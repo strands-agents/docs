@@ -203,7 +203,11 @@ bedrock_model = BedrockModel(
 agent = Agent(model=bedrock_model)
 ```
 
+For the Amazon Bedrock model provider, see the [Boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html) to configure credentials for your environment. For development, AWS credentials are typically defined in `AWS_` prefixed environment variables or configured with the `aws configure` CLI command.
+
 You will also need to enable model access in Amazon Bedrock for the models that you choose to use with your agents, following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) to enable access.
+
+More details in the [Amazon Bedrock Model Provider](concepts/model-providers/amazon-bedrock.md) documentation.
 
 ### Anthropic
 
@@ -307,6 +311,8 @@ ollama_model = OllamaModel(
 
 agent = Agent(model=ollama_model)
 ```
+
+More details in the [Ollama Model Provider](concepts/model-providers/ollama.md) documentation.
 
 ### Custom Model Providers
 
