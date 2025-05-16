@@ -203,12 +203,87 @@ bedrock_model = BedrockModel(
 agent = Agent(model=bedrock_model)
 ```
 
-For the Amazon Bedrock model provider, see the [Boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html) to configure credentials for your environment. For development, AWS credentials are typically defined in `AWS_` prefixed environment variables or configured with the `aws configure` CLI command.
-
 You will also need to enable model access in Amazon Bedrock for the models that you choose to use with your agents, following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) to enable access.
 
-More details in the [Amazon Bedrock Model Provider](concepts/model-providers/amazon-bedrock.md) documentation.
+### Anthropic
 
+First install the `anthropic` python client:
+
+```bash
+pip install strands-agents[anthropic]
+```
+
+Next, import and initialize the `AnthropicModel` provider:
+
+```python
+from strands import Agent
+from strands.models.anthropic import AnthropicModel
+
+anthropic_model = AnthropicModel(
+    client_args={
+        "api_key": "<KEY>",
+    },
+    max_tokens=1028,
+    model_id="claude-3-7-sonnet-20250219",
+    params={
+        "temperature": 0.7,
+    }
+)
+
+agent = Agent(model=anthropic_model)
+```
+
+### LiteLLM
+
+LiteLLM is a unified interface for various LLM providers that allows you to interact with models from OpenAI and many others.
+
+First install the `litellm` python client:
+
+```bash
+pip install strands-agents[litellm]
+```
+
+Next, import and initialize the `LiteLLMModel` provider:
+
+```python
+from strands import Agent
+from strands.models.litellm import LiteLLMModel
+
+litellm_model = LiteLLMModel(
+    client_args={
+        "api_key": "<KEY>",
+    },
+    model_id="gpt-4o"
+)
+
+agent = Agent(model=litellm_model)
+```
+
+### Llama API
+
+Llama API is a Meta-hosted API service that helps you integrate Llama models into your applications quickly and efficiently.
+
+First install the `llamaapi` python client:
+```bash
+pip install strands-agents[llamaapi]
+```
+
+Next, import and initialize the `LlamaAPIModel` provider:
+
+```python
+from strands import Agent
+from strands.models.llamaapi import LLamaAPIModel
+
+model = LlamaAPIModel(
+    client_args={
+        "api_key": "<KEY>",
+    },
+    # **model_config
+    model_id="Llama-4-Maverick-17B-128E-Instruct-FP8",
+)
+
+agent = Agent(models=LLamaAPIModel)
+```
 
 ### Ollama (Local Models)
 
@@ -218,7 +293,7 @@ First install the `ollama` python client:
 pip install strands-agents[ollama]
 ```
 
-Next, import and intialize the `OllamaModel` provider:
+Next, import and initialize the `OllamaModel` provider:
 
 ```python
 from strands import Agent
@@ -232,8 +307,6 @@ ollama_model = OllamaModel(
 
 agent = Agent(model=ollama_model)
 ```
-
-More details in the [Ollama Model Provider](concepts/model-providers/ollama.md) documentation.
 
 ### Custom Model Providers
 
