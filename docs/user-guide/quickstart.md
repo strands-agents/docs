@@ -209,128 +209,15 @@ You will also need to enable model access in Amazon Bedrock for the models that 
 
 More details in the [Amazon Bedrock Model Provider](concepts/model-providers/amazon-bedrock.md) documentation.
 
-### Anthropic
+### Additional Model Providers
 
-First install the `anthropic` python client:
+Strands Agents supports several other model providers beyond Amazon Bedrock:
 
-```bash
-pip install strands-agents[anthropic]
-```
-
-Next, import and initialize the `AnthropicModel` provider:
-
-```python
-from strands import Agent
-from strands.models.anthropic import AnthropicModel
-
-anthropic_model = AnthropicModel(
-    client_args={
-        "api_key": "<KEY>",
-    },
-    max_tokens=1028,
-    model_id="claude-3-7-sonnet-20250219",
-    params={
-        "temperature": 0.7,
-    }
-)
-
-agent = Agent(model=anthropic_model)
-```
-
-### LiteLLM
-
-LiteLLM is a unified interface for various LLM providers that allows you to interact with models from OpenAI and many others.
-
-First install the `litellm` python client:
-
-```bash
-pip install strands-agents[litellm]
-```
-
-Next, import and initialize the `LiteLLMModel` provider:
-
-```python
-from strands import Agent
-from strands.models.litellm import LiteLLMModel
-
-litellm_model = LiteLLMModel(
-    client_args={
-        "api_key": "<KEY>",
-    },
-    model_id="gpt-4o"
-)
-
-agent = Agent(model=litellm_model)
-```
-
-### Llama API
-
-Llama API is a Meta-hosted API service that helps you integrate Llama models into your applications quickly and efficiently.
-
-First install the `llamaapi` python client:
-```bash
-pip install strands-agents[llamaapi]
-```
-
-Next, import and initialize the `LlamaAPIModel` provider:
-
-```python
-from strands import Agent
-from strands.models.llamaapi import LLamaAPIModel
-
-model = LlamaAPIModel(
-    client_args={
-        "api_key": "<KEY>",
-    },
-    # **model_config
-    model_id="Llama-4-Maverick-17B-128E-Instruct-FP8",
-)
-
-agent = Agent(models=LLamaAPIModel)
-```
-
-### Ollama (Local Models)
-
-First install the `ollama` python client:
-
-```bash
-pip install strands-agents[ollama]
-```
-
-Next, import and initialize the `OllamaModel` provider:
-
-```python
-from strands import Agent
-from strands.models.ollama import OllamaModel
-
-ollama_model = OllamaModel(
-    host="http://localhost:11434"  # Ollama server address
-    model_id="llama3",  # Specify which model to use
-    temperature=0.3,
-)
-
-agent = Agent(model=ollama_model)
-```
-
-More details in the [Ollama Model Provider](concepts/model-providers/ollama.md) documentation.
-
-### Custom Model Providers
-
-We can even connect our agents to custom model providers to use any model from anywhere!
-
-```python
-from strands import Agent
-from your_company.models.custom_model import CustomModel
-
-custom_model = CustomModel(
-    model_id="your-model-id
-    temperature=0.3,
-)
-
-agent = Agent(model=custom_model)
-```
-
-See the [Custom Providers](concepts/model-providers/custom_model_provider.md) documentation for more information on creating your own model provider.
+- **Anthropic** - Direct API access to Claude models ([docs](concepts/model-providers/anthropic.md))
+- **LiteLLM** - Unified interface for OpenAI, Mistral, and other providers ([docs](concepts/model-providers/litellm.md))
+- **Llama API** - Access to Meta's Llama models ([docs](concepts/model-providers/llamaapi.md))
+- **Ollama** - Run models locally for privacy or offline use ([docs](concepts/model-providers/ollama.md))
+- **Custom Providers** - Build your own provider for specialized needs ([docs](concepts/model-providers/custom_model_provider.md))
 
 ## Capturing Streamed Data & Events
 
