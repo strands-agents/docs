@@ -1,0 +1,42 @@
+.md-tabs__link {
+    opacity: 1;
+    font-size: 1.6em;
+}
+
+.md-tabs__item--active,
+.md-tabs__item:hover {
+    text-decoration: underline;
+    text-underline-offset: .5em;
+}
+
+.md-nav--lifted > .md-nav__list > .md-nav__item > [for],
+.md-nav__item--section > .md-nav__link[for],
+.md-nav__title {
+    font-size: 1.4em;
+}
+
+.md-typeset h1 {
+    color: inherit;
+}
+
+.md-grid {
+    /* default was max-width: 61rem; */
+    max-width: 68rem;
+}
+
+.mermaid {
+    text-align: center;
+}
+
+/* Remove the font-enlargement that is on by default for the material theme */
+@media screen and (min-width: 100em) {
+    html {
+        font-size: 125%;
+    }
+}
+
+@media screen and (min-width: 125em) {
+    html {
+        font-size: 125%;
+    }
+}

@@ -1,0 +1,7 @@
+.cache/
+/app.tar
+/app/
+site/
+*.bak
+__pycache__
+.venv

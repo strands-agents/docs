@@ -1,0 +1,37 @@
+name: Build Strands Agents GitHub Pages
+on:
+  push:
+    branches:
+      - strands
+  repository_dispatch:
+    types:
+      - sdk-push
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: |
+          pip install -r requirements.txt
+          pip install git+https://${{ secrets.PAT_TOKEN }}@github.com/2umtGXt3XZODBPfPgiR53A/agents-sdk-python.git@strands
+      - run: |
+          mike deploy --push --update-aliases 0.1.x-strands
