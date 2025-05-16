@@ -25,7 +25,7 @@
 
 ## Checklist
 <!-- Mark completed items with an [x] -->
-- [ ] I have read the [CONTRIBUTING](../docs/CONTRIBUTING.md) document
+- [ ] I have read the CONTRIBUTING document
 - [ ] My changes follow the project's documentation style
 - [ ] I have tested the documentation locally using `mkdocs serve`
 - [ ] Links in the documentation are valid and working
