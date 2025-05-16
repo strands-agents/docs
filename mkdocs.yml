@@ -73,6 +73,7 @@ nav:
         - Example Tools Package: user-guide/concepts/tools/example-tools-package.md
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
+        - Anthropic: user-guide/concepts/model-providers/anthropic.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md

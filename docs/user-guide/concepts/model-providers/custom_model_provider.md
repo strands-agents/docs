@@ -9,6 +9,7 @@ Strands Agents uses an abstract `Model` class that defines the standard interfac
 ```mermaid
 flowchart TD
     Base["Model (Base)"] --> Bedrock["Bedrock Model Provider"]
+    Base --> Anthropic["Anthropic Model Provider"]
     Base --> LiteLLM["LiteLLM Model Provider"]
     Base --> Ollama["Ollama Model Provider"]
     Base --> Custom["Custom Model Provider"]
