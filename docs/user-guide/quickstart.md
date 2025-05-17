@@ -168,6 +168,19 @@ agent("Hello!")
 
 ## Model Providers
 
+### Identifying a configured model 
+
+Strands defaults to the Bedrock model provider using Claude 3.7 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](/api-reference/types/#strands.types.models.Model.get_config):
+
+```python
+from strands import Agent
+
+agent = Agent()
+
+print(agent.model.config)
+# {'model_id': 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'}
+```
+
 You can specify a different model in two ways:
 
 1. By passing a string model ID directly to the Agent constructor
