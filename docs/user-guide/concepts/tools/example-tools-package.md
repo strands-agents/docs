@@ -31,7 +31,7 @@ pip install strands-agents-tools
 #### Multi-modal
 - [`image_reader`]({{ tools_repo }}/src/strands_tools/image_reader.py): Process and analyze images
 - [`generate_image`]({{ tools_repo }}/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
-- [`nova_reels`]({{ tools_repo }}/src/strands_tools/nova_reels.py): Create AI generated images with Nova Reels on Amazon Bedrock
+- [`nova_reels`]({{ tools_repo }}/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
 
 #### AWS Services
 - [`use_aws`]({{ tools_repo }}/src/strands_tools/use_aws.py): Interact with AWS services
