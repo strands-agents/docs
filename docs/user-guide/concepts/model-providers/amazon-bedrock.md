@@ -58,7 +58,7 @@ The model access request is typically processed immediately. Once approved, the 
 
 For more details, see the [Amazon Bedrock documentation on modifying model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 
-#### Setting Up AWS Credentials
+#### Setting Up AWS Credentials & Region
 
 Strands uses [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) (the AWS SDK for Python) to make calls to Amazon Bedrock. Boto3 has its own credential resolution system that determines which credentials to use when making requests to AWS.
 
@@ -74,6 +74,7 @@ aws configure
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
 export AWS_SESSION_TOKEN=your_session_token  # If using temporary credentials
+export AWS_REGION="us-west-2"  # Used if a custom Boto3 Session is not provided
 ```
 
 **Option 3: Custom Boto3 Session**
