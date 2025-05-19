@@ -106,6 +106,8 @@ nav:
     - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
     - Weather Forecaster: examples/python/weather_forecaster.md
     - Memory Agent: examples/python/memory_agent.md
+    - Therapist Agent: examples/python/therapist_agent.md
+    - Personalized Tutor Agent: examples/python/tutor_agent.md
     - File Operations: examples/python/file_operations.md
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
