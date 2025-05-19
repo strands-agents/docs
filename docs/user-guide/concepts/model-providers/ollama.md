@@ -16,7 +16,7 @@ The [`OllamaModel`](../../../api-reference/models.md#strands.models.ollama) clas
 
 First install the python client into your python environment:
 ```bash
-pip install strands-agents[ollama]
+pip install 'strands-agents[ollama]'
 ```
 
 Next, you'll need to install and setup ollama itself.
@@ -231,7 +231,7 @@ response = agent("What's the square root of 144 plus the current time?")
 
 3. **Module Not Found**:
     - If you encounter the error `ModuleNotFoundError: No module named 'ollama'`, this means you haven't installed the `ollama` dependency in your python environment
-    - To fix, run `pip install strands-agents[ollama]`
+    - To fix, run `pip install 'strands-agents[ollama]'`
 
 ## Related Resources
 

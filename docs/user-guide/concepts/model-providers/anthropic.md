@@ -7,7 +7,7 @@
 Anthropic is configured as an optional dependency in Strands. To install, run:
 
 ```bash
-pip install strands-agents[anthropic]
+pip install 'strands-agents[anthropic]'
 ```
 
 ## Usage
@@ -56,7 +56,7 @@ The `model_config` configures the underlying model selected for inference. The s
 
 ### Module Not Found
 
-If you encounter the error `ModuleNotFoundError: No module named 'anthropic'`, this means you haven't installed the `anthropic` dependency in your environment. To fix, run `pip install strands-agents[anthropic]`.
+If you encounter the error `ModuleNotFoundError: No module named 'anthropic'`, this means you haven't installed the `anthropic` dependency in your environment. To fix, run `pip install 'strands-agents[anthropic]'`.
 
 ## References
 

@@ -11,7 +11,7 @@ With Llama API, you get access to state-of-the-art AI capabilities through a dev
 Llama API is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install strands-agents[llamaapi]
+pip install 'strands-agents[llamaapi]'
 ```
 
 ## Usage
@@ -61,7 +61,7 @@ The `model_config` configures the underlying model selected for inference. The s
 
 ### Module Not Found
 
-If you encounter the error `ModuleNotFoundError: No module named 'llamaapi'`, this means you haven't installed the `llamaapi` dependency in your environment. To fix, run `pip install strands-agents[llamaapi]`.
+If you encounter the error `ModuleNotFoundError: No module named 'llamaapi'`, this means you haven't installed the `llamaapi` dependency in your environment. To fix, run `pip install 'strands-agents[llamaapi]'`.
 
 ## References
 

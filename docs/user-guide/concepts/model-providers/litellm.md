@@ -7,7 +7,7 @@
 LiteLLM is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install strands-agents[litellm]
+pip install 'strands-agents[litellm]'
 ```
 
 ## Usage
@@ -55,7 +55,7 @@ The `model_config` configures the underlying model selected for inference. The s
 
 ### Module Not Found
 
-If you encounter the error `ModuleNotFoundError: No module named 'litellm'`, this means you haven't installed the `litellm` dependency in your environment. To fix, run `pip install strands-agents[litellm]`.
+If you encounter the error `ModuleNotFoundError: No module named 'litellm'`, this means you haven't installed the `litellm` dependency in your environment. To fix, run `pip install 'strands-agents[litellm]'`.
 
 ## References
 
