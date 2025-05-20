@@ -8,7 +8,7 @@ Multi-agent systems consist of multiple interacting intelligent agents within an
 - **Information Sharing**: Agents exchange insights to build collective knowledge
 - **Specialization**: Different agents focus on specific aspects of a problem
 - **Redundancy**: Multiple agents working on similar tasks improve reliability
-- **Emergent Intelligence**: The system exhibits capabilities beyond those of its individual components
+- **Emergent Intelligence**: The system exhibits capabilities beyond those of its components
 
 Swarm intelligence emphasizes:
 
@@ -133,7 +133,7 @@ creative_result = creative_agent(query)
 critical_result = critical_agent(query)
 ```
 
-After the initial analysis, results are shared with all other agents (mesh communication):
+After the initial analysis, the results are shared with all other agents (mesh communication):
 
 ```python
 # Share results with all other agents (mesh communication)
@@ -179,7 +179,7 @@ Please synthesize the following inputs from all agents into a comprehensive fina
 
 {"\n\n".join(messages["summarizer"])}
 
-Create a well-structured final answer that incorporates the research findings, 
+Create a well-structured final answer that incorporates the research findings. 
 creative ideas, and addresses the critical feedback.
 """
 
@@ -246,4 +246,4 @@ The full implementation of the swarm tool can be found in the [Strands Tools rep
 4. **Result Collection**: Results from all agents are aggregated and presented
 ## Conclusion
 
-Multi-agent swarms solve complex problems through collective intelligence. The Strands Agents SDK supports both custom implementations and a built-in swarm tool with shared memory. By distributing tasks across specialized agents and enabling effective communication, swarms achieve better results than single agents working alone. Whether using mesh communication patterns or the swarm tool, developers can create systems where multiple agents work together with defined roles, coordination mechanisms, and knowledge sharing.
+Multi-agent swarms solve complex problems through collective intelligence. The Strands Agents SDK supports custom implementations and a built-in swarm tool with shared memory. By distributing tasks across specialized agents and enabling effective communication, swarms achieve better results than single agents working alone. Whether using mesh communication patterns or the swarm tool, developers can create systems where multiple agents work together with defined roles, coordination mechanisms, and knowledge sharing.
