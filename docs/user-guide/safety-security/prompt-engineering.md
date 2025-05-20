@@ -21,7 +21,7 @@ Effective prompt engineering is crucial not only for maximizing Strands Agents' 
 # Example of security-focused task definition
 agent = Agent(
     system_prompt="""You are an API documentation specialist. When documenting code:
-    1. Identify function name, parameters, and return type
+    1. Identify the function name, parameters, and return type
     2. Create a concise description of the function's purpose
     3. Describe each parameter and return value
     4. Format using Markdown with proper code blocks
@@ -141,7 +141,7 @@ Now convert this inquiry:
 * Implement explicit verification steps for user inputs
 * Validate data against expected formats and ranges
 * Check for malicious patterns before processing
-* Create audit trail of input verification
+* Create an audit trail of input verification
 
 **Implementation:**
 
