@@ -88,7 +88,7 @@ When designing tools, follow these principles:
 
 1. **Least Privilege**: Tools should have the minimum permissions needed
 2. **Input Validation**: Thoroughly validate all inputs to tools
-3. **Clear Documentation**: Document tool purpose, limitations, and expected inputs
+3. **Clear Documentation**: Document the tool's purpose, limitations, and expected inputs
 4. **Error Handling**: Gracefully handle edge cases and invalid inputs
 5. **Audit Logging**: Log sensitive operations for review
 
