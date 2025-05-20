@@ -4,11 +4,11 @@ This document explains how Strands agents maintain conversation context, handle 
 
 Strands agents maintain state in several forms:
 
-1. **Conversation History**: The sequence of messages between user and agent
+1. **Conversation History**: The sequence of messages between the user and the agent
 2. **Tool State**: Information about tool executions and results
 3. **Request State**: Contextual information maintained within a single request
 
-Understanding how state works in Strands is essential for building agents that can maintain context across multi-turn interactions and workflows.
+Understanding how the state works in Strands is essential for building agents that can maintain context across multi-turn interactions and workflows.
 
 ## Conversation History
 
@@ -72,7 +72,7 @@ agent = Agent(conversation_manager=conversation_manager)
 The sliding window conversation manager:
 
 - Keeps the most recent N message pairs
-- Removes oldest messages when the window size is exceeded
+- Removes the oldest messages when the window size is exceeded
 - Handles context window overflow exceptions by reducing context
 - Ensures conversations don't exceed model context limits
 
@@ -86,7 +86,7 @@ from strands_tools import calculator
 
 agent = Agent(tools=[calculator])
 
-# Tool use is recorded in conversation history
+# Tool use is recorded in the conversation history
 agent("What is 123 × 456?")  # Uses calculator tool and records result
 
 # You can examine the tool interactions in the conversation history
@@ -123,7 +123,7 @@ The second `agent.tool.calculator()` call is **not** recorded in the history bec
 
 ## Request State
 
-Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and are **not** included in the agent's context:
+Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is not** included in the agent's context:
 
 ```python
 from strands import Agent
