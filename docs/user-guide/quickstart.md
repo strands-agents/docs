@@ -1,6 +1,6 @@
 This quickstart guide shows you how to create your first basic Strands agent, add built-in and custom tools to your agent, use different model providers, emit debug logs, and run the agent locally.
 
-After completing this guide you can integrate your agent with a web server, implement concepts like multi-agent, evaluate and improve your agent, along with deploying to production and running at scale.
+After completing this guide, you can integrate your agent with a web server, implement concepts like multi-agent, evaluate and improve your agent, along with deploying to production and run at scale.
 
 ## Install the SDK
 
@@ -18,7 +18,7 @@ And activate the virtual environment:
 * Windows (CMD): `.venv\Scripts\activate.bat`
 * Windows (PowerShell): `.venv\Scripts\Activate.ps1`
 
-Next we'll install the `strands-agents` SDK package:
+Next, we'll install the `strands-agents` SDK package:
 
 ```bash
 pip install strands-agents
@@ -137,7 +137,7 @@ More details can be found in the [Agent Loop](concepts/agents/agent-loop.md) doc
 
 Our agent is just Python, so we can run it using any mechanism for running Python!
 
-To test our agent we can simply run:
+To test our agent, we can simply run:
 ```bash
 python -u my_agent/agent.py
 ```
@@ -327,7 +327,7 @@ Ready to learn more? Check out these resources:
 - [Strands Agent Builder]({{ agent_builder_repo_home }}) - Use the accompanying `strands-agents-builder` agent builder to harness the power of LLMs to generate your own tools and agents
 - [Agent Loop](concepts/agents/agent-loop.md) - Learn how Strands agents work under the hood
 - [Sessions & State](concepts/agents/sessions-state.md) - Understand how agents maintain context and state across a conversation or workflow
-- [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together in to one system, with each agent completing specialized tasks
+- [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together into one system, with each agent completing specialized tasks
 - [Workflows](concepts/workflows/code-defined-ai-workflows.md) - Integrate agents in to existing workflows and systems
 - [Observability & Evaluation](observability-evaluation/observability.md) - Understand how agents make decisions and improve them with data
 - [Operating Agents in Production](deploy/operating-agents-in-production.md) - Taking agents from development to production, operating them responsibly at scale
