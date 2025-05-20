@@ -125,7 +125,7 @@ The agent is called with a user input:
 result = agent("Calculate 25 * 48")
 ```
 
-Calling the agent adds the message to conversation history and applies conversation management strategies before initializing a new event loop cycle.
+Calling the agent adds the message to the conversation history and applies conversation management strategies before initializing a new event loop cycle.
 
 ### 3. Model Processing
 
@@ -186,7 +186,7 @@ The tool result is formatted as:
 }
 ```
 
-This result is added to the conversation history and the model invoked again for it to reason about the tool results.
+This result is added to the conversation history, and the model is invoked again for it to reason about the tool results.
 
 ### 6. Recursive Processing
 
@@ -195,8 +195,8 @@ The agent loop can recursively continue if the model requests more tool executio
 This recursive nature allows for complex workflows like:
 
 1. User asks a question
-2. Agent uses a search tool to find information
-3. Agent uses a calculator to process the information
+2. The agent uses a search tool to find information
+3. The agent uses a calculator to process the information
 4. Agent synthesizes a final response
 
 ### 7. Completion
