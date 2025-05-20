@@ -208,7 +208,7 @@ Traces can be visualized and analyzed using any OpenTelemetry-compatible tool:
 Common visualization options include:
 
 1. **Jaeger**: Open-source, end-to-end distributed tracing
-2. **Langfuse**: For Traces, evals, prompt management and metrics
+2. **Langfuse**: For Traces, evals, prompt management, and metrics
 3. **AWS X-Ray**: For AWS-based applications
 4. **Zipkin**: Lightweight distributed tracing
 
@@ -240,7 +240,7 @@ Then access the Jaeger UI at http://localhost:16686 to view your traces.
 You can also enable console export to inspect the spans:
 
 ```python
-# By enabling the enviorment variable
+# By enabling the environment variable
 os.environ["STRANDS_OTEL_ENABLE_CONSOLE_EXPORT"] = "true"
 
 # or
