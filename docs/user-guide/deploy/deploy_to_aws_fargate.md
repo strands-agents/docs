@@ -15,7 +15,7 @@ The FastAPI application follows these steps:
 1. Define endpoints for agent interactions
 2. Create a Strands Agents SDK agent with the specified system prompt and tools
 3. Process incoming requests through the agent
-4. Return the response back to the client
+4. Return the response to the client
 
 Here's an example of a weather forecasting agent application ([`app.py`][app_py]):
 
@@ -72,7 +72,7 @@ async def get_weather(request: PromptRequest):
 
 Streaming responses can significantly improve the user experience by providing real-time responses back to the customer. This is especially valuable for longer responses.
 
-Python web-servers commonly implement streaming through the use of iterators and the Strands Agents SDK facilitates response streaming via the `stream_async(prompt)` api:
+Python web-servers commonly implement streaming through the use of iterators, and the Strands Agents SDK facilitates response streaming via the `stream_async(prompt)` api:
 
 ```python
 async def run_weather_agent_and_stream_response(prompt: str):
@@ -239,7 +239,7 @@ The full example ([agent-fargate-stack.ts][agent_fargate_stack]):
 
 ## Deploying Your Agent & Testing
 
-Assuming that Python & Node dependencies are already installed, run the CDK and deploy which will also run the docker file for deployment:
+Assuming that Python & Node dependencies are already installed, run the CDK and deploy, which will also run the Docker file for deployment:
 
 ```bash
 # Bootstrap your AWS environment (if not already done)
