@@ -63,6 +63,6 @@ Each example typically follows this structure:
 
 - Python implementation file(s) (`.py`)
 - Documentation file (`.md`) explaining the example's purpose, architecture, and usage
-- Any additional resources needed by the example
+- Any additional resources needed for the example
 
 To run any specific example, refer to its associated documentation for detailed instructions and requirements.
