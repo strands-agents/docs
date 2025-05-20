@@ -51,7 +51,7 @@ First, define specialized agents as tool functions using Strands Agents SDK's `@
 from strands import Agent, tool
 from strands_tools import retrieve, http_request
 
-# Define specialized system prompt
+# Define a specialized system prompt
 RESEARCH_ASSISTANT_PROMPT = """
 You are a specialized research assistant. Focus only on providing
 factual, well-sourced information in response to research questions.
@@ -141,9 +141,9 @@ Next, create an orchestrator agent that has access to all specialized agents as 
 from strands import Agent
 from .specialized_agents import research_assistant, product_recommendation_assistant, trip_planning_assistant
 
-# Define orchestrator system prompt with clear tool selection guidance
+# Define the orchestrator system prompt with clear tool selection guidance
 MAIN_SYSTEM_PROMPT = """
-You are an assistant that routes queries to specialized agents:
+You are an assistant who routes queries to specialized agents:
 - For research questions and factual information → Use the research_assistant tool
 - For product recommendations and shopping advice → Use the product_recommendation_assistant tool
 - For travel planning and itineraries → Use the trip_planning_assistant tool
@@ -168,11 +168,11 @@ Here's how this multi-agent system might handle a complex user query:
 # Example: E-commerce Customer Service System
 customer_query = "I'm looking for hiking boots for a trip to Patagonia next month"
 
-# The orchestrator automatically determines this requires multiple specialized agents
+# The orchestrator automatically determines that this requires multiple specialized agents
 response = orchestrator(customer_query)
 
 # Behind the scenes, the orchestrator will:
-# 1. First call the trip_planning_assistant to understand travel requirements for Patagonia
+# 1. First, call the trip_planning_assistant to understand travel requirements for Patagonia
 #    - Weather conditions in the region next month
 #    - Typical terrain and hiking conditions
 # 2. Then call product_recommendation_assistant with this context to suggest appropriate boots
@@ -183,7 +183,7 @@ response = orchestrator(customer_query)
 #    travel planning and product recommendation aspects of the query
 ```
 
-This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer. By following the best practices outlined earlier and leveraging Strands Agents SDK's capabilities, you can build sophisticated multi-agent systems that handle complex tasks through specialized expertise and coordinated collaboration.
+This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer. Following the best practices outlined earlier and leveraging Strands Agents SDK's capabilities, you can build sophisticated multi-agent systems that handle complex tasks through specialized expertise and coordinated collaboration.
 
 ## Complete Working Example
 
