@@ -24,7 +24,7 @@ agent = Agent(tools=[calculator])
 result = agent("What is the square root of 144?")
 
 # Access metrics through the AgentResult
-print(f"Total tokens: {result.metrics.accumulated_usage.totalTokens}")
+print(f"Total tokens: {result.metrics.accumulated_usage['totalTokens']}")
 print(f"Execution time: {sum(result.metrics.cycle_durations):.2f} seconds")
 print(f"Tools used: {list(result.metrics.tool_metrics.keys())}")
 ```
