@@ -40,7 +40,7 @@ agent = Agent(
   - `load_tool`: Tool used to load the tool so the Agent can use it.
   - `shell`: Tool used to execute the tool. 
 
-#### 2. Agent System Prompt outlines a strict guidline for naming, structure, and creation of the new tools.
+#### 2. Agent System Prompt outlines a strict guideline for naming, structure, and creation of the new tools.
 
 The system prompt guides the agent in proper tool creation. The [TOOL_BUILDER_SYSTEM_PROMPT](https://github.com/strands-agents/docs/blob/main/docs/examples/python/meta_tooling.py#L17) outlines important elements to enable the agent achieve meta-tooling capabilities:
 
@@ -201,4 +201,4 @@ Here are some ways to enhance this example:
 
 2. **Tool Testing**: Add automated testing for newly created tools to ensure reliability
 
-3. **Tool Improvement**: Create tools to improve existing capabilites of existing tools.
+3. **Tool Improvement**: Create tools to improve existing capabilities of existing tools.

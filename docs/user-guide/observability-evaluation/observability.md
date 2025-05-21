@@ -93,7 +93,7 @@ With these components in place, a continuous improvement flywheel emerges which 
 2. **Design for Multiple Consumers**: Implement a fan-out architecture for telemetry data to serve different stakeholders and use cases. Specifically, [OpenTelemetry collectors](https://opentelemetry.io/docs/collector/) can serve as this routing layer.
 3. **Optimize for Large Data Volume**: Identify which data attributes are important for downstream tasks and implement filtering to send specific data to those downstream systems. Incorporate sampling and batching wherever possible.
 4. **Shift Observability Left**: Use telemetry data when building agents to improve prompts and tool implementations. 
-5. **Raise the Security and Privacy Bar**: Implement proper data access controls and retention policies for all sensitive data. Redact or omit data containing personal identifiable information. Regurlarly audit data collection processes. 
+5. **Raise the Security and Privacy Bar**: Implement proper data access controls and retention policies for all sensitive data. Redact or omit data containing personal identifiable information. Regularly audit data collection processes. 
 
 ## Conclusion
 

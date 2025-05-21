@@ -47,14 +47,14 @@ The `client_args` configure the underlying LlamaAPI client. For a complete list 
 
 The `model_config` configures the underlying model selected for inference. The supported configurations are:
 
-|  Parameter | Description | Example | Options |
-|------------|-------------|---------|---------|
-| `model_id` | ID of a model to use | `Llama-4-Maverick-17B-128E-Instruct-FP8` | [reference](https://llama.developer.meta.com/docs/)
-| `repetition_penalty` | Controls the likelyhood and generating repetitive responses. (minimum: 1, maximum: 2, default: 1) |  `1`  | [reference](https://llama.developer.meta.com/docs/api/chat)
-| `temperature` | Controls randomness of the response by setting a temperature. | `0.7` | [reference](https://llama.developer.meta.com/docs/api/chat)
+|  Parameter | Description                                                                                         | Example | Options |
+|------------|-----------------------------------------------------------------------------------------------------|---------|---------|
+| `model_id` | ID of a model to use                                                                                | `Llama-4-Maverick-17B-128E-Instruct-FP8` | [reference](https://llama.developer.meta.com/docs/)
+| `repetition_penalty` | Controls the likelihood and generating repetitive responses. (minimum: 1, maximum: 2, default: 1)   |  `1`  | [reference](https://llama.developer.meta.com/docs/api/chat)
+| `temperature` | Controls randomness of the response by setting a temperature.                                       | `0.7` | [reference](https://llama.developer.meta.com/docs/api/chat)
 | `top_p` | Controls diversity of the response by setting a probability threshold when choosing the next token. | `0.9` | [reference](https://llama.developer.meta.com/docs/api/chat)
-| `max_completion_tokens` | The maximum number of tokens to generate.  | `4096` | [reference](https://llama.developer.meta.com/docs/api/chat)
-| `top_k` | Only sample from the top K options for each subsequent token. | `10` | [reference](https://llama.developer.meta.com/docs/api/chat)
+| `max_completion_tokens` | The maximum number of tokens to generate.                                                           | `4096` | [reference](https://llama.developer.meta.com/docs/api/chat)
+| `top_k` | Only sample from the top K options for each subsequent token.                                       | `10` | [reference](https://llama.developer.meta.com/docs/api/chat)
 
 
 ## Troubleshooting
