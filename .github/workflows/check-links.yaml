@@ -2,6 +2,10 @@ name: Links
 
 on:
 
+  push:
+    paths:
+      - '.github/workflows/check-links.yaml'
+
   repository_dispatch:
 
   workflow_dispatch:
