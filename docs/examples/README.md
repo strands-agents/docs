@@ -42,7 +42,7 @@ Available Python examples:
 - [File Operations](python/file_operations.md) - Example of agent with file manipulation capabilities
 - [MCP Calculator](python/mcp_calculator.md) - Example of agent with Model Context Protocol capabilities
 - [Meta Tooling](python/meta_tooling.md) - Example of Agent with Meta tooling capabilities 
-- [Multi-Agent Example](python/multi_agent_example/multi_agent_example.md) - Example of a of multi-agent system
+- [Multi-Agent Example](python/multi_agent_example/multi_agent_example.md) - Example of a multi-agent system
 - [Weather Forecaster](python/weather_forecaster.md) - Example of a weather forecasting agent with http_request capabilities
 
 ### CDK Examples

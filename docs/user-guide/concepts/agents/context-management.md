@@ -22,7 +22,7 @@ The SDK provides a flexible system for context management through the [`Conversa
 
 2. [`reduce_context`](../../../api-reference/agent.md#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context): This method is called when the model's context window is exceeded (typically due to token limits). It implements the specific strategy for reducing the window size when necessary. The agent calls this method when it encounters a context window overflow exception, giving your implementation a chance to trim the conversation history before retrying.
 
-For managing conversations, you can either build your own custom solution or leverage one of Strands's provided managers.
+For managing conversations, you can either build your own custom solution or leverage one of Strands' provided managers.
 
 #### NullConversationManager
 

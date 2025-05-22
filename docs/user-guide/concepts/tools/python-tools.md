@@ -32,7 +32,7 @@ The decorator extracts information from your function's docstring to create the 
 
 ### Loading Function-Decorated tools
 
-To use function based tool, simply pass the function to the agent:
+To use function-based tool, simply pass the function to the agent:
 
 ```python
 agent = Agent(

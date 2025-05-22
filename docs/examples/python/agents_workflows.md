@@ -19,7 +19,7 @@ The `http_request` tool enables the agent to make HTTP requests to retrieve info
 
 ## Workflow Architecture
 
-The Research Assistant example implements a three-agent workflow where each agent has a specific role and work together to complete tasks that require multiple steps of processing:
+The Research Assistant example implements a three-agent workflow where each agent has a specific role and works with other agents to complete tasks that require multiple steps of processing:
 
 1. **Researcher Agent**: Gathers information from web sources using http_request tool
 2. **Analyst Agent**: Verifies facts and identifies key insights from research findings

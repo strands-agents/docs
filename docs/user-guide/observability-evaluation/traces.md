@@ -70,7 +70,7 @@ Each trace consists of multiple spans that represent different operations in you
 
 ## OpenTelemetry Integration
 
-Strands natively integrates with OpenTelemetry, an industry-standard for distributed tracing. This integration provides:
+Strands natively integrates with OpenTelemetry, an industry standard for distributed tracing. This integration provides:
 
 1. **Compatibility with existing observability tools**: Send traces to platforms like Jaeger, Grafana Tempo, AWS X-Ray, Datadog, and more
 2. **Standardized attribute naming**: Using the OpenTelemetry semantic conventions

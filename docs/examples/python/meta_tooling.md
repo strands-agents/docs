@@ -14,7 +14,7 @@ Meta-tooling refers to the ability of an AI system to create new tools at runtim
 
 ## Tools Used Overview
 
-The meta-tooling agent use three primary tools to create and manage dynamic tools:
+The meta-tooling agent uses three primary tools to create and manage dynamic tools:
 
   1. `load_tool`: enables dynamic loading of Python tools at runtime, registering new tools with the agent's registry, enabling hot-reloading of capabilities, and validating tool specifications before loading.
   2. `editor`: allows creation and modification of tool code files with syntax highlighting, making precise string replacements in existing tools, inserting code at specific locations, finding and navigating to specific sections of code, and creating backups with undo capability before modifications.
