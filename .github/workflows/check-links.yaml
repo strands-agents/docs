@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/check-links.yaml'
+      - '.lycheeignore'
 
   repository_dispatch:
 
