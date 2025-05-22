@@ -11,9 +11,12 @@
 ::: strands.models.litellm
     options:
       heading_level: 2
+::: strands.models.llamaapi
+    options:
+      heading_level: 2
 ::: strands.models.ollama
     options:
       heading_level: 2
-::: strands.models.llamaapi
+::: strands.models.openai
     options:
       heading_level: 2

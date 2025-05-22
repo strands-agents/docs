@@ -230,6 +230,7 @@ Strands Agents supports several other model providers beyond Amazon Bedrock:
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
 - **[Ollama](concepts/model-providers/ollama.md)** - Run models locally for privacy or offline use
+- **[OpenAI](concepts/model-providers/openai.md)** - Direct API access to OpenAI or OpenAI-compatible models
 - **[Custom Providers](concepts/model-providers/custom_model_provider.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
