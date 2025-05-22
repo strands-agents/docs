@@ -1,6 +1,6 @@
 # Llama API
 
-[Llama API](https://llama.developer.meta.com/) is a Meta-hosted API service that helps you integrate Llama models into your applications quickly and efficiently.
+[Llama API](https://llama.developer.meta.com?utm_source=partner-strandsagent&utm_medium=website) is a Meta-hosted API service that helps you integrate Llama models into your applications quickly and efficiently.
 
 Llama API provides access to Llama models through a simple API interface, with inference provided by Meta, so you can focus on building AI-powered solutions without managing your own inference infrastructure.
 
