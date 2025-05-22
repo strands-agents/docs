@@ -8,5 +8,3 @@ https?://127\.0\.0\.1.*
 https?://www\.oecd\.org.*
 
 https?://.*\.openai\.com.*
-
-https?://github\.com/ebmdatalab/opensafely-output-review(?:/.*)?$
