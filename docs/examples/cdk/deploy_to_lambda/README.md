@@ -38,16 +38,21 @@ pip install -r requirements.txt
 pip install -r requirements.txt --platform manylinux2014_aarch64 --target ./packaging/_dependencies --only-binary=:all:
 ```
 
-2. Bootstrap your AWS environment (if not already done):
+2. Package the lambda:
+
+```bash
+python ./bin/package_for_lambda.py
+```
+
+3. Bootstrap your AWS environment (if not already done):
 
 ```bash
 npx cdk bootstrap
 ```
 
-3. Package the lambda & deploy the stack:
+4. Deploy the lambda:
 
-```bash
-python ./bin/package_for_lambda.py
+```
 npx cdk deploy
 ```
 
