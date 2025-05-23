@@ -95,7 +95,10 @@ with streamable_http_mcp_client:
 
    # Create an agent with the MCP tools
    agent = Agent(tools=tools)
-   agent.add(x=125, y=375)
+   result = agent.tool.add(x=125, y=375)
+
+   # Process the result
+   print(f"Calculation result: {result['content'][0]['text']}")
 ```
 
 ### Sample Queries and Responses
