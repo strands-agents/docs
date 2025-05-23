@@ -72,14 +72,7 @@ When running Strands in interactive mode, you can use these special commands:
 
 | Command | Description |
 |---------|-------------|
-| `/exit` or `exit` | Exit Strands CLI |
-| `/clear` | Clear conversation history |
-| `/tips` | Show helpful tips |
-| `/feedback [text]` | Submit feedback or bug report |
-| `/messages` | Show current conversation messages |
-| `/messages_json` | Show conversation as formatted JSON |
-| `/dev` | Toggle developer mode |
-| `/tools` | List all available tools |
+| `exit` | Exit Strands CLI |
 | `!command` | Execute shell command directly |
 
 ## Shell Integration
