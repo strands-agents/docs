@@ -16,30 +16,29 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) cl
 
 1. **AWS Account**: You need an AWS account with access to Amazon Bedrock
 2. **Model Access**: Request access to your desired models in the Amazon Bedrock console
-3. **AWS Credentials**: Configure AWS credentials with appropriate permissions, including `bedrock-runtime:InvokeModelWithResponseStream`
+3. **AWS Credentials**: Configure AWS credentials with appropriate permissions, including `bedrock:InvokeModelWithResponseStream`
 
 #### Required IAM Permissions
 
 To use Amazon Bedrock with Strands, your IAM user or role needs the following permissions:
 
-- `bedrock-runtime:InvokeModelWithResponseStream`
+- `bedrock:InvokeModelWithResponseStream`
 
 Here's a sample IAM policy that grants the necessary permissions:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "bedrock-runtime:InvokeModelWithResponseStream"
-            ],
-            "Resource": "*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["bedrock:InvokeModelWithResponseStream"],
+      "Resource": "*"
+    }
+  ]
 }
 ```
+
 For production environments, it's recommended to scope down the `Resource` to specific model ARNs.
 
 #### Requesting Access to Bedrock Models
@@ -65,11 +64,13 @@ Strands uses [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/ind
 For development environments, configure credentials using one of these methods:
 
 **Option 1: AWS CLI**
+
 ```bash
 aws configure
 ```
 
 **Option 2: Environment Variables**
+
 ```bash
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
@@ -108,30 +109,29 @@ For complete details on credential configuration and resolution, see the [boto3 
 
 1. **AWS Account**: You need an AWS account with access to Amazon Bedrock
 2. **Model Access**: Request access to your desired models in the Amazon Bedrock console
-3. **AWS Credentials**: Configure AWS credentials with appropriate permissions, including `bedrock-runtime:InvokeModelWithResponseStream`
+3. **AWS Credentials**: Configure AWS credentials with appropriate permissions, including `bedrock:InvokeModelWithResponseStream`
 
 #### Required IAM Permissions
 
 To use Amazon Bedrock with Strands, your IAM user or role needs the following permissions:
 
-- `bedrock-runtime:InvokeModelWithResponseStream`
+- `bedrock:InvokeModelWithResponseStream`
 
 Here's a sample IAM policy that grants the necessary permissions:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "bedrock-runtime:InvokeModelWithResponseStream"
-            ],
-            "Resource": "*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["bedrock:InvokeModelWithResponseStream"],
+      "Resource": "*"
+    }
+  ]
 }
 ```
+
 For production environments, it's recommended to scope down the `Resource` to specific model ARNs.
 
 #### Requesting Access to Bedrock Models
@@ -157,11 +157,13 @@ Strands uses [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/ind
 For development environments, configure credentials using one of these methods:
 
 **Option 1: AWS CLI**
+
 ```bash
 aws configure
 ```
 
 **Option 2: Environment Variables**
+
 ```bash
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
@@ -240,30 +242,29 @@ response = agent("Tell me about Amazon Bedrock.")
 
 The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) supports various [configuration parameters](../../../api-reference/models.md#strands.models.bedrock.BedrockModel.BedrockConfig):
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) | The Bedrock model identifier | "us.anthropic.claude-3-7-sonnet-20250219-v1:0" |
-| [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) | Boto Session to use when creating the Boto3 Bedrock Client | Boto Session with region: "us-west-2" |
-| [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html)| Botocore Configuration used when creating the Boto3 Bedrock Client | - |
-| [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html) | AWS region to use for the Bedrock service | "us-west-2" |
-| [`temperature`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Controls randomness (higher = more random) | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
-| [`max_tokens`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Maximum number of tokens to generate | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
-| [`top_p`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Controls diversity via nucleus sampling | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
-| [`stop_sequences`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | List of sequences that stop generation | - |
-| [`cache_prompt`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) | Cache point type for the system prompt | - |
-| [`cache_tools`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) | Cache point type for tools | - |
-| [`guardrail_id`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | ID of the guardrail to apply | - |
-| [`guardrail_trace`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Guardrail trace mode ("enabled", "disabled", "enabled_full") | "enabled" |
-| [`guardrail_version`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Version of the guardrail to apply | - |
-| [`guardrail_stream_processing_mode`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | The guardrail processing mode ("sync", "async") | - |
-| [`guardrail_redact_input`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Flag to redact input if a guardrail is triggered | True |
-| [`guardrail_redact_input_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | If a Bedrock guardrail triggers, replace the input with this message | "[User input redacted.]" |
-| [`guardrail_redact_output`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Flag to redact output if guardrail is triggered | False |
-| [`guardrail_redact_output_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | If a Bedrock guardrail triggers, replace output with this message | "[Assistant output redacted.]" |
-| [`additional_request_fields`](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | Additional inference parameters that the model supports | - |
-| [`additional_response_field_paths`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html#bedrock-runtime_ConverseStream-request-additionalModelResponseFieldPaths) | Additional model parameters field paths to return in the response | - |
-| `additional_args` | Additional arguments to include in the request. This is included for forwards compatibility of new parameters. | - |
-
+| Parameter                                                                                                                                                                                             | Description                                                                                                    | Default                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)                                                                                                              | The Bedrock model identifier                                                                                   | "us.anthropic.claude-3-7-sonnet-20250219-v1:0"                                                       |
+| [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html)                                                                                                 | Boto Session to use when creating the Boto3 Bedrock Client                                                     | Boto Session with region: "us-west-2"                                                                |
+| [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html)                                                                                              | Botocore Configuration used when creating the Boto3 Bedrock Client                                             | -                                                                                                    |
+| [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html)                                                                                                                           | AWS region to use for the Bedrock service                                                                      | "us-west-2"                                                                                          |
+| [`temperature`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                          | Controls randomness (higher = more random)                                                                     | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
+| [`max_tokens`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                           | Maximum number of tokens to generate                                                                           | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
+| [`top_p`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                                | Controls diversity via nucleus sampling                                                                        | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
+| [`stop_sequences`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                       | List of sequences that stop generation                                                                         | -                                                                                                    |
+| [`cache_prompt`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html)                                                                                                            | Cache point type for the system prompt                                                                         | -                                                                                                    |
+| [`cache_tools`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html)                                                                                                             | Cache point type for tools                                                                                     | -                                                                                                    |
+| [`guardrail_id`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                               | ID of the guardrail to apply                                                                                   | -                                                                                                    |
+| [`guardrail_trace`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                            | Guardrail trace mode ("enabled", "disabled", "enabled_full")                                                   | "enabled"                                                                                            |
+| [`guardrail_version`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                          | Version of the guardrail to apply                                                                              | -                                                                                                    |
+| [`guardrail_stream_processing_mode`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                           | The guardrail processing mode ("sync", "async")                                                                | -                                                                                                    |
+| [`guardrail_redact_input`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                     | Flag to redact input if a guardrail is triggered                                                               | True                                                                                                 |
+| [`guardrail_redact_input_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                             | If a Bedrock guardrail triggers, replace the input with this message                                           | "[User input redacted.]"                                                                             |
+| [`guardrail_redact_output`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                    | Flag to redact output if guardrail is triggered                                                                | False                                                                                                |
+| [`guardrail_redact_output_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                            | If a Bedrock guardrail triggers, replace output with this message                                              | "[Assistant output redacted.]"                                                                       |
+| [`additional_request_fields`](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html)                                                                                             | Additional inference parameters that the model supports                                                        | -                                                                                                    |
+| [`additional_response_field_paths`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html#bedrock-runtime_ConverseStream-request-additionalModelResponseFieldPaths) | Additional model parameters field paths to return in the response                                              | -                                                                                                    |
+| `additional_args`                                                                                                                                                                                     | Additional arguments to include in the request. This is included for forwards compatibility of new parameters. | -                                                                                                    |
 
 ### Example with Configuration
 
@@ -376,9 +377,9 @@ response = guardrail_agent("Can you tell me about the Strands SDK?")
 
 When a guardrail is triggered:
 
-* Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
-* Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
-* Custom redaction messages can be specified for both input and output redactions
+- Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
+- Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
+- Custom redaction messages can be specified for both input and output redactions
 
 ### Caching
 
@@ -407,8 +408,8 @@ bedrock_model = BedrockModel(
 # Create an agent with the model
 agent = Agent(
     model=bedrock_model,
-    system_prompt="You are a helpful assistant that provides concise answers. " + 
-                 "This is a long system prompt with detailed instructions... " 
+    system_prompt="You are a helpful assistant that provides concise answers. " +
+                 "This is a long system prompt with detailed instructions... "
                  # Add enough text to reach the minimum token requirement for your model
 )
 
