@@ -329,6 +329,5 @@ Ready to learn more? Check out these resources:
 - [Agent Loop](concepts/agents/agent-loop.md) - Learn how Strands agents work under the hood
 - [Sessions & State](concepts/agents/sessions-state.md) - Understand how agents maintain context and state across a conversation or workflow
 - [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together as one system, with each agent completing specialized tasks
-- [Workflows](concepts/workflows/code-defined-ai-workflows.md) - Integrate agents in to existing workflows and systems
 - [Observability & Evaluation](observability-evaluation/observability.md) - Understand how agents make decisions and improve them with data
 - [Operating Agents in Production](deploy/operating-agents-in-production.md) - Taking agents from development to production, operating them responsibly at scale

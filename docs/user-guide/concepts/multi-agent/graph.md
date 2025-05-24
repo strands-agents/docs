@@ -298,7 +298,7 @@ agent.tool.agent_graph(
 
 The agent_graph tool supports five primary actions:
 
-1. **create**: Build a new agent network with specified topology
+1. **create**: Build a new agent network with the specified topology
 2. **message**: Send information to a specific agent in the network
 3. **status**: Check the current state of an agent network
 4. **list**: View all active agent networks

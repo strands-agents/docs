@@ -125,7 +125,7 @@ The agent is called with a user input:
 result = agent("Calculate 25 * 48")
 ```
 
-Calling the agent adds the message to conversation history and applies conversation management strategies before initializing a new event loop cycle.
+Calling the agent adds the message to the conversation history and applies conversation management strategies before initializing a new event loop cycle.
 
 ### 3. Model Processing
 
@@ -186,7 +186,7 @@ The tool result is formatted as:
 }
 ```
 
-This result is added to the conversation history and the model invoked again for it to reason about the tool results.
+This result is added to the conversation history, and the model is invoked again for it to reason about the tool results.
 
 ### 6. Recursive Processing
 

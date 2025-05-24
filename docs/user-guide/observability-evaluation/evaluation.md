@@ -2,7 +2,7 @@
 
 This guide covers approaches to evaluating agents. Effective evaluation is essential for measuring agent performance, tracking improvements, and ensuring your agents meet quality standards.
 
-When building AI agents, evaluating their performance is crucial during this process. It's important to consider various qualitative and quantitative factors, including response quality, task completion, success, and inaccuracies or hallucinations. In evaluations, it's also important to consider comparing different agent configurations to optimize for specific desired outcomes. Given the dynamic and non-deterministic nature of LLMs, it's also important to have rigorous and frequent evaluation to ensure a consistent baseline for tracking improvements or regressions. 
+When building AI agents, evaluating their performance is crucial during this process. It's important to consider various qualitative and quantitative factors, including response quality, task completion, success, and inaccuracies or hallucinations. In evaluations, it's also important to consider comparing different agent configurations to optimize for specific desired outcomes. Given the dynamic and non-deterministic nature of LLMs, it's also important to have rigorous and frequent evaluations to ensure a consistent baseline for tracking improvements or regressions. 
 
 
 ## Creating Test Cases
@@ -361,5 +361,5 @@ if __name__ == "__main__":
 
 1. **Iterative improvement** - Use results to inform agent refinements
 2. **System prompt engineering** - Adjust prompts based on identified weaknesses
-3. **Tool selection optimization** - Improve tool names, descriptions and tool selection strategies
+3. **Tool selection optimization** - Improve tool names, descriptions, and tool selection strategies
 4. **Version control** - Track agent configurations alongside evaluation results

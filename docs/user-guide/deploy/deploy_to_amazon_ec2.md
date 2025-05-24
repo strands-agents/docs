@@ -155,7 +155,7 @@ To deploy the agent to EC2 using the TypeScript CDK, you need to define the infr
 
 ```
 
-For EC2 deployment, the application code and dependencies are packaged separately and uploaded to S3 as assets, During instance initialization, both packages are downloaded and extracted to the appropriate locations and then configured to run as linux service:
+For EC2 deployment, the application code and dependencies are packaged separately and uploaded to S3 as assets. During instance initialization, both packages are downloaded and extracted to the appropriate locations and then configured to run as a Linux service:
 
 ```typescript
  // Create user data script to set up the application

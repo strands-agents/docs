@@ -72,7 +72,7 @@ async def get_weather(request: PromptRequest):
 
 Streaming responses can significantly improve the user experience by providing real-time responses back to the customer. This is especially valuable for longer responses.
 
-Python web-servers commonly implement streaming through the use of iterators and the Strands Agents SDK facilitates response streaming via the `stream_async(prompt)` api:
+Python web-servers commonly implement streaming through the use of iterators, and the Strands Agents SDK facilitates response streaming via the `stream_async(prompt)` function:
 
 ```python
 async def run_weather_agent_and_stream_response(prompt: str):
@@ -116,7 +116,7 @@ The implementation above employs a [custom tool](../concepts/tools/python-tools.
 
 ## Containerization
 
-To deploy your agent to Fargate, you need to containerize it using Podman or Docker. The Dockerfile defines how your application is packaged and run.  Below is an example docker file that installs all needed dependencies, the application, and configures the FastAPI server to run via unicorn ([Dockerfile][dockerfile]):
+To deploy your agent to Fargate, you need to containerize it using Podman or Docker. The Dockerfile defines how your application is packaged and run.  Below is an example Docker file that installs all needed dependencies, the application, and configures the FastAPI server to run via unicorn ([Dockerfile][dockerfile]):
 
 ```dockerfile
 FROM public.ecr.aws/docker/library/python:3.12-slim
@@ -239,7 +239,7 @@ The full example ([agent-fargate-stack.ts][agent_fargate_stack]):
 
 ## Deploying Your Agent & Testing
 
-Assuming that Python & Node dependencies are already installed, run the CDK and deploy which will also run the docker file for deployment:
+Assuming that Python & Node dependencies are already installed, run the CDK and deploy which will also run the Docker file for deployment:
 
 ```bash
 # Bootstrap your AWS environment (if not already done)
