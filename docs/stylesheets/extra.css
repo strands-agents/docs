@@ -49,6 +49,14 @@
     }
 }
 
+@media screen and (max-width: 76.2344em) {
+    .md-nav--lifted > .md-nav__list > .md-nav__item > [for],
+    .md-nav__item--section > .md-nav__link[for],
+    .md-nav__title {
+        font-size: 1em;
+    }
+}
+
 [data-md-color-scheme=slate] {
     /* Override the font color in dark mode - text is too light */
     --md-default-fg-color: rgb(240, 246, 252)
