@@ -1,0 +1,38 @@
+name: Links
+
+on:
+
+  push:
+    paths:
+      - '.github/workflows/check-links.yaml'
+      - '.lycheeignore'
+
+  repository_dispatch:
+
+  workflow_dispatch: # for manual launch by authorized users.
+
+  pull_request:
+    types: [ opened, edited, reopened ]
+
+  schedule:
+    - cron: "00 09 * * *"
+
+jobs:
+  check_links:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+
+      - name: Check links with lychee
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: "--base . --cache --max-cache-age 1d ."
