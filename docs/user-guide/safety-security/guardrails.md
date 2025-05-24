@@ -37,7 +37,8 @@ bedrock_model = BedrockModel(
 
 # Create agent with the guardrail-protected model
 agent = Agent(
-    system_prompt="You are a helpful assistant."
+    system_prompt="You are a helpful assistant.",
+    model=bedrock_model,
 )
 
 # Use the protected agent for conversations
