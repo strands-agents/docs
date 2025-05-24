@@ -1,5 +1,5 @@
 .md-header__button.md-logo {
-    padding: 0;
+    padding: 0 .2rem;
     margin: 0;
 }
 .md-header__button.md-logo img,
@@ -64,6 +64,7 @@
         padding: 2rem .8rem .2rem;
     }
     .md-nav--primary .md-nav__title .md-logo {
+        padding: .2rem;
         margin: 0;
     }
 }
