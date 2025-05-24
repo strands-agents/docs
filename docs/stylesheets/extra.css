@@ -1,3 +1,11 @@
+.md-header__button.md-logo {
+    padding: 0 .4rem;
+}
+.md-header__button.md-logo img, .md-header__button.md-logo svg {
+    height: 2rem;
+    width: 2rem;
+}
+
 .md-tabs__link {
     opacity: 1;
     font-size: 1.6em;
