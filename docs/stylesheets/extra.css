@@ -1,9 +1,13 @@
 .md-header__button.md-logo {
-    padding: 0 .4rem;
+    padding: 0;
+    margin: 0;
 }
-.md-header__button.md-logo img, .md-header__button.md-logo svg {
-    height: 2rem;
-    width: 2rem;
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg,
+.md-nav__title .md-nav__button.md-logo img,
+.md-nav__title .md-nav__button.md-logo svg {
+    height: 1.5rem;
+    width: 1.5rem;
 }
 
 .md-tabs__link {
@@ -54,6 +58,13 @@
     .md-nav__item--section > .md-nav__link[for],
     .md-nav__title {
         font-size: 1em;
+    }
+    .md-nav--primary .md-nav__title {
+        height: auto;
+        padding: 2rem .8rem .2rem;
+    }
+    .md-nav--primary .md-nav__title .md-logo {
+        margin: 0;
     }
 }
 
