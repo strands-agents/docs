@@ -6,8 +6,8 @@ repo_url: https://github.com/strands-agents/sdk-python
 
 theme:
   name: material
-  logo: assets/logo.svg
-  favicon: assets/logo.svg
+  logo: assets/logo-light.svg
+  favicon: assets/logo-light.svg
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
