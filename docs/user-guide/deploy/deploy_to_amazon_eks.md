@@ -151,8 +151,79 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "
 
 ## Infrastructure
 
+To deploy our containerized agent to EKS, we will first need to provision an EKS Auto Mode cluster, define IAM role and policies, associate them with a Kubernetes Service Account and package & deploy our Agent using Helm.
+Helm packages and deploys application to Kubernetes and EKS and manage configuration through [`values.yaml`][values_yaml], Helm enables deployment to different environments, define version control, updates, and consistent deployments across EKS clusters.
 
+Follow the full example [`deploy_to_eks` sample project on GitHub][project_code]:
+
+1. Using eksctl creates an EKS Auto Mode cluster and a VPC
+2. Builds and push the Docker image from your Dockerfile to Amazon Elastic Container Registry (ECR).
+3. Deploy the `strands-agents-weather` agent helm package to EKS
+4. Configure agent access to AWS services such as Bedrock by using Amazon EKS Pod Identity.
+5. Sets up an Application Load Balancer using Kubernetes Ingress and EKS Auto Mode network capabilities.
+6. Outputs the load balancer DNS name for accessing your service
+
+## Deploying Your agent & Testing
+
+Assuming your EKS Auto Mode cluster is already provisioned, deploy the Helm chart.
+
+```bash
+helm install strands-agents-weather docs/examples/deploy_to_eks/chart \
+  --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest \ 
+```
+
+Once deployed, you can test your agent using kubectl port-forward:
+
+```bash
+kubectl port-forward service/strands-agents-weather 8080:80
+```
+
+Call the weather service
+```bash
+curl -X POST \
+  http://localhost:8080/weather \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt": "What is the weather in Seattle?"}'
+```
+
+Call the weather streaming endpoint
+```bash
+curl -X POST \
+  http://localhost:8080/weather-streaming \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt": "What is the weather in New York in Celsius?"}'
+```
+
+## Summary
+
+The above steps covered:
+
+- Creating a FastAPI application that hosts your Strands Agents SDK agent
+- Containerizing your application with Podman or Docker
+- Creating the infrastructure to deploy to EKS Auto Mode
+- Deploying the agent and infrastructure to EKS Auto Mode
+- Manually testing the deployed service
+
+Possible follow-up tasks would be to:
+
+- Set up auto-scaling based on CPU/memory usage or request count using HPA
+- Configure Pod Disruption Budgets for high availability and resiliency
+- Implement API authentication for secure access
+- Add custom domain name and HTTPS support
+- Set up monitoring and alerting
+- Implement CI/CD pipeline for automated deployments
+
+## Complete Example
+
+For the complete example code, including all files and configurations, see the  [`deploy_to_eks` sample project on GitHub][project_code]
+
+## Related Resources
+
+- [Amazon EKS Auto Mode Documentation](https://aws.amazon.com)
+- [eksctl Documentation](https://aws.amazon.com)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
 
 [project_code]: {{ docs_repo }}/docs/examples/deploy_to_eks
 [app_py]: {{ docs_repo }}/docs/examples/deploy_to_eks/docker/app/app.py
 [dockerfile]: {{ docs_repo }}/docs/examples/deploy_to_eks/docker/Dockerfile
+[values_yaml]: {{ docs_repo }}/docs/examples/deploy_to_eks/chart/values.yaml
