@@ -1,14 +1,41 @@
 # Amazon EKS Deployment Example
 
+## Introduction
+
+## Prerequisites
+
+- [AWS CLI](https://aws.amazon.com/cli/) installed and configured
+- [eksctl](https://eksctl.io/installation/) (v0.208.x or later) installed
+- [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html) installed
+- Either:
+    - [Podman](https://podman.io/) installed and running
+    - (or) [Docker](https://www.docker.com/) installed and running
+
+## Project Structure
+
+- `chart/` - Contains the Helm chart
+    - `values.yaml` - Helm chart default values
+- `docker/` - Contains the Dockerfile and application code for the container:
+     - `Dockerfile` - Docker image definition
+     - `app/` - Application code
+     - `requirements.txt` - Python dependencies for the container & local development
+
+## Create EKS Auto Mode cluster
+
+Set environment variables
 ```bash
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 export AWS_REGION=us-east-1
 export CLUSTER_NAME=eks-strands-agents-demo
 ```
 
-## Create EKS Auto Mode cluster using eksctl
+Create EKS Auto Mode cluster
 ```bash
 eksctl create cluster --name $CLUSTER_NAME --enable-auto-mode
+```
+Configure kubeconfig context
+```bash
+aws eks update-kubeconfig --name $CLUSTER_NAME
 ```
 
 ## Building and Pushing Docker Image to ECR
@@ -41,16 +68,10 @@ docker tag strands-agents-weather:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}
 ```bash
 docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather:latest
 ```
-## Deploy strands-agents-weather application
 
-1. Deploy the helm chart with the image from ECR:
-```bash
-cd ..
-helm install strands-agents-weather ./chart \
-  --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest
-```
+## Configure EKS Pod Identity to access Amazon Bedrock
 
-2. Create an IAM policy to allow access to Bedrock
+Create an IAM policy to allow InvokeModel & InvokeModelWithResponseStream to all Amazon Bedrock models
 ```bash
 cat > bedrock-policy.json << EOF
 {
@@ -71,15 +92,30 @@ EOF
 aws iam create-policy \
   --policy-name strands-agents-weather-bedrock-policy \
   --policy-document file://bedrock-policy.json
+rm -f bedrock-policy.json
 ```
 
-3. EKS Pod Identity association
+Create an EKS Pod Identity association
 ```bash
 eksctl create podidentityassociation --cluster $CLUSTER_NAME \
   --namespace default \
   --service-account-name strands-agents-weather \
   --permission-policy-arns arn:aws:iam::$AWS_ACCOUNT_ID:policy/strands-agents-weather-bedrock-policy \
   --role-name eks-strands-agents-weather
+```
+
+## Deploy strands-agents-weather application
+
+Deploy the helm chart with the image from ECR
+```bash
+cd ..
+helm install strands-agents-weather ./chart \
+  --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest
+```
+
+Wait for Deployment to be available (Pods Running)
+```bash
+kubectl wait --for=condition=available deployments strands-agents-weather --all
 ```
 
 ## Test the Agent
@@ -105,8 +141,9 @@ curl -X POST \
   -d '{"prompt": "What is the weather in New York in Celsius?"}'
 ```
 
-## Expose Agent using Ingress
+## Expose Agent through Application Load Balancer
 
+[Create an IngressClass to configure an Application Load Balancer](https://docs.aws.amazon.com/eks/latest/userguide/auto-configure-alb.html)
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: eks.amazonaws.com/v1
@@ -134,6 +171,8 @@ spec:
     name: alb
 EOF
 ```
+
+Update helm deployment to create Ingress using the IngressClass created
 ```bash
 helm upgrade strands-agents-weather ./chart \
   --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest \
@@ -141,19 +180,77 @@ helm upgrade strands-agents-weather ./chart \
   --set ingress.className=alb 
 ```
 
-### Get the ALB URL
+Get the ALB URL
+```bash
 export ALB_URL=$(kubectl get ingress strands-agents-weather -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 echo "The shared ALB is available at: http://$ALB_URL"
+```
 
 Wait for ALB to be active
 ```bash
 aws elbv2 wait load-balancer-available --load-balancer-arns $(aws elbv2 describe-load-balancers --query 'LoadBalancers[?DNSName==`'"$ALB_URL"'`].LoadBalancerArn' --output text)
 ```
 
-### Call the weather service ALB
+Call the weather service Application Load Balancer endpoint
 ```bash
 curl -X POST \
   http://$ALB_URL/weather \
   -H 'Content-Type: application/json' \
   -d '{"prompt": "What is the weather in Seattle?"}'
+```
+
+## Configure High Availability and Resiliency
+
+- Increase replicas to 3
+- [Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/): Spread workload across multi-az
+- [Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets): Tolerate minAvailable of 1
+
+```bash 
+helm upgrade strands-agents-weather ./chart -f - <<EOF
+image:
+  repository: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather 
+  tag: latest
+
+ingress:
+  enabled: true 
+  className: alb
+
+replicaCount: 3
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    minDomains: 3
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: strands-agents-weather
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/instance: strands-agents-weather
+          
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+EOF
+```
+
+## Cleanup
+
+Uninstall helm chart
+```bash
+helm uninstall strands-agents-weather
+```
+
+Delete EKS Auto Mode cluster
+```bash
+eksctl delete cluster --name $CLUSTER_NAME --wait
+```
+
+Delete IAM policy
+```bash
+aws iam delete-policy --policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/strands-agents-weather-bedrock-policy
 ```

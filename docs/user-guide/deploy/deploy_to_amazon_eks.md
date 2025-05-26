@@ -6,8 +6,6 @@ In this tutorial we are using [Amazon EKS Auto Mode](https://aws.amazon.com/eks/
 
 This guide discuss EKS integration at a high level - for a complete example project deploying to EKS, check out the [`deploy_to_eks` sample project on GitHub][project_code].
 
-[project_code]: {{ docs_repo }}/docs/examples/deploy_to_eks
-
 ## Creating Your Agent in Python
 
 The core of your EKS deployment is a containerized Flask application that hosts your Strands Agents SDK agent. This Python application initializes your agent and processes incoming HTTP requests.
@@ -151,15 +149,15 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "
 
 ## Infrastructure
 
-To deploy our containerized agent to EKS, we will first need to provision an EKS Auto Mode cluster, define IAM role and policies, associate them with a Kubernetes Service Account and package & deploy our Agent using Helm.
-Helm packages and deploys application to Kubernetes and EKS and manage configuration through [`values.yaml`][values_yaml], Helm enables deployment to different environments, define version control, updates, and consistent deployments across EKS clusters.
+To deploy our containerized agent to EKS, we will first need to provision an EKS Auto Mode cluster, define IAM role and policies, associate them with a Kubernetes Service Account and package & deploy our Agent using Helm.   
+Helm packages and deploys application to Kubernetes and EKS, Helm enables deployment to different environments, define version control, updates, and consistent deployments across EKS clusters.
 
 Follow the full example [`deploy_to_eks` sample project on GitHub][project_code]:
 
 1. Using eksctl creates an EKS Auto Mode cluster and a VPC
-2. Builds and push the Docker image from your Dockerfile to Amazon Elastic Container Registry (ECR).
-3. Deploy the `strands-agents-weather` agent helm package to EKS
-4. Configure agent access to AWS services such as Bedrock by using Amazon EKS Pod Identity.
+2. Builds and push the Docker image from your Dockerfile to Amazon Elastic Container Registry (ECR). 
+3. Configure agent access to AWS services such as Amazon Bedrock by using Amazon EKS Pod Identity.
+4. Deploy the `strands-agents-weather` agent helm package to EKS
 5. Sets up an Application Load Balancer using Kubernetes Ingress and EKS Auto Mode network capabilities.
 6. Outputs the load balancer DNS name for accessing your service
 
@@ -168,8 +166,7 @@ Follow the full example [`deploy_to_eks` sample project on GitHub][project_code]
 Assuming your EKS Auto Mode cluster is already provisioned, deploy the Helm chart.
 
 ```bash
-helm install strands-agents-weather docs/examples/deploy_to_eks/chart \
-  --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest \ 
+helm install strands-agents-weather docs/examples/deploy_to_eks/chart
 ```
 
 Once deployed, you can test your agent using kubectl port-forward:
@@ -219,8 +216,8 @@ For the complete example code, including all files and configurations, see the  
 
 ## Related Resources
 
-- [Amazon EKS Auto Mode Documentation](https://aws.amazon.com)
-- [eksctl Documentation](https://aws.amazon.com)
+- [Amazon EKS Auto Mode Documentation](https://docs.aws.amazon.com/eks/latest/userguide/automode.html)
+- [eksctl Documentation](https://eksctl.io/usage/creating-and-managing-clusters/)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 
 [project_code]: {{ docs_repo }}/docs/examples/deploy_to_eks

@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  repository: placeholder/strands-agents-weather
+  repository: placeholder
   pullPolicy: IfNotPresent
   tag: "latest"
 
@@ -68,6 +68,19 @@ tolerations: []
 affinity: {}
 
 topologySpreadConstraints: []
+  #  - maxSkew: 1
+  #    minDomains: 3
+  #    topologyKey: topology.kubernetes.io/zone
+  #    whenUnsatisfiable: DoNotSchedule
+  #    labelSelector:
+  #      matchLabels:
+  #        app.kubernetes.io/name: strands-agents-weather
+  #  - maxSkew: 1
+  #    topologyKey: kubernetes.io/hostname
+  #    whenUnsatisfiable: ScheduleAnyway
+  #    labelSelector:
+  #      matchLabels:
+  #        app.kubernetes.io/instance: strands-agents-weather
 
 podDisruptionBudget:
   enabled: false
