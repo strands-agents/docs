@@ -1,7 +1,15 @@
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.hosts }}
 {{- range $host := .Values.ingress.hosts }}
   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host }}{{ $.Values.ingress.path }}
+{{- end }}
+{{- else }}
+export ALB_URL=$(kubectl get ingress strands-agents-weather -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo "The shared ALB is available at: http://$ALB_URL"
+
+NOTE: It may take a few minutes for the LoadBalancer to be active, you can wait for it by running
+aws elbv2 wait load-balancer-available --load-balancer-arns $(aws elbv2 describe-load-balancers --query 'LoadBalancers[?DNSName==`'"$ALB_URL"'`].LoadBalancerArn' --output text)
 {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "strands-agents-weather.fullname" . }})

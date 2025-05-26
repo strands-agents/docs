@@ -46,7 +46,8 @@ docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents
 1. Deploy the helm chart with the image from ECR:
 ```bash
 cd ..
-helm install strands-agents-weather ./chart --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest
+helm install strands-agents-weather ./chart \
+  --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest
 ```
 
 2. Create an IAM policy to allow access to Bedrock
@@ -104,6 +105,55 @@ curl -X POST \
   -d '{"prompt": "What is the weather in New York in Celsius?"}'
 ```
 
-## Expose agent using Ingress
+## Expose Agent using Ingress
 
-TBD
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: eks.amazonaws.com/v1
+kind: IngressClassParams
+metadata:
+  name: alb
+spec:
+  scheme: internet-facing
+EOF
+```
+
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: alb
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  controller: eks.amazonaws.com/alb
+  parameters:
+    apiGroup: eks.amazonaws.com
+    kind: IngressClassParams
+    name: alb
+EOF
+```
+```bash
+helm upgrade strands-agents-weather ./chart \
+  --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest \
+  --set ingress.enabled=true \
+  --set ingress.className=alb 
+```
+
+### Get the ALB URL
+export ALB_URL=$(kubectl get ingress strands-agents-weather -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo "The shared ALB is available at: http://$ALB_URL"
+
+Wait for ALB to be active
+```bash
+aws elbv2 wait load-balancer-available --load-balancer-arns $(aws elbv2 describe-load-balancers --query 'LoadBalancers[?DNSName==`'"$ALB_URL"'`].LoadBalancerArn' --output text)
+```
+
+### Call the weather service ALB
+```bash
+curl -X POST \
+  http://$ALB_URL/weather \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt": "What is the weather in Seattle?"}'
+```
