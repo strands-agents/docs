@@ -61,18 +61,19 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+topologySpreadConstraints: []
+
+podDisruptionBudget:
+  enabled: false
+  # Only one of maxUnavailable and minAvailable can be specified
+  # minAvailable: 1    # Can be an absolute number or a percentage (e.g., "50%")
+  # maxUnavailable: 1  # Can be an absolute number or a percentage (e.g., "50%")
 
 env: []
   # - name: ENV_VAR_NAME
