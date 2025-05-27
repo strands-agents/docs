@@ -79,6 +79,7 @@ aws configure
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
 export AWS_SESSION_TOKEN=your_session_token  # If using temporary credentials
+export AWS_REGION="us-west-2"  # Used if a custom Boto3 Session is not provided
 ```
 
 **Option 3: Custom Boto3 Session**
