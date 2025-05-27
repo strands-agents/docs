@@ -2,11 +2,6 @@ name: Links
 
 on:
 
-  push:
-    paths:
-      - '.github/workflows/check-links.yaml'
-      - '.lycheeignore'
-
   pull_request:
     branches: [ main ]
     types: [ opened, synchronize, reopened, ready_for_review, review_requested, review_request_removed ]
