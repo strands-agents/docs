@@ -7,15 +7,14 @@ on:
       - '.github/workflows/check-links.yaml'
       - '.lycheeignore'
 
-  repository_dispatch:
-
-  workflow_dispatch: # for manual launch by authorized users.
-
   pull_request:
-    types: [ opened, edited, reopened ]
+    branches: [ main ]
+    types: [ opened, synchronize, reopened, ready_for_review, review_requested, review_request_removed ]
 
   schedule:
     - cron: "00 09 * * *"
+
+permissions: read-all
 
 jobs:
   check_links:
