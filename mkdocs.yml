@@ -1,6 +1,7 @@
 site_name: Strands Agents SDK
 site_description: Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
 site_dir: site
+site_url: https://strandsagents.com
 
 repo_url: https://github.com/strands-agents/sdk-python
 
@@ -145,6 +146,26 @@ plugins:
             docstring_style: google
             show_root_heading: true
             show_source: true
+  - llmstxt:
+      markdown_description: Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
+      sections:
+        User Guide:
+          - README.md
+          - user-guide/quickstart.md
+          - user-guide/concepts/agents/*.md
+          - user-guide/concepts/tools/*.md
+          - user-guide/concepts/model-providers/*.md
+          - user-guide/concepts/streaming/*.md
+          - user-guide/concepts/multi-agent/*.md
+          - user-guide/safety-security/*.md
+          - user-guide/observability-evaluation/*.md
+          - user-guide/deploy/*.md
+        Examples:
+          - examples/README.md
+          - examples/python/*.md
+          - examples/cdk/*/*.md
+        API Reference:
+          - api-reference/*.md
 
 extra:
   social:
