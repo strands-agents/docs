@@ -7,7 +7,7 @@ on:
     types: [ opened, synchronize, reopened, ready_for_review, review_requested, review_request_removed ]
 
   schedule:
-    - cron: "00 09 * * *"
+    - cron: "00 09 * * *"  # Run at 9:00 AM every day
 
 permissions: read-all
 
