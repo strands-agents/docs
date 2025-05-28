@@ -6,6 +6,13 @@
     --md-typeset-a-color: #5E8BDE;
 }
 
+[data-md-color-scheme="default"] .logo-light {
+    display: none !important;
+}
+[data-md-color-scheme="slate"] .logo-dark {
+    display: none !important;
+}
+
 [data-md-color-scheme="default"] {
     .md-header, .md-tabs {
         background-color: #FFF;

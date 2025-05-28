@@ -6,8 +6,11 @@ repo_url: https://github.com/strands-agents/sdk-python
 
 theme:
   name: material
-  logo: assets/logo-auto.svg
+  custom_dir: overrides
+  logo: assets/logo-light.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+  logo_dark: assets/logo-dark.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
   favicon: assets/logo-auto.svg
+  favicon_png: assets/logo-light.png  # Safari doesn't support SVG favicons
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
