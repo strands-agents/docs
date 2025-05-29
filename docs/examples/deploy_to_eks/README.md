@@ -12,6 +12,7 @@ The example deploys a weather forecaster application that runs as a containerize
 
 - [AWS CLI](https://aws.amazon.com/cli/) installed and configured
 - [eksctl](https://eksctl.io/installation/) (v0.208.x or later) installed
+- [Helm](https://helm.sh/) (v3 or later) installed
 - [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html) installed
 - Either:
     - [Podman](https://podman.io/) installed and running
