@@ -2,6 +2,12 @@
 
 ## Introduction
 
+This is an example that demonstrates how to deploy a Python application to Amazon EKS.   
+The example deploys a weather forecaster application that runs as a containerized service in Amazon EKS with an Application Load Balancer. The application is built with FastAPI and provides two weather endpoints:
+
+1. `/weather` - A standard endpoint that returns weather information based on the provided prompt
+2. `/weather-streaming` - A streaming endpoint that delivers weather information in real-time as it's being generated
+
 ## Prerequisites
 
 - [AWS CLI](https://aws.amazon.com/cli/) installed and configured
@@ -10,6 +16,8 @@
 - Either:
     - [Podman](https://podman.io/) installed and running
     - (or) [Docker](https://www.docker.com/) installed and running
+- Amazon Bedrock Anthropic Claude 3.7 model enabled in your AWS environment   
+  You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html)
 
 ## Project Structure
 
@@ -44,8 +52,7 @@ Follow these steps to build the Docker image and push it to Amazon ECR:
 
 1. Authenticate to Amazon ECR:
 ```bash
-
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ```
 
 2. Create the ECR repository if it doesn't exist:
@@ -55,8 +62,7 @@ aws ecr create-repository --repository-name strands-agents-weather --region ${AW
 
 3. Build the Docker image:
 ```bash
-cd docker
-docker build --platform linux/amd64 -t strands-agents-weather:latest .
+docker build --platform linux/amd64 -t strands-agents-weather:latest docker/
 ```
 
 4. Tag the image for ECR:
@@ -108,7 +114,6 @@ eksctl create podidentityassociation --cluster $CLUSTER_NAME \
 
 Deploy the helm chart with the image from ECR
 ```bash
-cd ..
 helm install strands-agents-weather ./chart \
   --set image.repository=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/strands-agents-weather --set image.tag=latest
 ```
@@ -122,7 +127,7 @@ kubectl wait --for=condition=available deployments strands-agents-weather --all
 
 Using kubernetes port-forward
 ```
-kubectl --namespace default port-forward service/strands-agents-weather 8080:80
+kubectl --namespace default port-forward service/strands-agents-weather 8080:80 &
 ```
 
 Call the weather service
@@ -196,7 +201,7 @@ Call the weather service Application Load Balancer endpoint
 curl -X POST \
   http://$ALB_URL/weather \
   -H 'Content-Type: application/json' \
-  -d '{"prompt": "What is the weather in Seattle?"}'
+  -d '{"prompt": "What is the weather in Portland?"}'
 ```
 
 ## Configure High Availability and Resiliency

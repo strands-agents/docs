@@ -13,7 +13,7 @@ The core of your EKS deployment is a containerized Flask application that hosts 
 The FastAPI application follows these steps:
 
 1. Define endpoints for agent interactions
-2. Create a Strands Agents SDK agent with the specified system prompt and tools
+2. Create a Strands agent with the specified system prompt and tools
 3. Process incoming requests through the agent
 4. Return the response back to the client
 
@@ -172,7 +172,7 @@ helm install strands-agents-weather docs/examples/deploy_to_eks/chart
 Once deployed, you can test your agent using kubectl port-forward:
 
 ```bash
-kubectl port-forward service/strands-agents-weather 8080:80
+kubectl port-forward service/strands-agents-weather 8080:80 &
 ```
 
 Call the weather service
