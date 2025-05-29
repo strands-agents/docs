@@ -151,7 +151,7 @@ plugins:
       sections:
         User Guide:
           - README.md
-          - user-guide/quickstart.md
+          - user-guide/**/*.md
           - user-guide/concepts/agents/*.md
           - user-guide/concepts/tools/*.md
           - user-guide/concepts/model-providers/*.md
@@ -161,7 +161,7 @@ plugins:
           - user-guide/observability-evaluation/*.md
           - user-guide/deploy/*.md
         Examples:
-          - examples/README.md
+          - examples/**/*.md
           - examples/python/*.md
           - examples/cdk/*/*.md
         API Reference:
