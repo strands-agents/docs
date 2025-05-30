@@ -64,3 +64,42 @@ Key features of the `SlidingWindowConversationManager`:
 - **Maintains Window Size**: Automatically removes messages from the window if the number of messages exceeds the limit.
 - **Dangling Message Cleanup**: Removes incomplete message sequences to maintain valid conversation state.
 - **Overflow Trimming**: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.
+
+#### SummarizingConversationManager
+
+The [`SummarizingConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.summarizing_conversation_manager.SummarizingConversationManager) extends the sliding window approach with optional summarization of older messages. Instead of simply discarding old context, it can summarize older messages to preserve important information while staying within context limits.
+
+```python
+from strands import Agent
+from strands.agent.conversation_manager import SummarizingConversationManager
+from strands.models import AnthropicModel
+
+# Create a model for generating summaries
+summarizing_model = AnthropicModel(
+    model_id="claude-opus-4-20250514",
+    max_tokens=500,  # Maximum tokens the model can generate in response
+    params={
+        "temperature": 0.3  # Lower temperature for more consistent summaries
+    },
+)
+
+# Create the summarizing conversation manager
+conversation_manager = SummarizingConversationManager(
+    window_size=6,  # Maximum number of messages to keep in history
+    enable_summarization=True,  # Enable the feature
+    summarization_model=summarizing_model,  # Use Anthropic model for summaries
+    summary_ratio=0.5,  # Summarize 50% of oldest messages
+    preserve_recent_messages=3,  # Always keep 3 most recent messages
+)
+
+agent = Agent(
+    conversation_manager=conversation_manager
+)
+```
+
+Key features of the `SummarizingConversationManager`:
+
+- **Intelligent Summarization**: Summarizes older context instead of discarding it, preserving important information.
+- **Configurable Strategy**: Control how much of the conversation to summarize and how many recent messages to preserve.
+- **Fallback Behavior**: Falls back to sliding window behavior if summarization is disabled or fails.
+- **Flexible Model Support**: Use any model for generating summaries, allowing for cost optimization.
