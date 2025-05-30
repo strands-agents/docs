@@ -16,26 +16,30 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) cl
 
 1. **AWS Account**: You need an AWS account with access to Amazon Bedrock
 2. **Model Access**: Request access to your desired models in the Amazon Bedrock console
-3. **AWS Credentials**: Configure AWS credentials with appropriate permissions, including `bedrock:InvokeModelWithResponseStream`
+3. **AWS Credentials**: Configure AWS credentials with appropriate permissions
 
 #### Required IAM Permissions
 
 To use Amazon Bedrock with Strands, your IAM user or role needs the following permissions:
 
-- `bedrock:InvokeModelWithResponseStream`
+- `bedrock-runtime:InvokeModelWithResponseStream` (for streaming mode)
+- `bedrock-runtime:InvokeModel` (for non-streaming mode)
 
 Here's a sample IAM policy that grants the necessary permissions:
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["bedrock:InvokeModelWithResponseStream"],
-      "Resource": "*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock-runtime:InvokeModelWithResponseStream",
+                "bedrock-runtime:InvokeModel"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 ```
 
@@ -57,7 +61,7 @@ The model access request is typically processed immediately. Once approved, the 
 
 For more details, see the [Amazon Bedrock documentation on modifying model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 
-#### Setting Up AWS Credentials & Region
+#### Setting Up AWS Credentials
 
 Strands uses [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) (the AWS SDK for Python) to make calls to Amazon Bedrock. Boto3 has its own credential resolution system that determines which credentials to use when making requests to AWS.
 
@@ -156,6 +160,7 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) su
 | [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html)                                                                                                 | Boto Session to use when creating the Boto3 Bedrock Client                                                     | Boto Session with region: "us-west-2"                                                                |
 | [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html)                                                                                              | Botocore Configuration used when creating the Boto3 Bedrock Client                                             | -                                                                                                    |
 | [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html)                                                                                                                           | AWS region to use for the Bedrock service                                                                      | "us-west-2"                                                                                          |
+| [`streaming`](https://docs.aws.amazon.com/bedrock/latest/userguide/api-methods.html)                                                                                                                  | Flag to enable/disable streaming mode                                                                          | True                                                                                                 |
 | [`temperature`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                          | Controls randomness (higher = more random)                                                                     | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
 | [`max_tokens`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                           | Maximum number of tokens to generate                                                                           | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
 | [`top_p`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                                | Controls diversity via nucleus sampling                                                                        | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
@@ -206,6 +211,27 @@ response = agent("Write a short story about an AI assistant.")
 ```
 
 ## Advanced Features
+
+### Streaming vs Non-Streaming Mode
+
+Certain Amazon Bedrock models only support non-streaming tool use, so you can set the `streaming` configuration to false
+in order to use these models. Both modes provide the same event structure and functionality in your agent, as the non-streaming responses are converted to the streaming format internally.
+
+```python
+# Streaming model (default)
+streaming_model = BedrockModel(
+    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    streaming=True,  # This is the default
+)
+
+# Non-streaming model
+non_streaming_model = BedrockModel(
+    model_id="us.meta.llama3-2-90b-instruct-v1:0",
+    streaming=False,  # Disable streaming
+)
+```
+
+See the Amazon Bedrock documentation for [Supported models and model features](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html) to learn about the streaming support for different models.
 
 ### Multimodal Support
 
