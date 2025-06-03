@@ -8,7 +8,7 @@ This guide discusses Fargate integration at a high level - for a complete exampl
 
 ## Creating Your Agent in Python
 
-The core of your Fargate deployment is a containerized Flask application that hosts your Strands Agents SDK agent. This Python application initializes your agent and processes incoming HTTP requests.
+The core of your Fargate deployment is a containerized FastAPI application that hosts your Strands Agents SDK agent. This Python application initializes your agent and processes incoming HTTP requests.
 
 The FastAPI application follows these steps:
 
