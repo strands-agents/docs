@@ -60,3 +60,4 @@ pip install strands-agents-tools[mem0_memory]
 - [`think`]({{ tools_repo }}/src/strands_tools/think.py): Perform deep thinking by creating parallel branches of agentic reasoning
 - [`use_llm`]({{ tools_repo }}/src/strands_tools/use_llm.py): Run a new AI event loop with custom prompts
 - [`workflow`]({{ tools_repo }}/src/strands_tools/workflow.py): Orchestrate sequenced workflows
+- [`batch`]({{ tools_repo }}/src/strands_tools/batch.py): Call multiple other tools in parallel
