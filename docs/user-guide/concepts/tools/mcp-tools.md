@@ -4,6 +4,11 @@ The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open p
 
 MCP enables communication between agents and MCP servers that provide additional tools. Strands includes built-in support for connecting to MCP servers and using their tools.
 
+When working with MCP tools in Strands, all agent operations must be performed within the MCP client's context manager (using a with statement). 
+This requirement ensures that the MCP session remains active and connected while the agent is using the tools. 
+If you attempt to use an agent or its MCP tools outside of this context, you'll encounter errors because the MCP session will have closed, leaving the tools uninitialized and disconnected.
+
+
 ## MCP Server Connection Options
 
 Strands provides several ways to connect to MCP servers:
@@ -47,6 +52,7 @@ with stdio_mcp_client:
     
     # Create an agent with these tools
     agent = Agent(tools=tools)
+    agent("What is AWS Lambda?")
 ```
 
 ### 2. Streamable HTTP
@@ -240,17 +246,28 @@ print(f"Calculation result: {result['content'][0]['text']}")
 
 ## Troubleshooting
 
-### Common Issues
+### **MCPClientInitializationError**
 
-1. **Connection Failures**:
-    - Ensure the MCP server is running and accessible
-    - Check network connectivity and firewall settings
-    - Verify the URL or command is correct
+AgentTools relying on an MCP connection must always be used within a context manager. When you create or use an agent outside a with statement, operations will fail because the MCP session is automatically closed once you exit the context manager block. The MCP connection must remain active throughout the agent's operations to maintain access to the tools and services it provides.
 
-2. **Tool Discovery Issues**:
-    - Ensure the MCP server properly implements the `list_tools` method
-    - Check that tools are correctly registered with the server
+Correct usage:
+```python
+with mcp_client:
+    agent = Agent(tools=mcp_client.list_tools_sync())
+    response = agent("Your prompt")  # Works
+```
 
-3. **Tool Execution Errors**:
-    - Verify that tool arguments match the expected schema
-    - Check server logs for detailed error information
+Incorrect usage:
+```python
+with mcp_client:
+    agent = Agent(tools=mcp_client.list_tools_sync())
+response = agent("Your prompt")  # Will fail with MCPClientInitializationError
+```
+### **Connection Failures**
+   Connection failures occur when there are problems establishing a connection with the MCP server. To resolve these issues, first ensure that the MCP server is running and accessible from your network environment. You should also verify your network connectivity and check if any firewall settings are blocking the connection. Additionally, make sure that the URL or command you're using to connect to the server is correct and properly formatted.
+
+### **Tool Discovery Issues**
+   When encountering tool discovery problems, first confirm that the MCP server has properly implemented the list_tools method as this is essential for tool discovery to function. It's also important to verify that all tools have been correctly registered with the server. Tool discovery is a critical initial step that must succeed before any tool-based operations can be performed.
+
+### **Tool Execution Errors**
+   Tool execution errors can arise during the actual operation of MCP tools. To resolve these errors, verify that all tool arguments being passed match the expected schema for that particular tool. When errors occur, consulting the server logs can provide detailed information about what went wrong during the execution process. This information is invaluable for diagnosing and fixing the underlying issue.
