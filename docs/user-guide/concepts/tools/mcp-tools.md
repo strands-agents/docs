@@ -6,7 +6,7 @@ MCP enables communication between agents and MCP servers that provide additional
 
 When working with MCP tools in Strands, all agent operations must be performed within the MCP client's context manager (using a with statement). 
 This requirement ensures that the MCP session remains active and connected while the agent is using the tools. 
-If you attempt to use an agent or its MCP tools outside of this context, you'll encounter errors because the MCP session will have closed, leaving the tools uninitialized and disconnected.
+If you attempt to use an agent or its MCP tools outside of this context, you'll encounter errors because the MCP session will have closed.
 
 
 ## MCP Server Connection Options
