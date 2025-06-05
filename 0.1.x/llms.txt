@@ -1,0 +1,69 @@
+# Strands Agents SDK
+
+> Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
+
+## User Guide
+
+- [Welcome](https://strandsagents.com/latest/index.md)
+- [Agent Loop](https://strandsagents.com/latest/user-guide/concepts/agents/agent-loop/index.md)
+- [Context Management](https://strandsagents.com/latest/user-guide/concepts/agents/context-management/index.md)
+- [Prompts](https://strandsagents.com/latest/user-guide/concepts/agents/prompts/index.md)
+- [Sessions & State](https://strandsagents.com/latest/user-guide/concepts/agents/sessions-state/index.md)
+- [Amazon Bedrock](https://strandsagents.com/latest/user-guide/concepts/model-providers/amazon-bedrock/index.md)
+- [Anthropic](https://strandsagents.com/latest/user-guide/concepts/model-providers/anthropic/index.md)
+- [Custom Providers](https://strandsagents.com/latest/user-guide/concepts/model-providers/custom_model_provider/index.md)
+- [LiteLLM](https://strandsagents.com/latest/user-guide/concepts/model-providers/litellm/index.md)
+- [LlamaAPI](https://strandsagents.com/latest/user-guide/concepts/model-providers/llamaapi/index.md)
+- [Ollama](https://strandsagents.com/latest/user-guide/concepts/model-providers/ollama/index.md)
+- [OpenAI](https://strandsagents.com/latest/user-guide/concepts/model-providers/openai/index.md)
+- [Agents as Tools](https://strandsagents.com/latest/user-guide/concepts/multi-agent/agents-as-tools/index.md)
+- [Graph](https://strandsagents.com/latest/user-guide/concepts/multi-agent/graph/index.md)
+- [Swarm](https://strandsagents.com/latest/user-guide/concepts/multi-agent/swarm/index.md)
+- [Workflow](https://strandsagents.com/latest/user-guide/concepts/multi-agent/workflow/index.md)
+- [Async Iterators](https://strandsagents.com/latest/user-guide/concepts/streaming/async-iterators/index.md)
+- [Callback Handlers](https://strandsagents.com/latest/user-guide/concepts/streaming/callback-handlers/index.md)
+- [Example Tools Package](https://strandsagents.com/latest/user-guide/concepts/tools/example-tools-package/index.md)
+- [Model Context Protocol (MCP)](https://strandsagents.com/latest/user-guide/concepts/tools/mcp-tools/index.md)
+- [Python](https://strandsagents.com/latest/user-guide/concepts/tools/python-tools/index.md)
+- [Overview](https://strandsagents.com/latest/user-guide/concepts/tools/tools_overview/index.md)
+- [Amazon EC2](https://strandsagents.com/latest/user-guide/deploy/deploy_to_amazon_ec2/index.md)
+- [Amazon EKS](https://strandsagents.com/latest/user-guide/deploy/deploy_to_amazon_eks/index.md)
+- [AWS Fargate](https://strandsagents.com/latest/user-guide/deploy/deploy_to_aws_fargate/index.md)
+- [AWS Lambda](https://strandsagents.com/latest/user-guide/deploy/deploy_to_aws_lambda/index.md)
+- [Operating Agents in Production](https://strandsagents.com/latest/user-guide/deploy/operating-agents-in-production/index.md)
+- [Evaluation](https://strandsagents.com/latest/user-guide/observability-evaluation/evaluation/index.md)
+- [Logs](https://strandsagents.com/latest/user-guide/observability-evaluation/logs/index.md)
+- [Metrics](https://strandsagents.com/latest/user-guide/observability-evaluation/metrics/index.md)
+- [Observability](https://strandsagents.com/latest/user-guide/observability-evaluation/observability/index.md)
+- [Traces](https://strandsagents.com/latest/user-guide/observability-evaluation/traces/index.md)
+- [Guardrails](https://strandsagents.com/latest/user-guide/safety-security/guardrails/index.md)
+- [Prompt Engineering](https://strandsagents.com/latest/user-guide/safety-security/prompt-engineering/index.md)
+- [Responsible AI](https://strandsagents.com/latest/user-guide/safety-security/responsible-ai/index.md)
+
+## Examples
+
+- [AWS CDK EC2 Deployment Example](https://strandsagents.com/latest/examples/cdk/deploy_to_ec2/index.md)
+- [AWS CDK Fargate Deployment Example](https://strandsagents.com/latest/examples/cdk/deploy_to_fargate/index.md)
+- [AWS CDK Lambda Deployment Example](https://strandsagents.com/latest/examples/cdk/deploy_to_lambda/index.md)
+- [Amazon EKS Deployment Example](https://strandsagents.com/latest/examples/deploy_to_eks/index.md)
+- [Agents Workflows](https://strandsagents.com/latest/examples/python/agents_workflows/index.md)
+- [CLI Reference Agent Implementation](https://strandsagents.com/latest/examples/python/cli-reference-agent/index.md)
+- [File Operations](https://strandsagents.com/latest/examples/python/file_operations/index.md)
+- [Knowledge-Base Workflow](https://strandsagents.com/latest/examples/python/knowledge_base_agent/index.md)
+- [MCP](https://strandsagents.com/latest/examples/python/mcp_calculator/index.md)
+- [Memory Agent](https://strandsagents.com/latest/examples/python/memory_agent/index.md)
+- [Meta Tooling](https://strandsagents.com/latest/examples/python/meta_tooling/index.md)
+- [Weather Forecaster](https://strandsagents.com/latest/examples/python/weather_forecaster/index.md)
+- [Multi-Agent Example](https://strandsagents.com/latest/examples/python/multi_agent_example/index.md)
+- [Multi Agents](https://strandsagents.com/latest/examples/python/multi_agent_example/multi_agent_example/index.md)
+
+## API Reference
+
+- [Agent](https://strandsagents.com/latest/api-reference/agent/index.md)
+- [Event Loop](https://strandsagents.com/latest/api-reference/event-loop/index.md)
+- [Handlers](https://strandsagents.com/latest/api-reference/handlers/index.md)
+- [Models](https://strandsagents.com/latest/api-reference/models/index.md)
+- [Telemetry](https://strandsagents.com/latest/api-reference/telemetry/index.md)
+- [Tools](https://strandsagents.com/latest/api-reference/tools/index.md)
+- [Types](https://strandsagents.com/latest/api-reference/types/index.md)
+
