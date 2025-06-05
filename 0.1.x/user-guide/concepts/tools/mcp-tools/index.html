@@ -940,9 +940,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#mcpclientinitializationerror" class="md-nav__link">
     <span class="md-ellipsis">
-      Common Issues
+      MCPClientInitializationError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Failures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-discovery-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Discovery Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-execution-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Execution Errors
     </span>
   </a>
   
@@ -2614,9 +2641,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#mcpclientinitializationerror" class="md-nav__link">
     <span class="md-ellipsis">
-      Common Issues
+      MCPClientInitializationError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Failures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-discovery-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Discovery Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tool-execution-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Execution Errors
     </span>
   </a>
   
@@ -2649,6 +2703,9 @@
 <h1 id="model-context-protocol-mcp-tools">Model Context Protocol (MCP) Tools<a class="headerlink" href="#model-context-protocol-mcp-tools" title="Permanent link">&para;</a></h1>
 <p>The <a href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a> is an open protocol that standardizes how applications provide context to Large Language Models (LLMs). Strands Agents integrates with MCP to extend agent capabilities through external tools and services.</p>
 <p>MCP enables communication between agents and MCP servers that provide additional tools. Strands includes built-in support for connecting to MCP servers and using their tools.</p>
+<p>When working with MCP tools in Strands, all agent operations must be performed within the MCP client's context manager (using a with statement). 
+This requirement ensures that the MCP session remains active and connected while the agent is using the tools. 
+If you attempt to use an agent or its MCP tools outside of this context, you'll encounter errors because the MCP session will have closed.</p>
 <h2 id="mcp-server-connection-options">MCP Server Connection Options<a class="headerlink" href="#mcp-server-connection-options" title="Permanent link">&para;</a></h2>
 <p>Strands provides several ways to connect to MCP servers:</p>
 <h3 id="1-standard-io-stdio">1. Standard I/O (stdio)<a class="headerlink" href="#1-standard-io-stdio" title="Permanent link">&para;</a></h3>
@@ -2687,6 +2744,7 @@
 
     <span class="c1"># Create an agent with these tools</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">)</span>
+    <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;What is AWS Lambda?&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="2-streamable-http">2. Streamable HTTP<a class="headerlink" href="#2-streamable-http" title="Permanent link">&para;</a></h3>
 <p>For HTTP-based MCP servers that use Streamable-HTTP Events transport:</p>
@@ -2843,31 +2901,24 @@
 <li><strong>Timeouts</strong>: Set appropriate timeouts for tool calls to prevent hanging on long-running operations</li>
 </ul>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
-<ol>
-<li>
-<p><strong>Connection Failures</strong>:</p>
-<ul>
-<li>Ensure the MCP server is running and accessible</li>
-<li>Check network connectivity and firewall settings</li>
-<li>Verify the URL or command is correct</li>
-</ul>
-</li>
-<li>
-<p><strong>Tool Discovery Issues</strong>:</p>
-<ul>
-<li>Ensure the MCP server properly implements the <code>list_tools</code> method</li>
-<li>Check that tools are correctly registered with the server</li>
-</ul>
-</li>
-<li>
-<p><strong>Tool Execution Errors</strong>:</p>
-<ul>
-<li>Verify that tool arguments match the expected schema</li>
-<li>Check server logs for detailed error information</li>
-</ul>
-</li>
-</ol>
+<h3 id="mcpclientinitializationerror"><strong>MCPClientInitializationError</strong><a class="headerlink" href="#mcpclientinitializationerror" title="Permanent link">&para;</a></h3>
+<p>AgentTools relying on an MCP connection must always be used within a context manager. When you create or use an agent outside a with statement, operations will fail because the MCP session is automatically closed once you exit the context manager block. The MCP connection must remain active throughout the agent's operations to maintain access to the tools and services it provides.</p>
+<p>Correct usage:
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">mcp_client</span><span class="p">:</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="n">mcp_client</span><span class="o">.</span><span class="n">list_tools_sync</span><span class="p">())</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Your prompt&quot;</span><span class="p">)</span>  <span class="c1"># Works</span>
+</code></pre></div></p>
+<p>Incorrect usage:
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">mcp_client</span><span class="p">:</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="n">mcp_client</span><span class="o">.</span><span class="n">list_tools_sync</span><span class="p">())</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Your prompt&quot;</span><span class="p">)</span>  <span class="c1"># Will fail with MCPClientInitializationError</span>
+</code></pre></div></p>
+<h3 id="connection-failures"><strong>Connection Failures</strong><a class="headerlink" href="#connection-failures" title="Permanent link">&para;</a></h3>
+<p>Connection failures occur when there are problems establishing a connection with the MCP server. To resolve these issues, first ensure that the MCP server is running and accessible from your network environment. You should also verify your network connectivity and check if any firewall settings are blocking the connection. Additionally, make sure that the URL or command you're using to connect to the server is correct and properly formatted.</p>
+<h3 id="tool-discovery-issues"><strong>Tool Discovery Issues</strong><a class="headerlink" href="#tool-discovery-issues" title="Permanent link">&para;</a></h3>
+<p>When encountering tool discovery problems, first confirm that the MCP server has properly implemented the list_tools method as this is essential for tool discovery to function. It's also important to verify that all tools have been correctly registered with the server.</p>
+<h3 id="tool-execution-errors"><strong>Tool Execution Errors</strong><a class="headerlink" href="#tool-execution-errors" title="Permanent link">&para;</a></h3>
+<p>Tool execution errors can arise during the actual operation of MCP tools. To resolve these errors, verify that all tool arguments being passed match the expected schema for that particular tool. When errors occur, consulting the server logs can provide detailed information about what went wrong during the execution process.</p>
 
 
 
