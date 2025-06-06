@@ -2650,7 +2650,7 @@
 npx<span class="w"> </span>cdk<span class="w"> </span>bootstrap
 
 <span class="c1"># Package Python dependencies for the target architecture</span>
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--platform<span class="w"> </span>manylinux2014_aarch64<span class="w"> </span>--target<span class="w"> </span>./packaging/_dependencies<span class="w"> </span>--only-binary<span class="o">=</span>:all:
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--target<span class="w"> </span>./packaging/_dependencies<span class="w"> </span>--python-version<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--platform<span class="w"> </span>manylinux2014_aarch64<span class="w"> </span>--only-binary<span class="o">=</span>:all:
 
 <span class="c1"># Deploy the stack</span>
 npx<span class="w"> </span>cdk<span class="w"> </span>deploy

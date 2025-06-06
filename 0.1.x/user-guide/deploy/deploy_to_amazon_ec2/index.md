@@ -225,7 +225,7 @@ To deploy your agent to EC2:
 npx cdk bootstrap
 
 # Package Python dependencies for the target architecture
-pip install -r requirements.txt --platform manylinux2014_aarch64 --target ./packaging/_dependencies --only-binary=:all:
+pip install -r requirements.txt --target ./packaging/_dependencies --python-version 3.12 --platform manylinux2014_aarch64 --only-binary=:all:
 
 # Deploy the stack
 npx cdk deploy
