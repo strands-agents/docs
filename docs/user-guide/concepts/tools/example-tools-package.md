@@ -60,3 +60,30 @@ pip install strands-agents-tools[mem0_memory]
 - [`think`]({{ tools_repo }}/src/strands_tools/think.py): Perform deep thinking by creating parallel branches of agentic reasoning
 - [`use_llm`]({{ tools_repo }}/src/strands_tools/use_llm.py): Run a new AI event loop with custom prompts
 - [`workflow`]({{ tools_repo }}/src/strands_tools/workflow.py): Orchestrate sequenced workflows
+
+
+## Tool Consent and Bypassing
+
+By default, certain tools that perform potentially sensitive operations (like file modifications, shell commands, or code execution) will prompt for user confirmation before executing. This safety feature ensures users maintain control over actions that could modify their system.
+
+To bypass these confirmation prompts, you can set the `BYPASS_TOOL_CONSENT` environment variable:
+
+```bash
+# Set this environment variable to bypass tool confirmation prompts
+export BYPASS_TOOL_CONSENT=true
+```
+
+```
+import os
+
+os.environ["BYPASS_TOOL_CONSENT"] = "true"
+```
+
+When this variable is set to `true`, tools will execute without asking for confirmation. This is particularly useful for:
+
+- Automated workflows where user interaction isn't possible
+- Development and testing environments
+- CI/CD pipelines
+- Situations where you've already validated the safety of operations
+
+**Note:** Use this feature with caution in production environments, as it removes an important safety check.
