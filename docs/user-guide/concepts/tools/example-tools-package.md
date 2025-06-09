@@ -73,7 +73,7 @@ To bypass these confirmation prompts, you can set the `BYPASS_TOOL_CONSENT` envi
 export BYPASS_TOOL_CONSENT=true
 ```
 
-```
+```python
 import os
 
 os.environ["BYPASS_TOOL_CONSENT"] = "true"
