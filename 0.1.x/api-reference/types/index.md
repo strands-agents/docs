@@ -21,6 +21,30 @@ Role of a message sender.
 - "user": Messages from the user to the assistant
 - "assistant": Messages from the assistant to the user
 
+### `CachePoint`
+
+Bases: `TypedDict`
+
+A cache point configuration for optimizing conversation history.
+
+Attributes:
+
+| Name | Type | Description | | --- | --- | --- | | `type` | `str` | The type of cache point, typically "default". |
+
+Source code in `strands/types/content.py`
+
+```
+class CachePoint(TypedDict):
+    """A cache point configuration for optimizing conversation history.
+
+    Attributes:
+        type: The type of cache point, typically "default".
+    """
+
+    type: str
+
+```
+
 ### `ContentBlock`
 
 Bases: `TypedDict`
@@ -29,7 +53,7 @@ A block of content for a message that you pass to, or receive from, a model.
 
 Attributes:
 
-| Name | Type | Description | | --- | --- | --- | | `document` | `DocumentContent` | A document to include in the message. | | `guardContent` | `GuardContent` | Contains the content to assess with the guardrail. | | `image` | `ImageContent` | Image to include in the message. | | `reasoningContent` | `ReasoningContentBlock` | Contains content regarding the reasoning that is carried out by the model. | | `text` | `str` | Text to include in the message. | | `toolResult` | `ToolResult` | The result for a tool request that a model makes. | | `toolUse` | `ToolUse` | Information about a tool use request from a model. | | `video` | `VideoContent` | Video to include in the message. |
+| Name | Type | Description | | --- | --- | --- | | `cachePoint` | `CachePoint` | A cache point configuration to optimize conversation history. | | `document` | `DocumentContent` | A document to include in the message. | | `guardContent` | `GuardContent` | Contains the content to assess with the guardrail. | | `image` | `ImageContent` | Image to include in the message. | | `reasoningContent` | `ReasoningContentBlock` | Contains content regarding the reasoning that is carried out by the model. | | `text` | `str` | Text to include in the message. | | `toolResult` | `ToolResult` | The result for a tool request that a model makes. | | `toolUse` | `ToolUse` | Information about a tool use request from a model. | | `video` | `VideoContent` | Video to include in the message. |
 
 Source code in `strands/types/content.py`
 
@@ -38,6 +62,7 @@ class ContentBlock(TypedDict, total=False):
     """A block of content for a message that you pass to, or receive from, a model.
 
     Attributes:
+        cachePoint: A cache point configuration to optimize conversation history.
         document: A document to include in the message.
         guardContent: Contains the content to assess with the guardrail.
         image: Image to include in the message.
@@ -48,6 +73,7 @@ class ContentBlock(TypedDict, total=False):
         video: Video to include in the message.
     """
 
+    cachePoint: CachePoint
     document: DocumentContent
     guardContent: GuardContent
     image: ImageContent
@@ -1750,8 +1776,8 @@ class OpenAIModel(Model, abc.ABC):
 
     config: dict[str, Any]
 
-    @staticmethod
-    def format_request_message_content(content: ContentBlock) -> dict[str, Any]:
+    @classmethod
+    def format_request_message_content(cls, content: ContentBlock) -> dict[str, Any]:
         """Format an OpenAI compatible content block.
 
         Args:
@@ -1759,6 +1785,9 @@ class OpenAIModel(Model, abc.ABC):
 
         Returns:
             OpenAI compatible content block.
+
+        Raises:
+            TypeError: If the content block type cannot be converted to an OpenAI-compatible format.
         """
         if "document" in content:
             mime_type = mimetypes.types_map.get(f".{content['document']['format']}", "application/octet-stream")
@@ -1786,10 +1815,10 @@ class OpenAIModel(Model, abc.ABC):
         if "text" in content:
             return {"text": content["text"], "type": "text"}
 
-        return {"text": json.dumps(content), "type": "text"}
+        raise TypeError(f"content_type=<{next(iter(content))}> | unsupported type")
 
-    @staticmethod
-    def format_request_message_tool_call(tool_use: ToolUse) -> dict[str, Any]:
+    @classmethod
+    def format_request_message_tool_call(cls, tool_use: ToolUse) -> dict[str, Any]:
         """Format an OpenAI compatible tool call.
 
         Args:
@@ -1807,8 +1836,8 @@ class OpenAIModel(Model, abc.ABC):
             "type": "function",
         }
 
-    @staticmethod
-    def format_request_tool_message(tool_result: ToolResult) -> dict[str, Any]:
+    @classmethod
+    def format_request_tool_message(cls, tool_result: ToolResult) -> dict[str, Any]:
         """Format an OpenAI compatible tool message.
 
         Args:
@@ -1817,15 +1846,18 @@ class OpenAIModel(Model, abc.ABC):
         Returns:
             OpenAI compatible tool message.
         """
+        contents = cast(
+            list[ContentBlock],
+            [
+                {"text": json.dumps(content["json"])} if "json" in content else content
+                for content in tool_result["content"]
+            ],
+        )
+
         return {
             "role": "tool",
             "tool_call_id": tool_result["toolUseId"],
-            "content": json.dumps(
-                {
-                    "content": tool_result["content"],
-                    "status": tool_result["status"],
-                }
-            ),
+            "content": [cls.format_request_message_content(content) for content in contents],
         }
 
     @classmethod
@@ -1882,6 +1914,10 @@ class OpenAIModel(Model, abc.ABC):
 
         Returns:
             An OpenAI compatible chat streaming request.
+
+        Raises:
+            TypeError: If a message contains a content block type that cannot be converted to an OpenAI-compatible
+                format.
         """
         return {
             "messages": self.format_request_messages(messages, system_prompt),
@@ -2077,6 +2113,10 @@ Returns:
 
 | Type | Description | | --- | --- | | `dict[str, Any]` | An OpenAI compatible chat streaming request. |
 
+Raises:
+
+| Type | Description | | --- | --- | | `TypeError` | If a message contains a content block type that cannot be converted to an OpenAI-compatible format. |
+
 Source code in `strands/types/models/openai.py`
 
 ```
@@ -2093,6 +2133,10 @@ def format_request(
 
     Returns:
         An OpenAI compatible chat streaming request.
+
+    Raises:
+        TypeError: If a message contains a content block type that cannot be converted to an OpenAI-compatible
+            format.
     """
     return {
         "messages": self.format_request_messages(messages, system_prompt),
@@ -2127,11 +2171,15 @@ Returns:
 
 | Type | Description | | --- | --- | | `dict[str, Any]` | OpenAI compatible content block. |
 
+Raises:
+
+| Type | Description | | --- | --- | | `TypeError` | If the content block type cannot be converted to an OpenAI-compatible format. |
+
 Source code in `strands/types/models/openai.py`
 
 ```
-@staticmethod
-def format_request_message_content(content: ContentBlock) -> dict[str, Any]:
+@classmethod
+def format_request_message_content(cls, content: ContentBlock) -> dict[str, Any]:
     """Format an OpenAI compatible content block.
 
     Args:
@@ -2139,6 +2187,9 @@ def format_request_message_content(content: ContentBlock) -> dict[str, Any]:
 
     Returns:
         OpenAI compatible content block.
+
+    Raises:
+        TypeError: If the content block type cannot be converted to an OpenAI-compatible format.
     """
     if "document" in content:
         mime_type = mimetypes.types_map.get(f".{content['document']['format']}", "application/octet-stream")
@@ -2166,7 +2217,7 @@ def format_request_message_content(content: ContentBlock) -> dict[str, Any]:
     if "text" in content:
         return {"text": content["text"], "type": "text"}
 
-    return {"text": json.dumps(content), "type": "text"}
+    raise TypeError(f"content_type=<{next(iter(content))}> | unsupported type")
 
 ```
 
@@ -2185,8 +2236,8 @@ Returns:
 Source code in `strands/types/models/openai.py`
 
 ```
-@staticmethod
-def format_request_message_tool_call(tool_use: ToolUse) -> dict[str, Any]:
+@classmethod
+def format_request_message_tool_call(cls, tool_use: ToolUse) -> dict[str, Any]:
     """Format an OpenAI compatible tool call.
 
     Args:
@@ -2279,8 +2330,8 @@ Returns:
 Source code in `strands/types/models/openai.py`
 
 ```
-@staticmethod
-def format_request_tool_message(tool_result: ToolResult) -> dict[str, Any]:
+@classmethod
+def format_request_tool_message(cls, tool_result: ToolResult) -> dict[str, Any]:
     """Format an OpenAI compatible tool message.
 
     Args:
@@ -2289,15 +2340,18 @@ def format_request_tool_message(tool_result: ToolResult) -> dict[str, Any]:
     Returns:
         OpenAI compatible tool message.
     """
+    contents = cast(
+        list[ContentBlock],
+        [
+            {"text": json.dumps(content["json"])} if "json" in content else content
+            for content in tool_result["content"]
+        ],
+    )
+
     return {
         "role": "tool",
         "tool_call_id": tool_result["toolUseId"],
-        "content": json.dumps(
-            {
-                "content": tool_result["content"],
-                "status": tool_result["status"],
-            }
-        ),
+        "content": [cls.format_request_message_content(content) for content in contents],
     }
 
 ```

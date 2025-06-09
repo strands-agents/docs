@@ -60,7 +60,7 @@ class Agent:
             #          agent tools and thus break their execution.
             self._agent = agent
 
-        def __getattr__(self, name: str) -> Callable:
+        def __getattr__(self, name: str) -> Callable[..., Any]:
             """Call tool as a function.
 
             This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
@@ -155,7 +155,7 @@ class Agent:
                     self._agent._record_tool_execution(tool_use, tool_result, user_message_override, messages)
 
                 # Apply window management
-                self._agent.conversation_manager.apply_management(self._agent.messages)
+                self._agent.conversation_manager.apply_management(self._agent)
 
                 return tool_result
 
@@ -167,7 +167,9 @@ class Agent:
         messages: Optional[Messages] = None,
         tools: Optional[List[Union[str, Dict[str, str], Any]]] = None,
         system_prompt: Optional[str] = None,
-        callback_handler: Optional[Callable] = PrintingCallbackHandler(),
+        callback_handler: Optional[
+            Union[Callable[..., Any], _DefaultCallbackHandlerSentinel]
+        ] = _DEFAULT_CALLBACK_HANDLER,
         conversation_manager: Optional[ConversationManager] = None,
         max_parallel_tools: int = os.cpu_count() or 1,
         record_direct_tool_call: bool = True,
@@ -194,7 +196,8 @@ class Agent:
             system_prompt: System prompt to guide model behavior.
                 If None, the model will behave according to its default settings.
             callback_handler: Callback for processing events as they happen during agent execution.
-                Defaults to strands.handlers.PrintingCallbackHandler if None.
+                If not provided (using the default), a new PrintingCallbackHandler instance is created.
+                If explicitly set to None, null_callback_handler is used.
             conversation_manager: Manager for conversation history and context window.
                 Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None.
             max_parallel_tools: Maximum number of tools to run in parallel when the model returns multiple tool calls.
@@ -212,7 +215,17 @@ class Agent:
         self.messages = messages if messages is not None else []
 
         self.system_prompt = system_prompt
-        self.callback_handler = callback_handler or null_callback_handler
+
+        # If not provided, create a new PrintingCallbackHandler instance
+        # If explicitly set to None, use null_callback_handler
+        # Otherwise use the passed callback_handler
+        self.callback_handler: Union[Callable[..., Any], PrintingCallbackHandler]
+        if isinstance(callback_handler, _DefaultCallbackHandlerSentinel):
+            self.callback_handler = PrintingCallbackHandler()
+        elif callback_handler is None:
+            self.callback_handler = null_callback_handler
+        else:
+            self.callback_handler = callback_handler
 
         self.conversation_manager = conversation_manager if conversation_manager else SlidingWindowConversationManager()
 
@@ -405,7 +418,7 @@ class Agent:
             thread.join()
 
     def _run_loop(
-        self, prompt: str, kwargs: Any, supplementary_callback_handler: Optional[Callable] = None
+        self, prompt: str, kwargs: Dict[str, Any], supplementary_callback_handler: Optional[Callable[..., Any]] = None
     ) -> AgentResult:
         """Execute the agent's event loop with the given prompt and parameters."""
         try:
@@ -429,9 +442,9 @@ class Agent:
             return self._execute_event_loop_cycle(invocation_callback_handler, kwargs)
 
         finally:
-            self.conversation_manager.apply_management(self.messages)
+            self.conversation_manager.apply_management(self)
 
-    def _execute_event_loop_cycle(self, callback_handler: Callable, kwargs: dict[str, Any]) -> AgentResult:
+    def _execute_event_loop_cycle(self, callback_handler: Callable[..., Any], kwargs: Dict[str, Any]) -> AgentResult:
         """Execute the event loop cycle with retry logic for context window limits.
 
         This internal method handles the execution of the event loop cycle and implements
@@ -473,7 +486,7 @@ class Agent:
         except ContextWindowOverflowException as e:
             # Try reducing the context size and retrying
 
-            self.conversation_manager.reduce_context(messages, e=e)
+            self.conversation_manager.reduce_context(self, e=e)
             return self._execute_event_loop_cycle(callback_handler_override, kwargs)
 
     def _record_tool_execution(
@@ -625,7 +638,7 @@ class ToolCaller:
         #          agent tools and thus break their execution.
         self._agent = agent
 
-    def __getattr__(self, name: str) -> Callable:
+    def __getattr__(self, name: str) -> Callable[..., Any]:
         """Call tool as a function.
 
         This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
@@ -720,7 +733,7 @@ class ToolCaller:
                 self._agent._record_tool_execution(tool_use, tool_result, user_message_override, messages)
 
             # Apply window management
-            self._agent.conversation_manager.apply_management(self._agent.messages)
+            self._agent.conversation_manager.apply_management(self._agent)
 
             return tool_result
 
@@ -740,7 +753,7 @@ Parameters:
 
 Returns:
 
-| Type | Description | | --- | --- | | `Callable` | A function that when called will execute the named tool. |
+| Type | Description | | --- | --- | | `Callable[..., Any]` | A function that when called will execute the named tool. |
 
 Raises:
 
@@ -749,7 +762,7 @@ Raises:
 Source code in `strands/agent/agent.py`
 
 ```
-def __getattr__(self, name: str) -> Callable:
+def __getattr__(self, name: str) -> Callable[..., Any]:
     """Call tool as a function.
 
     This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
@@ -844,7 +857,7 @@ def __getattr__(self, name: str) -> Callable:
             self._agent._record_tool_execution(tool_use, tool_result, user_message_override, messages)
 
         # Apply window management
-        self._agent.conversation_manager.apply_management(self._agent.messages)
+        self._agent.conversation_manager.apply_management(self._agent)
 
         return tool_result
 
@@ -947,13 +960,13 @@ def __del__(self) -> None:
 
 ```
 
-#### `__init__(model=None, messages=None, tools=None, system_prompt=None, callback_handler=PrintingCallbackHandler(), conversation_manager=None, max_parallel_tools=os.cpu_count() or 1, record_direct_tool_call=True, load_tools_from_directory=True, trace_attributes=None)`
+#### `__init__(model=None, messages=None, tools=None, system_prompt=None, callback_handler=_DEFAULT_CALLBACK_HANDLER, conversation_manager=None, max_parallel_tools=os.cpu_count() or 1, record_direct_tool_call=True, load_tools_from_directory=True, trace_attributes=None)`
 
 Initialize the Agent with the specified configuration.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Union[Model, str, None]` | Provider for running inference or a string representing the model-id for Bedrock to use. Defaults to strands.models.BedrockModel if None. | `None` | | `messages` | `Optional[Messages]` | List of initial messages to pre-load into the conversation. Defaults to an empty list if None. | `None` | | `tools` | `Optional[List[Union[str, Dict[str, str], Any]]]` | List of tools to make available to the agent. Can be specified as: String tool names (e.g., "retrieve") File paths (e.g., "/path/to/tool.py") Imported Python modules (e.g., from strands_tools import current_time) Dictionaries with name/path keys (e.g., {"name": "tool_name", "path": "/path/to/tool.py"}) Functions decorated with @strands.tool decorator. If provided, only these tools will be available. If None, all tools will be available. | `None` | | `system_prompt` | `Optional[str]` | System prompt to guide model behavior. If None, the model will behave according to its default settings. | `None` | | `callback_handler` | `Optional[Callable]` | Callback for processing events as they happen during agent execution. Defaults to strands.handlers.PrintingCallbackHandler if None. | `PrintingCallbackHandler()` | | `conversation_manager` | `Optional[ConversationManager]` | Manager for conversation history and context window. Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None. | `None` | | `max_parallel_tools` | `int` | Maximum number of tools to run in parallel when the model returns multiple tool calls. Defaults to os.cpu_count() or 1. | `cpu_count() or 1` | | `record_direct_tool_call` | `bool` | Whether to record direct tool calls in message history. Defaults to True. | `True` | | `load_tools_from_directory` | `bool` | Whether to load and automatically reload tools in the ./tools/ directory. Defaults to True. | `True` | | `trace_attributes` | `Optional[Mapping[str, AttributeValue]]` | Custom trace attributes to apply to the agent's trace span. | `None` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Union[Model, str, None]` | Provider for running inference or a string representing the model-id for Bedrock to use. Defaults to strands.models.BedrockModel if None. | `None` | | `messages` | `Optional[Messages]` | List of initial messages to pre-load into the conversation. Defaults to an empty list if None. | `None` | | `tools` | `Optional[List[Union[str, Dict[str, str], Any]]]` | List of tools to make available to the agent. Can be specified as: String tool names (e.g., "retrieve") File paths (e.g., "/path/to/tool.py") Imported Python modules (e.g., from strands_tools import current_time) Dictionaries with name/path keys (e.g., {"name": "tool_name", "path": "/path/to/tool.py"}) Functions decorated with @strands.tool decorator. If provided, only these tools will be available. If None, all tools will be available. | `None` | | `system_prompt` | `Optional[str]` | System prompt to guide model behavior. If None, the model will behave according to its default settings. | `None` | | `callback_handler` | `Optional[Union[Callable[..., Any], _DefaultCallbackHandlerSentinel]]` | Callback for processing events as they happen during agent execution. If not provided (using the default), a new PrintingCallbackHandler instance is created. If explicitly set to None, null_callback_handler is used. | `_DEFAULT_CALLBACK_HANDLER` | | `conversation_manager` | `Optional[ConversationManager]` | Manager for conversation history and context window. Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None. | `None` | | `max_parallel_tools` | `int` | Maximum number of tools to run in parallel when the model returns multiple tool calls. Defaults to os.cpu_count() or 1. | `cpu_count() or 1` | | `record_direct_tool_call` | `bool` | Whether to record direct tool calls in message history. Defaults to True. | `True` | | `load_tools_from_directory` | `bool` | Whether to load and automatically reload tools in the ./tools/ directory. Defaults to True. | `True` | | `trace_attributes` | `Optional[Mapping[str, AttributeValue]]` | Custom trace attributes to apply to the agent's trace span. | `None` |
 
 Raises:
 
@@ -968,7 +981,9 @@ def __init__(
     messages: Optional[Messages] = None,
     tools: Optional[List[Union[str, Dict[str, str], Any]]] = None,
     system_prompt: Optional[str] = None,
-    callback_handler: Optional[Callable] = PrintingCallbackHandler(),
+    callback_handler: Optional[
+        Union[Callable[..., Any], _DefaultCallbackHandlerSentinel]
+    ] = _DEFAULT_CALLBACK_HANDLER,
     conversation_manager: Optional[ConversationManager] = None,
     max_parallel_tools: int = os.cpu_count() or 1,
     record_direct_tool_call: bool = True,
@@ -995,7 +1010,8 @@ def __init__(
         system_prompt: System prompt to guide model behavior.
             If None, the model will behave according to its default settings.
         callback_handler: Callback for processing events as they happen during agent execution.
-            Defaults to strands.handlers.PrintingCallbackHandler if None.
+            If not provided (using the default), a new PrintingCallbackHandler instance is created.
+            If explicitly set to None, null_callback_handler is used.
         conversation_manager: Manager for conversation history and context window.
             Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None.
         max_parallel_tools: Maximum number of tools to run in parallel when the model returns multiple tool calls.
@@ -1013,7 +1029,17 @@ def __init__(
     self.messages = messages if messages is not None else []
 
     self.system_prompt = system_prompt
-    self.callback_handler = callback_handler or null_callback_handler
+
+    # If not provided, create a new PrintingCallbackHandler instance
+    # If explicitly set to None, use null_callback_handler
+    # Otherwise use the passed callback_handler
+    self.callback_handler: Union[Callable[..., Any], PrintingCallbackHandler]
+    if isinstance(callback_handler, _DefaultCallbackHandlerSentinel):
+        self.callback_handler = PrintingCallbackHandler()
+    elif callback_handler is None:
+        self.callback_handler = null_callback_handler
+    else:
+        self.callback_handler = callback_handler
 
     self.conversation_manager = conversation_manager if conversation_manager else SlidingWindowConversationManager()
 
@@ -1293,22 +1319,22 @@ class ConversationManager(ABC):
 
     @abstractmethod
     # pragma: no cover
-    def apply_management(self, messages: Messages) -> None:
-        """Applies management strategy to the provided list of messages.
+    def apply_management(self, agent: "Agent") -> None:
+        """Applies management strategy to the provided agent.
 
         Processes the conversation history to maintain appropriate size by modifying the messages list in-place.
         Implementations should handle message pruning, summarization, or other size management techniques to keep the
         conversation context within desired bounds.
 
         Args:
-            messages: The conversation history to manage.
+            agent: The agent whose conversation history will be manage.
                 This list is modified in-place.
         """
         pass
 
     @abstractmethod
     # pragma: no cover
-    def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
+    def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
         """Called when the model's context window is exceeded.
 
         This method should implement the specific strategy for reducing the window size when a context overflow occurs.
@@ -1322,7 +1348,7 @@ class ConversationManager(ABC):
         - Maintaining critical conversation markers
 
         Args:
-            messages: The conversation history to reduce.
+            agent: The agent whose conversation history will be reduced.
                 This list is modified in-place.
             e: The exception that triggered the context reduction, if any.
         """
@@ -1330,37 +1356,37 @@ class ConversationManager(ABC):
 
 ```
 
-##### `apply_management(messages)`
+##### `apply_management(agent)`
 
-Applies management strategy to the provided list of messages.
+Applies management strategy to the provided agent.
 
 Processes the conversation history to maintain appropriate size by modifying the messages list in-place. Implementations should handle message pruning, summarization, or other size management techniques to keep the conversation context within desired bounds.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation history to manage. This list is modified in-place. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent whose conversation history will be manage. This list is modified in-place. | *required* |
 
 Source code in `strands/agent/conversation_manager/conversation_manager.py`
 
 ```
 @abstractmethod
 # pragma: no cover
-def apply_management(self, messages: Messages) -> None:
-    """Applies management strategy to the provided list of messages.
+def apply_management(self, agent: "Agent") -> None:
+    """Applies management strategy to the provided agent.
 
     Processes the conversation history to maintain appropriate size by modifying the messages list in-place.
     Implementations should handle message pruning, summarization, or other size management techniques to keep the
     conversation context within desired bounds.
 
     Args:
-        messages: The conversation history to manage.
+        agent: The agent whose conversation history will be manage.
             This list is modified in-place.
     """
     pass
 
 ```
 
-##### `reduce_context(messages, e=None)`
+##### `reduce_context(agent, e=None)`
 
 Called when the model's context window is exceeded.
 
@@ -1375,14 +1401,14 @@ Implementations might use strategies such as:
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation history to reduce. This list is modified in-place. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent whose conversation history will be reduced. This list is modified in-place. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
 
 Source code in `strands/agent/conversation_manager/conversation_manager.py`
 
 ```
 @abstractmethod
 # pragma: no cover
-def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
+def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
     """Called when the model's context window is exceeded.
 
     This method should implement the specific strategy for reducing the window size when a context overflow occurs.
@@ -1396,7 +1422,7 @@ def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> N
     - Maintaining critical conversation markers
 
     Args:
-        messages: The conversation history to reduce.
+        agent: The agent whose conversation history will be reduced.
             This list is modified in-place.
         e: The exception that triggered the context reduction, if any.
     """
@@ -1433,19 +1459,19 @@ class NullConversationManager(ConversationManager):
     - Situations where the full conversation history should be preserved
     """
 
-    def apply_management(self, messages: Messages) -> None:
+    def apply_management(self, _agent: "Agent") -> None:
         """Does nothing to the conversation history.
 
         Args:
-            messages: The conversation history that will remain unmodified.
+            agent: The agent whose conversation history will remain unmodified.
         """
         pass
 
-    def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
+    def reduce_context(self, _agent: "Agent", e: Optional[Exception] = None) -> None:
         """Does not reduce context and raises an exception.
 
         Args:
-            messages: The conversation history that will remain unmodified.
+            agent: The agent whose conversation history will remain unmodified.
             e: The exception that triggered the context reduction, if any.
 
         Raises:
@@ -1459,34 +1485,34 @@ class NullConversationManager(ConversationManager):
 
 ```
 
-##### `apply_management(messages)`
+##### `apply_management(_agent)`
 
 Does nothing to the conversation history.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation history that will remain unmodified. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | | The agent whose conversation history will remain unmodified. | *required* |
 
 Source code in `strands/agent/conversation_manager/null_conversation_manager.py`
 
 ```
-def apply_management(self, messages: Messages) -> None:
+def apply_management(self, _agent: "Agent") -> None:
     """Does nothing to the conversation history.
 
     Args:
-        messages: The conversation history that will remain unmodified.
+        agent: The agent whose conversation history will remain unmodified.
     """
     pass
 
 ```
 
-##### `reduce_context(messages, e=None)`
+##### `reduce_context(_agent, e=None)`
 
 Does not reduce context and raises an exception.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation history that will remain unmodified. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | | The agent whose conversation history will remain unmodified. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
 
 Raises:
 
@@ -1495,11 +1521,11 @@ Raises:
 Source code in `strands/agent/conversation_manager/null_conversation_manager.py`
 
 ```
-def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
+def reduce_context(self, _agent: "Agent", e: Optional[Exception] = None) -> None:
     """Does not reduce context and raises an exception.
 
     Args:
-        messages: The conversation history that will remain unmodified.
+        agent: The agent whose conversation history will remain unmodified.
         e: The exception that triggered the context reduction, if any.
 
     Raises:
@@ -1539,13 +1565,13 @@ class SlidingWindowConversationManager(ConversationManager):
         """Initialize the sliding window conversation manager.
 
         Args:
-            window_size: Maximum number of messages to keep in history.
+            window_size: Maximum number of messages to keep in the agent's history.
                 Defaults to 40 messages.
         """
         self.window_size = window_size
 
-    def apply_management(self, messages: Messages) -> None:
-        """Apply the sliding window to the messages array to maintain a manageable history size.
+    def apply_management(self, agent: "Agent") -> None:
+        """Apply the sliding window to the agent's messages array to maintain a manageable history size.
 
         This method is called after every event loop cycle, as the messages array may have been modified with tool
         results and assistant responses. It first removes any dangling messages that might create an invalid
@@ -1556,9 +1582,10 @@ class SlidingWindowConversationManager(ConversationManager):
         blocks to maintain conversation coherence.
 
         Args:
-            messages: The messages to manage.
+            agent: The agent whose messages will be managed.
                 This list is modified in-place.
         """
+        messages = agent.messages
         self._remove_dangling_messages(messages)
 
         if len(messages) <= self.window_size:
@@ -1566,7 +1593,7 @@ class SlidingWindowConversationManager(ConversationManager):
                 "window_size=<%s>, message_count=<%s> | skipping context reduction", len(messages), self.window_size
             )
             return
-        self.reduce_context(messages)
+        self.reduce_context(agent)
 
     def _remove_dangling_messages(self, messages: Messages) -> None:
         """Remove dangling messages that would create an invalid conversation state.
@@ -1599,7 +1626,7 @@ class SlidingWindowConversationManager(ConversationManager):
                     if not any("toolResult" in content for content in messages[-1]["content"]):
                         messages.pop()
 
-    def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
+    def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
         """Trim the oldest messages to reduce the conversation context size.
 
         The method handles special cases where trimming the messages leads to:
@@ -1607,7 +1634,7 @@ class SlidingWindowConversationManager(ConversationManager):
          - toolUse with no corresponding toolResult
 
         Args:
-            messages: The messages to reduce.
+            agent: The agent whose messages will be reduce.
                 This list is modified in-place.
             e: The exception that triggered the context reduction, if any.
 
@@ -1616,6 +1643,7 @@ class SlidingWindowConversationManager(ConversationManager):
                 Such as when the conversation is already minimal or when tool result messages cannot be properly
                 converted.
         """
+        messages = agent.messages
         # If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size
         trim_index = 2 if len(messages) <= self.window_size else len(messages) - self.window_size
 
@@ -1649,7 +1677,7 @@ Initialize the sliding window conversation manager.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `window_size` | `int` | Maximum number of messages to keep in history. Defaults to 40 messages. | `40` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `window_size` | `int` | Maximum number of messages to keep in the agent's history. Defaults to 40 messages. | `40` |
 
 Source code in `strands/agent/conversation_manager/sliding_window_conversation_manager.py`
 
@@ -1658,16 +1686,16 @@ def __init__(self, window_size: int = 40):
     """Initialize the sliding window conversation manager.
 
     Args:
-        window_size: Maximum number of messages to keep in history.
+        window_size: Maximum number of messages to keep in the agent's history.
             Defaults to 40 messages.
     """
     self.window_size = window_size
 
 ```
 
-##### `apply_management(messages)`
+##### `apply_management(agent)`
 
-Apply the sliding window to the messages array to maintain a manageable history size.
+Apply the sliding window to the agent's messages array to maintain a manageable history size.
 
 This method is called after every event loop cycle, as the messages array may have been modified with tool results and assistant responses. It first removes any dangling messages that might create an invalid conversation state, then applies the sliding window if the message count exceeds the window size.
 
@@ -1675,13 +1703,13 @@ Special handling is implemented to ensure we don't leave a user message with too
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The messages to manage. This list is modified in-place. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent whose messages will be managed. This list is modified in-place. | *required* |
 
 Source code in `strands/agent/conversation_manager/sliding_window_conversation_manager.py`
 
 ```
-def apply_management(self, messages: Messages) -> None:
-    """Apply the sliding window to the messages array to maintain a manageable history size.
+def apply_management(self, agent: "Agent") -> None:
+    """Apply the sliding window to the agent's messages array to maintain a manageable history size.
 
     This method is called after every event loop cycle, as the messages array may have been modified with tool
     results and assistant responses. It first removes any dangling messages that might create an invalid
@@ -1692,9 +1720,10 @@ def apply_management(self, messages: Messages) -> None:
     blocks to maintain conversation coherence.
 
     Args:
-        messages: The messages to manage.
+        agent: The agent whose messages will be managed.
             This list is modified in-place.
     """
+    messages = agent.messages
     self._remove_dangling_messages(messages)
 
     if len(messages) <= self.window_size:
@@ -1702,11 +1731,11 @@ def apply_management(self, messages: Messages) -> None:
             "window_size=<%s>, message_count=<%s> | skipping context reduction", len(messages), self.window_size
         )
         return
-    self.reduce_context(messages)
+    self.reduce_context(agent)
 
 ```
 
-##### `reduce_context(messages, e=None)`
+##### `reduce_context(agent, e=None)`
 
 Trim the oldest messages to reduce the conversation context size.
 
@@ -1717,7 +1746,7 @@ The method handles special cases where trimming the messages leads to
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The messages to reduce. This list is modified in-place. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent whose messages will be reduce. This list is modified in-place. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
 
 Raises:
 
@@ -1726,7 +1755,7 @@ Raises:
 Source code in `strands/agent/conversation_manager/sliding_window_conversation_manager.py`
 
 ```
-def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
+def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
     """Trim the oldest messages to reduce the conversation context size.
 
     The method handles special cases where trimming the messages leads to:
@@ -1734,7 +1763,7 @@ def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> N
      - toolUse with no corresponding toolResult
 
     Args:
-        messages: The messages to reduce.
+        agent: The agent whose messages will be reduce.
             This list is modified in-place.
         e: The exception that triggered the context reduction, if any.
 
@@ -1743,6 +1772,7 @@ def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> N
             Such as when the conversation is already minimal or when tool result messages cannot be properly
             converted.
     """
+    messages = agent.messages
     # If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size
     trim_index = 2 if len(messages) <= self.window_size else len(messages) - self.window_size
 

@@ -2647,6 +2647,10 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Directly invoke a tool as a method</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">tool</span><span class="o">.</span><span class="n">file_read</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.txt&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">)</span>
 </code></pre></div>
+<p>If a tool name contains hyphens, you can invoke the tool using underscores instead:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Directly invoke a tool named &quot;read-all&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">tool</span><span class="o">.</span><span class="n">read_all</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/file.txt&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="building-loading-tools">Building &amp; Loading Tools<a class="headerlink" href="#building-loading-tools" title="Permanent link">&para;</a></h2>
 <h3 id="1-python-tools">1. Python Tools<a class="headerlink" href="#1-python-tools" title="Permanent link">&para;</a></h3>
 <p>Build your own Python tools using the Strands SDK's tool interfaces.</p>

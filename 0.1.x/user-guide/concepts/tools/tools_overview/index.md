@@ -82,6 +82,14 @@ result = agent.tool.file_read(path="/path/to/file.txt", mode="view")
 
 ```
 
+If a tool name contains hyphens, you can invoke the tool using underscores instead:
+
+```
+# Directly invoke a tool named "read-all"
+result = agent.tool.read_all(path="/path/to/file.txt")
+
+```
+
 ## Building & Loading Tools
 
 ### 1. Python Tools

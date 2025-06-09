@@ -4183,11 +4183,7 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 
               <details class="quote">
                 <summary>Source code in <code>strands/tools/tools.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
@@ -4299,7 +4295,11 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 <span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
-<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FunctionTool</span><span class="p">(</span><span class="n">AgentTool</span><span class="p">):</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FunctionTool</span><span class="p">(</span><span class="n">AgentTool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tool implementation for function-based tools created with @tool.</span>
 
 <span class="sd">    This class adapts Python functions decorated with @tool to the AgentTool interface.</span>
@@ -4742,11 +4742,7 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
@@ -4766,7 +4762,11 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ToolUse</span><span class="p">,</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">ToolResult</span><span class="p">],</span> <span class="n">tool_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ToolUse</span><span class="p">,</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">ToolResult</span><span class="p">],</span> <span class="n">tool_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a function-based tool.</span>
 
 <span class="sd">    Args:</span>
@@ -4836,15 +4836,15 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
-<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_display_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_display_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get properties to display in UI representations.</span>
 
 <span class="sd">    Returns:</span>
@@ -4961,11 +4961,7 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
 <span class="normal">211</span>
 <span class="normal">212</span>
 <span class="normal">213</span>
@@ -4988,7 +4984,11 @@ Python module-based tools, as well as utilities for validating tool uses and nor
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
-<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolResult</span><span class="p">:</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute the function with the given tool use request.</span>
 
 <span class="sd">    Args:</span>
@@ -5098,11 +5098,7 @@ as SDK tools.</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/tools/tools.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
 <span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
@@ -5163,7 +5159,11 @@ as SDK tools.</p>
 <span class="normal">319</span>
 <span class="normal">320</span>
 <span class="normal">321</span>
-<span class="normal">322</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PythonAgentTool</span><span class="p">(</span><span class="n">AgentTool</span><span class="p">):</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PythonAgentTool</span><span class="p">(</span><span class="n">AgentTool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tool implementation for Python-based tools.</span>
 
 <span class="sd">    This class handles tools implemented as Python functions, providing a simple interface for executing Python code</span>
@@ -5458,11 +5458,7 @@ as SDK tools.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">272</span>
 <span class="normal">273</span>
 <span class="normal">274</span>
 <span class="normal">275</span>
@@ -5472,7 +5468,11 @@ as SDK tools.</p>
 <span class="normal">279</span>
 <span class="normal">280</span>
 <span class="normal">281</span>
-<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tool_spec</span><span class="p">:</span> <span class="n">ToolSpec</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ToolUse</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">ToolResult</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a Python-based tool.</span>
@@ -5595,18 +5595,18 @@ as SDK tools.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
 <span class="normal">319</span>
 <span class="normal">320</span>
 <span class="normal">321</span>
-<span class="normal">322</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ToolResult</span><span class="p">:</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ToolResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute the Python function with the given tool use request.</span>
 
 <span class="sd">    Args:</span>
@@ -5645,6 +5645,8 @@ as SDK tools.</p>
     <div class="doc doc-contents ">
 
         <p>Normalize a JSON schema to match expectations.</p>
+<p>This function recursively processes nested objects to preserve the complete schema structure.
+Uses a copy-then-normalize approach to preserve all original schema properties.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5703,30 +5705,7 @@ as SDK tools.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 89</span>
 <span class="normal"> 90</span>
 <span class="normal"> 91</span>
 <span class="normal"> 92</span>
@@ -5748,8 +5727,15 @@ as SDK tools.</p>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
-<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_schema</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_schema</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize a JSON schema to match expectations.</span>
+
+<span class="sd">    This function recursively processes nested objects to preserve the complete schema structure.</span>
+<span class="sd">    Uses a copy-then-normalize approach to preserve all original schema properties.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        schema: The schema to normalize.</span>
@@ -5757,41 +5743,19 @@ as SDK tools.</p>
 <span class="sd">    Returns:</span>
 <span class="sd">        The normalized schema.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">normalized</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">),</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="c1"># Start with a complete copy to preserve all existing properties</span>
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="c1"># Handle properties</span>
-    <span class="k">if</span> <span class="s2">&quot;properties&quot;</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_def</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prop_def</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">normalized_prop</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">prop_def</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">prop_def</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Property </span><span class="si">{</span><span class="n">prop_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-                <span class="p">}</span>
+    <span class="c1"># Ensure essential structure exists</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">)</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">normalized</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
-                <span class="c1"># Handle enum values correctly</span>
-                <span class="k">if</span> <span class="s2">&quot;enum&quot;</span> <span class="ow">in</span> <span class="n">prop_def</span><span class="p">:</span>
-                    <span class="n">normalized_prop</span><span class="p">[</span><span class="s2">&quot;enum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop_def</span><span class="p">[</span><span class="s2">&quot;enum&quot;</span><span class="p">]</span>
-
-                <span class="c1"># Handle numeric constraints</span>
-                <span class="k">if</span> <span class="n">prop_def</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">]:</span>
-                    <span class="k">if</span> <span class="s2">&quot;minimum&quot;</span> <span class="ow">in</span> <span class="n">prop_def</span><span class="p">:</span>
-                        <span class="n">normalized_prop</span><span class="p">[</span><span class="s2">&quot;minimum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop_def</span><span class="p">[</span><span class="s2">&quot;minimum&quot;</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="s2">&quot;maximum&quot;</span> <span class="ow">in</span> <span class="n">prop_def</span><span class="p">:</span>
-                        <span class="n">normalized_prop</span><span class="p">[</span><span class="s2">&quot;maximum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop_def</span><span class="p">[</span><span class="s2">&quot;maximum&quot;</span><span class="p">]</span>
-
-                <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">][</span><span class="n">prop_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized_prop</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Handle non-dict property definitions (like simple strings)</span>
-                <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">][</span><span class="n">prop_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Property </span><span class="si">{</span><span class="n">prop_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="p">}</span>
-
-    <span class="c1"># Required fields</span>
-    <span class="k">if</span> <span class="s2">&quot;required&quot;</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
-        <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Process properties recursively</span>
+    <span class="k">if</span> <span class="s2">&quot;properties&quot;</span> <span class="ow">in</span> <span class="n">normalized</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_def</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">][</span><span class="n">prop_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_normalize_property</span><span class="p">(</span><span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_def</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">normalized</span>
 </code></pre></div></td></tr></table></div>
@@ -5870,11 +5834,7 @@ as SDK tools.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/tools.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
@@ -5891,7 +5851,11 @@ as SDK tools.</p>
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_tool_spec</span><span class="p">(</span><span class="n">tool_spec</span><span class="p">:</span> <span class="n">ToolSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolSpec</span><span class="p">:</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_tool_spec</span><span class="p">(</span><span class="n">tool_spec</span><span class="p">:</span> <span class="n">ToolSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolSpec</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize a complete tool specification by transforming its inputSchema.</span>
 
 <span class="sd">    Args:</span>
@@ -14627,13 +14591,7 @@ while maintaining communication with the MCP service.</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 51</span>
 <span class="normal"> 52</span>
 <span class="normal"> 53</span>
 <span class="normal"> 54</span>
@@ -14883,7 +14841,13 @@ while maintaining communication with the MCP service.</p>
 <span class="normal">298</span>
 <span class="normal">299</span>
 <span class="normal">300</span>
-<span class="normal">301</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MCPClient</span><span class="p">:</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MCPClient</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a connection to a Model Context Protocol (MCP) server.</span>
 
 <span class="sd">    This class implements a context manager pattern for efficient connection management,</span>
@@ -14986,7 +14950,7 @@ while maintaining communication with the MCP service.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log_debug_with_thread</span><span class="p">(</span><span class="s2">&quot;listing MCP tools synchronously&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_session_active</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="s2">&quot;the client session is not running&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="n">CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE</span><span class="p">)</span>
 
         <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_list_tools_async</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ListToolsResult</span><span class="p">:</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_background_thread_session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
@@ -15021,7 +14985,7 @@ while maintaining communication with the MCP service.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log_debug_with_thread</span><span class="p">(</span><span class="s2">&quot;calling MCP tool &#39;</span><span class="si">%s</span><span class="s2">&#39; synchronously with tool_use_id=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_session_active</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="s2">&quot;the client session is not running&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="n">CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE</span><span class="p">)</span>
 
         <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_call_tool_async</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MCPCallToolResult</span><span class="p">:</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_background_thread_session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">read_timeout_seconds</span><span class="p">)</span>
@@ -15171,9 +15135,9 @@ while maintaining communication with the MCP service.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MCPClient&quot;</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MCPClient&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager entry point which initializes the MCP server connection.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -15198,9 +15162,9 @@ while maintaining communication with the MCP service.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">:</span> <span class="n">TracebackType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">:</span> <span class="n">TracebackType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager exit point that cleans up resources.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -15256,13 +15220,7 @@ while maintaining communication with the MCP service.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span>
@@ -15270,7 +15228,13 @@ while maintaining communication with the MCP service.</p>
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport_callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MCPTransport</span><span class="p">]):</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport_callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MCPTransport</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a new MCP Server connection.</span>
 
 <span class="sd">    Args:</span>
@@ -15411,13 +15375,7 @@ and converts the result to the ToolResult format.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
@@ -15458,7 +15416,13 @@ and converts the result to the ToolResult format.</p>
 <span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
-<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">call_tool_sync</span><span class="p">(</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">call_tool_sync</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">tool_use_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -15481,7 +15445,7 @@ and converts the result to the ToolResult format.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_log_debug_with_thread</span><span class="p">(</span><span class="s2">&quot;calling MCP tool &#39;</span><span class="si">%s</span><span class="s2">&#39; synchronously with tool_use_id=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tool_use_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_session_active</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="s2">&quot;the client session is not running&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="n">CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_call_tool_async</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MCPCallToolResult</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_background_thread_session</span><span class="o">.</span><span class="n">call_tool</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">read_timeout_seconds</span><span class="p">)</span>
@@ -15553,13 +15517,7 @@ and adapts the returned tools to the AgentTool interface.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
@@ -15574,7 +15532,13 @@ and adapts the returned tools to the AgentTool interface.</p>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
-<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_tools_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MCPAgentTool</span><span class="p">]:</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_tools_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MCPAgentTool</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Synchronously retrieves the list of available tools from the MCP server.</span>
 
 <span class="sd">    This method calls the asynchronous list_tools method on the MCP session</span>
@@ -15585,7 +15549,7 @@ and adapts the returned tools to the AgentTool interface.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_log_debug_with_thread</span><span class="p">(</span><span class="s2">&quot;listing MCP tools synchronously&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_session_active</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="s2">&quot;the client session is not running&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">MCPClientInitializationError</span><span class="p">(</span><span class="n">CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_list_tools_async</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ListToolsResult</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_background_thread_session</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
@@ -15666,13 +15630,7 @@ and blocks until the connection is ready or times out.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
 <span class="normal"> 87</span>
 <span class="normal"> 88</span>
 <span class="normal"> 89</span>
@@ -15694,7 +15652,13 @@ and blocks until the connection is ready or times out.</p>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MCPClient&quot;</span><span class="p">:</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MCPClient&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Starts the background thread and waits for initialization.</span>
 
 <span class="sd">    This method starts the background thread that manages the MCP connection</span>
@@ -15808,13 +15772,7 @@ and blocks until the connection is ready or times out.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/mcp/mcp_client.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
@@ -15833,7 +15791,13 @@ and blocks until the connection is ready or times out.</p>
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="n">exc_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="n">exc_tb</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TracebackType</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Signals the background thread to stop and waits for it to complete, ensuring proper cleanup of all resources.</span>

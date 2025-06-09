@@ -476,6 +476,8 @@ def invoke(self, tool: ToolUse, *args: Any, **kwargs: dict[str, Any]) -> ToolRes
 
 Normalize a JSON schema to match expectations.
 
+This function recursively processes nested objects to preserve the complete schema structure. Uses a copy-then-normalize approach to preserve all original schema properties.
+
 Parameters:
 
 | Name | Type | Description | Default | | --- | --- | --- | --- | | `schema` | `Dict[str, Any]` | The schema to normalize. | *required* |
@@ -490,47 +492,28 @@ Source code in `strands/tools/tools.py`
 def normalize_schema(schema: Dict[str, Any]) -> Dict[str, Any]:
     """Normalize a JSON schema to match expectations.
 
+    This function recursively processes nested objects to preserve the complete schema structure.
+    Uses a copy-then-normalize approach to preserve all original schema properties.
+
     Args:
         schema: The schema to normalize.
 
     Returns:
         The normalized schema.
     """
-    normalized = {"type": schema.get("type", "object"), "properties": {}}
+    # Start with a complete copy to preserve all existing properties
+    normalized = schema.copy()
 
-    # Handle properties
-    if "properties" in schema:
-        for prop_name, prop_def in schema["properties"].items():
-            if isinstance(prop_def, dict):
-                normalized_prop = {
-                    "type": prop_def.get("type", "string"),
-                    "description": prop_def.get("description", f"Property {prop_name}"),
-                }
+    # Ensure essential structure exists
+    normalized.setdefault("type", "object")
+    normalized.setdefault("properties", {})
+    normalized.setdefault("required", [])
 
-                # Handle enum values correctly
-                if "enum" in prop_def:
-                    normalized_prop["enum"] = prop_def["enum"]
-
-                # Handle numeric constraints
-                if prop_def.get("type") in ["number", "integer"]:
-                    if "minimum" in prop_def:
-                        normalized_prop["minimum"] = prop_def["minimum"]
-                    if "maximum" in prop_def:
-                        normalized_prop["maximum"] = prop_def["maximum"]
-
-                normalized["properties"][prop_name] = normalized_prop
-            else:
-                # Handle non-dict property definitions (like simple strings)
-                normalized["properties"][prop_name] = {
-                    "type": "string",
-                    "description": f"Property {prop_name}",
-                }
-
-    # Required fields
-    if "required" in schema:
-        normalized["required"] = schema["required"]
-    else:
-        normalized["required"] = []
+    # Process properties recursively
+    if "properties" in normalized:
+        properties = normalized["properties"]
+        for prop_name, prop_def in properties.items():
+            normalized["properties"][prop_name] = _normalize_property(prop_name, prop_def)
 
     return normalized
 
@@ -4038,7 +4021,7 @@ class MCPClient:
         """
         self._log_debug_with_thread("listing MCP tools synchronously")
         if not self._is_session_active():
-            raise MCPClientInitializationError("the client session is not running")
+            raise MCPClientInitializationError(CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE)
 
         async def _list_tools_async() -> ListToolsResult:
             return await self._background_thread_session.list_tools()
@@ -4073,7 +4056,7 @@ class MCPClient:
         """
         self._log_debug_with_thread("calling MCP tool '%s' synchronously with tool_use_id=%s", name, tool_use_id)
         if not self._is_session_active():
-            raise MCPClientInitializationError("the client session is not running")
+            raise MCPClientInitializationError(CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE)
 
         async def _call_tool_async() -> MCPCallToolResult:
             return await self._background_thread_session.call_tool(name, arguments, read_timeout_seconds)
@@ -4290,7 +4273,7 @@ def call_tool_sync(
     """
     self._log_debug_with_thread("calling MCP tool '%s' synchronously with tool_use_id=%s", name, tool_use_id)
     if not self._is_session_active():
-        raise MCPClientInitializationError("the client session is not running")
+        raise MCPClientInitializationError(CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE)
 
     async def _call_tool_async() -> MCPCallToolResult:
         return await self._background_thread_session.call_tool(name, arguments, read_timeout_seconds)
@@ -4342,7 +4325,7 @@ def list_tools_sync(self) -> List[MCPAgentTool]:
     """
     self._log_debug_with_thread("listing MCP tools synchronously")
     if not self._is_session_active():
-        raise MCPClientInitializationError("the client session is not running")
+        raise MCPClientInitializationError(CLIENT_SESSION_NOT_RUNNING_ERROR_MESSAGE)
 
     async def _list_tools_async() -> ListToolsResult:
         return await self._background_thread_session.list_tools()

@@ -65,4 +65,3 @@ Ollama doesn't currently provide native guardrail capabilities like Bedrock. Ins
 
 - [Amazon Bedrock Guardrails Documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
 - [Allen Institute for AI: Guardrails Project](https://www.guardrailsai.com/docs)
-- [LangChain's LCEL Guard Integration](https://llm-guard.com/tutorials/notebooks/langchain/)

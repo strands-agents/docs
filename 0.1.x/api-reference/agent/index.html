@@ -3118,17 +3118,7 @@ models and tools in the SDK.</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/agent/agent.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 57</span>
 <span class="normal"> 58</span>
 <span class="normal"> 59</span>
 <span class="normal"> 60</span>
@@ -3653,7 +3643,30 @@ models and tools in the SDK.</p>
 <span class="normal">579</span>
 <span class="normal">580</span>
 <span class="normal">581</span>
-<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Core Agent interface.</span>
 
 <span class="sd">    An agent orchestrates the following workflow:</span>
@@ -3679,7 +3692,7 @@ models and tools in the SDK.</p>
             <span class="c1">#          agent tools and thus break their execution.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span> <span class="o">=</span> <span class="n">agent</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Call tool as a function.</span>
 
 <span class="sd">            This method enables the method-style interface (e.g., `agent.tool.tool_name(param=&quot;value&quot;)`).</span>
@@ -3774,7 +3787,7 @@ models and tools in the SDK.</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">_record_tool_execution</span><span class="p">(</span><span class="n">tool_use</span><span class="p">,</span> <span class="n">tool_result</span><span class="p">,</span> <span class="n">user_message_override</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
 
                 <span class="c1"># Apply window management</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="p">)</span>
 
                 <span class="k">return</span> <span class="n">tool_result</span>
 
@@ -3786,7 +3799,9 @@ models and tools in the SDK.</p>
         <span class="n">messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Messages</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">tools</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="n">PrintingCallbackHandler</span><span class="p">(),</span>
+        <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">_DefaultCallbackHandlerSentinel</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">_DEFAULT_CALLBACK_HANDLER</span><span class="p">,</span>
         <span class="n">conversation_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConversationManager</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">max_parallel_tools</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">record_direct_tool_call</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -3813,7 +3828,8 @@ models and tools in the SDK.</p>
 <span class="sd">            system_prompt: System prompt to guide model behavior.</span>
 <span class="sd">                If None, the model will behave according to its default settings.</span>
 <span class="sd">            callback_handler: Callback for processing events as they happen during agent execution.</span>
-<span class="sd">                Defaults to strands.handlers.PrintingCallbackHandler if None.</span>
+<span class="sd">                If not provided (using the default), a new PrintingCallbackHandler instance is created.</span>
+<span class="sd">                If explicitly set to None, null_callback_handler is used.</span>
 <span class="sd">            conversation_manager: Manager for conversation history and context window.</span>
 <span class="sd">                Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None.</span>
 <span class="sd">            max_parallel_tools: Maximum number of tools to run in parallel when the model returns multiple tool calls.</span>
@@ -3831,7 +3847,17 @@ models and tools in the SDK.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span> <span class="k">if</span> <span class="n">messages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">system_prompt</span> <span class="o">=</span> <span class="n">system_prompt</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">callback_handler</span> <span class="ow">or</span> <span class="n">null_callback_handler</span>
+
+        <span class="c1"># If not provided, create a new PrintingCallbackHandler instance</span>
+        <span class="c1"># If explicitly set to None, use null_callback_handler</span>
+        <span class="c1"># Otherwise use the passed callback_handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">PrintingCallbackHandler</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_handler</span><span class="p">,</span> <span class="n">_DefaultCallbackHandlerSentinel</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">PrintingCallbackHandler</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">callback_handler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">null_callback_handler</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">callback_handler</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">conversation_manager</span> <span class="o">=</span> <span class="n">conversation_manager</span> <span class="k">if</span> <span class="n">conversation_manager</span> <span class="k">else</span> <span class="n">SlidingWindowConversationManager</span><span class="p">()</span>
 
@@ -4024,7 +4050,7 @@ models and tools in the SDK.</p>
             <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_run_loop</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">supplementary_callback_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">supplementary_callback_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the agent&#39;s event loop with the given prompt and parameters.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -4048,9 +4074,9 @@ models and tools in the SDK.</p>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_event_loop_cycle</span><span class="p">(</span><span class="n">invocation_callback_handler</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">finally</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_execute_event_loop_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_execute_event_loop_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the event loop cycle with retry logic for context window limits.</span>
 
 <span class="sd">        This internal method handles the execution of the event loop cycle and implements</span>
@@ -4092,7 +4118,7 @@ models and tools in the SDK.</p>
         <span class="k">except</span> <span class="n">ContextWindowOverflowException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Try reducing the context size and retrying</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">reduce_context</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_event_loop_cycle</span><span class="p">(</span><span class="n">callback_handler_override</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_record_tool_execution</span><span class="p">(</span>
@@ -4369,17 +4395,7 @@ agent.tool.calculator(...)
 
               <details class="quote">
                 <summary>Source code in <code>strands/agent/agent.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 70</span>
 <span class="normal"> 71</span>
 <span class="normal"> 72</span>
 <span class="normal"> 73</span>
@@ -4481,7 +4497,17 @@ agent.tool.calculator(...)
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ToolCaller</span><span class="p">:</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ToolCaller</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Call tool as a function.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -4494,7 +4520,7 @@ agent.tool.calculator(...)
         <span class="c1">#          agent tools and thus break their execution.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span> <span class="o">=</span> <span class="n">agent</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Call tool as a function.</span>
 
 <span class="sd">        This method enables the method-style interface (e.g., `agent.tool.tool_name(param=&quot;value&quot;)`).</span>
@@ -4589,7 +4615,7 @@ agent.tool.calculator(...)
                 <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">_record_tool_execution</span><span class="p">(</span><span class="n">tool_use</span><span class="p">,</span> <span class="n">tool_result</span><span class="p">,</span> <span class="n">user_message_override</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
 
             <span class="c1"># Apply window management</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="n">tool_result</span>
 
@@ -4666,7 +4692,7 @@ agent.tool.calculator(...)
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Callable">Callable</span></code>
+                  <code><span title="typing.Callable">Callable</span>[..., <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4703,17 +4729,7 @@ agent.tool.calculator(...)
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 83</span>
 <span class="normal"> 84</span>
 <span class="normal"> 85</span>
 <span class="normal"> 86</span>
@@ -4802,7 +4818,17 @@ agent.tool.calculator(...)
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Call tool as a function.</span>
 
 <span class="sd">    This method enables the method-style interface (e.g., `agent.tool.tool_name(param=&quot;value&quot;)`).</span>
@@ -4897,7 +4923,7 @@ agent.tool.calculator(...)
             <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">_record_tool_execution</span><span class="p">(</span><span class="n">tool_use</span><span class="p">,</span> <span class="n">tool_result</span><span class="p">,</span> <span class="n">user_message_override</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
 
         <span class="c1"># Apply window management</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">conversation_manager</span><span class="o">.</span><span class="n">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">tool_result</span>
 
@@ -4955,15 +4981,15 @@ agent.tool.calculator(...)
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize instance.</span>
 
 <span class="sd">    Args:</span>
@@ -5086,30 +5112,7 @@ the conversation history, processes it through the model, executes any tool call
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
-<span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span>
-<span class="normal">335</span>
-<span class="normal">336</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
 <span class="normal">337</span>
 <span class="normal">338</span>
 <span class="normal">339</span>
@@ -5117,7 +5120,30 @@ the conversation history, processes it through the model, executes any tool call
 <span class="normal">341</span>
 <span class="normal">342</span>
 <span class="normal">343</span>
-<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process a natural language prompt through the agent&#39;s event loop.</span>
 
 <span class="sd">    This method implements the conversational interface (e.g., `agent(&quot;hello!&quot;)`). It adds the user&#39;s prompt to</span>
@@ -5172,14 +5198,14 @@ the conversation history, processes it through the model, executes any tool call
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean up resources when Agent is garbage collected.</span>
 
 <span class="sd">    Ensures proper shutdown of the thread pool executor if one exists.</span>
@@ -5197,7 +5223,7 @@ the conversation history, processes it through the model, executes any tool call
 
 
 <h4 id="strands.agent.agent.Agent.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">system_prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback_handler</span><span class="o">=</span><span class="n">PrintingCallbackHandler</span><span class="p">(),</span> <span class="n">conversation_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_parallel_tools</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span> <span class="n">record_direct_tool_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">load_tools_from_directory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">trace_attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">system_prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback_handler</span><span class="o">=</span><span class="n">_DEFAULT_CALLBACK_HANDLER</span><span class="p">,</span> <span class="n">conversation_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_parallel_tools</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span> <span class="n">record_direct_tool_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">load_tools_from_directory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">trace_attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#strands.agent.agent.Agent.__init__" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -5303,16 +5329,17 @@ If None, the model will behave according to its default settings.</p>
                 <code>callback_handler</code>
             </td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Callable">Callable</span>]</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="typing.Callable">Callable</span>[..., <span title="typing.Any">Any</span>], <span title="strands.agent.agent._DefaultCallbackHandlerSentinel">_DefaultCallbackHandlerSentinel</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
                 <p>Callback for processing events as they happen during agent execution.
-Defaults to strands.handlers.PrintingCallbackHandler if None.</p>
+If not provided (using the default), a new PrintingCallbackHandler instance is created.
+If explicitly set to None, null_callback_handler is used.</p>
               </div>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="PrintingCallbackHandler (strands.handlers.callback_handler.PrintingCallbackHandler)" href="../handlers/#strands.handlers.callback_handler.PrintingCallbackHandler">PrintingCallbackHandler</a>()</code>
+                  <code><span title="strands.agent.agent._DEFAULT_CALLBACK_HANDLER">_DEFAULT_CALLBACK_HANDLER</span></code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -5428,17 +5455,7 @@ Defaults to True.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">184</span>
 <span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
@@ -5522,13 +5539,38 @@ Defaults to True.</p>
 <span class="normal">265</span>
 <span class="normal">266</span>
 <span class="normal">267</span>
-<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Messages</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tools</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="n">PrintingCallbackHandler</span><span class="p">(),</span>
+    <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">_DefaultCallbackHandlerSentinel</span><span class="p">]</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">_DEFAULT_CALLBACK_HANDLER</span><span class="p">,</span>
     <span class="n">conversation_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ConversationManager</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">max_parallel_tools</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">record_direct_tool_call</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -5555,7 +5597,8 @@ Defaults to True.</p>
 <span class="sd">        system_prompt: System prompt to guide model behavior.</span>
 <span class="sd">            If None, the model will behave according to its default settings.</span>
 <span class="sd">        callback_handler: Callback for processing events as they happen during agent execution.</span>
-<span class="sd">            Defaults to strands.handlers.PrintingCallbackHandler if None.</span>
+<span class="sd">            If not provided (using the default), a new PrintingCallbackHandler instance is created.</span>
+<span class="sd">            If explicitly set to None, null_callback_handler is used.</span>
 <span class="sd">        conversation_manager: Manager for conversation history and context window.</span>
 <span class="sd">            Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None.</span>
 <span class="sd">        max_parallel_tools: Maximum number of tools to run in parallel when the model returns multiple tool calls.</span>
@@ -5573,7 +5616,17 @@ Defaults to True.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span> <span class="k">if</span> <span class="n">messages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">system_prompt</span> <span class="o">=</span> <span class="n">system_prompt</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">callback_handler</span> <span class="ow">or</span> <span class="n">null_callback_handler</span>
+
+    <span class="c1"># If not provided, create a new PrintingCallbackHandler instance</span>
+    <span class="c1"># If explicitly set to None, use null_callback_handler</span>
+    <span class="c1"># Otherwise use the passed callback_handler</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">PrintingCallbackHandler</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback_handler</span><span class="p">,</span> <span class="n">_DefaultCallbackHandlerSentinel</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">PrintingCallbackHandler</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">callback_handler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">null_callback_handler</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback_handler</span> <span class="o">=</span> <span class="n">callback_handler</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">conversation_manager</span> <span class="o">=</span> <span class="n">conversation_manager</span> <span class="k">if</span> <span class="n">conversation_manager</span> <span class="k">else</span> <span class="n">SlidingWindowConversationManager</span><span class="p">()</span>
 
@@ -5806,30 +5859,7 @@ async environments.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span>
-<span class="normal">358</span>
-<span class="normal">359</span>
-<span class="normal">360</span>
-<span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">369</span>
 <span class="normal">370</span>
 <span class="normal">371</span>
 <span class="normal">372</span>
@@ -5875,7 +5905,30 @@ async environments.</p>
 <span class="normal">412</span>
 <span class="normal">413</span>
 <span class="normal">414</span>
-<span class="normal">415</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process a natural language prompt and yield events as an async iterator.</span>
 
 <span class="sd">    This method provides an asynchronous interface for streaming agent events, allowing</span>
@@ -6385,8 +6438,7 @@ arrays/conversation histories, helping to:</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/agent/conversation_manager/conversation_manager.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
-<span class="normal">10</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
 <span class="normal">13</span>
@@ -6431,7 +6483,8 @@ arrays/conversation histories, helping to:</p>
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ConversationManager</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ConversationManager</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for managing conversation history.</span>
 
 <span class="sd">    This class provides an interface for implementing conversation management strategies to control the size of message</span>
@@ -6444,22 +6497,22 @@ arrays/conversation histories, helping to:</p>
 
     <span class="nd">@abstractmethod</span>
     <span class="c1"># pragma: no cover</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies management strategy to the provided list of messages.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies management strategy to the provided agent.</span>
 
 <span class="sd">        Processes the conversation history to maintain appropriate size by modifying the messages list in-place.</span>
 <span class="sd">        Implementations should handle message pruning, summarization, or other size management techniques to keep the</span>
 <span class="sd">        conversation context within desired bounds.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            messages: The conversation history to manage.</span>
+<span class="sd">            agent: The agent whose conversation history will be manage.</span>
 <span class="sd">                This list is modified in-place.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="c1"># pragma: no cover</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when the model&#39;s context window is exceeded.</span>
 
 <span class="sd">        This method should implement the specific strategy for reducing the window size when a context overflow occurs.</span>
@@ -6473,7 +6526,7 @@ arrays/conversation histories, helping to:</p>
 <span class="sd">        - Maintaining critical conversation markers</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            messages: The conversation history to reduce.</span>
+<span class="sd">            agent: The agent whose conversation history will be reduced.</span>
 <span class="sd">                This list is modified in-place.</span>
 <span class="sd">            e: The exception that triggered the context reduction, if any.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -6497,7 +6550,7 @@ arrays/conversation histories, helping to:</p>
 
 
 <h5 id="strands.agent.conversation_manager.conversation_manager.ConversationManager.apply_management" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">apply_management</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">apply_management</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
@@ -6508,7 +6561,7 @@ arrays/conversation histories, helping to:</p>
 
     <div class="doc doc-contents ">
 
-        <p>Applies management strategy to the provided list of messages.</p>
+        <p>Applies management strategy to the provided agent.</p>
 <p>Processes the conversation history to maintain appropriate size by modifying the messages list in-place.
 Implementations should handle message pruning, summarization, or other size management techniques to keep the
 conversation context within desired bounds.</p>
@@ -6527,18 +6580,14 @@ conversation context within desired bounds.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>messages</code>
+                <code>agent</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
+                  <code><a class="autorefs autorefs-internal" title="Agent (strands.agent.agent.Agent)" href="#strands.agent.agent.Agent">Agent</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The conversation history to manage.
+                <p>The agent whose conversation history will be manage.
 This list is modified in-place.</p>
               </div>
             </td>
@@ -6552,8 +6601,7 @@ This list is modified in-place.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
@@ -6565,17 +6613,18 @@ This list is modified in-place.</p>
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
 <span class="c1"># pragma: no cover</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies management strategy to the provided list of messages.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies management strategy to the provided agent.</span>
 
 <span class="sd">    Processes the conversation history to maintain appropriate size by modifying the messages list in-place.</span>
 <span class="sd">    Implementations should handle message pruning, summarization, or other size management techniques to keep the</span>
 <span class="sd">    conversation context within desired bounds.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        messages: The conversation history to manage.</span>
+<span class="sd">        agent: The agent whose conversation history will be manage.</span>
 <span class="sd">            This list is modified in-place.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
@@ -6589,7 +6638,7 @@ This list is modified in-place.</p>
 
 
 <h5 id="strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">reduce_context</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">reduce_context</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
@@ -6625,18 +6674,14 @@ It is typically called after a ContextWindowOverflowException is caught.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>messages</code>
+                <code>agent</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
+                  <code><a class="autorefs autorefs-internal" title="Agent (strands.agent.agent.Agent)" href="#strands.agent.agent.Agent">Agent</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The conversation history to reduce.
+                <p>The agent whose conversation history will be reduced.
 This list is modified in-place.</p>
               </div>
             </td>
@@ -6666,8 +6711,7 @@ This list is modified in-place.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
-<span class="normal">36</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
@@ -6686,9 +6730,10 @@ This list is modified in-place.</p>
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
 <span class="c1"># pragma: no cover</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Called when the model&#39;s context window is exceeded.</span>
 
 <span class="sd">    This method should implement the specific strategy for reducing the window size when a context overflow occurs.</span>
@@ -6702,7 +6747,7 @@ This list is modified in-place.</p>
 <span class="sd">    - Maintaining critical conversation markers</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        messages: The conversation history to reduce.</span>
+<span class="sd">        agent: The agent whose conversation history will be reduced.</span>
 <span class="sd">            This list is modified in-place.</span>
 <span class="sd">        e: The exception that triggered the context reduction, if any.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -6793,9 +6838,7 @@ This list is modified in-place.</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/agent/conversation_manager/null_conversation_manager.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
@@ -6825,7 +6868,9 @@ This list is modified in-place.</p>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NullConversationManager</span><span class="p">(</span><span class="n">ConversationManager</span><span class="p">):</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NullConversationManager</span><span class="p">(</span><span class="n">ConversationManager</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A no-op conversation manager that does not modify the conversation history.</span>
 
 <span class="sd">    Useful for:</span>
@@ -6835,19 +6880,19 @@ This list is modified in-place.</p>
 <span class="sd">    - Situations where the full conversation history should be preserved</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Does nothing to the conversation history.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            messages: The conversation history that will remain unmodified.</span>
+<span class="sd">            agent: The agent whose conversation history will remain unmodified.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Does not reduce context and raises an exception.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            messages: The conversation history that will remain unmodified.</span>
+<span class="sd">            agent: The agent whose conversation history will remain unmodified.</span>
 <span class="sd">            e: The exception that triggered the context reduction, if any.</span>
 
 <span class="sd">        Raises:</span>
@@ -6877,7 +6922,7 @@ This list is modified in-place.</p>
 
 
 <h5 id="strands.agent.conversation_manager.null_conversation_manager.NullConversationManager.apply_management" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">apply_management</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">apply_management</span><span class="p">(</span><span class="n">_agent</span><span class="p">)</span></code>
 
 <a href="#strands.agent.conversation_manager.null_conversation_manager.NullConversationManager.apply_management" class="headerlink" title="Permanent link">&para;</a></h5>
 
@@ -6900,18 +6945,13 @@ This list is modified in-place.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>messages</code>
+                <code>agent</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The conversation history that will remain unmodified.</p>
+                <p>The agent whose conversation history will remain unmodified.</p>
               </div>
             </td>
             <td>
@@ -6924,17 +6964,17 @@ This list is modified in-place.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/null_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Does nothing to the conversation history.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        messages: The conversation history that will remain unmodified.</span>
+<span class="sd">        agent: The agent whose conversation history will remain unmodified.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
@@ -6947,7 +6987,7 @@ This list is modified in-place.</p>
 
 
 <h5 id="strands.agent.conversation_manager.null_conversation_manager.NullConversationManager.reduce_context" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">reduce_context</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">reduce_context</span><span class="p">(</span><span class="n">_agent</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#strands.agent.conversation_manager.null_conversation_manager.NullConversationManager.reduce_context" class="headerlink" title="Permanent link">&para;</a></h5>
 
@@ -6970,18 +7010,13 @@ This list is modified in-place.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>messages</code>
+                <code>agent</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The conversation history that will remain unmodified.</p>
+                <p>The agent whose conversation history will remain unmodified.</p>
               </div>
             </td>
             <td>
@@ -7043,9 +7078,7 @@ This list is modified in-place.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/null_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
@@ -7057,11 +7090,13 @@ This list is modified in-place.</p>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Does not reduce context and raises an exception.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        messages: The conversation history that will remain unmodified.</span>
+<span class="sd">        agent: The agent whose conversation history will remain unmodified.</span>
 <span class="sd">        e: The exception that triggered the context reduction, if any.</span>
 
 <span class="sd">    Raises:</span>
@@ -7154,10 +7189,7 @@ invalid window states.</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 37</span>
-<span class="normal"> 38</span>
-<span class="normal"> 39</span>
-<span class="normal"> 40</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 40</span>
 <span class="normal"> 41</span>
 <span class="normal"> 42</span>
 <span class="normal"> 43</span>
@@ -7265,7 +7297,12 @@ invalid window states.</p>
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SlidingWindowConversationManager</span><span class="p">(</span><span class="n">ConversationManager</span><span class="p">):</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SlidingWindowConversationManager</span><span class="p">(</span><span class="n">ConversationManager</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements a sliding window strategy for managing conversation history.</span>
 
 <span class="sd">    This class handles the logic of maintaining a conversation window that preserves tool usage pairs and avoids</span>
@@ -7276,13 +7313,13 @@ invalid window states.</p>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the sliding window conversation manager.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            window_size: Maximum number of messages to keep in history.</span>
+<span class="sd">            window_size: Maximum number of messages to keep in the agent&#39;s history.</span>
 <span class="sd">                Defaults to 40 messages.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the sliding window to the messages array to maintain a manageable history size.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the sliding window to the agent&#39;s messages array to maintain a manageable history size.</span>
 
 <span class="sd">        This method is called after every event loop cycle, as the messages array may have been modified with tool</span>
 <span class="sd">        results and assistant responses. It first removes any dangling messages that might create an invalid</span>
@@ -7293,9 +7330,10 @@ invalid window states.</p>
 <span class="sd">        blocks to maintain conversation coherence.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            messages: The messages to manage.</span>
+<span class="sd">            agent: The agent whose messages will be managed.</span>
 <span class="sd">                This list is modified in-place.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remove_dangling_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span><span class="p">:</span>
@@ -7303,7 +7341,7 @@ invalid window states.</p>
                 <span class="s2">&quot;window_size=&lt;</span><span class="si">%s</span><span class="s2">&gt;, message_count=&lt;</span><span class="si">%s</span><span class="s2">&gt; | skipping context reduction&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
             <span class="p">)</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reduce_context</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reduce_context</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_remove_dangling_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove dangling messages that would create an invalid conversation state.</span>
@@ -7336,7 +7374,7 @@ invalid window states.</p>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;toolResult&quot;</span> <span class="ow">in</span> <span class="n">content</span> <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]):</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Trim the oldest messages to reduce the conversation context size.</span>
 
 <span class="sd">        The method handles special cases where trimming the messages leads to:</span>
@@ -7344,7 +7382,7 @@ invalid window states.</p>
 <span class="sd">         - toolUse with no corresponding toolResult</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            messages: The messages to reduce.</span>
+<span class="sd">            agent: The agent whose messages will be reduce.</span>
 <span class="sd">                This list is modified in-place.</span>
 <span class="sd">            e: The exception that triggered the context reduction, if any.</span>
 
@@ -7353,6 +7391,7 @@ invalid window states.</p>
 <span class="sd">                Such as when the conversation is already minimal or when tool result messages cannot be properly</span>
 <span class="sd">                converted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
         <span class="c1"># If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size</span>
         <span class="n">trim_index</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
 
@@ -7426,7 +7465,7 @@ invalid window states.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Maximum number of messages to keep in history.
+                <p>Maximum number of messages to keep in the agent's history.
 Defaults to 40 messages.</p>
               </div>
             </td>
@@ -7440,18 +7479,18 @@ Defaults to 40 messages.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
-<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">):</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the sliding window conversation manager.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        window_size: Maximum number of messages to keep in history.</span>
+<span class="sd">        window_size: Maximum number of messages to keep in the agent&#39;s history.</span>
 <span class="sd">            Defaults to 40 messages.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
@@ -7465,14 +7504,14 @@ Defaults to 40 messages.</p>
 
 
 <h5 id="strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager.apply_management" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">apply_management</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">apply_management</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span></code>
 
 <a href="#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager.apply_management" class="headerlink" title="Permanent link">&para;</a></h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Apply the sliding window to the messages array to maintain a manageable history size.</p>
+        <p>Apply the sliding window to the agent's messages array to maintain a manageable history size.</p>
 <p>This method is called after every event loop cycle, as the messages array may have been modified with tool
 results and assistant responses. It first removes any dangling messages that might create an invalid
 conversation state, then applies the sliding window if the message count exceeds the window size.</p>
@@ -7494,18 +7533,14 @@ blocks to maintain conversation coherence.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>messages</code>
+                <code>agent</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
+                  <code><a class="autorefs autorefs-internal" title="Agent (strands.agent.agent.Agent)" href="#strands.agent.agent.Agent">Agent</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The messages to manage.
+                <p>The agent whose messages will be managed.
 This list is modified in-place.</p>
               </div>
             </td>
@@ -7519,10 +7554,7 @@ This list is modified in-place.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
@@ -7541,8 +7573,12 @@ This list is modified in-place.</p>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the sliding window to the messages array to maintain a manageable history size.</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the sliding window to the agent&#39;s messages array to maintain a manageable history size.</span>
 
 <span class="sd">    This method is called after every event loop cycle, as the messages array may have been modified with tool</span>
 <span class="sd">    results and assistant responses. It first removes any dangling messages that might create an invalid</span>
@@ -7553,9 +7589,10 @@ This list is modified in-place.</p>
 <span class="sd">    blocks to maintain conversation coherence.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        messages: The messages to manage.</span>
+<span class="sd">        agent: The agent whose messages will be managed.</span>
 <span class="sd">            This list is modified in-place.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_remove_dangling_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span><span class="p">:</span>
@@ -7563,7 +7600,7 @@ This list is modified in-place.</p>
             <span class="s2">&quot;window_size=&lt;</span><span class="si">%s</span><span class="s2">&gt;, message_count=&lt;</span><span class="si">%s</span><span class="s2">&gt; | skipping context reduction&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
         <span class="p">)</span>
         <span class="k">return</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">reduce_context</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reduce_context</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7574,7 +7611,7 @@ This list is modified in-place.</p>
 
 
 <h5 id="strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager.reduce_context" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">reduce_context</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">reduce_context</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager.reduce_context" class="headerlink" title="Permanent link">&para;</a></h5>
 
@@ -7605,18 +7642,14 @@ This list is modified in-place.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>messages</code>
+                <code>agent</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
+                  <code><a class="autorefs autorefs-internal" title="Agent (strands.agent.agent.Agent)" href="#strands.agent.agent.Agent">Agent</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The messages to reduce.
+                <p>The agent whose messages will be reduce.
 This list is modified in-place.</p>
               </div>
             </td>
@@ -7671,11 +7704,7 @@ converted.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
@@ -7711,7 +7740,12 @@ converted.</p>
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Trim the oldest messages to reduce the conversation context size.</span>
 
 <span class="sd">    The method handles special cases where trimming the messages leads to:</span>
@@ -7719,7 +7753,7 @@ converted.</p>
 <span class="sd">     - toolUse with no corresponding toolResult</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        messages: The messages to reduce.</span>
+<span class="sd">        agent: The agent whose messages will be reduce.</span>
 <span class="sd">            This list is modified in-place.</span>
 <span class="sd">        e: The exception that triggered the context reduction, if any.</span>
 
@@ -7728,6 +7762,7 @@ converted.</p>
 <span class="sd">            Such as when the conversation is already minimal or when tool result messages cannot be properly</span>
 <span class="sd">            converted.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
     <span class="c1"># If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size</span>
     <span class="n">trim_index</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
 
@@ -7837,16 +7872,16 @@ converted.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
-<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_assistant_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_assistant_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a message is from an assistant.</span>
 
 <span class="sd">    Args:</span>
@@ -7932,16 +7967,16 @@ converted.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_user_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_user_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a message is from a user.</span>
 
 <span class="sd">    Args:</span>
