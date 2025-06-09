@@ -27,34 +27,19 @@ The memory agent utilizes two primary tools:
 This example demonstrates a workflow where memories are used to generate contextually relevant responses:
 
 ```
-┌─────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
-│                 │     │                         │     │                         │
-│   User Query    │────▶│  Command Classification │────▶│  Conditional Execution  │
-│                 │     │  (store/retrieve/list)  │     │  Based on Command Type  │
-│                 │     │                         │     │                         │
-└─────────────────┘     └─────────────────────────┘     └───────────┬─────────────┘
-                                                                    │
-                                                                    │
-                                                                    ▼
-                           ┌───────────────────────────────────────────────────────┐
-                           │                                                       │
-                           │  Store Action     List Action      Retrieve Action    │
-                           │  ┌───────────┐    ┌───────────┐    ┌───────────────┐ │
-                           │  │           │    │           │    │               │ │
-                           │  │ mem0()    │    │ mem0()    │    │ mem0()        │ │
-                           │  │ (store)   │    │ (list)    │    │ (retrieve)    │ │
-                           │  │           │    │           │    │               │ │
-                           │  └───────────┘    └───────────┘    └───────┬───────┘ │
-                           │                                            │         │
-                           │                                            ▼         │
-                           │                                      ┌───────────┐   │
-                           │                                      │           │   │
-                           │                                      │ use_llm() │   │
-                           │                                      │           │   │
-                           │                                      └───────────┘   │
-                           │                                                      │
-                           └──────────────────────────────────────────────────────┘
+flowchart TD
+    UserQuery["User Query"] --> CommandClassification["Command Classification<br>(store/retrieve/list)"]
+    CommandClassification --> ConditionalExecution["Conditional Execution<br>Based on Command Type"]
 
+    ConditionalExecution --> ActionContainer["Memory Operations"]
+
+    subgraph ActionContainer[Memory Operations]
+        StoreAction["Store Action<br><br>mem0()<br>(store)"]
+        ListAction["List Action<br><br>mem0()<br>(list)"]
+        RetrieveAction["Retrieve Action<br><br>mem0()<br>(retrieve)"]
+    end
+
+    RetrieveAction --> UseLLM["use_llm()"]
 ```
 
 ### Key Workflow Components
@@ -126,14 +111,10 @@ This two-step process:
 The retrieval path demonstrates tool chaining, where memory retrieval and LLM response generation work together:
 
 ```
-┌───────────────┐     ┌───────────────────────┐     ┌───────────────┐
-│               │     │                       │     │               │
-│  User Query   │────▶│  memory() Retrieval   │────▶│  use_llm()    │────▶ Response
-│               │     │                       │     │               │
-└───────────────┘     └───────────────────────┘     └───────────────┘
-                      (Finds relevant memories)     (Generates natural
-                                                    language answer)
-
+flowchart LR
+    UserQuery["User Query"] --> MemoryRetrieval["memory() Retrieval<br>(Finds relevant memories)"]
+    MemoryRetrieval --> UseLLM["use_llm()<br>(Generates natural<br>language answer)"]
+    UseLLM --> Response["Response"]
 ```
 
 This chaining allows the agent to:

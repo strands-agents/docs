@@ -2531,13 +2531,15 @@
 <h3 id="key-components">Key Components<a class="headerlink" href="#key-components" title="Permanent link">&para;</a></h3>
 <h4 id="1-agent-is-initialized-with-existing-tools-to-help-build-new-tools">1. Agent is initialized with existing tools to help build new tools<a class="headerlink" href="#1-agent-is-initialized-with-existing-tools-to-help-build-new-tools" title="Permanent link">&para;</a></h4>
 <p>The agent is initialized with the necessary tools for creating new tools:</p>
-<p><div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
     <span class="n">system_prompt</span><span class="o">=</span><span class="n">TOOL_BUILDER_SYSTEM_PROMPT</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">load_tool</span><span class="p">,</span> <span class="n">shell</span><span class="p">,</span> <span class="n">editor</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
-  - <code>editor</code>: Tool used to write code directly to a file named <code>"custom_tool_X.py"</code>, where "X" is the index of the tool being created. 
-  - <code>load_tool</code>: Tool used to load the tool so the Agent can use it.
-  - <code>shell</code>: Tool used to execute the tool. </p>
+<ul>
+<li><code>editor</code>: Tool used to write code directly to a file named <code>"custom_tool_X.py"</code>, where "X" is the index of the tool being created.</li>
+<li><code>load_tool</code>: Tool used to load the tool so the Agent can use it.</li>
+<li><code>shell</code>: Tool used to execute the tool. </li>
+</ul>
 <h4 id="2-agent-system-prompt-outlines-a-strict-guideline-for-naming-structure-and-creation-of-the-new-tools">2. Agent System Prompt outlines a strict guideline for naming, structure, and creation of the new tools.<a class="headerlink" href="#2-agent-system-prompt-outlines-a-strict-guideline-for-naming-structure-and-creation-of-the-new-tools" title="Permanent link">&para;</a></h4>
 <p>The system prompt guides the agent in proper tool creation. The <a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/meta_tooling.py#L17">TOOL_BUILDER_SYSTEM_PROMPT</a> outlines important elements to enable the agent achieve meta-tooling capabilities:</p>
 <ul>

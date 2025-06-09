@@ -907,6 +907,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tool-consent-and-bypassing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Consent and Bypassing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2489,6 +2498,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tool-consent-and-bypassing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Consent and Bypassing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2571,6 +2589,25 @@
 <li><a href="https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_llm.py"><code>use_llm</code></a>: Run a new AI event loop with custom prompts</li>
 <li><a href="https://github.com/strands-agents/tools/blob/main/src/strands_tools/workflow.py"><code>workflow</code></a>: Orchestrate sequenced workflows</li>
 </ul>
+<h2 id="tool-consent-and-bypassing">Tool Consent and Bypassing<a class="headerlink" href="#tool-consent-and-bypassing" title="Permanent link">&para;</a></h2>
+<p>By default, certain tools that perform potentially sensitive operations (like file modifications, shell commands, or code execution) will prompt for user confirmation before executing. This safety feature ensures users maintain control over actions that could modify their system.</p>
+<p>To bypass these confirmation prompts, you can set the <code>BYPASS_TOOL_CONSENT</code> environment variable:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Set this environment variable to bypass tool confirmation prompts</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BYPASS_TOOL_CONSENT</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+<p>Setting the environment variable within Python:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;BYPASS_TOOL_CONSENT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
+</code></pre></div>
+<p>When this variable is set to <code>true</code>, tools will execute without asking for confirmation. This is particularly useful for:</p>
+<ul>
+<li>Automated workflows where user interaction isn't possible</li>
+<li>Development and testing environments</li>
+<li>CI/CD pipelines</li>
+<li>Situations where you've already validated the safety of operations</li>
+</ul>
+<p><strong>Note:</strong> Use this feature with caution in production environments, as it removes an important safety check.</p>
 
 
 

@@ -2577,34 +2577,19 @@
 </ol>
 <h2 id="memory-enhanced-response-generation-workflow">Memory-Enhanced Response Generation Workflow<a class="headerlink" href="#memory-enhanced-response-generation-workflow" title="Permanent link">&para;</a></h2>
 <p>This example demonstrates a workflow where memories are used to generate contextually relevant responses:</p>
-<div class="highlight"><pre><span></span><code>┌─────────────────┐     ┌─────────────────────────┐     ┌─────────────────────────┐
-│                 │     │                         │     │                         │
-│   User Query    │────▶│  Command Classification │────▶│  Conditional Execution  │
-│                 │     │  (store/retrieve/list)  │     │  Based on Command Type  │
-│                 │     │                         │     │                         │
-└─────────────────┘     └─────────────────────────┘     └───────────┬─────────────┘
-                                                                    │
-                                                                    │
-                                                                    ▼
-                           ┌───────────────────────────────────────────────────────┐
-                           │                                                       │
-                           │  Store Action     List Action      Retrieve Action    │
-                           │  ┌───────────┐    ┌───────────┐    ┌───────────────┐ │
-                           │  │           │    │           │    │               │ │
-                           │  │ mem0()    │    │ mem0()    │    │ mem0()        │ │
-                           │  │ (store)   │    │ (list)    │    │ (retrieve)    │ │
-                           │  │           │    │           │    │               │ │
-                           │  └───────────┘    └───────────┘    └───────┬───────┘ │
-                           │                                            │         │
-                           │                                            ▼         │
-                           │                                      ┌───────────┐   │
-                           │                                      │           │   │
-                           │                                      │ use_llm() │   │
-                           │                                      │           │   │
-                           │                                      └───────────┘   │
-                           │                                                      │
-                           └──────────────────────────────────────────────────────┘
-</code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    UserQuery["User Query"] --&gt; CommandClassification["Command Classification&lt;br&gt;(store/retrieve/list)"]
+    CommandClassification --&gt; ConditionalExecution["Conditional Execution&lt;br&gt;Based on Command Type"]
+
+    ConditionalExecution --&gt; ActionContainer["Memory Operations"]
+
+    subgraph ActionContainer[Memory Operations]
+        StoreAction["Store Action&lt;br&gt;&lt;br&gt;mem0()&lt;br&gt;(store)"]
+        ListAction["List Action&lt;br&gt;&lt;br&gt;mem0()&lt;br&gt;(list)"]
+        RetrieveAction["Retrieve Action&lt;br&gt;&lt;br&gt;mem0()&lt;br&gt;(retrieve)"]
+    end
+
+    RetrieveAction --&gt; UseLLM["use_llm()"]</code></pre>
 <h3 id="key-workflow-components">Key Workflow Components<a class="headerlink" href="#key-workflow-components" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Command Classification Layer</strong></li>
@@ -2662,14 +2647,10 @@
 <li><strong>Tool Chaining for Enhanced Responses</strong></li>
 </ol>
 <p>The retrieval path demonstrates tool chaining, where memory retrieval and LLM response generation work together:</p>
-<div class="highlight"><pre><span></span><code>┌───────────────┐     ┌───────────────────────┐     ┌───────────────┐
-│               │     │                       │     │               │
-│  User Query   │────▶│  memory() Retrieval   │────▶│  use_llm()    │────▶ Response
-│               │     │                       │     │               │
-└───────────────┘     └───────────────────────┘     └───────────────┘
-                      (Finds relevant memories)     (Generates natural
-                                                    language answer)
-</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    UserQuery["User Query"] --&gt; MemoryRetrieval["memory() Retrieval&lt;br&gt;(Finds relevant memories)"]
+    MemoryRetrieval --&gt; UseLLM["use_llm()&lt;br&gt;(Generates natural&lt;br&gt;language answer)"]
+    UseLLM --&gt; Response["Response"]</code></pre>
 <p>This chaining allows the agent to:
    1. First retrieve memories that are semantically relevant to the user's query
    2. Then process those memories to generate a natural, conversational response that directly addresses the query</p>

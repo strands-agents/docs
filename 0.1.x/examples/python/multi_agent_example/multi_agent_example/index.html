@@ -2592,11 +2592,13 @@
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error processing your mathematical query: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
-**Each specialized agent has a distinct system prompt, and tools in its inventory, and follows this general pattern.
-  - <a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/language_assistant.py">Language Assistant</a> specializes in queries related to translation into different languages.
-  - <a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/computer_science_assistant.py">Computer Scince Assistant</a> specializes in queries related to writing, editing, running, code and explaining computer science concepts.
-  - <a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/english_assistant.py">English Assistant</a> specializes in queries related to grammar, and english comprehension.
-  - <a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/no_expertise.py">General Assistant</a> is a no specialty agent that aims to answer queries outside of the specific domains the agents are specialized in.</p>
+Each specialized agent has a distinct system prompt, and tools in its inventory, and follows this general pattern.</p>
+<ul>
+<li><a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/language_assistant.py">Language Assistant</a> specializes in queries related to translation into different languages.</li>
+<li><a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/computer_science_assistant.py">Computer Scince Assistant</a> specializes in queries related to writing, editing, running, code and explaining computer science concepts.</li>
+<li><a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/english_assistant.py">English Assistant</a> specializes in queries related to grammar, and english comprehension.</li>
+<li><a href="https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/no_expertise.py">General Assistant</a> is a no specialty agent that aims to answer queries outside of the specific domains the agents are specialized in.</li>
+</ul>
 <h3 id="3-tool-agent-pattern">3. Tool-Agent Pattern<a class="headerlink" href="#3-tool-agent-pattern" title="Permanent link">&para;</a></h3>
 <p>This example demonstrates the <a href="https://github.com/strands-agents/docs/blob/main/docs/user-guide/concepts/tools/python-tools.md#python-tool-decorators">"Tool-Agent Pattern"</a> where Strands agents are wrapped as tools using the <code>@tool</code> decorator. These tools are then provided to another agent (the Teacher's Assistant), creating a system where agents can use other agents as tools.</p>
 <h3 id="sample-interactions">Sample Interactions<a class="headerlink" href="#sample-interactions" title="Permanent link">&para;</a></h3>
