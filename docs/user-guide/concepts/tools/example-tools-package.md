@@ -73,6 +73,8 @@ To bypass these confirmation prompts, you can set the `BYPASS_TOOL_CONSENT` envi
 export BYPASS_TOOL_CONSENT=true
 ```
 
+Setting the environment variable within Python:
+
 ```python
 import os
 
