@@ -36,7 +36,8 @@ agent = Agent(
     system_prompt=TOOL_BUILDER_SYSTEM_PROMPT, tools=[load_tool, shell, editor]
 )
 ```
-  - `editor`: Tool used to write code directly to a file named `"custom_tool_X.py"`, where "X" is the index of the tool being created. 
+
+  - `editor`: Tool used to write code directly to a file named `"custom_tool_X.py"`, where "X" is the index of the tool being created.
   - `load_tool`: Tool used to load the tool so the Agent can use it.
   - `shell`: Tool used to execute the tool. 
 
@@ -46,7 +47,7 @@ The system prompt guides the agent in proper tool creation. The [TOOL_BUILDER_SY
 
   -  **Tool Naming Convention**: Provides the naming convention to use when building new custom tools.
 
-  -  **Tool Structure**: Enforces a standardized structure for all tools, making it possible for the agent to generate valid tools based on the `TOOL_SPEC` [provided](https://github.com/strands-agents/docs/blob/main/docs/api/TOOL_DEVELOPMENT.md). 
+  -  **Tool Structure**: Enforces a standardized structure for all tools, making it possible for the agent to generate valid tools based on the `TOOL_SPEC` [provided](https://strandsagents.com/latest/user-guide/concepts/tools/python-tools/#python-modules-as-tools). 
 
 
 ```python

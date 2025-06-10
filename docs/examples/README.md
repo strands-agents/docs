@@ -57,6 +57,11 @@ Available CDK examples:
 - [Deploy to Fargate](cdk/deploy_to_fargate/README.md) - Guide for deploying agents to AWS Fargate
 - [Deploy to Lambda](cdk/deploy_to_lambda/README.md) - Guide for deploying agents to AWS Lambda
 
+### Amazon EKS Example
+
+The `/examples/deploy_to_eks` directory contains examples for using Amazon EKS with agents.   
+The [Deploy to Amazon EKS](deploy_to_eks/README.md) includes its own documentation with instruction for setup and deployment.
+
 ## Example Structure
 
 Each example typically follows this structure:

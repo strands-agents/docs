@@ -1,26 +1,28 @@
 site_name: Strands Agents SDK
 site_description: Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
 site_dir: site
+site_url: https://strandsagents.com
 
 repo_url: https://github.com/strands-agents/sdk-python
 
 theme:
   name: material
-  logo: assets/logo-light.svg
+  custom_dir: overrides
+  logo: assets/logo-light.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+  logo_dark: assets/logo-dark.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
   favicon: assets/logo-auto.svg
+  favicon_png: assets/logo-light.png  # Safari doesn't support SVG favicons
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
-      primary: blue grey
-      accent: orange
+      primary: custom
       scheme: default
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
-      primary: blue grey
-      accent: orange
+      primary: custom
       scheme: slate
       toggle:
         icon: material/brightness-4
@@ -57,6 +59,11 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  # Workaround for site_url breaking mermaid rendering; see the following for more info:
+  # https://github.com/squidfunk/mkdocs-material/issues/3742#issuecomment-1076068038
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
 
 nav:
   - User Guide:
@@ -103,6 +110,7 @@ nav:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
   - Examples:
     - Overview: examples/README.md
@@ -144,6 +152,15 @@ plugins:
             docstring_style: google
             show_root_heading: true
             show_source: true
+  - llmstxt:
+      sections:
+        User Guide:
+          - README.md
+          - user-guide/**/*.md
+        Examples:
+          - examples/**/*.md
+        API Reference:
+          - api-reference/*.md
 
 extra:
   social:

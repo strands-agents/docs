@@ -134,6 +134,8 @@ Built-in guides are available for several AWS services:
 
 * **AWS Fargate** - Containerized deployment with streaming support, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](deploy_to_aws_fargate.md)
 
+* **Amazon EKS** - Containerized deployment with streaming support, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](deploy_to_amazon_eks.md)
+
 * **Amazon EC2** - Maximum control and flexibility for high-volume applications or specialized infrastructure requirements. [Learn more](deploy_to_amazon_ec2.md)
 
 ## Monitoring and Observability
