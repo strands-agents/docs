@@ -2430,6 +2430,7 @@
 <span class="c1"># Create a conversation manager with custom window size</span>
 <span class="n">conversation_manager</span> <span class="o">=</span> <span class="n">SlidingWindowConversationManager</span><span class="p">(</span>
     <span class="n">window_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>  <span class="c1"># Maximum number of messages to keep</span>
+    <span class="n">should_truncate_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># Enable truncating the tool result when a message is too large for the model&#39;s context window </span>
 <span class="p">)</span>
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
@@ -2441,6 +2442,7 @@
 <li><strong>Maintains Window Size</strong>: Automatically removes messages from the window if the number of messages exceeds the limit.</li>
 <li><strong>Dangling Message Cleanup</strong>: Removes incomplete message sequences to maintain valid conversation state.</li>
 <li><strong>Overflow Trimming</strong>: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.</li>
+<li><strong>Configurable Tool Result Truncation</strong>: Enable / disable truncation of tool results when the message exceeds context window limits. When <code>should_truncate_results=True</code> (default), large results are truncated with a placeholder message. When <code>False</code>, full results are preserved but more historical messages may be removed.</li>
 </ul>
 
 
