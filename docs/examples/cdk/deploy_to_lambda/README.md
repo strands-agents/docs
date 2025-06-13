@@ -35,7 +35,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install Python dependencies for the local development
 pip install -r requirements.txt
 # Install Python dependencies for lambda with correct architecture
-pip install -r requirements.txt --platform manylinux2014_aarch64 --target ./packaging/_dependencies --only-binary=:all:
+pip install -r requirements.txt --python-version 3.12 --platform manylinux2014_aarch64 --target ./packaging/_dependencies --only-binary=:all:
 ```
 
 2. Package the lambda:

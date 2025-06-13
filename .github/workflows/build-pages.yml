@@ -1,11 +1,7 @@
 name: Build GitHub Pages
-on:
-  push:
-    branches:
-      - main
-  repository_dispatch:
-    types:
-      - sdk-push
+# Until we have a branching strategy defined for bug fixes or features that are not 
+# yet published to pypi, we've decided to manually publish docs when publishing to pypi
+on:  workflow_dispatch
 permissions:
   contents: write
 jobs:
@@ -34,4 +30,4 @@ jobs:
           pip install -r requirements.txt
       - run: |
           mike deploy --push --update-aliases 0.1.x latest
-          mike set-default --push 0.1.x
+          mike set-default --push latest

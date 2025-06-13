@@ -52,6 +52,7 @@ from strands.agent.conversation_manager import SlidingWindowConversationManager
 # Create a conversation manager with custom window size
 conversation_manager = SlidingWindowConversationManager(
     window_size=20,  # Maximum number of messages to keep
+    should_truncate_results=True, # Enable truncating the tool result when a message is too large for the model's context window 
 )
 
 agent = Agent(
@@ -64,6 +65,7 @@ Key features of the `SlidingWindowConversationManager`:
 - **Maintains Window Size**: Automatically removes messages from the window if the number of messages exceeds the limit.
 - **Dangling Message Cleanup**: Removes incomplete message sequences to maintain valid conversation state.
 - **Overflow Trimming**: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.
+- **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed.
 
 #### SummarizingConversationManager
 
