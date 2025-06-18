@@ -8,10 +8,10 @@ repo_url: https://github.com/strands-agents/sdk-python
 theme:
   name: material
   custom_dir: overrides
-  logo: assets/logo-light.svg # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
-  logo_dark: assets/logo-dark.svg # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+  logo: assets/logo-light.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+  logo_dark: assets/logo-dark.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
   favicon: assets/logo-auto.svg
-  favicon_png: assets/logo-light.png # Safari doesn't support SVG favicons
+  favicon_png: assets/logo-light.png  # Safari doesn't support SVG favicons
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
@@ -50,9 +50,9 @@ markdown_extensions:
   - tables
   - pymdownx.superfences:
       custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format
   - toc:
       title: On this page
       permalink: true
@@ -67,71 +67,71 @@ extra_javascript:
 
 nav:
   - User Guide:
-      - Welcome: README.md
-      - Quickstart: user-guide/quickstart.md
-      - Concepts:
-          - Agents:
-              - Agent Loop: user-guide/concepts/agents/agent-loop.md
-              - Sessions & State: user-guide/concepts/agents/sessions-state.md
-              - Prompts: user-guide/concepts/agents/prompts.md
-              - Context Management: user-guide/concepts/agents/context-management.md
-          - Tools:
-              - Overview: user-guide/concepts/tools/tools_overview.md
-              - Python: user-guide/concepts/tools/python-tools.md
-              - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
-              - Example Tools Package: user-guide/concepts/tools/example-tools-package.md
-          - Model Providers:
-              - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
-              - Anthropic: user-guide/concepts/model-providers/anthropic.md
-              - LiteLLM: user-guide/concepts/model-providers/litellm.md
-              - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
-              - Ollama: user-guide/concepts/model-providers/ollama.md
-              - OpenAI: user-guide/concepts/model-providers/openai.md
-              - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
-          - Streaming:
-              - Async Iterators: user-guide/concepts/streaming/async-iterators.md
-              - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
-          - Multi-agent:
-              - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
-              - Swarm: user-guide/concepts/multi-agent/swarm.md
-              - Graph: user-guide/concepts/multi-agent/graph.md
-              - Workflow: user-guide/concepts/multi-agent/workflow.md
-      - Safety & Security:
-          - Responsible AI: user-guide/safety-security/responsible-ai.md
-          - Guardrails: user-guide/safety-security/guardrails.md
-          - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
-      - Observability & Evaluation:
-          - Observability: user-guide/observability-evaluation/observability.md
-          - Metrics: user-guide/observability-evaluation/metrics.md
-          - Traces: user-guide/observability-evaluation/traces.md
-          - Logs: user-guide/observability-evaluation/logs.md
-          - Evaluation: user-guide/observability-evaluation/evaluation.md
-      - Deploy:
-          - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
-          - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
-          - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
-          - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
-          - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+    - Welcome: README.md
+    - Quickstart: user-guide/quickstart.md
+    - Concepts:
+      - Agents:
+        - Agent Loop: user-guide/concepts/agents/agent-loop.md
+        - Sessions & State: user-guide/concepts/agents/sessions-state.md
+        - Prompts: user-guide/concepts/agents/prompts.md
+        - Context Management: user-guide/concepts/agents/context-management.md
+      - Tools:
+        - Overview: user-guide/concepts/tools/tools_overview.md
+        - Python: user-guide/concepts/tools/python-tools.md
+        - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
+        - Example Tools Package: user-guide/concepts/tools/example-tools-package.md
+      - Model Providers:
+        - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
+        - Anthropic: user-guide/concepts/model-providers/anthropic.md
+        - LiteLLM: user-guide/concepts/model-providers/litellm.md
+        - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+        - Ollama: user-guide/concepts/model-providers/ollama.md
+        - OpenAI: user-guide/concepts/model-providers/openai.md
+        - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
+      - Streaming:
+        - Async Iterators: user-guide/concepts/streaming/async-iterators.md
+        - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
+      - Multi-agent:
+        - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
+        - Swarm: user-guide/concepts/multi-agent/swarm.md
+        - Graph: user-guide/concepts/multi-agent/graph.md
+        - Workflow: user-guide/concepts/multi-agent/workflow.md
+    - Safety & Security:
+      - Responsible AI: user-guide/safety-security/responsible-ai.md
+      - Guardrails: user-guide/safety-security/guardrails.md
+      - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
+    - Observability & Evaluation:
+      - Observability: user-guide/observability-evaluation/observability.md
+      - Metrics: user-guide/observability-evaluation/metrics.md
+      - Traces: user-guide/observability-evaluation/traces.md
+      - Logs: user-guide/observability-evaluation/logs.md
+      - Evaluation: user-guide/observability-evaluation/evaluation.md
+    - Deploy:
+      - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
+      - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
+      - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
+      - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
   - Examples:
-      - Overview: examples/README.md
-      - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
-      - Weather Forecaster: examples/python/weather_forecaster.md
-      - Memory Agent: examples/python/memory_agent.md
-      - File Operations: examples/python/file_operations.md
-      - Agents Workflows: examples/python/agents_workflows.md
-      - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
-      - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
-      - Meta Tooling: examples/python/meta_tooling.md
-      - MCP: examples/python/mcp_calculator.md
+    - Overview: examples/README.md
+    - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
+    - Weather Forecaster: examples/python/weather_forecaster.md
+    - Memory Agent: examples/python/memory_agent.md
+    - File Operations: examples/python/file_operations.md
+    - Agents Workflows: examples/python/agents_workflows.md
+    - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
+    - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
+    - Meta Tooling: examples/python/meta_tooling.md
+    - MCP: examples/python/mcp_calculator.md
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
-      - Agent: api-reference/agent.md
-      - Event Loop: api-reference/event-loop.md
-      - Handlers: api-reference/handlers.md
-      - Models: api-reference/models.md
-      - Telemetry: api-reference/telemetry.md
-      - Tools: api-reference/tools.md
-      - Types: api-reference/types.md
+    - Agent: api-reference/agent.md
+    - Event Loop: api-reference/event-loop.md
+    - Handlers: api-reference/handlers.md
+    - Models: api-reference/models.md
+    - Telemetry: api-reference/telemetry.md
+    - Tools: api-reference/tools.md
+    - Types: api-reference/types.md
 
 exclude_docs: |
   node_modules
