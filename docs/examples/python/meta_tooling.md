@@ -36,7 +36,8 @@ agent = Agent(
     system_prompt=TOOL_BUILDER_SYSTEM_PROMPT, tools=[load_tool, shell, editor]
 )
 ```
-  - `editor`: Tool used to write code directly to a file named `"custom_tool_X.py"`, where "X" is the index of the tool being created. 
+
+  - `editor`: Tool used to write code directly to a file named `"custom_tool_X.py"`, where "X" is the index of the tool being created.
   - `load_tool`: Tool used to load the tool so the Agent can use it.
   - `shell`: Tool used to execute the tool. 
 

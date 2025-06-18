@@ -1,7 +1,6 @@
-name: Links
+name: Build and Test
 
 on:
-
   pull_request:
     branches: [ main ]
     types: [ opened, synchronize, reopened, ready_for_review, review_requested, review_request_removed ]
@@ -12,12 +11,25 @@ on:
 permissions: read-all
 
 jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Build docs
+        run: |
+          mkdocs build
+
   check_links:
+    name: Check Links
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-
       - name: Restore lychee cache
         uses: actions/cache@v4
         with:
