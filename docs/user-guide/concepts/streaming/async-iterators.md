@@ -59,6 +59,7 @@ The async iterator yields the same event types as [callback handlers](callback-h
 - `reasoning`: True for reasoning events
 - `reasoningText`: Text from reasoning process
 - `reasoning_signature`: Signature from reasoning process
+- `redactedContent`: Reasoning content redacted by the model
 
 ## FastAPI Example
 
