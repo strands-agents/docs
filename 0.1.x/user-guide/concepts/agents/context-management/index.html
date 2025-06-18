@@ -696,6 +696,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#summarizingconversationmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      SummarizingConversationManager
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2358,6 +2367,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#summarizingconversationmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      SummarizingConversationManager
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2443,6 +2461,94 @@
 <li><strong>Dangling Message Cleanup</strong>: Removes incomplete message sequences to maintain valid conversation state.</li>
 <li><strong>Overflow Trimming</strong>: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.</li>
 <li><strong>Configurable Tool Result Truncation</strong>: Enable / disable truncation of tool results when the message exceeds context window limits. When <code>should_truncate_results=True</code> (default), large results are truncated with a placeholder message. When <code>False</code>, full results are preserved but more historical messages may be removed.</li>
+</ul>
+<h4 id="summarizingconversationmanager">SummarizingConversationManager<a class="headerlink" href="#summarizingconversationmanager" title="Permanent link">&para;</a></h4>
+<p>The <a href="../../../../api-reference/agent/#strands.agent.conversation_manager.summarizing_conversation_manager.SummarizingConversationManager"><code>SummarizingConversationManager</code></a> implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.</p>
+<p>Configuration parameters:</p>
+<ul>
+<li><strong><code>summary_ratio</code></strong> (float, default: 0.3): Percentage of messages to summarize when reducing context (clamped between 0.1 and 0.8)</li>
+<li><strong><code>preserve_recent_messages</code></strong> (int, default: 10): Minimum number of recent messages to always keep</li>
+<li><strong><code>summarization_agent</code></strong> (Agent, optional): Custom agent for generating summaries. If not provided, uses the main agent instance. Cannot be used together with <code>summarization_system_prompt</code>.</li>
+<li><strong><code>summarization_system_prompt</code></strong> (str, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format. Cannot be used together with <code>summarization_agent</code>.</li>
+</ul>
+<p><strong>Basic Usage:</strong></p>
+<p>By default, the <code>SummarizingConversationManager</code> leverages the same model and configuration as your main agent to perform summarization.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.agent.conversation_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizingConversationManager</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">conversation_manager</span><span class="o">=</span><span class="n">SummarizingConversationManager</span><span class="p">()</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>You can also customize the behavior by adjusting parameters like summary ratio and number of preserved messages:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.agent.conversation_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizingConversationManager</span>
+
+<span class="c1"># Create the summarizing conversation manager with default settings</span>
+<span class="n">conversation_manager</span> <span class="o">=</span> <span class="n">SummarizingConversationManager</span><span class="p">(</span>
+    <span class="n">summary_ratio</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>  <span class="c1"># Summarize 30% of messages when context reduction is needed</span>
+    <span class="n">preserve_recent_messages</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Always keep 10 most recent messages</span>
+<span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">conversation_manager</span><span class="o">=</span><span class="n">conversation_manager</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Custom System Prompt for Domain-Specific Summarization:</strong></p>
+<p>You can customize the summarization behavior by providing a custom system prompt that tailors the summarization to your domain or use case.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.agent.conversation_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizingConversationManager</span>
+
+<span class="c1"># Custom system prompt for technical conversations</span>
+<span class="n">custom_system_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">You are summarizing a technical conversation. Create a concise bullet-point summary that:</span>
+<span class="s2">- Focuses on code changes, architectural decisions, and technical solutions</span>
+<span class="s2">- Preserves specific function names, file paths, and configuration details</span>
+<span class="s2">- Omits conversational elements and focuses on actionable information</span>
+<span class="s2">- Uses technical terminology appropriate for software development</span>
+
+<span class="s2">Format as bullet points without conversational language.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">conversation_manager</span> <span class="o">=</span> <span class="n">SummarizingConversationManager</span><span class="p">(</span>
+    <span class="n">summarization_system_prompt</span><span class="o">=</span><span class="n">custom_system_prompt</span>
+<span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">conversation_manager</span><span class="o">=</span><span class="n">conversation_manager</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Advanced Configuration with Custom Summarization Agent:</strong></p>
+<p>For advanced use cases, you can provide a custom <code>summarization_agent</code> to handle the summarization process. This enables using a different model (such as a faster or a more cost-effective one), incorporating tools during summarization, or implementing specialized summarization logic tailored to your domain. The custom agent can leverage its own system prompt, tools, and model configuration to generate summaries that best preserve the essential context for your specific use case.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.agent.conversation_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummarizingConversationManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnthropicModel</span>
+
+<span class="c1"># Create a cheaper, faster model for summarization tasks</span>
+<span class="n">summarization_model</span> <span class="o">=</span> <span class="n">AnthropicModel</span><span class="p">(</span>
+    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;claude-haiku-4-20250514&quot;</span><span class="p">,</span>  <span class="c1"># More cost-effective for summarization</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}</span>  <span class="c1"># Low temperature for consistent summaries</span>
+<span class="p">)</span>
+<span class="n">custom_summarization_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">summarization_model</span><span class="p">)</span>
+
+<span class="n">conversation_manager</span> <span class="o">=</span> <span class="n">SummarizingConversationManager</span><span class="p">(</span>
+    <span class="n">summary_ratio</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">preserve_recent_messages</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">summarization_agent</span><span class="o">=</span><span class="n">custom_summarization_agent</span>
+<span class="p">)</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">conversation_manager</span><span class="o">=</span><span class="n">conversation_manager</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Key features of the <code>SummarizingConversationManager</code>:</p>
+<ul>
+<li><strong>Context Window Management</strong>: Automatically reduces context when token limits are exceeded</li>
+<li><strong>Intelligent Summarization</strong>: Uses structured bullet-point summaries to capture key information</li>
+<li><strong>Tool Pair Preservation</strong>: Ensures tool use and result message pairs aren't broken during summarization</li>
+<li><strong>Flexible Configuration</strong>: Customize summarization behavior through various parameters</li>
+<li><strong>Fallback Safety</strong>: Handles summarization failures gracefully</li>
 </ul>
 
 

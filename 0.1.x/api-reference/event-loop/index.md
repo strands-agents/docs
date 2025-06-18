@@ -130,6 +130,7 @@ def event_loop_cycle(
     metrics: Metrics
 
     # Retry loop for handling throttling exceptions
+    current_delay = INITIAL_DELAY
     for attempt in range(MAX_ATTEMPTS):
         model_id = model.config.get("model_id") if hasattr(model, "config") else None
         model_invoke_span = tracer.start_model_invoke_span(
@@ -154,16 +155,7 @@ def event_loop_cycle(
         except ContextWindowOverflowException as e:
             if model_invoke_span:
                 tracer.end_span_with_error(model_invoke_span, str(e), e)
-            return handle_input_too_long_error(
-                e,
-                messages,
-                model,
-                system_prompt,
-                tool_config,
-                callback_handler,
-                tool_handler,
-                kwargs,
-            )
+            raise e
 
         except ModelThrottledException as e:
             if model_invoke_span:
@@ -171,7 +163,7 @@ def event_loop_cycle(
 
             # Handle throttling errors with exponential backoff
             should_retry, current_delay = handle_throttling_error(
-                e, attempt, MAX_ATTEMPTS, INITIAL_DELAY, MAX_DELAY, callback_handler, kwargs
+                e, attempt, MAX_ATTEMPTS, current_delay, MAX_DELAY, callback_handler, kwargs
             )
             if should_retry:
                 continue
@@ -242,6 +234,10 @@ def event_loop_cycle(
         # Don't invoke the callback_handler or log the exception - we already did it when we
         # raised the exception and we don't need that duplication.
         raise
+    except ContextWindowOverflowException as e:
+        if cycle_span:
+            tracer.end_span_with_error(cycle_span, str(e), e)
+        raise e
     except Exception as e:
         if cycle_span:
             tracer.end_span_with_error(cycle_span, str(e), e)
@@ -405,88 +401,6 @@ def recurse_event_loop(
 This module provides specialized error handlers for common issues that may occur during event loop execution.
 
 Examples include throttling exceptions and context window overflow errors. These handlers implement recovery strategies like exponential backoff for throttling and message truncation for context window limitations.
-
-### `handle_input_too_long_error(e, messages, model, system_prompt, tool_config, callback_handler, tool_handler, kwargs)`
-
-Handle 'Input is too long' errors by truncating tool results.
-
-When a context window overflow exception occurs (input too long for the model), this function attempts to recover by finding and truncating the most recent tool results in the conversation history. If truncation is successful, the function will make a call to the event loop.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `e` | `ContextWindowOverflowException` | The ContextWindowOverflowException that occurred. | *required* | | `messages` | `Messages` | The conversation message history. | *required* | | `model` | `Model` | Model provider for running inference. | *required* | | `system_prompt` | `Optional[str]` | System prompt for the model. | *required* | | `tool_config` | `Any` | Tool configuration for the conversation. | *required* | | `callback_handler` | `Any` | Callback for processing events as they happen. | *required* | | `tool_handler` | `Any` | Handler for tool execution. | *required* | | `kwargs` | `Dict[str, Any]` | Additional arguments for the event loop. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `Tuple[StopReason, Message, EventLoopMetrics, Any]` | The results from the event loop call if successful. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `ContextWindowOverflowException` | If messages cannot be truncated. |
-
-Source code in `strands/event_loop/error_handler.py`
-
-```
-def handle_input_too_long_error(
-    e: ContextWindowOverflowException,
-    messages: Messages,
-    model: Model,
-    system_prompt: Optional[str],
-    tool_config: Any,
-    callback_handler: Any,
-    tool_handler: Any,
-    kwargs: Dict[str, Any],
-) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
-    """Handle 'Input is too long' errors by truncating tool results.
-
-    When a context window overflow exception occurs (input too long for the model), this function attempts to recover
-    by finding and truncating the most recent tool results in the conversation history. If truncation is successful, the
-    function will make a call to the event loop.
-
-    Args:
-        e: The ContextWindowOverflowException that occurred.
-        messages: The conversation message history.
-        model: Model provider for running inference.
-        system_prompt: System prompt for the model.
-        tool_config: Tool configuration for the conversation.
-        callback_handler: Callback for processing events as they happen.
-        tool_handler: Handler for tool execution.
-        kwargs: Additional arguments for the event loop.
-
-    Returns:
-        The results from the event loop call if successful.
-
-    Raises:
-        ContextWindowOverflowException: If messages cannot be truncated.
-    """
-    from .event_loop import recurse_event_loop  # Import here to avoid circular imports
-
-    # Find the last message with tool results
-    last_message_with_tool_results = find_last_message_with_tool_results(messages)
-
-    # If we found a message with toolResult
-    if last_message_with_tool_results is not None:
-        logger.debug("message_index=<%s> | found message with tool results at index", last_message_with_tool_results)
-
-        # Truncate the tool results in this message
-        truncate_tool_results(messages, last_message_with_tool_results)
-
-        return recurse_event_loop(
-            model=model,
-            system_prompt=system_prompt,
-            messages=messages,
-            tool_config=tool_config,
-            callback_handler=callback_handler,
-            tool_handler=tool_handler,
-            **kwargs,
-        )
-
-    # If we can't handle this error, pass it up
-    callback_handler(force_stop=True, force_stop_reason=str(e))
-    logger.error("an exception occurred in event_loop_cycle | %s", e)
-    raise ContextWindowOverflowException() from e
-
-```
 
 ### `handle_throttling_error(e, attempt, max_attempts, current_delay, max_delay, callback_handler, kwargs)`
 
@@ -666,99 +580,6 @@ def clean_orphaned_empty_tool_uses(messages: Messages) -> bool:
             logger.warning("failed to fix orphaned tool use | %s", e)
 
     return True
-
-```
-
-### `find_last_message_with_tool_results(messages)`
-
-Find the index of the last message containing tool results.
-
-This is useful for identifying messages that might need to be truncated to reduce context size.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation message history. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `Optional[int]` | Index of the last message with tool results, or None if no such message exists. |
-
-Source code in `strands/event_loop/message_processor.py`
-
-```
-def find_last_message_with_tool_results(messages: Messages) -> Optional[int]:
-    """Find the index of the last message containing tool results.
-
-    This is useful for identifying messages that might need to be truncated to reduce context size.
-
-    Args:
-        messages: The conversation message history.
-
-    Returns:
-        Index of the last message with tool results, or None if no such message exists.
-    """
-    # Iterate backwards through all messages (from newest to oldest)
-    for idx in range(len(messages) - 1, -1, -1):
-        # Check if this message has any content with toolResult
-        current_message = messages[idx]
-        has_tool_result = False
-
-        for content in current_message.get("content", []):
-            if isinstance(content, dict) and "toolResult" in content:
-                has_tool_result = True
-                break
-
-        if has_tool_result:
-            return idx
-
-    return None
-
-```
-
-### `truncate_tool_results(messages, msg_idx)`
-
-Truncate tool results in a message to reduce context size.
-
-When a message contains tool results that are too large for the model's context window, this function replaces the content of those tool results with a simple error message.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation message history. | *required* | | `msg_idx` | `int` | Index of the message containing tool results to truncate. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `bool` | True if any changes were made to the message, False otherwise. |
-
-Source code in `strands/event_loop/message_processor.py`
-
-```
-def truncate_tool_results(messages: Messages, msg_idx: int) -> bool:
-    """Truncate tool results in a message to reduce context size.
-
-    When a message contains tool results that are too large for the model's context window, this function replaces the
-    content of those tool results with a simple error message.
-
-    Args:
-        messages: The conversation message history.
-        msg_idx: Index of the message containing tool results to truncate.
-
-    Returns:
-        True if any changes were made to the message, False otherwise.
-    """
-    if msg_idx >= len(messages) or msg_idx < 0:
-        return False
-
-    message = messages[msg_idx]
-    changes_made = False
-
-    for i, content in enumerate(message.get("content", [])):
-        if isinstance(content, dict) and "toolResult" in content:
-            # Update status to error with informative message
-            message["content"][i]["toolResult"]["status"] = "error"
-            message["content"][i]["toolResult"]["content"] = [{"text": "The tool result was too large!"}]
-            changes_made = True
-
-    return changes_made
 
 ```
 

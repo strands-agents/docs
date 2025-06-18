@@ -9995,7 +9995,22 @@ invocation capabilities.</p>
 <span class="normal">579</span>
 <span class="normal">580</span>
 <span class="normal">581</span>
-<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ToolRegistry</span><span class="p">:</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ToolRegistry</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Central registry for all tools available to the agent.</span>
 
 <span class="sd">    This class manages tool registration, validation, discovery, and invocation.</span>
@@ -10161,6 +10176,21 @@ invocation capabilities.</p>
             <span class="n">tool</span><span class="o">.</span><span class="n">tool_type</span><span class="p">,</span>
             <span class="n">tool</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">normalized_name</span> <span class="o">=</span> <span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+
+            <span class="n">matching_tools</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">tool_name</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">tool</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">normalized_name</span>
+            <span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">matching_tools</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Tool name &#39;</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">&#39; already exists as &#39;</span><span class="si">{</span><span class="n">matching_tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                    <span class="s2">&quot; Cannot add a duplicate tool which differs by a &#39;-&#39; or &#39;_&#39;&quot;</span>
+                <span class="p">)</span>
 
         <span class="c1"># Register in main registry</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool</span>
@@ -10618,14 +10648,14 @@ invocation capabilities.</p>
 
               <details class="quote">
                 <summary>Source code in <code>strands/tools/registry.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span>
-<span class="normal">545</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NewToolDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NewToolDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dictionary type for adding or updating a tool in the configuration.</span>
 
 <span class="sd">    Attributes:</span>
@@ -10727,22 +10757,7 @@ invocation capabilities.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/registry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
@@ -10750,7 +10765,22 @@ invocation capabilities.</p>
 <span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
-<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">discover_tool_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">discover_tool_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Discover available tool modules in all tools directories.</span>
 
 <span class="sd">    Returns:</span>
@@ -10939,25 +10969,25 @@ invocation capabilities.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/registry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">225</span>
 <span class="normal">226</span>
 <span class="normal">227</span>
-<span class="normal">228</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_tools_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_tools_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all tool directory paths.</span>
 
 <span class="sd">    Returns:</span>
@@ -11021,20 +11051,20 @@ invocation capabilities.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/registry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">478</span>
-<span class="normal">479</span>
-<span class="normal">480</span>
-<span class="normal">481</span>
-<span class="normal">482</span>
-<span class="normal">483</span>
-<span class="normal">484</span>
-<span class="normal">485</span>
-<span class="normal">486</span>
-<span class="normal">487</span>
-<span class="normal">488</span>
-<span class="normal">489</span>
-<span class="normal">490</span>
-<span class="normal">491</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialize_tool_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolConfig</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialize_tool_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ToolConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize tool configuration from tool handler with optional filtering.</span>
 
 <span class="sd">    Returns:</span>
@@ -11101,22 +11131,7 @@ invocation capabilities.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/registry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">359</span>
-<span class="normal">360</span>
-<span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">374</span>
 <span class="normal">375</span>
 <span class="normal">376</span>
 <span class="normal">377</span>
@@ -11218,7 +11233,22 @@ invocation capabilities.</p>
 <span class="normal">473</span>
 <span class="normal">474</span>
 <span class="normal">475</span>
-<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialize_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_tools_from_directory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">initialize_tools</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_tools_from_directory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize all tools by discovering and loading them dynamically from all tool directories.</span>
 
 <span class="sd">    Args:</span>
@@ -11805,7 +11835,22 @@ Can be:</p>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
-<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">register_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">AgentTool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">register_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">AgentTool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a tool function with the given name.</span>
 
 <span class="sd">    Args:</span>
@@ -11817,6 +11862,21 @@ Can be:</p>
         <span class="n">tool</span><span class="o">.</span><span class="n">tool_type</span><span class="p">,</span>
         <span class="n">tool</span><span class="o">.</span><span class="n">is_dynamic</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">normalized_name</span> <span class="o">=</span> <span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+
+        <span class="n">matching_tools</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">tool_name</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">tool</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">normalized_name</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">matching_tools</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Tool name &#39;</span><span class="si">{</span><span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="si">}</span><span class="s2">&#39; already exists as &#39;</span><span class="si">{</span><span class="n">matching_tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="s2">&quot; Cannot add a duplicate tool which differs by a &#39;-&#39; or &#39;_&#39;&quot;</span>
+            <span class="p">)</span>
 
     <span class="c1"># Register in main registry</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">registry</span><span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">tool_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool</span>
@@ -11941,22 +12001,7 @@ Can be:</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/registry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
 <span class="normal">273</span>
@@ -12043,7 +12088,22 @@ Can be:</p>
 <span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
-<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reload_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reload_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reload a specific tool module.</span>
 
 <span class="sd">    Args:</span>
@@ -12222,22 +12282,7 @@ Can be:</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/tools/registry.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">493</span>
-<span class="normal">494</span>
-<span class="normal">495</span>
-<span class="normal">496</span>
-<span class="normal">497</span>
-<span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span>
-<span class="normal">501</span>
-<span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span>
-<span class="normal">508</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">508</span>
 <span class="normal">509</span>
 <span class="normal">510</span>
 <span class="normal">511</span>
@@ -12265,7 +12310,22 @@ Can be:</p>
 <span class="normal">533</span>
 <span class="normal">534</span>
 <span class="normal">535</span>
-<span class="normal">536</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_tool_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_spec</span><span class="p">:</span> <span class="n">ToolSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_tool_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool_spec</span><span class="p">:</span> <span class="n">ToolSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate tool specification against required schema.</span>
 
 <span class="sd">    Args:</span>

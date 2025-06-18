@@ -2184,15 +2184,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#strands.event_loop.error_handler.handle_input_too_long_error" class="md-nav__link">
-    <span class="md-ellipsis">
-      handle_input_too_long_error
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#strands.event_loop.error_handler.handle_throttling_error" class="md-nav__link">
     <span class="md-ellipsis">
       handle_throttling_error
@@ -2220,24 +2211,6 @@
   <a href="#strands.event_loop.message_processor.clean_orphaned_empty_tool_uses" class="md-nav__link">
     <span class="md-ellipsis">
       clean_orphaned_empty_tool_uses
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#strands.event_loop.message_processor.find_last_message_with_tool_results" class="md-nav__link">
-    <span class="md-ellipsis">
-      find_last_message_with_tool_results
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#strands.event_loop.message_processor.truncate_tool_results" class="md-nav__link">
-    <span class="md-ellipsis">
-      truncate_tool_results
     </span>
   </a>
   
@@ -2574,15 +2547,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#strands.event_loop.error_handler.handle_input_too_long_error" class="md-nav__link">
-    <span class="md-ellipsis">
-      handle_input_too_long_error
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#strands.event_loop.error_handler.handle_throttling_error" class="md-nav__link">
     <span class="md-ellipsis">
       handle_throttling_error
@@ -2610,24 +2574,6 @@
   <a href="#strands.event_loop.message_processor.clean_orphaned_empty_tool_uses" class="md-nav__link">
     <span class="md-ellipsis">
       clean_orphaned_empty_tool_uses
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#strands.event_loop.message_processor.find_last_message_with_tool_results" class="md-nav__link">
-    <span class="md-ellipsis">
-      find_last_message_with_tool_results
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#strands.event_loop.message_processor.truncate_tool_results" class="md-nav__link">
-    <span class="md-ellipsis">
-      truncate_tool_results
     </span>
   </a>
   
@@ -3298,11 +3244,7 @@ recovery. It manages the entire lifecycle of a conversation turn, including:</p>
 <span class="normal">253</span>
 <span class="normal">254</span>
 <span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">event_loop_cycle</span><span class="p">(</span>
+<span class="normal">256</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">event_loop_cycle</span><span class="p">(</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
     <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span>
@@ -3388,6 +3330,7 @@ recovery. It manages the entire lifecycle of a conversation turn, including:</p>
     <span class="n">metrics</span><span class="p">:</span> <span class="n">Metrics</span>
 
     <span class="c1"># Retry loop for handling throttling exceptions</span>
+    <span class="n">current_delay</span> <span class="o">=</span> <span class="n">INITIAL_DELAY</span>
     <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_ATTEMPTS</span><span class="p">):</span>
         <span class="n">model_id</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_id&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">model_invoke_span</span> <span class="o">=</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_model_invoke_span</span><span class="p">(</span>
@@ -3412,16 +3355,7 @@ recovery. It manages the entire lifecycle of a conversation turn, including:</p>
         <span class="k">except</span> <span class="n">ContextWindowOverflowException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">model_invoke_span</span><span class="p">:</span>
                 <span class="n">tracer</span><span class="o">.</span><span class="n">end_span_with_error</span><span class="p">(</span><span class="n">model_invoke_span</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">handle_input_too_long_error</span><span class="p">(</span>
-                <span class="n">e</span><span class="p">,</span>
-                <span class="n">messages</span><span class="p">,</span>
-                <span class="n">model</span><span class="p">,</span>
-                <span class="n">system_prompt</span><span class="p">,</span>
-                <span class="n">tool_config</span><span class="p">,</span>
-                <span class="n">callback_handler</span><span class="p">,</span>
-                <span class="n">tool_handler</span><span class="p">,</span>
-                <span class="n">kwargs</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
 
         <span class="k">except</span> <span class="n">ModelThrottledException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">model_invoke_span</span><span class="p">:</span>
@@ -3429,7 +3363,7 @@ recovery. It manages the entire lifecycle of a conversation turn, including:</p>
 
             <span class="c1"># Handle throttling errors with exponential backoff</span>
             <span class="n">should_retry</span><span class="p">,</span> <span class="n">current_delay</span> <span class="o">=</span> <span class="n">handle_throttling_error</span><span class="p">(</span>
-                <span class="n">e</span><span class="p">,</span> <span class="n">attempt</span><span class="p">,</span> <span class="n">MAX_ATTEMPTS</span><span class="p">,</span> <span class="n">INITIAL_DELAY</span><span class="p">,</span> <span class="n">MAX_DELAY</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">,</span> <span class="n">kwargs</span>
+                <span class="n">e</span><span class="p">,</span> <span class="n">attempt</span><span class="p">,</span> <span class="n">MAX_ATTEMPTS</span><span class="p">,</span> <span class="n">current_delay</span><span class="p">,</span> <span class="n">MAX_DELAY</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">,</span> <span class="n">kwargs</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">should_retry</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -3500,6 +3434,10 @@ recovery. It manages the entire lifecycle of a conversation turn, including:</p>
         <span class="c1"># Don&#39;t invoke the callback_handler or log the exception - we already did it when we</span>
         <span class="c1"># raised the exception and we don&#39;t need that duplication.</span>
         <span class="k">raise</span>
+    <span class="k">except</span> <span class="n">ContextWindowOverflowException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cycle_span</span><span class="p">:</span>
+            <span class="n">tracer</span><span class="o">.</span><span class="n">end_span_with_error</span><span class="p">(</span><span class="n">cycle_span</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">e</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">cycle_span</span><span class="p">:</span>
             <span class="n">tracer</span><span class="o">.</span><span class="n">end_span_with_error</span><span class="p">(</span><span class="n">cycle_span</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
@@ -3716,7 +3654,11 @@ cycle ID for the next cycle. This maintains the parent-child relationship betwee
 
             <details class="quote">
               <summary>Source code in <code>strands/event_loop/event_loop.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">317</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
 <span class="normal">318</span>
 <span class="normal">319</span>
 <span class="normal">320</span>
@@ -3729,11 +3671,7 @@ cycle ID for the next cycle. This maintains the parent-child relationship betwee
 <span class="normal">327</span>
 <span class="normal">328</span>
 <span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prepare_next_cycle</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">event_loop_metrics</span><span class="p">:</span> <span class="n">EventLoopMetrics</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">330</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prepare_next_cycle</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">event_loop_metrics</span><span class="p">:</span> <span class="n">EventLoopMetrics</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare state for the next event loop cycle.</span>
 
 <span class="sd">    Updates the keyword arguments with the current event loop metrics and stores the current cycle ID as the parent</span>
@@ -3853,7 +3791,11 @@ cycle ID for the next cycle. This maintains the parent-child relationship betwee
 
             <details class="quote">
               <summary>Source code in <code>strands/event_loop/event_loop.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">263</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
@@ -3900,11 +3842,7 @@ cycle ID for the next cycle. This maintains the parent-child relationship betwee
 <span class="normal">307</span>
 <span class="normal">308</span>
 <span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">recurse_event_loop</span><span class="p">(</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">recurse_event_loop</span><span class="p">(</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">StopReason</span><span class="p">,</span> <span class="n">Message</span><span class="p">,</span> <span class="n">EventLoopMetrics</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a recursive call to event_loop_cycle with the current state.</span>
@@ -4003,348 +3941,6 @@ like exponential backoff for throttling and message truncation for context windo
 
 
 
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="strands.event_loop.error_handler.handle_input_too_long_error" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">handle_input_too_long_error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">system_prompt</span><span class="p">,</span> <span class="n">tool_config</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">,</span> <span class="n">tool_handler</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span></code>
-
-<a href="#strands.event_loop.error_handler.handle_input_too_long_error" class="headerlink" title="Permanent link">&para;</a></h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Handle 'Input is too long' errors by truncating tool results.</p>
-<p>When a context window overflow exception occurs (input too long for the model), this function attempts to recover
-by finding and truncating the most recent tool results in the conversation history. If truncation is successful, the
-function will make a call to the event loop.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>e</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ContextWindowOverflowException (strands.types.exceptions.ContextWindowOverflowException)" href="../types/#strands.types.exceptions.ContextWindowOverflowException">ContextWindowOverflowException</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The ContextWindowOverflowException that occurred.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>messages</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The conversation message history.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>model</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="Model (strands.types.models.Model)" href="../types/#strands.types.models.Model">Model</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Model provider for running inference.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>system_prompt</code>
-            </td>
-            <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>System prompt for the model.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>tool_config</code>
-            </td>
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Tool configuration for the conversation.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>callback_handler</code>
-            </td>
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Callback for processing events as they happen.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>tool_handler</code>
-            </td>
-            <td>
-                  <code><span title="typing.Any">Any</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Handler for tool execution.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>kwargs</code>
-            </td>
-            <td>
-                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Additional arguments for the event loop.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="typing.Tuple">Tuple</span>[<a class="autorefs autorefs-internal" title="StopReason = Literal['content_filtered', 'end_turn', 'guardrail_intervened', 'max_tokens', 'stop_sequence', 'tool_use']
-
-  
-      module-attribute
-   (strands.types.streaming.StopReason)" href="../types/#strands.types.event_loop.StopReason">StopReason</a>, <a class="autorefs autorefs-internal" title="Message (strands.types.content.Message)" href="../types/#strands.types.content.Message">Message</a>, <a class="autorefs autorefs-internal" title="EventLoopMetrics
-
-
-  
-      dataclass
-   (strands.telemetry.metrics.EventLoopMetrics)" href="../telemetry/#strands.telemetry.metrics.EventLoopMetrics">EventLoopMetrics</a>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The results from the event loop call if successful.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="ContextWindowOverflowException (strands.types.exceptions.ContextWindowOverflowException)" href="../types/#strands.types.exceptions.ContextWindowOverflowException">ContextWindowOverflowException</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If messages cannot be truncated.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>strands/event_loop/error_handler.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_input_too_long_error</span><span class="p">(</span>
-    <span class="n">e</span><span class="p">:</span> <span class="n">ContextWindowOverflowException</span><span class="p">,</span>
-    <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span>
-    <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
-    <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">tool_config</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-    <span class="n">callback_handler</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-    <span class="n">tool_handler</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-    <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">StopReason</span><span class="p">,</span> <span class="n">Message</span><span class="p">,</span> <span class="n">EventLoopMetrics</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle &#39;Input is too long&#39; errors by truncating tool results.</span>
-
-<span class="sd">    When a context window overflow exception occurs (input too long for the model), this function attempts to recover</span>
-<span class="sd">    by finding and truncating the most recent tool results in the conversation history. If truncation is successful, the</span>
-<span class="sd">    function will make a call to the event loop.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        e: The ContextWindowOverflowException that occurred.</span>
-<span class="sd">        messages: The conversation message history.</span>
-<span class="sd">        model: Model provider for running inference.</span>
-<span class="sd">        system_prompt: System prompt for the model.</span>
-<span class="sd">        tool_config: Tool configuration for the conversation.</span>
-<span class="sd">        callback_handler: Callback for processing events as they happen.</span>
-<span class="sd">        tool_handler: Handler for tool execution.</span>
-<span class="sd">        kwargs: Additional arguments for the event loop.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        The results from the event loop call if successful.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        ContextWindowOverflowException: If messages cannot be truncated.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.event_loop</span><span class="w"> </span><span class="kn">import</span> <span class="n">recurse_event_loop</span>  <span class="c1"># Import here to avoid circular imports</span>
-
-    <span class="c1"># Find the last message with tool results</span>
-    <span class="n">last_message_with_tool_results</span> <span class="o">=</span> <span class="n">find_last_message_with_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
-
-    <span class="c1"># If we found a message with toolResult</span>
-    <span class="k">if</span> <span class="n">last_message_with_tool_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;message_index=&lt;</span><span class="si">%s</span><span class="s2">&gt; | found message with tool results at index&quot;</span><span class="p">,</span> <span class="n">last_message_with_tool_results</span><span class="p">)</span>
-
-        <span class="c1"># Truncate the tool results in this message</span>
-        <span class="n">truncate_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">last_message_with_tool_results</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">recurse_event_loop</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-            <span class="n">system_prompt</span><span class="o">=</span><span class="n">system_prompt</span><span class="p">,</span>
-            <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
-            <span class="n">tool_config</span><span class="o">=</span><span class="n">tool_config</span><span class="p">,</span>
-            <span class="n">callback_handler</span><span class="o">=</span><span class="n">callback_handler</span><span class="p">,</span>
-            <span class="n">tool_handler</span><span class="o">=</span><span class="n">tool_handler</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="c1"># If we can&#39;t handle this error, pass it up</span>
-    <span class="n">callback_handler</span><span class="p">(</span><span class="n">force_stop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force_stop_reason</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;an exception occurred in event_loop_cycle | </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="n">ContextWindowOverflowException</span><span class="p">()</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
 
 <div class="doc doc-object doc-function">
 
@@ -4514,7 +4110,12 @@ function will make a call to the event loop.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/event_loop/error_handler.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
@@ -4549,12 +4150,7 @@ function will make a call to the event loop.</p>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_throttling_error</span><span class="p">(</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_throttling_error</span><span class="p">(</span>
     <span class="n">e</span><span class="p">:</span> <span class="n">ModelThrottledException</span><span class="p">,</span>
     <span class="n">attempt</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -4906,289 +4502,6 @@ toolUse.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;failed to fix orphaned tool use | </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">True</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="strands.event_loop.message_processor.find_last_message_with_tool_results" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">find_last_message_with_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span></code>
-
-<a href="#strands.event_loop.message_processor.find_last_message_with_tool_results" class="headerlink" title="Permanent link">&para;</a></h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Find the index of the last message containing tool results.</p>
-<p>This is useful for identifying messages that might need to be truncated to reduce context size.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>messages</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The conversation message history.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="int">int</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Index of the last message with tool results, or None if no such message exists.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>strands/event_loop/message_processor.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_last_message_with_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the index of the last message containing tool results.</span>
-
-<span class="sd">    This is useful for identifying messages that might need to be truncated to reduce context size.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        messages: The conversation message history.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Index of the last message with tool results, or None if no such message exists.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Iterate backwards through all messages (from newest to oldest)</span>
-    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># Check if this message has any content with toolResult</span>
-        <span class="n">current_message</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="n">has_tool_result</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">current_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="p">[]):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;toolResult&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-                <span class="n">has_tool_result</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">break</span>
-
-        <span class="k">if</span> <span class="n">has_tool_result</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">idx</span>
-
-    <span class="k">return</span> <span class="kc">None</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="strands.event_loop.message_processor.truncate_tool_results" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">truncate_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">msg_idx</span><span class="p">)</span></code>
-
-<a href="#strands.event_loop.message_processor.truncate_tool_results" class="headerlink" title="Permanent link">&para;</a></h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Truncate tool results in a message to reduce context size.</p>
-<p>When a message contains tool results that are too large for the model's context window, this function replaces the
-content of those tool results with a simple error message.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>messages</code>
-            </td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="Messages = List[Message]
-
-  
-      module-attribute
-   (strands.types.content.Messages)" href="../types/#strands.types.content.Messages">Messages</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The conversation message history.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>msg_idx</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Index of the message containing tool results to truncate.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>True if any changes were made to the message, False otherwise.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>strands/event_loop/message_processor.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">truncate_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">msg_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Truncate tool results in a message to reduce context size.</span>
-
-<span class="sd">    When a message contains tool results that are too large for the model&#39;s context window, this function replaces the</span>
-<span class="sd">    content of those tool results with a simple error message.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        messages: The conversation message history.</span>
-<span class="sd">        msg_idx: Index of the message containing tool results to truncate.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        True if any changes were made to the message, False otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">msg_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="ow">or</span> <span class="n">msg_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="n">message</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="n">msg_idx</span><span class="p">]</span>
-    <span class="n">changes_made</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="p">[])):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;toolResult&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-            <span class="c1"># Update status to error with informative message</span>
-            <span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;toolResult&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
-            <span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;toolResult&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;The tool result was too large!&quot;</span><span class="p">}]</span>
-            <span class="n">changes_made</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="k">return</span> <span class="n">changes_made</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

@@ -64,6 +64,7 @@ class Agent:
             """Call tool as a function.
 
             This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
+            It matches underscore-separated names to hyphenated tool names (e.g., 'some_thing' matches 'some-thing').
 
             Args:
                 name: The name of the attribute (tool) being accessed.
@@ -72,8 +73,29 @@ class Agent:
                 A function that when called will execute the named tool.
 
             Raises:
-                AttributeError: If no tool with the given name exists.
+                AttributeError: If no tool with the given name exists or if multiple tools match the given name.
             """
+
+            def find_normalized_tool_name() -> Optional[str]:
+                """Lookup the tool represented by name, replacing characters with underscores as necessary."""
+                tool_registry = self._agent.tool_registry.registry
+
+                if tool_registry.get(name, None):
+                    return name
+
+                # If the desired name contains underscores, it might be a placeholder for characters that can't be
+                # represented as python identifiers but are valid as tool names, such as dashes. In that case, find
+                # all tools that can be represented with the normalized name
+                if "_" in name:
+                    filtered_tools = [
+                        tool_name for (tool_name, tool) in tool_registry.items() if tool_name.replace("-", "_") == name
+                    ]
+
+                    # The registry itself defends against similar names, so we can just take the first match
+                    if filtered_tools:
+                        return filtered_tools[0]
+
+                raise AttributeError(f"Tool '{name}' not found")
 
             def caller(**kwargs: Any) -> Any:
                 """Call a tool directly by name.
@@ -95,14 +117,13 @@ class Agent:
                 Raises:
                     AttributeError: If the tool doesn't exist.
                 """
-                if name not in self._agent.tool_registry.registry:
-                    raise AttributeError(f"Tool '{name}' not found")
+                normalized_name = find_normalized_tool_name()
 
                 # Create unique tool ID and set up the tool request
                 tool_id = f"tooluse_{name}_{random.randint(100000000, 999999999)}"
                 tool_use = {
                     "toolUseId": tool_id,
-                    "name": name,
+                    "name": normalized_name,
                     "input": kwargs.copy(),
                 }
 
@@ -642,6 +663,7 @@ class ToolCaller:
         """Call tool as a function.
 
         This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
+        It matches underscore-separated names to hyphenated tool names (e.g., 'some_thing' matches 'some-thing').
 
         Args:
             name: The name of the attribute (tool) being accessed.
@@ -650,8 +672,29 @@ class ToolCaller:
             A function that when called will execute the named tool.
 
         Raises:
-            AttributeError: If no tool with the given name exists.
+            AttributeError: If no tool with the given name exists or if multiple tools match the given name.
         """
+
+        def find_normalized_tool_name() -> Optional[str]:
+            """Lookup the tool represented by name, replacing characters with underscores as necessary."""
+            tool_registry = self._agent.tool_registry.registry
+
+            if tool_registry.get(name, None):
+                return name
+
+            # If the desired name contains underscores, it might be a placeholder for characters that can't be
+            # represented as python identifiers but are valid as tool names, such as dashes. In that case, find
+            # all tools that can be represented with the normalized name
+            if "_" in name:
+                filtered_tools = [
+                    tool_name for (tool_name, tool) in tool_registry.items() if tool_name.replace("-", "_") == name
+                ]
+
+                # The registry itself defends against similar names, so we can just take the first match
+                if filtered_tools:
+                    return filtered_tools[0]
+
+            raise AttributeError(f"Tool '{name}' not found")
 
         def caller(**kwargs: Any) -> Any:
             """Call a tool directly by name.
@@ -673,14 +716,13 @@ class ToolCaller:
             Raises:
                 AttributeError: If the tool doesn't exist.
             """
-            if name not in self._agent.tool_registry.registry:
-                raise AttributeError(f"Tool '{name}' not found")
+            normalized_name = find_normalized_tool_name()
 
             # Create unique tool ID and set up the tool request
             tool_id = f"tooluse_{name}_{random.randint(100000000, 999999999)}"
             tool_use = {
                 "toolUseId": tool_id,
-                "name": name,
+                "name": normalized_name,
                 "input": kwargs.copy(),
             }
 
@@ -745,7 +787,7 @@ class ToolCaller:
 
 Call tool as a function.
 
-This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
+This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`). It matches underscore-separated names to hyphenated tool names (e.g., 'some_thing' matches 'some-thing').
 
 Parameters:
 
@@ -757,7 +799,7 @@ Returns:
 
 Raises:
 
-| Type | Description | | --- | --- | | `AttributeError` | If no tool with the given name exists. |
+| Type | Description | | --- | --- | | `AttributeError` | If no tool with the given name exists or if multiple tools match the given name. |
 
 Source code in `strands/agent/agent.py`
 
@@ -766,6 +808,7 @@ def __getattr__(self, name: str) -> Callable[..., Any]:
     """Call tool as a function.
 
     This method enables the method-style interface (e.g., `agent.tool.tool_name(param="value")`).
+    It matches underscore-separated names to hyphenated tool names (e.g., 'some_thing' matches 'some-thing').
 
     Args:
         name: The name of the attribute (tool) being accessed.
@@ -774,8 +817,29 @@ def __getattr__(self, name: str) -> Callable[..., Any]:
         A function that when called will execute the named tool.
 
     Raises:
-        AttributeError: If no tool with the given name exists.
+        AttributeError: If no tool with the given name exists or if multiple tools match the given name.
     """
+
+    def find_normalized_tool_name() -> Optional[str]:
+        """Lookup the tool represented by name, replacing characters with underscores as necessary."""
+        tool_registry = self._agent.tool_registry.registry
+
+        if tool_registry.get(name, None):
+            return name
+
+        # If the desired name contains underscores, it might be a placeholder for characters that can't be
+        # represented as python identifiers but are valid as tool names, such as dashes. In that case, find
+        # all tools that can be represented with the normalized name
+        if "_" in name:
+            filtered_tools = [
+                tool_name for (tool_name, tool) in tool_registry.items() if tool_name.replace("-", "_") == name
+            ]
+
+            # The registry itself defends against similar names, so we can just take the first match
+            if filtered_tools:
+                return filtered_tools[0]
+
+        raise AttributeError(f"Tool '{name}' not found")
 
     def caller(**kwargs: Any) -> Any:
         """Call a tool directly by name.
@@ -797,14 +861,13 @@ def __getattr__(self, name: str) -> Callable[..., Any]:
         Raises:
             AttributeError: If the tool doesn't exist.
         """
-        if name not in self._agent.tool_registry.registry:
-            raise AttributeError(f"Tool '{name}' not found")
+        normalized_name = find_normalized_tool_name()
 
         # Create unique tool ID and set up the tool request
         tool_id = f"tooluse_{name}_{random.randint(100000000, 999999999)}"
         tool_use = {
             "toolUseId": tool_id,
-            "name": name,
+            "name": normalized_name,
             "input": kwargs.copy(),
         }
 
@@ -1284,6 +1347,7 @@ It includes:
 - ConversationManager: Abstract base class defining the conversation management interface
 - NullConversationManager: A no-op implementation that does not modify conversation history
 - SlidingWindowConversationManager: An implementation that maintains a sliding window of messages to control context size while preserving conversation coherence
+- SummarizingConversationManager: An implementation that summarizes older context instead of simply trimming it
 
 Conversation managers help control memory usage and context length while maintaining relevant conversation state, which is critical for effective agent interactions.
 
@@ -1561,14 +1625,16 @@ class SlidingWindowConversationManager(ConversationManager):
     invalid window states.
     """
 
-    def __init__(self, window_size: int = 40):
+    def __init__(self, window_size: int = 40, should_truncate_results: bool = True):
         """Initialize the sliding window conversation manager.
 
         Args:
             window_size: Maximum number of messages to keep in the agent's history.
                 Defaults to 40 messages.
+            should_truncate_results: Truncate tool results when a message is too large for the model's context window
         """
         self.window_size = window_size
+        self.should_truncate_results = should_truncate_results
 
     def apply_management(self, agent: "Agent") -> None:
         """Apply the sliding window to the agent's messages array to maintain a manageable history size.
@@ -1644,6 +1710,19 @@ class SlidingWindowConversationManager(ConversationManager):
                 converted.
         """
         messages = agent.messages
+
+        # Try to truncate the tool result first
+        last_message_idx_with_tool_results = self._find_last_message_with_tool_results(messages)
+        if last_message_idx_with_tool_results is not None and self.should_truncate_results:
+            logger.debug(
+                "message_index=<%s> | found message with tool results at index", last_message_idx_with_tool_results
+            )
+            results_truncated = self._truncate_tool_results(messages, last_message_idx_with_tool_results)
+            if results_truncated:
+                logger.debug("message_index=<%s> | tool results truncated", last_message_idx_with_tool_results)
+                return
+
+        # Try to trim index id when tool result cannot be truncated anymore
         # If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size
         trim_index = 2 if len(messages) <= self.window_size else len(messages) - self.window_size
 
@@ -1669,27 +1748,95 @@ class SlidingWindowConversationManager(ConversationManager):
         # Overwrite message history
         messages[:] = messages[trim_index:]
 
+    def _truncate_tool_results(self, messages: Messages, msg_idx: int) -> bool:
+        """Truncate tool results in a message to reduce context size.
+
+        When a message contains tool results that are too large for the model's context window, this function
+        replaces the content of those tool results with a simple error message.
+
+        Args:
+            messages: The conversation message history.
+            msg_idx: Index of the message containing tool results to truncate.
+
+        Returns:
+            True if any changes were made to the message, False otherwise.
+        """
+        if msg_idx >= len(messages) or msg_idx < 0:
+            return False
+
+        message = messages[msg_idx]
+        changes_made = False
+        tool_result_too_large_message = "The tool result was too large!"
+        for i, content in enumerate(message.get("content", [])):
+            if isinstance(content, dict) and "toolResult" in content:
+                tool_result_content_text = next(
+                    (item["text"] for item in content["toolResult"]["content"] if "text" in item),
+                    "",
+                )
+                # make the overwriting logic togglable
+                if (
+                    message["content"][i]["toolResult"]["status"] == "error"
+                    and tool_result_content_text == tool_result_too_large_message
+                ):
+                    logger.info("ToolResult has already been updated, skipping overwrite")
+                    return False
+                # Update status to error with informative message
+                message["content"][i]["toolResult"]["status"] = "error"
+                message["content"][i]["toolResult"]["content"] = [{"text": tool_result_too_large_message}]
+                changes_made = True
+
+        return changes_made
+
+    def _find_last_message_with_tool_results(self, messages: Messages) -> Optional[int]:
+        """Find the index of the last message containing tool results.
+
+        This is useful for identifying messages that might need to be truncated to reduce context size.
+
+        Args:
+            messages: The conversation message history.
+
+        Returns:
+            Index of the last message with tool results, or None if no such message exists.
+        """
+        # Iterate backwards through all messages (from newest to oldest)
+        for idx in range(len(messages) - 1, -1, -1):
+            # Check if this message has any content with toolResult
+            current_message = messages[idx]
+            has_tool_result = False
+
+            for content in current_message.get("content", []):
+                if isinstance(content, dict) and "toolResult" in content:
+                    has_tool_result = True
+                    break
+
+            if has_tool_result:
+                return idx
+
+        return None
+
 ```
 
-##### `__init__(window_size=40)`
+##### `__init__(window_size=40, should_truncate_results=True)`
 
 Initialize the sliding window conversation manager.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `window_size` | `int` | Maximum number of messages to keep in the agent's history. Defaults to 40 messages. | `40` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `window_size` | `int` | Maximum number of messages to keep in the agent's history. Defaults to 40 messages. | `40` | | `should_truncate_results` | `bool` | Truncate tool results when a message is too large for the model's context window | `True` |
 
 Source code in `strands/agent/conversation_manager/sliding_window_conversation_manager.py`
 
 ```
-def __init__(self, window_size: int = 40):
+def __init__(self, window_size: int = 40, should_truncate_results: bool = True):
     """Initialize the sliding window conversation manager.
 
     Args:
         window_size: Maximum number of messages to keep in the agent's history.
             Defaults to 40 messages.
+        should_truncate_results: Truncate tool results when a message is too large for the model's context window
     """
     self.window_size = window_size
+    self.should_truncate_results = should_truncate_results
 
 ```
 
@@ -1773,6 +1920,19 @@ def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
             converted.
     """
     messages = agent.messages
+
+    # Try to truncate the tool result first
+    last_message_idx_with_tool_results = self._find_last_message_with_tool_results(messages)
+    if last_message_idx_with_tool_results is not None and self.should_truncate_results:
+        logger.debug(
+            "message_index=<%s> | found message with tool results at index", last_message_idx_with_tool_results
+        )
+        results_truncated = self._truncate_tool_results(messages, last_message_idx_with_tool_results)
+        if results_truncated:
+            logger.debug("message_index=<%s> | tool results truncated", last_message_idx_with_tool_results)
+            return
+
+    # Try to trim index id when tool result cannot be truncated anymore
     # If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size
     trim_index = 2 if len(messages) <= self.window_size else len(messages) - self.window_size
 

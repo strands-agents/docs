@@ -2456,6 +2456,10 @@
 <p>AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers. This makes it an excellent choice for deploying Strands Agents SDK agents because you only pay for the compute time you consume and don't need to manage hosts or servers.</p>
 <p>If you're not familiar with the AWS CDK, check out the <a href="https://docs.aws.amazon.com/cdk/v2/guide/home.html">official documentation</a>.</p>
 <p>This guide discusses Lambda integration at a high level - for a complete example project deploying to Lambda, check out the <a href="https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda"><code>deploy_to_lambda</code> sample project on GitHub</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This Lambda deployment example does not implement response streaming as described in the <a href="../../concepts/streaming/async-iterators/">Async Iterators for Streaming</a> documentation. If you need streaming capabilities, consider using the <a href="../deploy_to_aws_fargate/">AWS Fargate deployment</a> approach which does implement streaming responses.</p>
+</div>
 <h2 id="creating-your-agent-in-python">Creating Your Agent in Python<a class="headerlink" href="#creating-your-agent-in-python" title="Permanent link">&para;</a></h2>
 <p>The core of your Lambda deployment is the agent handler code. This Python script initializes your Strands Agents SDK agent and processes incoming requests. </p>
 <p>The Lambda handler follows these steps:</p>
@@ -2536,6 +2540,19 @@
 <span class="p">);</span>
 </code></pre></div>
 <p>The dependencies are packaged and pulled in via a Lambda layer separately from the application code. By separating your dependencies into a layer, your application code remains small and enables you to view or edit your function code directly in the Lambda console.</p>
+<div class="admonition info">
+<p class="admonition-title">Installing Dependencies with the Correct Architecture</p>
+<p>When deploying to AWS Lambda, it's important to install dependencies that match the target Lambda architecture. Because the example above uses ARM64 architecture, dependencies must be installed specifically for this architecture:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Python dependencies for lambda with correct architecture</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--python-version<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--platform<span class="w"> </span>manylinux2014_aarch64<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--target<span class="w"> </span>./packaging/_dependencies<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--only-binary<span class="o">=</span>:all:
+</code></pre></div>
+<p>This ensures that all binary dependencies are compatible with the Lambda ARM64 environment regardless of the operating-system used for development.</p>
+<p>Failing to match the architecture can result in runtime errors when the Lambda function executes.</p>
+</div>
 <h3 id="packaging-your-code">Packaging Your Code<a class="headerlink" href="#packaging-your-code" title="Permanent link">&para;</a></h3>
 <p>The CDK constructs above expect the Python code to be packaged before running the deployment - this can be done using a Python script that creates two ZIP files (<a href="https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/bin/package_for_lambda.py"><code>package_for_lambda.py</code></a>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_lambda_package</span><span class="p">():</span>

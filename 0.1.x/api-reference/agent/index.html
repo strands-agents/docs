@@ -3666,7 +3666,28 @@ models and tools in the SDK.</p>
 <span class="normal">602</span>
 <span class="normal">603</span>
 <span class="normal">604</span>
-<span class="normal">605</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Core Agent interface.</span>
 
 <span class="sd">    An agent orchestrates the following workflow:</span>
@@ -3696,6 +3717,7 @@ models and tools in the SDK.</p>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Call tool as a function.</span>
 
 <span class="sd">            This method enables the method-style interface (e.g., `agent.tool.tool_name(param=&quot;value&quot;)`).</span>
+<span class="sd">            It matches underscore-separated names to hyphenated tool names (e.g., &#39;some_thing&#39; matches &#39;some-thing&#39;).</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                name: The name of the attribute (tool) being accessed.</span>
@@ -3704,8 +3726,29 @@ models and tools in the SDK.</p>
 <span class="sd">                A function that when called will execute the named tool.</span>
 
 <span class="sd">            Raises:</span>
-<span class="sd">                AttributeError: If no tool with the given name exists.</span>
+<span class="sd">                AttributeError: If no tool with the given name exists or if multiple tools match the given name.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">find_normalized_tool_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Lookup the tool represented by name, replacing characters with underscores as necessary.&quot;&quot;&quot;</span>
+                <span class="n">tool_registry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">tool_registry</span><span class="o">.</span><span class="n">registry</span>
+
+                <span class="k">if</span> <span class="n">tool_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">name</span>
+
+                <span class="c1"># If the desired name contains underscores, it might be a placeholder for characters that can&#39;t be</span>
+                <span class="c1"># represented as python identifiers but are valid as tool names, such as dashes. In that case, find</span>
+                <span class="c1"># all tools that can be represented with the normalized name</span>
+                <span class="k">if</span> <span class="s2">&quot;_&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                    <span class="n">filtered_tools</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">tool_name</span> <span class="k">for</span> <span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">tool</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tool_registry</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span>
+                    <span class="p">]</span>
+
+                    <span class="c1"># The registry itself defends against similar names, so we can just take the first match</span>
+                    <span class="k">if</span> <span class="n">filtered_tools</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">filtered_tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">caller</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;Call a tool directly by name.</span>
@@ -3727,14 +3770,13 @@ models and tools in the SDK.</p>
 <span class="sd">                Raises:</span>
 <span class="sd">                    AttributeError: If the tool doesn&#39;t exist.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">tool_registry</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+                <span class="n">normalized_name</span> <span class="o">=</span> <span class="n">find_normalized_tool_name</span><span class="p">()</span>
 
                 <span class="c1"># Create unique tool ID and set up the tool request</span>
                 <span class="n">tool_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tooluse_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">100000000</span><span class="p">,</span><span class="w"> </span><span class="mi">999999999</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">tool_use</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;toolUseId&quot;</span><span class="p">:</span> <span class="n">tool_id</span><span class="p">,</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">normalized_name</span><span class="p">,</span>
                     <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                 <span class="p">}</span>
 
@@ -4507,7 +4549,28 @@ agent.tool.calculator(...)
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
-<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ToolCaller</span><span class="p">:</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ToolCaller</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Call tool as a function.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -4524,6 +4587,7 @@ agent.tool.calculator(...)
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Call tool as a function.</span>
 
 <span class="sd">        This method enables the method-style interface (e.g., `agent.tool.tool_name(param=&quot;value&quot;)`).</span>
+<span class="sd">        It matches underscore-separated names to hyphenated tool names (e.g., &#39;some_thing&#39; matches &#39;some-thing&#39;).</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: The name of the attribute (tool) being accessed.</span>
@@ -4532,8 +4596,29 @@ agent.tool.calculator(...)
 <span class="sd">            A function that when called will execute the named tool.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            AttributeError: If no tool with the given name exists.</span>
+<span class="sd">            AttributeError: If no tool with the given name exists or if multiple tools match the given name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">find_normalized_tool_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Lookup the tool represented by name, replacing characters with underscores as necessary.&quot;&quot;&quot;</span>
+            <span class="n">tool_registry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">tool_registry</span><span class="o">.</span><span class="n">registry</span>
+
+            <span class="k">if</span> <span class="n">tool_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">name</span>
+
+            <span class="c1"># If the desired name contains underscores, it might be a placeholder for characters that can&#39;t be</span>
+            <span class="c1"># represented as python identifiers but are valid as tool names, such as dashes. In that case, find</span>
+            <span class="c1"># all tools that can be represented with the normalized name</span>
+            <span class="k">if</span> <span class="s2">&quot;_&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">filtered_tools</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">tool_name</span> <span class="k">for</span> <span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">tool</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tool_registry</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span>
+                <span class="p">]</span>
+
+                <span class="c1"># The registry itself defends against similar names, so we can just take the first match</span>
+                <span class="k">if</span> <span class="n">filtered_tools</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">filtered_tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">caller</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Call a tool directly by name.</span>
@@ -4555,14 +4640,13 @@ agent.tool.calculator(...)
 <span class="sd">            Raises:</span>
 <span class="sd">                AttributeError: If the tool doesn&#39;t exist.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">tool_registry</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+            <span class="n">normalized_name</span> <span class="o">=</span> <span class="n">find_normalized_tool_name</span><span class="p">()</span>
 
             <span class="c1"># Create unique tool ID and set up the tool request</span>
             <span class="n">tool_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tooluse_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">100000000</span><span class="p">,</span><span class="w"> </span><span class="mi">999999999</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">tool_use</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;toolUseId&quot;</span><span class="p">:</span> <span class="n">tool_id</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">normalized_name</span><span class="p">,</span>
                 <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
             <span class="p">}</span>
 
@@ -4647,7 +4731,8 @@ agent.tool.calculator(...)
     <div class="doc doc-contents ">
 
         <p>Call tool as a function.</p>
-<p>This method enables the method-style interface (e.g., <code>agent.tool.tool_name(param="value")</code>).</p>
+<p>This method enables the method-style interface (e.g., <code>agent.tool.tool_name(param="value")</code>).
+It matches underscore-separated names to hyphenated tool names (e.g., 'some_thing' matches 'some-thing').</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4719,7 +4804,7 @@ agent.tool.calculator(...)
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If no tool with the given name exists.</p>
+                <p>If no tool with the given name exists or if multiple tools match the given name.</p>
               </div>
             </td>
           </tr>
@@ -4828,10 +4913,32 @@ agent.tool.calculator(...)
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
-<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Call tool as a function.</span>
 
 <span class="sd">    This method enables the method-style interface (e.g., `agent.tool.tool_name(param=&quot;value&quot;)`).</span>
+<span class="sd">    It matches underscore-separated names to hyphenated tool names (e.g., &#39;some_thing&#39; matches &#39;some-thing&#39;).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        name: The name of the attribute (tool) being accessed.</span>
@@ -4840,8 +4947,29 @@ agent.tool.calculator(...)
 <span class="sd">        A function that when called will execute the named tool.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        AttributeError: If no tool with the given name exists.</span>
+<span class="sd">        AttributeError: If no tool with the given name exists or if multiple tools match the given name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_normalized_tool_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup the tool represented by name, replacing characters with underscores as necessary.&quot;&quot;&quot;</span>
+        <span class="n">tool_registry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">tool_registry</span><span class="o">.</span><span class="n">registry</span>
+
+        <span class="k">if</span> <span class="n">tool_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">name</span>
+
+        <span class="c1"># If the desired name contains underscores, it might be a placeholder for characters that can&#39;t be</span>
+        <span class="c1"># represented as python identifiers but are valid as tool names, such as dashes. In that case, find</span>
+        <span class="c1"># all tools that can be represented with the normalized name</span>
+        <span class="k">if</span> <span class="s2">&quot;_&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">filtered_tools</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">tool_name</span> <span class="k">for</span> <span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">tool</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tool_registry</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">tool_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span>
+            <span class="p">]</span>
+
+            <span class="c1"># The registry itself defends against similar names, so we can just take the first match</span>
+            <span class="k">if</span> <span class="n">filtered_tools</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">filtered_tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">caller</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Call a tool directly by name.</span>
@@ -4863,14 +4991,13 @@ agent.tool.calculator(...)
 <span class="sd">        Raises:</span>
 <span class="sd">            AttributeError: If the tool doesn&#39;t exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_agent</span><span class="o">.</span><span class="n">tool_registry</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+        <span class="n">normalized_name</span> <span class="o">=</span> <span class="n">find_normalized_tool_name</span><span class="p">()</span>
 
         <span class="c1"># Create unique tool ID and set up the tool request</span>
         <span class="n">tool_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;tooluse_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">100000000</span><span class="p">,</span><span class="w"> </span><span class="mi">999999999</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">tool_use</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;toolUseId&quot;</span><span class="p">:</span> <span class="n">tool_id</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">normalized_name</span><span class="p">,</span>
             <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="p">}</span>
 
@@ -5112,28 +5239,7 @@ the conversation history, processes it through the model, executes any tool call
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">357</span>
 <span class="normal">358</span>
 <span class="normal">359</span>
 <span class="normal">360</span>
@@ -5143,7 +5249,28 @@ the conversation history, processes it through the model, executes any tool call
 <span class="normal">364</span>
 <span class="normal">365</span>
 <span class="normal">366</span>
-<span class="normal">367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process a natural language prompt through the agent&#39;s event loop.</span>
 
 <span class="sd">    This method implements the conversational interface (e.g., `agent(&quot;hello!&quot;)`). It adds the user&#39;s prompt to</span>
@@ -5198,14 +5325,14 @@ the conversation history, processes it through the model, executes any tool call
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean up resources when Agent is garbage collected.</span>
 
 <span class="sd">    Ensures proper shutdown of the thread pool executor if one exists.</span>
@@ -5455,28 +5582,7 @@ Defaults to True.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
@@ -5562,7 +5668,28 @@ Defaults to True.</p>
 <span class="normal">288</span>
 <span class="normal">289</span>
 <span class="normal">290</span>
-<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Messages</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5859,28 +5986,7 @@ async environments.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/agent.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span>
-<span class="normal">380</span>
-<span class="normal">381</span>
-<span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
-<span class="normal">387</span>
-<span class="normal">388</span>
-<span class="normal">389</span>
-<span class="normal">390</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">390</span>
 <span class="normal">391</span>
 <span class="normal">392</span>
 <span class="normal">393</span>
@@ -5928,7 +6034,28 @@ async environments.</p>
 <span class="normal">435</span>
 <span class="normal">436</span>
 <span class="normal">437</span>
-<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process a natural language prompt and yield events as an async iterator.</span>
 
 <span class="sd">    This method provides an asynchronous interface for streaming agent events, allowing</span>
@@ -6344,6 +6471,8 @@ like images or structured data.</p>
 <li>NullConversationManager: A no-op implementation that does not modify conversation history</li>
 <li>SlidingWindowConversationManager: An implementation that maintains a sliding window of messages to control context
   size while preserving conversation coherence</li>
+<li>SummarizingConversationManager: An implementation that summarizes older context instead
+  of simply trimming it</li>
 </ul>
 <p>Conversation managers help control memory usage and context length while maintaining relevant conversation state, which
 is critical for effective agent interactions.</p>
@@ -7302,21 +7431,104 @@ invalid window states.</p>
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SlidingWindowConversationManager</span><span class="p">(</span><span class="n">ConversationManager</span><span class="p">):</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SlidingWindowConversationManager</span><span class="p">(</span><span class="n">ConversationManager</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements a sliding window strategy for managing conversation history.</span>
 
 <span class="sd">    This class handles the logic of maintaining a conversation window that preserves tool usage pairs and avoids</span>
 <span class="sd">    invalid window states.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">should_truncate_results</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the sliding window conversation manager.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            window_size: Maximum number of messages to keep in the agent&#39;s history.</span>
 <span class="sd">                Defaults to 40 messages.</span>
+<span class="sd">            should_truncate_results: Truncate tool results when a message is too large for the model&#39;s context window</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">should_truncate_results</span> <span class="o">=</span> <span class="n">should_truncate_results</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the sliding window to the agent&#39;s messages array to maintain a manageable history size.</span>
@@ -7392,6 +7604,19 @@ invalid window states.</p>
 <span class="sd">                converted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">messages</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
+
+        <span class="c1"># Try to truncate the tool result first</span>
+        <span class="n">last_message_idx_with_tool_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_last_message_with_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">last_message_idx_with_tool_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_truncate_results</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;message_index=&lt;</span><span class="si">%s</span><span class="s2">&gt; | found message with tool results at index&quot;</span><span class="p">,</span> <span class="n">last_message_idx_with_tool_results</span>
+            <span class="p">)</span>
+            <span class="n">results_truncated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_truncate_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">last_message_idx_with_tool_results</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">results_truncated</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;message_index=&lt;</span><span class="si">%s</span><span class="s2">&gt; | tool results truncated&quot;</span><span class="p">,</span> <span class="n">last_message_idx_with_tool_results</span><span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="c1"># Try to trim index id when tool result cannot be truncated anymore</span>
         <span class="c1"># If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size</span>
         <span class="n">trim_index</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
 
@@ -7416,6 +7641,72 @@ invalid window states.</p>
 
         <span class="c1"># Overwrite message history</span>
         <span class="n">messages</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="n">trim_index</span><span class="p">:]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_truncate_tool_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">msg_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Truncate tool results in a message to reduce context size.</span>
+
+<span class="sd">        When a message contains tool results that are too large for the model&#39;s context window, this function</span>
+<span class="sd">        replaces the content of those tool results with a simple error message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages: The conversation message history.</span>
+<span class="sd">            msg_idx: Index of the message containing tool results to truncate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if any changes were made to the message, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">msg_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="ow">or</span> <span class="n">msg_idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="n">msg_idx</span><span class="p">]</span>
+        <span class="n">changes_made</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">tool_result_too_large_message</span> <span class="o">=</span> <span class="s2">&quot;The tool result was too large!&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="p">[])):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;toolResult&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="n">tool_result_content_text</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;toolResult&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;text&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">),</span>
+                    <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># make the overwriting logic togglable</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;toolResult&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span>
+                    <span class="ow">and</span> <span class="n">tool_result_content_text</span> <span class="o">==</span> <span class="n">tool_result_too_large_message</span>
+                <span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ToolResult has already been updated, skipping overwrite&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="c1"># Update status to error with informative message</span>
+                <span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;toolResult&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+                <span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;toolResult&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">tool_result_too_large_message</span><span class="p">}]</span>
+                <span class="n">changes_made</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">changes_made</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_last_message_with_tool_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the index of the last message containing tool results.</span>
+
+<span class="sd">        This is useful for identifying messages that might need to be truncated to reduce context size.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages: The conversation message history.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Index of the last message with tool results, or None if no such message exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Iterate backwards through all messages (from newest to oldest)</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Check if this message has any content with toolResult</span>
+            <span class="n">current_message</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">has_tool_result</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">current_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;toolResult&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="n">has_tool_result</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">has_tool_result</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">idx</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -7435,7 +7726,7 @@ invalid window states.</p>
 
 
 <h5 id="strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">window_size</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">window_size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">should_truncate_results</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 <a href="#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager.__init__" class="headerlink" title="Permanent link">&para;</a></h5>
 
@@ -7473,6 +7764,22 @@ Defaults to 40 messages.</p>
                   <code>40</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>should_truncate_results</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Truncate tool results when a message is too large for the model's context window</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -7486,14 +7793,18 @@ Defaults to 40 messages.</p>
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">):</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">should_truncate_results</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the sliding window conversation manager.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        window_size: Maximum number of messages to keep in the agent&#39;s history.</span>
 <span class="sd">            Defaults to 40 messages.</span>
+<span class="sd">        should_truncate_results: Truncate tool results when a message is too large for the model&#39;s context window</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">should_truncate_results</span> <span class="o">=</span> <span class="n">should_truncate_results</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7554,9 +7865,7 @@ This list is modified in-place.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
@@ -7577,7 +7886,9 @@ This list is modified in-place.</p>
 <span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">apply_management</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the sliding window to the agent&#39;s messages array to maintain a manageable history size.</span>
 
 <span class="sd">    This method is called after every event loop cycle, as the messages array may have been modified with tool</span>
@@ -7704,9 +8015,7 @@ converted.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/agent/conversation_manager/sliding_window_conversation_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
@@ -7745,7 +8054,22 @@ converted.</p>
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reduce_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Trim the oldest messages to reduce the conversation context size.</span>
 
 <span class="sd">    The method handles special cases where trimming the messages leads to:</span>
@@ -7763,6 +8087,19 @@ converted.</p>
 <span class="sd">            converted.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">messages</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
+
+    <span class="c1"># Try to truncate the tool result first</span>
+    <span class="n">last_message_idx_with_tool_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_last_message_with_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">last_message_idx_with_tool_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_truncate_results</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;message_index=&lt;</span><span class="si">%s</span><span class="s2">&gt; | found message with tool results at index&quot;</span><span class="p">,</span> <span class="n">last_message_idx_with_tool_results</span>
+        <span class="p">)</span>
+        <span class="n">results_truncated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_truncate_tool_results</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">last_message_idx_with_tool_results</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">results_truncated</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;message_index=&lt;</span><span class="si">%s</span><span class="s2">&gt; | tool results truncated&quot;</span><span class="p">,</span> <span class="n">last_message_idx_with_tool_results</span><span class="p">)</span>
+            <span class="k">return</span>
+
+    <span class="c1"># Try to trim index id when tool result cannot be truncated anymore</span>
     <span class="c1"># If the number of messages is less than the window_size, then we default to 2, otherwise, trim to window size</span>
     <span class="n">trim_index</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
 
