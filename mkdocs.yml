@@ -74,6 +74,7 @@ nav:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
         - Sessions & State: user-guide/concepts/agents/sessions-state.md
         - Prompts: user-guide/concepts/agents/prompts.md
+        - Structured Output: user-guide/concepts/agents/structured-output.md
         - Context Management: user-guide/concepts/agents/context-management.md
       - Tools:
         - Overview: user-guide/concepts/tools/tools_overview.md
@@ -120,6 +121,7 @@ nav:
     - File Operations: examples/python/file_operations.md
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
+    - Structured Output: examples/python/structured_output.md
     - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md

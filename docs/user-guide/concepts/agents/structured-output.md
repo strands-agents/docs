@@ -1,46 +1,31 @@
 # Structured Output
 
-Structured output enables you to get type-safe, validated responses from language models using Pydantic models. Instead of receiving raw text that you need to parse, you can define the exact structure you want and receive a validated Python object that matches your schema.
+Structured output enables you to get type-safe, validated responses from language models using Pydantic models. Instead of receiving raw text that you need to parse, you can define the exact structure you want and receive a validated Python object that matches your schema. This transforms unstructured LLM outputs into reliable, program-friendly data structures that integrate seamlessly with your application's type system and validation rules.
 
 ## What is Structured Output?
 
-Structured output is a feature that allows you to constrain language model responses to follow a specific schema defined by a Pydantic model. This ensures that the model's response is properly formatted, validated, and type-safe, eliminating the need for manual parsing and validation of text responses. Structured output transforms how you work with language model responses, providing type safety, validation, and clear data contracts that make your applications more robust and maintainable.
+Structured output allows you to constrain language model responses to follow a specific schema defined by a [Pydantic](https://docs.pydantic.dev/latest/concepts/models/) model. This ensures responses are properly formatted, validated, and type-safe, eliminating the need for manual parsing of text responses.
 
 ```mermaid
 flowchart LR
     A[Pydantic Model] --> B[Schema Conversion]
-    B --> C[Bedrock Tool Spec]
+    B --> C[convert_pydantic_to_tool_spec]
     C --> D[Model Response]
     D --> E[Validated Object]
-    
-    subgraph B[Schema Conversion]
-        F[Flatten Schema]
-        G[Resolve References]
-        H[Handle Optional Fields]
-        F --> G --> H
-    end
 ```
 
-Key benefits include:
-
-- **Type Safety**: Get properly typed Python objects instead of raw strings
-- **Automatic Validation**: Pydantic validates the model's response against your schema
-- **Documentation**: Your schema serves as clear documentation of expected output
-- **IDE Support**: Full autocomplete and type checking for response data
-- **Error Prevention**: Catch malformed responses early in development
+Key benefits:
+- **Type Safety**: Get typed Python objects instead of raw strings
+- **Automatic Validation**: Pydantic validates responses against your schema
+- **Clear Documentation**: Schema serves as documentation of expected output
+- **IDE Support**: Full autocomplete and type checking
+- **Error Prevention**: Catch malformed responses early
 
 ## How It Works
 
-The structured output system converts your Pydantic models into tool specifications that guide the language model to produce correctly formatted responses.
-Some combinations of model providers, LLMs, and SDKs support passing a Pydantic `BaseModel` directly, in which case we use that natively.
+The structured output system converts your Pydantic models into tool specifications that guide the language model to produce correctly formatted responses. Various model providers supported in Strands Agents sdk-python can work with these specifications, with some supporting Pydantic `BaseModel` directly.
 
-### The Conversion Process
-
-1. **Schema Generation**: Pydantic generates a JSON schema from your model
-2. **Reference Resolution**: The system resolves `$ref` references and flattens nested definitions
-3. **Tool Specification**: The schema is converted to a Bedrock tool specification
-4. **Model Invocation**: The model receives the tool spec and generates structured output
-5. **Validation**: The response is validated against your original Pydantic model
+Strands handles this through the [`Agent.structured_output()`](../../../api-reference/agent.md#strands.Agent.structured_output) method, which manages the conversion, validation, and response processing automatically.
 
 ```python
 from pydantic import BaseModel
@@ -57,11 +42,9 @@ result = agent.structured_output(Weather, "The time is 12:00 and the weather is 
 # Returns a validated Weather object
 ```
 
-## Core Components
+## Usage
 
-### Pydantic Model Definition
-
-Define your desired output structure using Pydantic models. Strands will use the docstring and field descriptions to guide the model.
+Define your desired output structure using Pydantic models:
 
 ```python
 from pydantic import BaseModel, Field
@@ -76,24 +59,7 @@ class WeatherForecast(BaseModel):
     forecast_days: List[str] = Field(default_factory=list, description="Multi-day forecast")
 ```
 
-### Agent Integration
-
-The `Agent.structured_output()` method provides the main interface:
-
-```python
-def structured_output(self, output_model: Type[BaseModel], prompt: Optional[str] = None) -> BaseModel:
-    """Get structured output from the agent.
-    
-    Args:
-        output_model: The Pydantic model defining the expected structure
-        prompt: Optional prompt to add to the conversation
-        
-    Returns:
-        A validated instance of output_model
-    """
-```
-
-## Usage Patterns
+Then use the `Agent.structured_output()` method:
 
 ### Basic Usage
 
@@ -176,55 +142,17 @@ result = agent.structured_output(
 print(result.name)                    # "Jane Doe"
 print(result.address.city)            # "New York"
 print(result.contacts[0].email)       # "jane@example.com"
-print(results.skills)                 # ["systems admin"]
+print(result.skills)                  # ["systems admin"]
 ```
 
 ## Advanced Features
 
-### Optional vs Required Fields
-
-The system properly handles optional and required fields:
-
-```python
-class ProductInfo(BaseModel):
-    name: str                           # Required
-    price: float                        # Required
-    description: Optional[str] = None   # Optional - can be null
-    category: str = "General"           # Optional with default
-    tags: List[str] = Field(default_factory=list)  # Optional list
-```
-
-Required fields must be provided by the model, while optional fields can be omitted or set to null.
-
-### Field Documentation
-
-Use Pydantic's `Field` for detailed documentation:
-
-```python
-class AnalysisResult(BaseModel):
-    """Results from data analysis."""
-    
-    confidence_score: float = Field(
-        description="Confidence level from 0.0 to 1.0",
-        ge=0.0,
-        le=1.0
-    )
-    
-    summary: str = Field(
-        description="Brief summary of findings",
-        min_length=10,
-        max_length=500
-    )
-    
-    recommendations: List[str] = Field(
-        description="List of actionable recommendations",
-        min_items=1
-    )
-```
+Refer to Pydantic documentation for details on:
+- [Models and schema definition](https://docs.pydantic.dev/latest/concepts/models/)
+- [Field types and constraints](https://docs.pydantic.dev/latest/concepts/fields/)
+- [Custom validators](https://docs.pydantic.dev/latest/concepts/validators/)
 
 ### Error Handling
-
-Handle validation errors gracefully:
 
 ```python
 from pydantic import ValidationError
@@ -232,111 +160,20 @@ from pydantic import ValidationError
 try:
     result = agent.structured_output(MyModel, prompt)
 except ValidationError as e:
-    print(f"Model validation failed: {e}")
-    # Handle the validation error appropriately
-except Exception as e:
-    print(f"Unexpected error: {e}")
+    print(f"Validation failed: {e}")
+    # Handle appropriately - options include:
+    # 1. Retry with a more specific prompt
+    # 2. Fall back to a simpler model
+    # 3. Extract partial information from the error
 ```
 
-### Integration with Tool System
+See our [Structured Output Example](../../../examples/python/structured_output.md) for a complete implementation with error handling.
 
-Structured output leverages the SDK's tool system:
-
-1. **Tool Specification**: Pydantic models become tool specifications
-2. **Model Invocation**: The model receives tools it can "use" to structure responses
-3. **Response Processing**: Tool responses are validated against the original model
-4. **Type Safety**: The final result is a properly typed Pydantic instance
 
 ## Best Practices
 
-### Model Design
-
-**Keep models focused and specific:**
-
-```python
-# Good - specific, focused model
-class EmailSummary(BaseModel):
-    subject: str
-    sender: str
-    key_points: List[str]
-    action_required: bool
-
-# Avoid - overly broad, unclear purpose
-class GenericData(BaseModel):
-    stuff: Any
-    things: List[Any]
-```
-
-**Use descriptive field names and documentation:**
-
-```python
-class TaskAnalysis(BaseModel):
-    """Analysis of a project task."""
-    
-    estimated_hours: float = Field(description="Estimated completion time in hours")
-    difficulty_level: int = Field(description="Difficulty from 1-5 (5 being hardest)")
-    required_skills: List[str] = Field(description="Skills needed to complete the task")
-```
-
-**Design for validation:**
-
-```python
-class UserPreferences(BaseModel):
-    theme: Literal["light", "dark", "auto"] = "auto"
-    font_size: int = Field(ge=8, le=24, default=12)
-    notifications: bool = True
-```
-
-### Error Handling Strategies
-
-**Validate business logic:**
-
-```python
-from pydantic import validator
-
-class TimeRange(BaseModel):
-    start_time: str
-    end_time: str
-    
-    @validator('end_time')
-    def end_after_start(cls, v, values):
-        if 'start_time' in values and v <= values['start_time']:
-            raise ValueError('end_time must be after start_time')
-        return v
-```
-
-### Integration with Agent Workflow
-
-**Combine with regular conversation:**
-
-```python
-agent = Agent()
-
-# Regular conversation to gather context
-agent("I need to analyze this sales data: [data here]")
-agent("Focus on trends and key insights")
-
-# Extract structured insights
-class SalesAnalysis(BaseModel):
-    total_revenue: float
-    growth_rate: float
-    top_products: List[str]
-    insights: List[str]
-
-analysis = agent.structured_output(SalesAnalysis)
-```
-
-**Use for data transformation:**
-
-```python
-# Transform unstructured input to structured output
-raw_text = "Customer complaint: Order #12345, shipped late, wants refund"
-
-class CustomerIssue(BaseModel):
-    issue_type: Literal["complaint", "inquiry", "compliment"]
-    order_id: Optional[str] = None
-    priority: Literal["low", "medium", "high"] = Field(default="medium", description="The priority of the issue. Refund and complaint is high.")
-    resolution_needed: bool
-
-issue = agent.structured_output(CustomerIssue, raw_text)
-```
+- **Keep models focused**: Define specific models for clear purposes
+- **Use descriptive field names**: Include helpful descriptions with `Field`
+- **Design for validation**: Use Pydantic's validation features
+- **Handle errors gracefully**: Implement proper error handling strategies with fallbacks
+- **Combine with conversations**: Use structured output alongside regular agent interactions
