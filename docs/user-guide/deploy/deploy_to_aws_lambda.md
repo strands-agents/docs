@@ -6,6 +6,10 @@ If you're not familiar with the AWS CDK, check out the [official documentation](
 
 This guide discusses Lambda integration at a high level - for a complete example project deploying to Lambda, check out the [`deploy_to_lambda` sample project on GitHub][project_code].
 
+!!! note
+
+    This Lambda deployment example does not implement response streaming as described in the [Async Iterators for Streaming](../concepts/streaming/async-iterators.md) documentation. If you need streaming capabilities, consider using the [AWS Fargate deployment](deploy_to_aws_fargate.md) approach which does implement streaming responses.
+
 ## Creating Your Agent in Python
 
 The core of your Lambda deployment is the agent handler code. This Python script initializes your Strands Agents SDK agent and processes incoming requests. 
@@ -95,6 +99,23 @@ weatherFunction.addToRolePolicy(
 ```
 
 The dependencies are packaged and pulled in via a Lambda layer separately from the application code. By separating your dependencies into a layer, your application code remains small and enables you to view or edit your function code directly in the Lambda console.
+
+!!! info "Installing Dependencies with the Correct Architecture"
+    
+    When deploying to AWS Lambda, it's important to install dependencies that match the target Lambda architecture. Because the example above uses ARM64 architecture, dependencies must be installed specifically for this architecture:
+    
+    ```shell
+    # Install Python dependencies for lambda with correct architecture
+    pip install -r requirements.txt \
+        --python-version 3.12 \
+        --platform manylinux2014_aarch64 \
+        --target ./packaging/_dependencies \
+        --only-binary=:all:
+    ```
+    
+    This ensures that all binary dependencies are compatible with the Lambda ARM64 environment regardless of the operating-system used for development.
+
+    Failing to match the architecture can result in runtime errors when the Lambda function executes.
 
 ### Packaging Your Code
 
