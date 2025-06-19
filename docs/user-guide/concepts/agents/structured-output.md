@@ -159,7 +159,6 @@ except ValidationError as e:
     # 3. Extract partial information from the error
 ```
 
-See our [Structured Output Example](../../../examples/python/structured_output.md) for a complete implementation with error handling.
 
 ## Advanced Features
 
