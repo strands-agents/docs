@@ -8,13 +8,21 @@ Structured output allows you to constrain language model responses to follow a s
 
 ```mermaid
 flowchart LR
-    A[Pydantic Model] --> B[Schema Conversion]
-    B --> C[convert_pydantic_to_tool_spec]
-    C --> D[Model Response]
-    D --> E[Validated Object]
+    A[Pydantic Model] --> B[Agent.structured_output]
+
+    subgraph Process[" "]
+        direction TB
+        C[convert_pydantic_to_tool_spec] --> D[LLM Response]
+    end
+    
+    B --> Process
+    Process --> E[Validated Pydantic Model]
 ```
 
+*The conversion to tool spec happens behind the scenes*
+
 Key benefits:
+
 - **Type Safety**: Get typed Python objects instead of raw strings
 - **Automatic Validation**: Pydantic validates responses against your schema
 - **Clear Documentation**: Schema serves as documentation of expected output
@@ -25,7 +33,7 @@ Key benefits:
 
 The structured output system converts your Pydantic models into tool specifications that guide the language model to produce correctly formatted responses. Various model providers supported in Strands Agents sdk-python can work with these specifications, with some supporting Pydantic `BaseModel` directly.
 
-Strands handles this through the [`Agent.structured_output()`](../../../api-reference/agent.md#strands.Agent.structured_output) method, which manages the conversion, validation, and response processing automatically.
+Strands handles this through the [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output) method, which manages the conversion, validation, and response processing automatically.
 
 ```python
 from pydantic import BaseModel
@@ -148,6 +156,7 @@ print(result.skills)                  # ["systems admin"]
 ## Advanced Features
 
 Refer to Pydantic documentation for details on:
+
 - [Models and schema definition](https://docs.pydantic.dev/latest/concepts/models/)
 - [Field types and constraints](https://docs.pydantic.dev/latest/concepts/fields/)
 - [Custom validators](https://docs.pydantic.dev/latest/concepts/validators/)
@@ -176,4 +185,4 @@ See our [Structured Output Example](../../../examples/python/structured_output.m
 - **Use descriptive field names**: Include helpful descriptions with `Field`
 - **Design for validation**: Use Pydantic's validation features
 - **Handle errors gracefully**: Implement proper error handling strategies with fallbacks
-- **Combine with conversations**: Use structured output alongside regular agent interactions
+- **Extract key data at conversation completion**: Use structured output at the end of agent workflows to distill conversations into actionable data structures

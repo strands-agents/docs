@@ -8,7 +8,6 @@ This example demonstrates how to use Strands' structured output feature to get t
 - Extracting structured information from text
 - Using conversation history with structured output
 - Working with complex nested models
-- Handling validation errors
 
 ## Code Example
 
@@ -17,7 +16,6 @@ The example covers four key use cases:
 1. Basic structured output
 2. Using existing conversation context
 3. Working with complex nested models
-4. Error handling with validation errors
 
 ```python
 #!/usr/bin/env python3
@@ -117,55 +115,12 @@ def complex_nested_model_example():
     print(f"Skills: {result.skills}")                # ["systems admin"]
 
 
-def error_handling_example():
-    """Example demonstrating error handling with validation errors."""
-    print("\n--- Error Handling Example ---")
-    
-    class StrictPersonInfo(BaseModel):
-        name: str
-        age: int = Field(gt=0, lt=120)  # Age must be between 0 and 120
-        occupation: str
-        salary: float = Field(gt=0)     # Salary must be positive
-
-    agent = Agent()
-    
-    try:
-        print("Attempting to extract information that might not validate...")
-        result = agent.structured_output(
-            StrictPersonInfo, 
-            "John Smith is a 30-year-old software engineer"
-        )
-        # Note: This might fail if the model doesn't provide a salary value
-        
-        print(f"Name: {result.name}")
-        print(f"Age: {result.age}")
-        print(f"Job: {result.occupation}")
-        print(f"Salary: ${result.salary}")
-        
-    except Exception as e:
-        print(f"Validation error occurred: {e}")
-        print("Handling the error gracefully...")
-        
-        # Retry with a more explicit prompt
-        result = agent.structured_output(
-            StrictPersonInfo, 
-            "John Smith is a 30-year-old software engineer with an annual salary of $120,000"
-        )
-        
-        print("Retry successful:")
-        print(f"Name: {result.name}")
-        print(f"Age: {result.age}")
-        print(f"Job: {result.occupation}")
-        print(f"Salary: ${result.salary}")
-
-
 if __name__ == "__main__":
     print("Structured Output Examples\n")
     
     basic_example()
     conversation_history_example()
     complex_nested_model_example()
-    error_handling_example()
     
     print("\nExamples completed.")
 ```

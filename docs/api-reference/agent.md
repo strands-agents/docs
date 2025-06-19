@@ -8,9 +8,6 @@
 ::: strands.agent.agent_result
     options:
       heading_level: 2
-::: strands.agent.agent.structured_output
-    options:
-      heading_level: 2
 ::: strands.agent.conversation_manager
     options:
       heading_level: 2
