@@ -160,9 +160,6 @@ except ValidationError as e:
 ```
 
 
-## Advanced Features
-
-
 ## Best Practices
 
 - **Keep models focused**: Define specific models for clear purposes
