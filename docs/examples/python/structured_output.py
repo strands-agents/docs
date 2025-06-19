@@ -48,9 +48,9 @@ def conversation_history_example():
         population: Optional[int] = None
         climate: str
 
-    # Uses existing conversation context
+    # Uses existing conversation context with a prompt
     print("Extracting structured information from conversation context...")
-    result = agent.structured_output(CityInfo)
+    result = agent.structured_output(CityInfo, "Extract structured information about Paris")
     
     print(f"City: {result.city}")
     print(f"Country: {result.country}")

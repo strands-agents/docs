@@ -61,16 +61,16 @@ def conversation_history_example():
     agent("What do you know about Paris, France?")
     agent("Tell me about the weather there in spring.")
 
-    # Extract structured information without additional prompt
+    # Extract structured information with a prompt
     class CityInfo(BaseModel):
         city: str
         country: str
         population: Optional[int] = None
         climate: str
 
-    # Uses existing conversation context
+    # Uses existing conversation context with a prompt
     print("Extracting structured information from conversation context...")
-    result = agent.structured_output(CityInfo)
+    result = agent.structured_output(CityInfo, "Extract structured information about Paris")
     
     print(f"City: {result.city}")
     print(f"Country: {result.country}")
@@ -137,7 +137,7 @@ The `structured_output()` method ensures that the language model generates a res
 
 - Type-safe responses with proper Python types
 - Automatic validation against your schema
-- IDE support with autocomplete
+- IDE type hinting from LLM-generated responses
 - Clear documentation of expected output
 - Error prevention for malformed responses
 

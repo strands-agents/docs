@@ -26,7 +26,7 @@ Key benefits:
 - **Type Safety**: Get typed Python objects instead of raw strings
 - **Automatic Validation**: Pydantic validates responses against your schema
 - **Clear Documentation**: Schema serves as documentation of expected output
-- **IDE Support**: Full autocomplete and type checking
+- **IDE Support**: IDE type hinting from LLM-generated responses
 - **Error Prevention**: Catch malformed responses early
 
 ## How It Works
@@ -34,21 +34,6 @@ Key benefits:
 The structured output system converts your Pydantic models into tool specifications that guide the language model to produce correctly formatted responses. Various model providers supported in Strands Agents sdk-python can work with these specifications, with some supporting Pydantic `BaseModel` directly.
 
 Strands handles this through the [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output) method, which manages the conversion, validation, and response processing automatically.
-
-```python
-from pydantic import BaseModel
-from strands import Agent
-
-class Weather(BaseModel):
-    """Weather information for a specific time."""
-    time: str
-    weather: str
-    temperature: Optional[float] = None
-
-agent = Agent()
-result = agent.structured_output(Weather, "The time is 12:00 and the weather is sunny")
-# Returns a validated Weather object
-```
 
 ## Usage
 
@@ -104,15 +89,15 @@ agent = Agent()
 agent("What do you know about Paris, France?")
 agent("Tell me about the weather there in spring.")
 
-# Extract structured information without additional prompt
+# Extract structured information with a prompt
 class CityInfo(BaseModel):
     city: str
     country: str
     population: Optional[int] = None
     climate: str
 
-# Uses existing conversation context
-result = agent.structured_output(CityInfo)
+# Uses existing conversation context with a prompt
+result = agent.structured_output(CityInfo, "Extract structured information about Paris")
 ```
 
 ### Complex Nested Models
@@ -153,8 +138,6 @@ print(result.contacts[0].email)       # "jane@example.com"
 print(result.skills)                  # ["systems admin"]
 ```
 
-## Advanced Features
-
 Refer to Pydantic documentation for details on:
 
 - [Models and schema definition](https://docs.pydantic.dev/latest/concepts/models/)
@@ -178,11 +161,12 @@ except ValidationError as e:
 
 See our [Structured Output Example](../../../examples/python/structured_output.md) for a complete implementation with error handling.
 
+## Advanced Features
+
 
 ## Best Practices
 
 - **Keep models focused**: Define specific models for clear purposes
 - **Use descriptive field names**: Include helpful descriptions with `Field`
-- **Design for validation**: Use Pydantic's validation features
 - **Handle errors gracefully**: Implement proper error handling strategies with fallbacks
 - **Extract key data at conversation completion**: Use structured output at the end of agent workflows to distill conversations into actionable data structures
