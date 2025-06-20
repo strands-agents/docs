@@ -191,6 +191,52 @@ creative_agent = Agent(model=creative_model)
 factual_agent = Agent(model=factual_model)
 ```
 
+### Structured Output
+
+Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.ollama import OllamaModel
+
+class CodeAnalysis(BaseModel):
+    """Analyze code structure and quality."""
+    language: str = Field(description="Programming language")
+    complexity: str = Field(description="Code complexity: low, medium, high")
+    issues: List[str] = Field(description="Potential issues or improvements")
+    score: int = Field(description="Code quality score 1-10", ge=1, le=10)
+
+# Use a model that supports tool calling
+ollama_model = OllamaModel(
+    host="http://localhost:11434",
+    model_id="llama3.1:8b",  # Tool-capable model
+    temperature=0.1  # Low temperature for consistent structured output
+)
+
+agent = Agent(model=ollama_model)
+
+# Extract structured code analysis
+result = agent.structured_output(
+    CodeAnalysis,
+    """
+    Analyze this Python function:
+    
+    def calculate_fibonacci(n):
+        if n <= 1:
+            return n
+        return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
+    
+    This is a recursive implementation of the Fibonacci sequence.
+    """
+)
+
+print(f"Language: {result.language}")
+print(f"Complexity: {result.complexity}")
+print(f"Issues: {result.issues}")
+print(f"Score: {result.score}")
+```
+
 ## Tool Support
 
 [Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands's tool system:

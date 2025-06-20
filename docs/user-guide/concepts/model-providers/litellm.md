@@ -57,6 +57,52 @@ The `model_config` configures the underlying model selected for inference. The s
 
 If you encounter the error `ModuleNotFoundError: No module named 'litellm'`, this means you haven't installed the `litellm` dependency in your environment. To fix, run `pip install 'strands-agents[litellm]'`.
 
+## Advanced Features
+
+### Structured Output
+
+LiteLLM supports structured output by proxying requests to underlying model providers that support tool calling. The availability of structured output depends on the specific model and provider you're using through LiteLLM.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.litellm import LiteLLMModel
+
+class TaskAnalysis(BaseModel):
+    """Analyze a task or project."""
+    title: str = Field(description="Task title")
+    priority: str = Field(description="Priority level: low, medium, high")
+    estimated_hours: float = Field(description="Estimated completion time in hours")
+    dependencies: List[str] = Field(description="Task dependencies")
+    status: str = Field(description="Current status")
+
+model = LiteLLMModel(
+    model_id="gpt-4o",  # OpenAI model through LiteLLM
+    params={
+        "temperature": 0.1,
+        "max_tokens": 1000
+    }
+)
+
+agent = Agent(model=model)
+
+# Extract structured task information
+result = agent.structured_output(
+    TaskAnalysis,
+    """
+    Analyze this project task: "Implement user authentication system"
+    This is a high-priority task that requires database setup and security review.
+    Estimated to take 16 hours. Currently in planning phase.
+    Depends on database schema design and security policy approval.
+    """
+)
+
+print(f"Task: {result.title}")
+print(f"Priority: {result.priority}")
+print(f"Hours: {result.estimated_hours}")
+print(f"Dependencies: {result.dependencies}")
+```
+
 ## References
 
 - [API](../../../api-reference/models.md)

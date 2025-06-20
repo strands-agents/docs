@@ -58,6 +58,50 @@ The `model_config` configures the underlying model selected for inference. The s
 
 If you encounter the error `ModuleNotFoundError: No module named 'anthropic'`, this means you haven't installed the `anthropic` dependency in your environment. To fix, run `pip install 'strands-agents[anthropic]'`.
 
+## Advanced Features
+
+### Structured Output
+
+Anthropic's Claude models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to Anthropic's tool specification format.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.anthropic import AnthropicModel
+
+class BookAnalysis(BaseModel):
+    """Analyze a book's key information."""
+    title: str = Field(description="The book's title")
+    author: str = Field(description="The book's author")
+    genre: str = Field(description="Primary genre or category")
+    summary: str = Field(description="Brief summary of the book")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+
+model = AnthropicModel(
+    client_args={"api_key": "<KEY>"},
+    max_tokens=1024,
+    model_id="claude-3-7-sonnet-20250219",
+    params={"temperature": 0.2}  # Lower temperature for consistent structured output
+)
+
+agent = Agent(model=model)
+
+# Extract structured book information
+result = agent.structured_output(
+    BookAnalysis,
+    """
+    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
+    """
+)
+
+print(f"Title: {result.title}")
+print(f"Author: {result.author}")
+print(f"Genre: {result.genre}")
+print(f"Rating: {result.rating}")
+```
+
 ## References
 
 - [API](../../../api-reference/models.md)
