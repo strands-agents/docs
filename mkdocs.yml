@@ -93,6 +93,7 @@ nav:
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
         - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
       - Multi-agent:
+        - Agent2Agent (A2A): user-guide/concepts/multi-agent/agent-to-agent.md
         - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
         - Swarm: user-guide/concepts/multi-agent/swarm.md
         - Graph: user-guide/concepts/multi-agent/graph.md
