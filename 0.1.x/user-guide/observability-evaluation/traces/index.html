@@ -613,6 +613,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../concepts/agents/structured-output/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Structured Output
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../concepts/agents/context-management/" class="md-nav__link">
         
   
@@ -1131,6 +1154,29 @@
             Multi-agent
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/multi-agent/agent-to-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agent2Agent (A2A)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2154,6 +2200,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../examples/python/structured_output/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Structured Output
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../examples/python/multi_agent_example/multi_agent_example/" class="md-nav__link">
         
   
@@ -2765,7 +2834,9 @@
 <li><strong>Auto-instrumentation</strong>: Trace creation is handled automatically when you enable tracing</li>
 </ol>
 <h2 id="enabling-tracing">Enabling Tracing<a class="headerlink" href="#enabling-tracing" title="Permanent link">&para;</a></h2>
-<p>You can enable tracing either through environment variables or through code:</p>
+<div class="admonition warning">
+<p class="admonition-title">To enable OTEL exporting, install Strands Agents with <code>otel</code> extra dependencies: <code>pip install strands-agents[otel]</code></p>
+</div>
 <h3 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Specify custom OTLP endpoint if set will enable OTEL by default</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://collector.example.com:4318&quot;</span>

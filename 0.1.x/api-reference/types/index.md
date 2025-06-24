@@ -1471,6 +1471,26 @@ class Model(abc.ABC):
 
     @abc.abstractmethod
     # pragma: no cover
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+
+        Returns:
+            The structured output as a serialized instance of the output model.
+
+        Raises:
+            ValidationException: The response format from the model does not match the output_model
+        """
+        pass
+
+    @abc.abstractmethod
+    # pragma: no cover
     def format_request(
         self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
     ) -> Any:
@@ -1734,6 +1754,47 @@ def stream(self, request: Any) -> Iterable[Any]:
 
 ```
 
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Returns:
+
+| Type | Description | | --- | --- | | `T` | The structured output as a serialized instance of the output model. |
+
+Raises:
+
+| Type | Description | | --- | --- | | `ValidationException` | The response format from the model does not match the output_model |
+
+Source code in `strands/types/models/model.py`
+
+```
+@abc.abstractmethod
+# pragma: no cover
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+
+    Returns:
+        The structured output as a serialized instance of the output model.
+
+    Raises:
+        ValidationException: The response format from the model does not match the output_model
+    """
+    pass
+
+```
+
 #### `update_config(**model_config)`
 
 Update the model configuration with the provided arguments.
@@ -1776,6 +1837,32 @@ class OpenAIModel(Model, abc.ABC):
 
     config: dict[str, Any]
 
+    @staticmethod
+    def b64encode(data: bytes) -> bytes:
+        """Base64 encode the provided data.
+
+        If the data is already base64 encoded, we do nothing.
+        Note, this is a temporary method used to provide a warning to users who pass in base64 encoded data. In future
+        versions, images and documents will be base64 encoded on behalf of customers for consistency with the other
+        providers and general convenience.
+
+        Args:
+            data: Data to encode.
+
+        Returns:
+            Base64 encoded data.
+        """
+        try:
+            base64.b64decode(data, validate=True)
+            logger.warning(
+                "issue=<%s> | base64 encoded images and documents will not be accepted in future versions",
+                "https://github.com/strands-agents/sdk-python/issues/252",
+            )
+        except ValueError:
+            data = base64.b64encode(data)
+
+        return data
+
     @classmethod
     def format_request_message_content(cls, content: ContentBlock) -> dict[str, Any]:
         """Format an OpenAI compatible content block.
@@ -1802,7 +1889,8 @@ class OpenAIModel(Model, abc.ABC):
 
         if "image" in content:
             mime_type = mimetypes.types_map.get(f".{content['image']['format']}", "application/octet-stream")
-            image_data = content["image"]["source"]["bytes"].decode("utf-8")
+            image_data = OpenAIModel.b64encode(content["image"]["source"]["bytes"]).decode("utf-8")
+
             return {
                 "image_url": {
                     "detail": "auto",
@@ -2008,6 +2096,64 @@ class OpenAIModel(Model, abc.ABC):
             case _:
                 raise RuntimeError(f"chunk_type=<{event['chunk_type']} | unknown type")
 
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+        """
+        return output_model()
+
+```
+
+#### `b64encode(data)`
+
+Base64 encode the provided data.
+
+If the data is already base64 encoded, we do nothing. Note, this is a temporary method used to provide a warning to users who pass in base64 encoded data. In future versions, images and documents will be base64 encoded on behalf of customers for consistency with the other providers and general convenience.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `data` | `bytes` | Data to encode. | *required* |
+
+Returns:
+
+| Type | Description | | --- | --- | | `bytes` | Base64 encoded data. |
+
+Source code in `strands/types/models/openai.py`
+
+```
+@staticmethod
+def b64encode(data: bytes) -> bytes:
+    """Base64 encode the provided data.
+
+    If the data is already base64 encoded, we do nothing.
+    Note, this is a temporary method used to provide a warning to users who pass in base64 encoded data. In future
+    versions, images and documents will be base64 encoded on behalf of customers for consistency with the other
+    providers and general convenience.
+
+    Args:
+        data: Data to encode.
+
+    Returns:
+        Base64 encoded data.
+    """
+    try:
+        base64.b64decode(data, validate=True)
+        logger.warning(
+            "issue=<%s> | base64 encoded images and documents will not be accepted in future versions",
+            "https://github.com/strands-agents/sdk-python/issues/252",
+        )
+    except ValueError:
+        data = base64.b64encode(data)
+
+    return data
+
 ```
 
 #### `format_chunk(event)`
@@ -2204,7 +2350,8 @@ def format_request_message_content(cls, content: ContentBlock) -> dict[str, Any]
 
     if "image" in content:
         mime_type = mimetypes.types_map.get(f".{content['image']['format']}", "application/octet-stream")
-        image_data = content["image"]["source"]["bytes"].decode("utf-8")
+        image_data = OpenAIModel.b64encode(content["image"]["source"]["bytes"]).decode("utf-8")
+
         return {
             "image_url": {
                 "detail": "auto",
@@ -2353,6 +2500,32 @@ def format_request_tool_message(cls, tool_result: ToolResult) -> dict[str, Any]:
         "tool_call_id": tool_result["toolUseId"],
         "content": [cls.format_request_message_content(content) for content in contents],
     }
+
+```
+
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Source code in `strands/types/models/openai.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+    """
+    return output_model()
 
 ```
 

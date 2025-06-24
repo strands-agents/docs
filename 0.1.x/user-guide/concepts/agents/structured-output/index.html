@@ -10,13 +10,13 @@
     
     
     
-      <link rel="canonical" href="https://strandsagents.com/latest/user-guide/concepts/model-providers/ollama/">
+      <link rel="canonical" href="https://strandsagents.com/latest/user-guide/concepts/agents/structured-output/">
     
     
-      <link rel="prev" href="../llamaapi/">
+      <link rel="prev" href="../prompts/">
     
     
-      <link rel="next" href="../openai/">
+      <link rel="next" href="../context-management/">
     
     
     <link rel="icon" href="../../../../assets/logo-light.png" sizes="any">
@@ -25,7 +25,7 @@
 
     
       
-        <title>Ollama - Strands Agents SDK</title>
+        <title>Structured Output - Strands Agents SDK</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ollama" class="md-skip">
+        <a href="#structured-output" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ollama
+              Structured Output
             
           </span>
         </div>
@@ -500,8 +500,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -512,11 +514,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_1" checked>
         
           
           <label class="md-nav__link" for="__nav_1_3_1" id="__nav_1_3_1_label" tabindex="0">
@@ -532,7 +534,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_3_1">
             <span class="md-nav__icon md-icon"></span>
             Agents
@@ -546,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/agent-loop/" class="md-nav__link">
+      <a href="../agent-loop/" class="md-nav__link">
         
   
   
@@ -569,7 +571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/sessions-state/" class="md-nav__link">
+      <a href="../sessions-state/" class="md-nav__link">
         
   
   
@@ -592,7 +594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/prompts/" class="md-nav__link">
+      <a href="../prompts/" class="md-nav__link">
         
   
   
@@ -612,10 +614,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../agents/structured-output/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Structured Output
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -626,6 +650,106 @@
   
 
       </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-structured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Structured Output?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-conversation-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Conversation History
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complex-nested-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complex Nested Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -638,7 +762,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/context-management/" class="md-nav__link">
+      <a href="../context-management/" class="md-nav__link">
         
   
   
@@ -809,8 +933,6 @@
                 
   
   
-    
-  
   
   
     
@@ -823,11 +945,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_3" >
         
           
           <label class="md-nav__link" for="__nav_1_3_3" id="__nav_1_3_3_label" tabindex="0">
@@ -843,7 +965,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_3_3">
             <span class="md-nav__icon md-icon"></span>
             Model Providers
@@ -857,7 +979,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../amazon-bedrock/" class="md-nav__link">
+      <a href="../../model-providers/amazon-bedrock/" class="md-nav__link">
         
   
   
@@ -880,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../anthropic/" class="md-nav__link">
+      <a href="../../model-providers/anthropic/" class="md-nav__link">
         
   
   
@@ -903,7 +1025,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm/" class="md-nav__link">
+      <a href="../../model-providers/litellm/" class="md-nav__link">
         
   
   
@@ -926,7 +1048,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../llamaapi/" class="md-nav__link">
+      <a href="../../model-providers/llamaapi/" class="md-nav__link">
         
   
   
@@ -946,32 +1068,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Ollama
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../model-providers/ollama/" class="md-nav__link">
         
   
   
@@ -982,184 +1082,6 @@
   
 
       </a>
-      
-        
-
-  
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Started
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting Started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-1-native-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 1: Native Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-2-docker-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 2: Docker Installation
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration Options
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-with-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example with Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Features
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#updating-configuration-at-runtime" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updating Configuration at Runtime
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-different-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Different Models
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tool Support
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Resources
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1172,7 +1094,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../openai/" class="md-nav__link">
+      <a href="../../model-providers/openai/" class="md-nav__link">
         
   
   
@@ -1195,7 +1117,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../custom_model_provider/" class="md-nav__link">
+      <a href="../../model-providers/custom_model_provider/" class="md-nav__link">
         
   
   
@@ -2523,54 +2445,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#what-is-structured-output" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      What is Structured Output?
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Getting Started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-1-native-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 1: Native Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-2-docker-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 2: Docker Installation
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Usage
@@ -2578,21 +2480,29 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#using-conversation-history" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration Options
+      Using Conversation History
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration Options">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#example-with-configuration" class="md-nav__link">
+  <a href="#complex-nested-models" class="md-nav__link">
     <span class="md-ellipsis">
-      Example with Configuration
+      Complex Nested Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
     </span>
   </a>
   
@@ -2604,75 +2514,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-features" class="md-nav__link">
+  <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
-      Advanced Features
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#updating-configuration-at-runtime" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updating Configuration at Runtime
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-different-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Different Models
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tool Support
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Resources
+      Best Practices
     </span>
   </a>
   
@@ -2697,269 +2541,142 @@
   
 
 
-<h1 id="ollama">Ollama<a class="headerlink" href="#ollama" title="Permanent link">&para;</a></h1>
-<p>Ollama is a framework for running open-source large language models locally. Strands provides native support for Ollama, allowing you to use locally-hosted models in your agents.</p>
-<p>The <a href="../../../../api-reference/models/#strands.models.ollama"><code>OllamaModel</code></a> class in Strands enables seamless integration with Ollama's API, supporting:</p>
+<h1 id="structured-output">Structured Output<a class="headerlink" href="#structured-output" title="Permanent link">&para;</a></h1>
+<p>Structured output enables you to get type-safe, validated responses from language models using Pydantic models. Instead of receiving raw text that you need to parse, you can define the exact structure you want and receive a validated Python object that matches your schema. This transforms unstructured LLM outputs into reliable, program-friendly data structures that integrate seamlessly with your application's type system and validation rules.</p>
+<h2 id="what-is-structured-output">What is Structured Output?<a class="headerlink" href="#what-is-structured-output" title="Permanent link">&para;</a></h2>
+<p>Structured output allows you to constrain language model responses to follow a specific schema defined by a <a href="https://docs.pydantic.dev/latest/concepts/models/">Pydantic</a> model. This ensures responses are properly formatted, validated, and type-safe, eliminating the need for manual parsing of text responses.</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Pydantic Model] --&gt; B[Agent.structured_output]
+
+    subgraph Process[" "]
+        direction TB
+        C[convert_pydantic_to_tool_spec] --&gt; D[LLM Response]
+    end
+
+    B --&gt; Process
+    Process --&gt; E[Validated Pydantic Model]</code></pre>
+<p><em>The conversion to tool spec happens behind the scenes</em></p>
+<p>Key benefits:</p>
 <ul>
-<li>Text generation</li>
-<li>Image understanding</li>
-<li>Tool/function calling</li>
-<li>Streaming responses</li>
-<li>Configuration management</li>
+<li><strong>Type Safety</strong>: Get typed Python objects instead of raw strings</li>
+<li><strong>Automatic Validation</strong>: Pydantic validates responses against your schema</li>
+<li><strong>Clear Documentation</strong>: Schema serves as documentation of expected output</li>
+<li><strong>IDE Support</strong>: IDE type hinting from LLM-generated responses</li>
+<li><strong>Error Prevention</strong>: Catch malformed responses early</li>
 </ul>
-<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
-<p>First install the python client into your python environment:
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;strands-agents[ollama]&#39;</span>
-</code></pre></div></p>
-<p>Next, you'll need to install and setup ollama itself.</p>
-<h4 id="option-1-native-installation">Option 1: Native Installation<a class="headerlink" href="#option-1-native-installation" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Install Ollama by following the instructions at <a href="https://ollama.ai">ollama.ai</a></li>
-<li>Pull your desired model:
-   <div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>pull<span class="w"> </span>llama3
-</code></pre></div></li>
-<li>Start the Ollama server:
-   <div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>serve
-</code></pre></div></li>
-</ol>
-<h4 id="option-2-docker-installation">Option 2: Docker Installation<a class="headerlink" href="#option-2-docker-installation" title="Permanent link">&para;</a></h4>
-<ol>
-<li>
-<p>Pull the Ollama Docker image:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>ollama/ollama
-</code></pre></div></p>
-</li>
-<li>
-<p>Run the Ollama container:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-v<span class="w"> </span>ollama:/root/.ollama<span class="w"> </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span>--name<span class="w"> </span>ollama<span class="w"> </span>ollama/ollama
-</code></pre></div></p>
-</li>
-</ol>
-<blockquote>
-<p>Note: Add <code>--gpus=all</code> if you have a GPU and if Docker GPU support is configured.</p>
-</blockquote>
-<ol>
-<li>
-<p>Pull a model using the Docker container:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the Ollama server is running:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/tags
-</code></pre></div></p>
-</li>
-</ol>
-<h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<p>Here's how to create an agent using an Ollama model:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>The structured output system converts your Pydantic models into tool specifications that guide the language model to produce correctly formatted responses. Various model providers supported in Strands Agents sdk-python can work with these specifications, with some supporting Pydantic <code>BaseModel</code> directly.</p>
+<p>Strands handles this through the <a href="../../../../api-reference/agent/#strands.agent.agent.Agent.structured_output"><code>Agent.structured_output()</code></a> method, which manages the conversion, validation, and response processing automatically.</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>Define your desired output structure using Pydantic models:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 
-<span class="c1"># Create an Ollama model instance</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>  <span class="c1"># Ollama server address</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span>               <span class="c1"># Specify which model to use</span>
-<span class="p">)</span>
-
-<span class="c1"># Create an agent using the Ollama model</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">)</span>
-
-<span class="c1"># Use the agent</span>
-<span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Tell me about Strands agents.&quot;</span><span class="p">)</span> <span class="c1"># Prints model output to stdout by default</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WeatherForecast</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete weather forecast information.&quot;&quot;&quot;</span>
+    <span class="n">location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;The location for this forecast&quot;</span><span class="p">)</span>
+    <span class="n">current_time</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Current time in HH:MM format&quot;</span><span class="p">)</span>
+    <span class="n">current_weather</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Current weather conditions&quot;</span><span class="p">)</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Temperature in Celsius&quot;</span><span class="p">)</span>
+    <span class="n">forecast_days</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Multi-day forecast&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="configuration-options">Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
-<p>The <a href="../../../../api-reference/models/#strands.models.ollama"><code>OllamaModel</code></a> supports various <a href="../../../../api-reference/models/#strands.models.ollama.OllamaModel.OllamaConfig">configuration parameters</a>:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>host</code></td>
-<td>The address of the Ollama server</td>
-<td>Required</td>
-</tr>
-<tr>
-<td><code>model_id</code></td>
-<td>The Ollama model identifier</td>
-<td>Required</td>
-</tr>
-<tr>
-<td><code>keep_alive</code></td>
-<td>How long the model stays loaded in memory</td>
-<td>"5m"</td>
-</tr>
-<tr>
-<td><code>max_tokens</code></td>
-<td>Maximum number of tokens to generate</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>temperature</code></td>
-<td>Controls randomness (higher = more random)</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>top_p</code></td>
-<td>Controls diversity via nucleus sampling</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>stop_sequences</code></td>
-<td>List of sequences that stop generation</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>options</code></td>
-<td>Additional model parameters (e.g., top_k)</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>additional_args</code></td>
-<td>Any additional arguments for the request</td>
-<td>None</td>
-</tr>
-</tbody>
-</table>
-<h3 id="example-with-configuration">Example with Configuration<a class="headerlink" href="#example-with-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
+<p>Then use the <code>Agent.structured_output()</code> method:</p>
+<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
+<p>Extract structured information from text:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
 
-<span class="c1"># Create a configured Ollama model</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-    <span class="n">keep_alive</span><span class="o">=</span><span class="s2">&quot;10m&quot;</span><span class="p">,</span>
-    <span class="n">stop_sequences</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;###&quot;</span><span class="p">,</span> <span class="s2">&quot;END&quot;</span><span class="p">],</span>
-    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PersonInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">occupation</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span>
+    <span class="n">PersonInfo</span><span class="p">,</span> 
+    <span class="s2">&quot;John Smith is a 30-year-old software engineer&quot;</span>
 <span class="p">)</span>
 
-<span class="c1"># Create an agent with the configured model</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">)</span>
-
-<span class="c1"># Use the agent</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Write a short story about an AI assistant.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>      <span class="c1"># &quot;John Smith&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Age: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">age</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>        <span class="c1"># 30</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Job: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">occupation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># &quot;software engineer&quot;</span>
 </code></pre></div>
-<h2 id="advanced-features">Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
-<h3 id="updating-configuration-at-runtime">Updating Configuration at Runtime<a class="headerlink" href="#updating-configuration-at-runtime" title="Permanent link">&para;</a></h3>
-<p>You can update the model configuration during runtime:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create the model with initial configuration</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span>
-<span class="p">)</span>
+<h3 id="using-conversation-history">Using Conversation History<a class="headerlink" href="#using-conversation-history" title="Permanent link">&para;</a></h3>
+<p>Structured output can work with existing conversation context:</p>
+<div class="highlight"><pre><span></span><code><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
 
-<span class="c1"># Update configuration later</span>
-<span class="n">ollama_model</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.8</span>
-<span class="p">)</span>
+<span class="c1"># Build up conversation context</span>
+<span class="n">agent</span><span class="p">(</span><span class="s2">&quot;What do you know about Paris, France?&quot;</span><span class="p">)</span>
+<span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Tell me about the weather there in spring.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Extract structured information with a prompt</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CityInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">country</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">population</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">climate</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Uses existing conversation context with a prompt</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">CityInfo</span><span class="p">,</span> <span class="s2">&quot;Extract structured information about Paris&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>This is especially useful if you want a tool to update the model's config for you:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_model_id</span><span class="p">(</span><span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the model id of the agent</span>
+<h3 id="complex-nested-models">Complex Nested Models<a class="headerlink" href="#complex-nested-models" title="Permanent link">&para;</a></h3>
+<p>Handle sophisticated data structures:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">      model_id: Ollama model id to use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating model_id to </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Model updated to </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">street</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">country</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">postal_code</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">Contact</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">phone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-<span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_temperature</span><span class="p">(</span><span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the temperature of the agent</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete person information.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Full name of the person&quot;</span><span class="p">)</span>
+    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Age in years&quot;</span><span class="p">)</span>
+    <span class="n">address</span><span class="p">:</span> <span class="n">Address</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Home address&quot;</span><span class="p">)</span>
+    <span class="n">contacts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Contact</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Contact methods&quot;</span><span class="p">)</span>
+    <span class="n">skills</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Professional skills&quot;</span><span class="p">)</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">      temperature: Temperature value for the model to use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating Temperature to </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Temperature updated to </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span>
+    <span class="n">Person</span><span class="p">,</span>
+    <span class="s2">&quot;Extract info: Jane Doe, a systems admin, 28, lives at 123 Main St, New York, NY. Email: jane@example.com&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>                    <span class="c1"># &quot;Jane Doe&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">city</span><span class="p">)</span>            <span class="c1"># &quot;New York&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">contacts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>       <span class="c1"># &quot;jane@example.com&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">skills</span><span class="p">)</span>                  <span class="c1"># [&quot;systems admin&quot;]</span>
 </code></pre></div>
-<h3 id="using-different-models">Using Different Models<a class="headerlink" href="#using-different-models" title="Permanent link">&para;</a></h3>
-<p>Ollama supports many different models. You can switch between them (make sure they are pulled first). See the list of
-available models here: https://ollama.com/search</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create models for different use cases</span>
-<span class="n">creative_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.8</span>
-<span class="p">)</span>
-
-<span class="n">factual_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;mistral&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.2</span>
-<span class="p">)</span>
-
-<span class="c1"># Create agents with different models</span>
-<span class="n">creative_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">creative_model</span><span class="p">)</span>
-<span class="n">factual_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">factual_model</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="tool-support">Tool Support<a class="headerlink" href="#tool-support" title="Permanent link">&para;</a></h2>
-<p><a href="https://ollama.com/search?c=tools">Ollama models that support tool use</a> can use tools through Strands's tool system:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">current_time</span>
-
-<span class="c1"># Create an Ollama model</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span>
-<span class="p">)</span>
-
-<span class="c1"># Create an agent with tools</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">calculator</span><span class="p">,</span> <span class="n">current_time</span><span class="p">]</span>
-<span class="p">)</span>
-
-<span class="c1"># Use the agent with tools</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;What&#39;s the square root of 144 plus the current time?&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
-<ol>
-<li>
-<p><strong>Connection Refused</strong>:</p>
+<p>Refer to Pydantic documentation for details on:</p>
 <ul>
-<li>Ensure the Ollama server is running (<code>ollama serve</code> or check Docker container status)</li>
-<li>Verify the host URL is correct</li>
-<li>For Docker: Check if port 11434 is properly exposed</li>
+<li><a href="https://docs.pydantic.dev/latest/concepts/models/">Models and schema definition</a></li>
+<li><a href="https://docs.pydantic.dev/latest/concepts/fields/">Field types and constraints</a></li>
+<li><a href="https://docs.pydantic.dev/latest/concepts/validators/">Custom validators</a></li>
 </ul>
-</li>
-<li>
-<p><strong>Model Not Found</strong>:</p>
+<h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">structured_output</span><span class="p">(</span><span class="n">MyModel</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Handle appropriately - options include:</span>
+    <span class="c1"># 1. Retry with a more specific prompt</span>
+    <span class="c1"># 2. Fall back to a simpler model</span>
+    <span class="c1"># 3. Extract partial information from the error</span>
+</code></pre></div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Pull the model first: <code>ollama pull model_name</code> or <code>docker exec -it ollama ollama pull model_name</code></li>
-<li>Check for typos in the model_id</li>
-</ul>
-</li>
-<li>
-<p><strong>Module Not Found</strong>:</p>
-<ul>
-<li>If you encounter the error <code>ModuleNotFoundError: No module named 'ollama'</code>, this means you haven't installed the <code>ollama</code> dependency in your python environment</li>
-<li>To fix, run <code>pip install 'strands-agents[ollama]'</code></li>
-</ul>
-</li>
-</ol>
-<h2 id="related-resources">Related Resources<a class="headerlink" href="#related-resources" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/ollama/ollama/blob/main/README.md">Ollama Documentation</a></li>
-<li><a href="https://hub.docker.com/r/ollama/ollama">Ollama Docker Hub</a></li>
-<li><a href="https://ollama.ai/library">Available Ollama Models</a></li>
+<li><strong>Keep models focused</strong>: Define specific models for clear purposes</li>
+<li><strong>Use descriptive field names</strong>: Include helpful descriptions with <code>Field</code></li>
+<li><strong>Handle errors gracefully</strong>: Implement proper error handling strategies with fallbacks</li>
+<li><strong>Extract key data at conversation completion</strong>: Use structured output at the end of agent workflows to distill conversations into actionable data structures</li>
 </ul>
 
 

@@ -605,6 +605,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../user-guide/concepts/agents/structured-output/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Structured Output
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../user-guide/concepts/agents/context-management/" class="md-nav__link">
         
   
@@ -1123,6 +1146,29 @@
             Multi-agent
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/concepts/multi-agent/agent-to-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agent2Agent (A2A)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1902,6 +1948,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../examples/python/structured_output/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Structured Output
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../examples/python/multi_agent_example/multi_agent_example/" class="md-nav__link">
         
   
@@ -2271,6 +2340,48 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient" class="md-nav__link">
+    <span class="md-ellipsis">
+      MetricsClient
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MetricsClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient.__new__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __new__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient.create_instruments" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_instruments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#strands.telemetry.metrics.ToolMetrics" class="md-nav__link">
     <span class="md-ellipsis">
       ToolMetrics
@@ -2536,6 +2647,48 @@
   <a href="#strands.telemetry.metrics.EventLoopMetrics.update_usage" class="md-nav__link">
     <span class="md-ellipsis">
       update_usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient" class="md-nav__link">
+    <span class="md-ellipsis">
+      MetricsClient
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MetricsClient">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __init__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient.__new__" class="md-nav__link">
+    <span class="md-ellipsis">
+      __new__
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strands.telemetry.metrics.MetricsClient.create_instruments" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_instruments
     </span>
   </a>
   
@@ -2857,23 +3010,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
@@ -2980,7 +3117,55 @@
 <span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
-<span class="normal">261</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">EventLoopMetrics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregated metrics for an event loop&#39;s execution.</span>
 
@@ -3000,32 +3185,53 @@
     <span class="n">accumulated_usage</span><span class="p">:</span> <span class="n">Usage</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Usage</span><span class="p">(</span><span class="n">inputTokens</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">outputTokens</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">totalTokens</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
     <span class="n">accumulated_metrics</span><span class="p">:</span> <span class="n">Metrics</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Metrics</span><span class="p">(</span><span class="n">latencyMs</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">start_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Trace</span><span class="p">]:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_metrics_client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MetricsClient&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the singleton MetricsClient instance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MetricsClient</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_cycle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Trace</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a new event loop cycle and create a trace for it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            attributes: attributes of the metrics.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A tuple containing the start time and the cycle trace object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_cycle_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_start_cycle</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cycle_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">cycle_trace</span> <span class="o">=</span> <span class="n">Trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cycle </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cycle_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cycle_trace</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">cycle_trace</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">end_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">cycle_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">end_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">cycle_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;End the current event loop cycle and record its duration.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            start_time: The timestamp when the cycle started.</span>
 <span class="sd">            cycle_trace: The trace object for this cycle.</span>
+<span class="sd">            attributes: attributes of the metrics.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_end_cycle</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
         <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">duration</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_cycle_duration</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cycle_durations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
         <span class="n">cycle_trace</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_tool_usage</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tool_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">tool_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">,</span>
+        <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Record metrics for a tool invocation.</span>
 
@@ -3048,8 +3254,16 @@
         <span class="n">tool_trace</span><span class="o">.</span><span class="n">raw_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">tool_use_id</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">tool_trace</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">tool_metrics</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">ToolMetrics</span><span class="p">(</span><span class="n">tool</span><span class="p">))</span><span class="o">.</span><span class="n">add_call</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">tool_metrics</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">ToolMetrics</span><span class="p">(</span><span class="n">tool</span><span class="p">))</span><span class="o">.</span><span class="n">add_call</span><span class="p">(</span>
+            <span class="n">tool</span><span class="p">,</span>
+            <span class="n">duration</span><span class="p">,</span>
+            <span class="n">success</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;tool_name&quot;</span><span class="p">:</span> <span class="n">tool_name</span><span class="p">,</span>
+                <span class="s2">&quot;tool_use_id&quot;</span><span class="p">:</span> <span class="n">tool_use_id</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
         <span class="n">tool_trace</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usage</span><span class="p">:</span> <span class="n">Usage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -3058,6 +3272,8 @@
 <span class="sd">        Args:</span>
 <span class="sd">            usage: The usage data to add to the accumulated totals.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_input_tokens</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;inputTokens&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_output_tokens</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;outputTokens&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_usage</span><span class="p">[</span><span class="s2">&quot;inputTokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;inputTokens&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_usage</span><span class="p">[</span><span class="s2">&quot;outputTokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;outputTokens&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_usage</span><span class="p">[</span><span class="s2">&quot;totalTokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;totalTokens&quot;</span><span class="p">]</span>
@@ -3068,6 +3284,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metrics: The metrics data to add to the accumulated totals.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_latency</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;latencyMs&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_metrics</span><span class="p">[</span><span class="s2">&quot;latencyMs&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;latencyMs&quot;</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -3230,34 +3447,52 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_tool_usage</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tool_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_tool_usage</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span>
+    <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">tool_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">,</span>
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Record metrics for a tool invocation.</span>
 
@@ -3280,8 +3515,16 @@
     <span class="n">tool_trace</span><span class="o">.</span><span class="n">raw_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tool_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">tool_use_id</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">tool_trace</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">tool_metrics</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">ToolMetrics</span><span class="p">(</span><span class="n">tool</span><span class="p">))</span><span class="o">.</span><span class="n">add_call</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span>
-
+    <span class="bp">self</span><span class="o">.</span><span class="n">tool_metrics</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">ToolMetrics</span><span class="p">(</span><span class="n">tool</span><span class="p">))</span><span class="o">.</span><span class="n">add_call</span><span class="p">(</span>
+        <span class="n">tool</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">,</span>
+        <span class="n">success</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;tool_name&quot;</span><span class="p">:</span> <span class="n">tool_name</span><span class="p">,</span>
+            <span class="s2">&quot;tool_use_id&quot;</span><span class="p">:</span> <span class="n">tool_use_id</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
     <span class="n">tool_trace</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3293,7 +3536,7 @@
 
 
 <h4 id="strands.telemetry.metrics.EventLoopMetrics.end_cycle" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">end_cycle</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">cycle_trace</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">end_cycle</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">cycle_trace</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#strands.telemetry.metrics.EventLoopMetrics.end_cycle" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -3346,31 +3589,53 @@
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>attributes</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>attributes of the metrics.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">end_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">cycle_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">end_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">cycle_trace</span><span class="p">:</span> <span class="n">Trace</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;End the current event loop cycle and record its duration.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        start_time: The timestamp when the cycle started.</span>
 <span class="sd">        cycle_trace: The trace object for this cycle.</span>
+<span class="sd">        attributes: attributes of the metrics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_end_cycle</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_cycle_duration</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cycle_durations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
     <span class="n">cycle_trace</span><span class="o">.</span><span class="n">end</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3428,40 +3693,40 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a comprehensive summary of all collected metrics.</span>
 
 <span class="sd">    Returns:</span>
@@ -3505,7 +3770,7 @@
 
 
 <h4 id="strands.telemetry.metrics.EventLoopMetrics.start_cycle" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">start_cycle</span><span class="p">()</span></code>
+            <code class="highlight language-python"><span class="n">start_cycle</span><span class="p">(</span><span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#strands.telemetry.metrics.EventLoopMetrics.start_cycle" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -3513,6 +3778,37 @@
     <div class="doc doc-contents ">
 
         <p>Start a new event loop cycle and create a trace for it.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>attributes</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>attributes of the metrics.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -3540,22 +3836,38 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">start_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Trace</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">start_cycle</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Trace</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Start a new event loop cycle and create a trace for it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        attributes: attributes of the metrics.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A tuple containing the start time and the cycle trace object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_cycle_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_start_cycle</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cycle_count</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">cycle_trace</span> <span class="o">=</span> <span class="n">Trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cycle </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cycle_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="n">start_time</span><span class="p">)</span>
@@ -3614,18 +3926,20 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Metrics</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Metrics</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the accumulated performance metrics with new metrics data.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        metrics: The metrics data to add to the accumulated totals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_latency</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;latencyMs&quot;</span><span class="p">])</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_metrics</span><span class="p">[</span><span class="s2">&quot;latencyMs&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;latencyMs&quot;</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3680,23 +3994,391 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usage</span><span class="p">:</span> <span class="n">Usage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usage</span><span class="p">:</span> <span class="n">Usage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the accumulated token usage with new usage data.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        usage: The usage data to add to the accumulated totals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_input_tokens</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;inputTokens&quot;</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_metrics_client</span><span class="o">.</span><span class="n">event_loop_output_tokens</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;outputTokens&quot;</span><span class="p">])</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_usage</span><span class="p">[</span><span class="s2">&quot;inputTokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;inputTokens&quot;</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_usage</span><span class="p">[</span><span class="s2">&quot;outputTokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;outputTokens&quot;</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_usage</span><span class="p">[</span><span class="s2">&quot;totalTokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;totalTokens&quot;</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="strands.telemetry.metrics.MetricsClient" class="doc doc-heading">
+            <code>MetricsClient</code>
+
+
+<a href="#strands.telemetry.metrics.MetricsClient" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Singleton client for managing OpenTelemetry metrics instruments.</p>
+<p>The actual metrics export destination (console, OTLP endpoint, etc.) is configured
+through OpenTelemetry SDK configuration by users, not by this client.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MetricsClient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Singleton client for managing OpenTelemetry metrics instruments.</span>
+
+<span class="sd">    The actual metrics export destination (console, OTLP endpoint, etc.) is configured</span>
+<span class="sd">    through OpenTelemetry SDK configuration by users, not by this client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MetricsClient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">meter</span><span class="p">:</span> <span class="n">Meter</span>
+    <span class="n">event_loop_cycle_count</span><span class="p">:</span> <span class="n">Counter</span>
+    <span class="n">event_loop_start_cycle</span><span class="p">:</span> <span class="n">Counter</span>
+    <span class="n">event_loop_end_cycle</span><span class="p">:</span> <span class="n">Counter</span>
+    <span class="n">event_loop_cycle_duration</span><span class="p">:</span> <span class="n">Histogram</span>
+    <span class="n">event_loop_latency</span><span class="p">:</span> <span class="n">Histogram</span>
+    <span class="n">event_loop_input_tokens</span><span class="p">:</span> <span class="n">Histogram</span>
+    <span class="n">event_loop_output_tokens</span><span class="p">:</span> <span class="n">Histogram</span>
+
+    <span class="n">tool_call_count</span><span class="p">:</span> <span class="n">Counter</span>
+    <span class="n">tool_success_count</span><span class="p">:</span> <span class="n">Counter</span>
+    <span class="n">tool_error_count</span><span class="p">:</span> <span class="n">Counter</span>
+    <span class="n">tool_duration</span><span class="p">:</span> <span class="n">Histogram</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MetricsClient&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create or return the singleton instance of MetricsClient.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The single MetricsClient instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the MetricsClient.</span>
+
+<span class="sd">        This method only runs once due to the singleton pattern.</span>
+<span class="sd">        Sets up the OpenTelemetry meter and creates metric instruments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;meter&quot;</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating Strands MetricsClient&quot;</span><span class="p">)</span>
+        <span class="n">meter_provider</span><span class="p">:</span> <span class="n">metrics_api</span><span class="o">.</span><span class="n">MeterProvider</span> <span class="o">=</span> <span class="n">metrics_api</span><span class="o">.</span><span class="n">get_meter_provider</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meter</span> <span class="o">=</span> <span class="n">meter_provider</span><span class="o">.</span><span class="n">get_meter</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_instruments</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_instruments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and initialize all OpenTelemetry metric instruments.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_cycle_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_CYCLE_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_start_cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_START_CYCLE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_end_cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_END_CYCLE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_cycle_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_CYCLE_DURATION</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_latency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_LATENCY</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ms&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tool_call_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_CALL_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tool_success_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_SUCCESS_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tool_error_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_ERROR_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tool_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_DURATION</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_input_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_INPUT_TOKENS</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;token&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_output_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_OUTPUT_TOKENS</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;token&quot;</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="strands.telemetry.metrics.MetricsClient.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
+
+<a href="#strands.telemetry.metrics.MetricsClient.__init__" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialize the MetricsClient.</p>
+<p>This method only runs once due to the singleton pattern.
+Sets up the OpenTelemetry meter and creates metric instruments.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the MetricsClient.</span>
+
+<span class="sd">    This method only runs once due to the singleton pattern.</span>
+<span class="sd">    Sets up the OpenTelemetry meter and creates metric instruments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;meter&quot;</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating Strands MetricsClient&quot;</span><span class="p">)</span>
+    <span class="n">meter_provider</span><span class="p">:</span> <span class="n">metrics_api</span><span class="o">.</span><span class="n">MeterProvider</span> <span class="o">=</span> <span class="n">metrics_api</span><span class="o">.</span><span class="n">get_meter_provider</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">meter</span> <span class="o">=</span> <span class="n">meter_provider</span><span class="o">.</span><span class="n">get_meter</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">create_instruments</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="strands.telemetry.metrics.MetricsClient.__new__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__new__</span><span class="p">()</span></code>
+
+<a href="#strands.telemetry.metrics.MetricsClient.__new__" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create or return the singleton instance of MetricsClient.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="MetricsClient (strands.telemetry.metrics.MetricsClient)" href="#strands.telemetry.metrics.MetricsClient">MetricsClient</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The single MetricsClient instance.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MetricsClient&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create or return the singleton instance of MetricsClient.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The single MetricsClient instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instance</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="strands.telemetry.metrics.MetricsClient.create_instruments" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create_instruments</span><span class="p">()</span></code>
+
+<a href="#strands.telemetry.metrics.MetricsClient.create_instruments" class="headerlink" title="Permanent link">&para;</a></h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create and initialize all OpenTelemetry metric instruments.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_instruments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create and initialize all OpenTelemetry metric instruments.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_cycle_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_CYCLE_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_start_cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_START_CYCLE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_end_cycle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_END_CYCLE</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_cycle_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_CYCLE_DURATION</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_latency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_LATENCY</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ms&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tool_call_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_CALL_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tool_success_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_SUCCESS_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tool_error_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_counter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_ERROR_COUNT</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tool_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_TOOL_DURATION</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_input_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_INPUT_TOKENS</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;token&quot;</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_loop_output_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meter</span><span class="o">.</span><span class="n">create_histogram</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">STRANDS_EVENT_LOOP_OUTPUT_TOKENS</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;token&quot;</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3808,11 +4490,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
@@ -3841,7 +4519,23 @@
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ToolMetrics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Metrics for a specific tool&#39;s usage.</span>
 
@@ -3859,22 +4553,34 @@
     <span class="n">error_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">total_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">metrics_client</span><span class="p">:</span> <span class="s2">&quot;MetricsClient&quot;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Record a new tool call with its outcome.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            tool: The tool that was called.</span>
 <span class="sd">            duration: How long the call took in seconds.</span>
 <span class="sd">            success: Whether the call was successful.</span>
+<span class="sd">            metrics_client: The metrics client for recording the metrics.</span>
+<span class="sd">            attributes: attributes of the metrics.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="n">tool</span>  <span class="c1"># Update with latest tool state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">call_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">+=</span> <span class="n">duration</span>
-
+        <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_call_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
+        <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_duration</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_success_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">error_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_error_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -3894,7 +4600,7 @@
 
 
 <h4 id="strands.telemetry.metrics.ToolMetrics.add_call" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">add_call</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">add_call</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">success</span><span class="p">,</span> <span class="n">metrics_client</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#strands.telemetry.metrics.ToolMetrics.add_call" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -3963,17 +4669,45 @@
                 <em>required</em>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>metrics_client</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="MetricsClient (strands.telemetry.metrics.MetricsClient)" href="#strands.telemetry.metrics.MetricsClient">MetricsClient</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The metrics client for recording the metrics.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>attributes</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>attributes of the metrics.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
@@ -3984,22 +4718,50 @@
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_call</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">tool</span><span class="p">:</span> <span class="n">ToolUse</span><span class="p">,</span>
+    <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">metrics_client</span><span class="p">:</span> <span class="s2">&quot;MetricsClient&quot;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Record a new tool call with its outcome.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tool: The tool that was called.</span>
 <span class="sd">        duration: How long the call took in seconds.</span>
 <span class="sd">        success: Whether the call was successful.</span>
+<span class="sd">        metrics_client: The metrics client for recording the metrics.</span>
+<span class="sd">        attributes: attributes of the metrics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="n">tool</span>  <span class="c1"># Update with latest tool state</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">call_count</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">total_time</span> <span class="o">+=</span> <span class="n">duration</span>
-
+    <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_call_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
+    <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_duration</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_success_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">error_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">metrics_client</span><span class="o">.</span><span class="n">tool_error_count</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4038,90 +4800,90 @@
 
               <details class="quote">
                 <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Trace</span><span class="p">:</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Trace</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A trace representing a single operation or step in the execution flow.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -4348,11 +5110,7 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
@@ -4376,7 +5134,11 @@ If not provided, the current time will be used.</p>
 <span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
-<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -4458,13 +5220,13 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
 <span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">:</span> <span class="s2">&quot;Trace&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">:</span> <span class="s2">&quot;Trace&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a child trace to this trace.</span>
 
 <span class="sd">    Args:</span>
@@ -4524,13 +5286,13 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a message to the trace.</span>
 
 <span class="sd">    Args:</span>
@@ -4582,13 +5344,13 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
 <span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the duration of this trace.</span>
 
 <span class="sd">    Returns:</span>
@@ -4649,14 +5411,14 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mark the trace as complete with the given or current timestamp.</span>
 
 <span class="sd">    Args:</span>
@@ -4709,24 +5471,24 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the trace to a dictionary representation.</span>
 
 <span class="sd">    Returns:</span>
@@ -4850,17 +5612,17 @@ If not provided, the current time will be used.</p>
 
             <details class="quote">
               <summary>Source code in <code>strands/telemetry/metrics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">metrics_to_string</span><span class="p">(</span><span class="n">event_loop_metrics</span><span class="p">:</span> <span class="n">EventLoopMetrics</span><span class="p">,</span> <span class="n">allowed_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">metrics_to_string</span><span class="p">(</span><span class="n">event_loop_metrics</span><span class="p">:</span> <span class="n">EventLoopMetrics</span><span class="p">,</span> <span class="n">allowed_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert event loop metrics to a human-readable string representation.</span>
 
 <span class="sd">    Args:</span>

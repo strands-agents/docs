@@ -39,32 +39,53 @@ class EventLoopMetrics:
     accumulated_usage: Usage = field(default_factory=lambda: Usage(inputTokens=0, outputTokens=0, totalTokens=0))
     accumulated_metrics: Metrics = field(default_factory=lambda: Metrics(latencyMs=0))
 
-    def start_cycle(self) -> Tuple[float, Trace]:
+    @property
+    def _metrics_client(self) -> "MetricsClient":
+        """Get the singleton MetricsClient instance."""
+        return MetricsClient()
+
+    def start_cycle(
+        self,
+        attributes: Optional[Dict[str, Any]] = None,
+    ) -> Tuple[float, Trace]:
         """Start a new event loop cycle and create a trace for it.
+
+        Args:
+            attributes: attributes of the metrics.
 
         Returns:
             A tuple containing the start time and the cycle trace object.
         """
+        self._metrics_client.event_loop_cycle_count.add(1, attributes=attributes)
+        self._metrics_client.event_loop_start_cycle.add(1, attributes=attributes)
         self.cycle_count += 1
         start_time = time.time()
         cycle_trace = Trace(f"Cycle {self.cycle_count}", start_time=start_time)
         self.traces.append(cycle_trace)
         return start_time, cycle_trace
 
-    def end_cycle(self, start_time: float, cycle_trace: Trace) -> None:
+    def end_cycle(self, start_time: float, cycle_trace: Trace, attributes: Optional[Dict[str, Any]] = None) -> None:
         """End the current event loop cycle and record its duration.
 
         Args:
             start_time: The timestamp when the cycle started.
             cycle_trace: The trace object for this cycle.
+            attributes: attributes of the metrics.
         """
+        self._metrics_client.event_loop_end_cycle.add(1, attributes)
         end_time = time.time()
         duration = end_time - start_time
+        self._metrics_client.event_loop_cycle_duration.record(duration, attributes)
         self.cycle_durations.append(duration)
         cycle_trace.end(end_time)
 
     def add_tool_usage(
-        self, tool: ToolUse, duration: float, tool_trace: Trace, success: bool, message: Message
+        self,
+        tool: ToolUse,
+        duration: float,
+        tool_trace: Trace,
+        success: bool,
+        message: Message,
     ) -> None:
         """Record metrics for a tool invocation.
 
@@ -87,8 +108,16 @@ class EventLoopMetrics:
         tool_trace.raw_name = f"{tool_name} - {tool_use_id}"
         tool_trace.add_message(message)
 
-        self.tool_metrics.setdefault(tool_name, ToolMetrics(tool)).add_call(tool, duration, success)
-
+        self.tool_metrics.setdefault(tool_name, ToolMetrics(tool)).add_call(
+            tool,
+            duration,
+            success,
+            self._metrics_client,
+            attributes={
+                "tool_name": tool_name,
+                "tool_use_id": tool_use_id,
+            },
+        )
         tool_trace.end()
 
     def update_usage(self, usage: Usage) -> None:
@@ -97,6 +126,8 @@ class EventLoopMetrics:
         Args:
             usage: The usage data to add to the accumulated totals.
         """
+        self._metrics_client.event_loop_input_tokens.record(usage["inputTokens"])
+        self._metrics_client.event_loop_output_tokens.record(usage["outputTokens"])
         self.accumulated_usage["inputTokens"] += usage["inputTokens"]
         self.accumulated_usage["outputTokens"] += usage["outputTokens"]
         self.accumulated_usage["totalTokens"] += usage["totalTokens"]
@@ -107,6 +138,7 @@ class EventLoopMetrics:
         Args:
             metrics: The metrics data to add to the accumulated totals.
         """
+        self._metrics_client.event_loop_latency.record(metrics["latencyMs"])
         self.accumulated_metrics["latencyMs"] += metrics["latencyMs"]
 
     def get_summary(self) -> Dict[str, Any]:
@@ -158,7 +190,12 @@ Source code in `strands/telemetry/metrics.py`
 
 ```
 def add_tool_usage(
-    self, tool: ToolUse, duration: float, tool_trace: Trace, success: bool, message: Message
+    self,
+    tool: ToolUse,
+    duration: float,
+    tool_trace: Trace,
+    success: bool,
+    message: Message,
 ) -> None:
     """Record metrics for a tool invocation.
 
@@ -181,32 +218,43 @@ def add_tool_usage(
     tool_trace.raw_name = f"{tool_name} - {tool_use_id}"
     tool_trace.add_message(message)
 
-    self.tool_metrics.setdefault(tool_name, ToolMetrics(tool)).add_call(tool, duration, success)
-
+    self.tool_metrics.setdefault(tool_name, ToolMetrics(tool)).add_call(
+        tool,
+        duration,
+        success,
+        self._metrics_client,
+        attributes={
+            "tool_name": tool_name,
+            "tool_use_id": tool_use_id,
+        },
+    )
     tool_trace.end()
 
 ```
 
-#### `end_cycle(start_time, cycle_trace)`
+#### `end_cycle(start_time, cycle_trace, attributes=None)`
 
 End the current event loop cycle and record its duration.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `start_time` | `float` | The timestamp when the cycle started. | *required* | | `cycle_trace` | `Trace` | The trace object for this cycle. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `start_time` | `float` | The timestamp when the cycle started. | *required* | | `cycle_trace` | `Trace` | The trace object for this cycle. | *required* | | `attributes` | `Optional[Dict[str, Any]]` | attributes of the metrics. | `None` |
 
 Source code in `strands/telemetry/metrics.py`
 
 ```
-def end_cycle(self, start_time: float, cycle_trace: Trace) -> None:
+def end_cycle(self, start_time: float, cycle_trace: Trace, attributes: Optional[Dict[str, Any]] = None) -> None:
     """End the current event loop cycle and record its duration.
 
     Args:
         start_time: The timestamp when the cycle started.
         cycle_trace: The trace object for this cycle.
+        attributes: attributes of the metrics.
     """
+    self._metrics_client.event_loop_end_cycle.add(1, attributes)
     end_time = time.time()
     duration = end_time - start_time
+    self._metrics_client.event_loop_cycle_duration.record(duration, attributes)
     self.cycle_durations.append(duration)
     cycle_trace.end(end_time)
 
@@ -260,9 +308,13 @@ def get_summary(self) -> Dict[str, Any]:
 
 ```
 
-#### `start_cycle()`
+#### `start_cycle(attributes=None)`
 
 Start a new event loop cycle and create a trace for it.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `attributes` | `Optional[Dict[str, Any]]` | attributes of the metrics. | `None` |
 
 Returns:
 
@@ -271,12 +323,20 @@ Returns:
 Source code in `strands/telemetry/metrics.py`
 
 ```
-def start_cycle(self) -> Tuple[float, Trace]:
+def start_cycle(
+    self,
+    attributes: Optional[Dict[str, Any]] = None,
+) -> Tuple[float, Trace]:
     """Start a new event loop cycle and create a trace for it.
+
+    Args:
+        attributes: attributes of the metrics.
 
     Returns:
         A tuple containing the start time and the cycle trace object.
     """
+    self._metrics_client.event_loop_cycle_count.add(1, attributes=attributes)
+    self._metrics_client.event_loop_start_cycle.add(1, attributes=attributes)
     self.cycle_count += 1
     start_time = time.time()
     cycle_trace = Trace(f"Cycle {self.cycle_count}", start_time=start_time)
@@ -302,6 +362,7 @@ def update_metrics(self, metrics: Metrics) -> None:
     Args:
         metrics: The metrics data to add to the accumulated totals.
     """
+    self._metrics_client.event_loop_latency.record(metrics["latencyMs"])
     self.accumulated_metrics["latencyMs"] += metrics["latencyMs"]
 
 ```
@@ -323,9 +384,173 @@ def update_usage(self, usage: Usage) -> None:
     Args:
         usage: The usage data to add to the accumulated totals.
     """
+    self._metrics_client.event_loop_input_tokens.record(usage["inputTokens"])
+    self._metrics_client.event_loop_output_tokens.record(usage["outputTokens"])
     self.accumulated_usage["inputTokens"] += usage["inputTokens"]
     self.accumulated_usage["outputTokens"] += usage["outputTokens"]
     self.accumulated_usage["totalTokens"] += usage["totalTokens"]
+
+```
+
+### `MetricsClient`
+
+Singleton client for managing OpenTelemetry metrics instruments.
+
+The actual metrics export destination (console, OTLP endpoint, etc.) is configured through OpenTelemetry SDK configuration by users, not by this client.
+
+Source code in `strands/telemetry/metrics.py`
+
+```
+class MetricsClient:
+    """Singleton client for managing OpenTelemetry metrics instruments.
+
+    The actual metrics export destination (console, OTLP endpoint, etc.) is configured
+    through OpenTelemetry SDK configuration by users, not by this client.
+    """
+
+    _instance: Optional["MetricsClient"] = None
+    meter: Meter
+    event_loop_cycle_count: Counter
+    event_loop_start_cycle: Counter
+    event_loop_end_cycle: Counter
+    event_loop_cycle_duration: Histogram
+    event_loop_latency: Histogram
+    event_loop_input_tokens: Histogram
+    event_loop_output_tokens: Histogram
+
+    tool_call_count: Counter
+    tool_success_count: Counter
+    tool_error_count: Counter
+    tool_duration: Histogram
+
+    def __new__(cls) -> "MetricsClient":
+        """Create or return the singleton instance of MetricsClient.
+
+        Returns:
+            The single MetricsClient instance.
+        """
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __init__(self) -> None:
+        """Initialize the MetricsClient.
+
+        This method only runs once due to the singleton pattern.
+        Sets up the OpenTelemetry meter and creates metric instruments.
+        """
+        if hasattr(self, "meter"):
+            return
+
+        logger.info("Creating Strands MetricsClient")
+        meter_provider: metrics_api.MeterProvider = metrics_api.get_meter_provider()
+        self.meter = meter_provider.get_meter(__name__)
+        self.create_instruments()
+
+    def create_instruments(self) -> None:
+        """Create and initialize all OpenTelemetry metric instruments."""
+        self.event_loop_cycle_count = self.meter.create_counter(
+            name=constants.STRANDS_EVENT_LOOP_CYCLE_COUNT, unit="Count"
+        )
+        self.event_loop_start_cycle = self.meter.create_counter(
+            name=constants.STRANDS_EVENT_LOOP_START_CYCLE, unit="Count"
+        )
+        self.event_loop_end_cycle = self.meter.create_counter(name=constants.STRANDS_EVENT_LOOP_END_CYCLE, unit="Count")
+        self.event_loop_cycle_duration = self.meter.create_histogram(
+            name=constants.STRANDS_EVENT_LOOP_CYCLE_DURATION, unit="s"
+        )
+        self.event_loop_latency = self.meter.create_histogram(name=constants.STRANDS_EVENT_LOOP_LATENCY, unit="ms")
+        self.tool_call_count = self.meter.create_counter(name=constants.STRANDS_TOOL_CALL_COUNT, unit="Count")
+        self.tool_success_count = self.meter.create_counter(name=constants.STRANDS_TOOL_SUCCESS_COUNT, unit="Count")
+        self.tool_error_count = self.meter.create_counter(name=constants.STRANDS_TOOL_ERROR_COUNT, unit="Count")
+        self.tool_duration = self.meter.create_histogram(name=constants.STRANDS_TOOL_DURATION, unit="s")
+        self.event_loop_input_tokens = self.meter.create_histogram(
+            name=constants.STRANDS_EVENT_LOOP_INPUT_TOKENS, unit="token"
+        )
+        self.event_loop_output_tokens = self.meter.create_histogram(
+            name=constants.STRANDS_EVENT_LOOP_OUTPUT_TOKENS, unit="token"
+        )
+
+```
+
+#### `__init__()`
+
+Initialize the MetricsClient.
+
+This method only runs once due to the singleton pattern. Sets up the OpenTelemetry meter and creates metric instruments.
+
+Source code in `strands/telemetry/metrics.py`
+
+```
+def __init__(self) -> None:
+    """Initialize the MetricsClient.
+
+    This method only runs once due to the singleton pattern.
+    Sets up the OpenTelemetry meter and creates metric instruments.
+    """
+    if hasattr(self, "meter"):
+        return
+
+    logger.info("Creating Strands MetricsClient")
+    meter_provider: metrics_api.MeterProvider = metrics_api.get_meter_provider()
+    self.meter = meter_provider.get_meter(__name__)
+    self.create_instruments()
+
+```
+
+#### `__new__()`
+
+Create or return the singleton instance of MetricsClient.
+
+Returns:
+
+| Type | Description | | --- | --- | | `MetricsClient` | The single MetricsClient instance. |
+
+Source code in `strands/telemetry/metrics.py`
+
+```
+def __new__(cls) -> "MetricsClient":
+    """Create or return the singleton instance of MetricsClient.
+
+    Returns:
+        The single MetricsClient instance.
+    """
+    if cls._instance is None:
+        cls._instance = super().__new__(cls)
+    return cls._instance
+
+```
+
+#### `create_instruments()`
+
+Create and initialize all OpenTelemetry metric instruments.
+
+Source code in `strands/telemetry/metrics.py`
+
+```
+def create_instruments(self) -> None:
+    """Create and initialize all OpenTelemetry metric instruments."""
+    self.event_loop_cycle_count = self.meter.create_counter(
+        name=constants.STRANDS_EVENT_LOOP_CYCLE_COUNT, unit="Count"
+    )
+    self.event_loop_start_cycle = self.meter.create_counter(
+        name=constants.STRANDS_EVENT_LOOP_START_CYCLE, unit="Count"
+    )
+    self.event_loop_end_cycle = self.meter.create_counter(name=constants.STRANDS_EVENT_LOOP_END_CYCLE, unit="Count")
+    self.event_loop_cycle_duration = self.meter.create_histogram(
+        name=constants.STRANDS_EVENT_LOOP_CYCLE_DURATION, unit="s"
+    )
+    self.event_loop_latency = self.meter.create_histogram(name=constants.STRANDS_EVENT_LOOP_LATENCY, unit="ms")
+    self.tool_call_count = self.meter.create_counter(name=constants.STRANDS_TOOL_CALL_COUNT, unit="Count")
+    self.tool_success_count = self.meter.create_counter(name=constants.STRANDS_TOOL_SUCCESS_COUNT, unit="Count")
+    self.tool_error_count = self.meter.create_counter(name=constants.STRANDS_TOOL_ERROR_COUNT, unit="Count")
+    self.tool_duration = self.meter.create_histogram(name=constants.STRANDS_TOOL_DURATION, unit="s")
+    self.event_loop_input_tokens = self.meter.create_histogram(
+        name=constants.STRANDS_EVENT_LOOP_INPUT_TOKENS, unit="token"
+    )
+    self.event_loop_output_tokens = self.meter.create_histogram(
+        name=constants.STRANDS_EVENT_LOOP_OUTPUT_TOKENS, unit="token"
+    )
 
 ```
 
@@ -358,52 +583,76 @@ class ToolMetrics:
     error_count: int = 0
     total_time: float = 0.0
 
-    def add_call(self, tool: ToolUse, duration: float, success: bool) -> None:
+    def add_call(
+        self,
+        tool: ToolUse,
+        duration: float,
+        success: bool,
+        metrics_client: "MetricsClient",
+        attributes: Optional[Dict[str, Any]] = None,
+    ) -> None:
         """Record a new tool call with its outcome.
 
         Args:
             tool: The tool that was called.
             duration: How long the call took in seconds.
             success: Whether the call was successful.
+            metrics_client: The metrics client for recording the metrics.
+            attributes: attributes of the metrics.
         """
         self.tool = tool  # Update with latest tool state
         self.call_count += 1
         self.total_time += duration
-
+        metrics_client.tool_call_count.add(1, attributes=attributes)
+        metrics_client.tool_duration.record(duration, attributes=attributes)
         if success:
             self.success_count += 1
+            metrics_client.tool_success_count.add(1, attributes=attributes)
         else:
             self.error_count += 1
+            metrics_client.tool_error_count.add(1, attributes=attributes)
 
 ```
 
-#### `add_call(tool, duration, success)`
+#### `add_call(tool, duration, success, metrics_client, attributes=None)`
 
 Record a new tool call with its outcome.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool` | `ToolUse` | The tool that was called. | *required* | | `duration` | `float` | How long the call took in seconds. | *required* | | `success` | `bool` | Whether the call was successful. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool` | `ToolUse` | The tool that was called. | *required* | | `duration` | `float` | How long the call took in seconds. | *required* | | `success` | `bool` | Whether the call was successful. | *required* | | `metrics_client` | `MetricsClient` | The metrics client for recording the metrics. | *required* | | `attributes` | `Optional[Dict[str, Any]]` | attributes of the metrics. | `None` |
 
 Source code in `strands/telemetry/metrics.py`
 
 ```
-def add_call(self, tool: ToolUse, duration: float, success: bool) -> None:
+def add_call(
+    self,
+    tool: ToolUse,
+    duration: float,
+    success: bool,
+    metrics_client: "MetricsClient",
+    attributes: Optional[Dict[str, Any]] = None,
+) -> None:
     """Record a new tool call with its outcome.
 
     Args:
         tool: The tool that was called.
         duration: How long the call took in seconds.
         success: Whether the call was successful.
+        metrics_client: The metrics client for recording the metrics.
+        attributes: attributes of the metrics.
     """
     self.tool = tool  # Update with latest tool state
     self.call_count += 1
     self.total_time += duration
-
+    metrics_client.tool_call_count.add(1, attributes=attributes)
+    metrics_client.tool_duration.record(duration, attributes=attributes)
     if success:
         self.success_count += 1
+        metrics_client.tool_success_count.add(1, attributes=attributes)
     else:
         self.error_count += 1
+        metrics_client.tool_error_count.add(1, attributes=attributes)
 
 ```
 

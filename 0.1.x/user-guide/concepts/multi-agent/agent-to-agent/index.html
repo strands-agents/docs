@@ -10,13 +10,13 @@
     
     
     
-      <link rel="canonical" href="https://strandsagents.com/latest/user-guide/concepts/model-providers/ollama/">
+      <link rel="canonical" href="https://strandsagents.com/latest/user-guide/concepts/multi-agent/agent-to-agent/">
     
     
-      <link rel="prev" href="../llamaapi/">
+      <link rel="prev" href="../../streaming/callback-handlers/">
     
     
-      <link rel="next" href="../openai/">
+      <link rel="next" href="../agents-as-tools/">
     
     
     <link rel="icon" href="../../../../assets/logo-light.png" sizes="any">
@@ -25,7 +25,7 @@
 
     
       
-        <title>Ollama - Strands Agents SDK</title>
+        <title>Agent2Agent (A2A) - Strands Agents SDK</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ollama" class="md-skip">
+        <a href="#agent-to-agent-a2a-protocol" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ollama
+              Agent2Agent (A2A)
             
           </span>
         </div>
@@ -809,8 +809,6 @@
                 
   
   
-    
-  
   
   
     
@@ -823,11 +821,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_3" >
         
           
           <label class="md-nav__link" for="__nav_1_3_3" id="__nav_1_3_3_label" tabindex="0">
@@ -843,7 +841,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_3_3">
             <span class="md-nav__icon md-icon"></span>
             Model Providers
@@ -857,7 +855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../amazon-bedrock/" class="md-nav__link">
+      <a href="../../model-providers/amazon-bedrock/" class="md-nav__link">
         
   
   
@@ -880,7 +878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../anthropic/" class="md-nav__link">
+      <a href="../../model-providers/anthropic/" class="md-nav__link">
         
   
   
@@ -903,7 +901,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm/" class="md-nav__link">
+      <a href="../../model-providers/litellm/" class="md-nav__link">
         
   
   
@@ -926,7 +924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../llamaapi/" class="md-nav__link">
+      <a href="../../model-providers/llamaapi/" class="md-nav__link">
         
   
   
@@ -946,32 +944,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Ollama
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../model-providers/ollama/" class="md-nav__link">
         
   
   
@@ -982,184 +958,6 @@
   
 
       </a>
-      
-        
-
-  
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Started
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Getting Started">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-1-native-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 1: Native Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-2-docker-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 2: Docker Installation
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration Options
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-with-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example with Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Features
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#updating-configuration-at-runtime" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updating Configuration at Runtime
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-different-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Different Models
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tool Support
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Resources
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1172,7 +970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../openai/" class="md-nav__link">
+      <a href="../../model-providers/openai/" class="md-nav__link">
         
   
   
@@ -1195,7 +993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../custom_model_provider/" class="md-nav__link">
+      <a href="../../model-providers/custom_model_provider/" class="md-nav__link">
         
   
   
@@ -1320,8 +1118,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -1332,11 +1132,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_5" checked>
         
           
           <label class="md-nav__link" for="__nav_1_3_5" id="__nav_1_3_5_label" tabindex="0">
@@ -1352,7 +1152,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_3_5">
             <span class="md-nav__icon md-icon"></span>
             Multi-agent
@@ -1363,10 +1163,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../multi-agent/agent-to-agent/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Agent2Agent (A2A)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1377,6 +1199,112 @@
   
 
       </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-agent-to-agent-a2a" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Agent-to-Agent (A2A)?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is Agent-to-Agent (A2A)?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Cases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Install Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-and-run-the-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create and Run the Server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-and-run-the-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Create and Run the Client
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1389,7 +1317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-agent/agents-as-tools/" class="md-nav__link">
+      <a href="../agents-as-tools/" class="md-nav__link">
         
   
   
@@ -1412,7 +1340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-agent/swarm/" class="md-nav__link">
+      <a href="../swarm/" class="md-nav__link">
         
   
   
@@ -1435,7 +1363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-agent/graph/" class="md-nav__link">
+      <a href="../graph/" class="md-nav__link">
         
   
   
@@ -1458,7 +1386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../multi-agent/workflow/" class="md-nav__link">
+      <a href="../workflow/" class="md-nav__link">
         
   
   
@@ -2523,76 +2451,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#what-is-agent-to-agent-a2a" class="md-nav__link">
     <span class="md-ellipsis">
-      Getting Started
+      What is Agent-to-Agent (A2A)?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Getting Started">
+    <nav class="md-nav" aria-label="What is Agent-to-Agent (A2A)?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#use-cases" class="md-nav__link">
     <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-1-native-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 1: Native Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-2-docker-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Option 2: Docker Installation
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration Options
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-with-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example with Configuration
+      Use Cases
     </span>
   </a>
   
@@ -2604,28 +2475,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-features" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
-      Advanced Features
+      Installation
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Advanced Features">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Example">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#updating-configuration-at-runtime" class="md-nav__link">
+  <a href="#step-1-install-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
-      Updating Configuration at Runtime
+      Step 1: Install Dependencies
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#using-different-models" class="md-nav__link">
+  <a href="#step-2-create-and-run-the-server" class="md-nav__link">
     <span class="md-ellipsis">
-      Using Different Models
+      Step 2: Create and Run the Server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-and-run-the-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Create and Run the Client
     </span>
   </a>
   
@@ -2633,15 +2522,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tool-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tool Support
-    </span>
-  </a>
   
 </li>
       
@@ -2649,30 +2529,6 @@
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Resources
     </span>
   </a>
   
@@ -2697,270 +2553,110 @@
   
 
 
-<h1 id="ollama">Ollama<a class="headerlink" href="#ollama" title="Permanent link">&para;</a></h1>
-<p>Ollama is a framework for running open-source large language models locally. Strands provides native support for Ollama, allowing you to use locally-hosted models in your agents.</p>
-<p>The <a href="../../../../api-reference/models/#strands.models.ollama"><code>OllamaModel</code></a> class in Strands enables seamless integration with Ollama's API, supporting:</p>
+<h1 id="agent-to-agent-a2a-protocol">Agent-to-Agent (A2A) Protocol<a class="headerlink" href="#agent-to-agent-a2a-protocol" title="Permanent link">&para;</a></h1>
+<p>Strands Agents provides experimental support for the <a href="https://a2aproject.github.io/A2A/latest/">Agent-to-Agent (A2A) protocol</a>, enabling seamless communication between AI agents across different platforms and implementations.</p>
+<div class="admonition warning">
+<p class="admonition-title">Experimental Feature</p>
+<p>A2A support in Strands is currently <strong>EXPERIMENTAL</strong>. APIs may change, and additional functionality will be added in future releases. If you encounter bugs or have feature requests, please <a href="https://github.com/strands-agents/sdk-python/issues/new/choose">report them on GitHub</a>.</p>
+</div>
+<h2 id="what-is-agent-to-agent-a2a">What is Agent-to-Agent (A2A)?<a class="headerlink" href="#what-is-agent-to-agent-a2a" title="Permanent link">&para;</a></h2>
+<p>The Agent-to-Agent protocol is an open standard that defines how AI agents can discover, communicate, and collaborate with each other.</p>
+<h3 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h3>
+<p>A2A protocol support enables several powerful use cases:</p>
 <ul>
-<li>Text generation</li>
-<li>Image understanding</li>
-<li>Tool/function calling</li>
-<li>Streaming responses</li>
-<li>Configuration management</li>
+<li><strong>Multi-Agent Workflows</strong>: Chain multiple specialized agents together</li>
+<li><strong>Agent Marketplaces</strong>: Discover and use agents from different providers</li>
+<li><strong>Cross-Platform Integration</strong>: Connect Strands agents with other A2A-compatible systems</li>
+<li><strong>Distributed AI Systems</strong>: Build scalable, distributed agent architectures</li>
 </ul>
-<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
-<p>First install the python client into your python environment:
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;strands-agents[ollama]&#39;</span>
-</code></pre></div></p>
-<p>Next, you'll need to install and setup ollama itself.</p>
-<h4 id="option-1-native-installation">Option 1: Native Installation<a class="headerlink" href="#option-1-native-installation" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Install Ollama by following the instructions at <a href="https://ollama.ai">ollama.ai</a></li>
-<li>Pull your desired model:
-   <div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>pull<span class="w"> </span>llama3
-</code></pre></div></li>
-<li>Start the Ollama server:
-   <div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>serve
-</code></pre></div></li>
-</ol>
-<h4 id="option-2-docker-installation">Option 2: Docker Installation<a class="headerlink" href="#option-2-docker-installation" title="Permanent link">&para;</a></h4>
-<ol>
-<li>
-<p>Pull the Ollama Docker image:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>ollama/ollama
-</code></pre></div></p>
-</li>
-<li>
-<p>Run the Ollama container:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-v<span class="w"> </span>ollama:/root/.ollama<span class="w"> </span>-p<span class="w"> </span><span class="m">11434</span>:11434<span class="w"> </span>--name<span class="w"> </span>ollama<span class="w"> </span>ollama/ollama
-</code></pre></div></p>
-</li>
-</ol>
-<blockquote>
-<p>Note: Add <code>--gpus=all</code> if you have a GPU and if Docker GPU support is configured.</p>
-</blockquote>
-<ol>
-<li>
-<p>Pull a model using the Docker container:
-   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>ollama<span class="w"> </span>ollama<span class="w"> </span>pull<span class="w"> </span>llama3
-</code></pre></div></p>
-</li>
-<li>
-<p>Verify the Ollama server is running:
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:11434/api/tags
-</code></pre></div></p>
-</li>
-</ol>
-<h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<p>Here's how to create an agent using an Ollama model:</p>
+<p>Learn more about the A2A protocol:</p>
+<ul>
+<li><a href="https://github.com/a2aproject/A2A">A2A GitHub Organization</a></li>
+<li><a href="https://github.com/a2aproject/a2a-python">A2A Python SDK</a></li>
+<li><a href="https://a2aproject.github.io/A2A/latest/">A2A Documentation</a></li>
+</ul>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>To use A2A functionality with Strands, install the package with the A2A extra:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>strands-agents<span class="o">[</span>a2a<span class="o">]</span>
+</code></pre></div>
+<p>This installs the core Strands SDK along with the necessary A2A protocol dependencies.</p>
+<h2 id="basic-example">Basic Example<a class="headerlink" href="#basic-example" title="Permanent link">&para;</a></h2>
+<p>Here's a simple example to get started with A2A communication:</p>
+<h3 id="step-1-install-dependencies">Step 1: Install Dependencies<a class="headerlink" href="#step-1-install-dependencies" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>strands-agents<span class="o">[</span>a2a<span class="o">]</span>
+</code></pre></div>
+<h3 id="step-2-create-and-run-the-server">Step 2: Create and Run the Server<a class="headerlink" href="#step-2-create-and-run-the-server" title="Permanent link">&para;</a></h3>
+<p>Create <code>server.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.multiagent.a2a</span><span class="w"> </span><span class="kn">import</span> <span class="n">A2AAgent</span>
 
-<span class="c1"># Create an Ollama model instance</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>  <span class="c1"># Ollama server address</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span>               <span class="c1"># Specify which model to use</span>
-<span class="p">)</span>
+<span class="c1"># Create a basic agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;AI assistant&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A helpful AI assistant&quot;</span><span class="p">)</span>
 
-<span class="c1"># Create an agent using the Ollama model</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">)</span>
+<span class="c1"># Wrap it with A2A capabilities</span>
+<span class="n">a2a_agent</span> <span class="o">=</span> <span class="n">A2AAgent</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">)</span>
 
-<span class="c1"># Use the agent</span>
-<span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Tell me about Strands agents.&quot;</span><span class="p">)</span> <span class="c1"># Prints model output to stdout by default</span>
+<span class="c1"># Start the A2A server</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting A2A server on http://localhost:9000&quot;</span><span class="p">)</span>
+<span class="n">a2a_agent</span><span class="o">.</span><span class="n">serve</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="configuration-options">Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
-<p>The <a href="../../../../api-reference/models/#strands.models.ollama"><code>OllamaModel</code></a> supports various <a href="../../../../api-reference/models/#strands.models.ollama.OllamaModel.OllamaConfig">configuration parameters</a>:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>host</code></td>
-<td>The address of the Ollama server</td>
-<td>Required</td>
-</tr>
-<tr>
-<td><code>model_id</code></td>
-<td>The Ollama model identifier</td>
-<td>Required</td>
-</tr>
-<tr>
-<td><code>keep_alive</code></td>
-<td>How long the model stays loaded in memory</td>
-<td>"5m"</td>
-</tr>
-<tr>
-<td><code>max_tokens</code></td>
-<td>Maximum number of tokens to generate</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>temperature</code></td>
-<td>Controls randomness (higher = more random)</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>top_p</code></td>
-<td>Controls diversity via nucleus sampling</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>stop_sequences</code></td>
-<td>List of sequences that stop generation</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>options</code></td>
-<td>Additional model parameters (e.g., top_k)</td>
-<td>None</td>
-</tr>
-<tr>
-<td><code>additional_args</code></td>
-<td>Any additional arguments for the request</td>
-<td>None</td>
-</tr>
-</tbody>
-</table>
-<h3 id="example-with-configuration">Example with Configuration<a class="headerlink" href="#example-with-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
-
-<span class="c1"># Create a configured Ollama model</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-    <span class="n">keep_alive</span><span class="o">=</span><span class="s2">&quot;10m&quot;</span><span class="p">,</span>
-    <span class="n">stop_sequences</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;###&quot;</span><span class="p">,</span> <span class="s2">&quot;END&quot;</span><span class="p">],</span>
-    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
-<span class="p">)</span>
-
-<span class="c1"># Create an agent with the configured model</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">)</span>
-
-<span class="c1"># Use the agent</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Write a short story about an AI assistant.&quot;</span><span class="p">)</span>
+<p>Run the server:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>server.py
 </code></pre></div>
-<h2 id="advanced-features">Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
-<h3 id="updating-configuration-at-runtime">Updating Configuration at Runtime<a class="headerlink" href="#updating-configuration-at-runtime" title="Permanent link">&para;</a></h3>
-<p>You can update the model configuration during runtime:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create the model with initial configuration</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span>
-<span class="p">)</span>
+<h3 id="step-3-create-and-run-the-client">Step 3: Create and Run the Client<a class="headerlink" href="#step-3-create-and-run-the-client" title="Permanent link">&para;</a></h3>
+<p>Create <code>client.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
 
-<span class="c1"># Update configuration later</span>
-<span class="n">ollama_model</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.8</span>
-<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a2a.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">A2ACardResolver</span><span class="p">,</span> <span class="n">A2AClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a2a.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MessageSendParams</span><span class="p">,</span> <span class="n">SendMessageRequest</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ask_agent</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">httpx_client</span><span class="p">:</span>
+        <span class="c1"># Connect to the agent</span>
+        <span class="n">resolver</span> <span class="o">=</span> <span class="n">A2ACardResolver</span><span class="p">(</span><span class="n">httpx_client</span><span class="o">=</span><span class="n">httpx_client</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:9000&quot;</span><span class="p">)</span>
+
+        <span class="n">agent_card</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resolver</span><span class="o">.</span><span class="n">get_agent_card</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">agent_card</span><span class="p">)</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">A2AClient</span><span class="p">(</span><span class="n">httpx_client</span><span class="o">=</span><span class="n">httpx_client</span><span class="p">,</span> <span class="n">agent_card</span><span class="o">=</span><span class="n">agent_card</span><span class="p">)</span>
+
+        <span class="c1"># Send the message</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">SendMessageRequest</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+            <span class="n">params</span><span class="o">=</span><span class="n">MessageSendParams</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;parts&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}],</span>
+                    <span class="s2">&quot;messageId&quot;</span><span class="p">:</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+
+<span class="c1"># Example usage</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Tell me about agentic AI&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ask_agent</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
-<p>This is especially useful if you want a tool to update the model's config for you:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_model_id</span><span class="p">(</span><span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the model id of the agent</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">      model_id: Ollama model id to use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating model_id to </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Model updated to </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2">&quot;</span>
-
-
-<span class="nd">@tool</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_temperature</span><span class="p">(</span><span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Update the temperature of the agent</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">      temperature: Temperature value for the model to use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating Temperature to </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Temperature updated to </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div>
-<h3 id="using-different-models">Using Different Models<a class="headerlink" href="#using-different-models" title="Permanent link">&para;</a></h3>
-<p>Ollama supports many different models. You can switch between them (make sure they are pulled first). See the list of
-available models here: https://ollama.com/search</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create models for different use cases</span>
-<span class="n">creative_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.8</span>
-<span class="p">)</span>
-
-<span class="n">factual_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;mistral&quot;</span><span class="p">,</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.2</span>
-<span class="p">)</span>
-
-<span class="c1"># Create agents with different models</span>
-<span class="n">creative_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">creative_model</span><span class="p">)</span>
-<span class="n">factual_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">factual_model</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="tool-support">Tool Support<a class="headerlink" href="#tool-support" title="Permanent link">&para;</a></h2>
-<p><a href="https://ollama.com/search?c=tools">Ollama models that support tool use</a> can use tools through Strands's tool system:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">current_time</span>
-
-<span class="c1"># Create an Ollama model</span>
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span>
-<span class="p">)</span>
-
-<span class="c1"># Create an agent with tools</span>
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">,</span>
-    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">calculator</span><span class="p">,</span> <span class="n">current_time</span><span class="p">]</span>
-<span class="p">)</span>
-
-<span class="c1"># Use the agent with tools</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;What&#39;s the square root of 144 plus the current time?&quot;</span><span class="p">)</span>
+<p>Run the client (make sure your server is running first):</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>client.py
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<p>If you encounter bugs or need to request features for A2A support:</p>
 <ol>
-<li>
-<p><strong>Connection Refused</strong>:</p>
-<ul>
-<li>Ensure the Ollama server is running (<code>ollama serve</code> or check Docker container status)</li>
-<li>Verify the host URL is correct</li>
-<li>For Docker: Check if port 11434 is properly exposed</li>
-</ul>
-</li>
-<li>
-<p><strong>Model Not Found</strong>:</p>
-<ul>
-<li>Pull the model first: <code>ollama pull model_name</code> or <code>docker exec -it ollama ollama pull model_name</code></li>
-<li>Check for typos in the model_id</li>
-</ul>
-</li>
-<li>
-<p><strong>Module Not Found</strong>:</p>
-<ul>
-<li>If you encounter the error <code>ModuleNotFoundError: No module named 'ollama'</code>, this means you haven't installed the <code>ollama</code> dependency in your python environment</li>
-<li>To fix, run <code>pip install 'strands-agents[ollama]'</code></li>
-</ul>
-</li>
+<li>Check the <a href="https://a2aproject.github.io/A2A/latest/">A2A documentation</a> for protocol-specific issues</li>
+<li>Report Strands-specific issues on <a href="https://github.com/strands-agents/sdk-python/issues/new/choose">GitHub</a></li>
+<li>Include relevant error messages and code samples in your reports</li>
 </ol>
-<h2 id="related-resources">Related Resources<a class="headerlink" href="#related-resources" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/ollama/ollama/blob/main/README.md">Ollama Documentation</a></li>
-<li><a href="https://hub.docker.com/r/ollama/ollama">Ollama Docker Hub</a></li>
-<li><a href="https://ollama.ai/library">Available Ollama Models</a></li>
-</ul>
 
 
 

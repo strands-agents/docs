@@ -196,6 +196,9 @@ class Agent:
         record_direct_tool_call: bool = True,
         load_tools_from_directory: bool = True,
         trace_attributes: Optional[Mapping[str, AttributeValue]] = None,
+        *,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
     ):
         """Initialize the Agent with the specified configuration.
 
@@ -228,6 +231,10 @@ class Agent:
             load_tools_from_directory: Whether to load and automatically reload tools in the `./tools/` directory.
                 Defaults to True.
             trace_attributes: Custom trace attributes to apply to the agent's trace span.
+            name: name of the Agent
+                Defaults to None.
+            description: description of what the Agent does
+                Defaults to None.
 
         Raises:
             ValueError: If max_parallel_tools is less than 1.
@@ -288,8 +295,9 @@ class Agent:
         # Initialize tracer instance (no-op if not configured)
         self.tracer = get_tracer()
         self.trace_span: Optional[trace.Span] = None
-
         self.tool_caller = Agent.ToolCaller(self)
+        self.name = name
+        self.description = description
 
     @property
     def tool(self) -> ToolCaller:
@@ -366,6 +374,32 @@ class Agent:
 
             # Re-raise the exception to preserve original behavior
             raise
+
+    def structured_output(self, output_model: Type[T], prompt: Optional[str] = None) -> T:
+        """This method allows you to get structured output from the agent.
+
+        If you pass in a prompt, it will be added to the conversation history and the agent will respond to it.
+        If you don't pass in a prompt, it will use only the conversation history to respond.
+        If no conversation history exists and no prompt is provided, an error will be raised.
+
+        For smaller models, you may want to use the optional prompt string to add additional instructions to explicitly
+        instruct the model to output the structured data.
+
+        Args:
+            output_model(Type[BaseModel]): The output model (a JSON schema written as a Pydantic BaseModel)
+                that the agent will use when responding.
+            prompt(Optional[str]): The prompt to use for the agent.
+        """
+        messages = self.messages
+        if not messages and not prompt:
+            raise ValueError("No conversation history or prompt provided")
+
+        # add the prompt as the last message
+        if prompt:
+            messages.append({"role": "user", "content": [{"text": prompt}]})
+
+        # get the structured output from the model
+        return self.model.structured_output(output_model, messages, self.callback_handler)
 
     async def stream_async(self, prompt: str, **kwargs: Any) -> AsyncIterator[Any]:
         """Process a natural language prompt and yield events as an async iterator.
@@ -1023,13 +1057,13 @@ def __del__(self) -> None:
 
 ```
 
-#### `__init__(model=None, messages=None, tools=None, system_prompt=None, callback_handler=_DEFAULT_CALLBACK_HANDLER, conversation_manager=None, max_parallel_tools=os.cpu_count() or 1, record_direct_tool_call=True, load_tools_from_directory=True, trace_attributes=None)`
+#### `__init__(model=None, messages=None, tools=None, system_prompt=None, callback_handler=_DEFAULT_CALLBACK_HANDLER, conversation_manager=None, max_parallel_tools=os.cpu_count() or 1, record_direct_tool_call=True, load_tools_from_directory=True, trace_attributes=None, *, name=None, description=None)`
 
 Initialize the Agent with the specified configuration.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Union[Model, str, None]` | Provider for running inference or a string representing the model-id for Bedrock to use. Defaults to strands.models.BedrockModel if None. | `None` | | `messages` | `Optional[Messages]` | List of initial messages to pre-load into the conversation. Defaults to an empty list if None. | `None` | | `tools` | `Optional[List[Union[str, Dict[str, str], Any]]]` | List of tools to make available to the agent. Can be specified as: String tool names (e.g., "retrieve") File paths (e.g., "/path/to/tool.py") Imported Python modules (e.g., from strands_tools import current_time) Dictionaries with name/path keys (e.g., {"name": "tool_name", "path": "/path/to/tool.py"}) Functions decorated with @strands.tool decorator. If provided, only these tools will be available. If None, all tools will be available. | `None` | | `system_prompt` | `Optional[str]` | System prompt to guide model behavior. If None, the model will behave according to its default settings. | `None` | | `callback_handler` | `Optional[Union[Callable[..., Any], _DefaultCallbackHandlerSentinel]]` | Callback for processing events as they happen during agent execution. If not provided (using the default), a new PrintingCallbackHandler instance is created. If explicitly set to None, null_callback_handler is used. | `_DEFAULT_CALLBACK_HANDLER` | | `conversation_manager` | `Optional[ConversationManager]` | Manager for conversation history and context window. Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None. | `None` | | `max_parallel_tools` | `int` | Maximum number of tools to run in parallel when the model returns multiple tool calls. Defaults to os.cpu_count() or 1. | `cpu_count() or 1` | | `record_direct_tool_call` | `bool` | Whether to record direct tool calls in message history. Defaults to True. | `True` | | `load_tools_from_directory` | `bool` | Whether to load and automatically reload tools in the ./tools/ directory. Defaults to True. | `True` | | `trace_attributes` | `Optional[Mapping[str, AttributeValue]]` | Custom trace attributes to apply to the agent's trace span. | `None` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Union[Model, str, None]` | Provider for running inference or a string representing the model-id for Bedrock to use. Defaults to strands.models.BedrockModel if None. | `None` | | `messages` | `Optional[Messages]` | List of initial messages to pre-load into the conversation. Defaults to an empty list if None. | `None` | | `tools` | `Optional[List[Union[str, Dict[str, str], Any]]]` | List of tools to make available to the agent. Can be specified as: String tool names (e.g., "retrieve") File paths (e.g., "/path/to/tool.py") Imported Python modules (e.g., from strands_tools import current_time) Dictionaries with name/path keys (e.g., {"name": "tool_name", "path": "/path/to/tool.py"}) Functions decorated with @strands.tool decorator. If provided, only these tools will be available. If None, all tools will be available. | `None` | | `system_prompt` | `Optional[str]` | System prompt to guide model behavior. If None, the model will behave according to its default settings. | `None` | | `callback_handler` | `Optional[Union[Callable[..., Any], _DefaultCallbackHandlerSentinel]]` | Callback for processing events as they happen during agent execution. If not provided (using the default), a new PrintingCallbackHandler instance is created. If explicitly set to None, null_callback_handler is used. | `_DEFAULT_CALLBACK_HANDLER` | | `conversation_manager` | `Optional[ConversationManager]` | Manager for conversation history and context window. Defaults to strands.agent.conversation_manager.SlidingWindowConversationManager if None. | `None` | | `max_parallel_tools` | `int` | Maximum number of tools to run in parallel when the model returns multiple tool calls. Defaults to os.cpu_count() or 1. | `cpu_count() or 1` | | `record_direct_tool_call` | `bool` | Whether to record direct tool calls in message history. Defaults to True. | `True` | | `load_tools_from_directory` | `bool` | Whether to load and automatically reload tools in the ./tools/ directory. Defaults to True. | `True` | | `trace_attributes` | `Optional[Mapping[str, AttributeValue]]` | Custom trace attributes to apply to the agent's trace span. | `None` | | `name` | `Optional[str]` | name of the Agent Defaults to None. | `None` | | `description` | `Optional[str]` | description of what the Agent does Defaults to None. | `None` |
 
 Raises:
 
@@ -1052,6 +1086,9 @@ def __init__(
     record_direct_tool_call: bool = True,
     load_tools_from_directory: bool = True,
     trace_attributes: Optional[Mapping[str, AttributeValue]] = None,
+    *,
+    name: Optional[str] = None,
+    description: Optional[str] = None,
 ):
     """Initialize the Agent with the specified configuration.
 
@@ -1084,6 +1121,10 @@ def __init__(
         load_tools_from_directory: Whether to load and automatically reload tools in the `./tools/` directory.
             Defaults to True.
         trace_attributes: Custom trace attributes to apply to the agent's trace span.
+        name: name of the Agent
+            Defaults to None.
+        description: description of what the Agent does
+            Defaults to None.
 
     Raises:
         ValueError: If max_parallel_tools is less than 1.
@@ -1144,8 +1185,9 @@ def __init__(
     # Initialize tracer instance (no-op if not configured)
     self.tracer = get_tracer()
     self.trace_span: Optional[trace.Span] = None
-
     self.tool_caller = Agent.ToolCaller(self)
+    self.name = name
+    self.description = description
 
 ```
 
@@ -1251,6 +1293,49 @@ async def stream_async(self, prompt: str, **kwargs: Any) -> AsyncIterator[Any]:
         thread.join()
 
 ````
+
+#### `structured_output(output_model, prompt=None)`
+
+This method allows you to get structured output from the agent.
+
+If you pass in a prompt, it will be added to the conversation history and the agent will respond to it. If you don't pass in a prompt, it will use only the conversation history to respond. If no conversation history exists and no prompt is provided, an error will be raised.
+
+For smaller models, you may want to use the optional prompt string to add additional instructions to explicitly instruct the model to output the structured data.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model (a JSON schema written as a Pydantic BaseModel) that the agent will use when responding. | *required* | | `prompt(Optional[str])` | | The prompt to use for the agent. | *required* |
+
+Source code in `strands/agent/agent.py`
+
+```
+def structured_output(self, output_model: Type[T], prompt: Optional[str] = None) -> T:
+    """This method allows you to get structured output from the agent.
+
+    If you pass in a prompt, it will be added to the conversation history and the agent will respond to it.
+    If you don't pass in a prompt, it will use only the conversation history to respond.
+    If no conversation history exists and no prompt is provided, an error will be raised.
+
+    For smaller models, you may want to use the optional prompt string to add additional instructions to explicitly
+    instruct the model to output the structured data.
+
+    Args:
+        output_model(Type[BaseModel]): The output model (a JSON schema written as a Pydantic BaseModel)
+            that the agent will use when responding.
+        prompt(Optional[str]): The prompt to use for the agent.
+    """
+    messages = self.messages
+    if not messages and not prompt:
+        raise ValueError("No conversation history or prompt provided")
+
+    # add the prompt as the last message
+    if prompt:
+        messages.append({"role": "user", "content": [{"text": prompt}]})
+
+    # get the structured output from the model
+    return self.model.structured_output(output_model, messages, self.callback_handler)
+
+```
 
 ## `strands.agent.agent_result`
 
@@ -2013,5 +2098,336 @@ def is_user_message(message: Message) -> bool:
         True if the message has the user role, False otherwise.
     """
     return message["role"] == "user"
+
+```
+
+### `strands.agent.conversation_manager.summarizing_conversation_manager`
+
+Summarizing conversation history management with configurable options.
+
+#### `SummarizingConversationManager`
+
+Bases: `ConversationManager`
+
+Implements a summarizing window manager.
+
+This manager provides a configurable option to summarize older context instead of simply trimming it, helping preserve important information while staying within context limits.
+
+Source code in `strands/agent/conversation_manager/summarizing_conversation_manager.py`
+
+```
+class SummarizingConversationManager(ConversationManager):
+    """Implements a summarizing window manager.
+
+    This manager provides a configurable option to summarize older context instead of
+    simply trimming it, helping preserve important information while staying within
+    context limits.
+    """
+
+    def __init__(
+        self,
+        summary_ratio: float = 0.3,
+        preserve_recent_messages: int = 10,
+        summarization_agent: Optional["Agent"] = None,
+        summarization_system_prompt: Optional[str] = None,
+    ):
+        """Initialize the summarizing conversation manager.
+
+        Args:
+            summary_ratio: Ratio of messages to summarize vs keep when context overflow occurs.
+                Value between 0.1 and 0.8. Defaults to 0.3 (summarize 30% of oldest messages).
+            preserve_recent_messages: Minimum number of recent messages to always keep.
+                Defaults to 10 messages.
+            summarization_agent: Optional agent to use for summarization instead of the parent agent.
+                If provided, this agent can use tools as part of the summarization process.
+            summarization_system_prompt: Optional system prompt override for summarization.
+                If None, uses the default summarization prompt.
+        """
+        if summarization_agent is not None and summarization_system_prompt is not None:
+            raise ValueError(
+                "Cannot provide both summarization_agent and summarization_system_prompt. "
+                "Agents come with their own system prompt."
+            )
+
+        self.summary_ratio = max(0.1, min(0.8, summary_ratio))
+        self.preserve_recent_messages = preserve_recent_messages
+        self.summarization_agent = summarization_agent
+        self.summarization_system_prompt = summarization_system_prompt
+
+    def apply_management(self, agent: "Agent") -> None:
+        """Apply management strategy to conversation history.
+
+        For the summarizing conversation manager, no proactive management is performed.
+        Summarization only occurs when there's a context overflow that triggers reduce_context.
+
+        Args:
+            agent: The agent whose conversation history will be managed.
+                The agent's messages list is modified in-place.
+        """
+        # No proactive management - summarization only happens on context overflow
+        pass
+
+    def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
+        """Reduce context using summarization.
+
+        Args:
+            agent: The agent whose conversation history will be reduced.
+                The agent's messages list is modified in-place.
+            e: The exception that triggered the context reduction, if any.
+
+        Raises:
+            ContextWindowOverflowException: If the context cannot be summarized.
+        """
+        try:
+            # Calculate how many messages to summarize
+            messages_to_summarize_count = max(1, int(len(agent.messages) * self.summary_ratio))
+
+            # Ensure we don't summarize recent messages
+            messages_to_summarize_count = min(
+                messages_to_summarize_count, len(agent.messages) - self.preserve_recent_messages
+            )
+
+            if messages_to_summarize_count <= 0:
+                raise ContextWindowOverflowException("Cannot summarize: insufficient messages for summarization")
+
+            # Adjust split point to avoid breaking ToolUse/ToolResult pairs
+            messages_to_summarize_count = self._adjust_split_point_for_tool_pairs(
+                agent.messages, messages_to_summarize_count
+            )
+
+            if messages_to_summarize_count <= 0:
+                raise ContextWindowOverflowException("Cannot summarize: insufficient messages for summarization")
+
+            # Extract messages to summarize
+            messages_to_summarize = agent.messages[:messages_to_summarize_count]
+            remaining_messages = agent.messages[messages_to_summarize_count:]
+
+            # Generate summary
+            summary_message = self._generate_summary(messages_to_summarize, agent)
+
+            # Replace the summarized messages with the summary
+            agent.messages[:] = [summary_message] + remaining_messages
+
+        except Exception as summarization_error:
+            logger.error("Summarization failed: %s", summarization_error)
+            raise summarization_error from e
+
+    def _generate_summary(self, messages: List[Message], agent: "Agent") -> Message:
+        """Generate a summary of the provided messages.
+
+        Args:
+            messages: The messages to summarize.
+            agent: The agent instance to use for summarization.
+
+        Returns:
+            A message containing the conversation summary.
+
+        Raises:
+            Exception: If summary generation fails.
+        """
+        # Choose which agent to use for summarization
+        summarization_agent = self.summarization_agent if self.summarization_agent is not None else agent
+
+        # Save original system prompt and messages to restore later
+        original_system_prompt = summarization_agent.system_prompt
+        original_messages = summarization_agent.messages.copy()
+
+        try:
+            # Only override system prompt if no agent was provided during initialization
+            if self.summarization_agent is None:
+                # Use custom system prompt if provided, otherwise use default
+                system_prompt = (
+                    self.summarization_system_prompt
+                    if self.summarization_system_prompt is not None
+                    else DEFAULT_SUMMARIZATION_PROMPT
+                )
+                # Temporarily set the system prompt for summarization
+                summarization_agent.system_prompt = system_prompt
+            summarization_agent.messages = messages
+
+            # Use the agent to generate summary with rich content (can use tools if needed)
+            result = summarization_agent("Please summarize this conversation.")
+
+            return result.message
+
+        finally:
+            # Restore original agent state
+            summarization_agent.system_prompt = original_system_prompt
+            summarization_agent.messages = original_messages
+
+    def _adjust_split_point_for_tool_pairs(self, messages: List[Message], split_point: int) -> int:
+        """Adjust the split point to avoid breaking ToolUse/ToolResult pairs.
+
+        Uses the same logic as SlidingWindowConversationManager for consistency.
+
+        Args:
+            messages: The full list of messages.
+            split_point: The initially calculated split point.
+
+        Returns:
+            The adjusted split point that doesn't break ToolUse/ToolResult pairs.
+
+        Raises:
+            ContextWindowOverflowException: If no valid split point can be found.
+        """
+        if split_point > len(messages):
+            raise ContextWindowOverflowException("Split point exceeds message array length")
+
+        if split_point == len(messages):
+            return split_point
+
+        # Find the next valid split_point
+        while split_point < len(messages):
+            if (
+                # Oldest message cannot be a toolResult because it needs a toolUse preceding it
+                any("toolResult" in content for content in messages[split_point]["content"])
+                or (
+                    # Oldest message can be a toolUse only if a toolResult immediately follows it.
+                    any("toolUse" in content for content in messages[split_point]["content"])
+                    and split_point + 1 < len(messages)
+                    and not any("toolResult" in content for content in messages[split_point + 1]["content"])
+                )
+            ):
+                split_point += 1
+            else:
+                break
+        else:
+            # If we didn't find a valid split_point, then we throw
+            raise ContextWindowOverflowException("Unable to trim conversation context!")
+
+        return split_point
+
+```
+
+##### `__init__(summary_ratio=0.3, preserve_recent_messages=10, summarization_agent=None, summarization_system_prompt=None)`
+
+Initialize the summarizing conversation manager.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `summary_ratio` | `float` | Ratio of messages to summarize vs keep when context overflow occurs. Value between 0.1 and 0.8. Defaults to 0.3 (summarize 30% of oldest messages). | `0.3` | | `preserve_recent_messages` | `int` | Minimum number of recent messages to always keep. Defaults to 10 messages. | `10` | | `summarization_agent` | `Optional[Agent]` | Optional agent to use for summarization instead of the parent agent. If provided, this agent can use tools as part of the summarization process. | `None` | | `summarization_system_prompt` | `Optional[str]` | Optional system prompt override for summarization. If None, uses the default summarization prompt. | `None` |
+
+Source code in `strands/agent/conversation_manager/summarizing_conversation_manager.py`
+
+```
+def __init__(
+    self,
+    summary_ratio: float = 0.3,
+    preserve_recent_messages: int = 10,
+    summarization_agent: Optional["Agent"] = None,
+    summarization_system_prompt: Optional[str] = None,
+):
+    """Initialize the summarizing conversation manager.
+
+    Args:
+        summary_ratio: Ratio of messages to summarize vs keep when context overflow occurs.
+            Value between 0.1 and 0.8. Defaults to 0.3 (summarize 30% of oldest messages).
+        preserve_recent_messages: Minimum number of recent messages to always keep.
+            Defaults to 10 messages.
+        summarization_agent: Optional agent to use for summarization instead of the parent agent.
+            If provided, this agent can use tools as part of the summarization process.
+        summarization_system_prompt: Optional system prompt override for summarization.
+            If None, uses the default summarization prompt.
+    """
+    if summarization_agent is not None and summarization_system_prompt is not None:
+        raise ValueError(
+            "Cannot provide both summarization_agent and summarization_system_prompt. "
+            "Agents come with their own system prompt."
+        )
+
+    self.summary_ratio = max(0.1, min(0.8, summary_ratio))
+    self.preserve_recent_messages = preserve_recent_messages
+    self.summarization_agent = summarization_agent
+    self.summarization_system_prompt = summarization_system_prompt
+
+```
+
+##### `apply_management(agent)`
+
+Apply management strategy to conversation history.
+
+For the summarizing conversation manager, no proactive management is performed. Summarization only occurs when there's a context overflow that triggers reduce_context.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent whose conversation history will be managed. The agent's messages list is modified in-place. | *required* |
+
+Source code in `strands/agent/conversation_manager/summarizing_conversation_manager.py`
+
+```
+def apply_management(self, agent: "Agent") -> None:
+    """Apply management strategy to conversation history.
+
+    For the summarizing conversation manager, no proactive management is performed.
+    Summarization only occurs when there's a context overflow that triggers reduce_context.
+
+    Args:
+        agent: The agent whose conversation history will be managed.
+            The agent's messages list is modified in-place.
+    """
+    # No proactive management - summarization only happens on context overflow
+    pass
+
+```
+
+##### `reduce_context(agent, e=None)`
+
+Reduce context using summarization.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent whose conversation history will be reduced. The agent's messages list is modified in-place. | *required* | | `e` | `Optional[Exception]` | The exception that triggered the context reduction, if any. | `None` |
+
+Raises:
+
+| Type | Description | | --- | --- | | `ContextWindowOverflowException` | If the context cannot be summarized. |
+
+Source code in `strands/agent/conversation_manager/summarizing_conversation_manager.py`
+
+```
+def reduce_context(self, agent: "Agent", e: Optional[Exception] = None) -> None:
+    """Reduce context using summarization.
+
+    Args:
+        agent: The agent whose conversation history will be reduced.
+            The agent's messages list is modified in-place.
+        e: The exception that triggered the context reduction, if any.
+
+    Raises:
+        ContextWindowOverflowException: If the context cannot be summarized.
+    """
+    try:
+        # Calculate how many messages to summarize
+        messages_to_summarize_count = max(1, int(len(agent.messages) * self.summary_ratio))
+
+        # Ensure we don't summarize recent messages
+        messages_to_summarize_count = min(
+            messages_to_summarize_count, len(agent.messages) - self.preserve_recent_messages
+        )
+
+        if messages_to_summarize_count <= 0:
+            raise ContextWindowOverflowException("Cannot summarize: insufficient messages for summarization")
+
+        # Adjust split point to avoid breaking ToolUse/ToolResult pairs
+        messages_to_summarize_count = self._adjust_split_point_for_tool_pairs(
+            agent.messages, messages_to_summarize_count
+        )
+
+        if messages_to_summarize_count <= 0:
+            raise ContextWindowOverflowException("Cannot summarize: insufficient messages for summarization")
+
+        # Extract messages to summarize
+        messages_to_summarize = agent.messages[:messages_to_summarize_count]
+        remaining_messages = agent.messages[messages_to_summarize_count:]
+
+        # Generate summary
+        summary_message = self._generate_summary(messages_to_summarize, agent)
+
+        # Replace the summarized messages with the summary
+        agent.messages[:] = [summary_message] + remaining_messages
+
+    except Exception as summarization_error:
+        logger.error("Summarization failed: %s", summarization_error)
+        raise summarization_error from e
 
 ```

@@ -109,8 +109,17 @@ class BedrockModel(Model):
 
         logger.debug("config=<%s> | initializing", self.config)
 
+        region_for_boto = region_name or os.getenv("AWS_REGION")
+        if region_for_boto is None:
+            region_for_boto = "us-west-2"
+            logger.warning("defaulted to us-west-2 because no region was specified")
+            logger.warning(
+                "issue=<%s> | this behavior will change in an upcoming release",
+                "https://github.com/strands-agents/sdk-python/issues/238",
+            )
+
         session = boto_session or boto3.Session(
-            region_name=region_name or os.getenv("AWS_REGION") or "us-west-2",
+            region_name=region_for_boto,
         )
 
         # Add strands-agents to the request user agent
@@ -475,6 +484,45 @@ class BedrockModel(Model):
         # Otherwise return False
         return False
 
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+        """
+        callback_handler = callback_handler or PrintingCallbackHandler()
+        tool_spec = convert_pydantic_to_tool_spec(output_model)
+
+        response = self.converse(messages=prompt, tool_specs=[tool_spec])
+        for event in process_stream(response, prompt):
+            if "callback" in event:
+                callback_handler(**event["callback"])
+        else:
+            stop_reason, messages, _, _ = event["stop"]
+
+        if stop_reason != "tool_use":
+            raise ValueError("No valid tool use or tool use input was found in the Bedrock response.")
+
+        content = messages["content"]
+        output_response: dict[str, Any] | None = None
+        for block in content:
+            # if the tool use name doesn't match the tool spec name, skip, and if the block is not a tool use, skip.
+            # if the tool use name never matches, raise an error.
+            if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+                output_response = block["toolUse"]["input"]
+            else:
+                continue
+
+        if output_response is None:
+            raise ValueError("No valid tool use or tool use input was found in the Bedrock response.")
+
+        return output_model(**output_response)
+
 ```
 
 #### `BedrockConfig`
@@ -573,8 +621,17 @@ def __init__(
 
     logger.debug("config=<%s> | initializing", self.config)
 
+    region_for_boto = region_name or os.getenv("AWS_REGION")
+    if region_for_boto is None:
+        region_for_boto = "us-west-2"
+        logger.warning("defaulted to us-west-2 because no region was specified")
+        logger.warning(
+            "issue=<%s> | this behavior will change in an upcoming release",
+            "https://github.com/strands-agents/sdk-python/issues/238",
+        )
+
     session = boto_session or boto3.Session(
-        region_name=region_name or os.getenv("AWS_REGION") or "us-west-2",
+        region_name=region_for_boto,
     )
 
     # Add strands-agents to the request user agent
@@ -833,6 +890,58 @@ def stream(self, request: dict[str, Any]) -> Iterable[StreamEvent]:
 
         # Otherwise raise the error
         raise e
+
+```
+
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Source code in `strands/models/bedrock.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+    """
+    callback_handler = callback_handler or PrintingCallbackHandler()
+    tool_spec = convert_pydantic_to_tool_spec(output_model)
+
+    response = self.converse(messages=prompt, tool_specs=[tool_spec])
+    for event in process_stream(response, prompt):
+        if "callback" in event:
+            callback_handler(**event["callback"])
+    else:
+        stop_reason, messages, _, _ = event["stop"]
+
+    if stop_reason != "tool_use":
+        raise ValueError("No valid tool use or tool use input was found in the Bedrock response.")
+
+    content = messages["content"]
+    output_response: dict[str, Any] | None = None
+    for block in content:
+        # if the tool use name doesn't match the tool spec name, skip, and if the block is not a tool use, skip.
+        # if the tool use name never matches, raise an error.
+        if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+            output_response = block["toolUse"]["input"]
+        else:
+            continue
+
+    if output_response is None:
+        raise ValueError("No valid tool use or tool use input was found in the Bedrock response.")
+
+    return output_model(**output_response)
 
 ```
 
@@ -1208,10 +1317,10 @@ class AnthropicModel(Model):
             with self.client.messages.stream(**request) as stream:
                 for event in stream:
                     if event.type in AnthropicModel.EVENT_TYPES:
-                        yield event.dict()
+                        yield event.model_dump()
 
                 usage = event.message.usage  # type: ignore
-                yield {"type": "metadata", "usage": usage.dict()}
+                yield {"type": "metadata", "usage": usage.model_dump()}
 
         except anthropic.RateLimitError as error:
             raise ModelThrottledException(str(error)) from error
@@ -1221,6 +1330,45 @@ class AnthropicModel(Model):
                 raise ContextWindowOverflowException(str(error)) from error
 
             raise error
+
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+        """
+        callback_handler = callback_handler or PrintingCallbackHandler()
+        tool_spec = convert_pydantic_to_tool_spec(output_model)
+
+        response = self.converse(messages=prompt, tool_specs=[tool_spec])
+        for event in process_stream(response, prompt):
+            if "callback" in event:
+                callback_handler(**event["callback"])
+        else:
+            stop_reason, messages, _, _ = event["stop"]
+
+        if stop_reason != "tool_use":
+            raise ValueError("No valid tool use or tool use input was found in the Anthropic response.")
+
+        content = messages["content"]
+        output_response: dict[str, Any] | None = None
+        for block in content:
+            # if the tool use name doesn't match the tool spec name, skip, and if the block is not a tool use, skip.
+            # if the tool use name never matches, raise an error.
+            if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+                output_response = block["toolUse"]["input"]
+            else:
+                continue
+
+        if output_response is None:
+            raise ValueError("No valid tool use or tool use input was found in the Anthropic response.")
+
+        return output_model(**output_response)
 
 ```
 
@@ -1536,10 +1684,10 @@ def stream(self, request: dict[str, Any]) -> Iterable[dict[str, Any]]:
         with self.client.messages.stream(**request) as stream:
             for event in stream:
                 if event.type in AnthropicModel.EVENT_TYPES:
-                    yield event.dict()
+                    yield event.model_dump()
 
             usage = event.message.usage  # type: ignore
-            yield {"type": "metadata", "usage": usage.dict()}
+            yield {"type": "metadata", "usage": usage.model_dump()}
 
     except anthropic.RateLimitError as error:
         raise ModelThrottledException(str(error)) from error
@@ -1549,6 +1697,58 @@ def stream(self, request: dict[str, Any]) -> Iterable[dict[str, Any]]:
             raise ContextWindowOverflowException(str(error)) from error
 
         raise error
+
+```
+
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Source code in `strands/models/anthropic.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+    """
+    callback_handler = callback_handler or PrintingCallbackHandler()
+    tool_spec = convert_pydantic_to_tool_spec(output_model)
+
+    response = self.converse(messages=prompt, tool_specs=[tool_spec])
+    for event in process_stream(response, prompt):
+        if "callback" in event:
+            callback_handler(**event["callback"])
+    else:
+        stop_reason, messages, _, _ = event["stop"]
+
+    if stop_reason != "tool_use":
+        raise ValueError("No valid tool use or tool use input was found in the Anthropic response.")
+
+    content = messages["content"]
+    output_response: dict[str, Any] | None = None
+    for block in content:
+        # if the tool use name doesn't match the tool spec name, skip, and if the block is not a tool use, skip.
+        # if the tool use name never matches, raise an error.
+        if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+            output_response = block["toolUse"]["input"]
+        else:
+            continue
+
+    if output_response is None:
+        raise ValueError("No valid tool use or tool use input was found in the Anthropic response.")
+
+    return output_model(**output_response)
 
 ```
 
@@ -1671,6 +1871,46 @@ class LiteLLMModel(OpenAIModel):
             }
 
         return super().format_request_message_content(content)
+
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+
+        """
+        # The LiteLLM `Client` inits with Chat().
+        # Chat() inits with self.completions
+        # completions() has a method `create()` which wraps the real completion API of Litellm
+        response = self.client.chat.completions.create(
+            model=self.get_config()["model_id"],
+            messages=super().format_request(prompt)["messages"],
+            response_format=output_model,
+        )
+
+        if not supports_response_schema(self.get_config()["model_id"]):
+            raise ValueError("Model does not support response_format")
+        if len(response.choices) > 1:
+            raise ValueError("Multiple choices found in the response.")
+
+        # Find the first choice with tool_calls
+        for choice in response.choices:
+            if choice.finish_reason == "tool_calls":
+                try:
+                    # Parse the tool call content as JSON
+                    tool_call_data = json.loads(choice.message.content)
+                    # Instantiate the output model with the parsed data
+                    return output_model(**tool_call_data)
+                except (json.JSONDecodeError, TypeError, ValueError) as e:
+                    raise ValueError(f"Failed to parse or load content into model: {e}") from e
+
+        # If no tool_calls found, raise an error
+        raise ValueError("No tool_calls found in response")
 
 ```
 
@@ -1804,6 +2044,59 @@ def get_config(self) -> LiteLLMConfig:
         The LiteLLM model configuration.
     """
     return cast(LiteLLMModel.LiteLLMConfig, self.config)
+
+```
+
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Source code in `strands/models/litellm.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+
+    """
+    # The LiteLLM `Client` inits with Chat().
+    # Chat() inits with self.completions
+    # completions() has a method `create()` which wraps the real completion API of Litellm
+    response = self.client.chat.completions.create(
+        model=self.get_config()["model_id"],
+        messages=super().format_request(prompt)["messages"],
+        response_format=output_model,
+    )
+
+    if not supports_response_schema(self.get_config()["model_id"]):
+        raise ValueError("Model does not support response_format")
+    if len(response.choices) > 1:
+        raise ValueError("Multiple choices found in the response.")
+
+    # Find the first choice with tool_calls
+    for choice in response.choices:
+        if choice.finish_reason == "tool_calls":
+            try:
+                # Parse the tool call content as JSON
+                tool_call_data = json.loads(choice.message.content)
+                # Instantiate the output model with the parsed data
+                return output_model(**tool_call_data)
+            except (json.JSONDecodeError, TypeError, ValueError) as e:
+                raise ValueError(f"Failed to parse or load content into model: {e}") from e
+
+    # If no tool_calls found, raise an error
+    raise ValueError("No tool_calls found in response")
 
 ```
 
@@ -2206,6 +2499,34 @@ class LlamaAPIModel(Model):
         if metrics_event:
             yield {"chunk_type": "metadata", "data": metrics_event}
 
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+
+        Raises:
+            NotImplementedError: Structured output is not currently supported for LlamaAPI models.
+        """
+        # response_format: ResponseFormat = {
+        #     "type": "json_schema",
+        #     "json_schema": {
+        #         "name": output_model.__name__,
+        #         "schema": output_model.model_json_schema(),
+        #     },
+        # }
+        # response = self.client.chat.completions.create(
+        #     model=self.config["model_id"],
+        #     messages=self.format_request(prompt)["messages"],
+        #     response_format=response_format,
+        # )
+        raise NotImplementedError("Strands sdk-python does not implement this in the Llama API Preview.")
+
 ```
 
 #### `LlamaConfig`
@@ -2539,6 +2860,51 @@ def stream(self, request: dict[str, Any]) -> Iterable[dict[str, Any]]:
     # we may have a metrics event here
     if metrics_event:
         yield {"chunk_type": "metadata", "data": metrics_event}
+
+```
+
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Raises:
+
+| Type | Description | | --- | --- | | `NotImplementedError` | Structured output is not currently supported for LlamaAPI models. |
+
+Source code in `strands/models/llamaapi.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+
+    Raises:
+        NotImplementedError: Structured output is not currently supported for LlamaAPI models.
+    """
+    # response_format: ResponseFormat = {
+    #     "type": "json_schema",
+    #     "json_schema": {
+    #         "name": output_model.__name__,
+    #         "schema": output_model.model_json_schema(),
+    #     },
+    # }
+    # response = self.client.chat.completions.create(
+    #     model=self.config["model_id"],
+    #     messages=self.format_request(prompt)["messages"],
+    #     response_format=response_format,
+    # )
+    raise NotImplementedError("Strands sdk-python does not implement this in the Llama API Preview.")
 
 ```
 
@@ -2878,6 +3244,28 @@ class OllamaModel(Model):
         yield {"chunk_type": "message_stop", "data": "tool_use" if tool_requested else event.done_reason}
         yield {"chunk_type": "metadata", "data": event}
 
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+        """
+        formatted_request = self.format_request(messages=prompt)
+        formatted_request["format"] = output_model.model_json_schema()
+        formatted_request["stream"] = False
+        response = self.client.chat(**formatted_request)
+
+        try:
+            content = response.message.content.strip()
+            return output_model.model_validate_json(content)
+        except Exception as e:
+            raise ValueError(f"Failed to parse or load content into model: {e}") from e
+
 ```
 
 #### `OllamaConfig`
@@ -3185,6 +3573,41 @@ def stream(self, request: dict[str, Any]) -> Iterable[dict[str, Any]]:
 
 ```
 
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Source code in `strands/models/ollama.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+    """
+    formatted_request = self.format_request(messages=prompt)
+    formatted_request["format"] = output_model.model_json_schema()
+    formatted_request["stream"] = False
+    response = self.client.chat(**formatted_request)
+
+    try:
+        content = response.message.content.strip()
+        return output_model.model_validate_json(content)
+    except Exception as e:
+        raise ValueError(f"Failed to parse or load content into model: {e}") from e
+
+```
+
 #### `update_config(**model_config)`
 
 Update the Ollama Model configuration with the provided arguments.
@@ -3348,6 +3771,38 @@ class OpenAIModel(SAOpenAIModel):
 
         yield {"chunk_type": "metadata", "data": event.usage}
 
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output from the model.
+
+        Args:
+            output_model(Type[BaseModel]): The output model to use for the agent.
+            prompt(Messages): The prompt messages to use for the agent.
+            callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+        """
+        response: ParsedChatCompletion = self.client.beta.chat.completions.parse(  # type: ignore
+            model=self.get_config()["model_id"],
+            messages=super().format_request(prompt)["messages"],
+            response_format=output_model,
+        )
+
+        parsed: T | None = None
+        # Find the first choice with tool_calls
+        if len(response.choices) > 1:
+            raise ValueError("Multiple choices found in the OpenAI response.")
+
+        for choice in response.choices:
+            if isinstance(choice.message.parsed, output_model):
+                parsed = choice.message.parsed
+                break
+
+        if parsed:
+            return parsed
+        else:
+            raise ValueError("No valid tool use or tool use input was found in the OpenAI response.")
+
 ```
 
 #### `OpenAIConfig`
@@ -3493,6 +3948,51 @@ def stream(self, request: dict[str, Any]) -> Iterable[dict[str, Any]]:
         _ = event
 
     yield {"chunk_type": "metadata", "data": event.usage}
+
+```
+
+#### `structured_output(output_model, prompt, callback_handler=None)`
+
+Get structured output from the model.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model(Type[BaseModel])` | | The output model to use for the agent. | *required* | | `prompt(Messages)` | | The prompt messages to use for the agent. | *required* | | `callback_handler(Optional[Callable])` | | Optional callback handler for processing events. Defaults to None. | *required* |
+
+Source code in `strands/models/openai.py`
+
+```
+@override
+def structured_output(
+    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+) -> T:
+    """Get structured output from the model.
+
+    Args:
+        output_model(Type[BaseModel]): The output model to use for the agent.
+        prompt(Messages): The prompt messages to use for the agent.
+        callback_handler(Optional[Callable]): Optional callback handler for processing events. Defaults to None.
+    """
+    response: ParsedChatCompletion = self.client.beta.chat.completions.parse(  # type: ignore
+        model=self.get_config()["model_id"],
+        messages=super().format_request(prompt)["messages"],
+        response_format=output_model,
+    )
+
+    parsed: T | None = None
+    # Find the first choice with tool_calls
+    if len(response.choices) > 1:
+        raise ValueError("Multiple choices found in the OpenAI response.")
+
+    for choice in response.choices:
+        if isinstance(choice.message.parsed, output_model):
+            parsed = choice.message.parsed
+            break
+
+    if parsed:
+        return parsed
+    else:
+        raise ValueError("No valid tool use or tool use input was found in the OpenAI response.")
 
 ```
 

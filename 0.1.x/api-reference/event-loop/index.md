@@ -99,10 +99,11 @@ def event_loop_cycle(
     kwargs["event_loop_cycle_id"] = uuid.uuid4()
 
     event_loop_metrics: EventLoopMetrics = kwargs.get("event_loop_metrics", EventLoopMetrics())
-
     # Initialize state and get cycle trace
-    kwargs = initialize_state(**kwargs)
-    cycle_start_time, cycle_trace = event_loop_metrics.start_cycle()
+    if "request_state" not in kwargs:
+        kwargs["request_state"] = {}
+    attributes = {"event_loop_cycle_id": str(kwargs.get("event_loop_cycle_id"))}
+    cycle_start_time, cycle_trace = event_loop_metrics.start_cycle(attributes=attributes)
     kwargs["event_loop_cycle_trace"] = cycle_trace
 
     callback_handler(start=True)
@@ -140,14 +141,19 @@ def event_loop_cycle(
         )
 
         try:
-            stop_reason, message, usage, metrics, kwargs["request_state"] = stream_messages(
-                model,
-                system_prompt,
-                messages,
-                tool_config,
-                callback_handler,
-                **kwargs,
-            )
+            # TODO: As part of the migration to async-iterator, we will continue moving callback_handler calls up the
+            #       call stack. At this point, we converted all events that were previously passed to the handler in
+            #       `stream_messages` into yielded events that now have the "callback" key. To maintain backwards
+            #       compatability, we need to combine the event with kwargs before passing to the handler. This we will
+            #       revisit when migrating to strongly typed events.
+            for event in stream_messages(model, system_prompt, messages, tool_config):
+                if "callback" in event:
+                    inputs = {**event["callback"], **(kwargs if "delta" in event["callback"] else {})}
+                    callback_handler(**inputs)
+            else:
+                stop_reason, message, usage, metrics = event["stop"]
+                kwargs.setdefault("request_state", {})
+
             if model_invoke_span:
                 tracer.end_model_invoke_span(model_invoke_span, message, usage)
             break  # Success! Break out of retry loop
@@ -221,7 +227,7 @@ def event_loop_cycle(
             )
 
         # End the cycle and return results
-        event_loop_metrics.end_cycle(cycle_start_time, cycle_trace)
+        event_loop_metrics.end_cycle(cycle_start_time, cycle_trace, attributes)
         if cycle_span:
             tracer.end_event_loop_cycle_span(
                 span=cycle_span,
@@ -248,79 +254,6 @@ def event_loop_cycle(
         raise EventLoopException(e, kwargs["request_state"]) from e
 
     return stop_reason, message, event_loop_metrics, kwargs["request_state"]
-
-```
-
-### `initialize_state(**kwargs)`
-
-Initialize the request state if not present.
-
-Creates an empty request_state dictionary if one doesn't already exist in the provided keyword arguments.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `**kwargs` | `Any` | Keyword arguments that may contain a request_state. | `{}` |
-
-Returns:
-
-| Type | Description | | --- | --- | | `Any` | The updated kwargs dictionary with request_state initialized if needed. |
-
-Source code in `strands/event_loop/event_loop.py`
-
-```
-def initialize_state(**kwargs: Any) -> Any:
-    """Initialize the request state if not present.
-
-    Creates an empty request_state dictionary if one doesn't already exist in the
-    provided keyword arguments.
-
-    Args:
-        **kwargs: Keyword arguments that may contain a request_state.
-
-    Returns:
-        The updated kwargs dictionary with request_state initialized if needed.
-    """
-    if "request_state" not in kwargs:
-        kwargs["request_state"] = {}
-    return kwargs
-
-```
-
-### `prepare_next_cycle(kwargs, event_loop_metrics)`
-
-Prepare state for the next event loop cycle.
-
-Updates the keyword arguments with the current event loop metrics and stores the current cycle ID as the parent cycle ID for the next cycle. This maintains the parent-child relationship between cycles for tracing and metrics.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `kwargs` | `Dict[str, Any]` | Current keyword arguments containing event loop state. | *required* | | `event_loop_metrics` | `EventLoopMetrics` | The metrics object tracking event loop execution. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `Dict[str, Any]` | Updated keyword arguments ready for the next cycle. |
-
-Source code in `strands/event_loop/event_loop.py`
-
-```
-def prepare_next_cycle(kwargs: Dict[str, Any], event_loop_metrics: EventLoopMetrics) -> Dict[str, Any]:
-    """Prepare state for the next event loop cycle.
-
-    Updates the keyword arguments with the current event loop metrics and stores the current cycle ID as the parent
-    cycle ID for the next cycle. This maintains the parent-child relationship between cycles for tracing and metrics.
-
-    Args:
-        kwargs: Current keyword arguments containing event loop state.
-        event_loop_metrics: The metrics object tracking event loop execution.
-
-    Returns:
-        Updated keyword arguments ready for the next cycle.
-    """
-    # Store parent cycle ID
-    kwargs["event_loop_metrics"] = event_loop_metrics
-    kwargs["event_loop_parent_cycle_id"] = kwargs["event_loop_cycle_id"]
-
-    return kwargs
 
 ```
 
@@ -597,12 +530,12 @@ Parameters:
 
 Returns:
 
-| Type | Description | | --- | --- | | `Tuple[Usage, Metrics]` | The extracted usage metrics and latency. |
+| Type | Description | | --- | --- | | `tuple[Usage, Metrics]` | The extracted usage metrics and latency. |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
-def extract_usage_metrics(event: MetadataEvent) -> Tuple[Usage, Metrics]:
+def extract_usage_metrics(event: MetadataEvent) -> tuple[Usage, Metrics]:
     """Extracts usage metrics from the metadata chunk.
 
     Args:
@@ -618,47 +551,47 @@ def extract_usage_metrics(event: MetadataEvent) -> Tuple[Usage, Metrics]:
 
 ```
 
-### `handle_content_block_delta(event, state, callback_handler, **kwargs)`
+### `handle_content_block_delta(event, state)`
 
 Handles content block delta updates by appending text, tool input, or reasoning content to the state.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `ContentBlockDeltaEvent` | Delta event. | *required* | | `state` | `Dict[str, Any]` | The current state of message processing. | *required* | | `callback_handler` | `Any` | Callback for processing events as they happen. | *required* | | `**kwargs` | `Any` | Additional keyword arguments to pass to the callback handler. | `{}` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `ContentBlockDeltaEvent` | Delta event. | *required* | | `state` | `dict[str, Any]` | The current state of message processing. | *required* |
 
 Returns:
 
-| Type | Description | | --- | --- | | `Dict[str, Any]` | Updated state with appended text or tool input. |
+| Type | Description | | --- | --- | | `tuple[dict[str, Any], dict[str, Any]]` | Updated state with appended text or tool input. |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
 def handle_content_block_delta(
-    event: ContentBlockDeltaEvent, state: Dict[str, Any], callback_handler: Any, **kwargs: Any
-) -> Dict[str, Any]:
+    event: ContentBlockDeltaEvent, state: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any]]:
     """Handles content block delta updates by appending text, tool input, or reasoning content to the state.
 
     Args:
         event: Delta event.
         state: The current state of message processing.
-        callback_handler: Callback for processing events as they happen.
-        **kwargs: Additional keyword arguments to pass to the callback handler.
 
     Returns:
         Updated state with appended text or tool input.
     """
     delta_content = event["delta"]
 
+    callback_event = {}
+
     if "toolUse" in delta_content:
         if "input" not in state["current_tool_use"]:
             state["current_tool_use"]["input"] = ""
 
         state["current_tool_use"]["input"] += delta_content["toolUse"]["input"]
-        callback_handler(delta=delta_content, current_tool_use=state["current_tool_use"], **kwargs)
+        callback_event["callback"] = {"delta": delta_content, "current_tool_use": state["current_tool_use"]}
 
     elif "text" in delta_content:
         state["text"] += delta_content["text"]
-        callback_handler(data=delta_content["text"], delta=delta_content, **kwargs)
+        callback_event["callback"] = {"data": delta_content["text"], "delta": delta_content}
 
     elif "reasoningContent" in delta_content:
         if "text" in delta_content["reasoningContent"]:
@@ -666,26 +599,24 @@ def handle_content_block_delta(
                 state["reasoningText"] = ""
 
             state["reasoningText"] += delta_content["reasoningContent"]["text"]
-            callback_handler(
-                reasoningText=delta_content["reasoningContent"]["text"],
-                delta=delta_content,
-                reasoning=True,
-                **kwargs,
-            )
+            callback_event["callback"] = {
+                "reasoningText": delta_content["reasoningContent"]["text"],
+                "delta": delta_content,
+                "reasoning": True,
+            }
 
         elif "signature" in delta_content["reasoningContent"]:
             if "signature" not in state:
                 state["signature"] = ""
 
             state["signature"] += delta_content["reasoningContent"]["signature"]
-            callback_handler(
-                reasoning_signature=delta_content["reasoningContent"]["signature"],
-                delta=delta_content,
-                reasoning=True,
-                **kwargs,
-            )
+            callback_event["callback"] = {
+                "reasoning_signature": delta_content["reasoningContent"]["signature"],
+                "delta": delta_content,
+                "reasoning": True,
+            }
 
-    return state
+    return state, callback_event
 
 ```
 
@@ -699,12 +630,12 @@ Parameters:
 
 Returns:
 
-| Type | Description | | --- | --- | | `Dict[str, Any]` | Dictionary with tool use id and name if tool use request, empty dictionary otherwise. |
+| Type | Description | | --- | --- | | `dict[str, Any]` | Dictionary with tool use id and name if tool use request, empty dictionary otherwise. |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
-def handle_content_block_start(event: ContentBlockStartEvent) -> Dict[str, Any]:
+def handle_content_block_start(event: ContentBlockStartEvent) -> dict[str, Any]:
     """Handles the start of a content block by extracting tool usage information if any.
 
     Args:
@@ -732,16 +663,16 @@ Handles the end of a content block by finalizing tool usage, text content, or re
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `state` | `Dict[str, Any]` | The current state of message processing. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `state` | `dict[str, Any]` | The current state of message processing. | *required* |
 
 Returns:
 
-| Type | Description | | --- | --- | | `Dict[str, Any]` | Updated state with finalized content block. |
+| Type | Description | | --- | --- | | `dict[str, Any]` | Updated state with finalized content block. |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
-def handle_content_block_stop(state: Dict[str, Any]) -> Dict[str, Any]:
+def handle_content_block_stop(state: dict[str, Any]) -> dict[str, Any]:
     """Handles the end of a content block by finalizing tool usage, text content, or reasoning content.
 
     Args:
@@ -750,7 +681,7 @@ def handle_content_block_stop(state: Dict[str, Any]) -> Dict[str, Any]:
     Returns:
         Updated state with finalized content block.
     """
-    content: List[ContentBlock] = state["content"]
+    content: list[ContentBlock] = state["content"]
 
     current_tool_use = state["current_tool_use"]
     text = state["text"]
@@ -861,12 +792,12 @@ Handles redacting content from the input or output.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `RedactContentEvent` | Redact Content Event. | *required* | | `messages` | `Messages` | Agent messages. | *required* | | `state` | `Dict[str, Any]` | The current state of message processing. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `RedactContentEvent` | Redact Content Event. | *required* | | `messages` | `Messages` | Agent messages. | *required* | | `state` | `dict[str, Any]` | The current state of message processing. | *required* |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
-def handle_redact_content(event: RedactContentEvent, messages: Messages, state: Dict[str, Any]) -> None:
+def handle_redact_content(event: RedactContentEvent, messages: Messages, state: dict[str, Any]) -> None:
     """Handles redacting content from the input or output.
 
     Args:
@@ -882,42 +813,37 @@ def handle_redact_content(event: RedactContentEvent, messages: Messages, state: 
 
 ```
 
-### `process_stream(chunks, callback_handler, messages, **kwargs)`
+### `process_stream(chunks, messages)`
 
 Processes the response stream from the API, constructing the final message and extracting usage metrics.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `chunks` | `Iterable[StreamEvent]` | The chunks of the response stream from the model. | *required* | | `callback_handler` | `Any` | Callback for processing events as they happen. | *required* | | `messages` | `Messages` | The agents messages. | *required* | | `**kwargs` | `Any` | Additional keyword arguments that will be passed to the callback handler. And also returned in the request_state. | `{}` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `chunks` | `Iterable[StreamEvent]` | The chunks of the response stream from the model. | *required* | | `messages` | `Messages` | The agents messages. | *required* |
 
 Returns:
 
-| Type | Description | | --- | --- | | `Tuple[StopReason, Message, Usage, Metrics, Any]` | The reason for stopping, the constructed message, the usage metrics, and the updated request state. |
+| Type | Description | | --- | --- | | `None` | The reason for stopping, the constructed message, and the usage metrics. |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
 def process_stream(
     chunks: Iterable[StreamEvent],
-    callback_handler: Any,
     messages: Messages,
-    **kwargs: Any,
-) -> Tuple[StopReason, Message, Usage, Metrics, Any]:
+) -> Generator[dict[str, Any], None, None]:
     """Processes the response stream from the API, constructing the final message and extracting usage metrics.
 
     Args:
         chunks: The chunks of the response stream from the model.
-        callback_handler: Callback for processing events as they happen.
         messages: The agents messages.
-        **kwargs: Additional keyword arguments that will be passed to the callback handler.
-            And also returned in the request_state.
 
     Returns:
-        The reason for stopping, the constructed message, the usage metrics, and the updated request state.
+        The reason for stopping, the constructed message, and the usage metrics.
     """
     stop_reason: StopReason = "end_turn"
 
-    state: Dict[str, Any] = {
+    state: dict[str, Any] = {
         "message": {"role": "assistant", "content": []},
         "text": "",
         "current_tool_use": {},
@@ -929,18 +855,16 @@ def process_stream(
     usage: Usage = Usage(inputTokens=0, outputTokens=0, totalTokens=0)
     metrics: Metrics = Metrics(latencyMs=0)
 
-    kwargs.setdefault("request_state", {})
-
     for chunk in chunks:
-        # Callback handler call here allows each event to be visible to the caller
-        callback_handler(event=chunk)
+        yield {"callback": {"event": chunk}}
 
         if "messageStart" in chunk:
             state["message"] = handle_message_start(chunk["messageStart"], state["message"])
         elif "contentBlockStart" in chunk:
             state["current_tool_use"] = handle_content_block_start(chunk["contentBlockStart"])
         elif "contentBlockDelta" in chunk:
-            state = handle_content_block_delta(chunk["contentBlockDelta"], state, callback_handler, **kwargs)
+            state, callback_event = handle_content_block_delta(chunk["contentBlockDelta"], state)
+            yield callback_event
         elif "contentBlockStop" in chunk:
             state = handle_content_block_stop(state)
         elif "messageStop" in chunk:
@@ -950,7 +874,7 @@ def process_stream(
         elif "redactContent" in chunk:
             handle_redact_content(chunk["redactContent"], messages, state)
 
-    return stop_reason, state["message"], usage, metrics, kwargs["request_state"]
+    yield {"stop": (stop_reason, state["message"], usage, metrics)}
 
 ```
 
@@ -1012,17 +936,17 @@ def remove_blank_messages_content_text(messages: Messages) -> Messages:
 
 ```
 
-### `stream_messages(model, system_prompt, messages, tool_config, callback_handler, **kwargs)`
+### `stream_messages(model, system_prompt, messages, tool_config)`
 
 Streams messages to the model and processes the response.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Model` | Model provider. | *required* | | `system_prompt` | `Optional[str]` | The system prompt to send. | *required* | | `messages` | `Messages` | List of messages to send. | *required* | | `tool_config` | `Optional[ToolConfig]` | Configuration for the tools to use. | *required* | | `callback_handler` | `Any` | Callback for processing events as they happen. | *required* | | `**kwargs` | `Any` | Additional keyword arguments that will be passed to the callback handler. And also returned in the request_state. | `{}` |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Model` | Model provider. | *required* | | `system_prompt` | `Optional[str]` | The system prompt to send. | *required* | | `messages` | `Messages` | List of messages to send. | *required* | | `tool_config` | `Optional[ToolConfig]` | Configuration for the tools to use. | *required* |
 
 Returns:
 
-| Type | Description | | --- | --- | | `Tuple[StopReason, Message, Usage, Metrics, Any]` | The reason for stopping, the final message, the usage metrics, and updated request state. |
+| Type | Description | | --- | --- | | `None` | The reason for stopping, the final message, and the usage metrics |
 
 Source code in `strands/event_loop/streaming.py`
 
@@ -1032,9 +956,7 @@ def stream_messages(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    callback_handler: Any,
-    **kwargs: Any,
-) -> Tuple[StopReason, Message, Usage, Metrics, Any]:
+) -> Generator[dict[str, Any], None, None]:
     """Streams messages to the model and processes the response.
 
     Args:
@@ -1042,12 +964,9 @@ def stream_messages(
         system_prompt: The system prompt to send.
         messages: List of messages to send.
         tool_config: Configuration for the tools to use.
-        callback_handler: Callback for processing events as they happen.
-        **kwargs: Additional keyword arguments that will be passed to the callback handler.
-            And also returned in the request_state.
 
     Returns:
-        The reason for stopping, the final message, the usage metrics, and updated request state.
+        The reason for stopping, the final message, and the usage metrics
     """
     logger.debug("model=<%s> | streaming messages", model)
 
@@ -1055,6 +974,6 @@ def stream_messages(
     tool_specs = [tool["toolSpec"] for tool in tool_config.get("tools", [])] or None if tool_config else None
 
     chunks = model.converse(messages, tool_specs, system_prompt)
-    return process_stream(chunks, callback_handler, messages, **kwargs)
+    yield from process_stream(chunks, messages)
 
 ```
