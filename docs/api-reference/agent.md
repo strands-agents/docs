@@ -21,3 +21,6 @@
 ::: strands.agent.conversation_manager.sliding_window_conversation_manager
     options:
       heading_level: 3
+::: strands.agent.conversation_manager.summarizing_conversation_manager
+    options:
+      heading_level: 3
