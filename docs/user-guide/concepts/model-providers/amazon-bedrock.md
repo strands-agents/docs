@@ -22,8 +22,8 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) cl
 
 To use Amazon Bedrock with Strands, your IAM user or role needs the following permissions:
 
-- `bedrock-runtime:InvokeModelWithResponseStream` (for streaming mode)
-- `bedrock-runtime:InvokeModel` (for non-streaming mode)
+- `bedrock:InvokeModelWithResponseStream` (for streaming mode)
+- `bedrock:InvokeModel` (for non-streaming mode)
 
 Here's a sample IAM policy that grants the necessary permissions:
 
@@ -34,8 +34,8 @@ Here's a sample IAM policy that grants the necessary permissions:
         {
             "Effect": "Allow",
             "Action": [
-                "bedrock-runtime:InvokeModelWithResponseStream",
-                "bedrock-runtime:InvokeModel"
+                "bedrock:InvokeModelWithResponseStream",
+                "bedrock:InvokeModel"
             ],
             "Resource": "*"
         }
