@@ -68,39 +68,33 @@ from pydantic import BaseModel, Field
 from strands import Agent
 from strands.models.litellm import LiteLLMModel
 
-class TaskAnalysis(BaseModel):
-    """Analyze a task or project."""
-    title: str = Field(description="Task title")
-    priority: str = Field(description="Priority level: low, medium, high")
-    estimated_hours: float = Field(description="Estimated completion time in hours")
-    dependencies: List[str] = Field(description="Task dependencies")
-    status: str = Field(description="Current status")
+class BookAnalysis(BaseModel):
+    """Analyze a book's key information."""
+    title: str = Field(description="The book's title")
+    author: str = Field(description="The book's author")
+    genre: str = Field(description="Primary genre or category")
+    summary: str = Field(description="Brief summary of the book")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
 
 model = LiteLLMModel(
-    model_id="gpt-4o",  # OpenAI model through LiteLLM
-    params={
-        "temperature": 0.1,
-        "max_tokens": 1000
-    }
+    model_id="bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
 )
 
 agent = Agent(model=model)
 
-# Extract structured task information
 result = agent.structured_output(
-    TaskAnalysis,
+    BookAnalysis,
     """
-    Analyze this project task: "Implement user authentication system"
-    This is a high-priority task that requires database setup and security review.
-    Estimated to take 16 hours. Currently in planning phase.
-    Depends on database schema design and security policy approval.
+    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
     """
 )
 
-print(f"Task: {result.title}")
-print(f"Priority: {result.priority}")
-print(f"Hours: {result.estimated_hours}")
-print(f"Dependencies: {result.dependencies}")
+print(f"Title: {result.title}")
+print(f"Author: {result.author}")
+print(f"Genre: {result.genre}")
+print(f"Rating: {result.rating}")
 ```
 
 ## References

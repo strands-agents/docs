@@ -89,12 +89,10 @@ class PersonInfo(BaseModel):
 model = OpenAIModel(
     client_args={"api_key": "<KEY>"},
     model_id="gpt-4o",
-    params={"temperature": 0.1}  # Lower temperature for more consistent structured output
 )
 
 agent = Agent(model=model)
 
-# Extract structured information
 result = agent.structured_output(
     PersonInfo,
     "John Smith is a 30-year-old software engineer working at a tech startup."

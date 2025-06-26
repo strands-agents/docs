@@ -200,41 +200,34 @@ from pydantic import BaseModel, Field
 from strands import Agent
 from strands.models.ollama import OllamaModel
 
-class CodeAnalysis(BaseModel):
-    """Analyze code structure and quality."""
-    language: str = Field(description="Programming language")
-    complexity: str = Field(description="Code complexity: low, medium, high")
-    issues: List[str] = Field(description="Potential issues or improvements")
-    score: int = Field(description="Code quality score 1-10", ge=1, le=10)
+class BookAnalysis(BaseModel):
+    """Analyze a book's key information."""
+    title: str = Field(description="The book's title")
+    author: str = Field(description="The book's author")
+    genre: str = Field(description="Primary genre or category")
+    summary: str = Field(description="Brief summary of the book")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
 
-# Use a model that supports tool calling
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3.1:8b",  # Tool-capable model
-    temperature=0.1  # Low temperature for consistent structured output
+    model_id="llama3",
 )
 
 agent = Agent(model=ollama_model)
 
-# Extract structured code analysis
 result = agent.structured_output(
-    CodeAnalysis,
+    BookAnalysis,
     """
-    Analyze this Python function:
-    
-    def calculate_fibonacci(n):
-        if n <= 1:
-            return n
-        return calculate_fibonacci(n-1) + calculate_fibonacci(n-2)
-    
-    This is a recursive implementation of the Fibonacci sequence.
+    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
     """
 )
 
-print(f"Language: {result.language}")
-print(f"Complexity: {result.complexity}")
-print(f"Issues: {result.issues}")
-print(f"Score: {result.score}")
+print(f"Title: {result.title}")
+print(f"Author: {result.author}")
+print(f"Genre: {result.genre}")
+print(f"Rating: {result.rating}")
 ```
 
 ## Tool Support
@@ -249,7 +242,7 @@ from strands_tools import calculator, current_time
 # Create an Ollama model
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3"
+    model_id="llama3.3"
 )
 
 # Create an agent with tools

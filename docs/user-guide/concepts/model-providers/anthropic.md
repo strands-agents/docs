@@ -78,15 +78,18 @@ class BookAnalysis(BaseModel):
     rating: int = Field(description="Rating from 1-10", ge=1, le=10)
 
 model = AnthropicModel(
-    client_args={"api_key": "<KEY>"},
-    max_tokens=1024,
+    client_args={
+        "api_key": "<KEY>",
+    },
+    max_tokens=1028,
     model_id="claude-3-7-sonnet-20250219",
-    params={"temperature": 0.2}  # Lower temperature for consistent structured output
+    params={
+        "temperature": 0.7,
+    }
 )
 
 agent = Agent(model=model)
 
-# Extract structured book information
 result = agent.structured_output(
     BookAnalysis,
     """
