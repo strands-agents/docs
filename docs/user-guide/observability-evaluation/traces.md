@@ -89,9 +89,6 @@ Strands natively integrates with OpenTelemetry, an industry standard for distrib
 # Specify custom OTLP endpoint if set will enable OTEL by default
 export OTEL_EXPORTER_OTLP_ENDPOINT="http://collector.example.com:4318"
 
-# Enable Console debugging
-export STRANDS_OTEL_ENABLE_CONSOLE_EXPORT=true
-
 # Set Default OTLP Headers
 export OTEL_EXPORTER_OTLP_HEADERS="key1=value1,key2=value2"
 
@@ -101,15 +98,20 @@ export OTEL_EXPORTER_OTLP_HEADERS="key1=value1,key2=value2"
 
 ```python
 from strands import Agent
-from strands.telemetry.tracer import get_tracer
 
-# Configure the tracer
-tracer = get_tracer(
-    service_name="my-agent-service",
-    otlp_endpoint="http://localhost:4318",
-    otlp_headers={"Authorization": "Bearer TOKEN"},
-    enable_console_export=True  # Helpful for development
+# Option 1: Skip StrandsTelemetry if global tracer provider is already configured
+# (your existing OpenTelemetry setup will be used automatically)
+agent = Agent(
+    model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    system_prompt="You are a helpful AI assistant"
 )
+
+# Option 2: Use StrandsTelemetry if you need Strands to set up OpenTelemetry
+from strands.telemetry import StrandsTelemetry
+
+strands_telemetry = StrandsTelemetry()
+strands_telemetry.setup_otlp_exporter()     # Send traces to OTLP endpoint
+strands_telemetry.setup_console_exporter()  # Print traces to console
 
 # Create agent (tracing will be enabled automatically)
 agent = Agent(
@@ -238,22 +240,13 @@ docker run -d --name jaeger \
 
 Then access the Jaeger UI at http://localhost:16686 to view your traces.
 
-You can also enable console export to inspect the spans:
+You can also setup console export to inspect the spans:
 
 ```python
-# By enabling the environment variable
-os.environ["STRANDS_OTEL_ENABLE_CONSOLE_EXPORT"] = "true"
 
-# or
+from strands.telemetry import StrandsTelemetry
 
-# Configure the tracer
-tracer = get_tracer(
-    service_name="my-agent-service",
-    otlp_endpoint="http://localhost:4318",
-    otlp_headers={"Authorization": "Bearer TOKEN"},
-    enable_console_export=True  # Helpful for development
-)
-
+StrandsTelemetry().setup_console_exporter()
 
 ```
 
@@ -317,11 +310,13 @@ This example demonstrates capturing a complete trace of an agent interaction:
 
 ```python
 from strands import Agent
+from strands.telemetry import StrandsTelemetry
 import os
 
-# Enable tracing with console output for visibility
 os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:4318"
-os.environ["STRANDS_OTEL_ENABLE_CONSOLE_EXPORT"] = "true"
+strands_telemetry = StrandsTelemetry()
+strands_telemetry.setup_otlp_exporter()      # Send traces to OTLP endpoint
+strands_telemetry.setup_console_exporter()   # Print traces to console
 
 # Create agent
 agent = Agent(
