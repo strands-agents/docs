@@ -107,7 +107,7 @@ def get_user_location() -> str:
 @tool
 def weather(location: str) -> str:
     """Get weather information for a location
-    
+
     Args:
         location: City or location name
     """
@@ -168,10 +168,10 @@ TOOL_SPEC = {
 def weather(tool: ToolUse, **kwargs: Any) -> ToolResult:
     tool_use_id = tool["toolUseId"]
     location = tool["input"]["location"]
-    
+
     # Implement weather lookup logic here
     weather_info = f"Weather for {location}: Sunny, 72°F"
-    
+
     return {
         "toolUseId": tool_use_id,
         "status": "success",
@@ -221,13 +221,13 @@ from strands.tools.mcp import MCPClient
 sse_mcp_client = MCPClient(lambda: sse_client("http://localhost:8000/sse"))
 
 # Create an agent with MCP tools
-with sse_mcp_server:
+with sse_mcp_client:
     # Get the tools from the MCP server
     tools = sse_mcp_client.list_tools_sync()
-    
+
     # Create an agent with the MCP server's tools
     agent = Agent(tools=tools)
-    
+
     # Use the agent with MCP tools
     agent("Calculate the square root of 144")
 ```
@@ -236,7 +236,7 @@ For more information on using MCP tools, see [MCP Tools](mcp-tools.md).
 
 ### 3. Example Built-in Tools
 
-For rapid prototyping and common tasks, Strands offers an optional [example built-in tools package]({{ tools_repo }}) with pre-built tools for development. These tools cover a wide variety of capabilities including File Operations, Shell & Local System control, Web & Network for API calls, and Agents & Workflows for orchestration. 
+For rapid prototyping and common tasks, Strands offers an optional [example built-in tools package]({{ tools_repo }}) with pre-built tools for development. These tools cover a wide variety of capabilities including File Operations, Shell & Local System control, Web & Network for API calls, and Agents & Workflows for orchestration.
 
 For a complete list of available tools and their detailed descriptions, see [Example Built-in Tools](example-tools-package.md).
 
@@ -261,13 +261,13 @@ Example of a well-described tool:
 def search_database(query: str, max_results: int = 10) -> list:
     """
     Search the product database for items matching the query string.
-    
-    Use this tool when you need to find detailed product information based on keywords, 
-    product names, or categories. The search is case-insensitive and supports fuzzy 
+
+    Use this tool when you need to find detailed product information based on keywords,
+    product names, or categories. The search is case-insensitive and supports fuzzy
     matching to handle typos and variations in search terms.
-    
-    This tool connects to the enterprise product catalog database and performs a semantic 
-    search across all product fields, providing comprehensive results with all available 
+
+    This tool connects to the enterprise product catalog database and performs a semantic
+    search across all product fields, providing comprehensive results with all available
     product metadata.
 
     Example response:
@@ -281,20 +281,20 @@ def search_database(query: str, max_results: int = 10) -> list:
             },
             ...
         ]
-    
+
     Notes:
         - This tool only searches the product catalog and does not provide
           inventory or availability information
         - Results are cached for 15 minutes to improve performance
         - The search index updates every 6 hours, so very recent products may not appear
         - For real-time inventory status, use a separate inventory check tool
-    
+
     Args:
         query: The search string (product name, category, or keywords)
                Example: "red running shoes" or "smartphone charger"
         max_results: Maximum number of results to return (default: 10, range: 1-100)
                      Use lower values for faster response when exact matches are expected
-    
+
     Returns:
         A list of matching product records, each containing:
         - id: Unique product identifier (string)
@@ -303,8 +303,7 @@ def search_database(query: str, max_results: int = 10) -> list:
         - price: Current price in USD (float)
         - category: Product category hierarchy (list)
     """
-    
+
     # Implementation
     pass
 ```
-
