@@ -242,7 +242,7 @@ from strands_tools import calculator, current_time
 # Create an Ollama model
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3.3"
+    model_id="llama3"
 )
 
 # Create an agent with tools

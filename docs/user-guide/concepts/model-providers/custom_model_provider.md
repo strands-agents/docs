@@ -6,15 +6,17 @@ Strands Agents SDK provides an extensible interface for implementing custom mode
 
 Custom model providers in Strands Agents support two primary interaction modes:
 
-### Conversational Interaction (`converse`)
-The standard conversational mode where agents exchange messages with the model. This is the default interaction pattern used by [`Agent.converse()`](../../../api-reference/agent.md#strands.agent.agent.Agent.converse) and when you call an agent directly:
+### Conversational Interaction
+The standard conversational mode where agents exchange messages with the model. This is the default interaction pattern that is used when you call an agent directly:
 
 ```python
 agent = Agent(model=your_custom_model)
 response = agent("Hello, how can you help me today?")
 ```
 
-### Structured Output (`structured_output`)
+This invokes the underlying model provided to the agent.
+
+### Structured Output
 A specialized mode that returns type-safe, validated responses using [Pydantic](https://docs.pydantic.dev/latest/concepts/models/) models instead of raw text. This enables reliable data extraction and processing:
 
 ```python
@@ -288,46 +290,42 @@ Now that you have mapped the Strands Agents input to your models request, use th
 
 ### 5. Structured Output Support
 
-To support structured output in your custom model provider, you need to implement a `structured_output()` method that extracts schema information from Pydantic models, formats requests appropriately, and validates responses using tool calling capabilities.
+To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model, and has it return a json output. Below is an example of what this might look like for a Bedrock model, where we invoke the model with a tool spec, and check if the response contains a `toolUse` response.
 
 ```python
-from typing import Type, TypeVar, Optional, Callable, Any
-from strands.types.content import Messages
-from strands.utils.tools import convert_pydantic_to_tool_spec
-from strands.utils.streaming import process_stream
 
-T = TypeVar('T', bound=BaseModel)
+    T = TypeVar('T', bound=BaseModel)
 
-@override
-def structured_output(
-    self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
-) -> T:
-    """Get structured output using tool calling."""
-   
-    # Convert Pydantic model to tool specification
-    tool_spec = convert_pydantic_to_tool_spec(output_model)
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
+    ) -> T:
+        """Get structured output using tool calling."""
     
-    # Use existing converse method with tool specification
-    response = self.converse(messages=prompt, tool_specs=[tool_spec])
+        # Convert Pydantic model to tool specification
+        tool_spec = convert_pydantic_to_tool_spec(output_model)
+        
+        # Use existing converse method with tool specification
+        response = self.converse(messages=prompt, tool_specs=[tool_spec])
     
-    # Process streaming response
-    for event in process_stream(response, prompt):
-        if callback_handler and "callback" in event:
-            callback_handler(**event["callback"])
-    else:
-        stop_reason, messages, _, _ = event["stop"]
+        # Process streaming response
+        for event in process_stream(response, prompt):
+            if callback_handler and "callback" in event:
+                callback_handler(**event["callback"])
+        else:
+            stop_reason, messages, _, _ = event["stop"]
     
-    # Validate tool use response
-    if stop_reason != "tool_use":
-        raise ValueError("No valid tool use found in the model response.")
-    
-    # Extract tool use output
-    content = messages["content"]
-    for block in content:
-        if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
-            return output_model(**block["toolUse"]["input"])
-    
-    raise ValueError("No valid tool use input found in the response.")
+        # Validate tool use response
+        if stop_reason != "tool_use":
+            raise ValueError("No valid tool use found in the model response.")
+        
+        # Extract tool use output
+        content = messages["content"]
+        for block in content:
+            if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+                return output_model(**block["toolUse"]["input"])
+        
+        raise ValueError("No valid tool use input found in the response.")
 ```
 
 **Implementation Suggestions:**
@@ -337,35 +335,11 @@ def structured_output(
 3. **Error Handling**: Provide clear error messages for parsing and validation failures
 
 
-**Test Your Implementation:**
-```python
-def test_structured_output():
-    """Test structured output implementation."""
-    from pydantic import BaseModel, Field
-    
-    class PersonInfo(BaseModel):
-        name: str = Field(description="Full name")
-        age: int = Field(description="Age in years")
-        occupation: str = Field(description="Job title")
-    
-    model = YourCustomModel(api_key="key", model_id="model")
-    
-    result = model.structured_output(
-        PersonInfo,
-        [{"role": "user", "content": [{"text": "John Smith is a 30-year-old engineer."}]}]
-    )
-    
-    assert isinstance(result, PersonInfo)
-    assert result.name == "John Smith"
-    print("Structured output test passed!")
-```
-
-
 For detailed structured output usage patterns, see the [Structured Output documentation](../agents/structured-output.md).
 
 ### 6. Use Your Custom Model Provider
 
-Once implemented, you can use your custom model provider in your applications:
+Once implemented, you can use your custom model provider in your applications for regular agent invocation:
 
 ```python
 from strands import Agent
@@ -387,6 +361,29 @@ agent = Agent(model=custom_model)
 
 # Use the agent as usual
 response = agent("Hello, how are you today?")
+```
+
+Or you can use the `structured_output` feature to generate structured output:
+
+```python
+from strands import Agent
+from your_org.models.custom_model import Model as CustomModel
+from pydantic import BaseModel, Field
+
+class PersonInfo(BaseModel):
+    name: str = Field(description="Full name")
+    age: int = Field(description="Age in years")
+    occupation: str = Field(description="Job title")
+
+model = CustomModel(api_key="key", model_id="model")
+
+agent = Agent(model=model)
+
+result = agent.structured_output(PersonInfo, "John Smith is a 30-year-old engineer.")
+
+print(f"Name: {result.name}")
+print(f"Age: {result.age}")
+print(f"Occupation: {result.occupation}")
 ```
 
 ## Key Implementation Considerations
