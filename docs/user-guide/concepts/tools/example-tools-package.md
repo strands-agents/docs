@@ -39,6 +39,7 @@ pip install strands-agents-tools[mem0_memory]
 - [`slack`]({{ tools_repo }}/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
 
 #### Multi-modal
+- [`generate_image_stability`]({{ tools_repo }}/src/strands_tools/generate_image_stability.py): Create images with Stability AI
 - [`image_reader`]({{ tools_repo }}/src/strands_tools/image_reader.py): Process and analyze images
 - [`generate_image`]({{ tools_repo }}/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
 - [`nova_reels`]({{ tools_repo }}/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
