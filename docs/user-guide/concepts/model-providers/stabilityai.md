@@ -78,7 +78,7 @@ The available parameters that can be passed to the tool are:
 
 ### Optional Parameters
 
-- **`return_type`** (string, default: `"image"`)
+- **`return_type`** (string, default: `"json"`)
   - The format in which to return the generated image. Use 'image' to return the image data directly, or 'json' to return a JSON object containing the image data as a base64-encoded string.
   - Options: `"json"`, `"image"`
 
