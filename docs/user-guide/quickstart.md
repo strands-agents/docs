@@ -327,7 +327,7 @@ Ready to learn more? Check out these resources:
 - [Example Built-in Tools](concepts/tools/example-tools-package.md) - The `strands-agents-tools` package provides many powerful example tools for your agents to use during development
 - [Strands Agent Builder]({{ agent_builder_repo_home }}) - Use the accompanying `strands-agents-builder` agent builder to harness the power of LLMs to generate your own tools and agents
 - [Agent Loop](concepts/agents/agent-loop.md) - Learn how Strands agents work under the hood
-- [Sessions & State](concepts/agents/sessions-state.md) - Understand how agents maintain context and state across a conversation or workflow
+- [State & Sessions](concepts/agents/state-sessions.md) - Understand how agents maintain context and state across a conversation or workflow
 - [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together as one system, with each agent completing specialized tasks
 - [Observability & Evaluation](observability-evaluation/observability.md) - Understand how agents make decisions and improve them with data
 - [Operating Agents in Production](deploy/operating-agents-in-production.md) - Taking agents from development to production, operating them responsibly at scale

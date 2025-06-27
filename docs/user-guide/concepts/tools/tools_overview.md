@@ -56,7 +56,7 @@ agent = Agent(load_tools_from_directory=False)
 
 Tools can be invoked in two primary ways.
 
-Agents have context about tool calls and their results as part of conversation history. See [sessions & state](../agents/sessions-state.md#tool-state) for more information.
+Agents have context about tool calls and their results as part of conversation history. See [state & sessions](../agents/state-sessions.md#using-state-in-tools) for more information.
 
 ### Natural Language Invocation
 

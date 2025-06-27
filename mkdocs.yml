@@ -72,7 +72,7 @@ nav:
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
-        - Sessions & State: user-guide/concepts/agents/sessions-state.md
+        - State & Sessions: user-guide/concepts/agents/state-sessions.md
         - Prompts: user-guide/concepts/agents/prompts.md
         - Structured Output: user-guide/concepts/agents/structured-output.md
         - Context Management: user-guide/concepts/agents/context-management.md
