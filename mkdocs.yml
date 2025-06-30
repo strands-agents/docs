@@ -86,6 +86,7 @@ nav:
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+        - MistralAI: user-guide/concepts/model-providers/mistral.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
         - OpenAI: user-guide/concepts/model-providers/openai.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
