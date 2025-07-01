@@ -51,7 +51,6 @@ def event_loop_cycle(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    callback_handler: Any,
     tool_handler: Optional[ToolHandler],
     tool_execution_handler: Optional[ParallelToolExecutorInterface] = None,
     **kwargs: Any,

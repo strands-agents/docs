@@ -290,7 +290,7 @@ Now that you have mapped the Strands Agents input to your models request, use th
 
 ### 5. Structured Output Support
 
-To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model, and has it return a json output. Below is an example of what this might look like for a Bedrock model, where we invoke the model with a tool spec, and check if the response contains a `toolUse` response.
+To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model, and has it yield a json output. Below is an example of what this might look like for a Bedrock model, where we invoke the model with a tool spec, and check if the response contains a `toolUse` response.
 
 ```python
 
@@ -298,33 +298,33 @@ To support structured output in your custom model provider, you need to implemen
 
     @override
     def structured_output(
-        self, output_model: Type[T], prompt: Messages, callback_handler: Optional[Callable] = None
-    ) -> T:
+        self, output_model: Type[T], prompt: Messages
+    ) -> Generator[dict[str, Union[T, Any]], None, None]:
         """Get structured output using tool calling."""
-    
+
         # Convert Pydantic model to tool specification
         tool_spec = convert_pydantic_to_tool_spec(output_model)
-        
+
         # Use existing converse method with tool specification
         response = self.converse(messages=prompt, tool_specs=[tool_spec])
-    
+
         # Process streaming response
         for event in process_stream(response, prompt):
-            if callback_handler and "callback" in event:
-                callback_handler(**event["callback"])
-        else:
-            stop_reason, messages, _, _ = event["stop"]
-    
+            yield event  # Passed to callback handler configured in Agent instance
+
+        stop_reason, messages, _, _ = event["stop"]
+
         # Validate tool use response
         if stop_reason != "tool_use":
             raise ValueError("No valid tool use found in the model response.")
-        
+
         # Extract tool use output
         content = messages["content"]
         for block in content:
             if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
-                return output_model(**block["toolUse"]["input"])
-        
+                yield {"output": output_model(**block["toolUse"]["input"])}
+                return
+
         raise ValueError("No valid tool use input found in the response.")
 ```
 
