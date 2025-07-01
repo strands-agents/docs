@@ -114,7 +114,6 @@ from strands import Agent
 # Create an agent with initial state
 agent = Agent(state={"user_preferences": {"theme": "dark"}, "session_count": 0})
 
-agent2 Agent(state={"user_preferences": {"theme": "dark"}, "session_count": 0})
 
 # Access state values
 theme = agent.state.get("user_preferences")
