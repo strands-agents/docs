@@ -53,7 +53,7 @@ Conversation history is automatically:
 
 #### Direct Tool Calling
 
-Direct tool calls can also be recorded in the conversation history:
+Direct tool calls are (by default) recorded in the conversation history:
 
 ```python
 from strands import Agent
