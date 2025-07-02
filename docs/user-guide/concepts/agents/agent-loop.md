@@ -52,7 +52,7 @@ def event_loop_cycle(
     messages: Messages,
     tool_config: Optional[ToolConfig],
     tool_handler: Optional[ToolHandler],
-    tool_execution_handler: Optional[ParallelToolExecutorInterface] = None,
+    thread_pool: Optional[ThreadPoolExecutor] = None,
     **kwargs: Any,
 ) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
     # ... implementation details ...

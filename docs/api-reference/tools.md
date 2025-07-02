@@ -17,9 +17,6 @@
 ::: strands.tools.registry
     options:
       heading_level: 2
-::: strands.tools.thread_pool_executor
-    options:
-      heading_level: 2
 ::: strands.tools.watcher
     options:
       heading_level: 2
