@@ -54,16 +54,14 @@ model = WriterModel(
 
 The `WriterModel` accepts configuration parameters as keyword arguments to the model constructor:
 
-| Parameter | Type | Description | Example | Default | Options |
-|-----------|------|-------------|---------|---------|---------|
-| `model_id` | `str` | Model name to use (e.g. `palmyra-x5`, `palmyra-x4`, etc.) | `"palmyra-x5"` | Required | [reference](https://dev.writer.com/home/models) |
-| `logprobs` | `bool` | Whether to return log probabilities of the output tokens | `True` | `False` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-logprobs) |
-| `max_tokens` | `Optional[int]` | Maximum number of tokens to generate | `1000` | See the Context Window for [each available model](#available-models) | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-max- tokens) |
-| `n` | `Optional[int]` | Number of chat completions to generate for each prompt. Streaming with tool calls only supports `n=1`. | `1` | `1` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-n) |
-| `stop` | `Optional[Union[str, List[str]]]` | A token or sequence of tokens that, when generated, will cause the model to stop producing further content. This can be a single token or an array of tokens, acting as a signal to end the output. | `["\n", "END"]` | `None` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-stop) |
-| `stream_options` | `Dict[str, Any]` | Additional options for streaming. Specify `include_usage` to include usage information in the response, in the `accumulated_usage` field. If you do not specify this, `accumulated_usage` will show `0` for each value. | `{"include_usage": True}` | `None` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-stream) |
-| `temperature` | `Optional[float]` | What sampling temperature to use (0.0 to 2.0). A higher temperature will produce more random output. | `0.7` | `1` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-temperature) |
-| `top_p` | `Optional[float]` | Threshold for "nucleus sampling" | `0.9` | `None` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-top_p) |
+| Parameter | Type | Description | Default | Options |
+|-----------|------|-------------|---------|---------|
+| `model_id` | `str` | Model name to use (e.g. `palmyra-x5`, `palmyra-x4`, etc.) | Required | [reference](https://dev.writer.com/home/models) |
+| `max_tokens` | `Optional[int]` | Maximum number of tokens to generate | See the Context Window for [each available model](#available-models) | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-max- tokens) |
+| `stop` | `Optional[Union[str, List[str]]]` | A token or sequence of tokens that, when generated, will cause the model to stop producing further content. This can be a single token or an array of tokens, acting as a signal to end the output. | `None` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-stop) |
+| `stream_options` | `Dict[str, Any]` | Additional options for streaming. Specify `include_usage` to include usage information in the response, in the `accumulated_usage` field. If you do not specify this, `accumulated_usage` will show `0` for each value. | `None` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-stream) |
+| `temperature` | `Optional[float]` | What sampling temperature to use (0.0 to 2.0). A higher temperature will produce more random output. | `1` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-temperature) |
+| `top_p` | `Optional[float]` | Threshold for "nucleus sampling" | `None` | [reference](https://dev.writer.com/api-reference/completion-api/chat-completion#body-top_p) |
 
 ### Available Models
 
