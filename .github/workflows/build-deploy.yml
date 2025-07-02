@@ -29,5 +29,5 @@ jobs:
       - run: |
           pip install -r requirements.txt
       - run: |
-          mike deploy --push --update-aliases 0.1.x latest
+          mike deploy --push --update-aliases 0.2.x latest
           mike set-default --push latest
