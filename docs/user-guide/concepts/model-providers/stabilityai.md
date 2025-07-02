@@ -31,12 +31,13 @@ For example:
 export STABILITY_API_KEY=sk-xxx
 export STABILITY_MODEL_ID=stability.stable-image-ultra-v1:1
 ```
-If no model is selected, the tool defaults to using `stability.stable-image-core-v1:1`.
+If no `STABILITY_MODEL_ID` is selected, the tool defaults to using `stability.stable-image-core-v1:1`.
 
 
 # Use
 The Stability AI tool can be given to a Strands agent. This enables the agent to create images. For example, an agent that makes slide decks, marketing content, or social media posts could include images created to match the user's input.
 
+The model that the agent uses must be able to return responses of at least 2MB in order to work with the Stability AI tool.
 
 Use with Strands agent:
 ```python
