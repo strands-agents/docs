@@ -18,50 +18,54 @@ Each trace consists of multiple spans that represent different operations in you
 +-------------------------------------------------------------------------------------+
 | Strands Agent                                                                       |
 | - gen_ai.system: <system name>                                                      |
-| - agent.name: <agent name>                                                          |
 | - gen_ai.agent.name: <agent name>                                                   |
-| - gen_ai.prompt: <user query>                                                       |
+| - gen_ai.operation.name: <operation>                                                |
 | - gen_ai.request.model: <model identifier>                                          |
-| - system_prompt: <system instructions>                                              |
 | - gen_ai.event.start_time: <timestamp>                                              |
 | - gen_ai.event.end_time: <timestamp>                                                |
-| - gen_ai.completion: <agent response>                                               |
+| - gen_ai.user.message: <user query>                                                 |
+| - gen_ai.choice: <agent response>                                                   |
 | - gen_ai.usage.prompt_tokens: <number>                                              |
+| - gen_ai.usage.input_tokens: <number>                                               |
 | - gen_ai.usage.completion_tokens: <number>                                          |
+| - gen_ai.usage.output_tokens: <number>                                              |
 | - gen_ai.usage.total_tokens: <number>                                               |
 |                                                                                     |
 |  +-------------------------------------------------------------------------------+  |
 |  | Cycle <cycle-id>                                                              |  |
-|  | - gen_ai.prompt: <formatted prompt>                                           |  |
+|  | - gen_ai.user.message: <formatted prompt>                                     |  |
+|  | - gen_ai.assistant.message: <formatted prompt>                                |  |
 |  | - event_loop.cycle_id: <cycle identifier>                                     |  |
 |  | - gen_ai.event.end_time: <timestamp>                                          |  |
-|  | - tool.result: <tool result data>                                             |  |
-|  | - gen_ai.completion: <formatted completion>                                   |  |
+|  | - gen_ai.choice                                                               |  |
+|  |   - tool.result: <tool result data>                                           |  |
+|  |   - message: <formatted completion>                                           |  |
 |  |                                                                               |  |
 |  |  +-----------------------------------------------------------------------+    |  |
 |  |  | Model invoke                                                          |    |  |
 |  |  | - gen_ai.system: <system name>                                        |    |  |
-|  |  | - agent.name: <agent name>                                            |    |  |
-|  |  | - gen_ai.agent.name: <agent name>                                     |    |  |
-|  |  | - gen_ai.prompt: <formatted prompt>                                   |    |  |
+|  |  | - gen_ai.operation.name: <operation>                                  |    |  |
+|  |  | - gen_ai.user.message: <formatted prompt>                             |    |  |
+|  |  | - gen_ai.assistant.message: <formatted prompt>                        |    |  |
 |  |  | - gen_ai.request.model: <model identifier>                            |    |  |
 |  |  | - gen_ai.event.start_time: <timestamp>                                |    |  |
 |  |  | - gen_ai.event.end_time: <timestamp>                                  |    |  |
-|  |  | - gen_ai.completion: <model response with tool use>                   |    |  |
+|  |  | - gen_ai.choice: <model response with tool use>                       |    |  |
 |  |  | - gen_ai.usage.prompt_tokens: <number>                                |    |  |
+|  |  | - gen_ai.usage.input_tokens: <number>                                 |    |  |
 |  |  | - gen_ai.usage.completion_tokens: <number>                            |    |  |
+|  |  | - gen_ai.usage.output_tokens: <number>                                |    |  |
 |  |  | - gen_ai.usage.total_tokens: <number>                                 |    |  |
 |  |  +-----------------------------------------------------------------------+    |  |
 |  |                                                                               |  |
 |  |  +-----------------------------------------------------------------------+    |  |
 |  |  | Tool: <tool name>                                                     |    |  |
 |  |  | - gen_ai.event.start_time: <timestamp>                                |    |  |
-|  |  | - tool.name: <tool name>                                              |    |  |
-|  |  | - tool.id: <tool use identifier>                                      |    |  |
-|  |  | - tool.parameters: <tool parameters>                                  |    |  |
+|  |  | - gen_ai.operation.name: <operation>                                  |    |  |
+|  |  | - gen_ai.tool.name: <tool name>                                       |    |  |
+|  |  | - gen_ai.tool.call.id: <tool use identifier>                          |    |  |
 |  |  | - gen_ai.event.end_time: <timestamp>                                  |    |  |
-|  |  | - tool.result: <tool execution result>                                |    |  |
-|  |  | - gen_ai.completion: <formatted tool result>                          |    |  |
+|  |  | - gen_ai.choice: <tool execution result>                              |    |  |
 |  |  | - tool.status: <execution status>                                     |    |  |
 |  |  +-----------------------------------------------------------------------+    |  |
 |  +-------------------------------------------------------------------------------+  |
@@ -86,7 +90,7 @@ Strands natively integrates with OpenTelemetry, an industry standard for distrib
 
 ```bash
 
-# Specify custom OTLP endpoint if set will enable OTEL by default
+# Specify custom OTLP endpoint
 export OTEL_EXPORTER_OTLP_ENDPOINT="http://collector.example.com:4318"
 
 # Set Default OTLP Headers
@@ -99,7 +103,7 @@ export OTEL_EXPORTER_OTLP_HEADERS="key1=value1,key2=value2"
 ```python
 from strands import Agent
 
-# Option 1: Skip StrandsTelemetry if global tracer provider is already configured
+# Option 1: Skip StrandsTelemetry if global tracer provider and/or meter provider are already configured
 # (your existing OpenTelemetry setup will be used automatically)
 agent = Agent(
     model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
@@ -113,12 +117,16 @@ from strands.telemetry import StrandsTelemetry
 strands_telemetry = StrandsTelemetry()
 strands_telemetry.setup_otlp_exporter()     # Send traces to OTLP endpoint
 strands_telemetry.setup_console_exporter()  # Print traces to console
+strands_telemetry.setup_meter(
+    enable_console_exporter=True,
+    enable_otlp_exporter=True)       # Setup new meter provider and sets it as global
 
 # Option 3: Use StrandsTelemetry with your own tracer provider
 # (Keeps your tracer provider, adds Strands exporters without setting global)
 from strands.telemetry import StrandsTelemetry
 
 strands_telemetry = StrandsTelemetry(tracer_provider=user_tracer_provider)
+strands_telemetry.setup_meter(enable_otlp_exporter=True)
 strands_telemetry.setup_otlp_exporter().setup_console_exporter()  # Chaining supported
 
 # Create agent (tracing will be enabled automatically)
@@ -159,16 +167,17 @@ Strands traces include rich attributes that provide context for each operation:
 | Attribute | Description |
 |-----------|-------------|
 | `gen_ai.system` | The agent system identifier ("strands-agents") |
-| `agent.name` | Name of the agent |
-| `gen_ai.agent.name` | Name of the agent (duplicate) |
-| `gen_ai.prompt` | The user's initial prompt |
-| `gen_ai.completion` | The agent's final response |
+| `gen_ai.agent.name` | Name of the agent |
+| `gen_ai.user.message` | The user's initial prompt |
+| `gen_ai.choice` | The agent's final response |
 | `system_prompt` | System instructions for the agent |
 | `gen_ai.request.model` | Model ID used by the agent |
 | `gen_ai.event.start_time` | When agent processing began |
 | `gen_ai.event.end_time` | When agent processing completed |
 | `gen_ai.usage.prompt_tokens` | Total tokens used for prompts |
+| `gen_ai.usage.input_tokens` | Total tokens used for prompts (duplicate) |
 | `gen_ai.usage.completion_tokens` | Total tokens used for completions |
+| `gen_ai.usage.output_tokens` | Total tokens used for completions (duplicate) |
 | `gen_ai.usage.total_tokens` | Total token usage |
 
 ### Cycle-Level Attributes
@@ -176,39 +185,42 @@ Strands traces include rich attributes that provide context for each operation:
 | Attribute | Description |
 |-----------|-------------|
 | `event_loop.cycle_id` | Unique identifier for the reasoning cycle |
-| `gen_ai.prompt` | Formatted prompt for this reasoning cycle |
-| `gen_ai.completion` | Model's response for this cycle |
+| `gen_ai.user.message` | The user's initial prompt |
+| `gen_ai.assistant.message` | Formatted prompt for this reasoning cycle |
 | `gen_ai.event.end_time` | When the cycle completed |
-| `tool.result` | Results from tool calls (if any) |
+| `gen_ai.choice.message` | Model's response for this cycle |
+| `gen_ai.choice.tool.result` | Results from tool calls (if any) |
 
 ### Model Invoke Attributes
 
 | Attribute | Description |
 |-----------|-------------|
 | `gen_ai.system` | The agent system identifier |
-| `agent.name` | Name of the agent |
-| `gen_ai.agent.name` | Name of the agent (duplicate) |
-| `gen_ai.prompt` | Formatted prompt sent to the model |
+| `gen_ai.operation.name` | Gen-AI operation name |
+| `gen_ai.agent.name` | Name of the agent |
+| `gen_ai.user.message` | Formatted prompt sent to the model |
+| `gen_ai.assistant.message` | Formatted assistant prompt sent to the model |
 | `gen_ai.request.model` | Model ID (e.g., "us.anthropic.claude-3-7-sonnet-20250219-v1:0") |
 | `gen_ai.event.start_time` | When model invocation began |
 | `gen_ai.event.end_time` | When model invocation completed |
-| `gen_ai.completion` | Response from the model (may include tool calls) |
-| `gen_ai.usage.prompt_tokens` | Tokens used for this prompt |
-| `gen_ai.usage.completion_tokens` | Tokens generated in the completion |
-| `gen_ai.usage.total_tokens` | Total tokens for this operation |
+| `gen_ai.choice` | Response from the model (may include tool calls) |
+| `gen_ai.usage.prompt_tokens` | Total tokens used for prompts |
+| `gen_ai.usage.input_tokens` | Total tokens used for prompts (duplicate) |
+| `gen_ai.usage.completion_tokens` | Total tokens used for completions |
+| `gen_ai.usage.output_tokens` | Total tokens used for completions (duplicate) |
+| `gen_ai.usage.total_tokens` | Total token usage |
 
 ### Tool-Level Attributes
 
 | Attribute | Description |
 |-----------|-------------|
-| `tool.name` | Name of the tool called |
-| `tool.id` | Unique identifier for the tool call |
-| `tool.parameters` | Parameters passed to the tool |
-| `tool.result` | Result returned by the tool |
 | `tool.status` | Execution status (success/error) |
+| `gen_ai.tool.name` | Name of the tool called |
+| `gen_ai.tool.call.id` | Unique identifier for the tool call |
+| `gen_ai.operation.name` | Gen-AI operation name | 
 | `gen_ai.event.start_time` | When tool execution began |
 | `gen_ai.event.end_time` | When tool execution completed |
-| `gen_ai.completion` | Formatted tool result |
+| `gen_ai.choice` | Formatted tool result |
 
 ## Visualization and Analysis
 
