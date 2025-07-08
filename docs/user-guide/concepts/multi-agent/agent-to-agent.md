@@ -210,7 +210,15 @@ asyncio.run(send_streaming_message("what is 101 * 11"))
 
 ## Native Strands A2A Tool
 
-Strands provides a native tool for discovering and interacting with A2A agents without manually writing client code:
+### Installation
+
+To use the native A2A client tool, install strands-agents-tools with the A2A extra:
+
+```bash
+pip install 'strands-agents-tools[a2a]'
+```
+
+Strands provides this tool for discovering and interacting with A2A agents without manually writing client code:
 
 ```python
 import asyncio
