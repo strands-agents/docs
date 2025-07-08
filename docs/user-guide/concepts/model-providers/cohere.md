@@ -8,7 +8,7 @@ The Strands Agents SDK provides access to Cohere models through the OpenAI compa
 
 ```bash
 pip install 'strands-agents[openai]'
-````
+```
 
 ## Usage
 
