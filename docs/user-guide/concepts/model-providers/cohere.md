@@ -24,7 +24,10 @@ model = OpenAIModel(
         "api_key": "<COHERE_API_KEY>",
         "base_url": "https://api.cohere.ai/compatibility/v1",  # Cohere compatibility endpoint
     },
-    model_id="command-a-03-2025"  # or see https://docs.cohere.com/docs/models
+    model_id="command-a-03-2025"  # or see https://docs.cohere.com/docs/models,
+    params={
+        "stream_options": None
+    }
 )
 
 agent = Agent(model=model, tools=[calculator])
