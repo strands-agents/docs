@@ -31,8 +31,7 @@ model = OpenAIModel(
 )
 
 agent = Agent(model=model, tools=[calculator])
-response = agent("What is 2+2?")
-print(response)
+agent("What is 2+2?")
 ```
 
 ## Configuration
