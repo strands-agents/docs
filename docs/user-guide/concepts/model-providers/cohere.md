@@ -41,7 +41,8 @@ agent("What is 2+2?")
 The `client_args` configure the underlying OpenAI-compatible client. When using Cohere, you must set:
 
 * `api_key`: Your Cohere API key. Get one from the [Cohere Dashboard](https://dashboard.cohere.com).
-* `base_url`: `https://api.cohere.ai/compatibility/v1`
+* `base_url`:
+    * `https://api.cohere.ai/compatibility/v1`
 
 Refer to [OpenAI Python SDK GitHub](https://github.com/openai/openai-python) for full client options.
 
