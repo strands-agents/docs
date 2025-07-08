@@ -56,22 +56,14 @@ strands_agent = Agent(
     callback_handler=None
 )
 
-# Create A2A server with streaming disabled (default)
+# Create A2A server (streaming enabled by default)
 a2a_server = A2AServer(agent=strands_agent)
 
 # Start the server
 a2a_server.serve()
 ```
 
-### Streaming-Enabled Server
-
-To enable streaming capabilities, set the `streaming` parameter to `True`:
-
-```python
-# Create A2A server with streaming enabled
-a2a_server = A2AServer(agent=strands_agent, streaming=True)
-a2a_server.serve()
-```
+> NOTE: the server supports both `SendMessageRequest` and `SendStreamingMessageRequest` client requests!
 
 ### Server Configuration Options
 
@@ -82,7 +74,6 @@ The `A2AServer` constructor accepts several configuration options:
 - `port`: Port to bind to (default: 9000)
 - `version`: Version of the agent (default: "0.0.1")
 - `skills`: Custom list of agent skills (default: auto-generated from tools)
-- `streaming`: Enable streaming capabilities (default: False)
 
 ### Advanced Server Customization
 
