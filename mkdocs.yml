@@ -85,6 +85,7 @@ nav:
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
+        - Baseten: user-guide/concepts/model-providers/baseten.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
         - MistralAI: user-guide/concepts/model-providers/mistral.md
