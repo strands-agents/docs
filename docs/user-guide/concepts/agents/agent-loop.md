@@ -51,9 +51,8 @@ def event_loop_cycle(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    callback_handler: Any,
     tool_handler: Optional[ToolHandler],
-    tool_execution_handler: Optional[ParallelToolExecutorInterface] = None,
+    thread_pool: Optional[ThreadPoolExecutor] = None,
     **kwargs: Any,
 ) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
     # ... implementation details ...
@@ -69,7 +68,7 @@ Messages flow through the agent loop in a structured format:
 2. **Assistant messages**: Responses from the model that may include tool requests
 3. **Tool result messages**: Results from tool executions fed back to the model
 
-The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](sessions-state.md).
+The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](state-sessions.md).
 
 ### Tool Execution
 

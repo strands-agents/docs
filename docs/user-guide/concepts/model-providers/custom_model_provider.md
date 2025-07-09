@@ -2,6 +2,40 @@
 
 Strands Agents SDK provides an extensible interface for implementing custom model providers, allowing organizations to integrate their own LLM services while keeping implementation details private to their codebase.
 
+## Model Provider Functionality
+
+Custom model providers in Strands Agents support two primary interaction modes:
+
+### Conversational Interaction
+The standard conversational mode where agents exchange messages with the model. This is the default interaction pattern that is used when you call an agent directly:
+
+```python
+agent = Agent(model=your_custom_model)
+response = agent("Hello, how can you help me today?")
+```
+
+This invokes the underlying model provided to the agent.
+
+### Structured Output
+A specialized mode that returns type-safe, validated responses using [Pydantic](https://docs.pydantic.dev/latest/concepts/models/) models instead of raw text. This enables reliable data extraction and processing:
+
+```python
+from pydantic import BaseModel
+
+class PersonInfo(BaseModel):
+    name: str
+    age: int
+    occupation: str
+
+result = agent.structured_output(
+    PersonInfo,
+    "Extract info: John Smith is a 30-year-old software engineer"
+)
+# Returns a validated PersonInfo object
+```
+
+Both modes work through the same underlying model provider interface, with structured output using tool calling capabilities to ensure schema compliance.
+
 ## Model Provider Architecture
 
 Strands Agents uses an abstract `Model` class that defines the standard interface all model providers must implement:
@@ -254,9 +288,58 @@ Now that you have mapped the Strands Agents input to your models request, use th
             yield chunk
 ```
 
-### 5. Use Your Custom Model Provider
+### 5. Structured Output Support
 
-Once implemented, you can use your custom model provider in your applications:
+To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model, and has it yield a json output. Below is an example of what this might look like for a Bedrock model, where we invoke the model with a tool spec, and check if the response contains a `toolUse` response.
+
+```python
+
+    T = TypeVar('T', bound=BaseModel)
+
+    @override
+    def structured_output(
+        self, output_model: Type[T], prompt: Messages
+    ) -> Generator[dict[str, Union[T, Any]], None, None]:
+        """Get structured output using tool calling."""
+
+        # Convert Pydantic model to tool specification
+        tool_spec = convert_pydantic_to_tool_spec(output_model)
+
+        # Use existing converse method with tool specification
+        response = self.converse(messages=prompt, tool_specs=[tool_spec])
+
+        # Process streaming response
+        for event in process_stream(response, prompt):
+            yield event  # Passed to callback handler configured in Agent instance
+
+        stop_reason, messages, _, _ = event["stop"]
+
+        # Validate tool use response
+        if stop_reason != "tool_use":
+            raise ValueError("No valid tool use found in the model response.")
+
+        # Extract tool use output
+        content = messages["content"]
+        for block in content:
+            if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+                yield {"output": output_model(**block["toolUse"]["input"])}
+                return
+
+        raise ValueError("No valid tool use input found in the response.")
+```
+
+**Implementation Suggestions:**
+
+1. **Tool Integration**: Use your existing `converse()` method with tool specifications to invoke your model
+2. **Response Validation**: Use `output_model(**data)` to validate the response
+3. **Error Handling**: Provide clear error messages for parsing and validation failures
+
+
+For detailed structured output usage patterns, see the [Structured Output documentation](../agents/structured-output.md).
+
+### 6. Use Your Custom Model Provider
+
+Once implemented, you can use your custom model provider in your applications for regular agent invocation:
 
 ```python
 from strands import Agent
@@ -278,6 +361,29 @@ agent = Agent(model=custom_model)
 
 # Use the agent as usual
 response = agent("Hello, how are you today?")
+```
+
+Or you can use the `structured_output` feature to generate structured output:
+
+```python
+from strands import Agent
+from your_org.models.custom_model import Model as CustomModel
+from pydantic import BaseModel, Field
+
+class PersonInfo(BaseModel):
+    name: str = Field(description="Full name")
+    age: int = Field(description="Age in years")
+    occupation: str = Field(description="Job title")
+
+model = CustomModel(api_key="key", model_id="model")
+
+agent = Agent(model=model)
+
+result = agent.structured_output(PersonInfo, "John Smith is a 30-year-old engineer.")
+
+print(f"Name: {result.name}")
+print(f"Age: {result.age}")
+print(f"Occupation: {result.occupation}")
 ```
 
 ## Key Implementation Considerations

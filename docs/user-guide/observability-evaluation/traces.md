@@ -106,12 +106,20 @@ agent = Agent(
     system_prompt="You are a helpful AI assistant"
 )
 
-# Option 2: Use StrandsTelemetry if you need Strands to set up OpenTelemetry
+# Option 2: Use StrandsTelemetry to handle complete OpenTelemetry setup
+# (Creates new tracer provider and sets it as global)
 from strands.telemetry import StrandsTelemetry
 
 strands_telemetry = StrandsTelemetry()
 strands_telemetry.setup_otlp_exporter()     # Send traces to OTLP endpoint
 strands_telemetry.setup_console_exporter()  # Print traces to console
+
+# Option 3: Use StrandsTelemetry with your own tracer provider
+# (Keeps your tracer provider, adds Strands exporters without setting global)
+from strands.telemetry import StrandsTelemetry
+
+strands_telemetry = StrandsTelemetry(tracer_provider=user_tracer_provider)
+strands_telemetry.setup_otlp_exporter().setup_console_exporter()  # Chaining supported
 
 # Create agent (tracing will be enabled automatically)
 agent = Agent(

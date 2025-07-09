@@ -1,18 +1,18 @@
-# Sessions & State
+# State & Sessions
 
-This document explains how Strands agents maintain conversation context, handle state management, and support persistent sessions across interactions.
+## State Management
 
-Strands agents maintain state in several forms:
+Strands Agents state is maintained in several forms:
 
-1. **Conversation History**: The sequence of messages between the user and the agent
-2. **Tool State**: Information about tool executions and results
-3. **Request State**: Contextual information maintained within a single request
+1. **Conversation History:** The sequence of messages between the user and the agent.
+2. **Agent State**: Stateful information outside of conversation context, maintained across multiple requests.
+3. **Request State**: Contextual information maintained within a single request.
 
 Understanding how state works in Strands is essential for building agents that can maintain context across multi-turn interactions and workflows.
 
-## Conversation History
+### Conversation History
 
-The primary form of state in a Strands agent is the conversation history, directly accessible through the `agent.messages` property:
+Conversation history is the primary form of context in a Strands agent, directly accessible through the `agent.messages` property:
 
 ```python
 from strands import Agent
@@ -51,7 +51,30 @@ Conversation history is automatically:
 - Used for tool execution context
 - Managed to prevent context window overflow
 
-## Conversation Manager
+#### Direct Tool Calling
+
+Direct tool calls are (by default) recorded in the conversation history:
+
+```python
+from strands import Agent
+from strands_tools import calculator
+
+agent = Agent(tools=[calculator])
+
+# Direct tool call with recording (default behavior)
+agent.tool.calculator(expression="123 * 456")
+
+# Direct tool call without recording
+agent.tool.calculator(expression="765 / 987", record_direct_tool_call=False)
+
+print(agent.messages)
+```
+
+In this example we can see that the first `agent.tool.calculator()` call is recorded in the agent's conversation history.
+
+The second `agent.tool.calculator()` call is **not** recorded in the history because we specified the `record_direct_tool_call=False` argument.
+
+#### Conversation Manager
 
 Strands uses a conversation manager to handle conversation history effectively. The default is the [`SlidingWindowConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager), which keeps recent messages and removes older ones when needed:
 
@@ -76,52 +99,101 @@ The sliding window conversation manager:
 - Handles context window overflow exceptions by reducing context
 - Ensures conversations don't exceed model context limits
 
-## Tool State
+See [`Context Management`](context-management.md) for more information about conversation managers.
 
-When an agent uses tools, the tool executions and results become part of the conversation state:
 
-```python
-from strands import Agent
-from strands_tools import calculator
+### Agent State
 
-agent = Agent(tools=[calculator])
+Agent state provides key-value storage for stateful information that exists outside of the conversation context. Unlike conversation history, agent state is not passed to the model during inference but can be accessed and modified by tools and application logic.
 
-# Tool use is recorded in the conversation history
-agent("What is 123 × 456?")  # Uses calculator tool and records result
-
-# You can examine the tool interactions in the conversation history
-print(agent.messages)  # Shows tool calls and results
-```
-
-Tool state includes:
-
-- Tool use requests from the model
-- Tool execution parameters
-- Tool execution results
-- Any errors or exceptions that occurred
-
-Direct tool calls can also be recorded in the conversation history:
+#### Basic Usage
 
 ```python
 from strands import Agent
-from strands_tools import calculator
 
-agent = Agent(tools=[calculator])
+# Create an agent with initial state
+agent = Agent(state={"user_preferences": {"theme": "dark"}, "session_count": 0})
 
-# Direct tool call with recording (default behavior)
-agent.tool.calculator(expression="123 * 456")
 
-# Direct tool call without recording
-agent.tool.calculator(expression="765 / 987", record_direct_tool_call=False)
+# Access state values
+theme = agent.state.get("user_preferences")
+print(theme)  # {"theme": "dark"}
 
-print(agent.messages)
+# Set new state values
+agent.state.set("last_action", "login")
+agent.state.set("session_count", 1)
+
+# Get entire state
+all_state = agent.state.get()
+print(all_state)  # All state data as a dictionary
+
+# Delete state values
+agent.state.delete("last_action")
 ```
 
-In this example we can see that the first `agent.tool.calculator()` call is recorded in the agent's conversation history.
+#### State Validation and Safety
 
-The second `agent.tool.calculator()` call is **not** recorded in the history because we specified the `record_direct_tool_call=False` argument.
+Agent state enforces JSON serialization validation to ensure data can be persisted and restored:
 
-## Request State
+```python
+from strands import Agent
+
+agent = Agent()
+
+# Valid JSON-serializable values
+agent.state.set("string_value", "hello")
+agent.state.set("number_value", 42)
+agent.state.set("boolean_value", True)
+agent.state.set("list_value", [1, 2, 3])
+agent.state.set("dict_value", {"nested": "data"})
+agent.state.set("null_value", None)
+
+# Invalid values will raise ValueError
+try:
+    agent.state.set("function", lambda x: x)  # Not JSON serializable
+except ValueError as e:
+    print(f"Error: {e}")
+```
+
+#### Using State in Tools
+
+Agent state is particularly useful for maintaining information across tool executions:
+
+```python
+from strands import Agent
+from strands.tools.decorator import tool
+
+@tool
+def track_user_action(action: str, agent: Agent):
+    """Track user actions in agent state."""
+    # Get current action count
+    action_count = agent.state.get("action_count") or 0
+    
+    # Update state
+    agent.state.set("action_count", action_count + 1)
+    agent.state.set("last_action", action)
+    
+    return f"Action '{action}' recorded. Total actions: {action_count + 1}"
+
+@tool
+def get_user_stats(agent: Agent):
+    """Get user statistics from agent state."""
+    action_count = agent.state.get("action_count") or 0
+    last_action = agent.state.get("last_action") or "none"
+    
+    return f"Actions performed: {action_count}, Last action: {last_action}"
+
+# Create agent with tools
+agent = Agent(tools=[track_user_action, get_user_stats])
+
+# Use tools that modify and read state
+agent("Track that I logged in")
+agent("Track that I viewed my profile")
+print(f"Actions taken: {agent.state.get('action_count')}")
+print(f"Last action: {agent.state.get('last_action')}")
+```
+
+### Request State
 
 Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is **not** included in the agent's context:
 
@@ -149,12 +221,12 @@ The request state:
 
 - Is initialized at the beginning of each agent call
 - Persists through recursive event loop cycles
-- Can be modified by tools and handlers
+- Can be modified by callback handlers
 - Is returned in the AgentResult object
 
 ## Session Management
 
-For applications requiring persistent sessions across separate interactions, Strands provides several approaches:
+A session represents all of the stateful information that is needed by an agent to function. For applications requiring persistent sessions across separate interactions, Strands provides several approaches:
 
 ### 1. Object Persistence
 
@@ -256,23 +328,3 @@ def chat():
     return {"response": result.message}
 ```
 
-## Custom Conversation Management
-
-For specialized requirements, you can implement your own conversation manager:
-
-```python
-from strands.agent.conversation_manager import ConversationManager
-from strands.types.content import Messages
-from typing import Optional
-
-class CustomConversationManager(ConversationManager):
-    def apply_management(self, messages: Messages) -> None:
-        """Apply management strategies to the messages list."""
-        # Implement your management strategy
-        pass
-        
-    def reduce_context(self, messages: Messages, e: Optional[Exception] = None) -> None:
-        """Reduce context to handle overflow exceptions."""
-        # Implement your reduction strategy
-        pass
-```

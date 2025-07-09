@@ -57,6 +57,46 @@ The `model_config` configures the underlying model selected for inference. The s
 
 If you encounter the error `ModuleNotFoundError: No module named 'litellm'`, this means you haven't installed the `litellm` dependency in your environment. To fix, run `pip install 'strands-agents[litellm]'`.
 
+## Advanced Features
+
+### Structured Output
+
+LiteLLM supports structured output by proxying requests to underlying model providers that support tool calling. The availability of structured output depends on the specific model and provider you're using through LiteLLM.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.litellm import LiteLLMModel
+
+class BookAnalysis(BaseModel):
+    """Analyze a book's key information."""
+    title: str = Field(description="The book's title")
+    author: str = Field(description="The book's author")
+    genre: str = Field(description="Primary genre or category")
+    summary: str = Field(description="Brief summary of the book")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+
+model = LiteLLMModel(
+    model_id="bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+)
+
+agent = Agent(model=model)
+
+result = agent.structured_output(
+    BookAnalysis,
+    """
+    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
+    """
+)
+
+print(f"Title: {result.title}")
+print(f"Author: {result.author}")
+print(f"Genre: {result.genre}")
+print(f"Rating: {result.rating}")
+```
+
 ## References
 
 - [API](../../../api-reference/models.md)

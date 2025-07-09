@@ -40,7 +40,7 @@ For programmatic control, you can call tools directly:
 result = agent.tool.current_time(timezone="US/Pacific")
 ```
 
-This bypasses the natural language interface and directly executes the tool with the specified parameters. By default, direct tool calls are added to the [session state](sessions-state.md) but can be optionally not included by specifying `record_direct_tool_call=False`.
+This bypasses the natural language interface and directly executes the tool with the specified parameters. By default, direct tool calls are added to the [session state](state-sessions.md) but can be optionally not included by specifying `record_direct_tool_call=False`.
 
 ## Prompt Engineering
 
