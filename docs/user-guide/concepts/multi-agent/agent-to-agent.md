@@ -2,9 +2,6 @@
 
 Strands Agents provides experimental support for the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/latest/), enabling seamless communication between AI agents across different platforms and implementations.
 
-!!! warning "Experimental Feature"
-    A2A support in Strands is currently **EXPERIMENTAL**. APIs may change, and additional functionality will be added in future releases. If you encounter bugs or have feature requests, please [report them on GitHub](https://github.com/strands-agents/sdk-python/issues/new/choose).
-
 ## What is Agent-to-Agent (A2A)?
 
 The Agent-to-Agent protocol is an open standard that defines how AI agents can discover, communicate, and collaborate with each other.
