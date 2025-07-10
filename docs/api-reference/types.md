@@ -17,9 +17,6 @@
 ::: strands.types.media
     options:
       heading_level: 2
-::: strands.types.models
-    options:
-      heading_level: 2
 ::: strands.types.streaming
     options:
       heading_level: 2

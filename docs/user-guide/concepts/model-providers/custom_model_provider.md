@@ -64,7 +64,7 @@ from typing_extensions import Unpack
 
 from custom.model import CustomModelClient
 
-from strands.types.models import Model
+from strands.models import Model
 from strands.types.content import Messages
 from strands.types.streaming import StreamEvent
 from strands.types.tools import ToolSpec

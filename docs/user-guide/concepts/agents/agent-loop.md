@@ -51,7 +51,6 @@ def event_loop_cycle(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    tool_handler: Optional[ToolHandler],
     thread_pool: Optional[ThreadPoolExecutor] = None,
     **kwargs: Any,
 ) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
