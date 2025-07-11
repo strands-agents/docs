@@ -1,249 +1,226 @@
-# Multi-Agent Systems and Swarm Intelligence
+# Swarm Multi-Agent Pattern
 
-An agent swarm is a collection of autonomous AI agents working together to solve complex problems through collaboration. Inspired by natural systems like ant colonies or bird flocks, agent swarms leverage collective intelligence where the combined output exceeds what any single agent could produce. By distributing tasks and sharing information, swarms can tackle complex problems more efficiently and effectively than individual agents working in isolation.
+A Swarm is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. Unlike traditional sequential or hierarchical multi-agent systems, a Swarm enables autonomous coordination between agents with shared context and working memory.
 
-Multi-agent systems consist of multiple interacting intelligent agents within an environment. These systems enable:
+- **Self-organizing agent teams** with shared working memory
+- **Tool-based coordination** between agents
+- **Autonomous agent collaboration** without central control
+- **Dynamic task distribution** based on agent capabilities
+- **Collective intelligence** through shared context
+- **Multi-modal input support** for handling text, images, and other content types
 
-- **Distributed Problem Solving**: Breaking complex tasks into subtasks for parallel processing
-- **Information Sharing**: Agents exchange insights to build collective knowledge
-- **Specialization**: Different agents focus on specific aspects of a problem
-- **Redundancy**: Multiple agents working on similar tasks improve reliability
-- **Emergent Intelligence**: The system exhibits capabilities beyond those of its individual components
+## How Swarms Work
 
-Swarm intelligence emphasizes:
+Swarms operate on the principle of emergent intelligence - the idea that a group of specialized agents working together can solve problems more effectively than a single agent. Each agent in a Swarm:
 
-1. **Decentralized Control**: No single agent directs the entire system
-2. **Local Interactions**: Agents primarily interact with nearby agents
-3. **Simple Rules**: Individual agents follow relatively simple behaviors
-4. **Emergent Complexity**: Complex system behavior emerges from simple agent interactions
-
-### Components of a Swarm Architecture
-
-A swarm architecture consists of several key components:
-
-#### 1. Communication Patterns
-
-- **Mesh**: All agents can communicate with all other agents
+1. Has access to the full task context
+2. Can see the history of which agents have worked on the task
+3. Can access shared knowledge contributed by other agents
+4. Can decide when to hand off to another agent with different expertise
+5. Can mark a task as complete when the objective is achieved
 
 ```mermaid
 graph TD
-    Agent1[Agent 1] <--> Agent2[Agent 2]
-    Agent1 <--> Agent3[Agent 3]
-    Agent2 <--> Agent3
+    Researcher <--> Reviewer
+    Researcher <--> Architect
+    Reviewer <--> Architect
+    Coder <--> Researcher
+    Coder <--> Reviewer
+    Coder <--> Architect
 ```
 
-#### 2. Shared Memory Systems
+## Creating a Swarm
 
-For agents to collaborate effectively, they need mechanisms to share information:
-
-- **Centralized Knowledge Repositories**: Common storage for collective insights
-- **Message Passing Systems**: Direct communication between agents
-- **Blackboard Systems**: Shared workspace where agents post and read information
-
-#### 3. Coordination Mechanisms
-
-Swarms require coordination to ensure agents work together effectively:
-
-- **Collaborative**: Agents build upon others' insights and seek consensus
-- **Competitive**: Agents develop independent solutions and unique perspectives
-- **Hybrid**: Balances cooperation with independent exploration
-
-#### 4. Task Distribution
-
-How tasks are allocated affects the swarm's efficiency:
-
-- **Static Assignment**: Tasks are pre-assigned to specific agents
-- **Dynamic Assignment**: Tasks are allocated based on agent availability and capability
-- **Self-Organization**: Agents select tasks based on local information
-
-
-## Creating a Swarm with Strands Agents
-
-Strands Agents SDK allows you to create swarms using existing Agent objects, even when they use different model providers or have different configurations. While various communication architectures are possible (hierarchical, parallel, sequential, and mesh), the following example demonstrates a mesh architecture implementation, which provides a flexible foundation for agent-to-agent communication.
-
-
-#### Mesh Swarm Architecture
-
-```mermaid
-graph TD
-    Research[Research Agent] <---> Creative[Creative Agent]
-    Research <---> Critical[Critical Agent]
-    Creative <---> Critical
-    Creative <---> Summarizer[Summarizer Agent]
-    Critical <---> Summarizer
-    Research <---> Summarizer
-    
-    class Research top
-    class Creative,Critical middle
-    class Summarizer bottom
-```
-
-In a mesh architecture, all agents can communicate directly with each other. The following example demonstrates a swarm of specialized agents using mesh communication to solve problems collaboratively:
+To create a Swarm, you need to define a collection of agents with different specializations:
 
 ```python
 from strands import Agent
+from strands.multiagent import Swarm
 
-# Create specialized agents with different expertise
-research_agent = Agent(system_prompt=("""You are a Research Agent specializing in gathering and analyzing information.
-Your role in the swarm is to provide factual information and research insights on the topic.
-You should focus on providing accurate data and identifying key aspects of the problem.
-When receiving input from other agents, evaluate if their information aligns with your research.
-"""), 
-callback_handler=None)
+# Create specialized agents
+researcher = Agent(name="researcher", system_prompt="You are a research specialist...")
+coder = Agent(name="coder", system_prompt="You are a coding specialist...")
+reviewer = Agent(name="reviewer", system_prompt="You are a code review specialist...")
+architect = Agent(name="architect", system_prompt="You are a system architecture specialist...")
 
-creative_agent = Agent(system_prompt=("""You are a Creative Agent specializing in generating innovative solutions.
-Your role in the swarm is to think outside the box and propose creative approaches.
-You should build upon information from other agents while adding your unique creative perspective.
-Focus on novel approaches that others might not have considered.
-"""), 
-callback_handler=None)
-
-critical_agent = Agent(system_prompt=("""You are a Critical Agent specializing in analyzing proposals and finding flaws.
-Your role in the swarm is to evaluate solutions proposed by other agents and identify potential issues.
-You should carefully examine proposed solutions, find weaknesses or oversights, and suggest improvements.
-Be constructive in your criticism while ensuring the final solution is robust.
-"""), 
-callback_handler=None)
-
-summarizer_agent = Agent(system_prompt="""You are a Summarizer Agent specializing in synthesizing information.
-Your role in the swarm is to gather insights from all agents and create a cohesive final solution.
-You should combine the best ideas and address the criticisms to create a comprehensive response.
-Focus on creating a clear, actionable summary that addresses the original query effectively.
-""")
-```
-
-The mesh communication is implemented using a dictionary to track messages between agents:
-
-```python
-# Dictionary to track messages between agents (mesh communication)
-messages = {
-    "research": [],
-    "creative": [],
-    "critical": [],
-    "summarizer": []
-}
-```
-
-The swarm operates in multiple phases, with each agent first analyzing the problem independently:
-
-```python
-# Phase 1: Initial analysis by each specialized agent
-research_result = research_agent(query)
-creative_result = creative_agent(query)
-critical_result = critical_agent(query)
-```
-
-After the initial analysis, results are shared with all other agents (mesh communication):
-
-```python
-# Share results with all other agents (mesh communication)
-messages["creative"].append(f"From Research Agent: {research_result}")
-messages["critical"].append(f"From Research Agent: {research_result}")
-messages["summarizer"].append(f"From Research Agent: {research_result}")
-
-messages["research"].append(f"From Creative Agent: {creative_result}")
-messages["critical"].append(f"From Creative Agent: {creative_result}")
-messages["summarizer"].append(f"From Creative Agent: {creative_result}")
-
-messages["research"].append(f"From Critical Agent: {critical_result}")
-messages["creative"].append(f"From Critical Agent: {critical_result}")
-messages["summarizer"].append(f"From Critical Agent: {critical_result}")
-```
-
-In the second phase, each agent refines their solution based on input from all other agents:
-
-```python
-# Phase 2: Each agent refines based on input from others
-research_prompt = f"{query}\n\nConsider these messages from other agents:\n" + "\n\n".join(messages["research"])
-creative_prompt = f"{query}\n\nConsider these messages from other agents:\n" + "\n\n".join(messages["creative"])
-critical_prompt = f"{query}\n\nConsider these messages from other agents:\n" + "\n\n".join(messages["critical"])
-
-refined_research = research_agent(research_prompt)
-refined_creative = creative_agent(creative_prompt)
-refined_critical = critical_agent(critical_prompt)
-
-# Share refined results with summarizer
-messages["summarizer"].append(f"From Research Agent (Phase 2): {refined_research}")
-messages["summarizer"].append(f"From Creative Agent (Phase 2): {refined_creative}")
-messages["summarizer"].append(f"From Critical Agent (Phase 2): {refined_critical}")
-```
-
-Finally, the summarizer agent synthesizes all inputs into a comprehensive solution:
-
-```python
-# Final phase: Summarizer creates the final solution
-summarizer_prompt = f"""
-Original query: {query}
-
-Please synthesize the following inputs from all agents into a comprehensive final solution:
-
-{"\n\n".join(messages["summarizer"])}
-
-Create a well-structured final answer that incorporates the research findings, 
-creative ideas, and addresses the critical feedback.
-"""
-
-final_solution = summarizer_agent(summarizer_prompt)
-```
-
-This mesh architecture enables direct communication between all agents, allowing each agent to share insights with every other agent. The specialized roles (research, creative, critical, and summarizer) work together to produce a comprehensive solution that benefits from multiple perspectives and iterative refinement.
-
-### Implementing Shared Memory
-
-While the mesh communication example effectively demonstrates agent collaboration, a shared memory system would enhance the swarm's capabilities by providing:
-
-- A centralized knowledge repository for all agents
-- Automated phase tracking and historical knowledge preservation
-- Thread-safe concurrent access for improved efficiency
-- Persistent storage of insights across multiple interactions
-
-Extending our mesh swarm example with shared memory would replace the message dictionary with a SharedMemory instance, simplifying the code while enabling more sophisticated knowledge management.
-
-## Quick Start with the Swarm Tool
-
-The Strands Agents SDK provides a built-in swarm tool that simplifies the implementation of multi-agent systems, offering a quick start for users. This tool implements the shared memory concept discussed earlier, providing a more sophisticated version of what we described for extending the mesh swarm example.
-
-### Using the Swarm Tool
-
-```python
-from strands import Agent
-from strands_tools import swarm
-
-# Create an agent with swarm capability
-agent = Agent(tools=[swarm])
-
-# Process a complex task with multiple agents in parallel
-result = agent.tool.swarm(
-    task="Analyze this dataset and identify market trends",
-    swarm_size=4,
-    coordination_pattern="collaborative"
+# Create a swarm with these agents
+swarm = Swarm(
+    [researcher, coder, reviewer, architect],
+    max_handoffs=20,
+    max_iterations=20,
+    execution_timeout=900.0,  # 15 minutes
+    node_timeout=300.0,       # 5 minutes per agent
+    repetitive_handoff_detection_window=8,
+    repetitive_handoff_min_unique_agents=3
 )
 
-# The result contains contributions from all swarm agents
-print(result["content"])
+# Execute the swarm on a task
+result = swarm("Design and implement a simple REST API for a todo app")
+
+# Access the final result
+print(f"Status: {result.status}")
+print(f"Node history: {[node.node_id for node in result.node_history]}")
 ```
 
-### SharedMemory Implementation
+In this example:
 
-The swarm tool implements a SharedMemory system that serves as a central knowledge repository for all agents in the swarm. This system maintains a thread-safe store where agents can record their contributions with metadata (including agent ID, content, phase, and timestamp). It tracks processing phases, allowing agents to retrieve only current-phase knowledge or access historical information. This shared memory architecture enables concurrent collaboration, maintains contribution history, and ensures smooth information flow between agents—all essential features for effective collective intelligence in a swarm.
+1. The `researcher` might start by handing off to the `architect`
+2. The `architect` designs an API and system architecture
+3. Handoff to the `coder` to implement the API and architecture
+4. The `coder` writes the code
+5. Handoff to the `reviewer` for code review
+6. Finally, the `reviewer` completes the task with the final result
 
-The full implementation of the swarm tool can be found in the [Strands Tools repository](https://github.com/strands-agents/tools/blob/main/src/strands_tools/swarm.py).
+## Swarm Configuration
 
-### Key Parameters
+The `Swarm` constructor allows you to control the behavior and safety parameters:
 
-- **task**: The main task to be processed by the swarm
-- **swarm_size**: Number of agents in the swarm (1-10)
-- **coordination_pattern**: How agents should coordinate
-    - **collaborative**: Agents build upon others' insights
-    - **competitive**: Agents develop independent solutions
-  - **hybrid**: Balances cooperation with independent exploration
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `max_handoffs` | Maximum number of agent handoffs allowed | 20 |
+| `max_iterations` | Maximum total iterations across all agents | 20 |
+| `execution_timeout` | Total execution timeout in seconds | 900.0 (15 min) |
+| `node_timeout` | Individual agent timeout in seconds | 300.0 (5 min) |
+| `repetitive_handoff_detection_window` | Number of recent nodes to check for ping-pong behavior | 0 (disabled) |
+| `repetitive_handoff_min_unique_agents` | Minimum unique nodes required in recent sequence | 0 (disabled) |
 
-### How the Swarm Tool Works
+## Multi-Modal Input Support
 
-1. **Initialization**: Creates a swarm with shared memory and specialized agents
-2. **Phase Processing**: Agents work in parallel using ThreadPoolExecutor
-3. **Knowledge Sharing**: Agents store and retrieve information from shared memory
-4. **Result Collection**: Results from all agents are aggregated and presented
-## Conclusion
+Swarms support multi-modal inputs like text and images using ContentBlocks:
 
-Multi-agent swarms solve complex problems through collective intelligence. The Strands Agents SDK supports both custom implementations and a built-in swarm tool with shared memory. By distributing tasks across specialized agents and enabling effective communication, swarms achieve better results than single agents working alone. Whether using mesh communication patterns or the swarm tool, developers can create systems where multiple agents work together with defined roles, coordination mechanisms, and knowledge sharing.
+```python
+from strands import Agent
+from strands.multiagent import Swarm
+from strands.types.content import ContentBlock
+
+# Create agents for image processing workflow
+image_analyzer = Agent(name="image_analyzer", system_prompt="You are an image analysis expert...")
+report_writer = Agent(name="report_writer", system_prompt="You are a report writing expert...")
+
+# Create the swarm
+swarm = Swarm([image_analyzer, report_writer])
+
+# Create content blocks with text and image
+content_blocks = [
+    ContentBlock(text="Analyze this image and create a report about what you see:"),
+    ContentBlock(image={"format": "png", "source": {"bytes": image_bytes}}),
+]
+
+# Execute the swarm with multi-modal input
+result = swarm(content_blocks)
+```
+
+## Swarm Coordination Tools
+
+When you create a Swarm, each agent is automatically equipped with special tools for coordination:
+
+### 1. Handoff Tool
+
+Agents can transfer control to another agent when they need specialized help:
+
+```python
+handoff_to_agent(
+    agent_name="coder",
+    message="I need help implementing this algorithm in Python",
+    context={"algorithm_details": "..."}
+)
+```
+
+### 2. Completion Tool
+
+Any agent can mark the task as complete:
+
+```python
+complete_swarm_task()
+```
+
+## Shared Context
+
+The Swarm maintains a shared context that all agents can access. This includes:
+
+- The original task description
+- History of which agents have worked on the task
+- Knowledge contributed by previous agents
+- List of available agents for collaboration
+
+The formatted context for each agent looks like:
+
+```
+Handoff Message: The user needs help with Python debugging - I've identified the issue but need someone with more expertise to fix it.
+
+User Request: My Python script is throwing a KeyError when processing JSON data from an API
+
+Previous agents who worked on this: data_analyst → code_reviewer
+
+Shared knowledge from previous agents:
+• data_analyst: {"issue_location": "line 42", "error_type": "missing key validation", "suggested_fix": "add key existence check"}
+• code_reviewer: {"code_quality": "good overall structure", "security_notes": "API key should be in environment variable"}
+
+Other agents available for collaboration:
+Agent name: data_analyst. Agent description: Analyzes data and provides deeper insights
+Agent name: code_reviewer.
+Agent name: security_specialist. Agent description: Focuses on secure coding practices and vulnerability assessment
+
+You have access to swarm coordination tools if you need help from other agents or want to complete the task.
+```
+
+## Asynchronous Execution
+
+You can also execute a Swarm asynchronously:
+
+```python
+import asyncio
+
+async def run_swarm():
+    result = await swarm.execute_async("Design and implement a complex system...")
+    return result
+
+result = asyncio.run(run_swarm())
+```
+
+## Swarm Results
+
+When a Swarm completes execution, it returns a `SwarmResult` object with detailed information:
+
+```python
+result = swarm("Design a system architecture for...")
+
+# Access the final result
+print(f"Status: {result.status}")
+
+# Check execution status
+print(f"Status: {result.status}")  # COMPLETED, FAILED, etc.
+
+# See which agents were involved
+for node in result.node_history:
+    print(f"Agent: {node.node_id}")
+
+# Get results from specific nodes
+analyst_result = result.results["analyst"].result
+print(f"Analysis: {analyst_result}")
+
+# Get performance metrics
+print(f"Total iterations: {result.execution_count}")
+print(f"Execution time: {result.execution_time}ms")
+print(f"Token usage: {result.accumulated_usage}")
+```
+
+## Safety Mechanisms
+
+Swarms include several safety mechanisms to prevent infinite loops and ensure reliable execution:
+
+1. **Maximum handoffs**: Limits how many times control can be transferred between agents
+2. **Maximum iterations**: Caps the total number of execution iterations
+3. **Execution timeout**: Sets a maximum total runtime for the Swarm
+4. **Node timeout**: Limits how long any single agent can run
+5. **Repetitive handoff detection**: Prevents agents from endlessly passing control back and forth
+
+## Best Practices
+
+1. **Create specialized agents**: Define clear roles for each agent in your Swarm
+2. **Use descriptive agent names**: Names should reflect the agent's specialty
+3. **Set appropriate timeouts**: Adjust based on task complexity and expected runtime
+4. **Enable repetitive handoff detection**: Set appropriate values for `repetitive_handoff_detection_window` and `repetitive_handoff_min_unique_agents` to prevent ping-pong behavior
+5. **Include diverse expertise**: Ensure your Swarm has agents with complementary skills
+6. **Provide agent descriptions**: Add descriptions to your agents to help other agents understand their capabilities
+7. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
