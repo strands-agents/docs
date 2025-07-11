@@ -5,6 +5,3 @@
 ::: strands.handlers.callback_handler
     options:
       heading_level: 2
-::: strands.handlers.tool_handler
-    options:
-      heading_level: 2

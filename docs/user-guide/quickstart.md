@@ -168,9 +168,9 @@ agent("Hello!")
 
 ## Model Providers
 
-### Identifying a configured model 
+### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 3.7 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/types.md#strands.types.models.Model.get_config):
+Strands defaults to the Bedrock model provider using Claude 3.7 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/models.md#strands.models.model.Model.get_config):
 
 ```python
 from strands import Agent
