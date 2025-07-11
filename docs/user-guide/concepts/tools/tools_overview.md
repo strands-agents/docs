@@ -44,12 +44,12 @@ agent = Agent(tools=["/path/to/my_tool.py"])
 
 Tools placed in your current working directory `./tools/` can be automatically loaded at agent initialization, and automatically reloaded when modified. This can be really useful when developing and debugging tools: simply modify the tool code and any agents using that tool will reload it to use the latest modifications!
 
-Automatic loading and reloading of tools in the `./tools/` directory is enabled by default with the `load_tools_from_directory=True` parameter passed to `Agent` during initialization. To disable this behavior, simply set `load_tools_from_directory=False`:
+Automatic loading and reloading of tools in the `./tools/` directory is disabled by default. To enable this behavior, set `load_tools_from_directory=True` during `Agent` initialization:
 
 ```python
 from strands import Agent
 
-agent = Agent(load_tools_from_directory=False)
+agent = Agent(load_tools_from_directory=True)
 ```
 
 ## Using Tools

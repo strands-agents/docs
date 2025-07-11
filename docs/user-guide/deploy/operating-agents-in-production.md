@@ -35,7 +35,7 @@ See:
 In production environments, it's critical to control which tools are available to your agent. You should:
 
  - **Explicitly Specify Tools**: Always provide an explicit list of tools rather than loading all available tools
- - **Disable Automatic Tool Loading**: For stability in production, disable automatic loading and reloading of tools
+ - **Keep Automatic Tool Loading Disabled**: For stability in production, keep automatic loading and reloading of tools disabled (the default behavior)
  - **Audit Tool Usage**: Regularly review which tools are being used and remove any that aren't necessary for your use case
 
 ```python
@@ -43,8 +43,8 @@ agent = Agent(
     ...,
     # Explicitly specify tools
     tools=[weather_research, weather_analysis, summarizer],
-    # Disable automatic tool loading in production
-    load_tools_from_directory=False,
+    # Automatic tool loading is disabled by default (recommended for production)
+    # load_tools_from_directory=False,  # This is the default
 )
 ```
 
