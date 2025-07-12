@@ -130,19 +130,19 @@ During its execution, the `artist` agent used the following prompts (which can b
 
 "A majestic blue whale swimming in deep ocean waters, sunlight filtering through the surface, photorealistic"
 
-![output/a_majestic_blue_whale_swimming.png](../../assets/whale_1.png)
+![output/a_majestic_blue_whale_swimming.png](../../assets/multimodal/whale_1.png)
 
 "Humpback whale breaching from the water, dramatic splash, against sunset sky, wildlife photography"
 
-![output/humpback_whale_breaching_from_the.png](../../assets/whale_2.png)
+![output/humpback_whale_breaching_from_the.png](../../assets/multimodal/whale_2.png)
 
 "Orca whale pod swimming together in arctic waters, aerial view, detailed, pristine environment"
 
-![output/orca_whale_pod_swimming_together.png](../../assets/whale_3.png)
+![output/orca_whale_pod_swimming_together.png](../../assets/multimodal/whale_3.png)
 
 And the `critic` agent selected the humpback whale as the best image:
 
-![output/humpback_whale_breaching_from_the.png](../../assets/whale_2_large.png)
+![output/humpback_whale_breaching_from_the.png](../../assets/multimodal/whale_2_large.png)
 
 
 ## Extending the Example
