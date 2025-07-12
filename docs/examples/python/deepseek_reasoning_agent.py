@@ -71,7 +71,8 @@ def code_completion_example():
         params={
             "max_tokens": 500,
             "temperature": 0.2,  # Lower temperature for more consistent code
-        }
+        },
+        use_beta=True
     )
     
     agent = Agent(model=model)
