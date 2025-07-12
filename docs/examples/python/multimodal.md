@@ -1,6 +1,6 @@
 # Multi-modal - Strands Agents for Image Generation and Evaluation
 
-This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multimodal.py) demonstrates how to create a multi-agent system for generating and evaluating images. It shows how Strands agents can work with multimodal content thorugh a workflow between specialized agents.
+This [example][example_code] demonstrates how to create a multi-agent system for generating and evaluating images. It shows how Strands agents can work with multimodal content thorugh a workflow between specialized agents.
 
 ## Overview
 
@@ -153,3 +153,5 @@ Here are some ways you could extend this example:
 2. **Image Editing**: Extend the `generate_image` tool to accept and modify input images.
 3. **User Feedback Loop**: Allow users to provide feedback on the selection to improve future generations
 4. **Integration with Other Media**: Extend the system to work with other media types, such as video with Amazon Nova models.
+
+[example_code]: {{ docs_repo }}/docs/examples/python/multimodal.py
