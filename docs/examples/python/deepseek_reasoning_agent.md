@@ -83,7 +83,7 @@ Fill in the implementation for the fibonacci_sequence function.
 """
 
 response = agent(fim_prompt)
-```
+
 
 ### 4. Structured Reasoning Output
 

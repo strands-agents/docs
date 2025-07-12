@@ -40,9 +40,7 @@ Complete this Python function:
 def calculate_compound_interest(principal, rate, time, compound_frequency):
     '''Calculate compound interest.'''
     # TODO: Implement the compound interest formula
-    pass
-```
-"""
+    pass"""
 ```
 
 ### 2. Class Method Implementation
@@ -67,8 +65,7 @@ class BankAccount:
         # TODO: Implement withdraw method with overdraft protection
         pass
 ```
-"""
-```
+
 
 ### 3. Algorithm Implementation
 
@@ -90,8 +87,7 @@ class BinarySearchTree:
     def search(self, val):
         # TODO: Search for a value in the BST
         pass
-```
-"""
+
 ```
 
 ### 4. Code Refactoring
@@ -111,8 +107,6 @@ def process_data(data):
 ```
 
 Improve by making it more Pythonic and performant.
-"""
-```
 
 ### 5. API Integration
 
@@ -130,8 +124,6 @@ class WeatherAPIClient:
     def get_current_weather(self, city: str) -> Dict:
         # TODO: Implement method to get current weather
         pass
-```
-"""
 ```
 
 ## Complete Example Code
