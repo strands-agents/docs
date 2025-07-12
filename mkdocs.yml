@@ -85,6 +85,7 @@ nav:
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
+        - DeepSeek: user-guide/concepts/model-providers/deepseek.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
         - MistralAI: user-guide/concepts/model-providers/mistral.md
@@ -127,6 +128,8 @@ nav:
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
     - Structured Output: examples/python/structured_output.md
+    - DeepSeek Reasoning Agent: examples/python/deepseek_reasoning_agent.md
+    - DeepSeek Code Completion: examples/python/deepseek_code_completion.md
     - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md
