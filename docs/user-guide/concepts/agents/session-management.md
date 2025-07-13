@@ -1,0 +1,265 @@
+# Session Management
+
+Session management in Strands Agents provides a robust mechanism for persisting agent state and conversation history across multiple interactions. This enables agents to maintain context and continuity even when the application restarts or when deployed in distributed environments.
+
+## Overview
+
+A session represents all of the stateful information that is needed by an agent to function, including:
+
+- Conversation history (messages)
+- Agent state (key-value storage)
+- Other stateful information (like [Conversation Manager](./state.md#conversation-manager))
+
+Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents to seamlessly continue conversations where they left off.
+
+## Basic Usage
+
+First, create an agent with a session manager and use it:
+
+```python
+from strands import Agent
+from strands.session.file_session_manager import FileSessionManager
+
+# Create a session manager with a unique session ID
+session_manager = FileSessionManager(session_id="test-session")
+
+# Create an agent with the session manager
+agent = Agent(session_manager=session_manager)
+
+# Use the agent - all messages and state are automatically persisted
+agent("Hello!")  # This conversation is persisted
+```
+
+## Built-in Session Managers
+
+Strands offers two built-in session managers for persisting agent sessions:
+
+1. **FileSessionManager**: Stores sessions in the local filesystem
+2. **S3SessionManager**: Stores sessions in Amazon S3 buckets
+
+### FileSessionManager
+
+The `FileSessionManager` provides a simple way to persist agent sessions to the local filesystem:
+
+```python
+from strands import Agent
+from strands.session.file_session_manager import FileSessionManager
+
+# Create a session manager with a unique session ID
+session_manager = FileSessionManager(
+    session_id="user-123",
+    storage_dir="/path/to/sessions"  # Optional, defaults to a temp directory
+)
+
+# Create an agent with the session manager
+agent = Agent(session_manager=session_manager)
+
+# Use the agent normally - state and messages will be persisted automatically
+agent("Hello, I'm a new user!")
+```
+
+### S3SessionManager
+
+For cloud-based persistence, especially in distributed environments, use the `S3SessionManager`:
+
+```python
+from strands import Agent
+from strands.session.s3_session_manager import S3SessionManager
+import boto3
+
+# Optional: Create a custom boto3 session
+boto_session = boto3.Session(region_name="us-west-2")
+
+# Create a session manager that stores data in S3
+session_manager = S3SessionManager(
+    session_id="user-456",
+    bucket="my-agent-sessions",
+    prefix="production/",  # Optional key prefix
+    boto_session=boto_session,  # Optional boto3 session
+    region_name="us-west-2"  # Optional AWS region (if boto_session not provided)
+)
+
+# Create an agent with the session manager
+agent = Agent(session_manager=session_manager)
+
+# Use the agent normally - state and messages will be persisted to S3
+agent("Tell me about AWS S3")
+```
+
+#### Required S3 Permissions
+
+To use the `S3SessionManager`, your AWS credentials must have the following S3 permissions:
+
+- `s3:PutObject` - To create and update session data
+- `s3:GetObject` - To retrieve session data
+- `s3:DeleteObject` - To delete session data
+- `s3:ListBucket` - To list objects in the bucket
+
+Here's a sample IAM policy that grants these permissions for a specific bucket:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": "arn:aws:s3:::my-agent-sessions/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::my-agent-sessions"
+        }
+    ]
+}
+```
+
+## How Session Management Works
+
+The session management system in Strands Agents works through a combination of events, repositories, and data models:
+
+### 1. Session Persistence Triggers
+
+Session persistence is automatically triggered by several key events in the agent lifecycle:
+
+- **Agent Initialization**: When an agent is created with a session manager, it automatically restores any existing state and messages from the session.
+- **Message Addition**: When a new message is added to the conversation, it's automatically persisted to the session.
+- **Agent Invocation**: After each agent invocation, the agent state is synchronized with the session to capture any updates.
+- **Message Redaction**: When sensitive information needs to be redacted, the session manager can replace the original message with a redacted version while maintaining conversation flow.
+
+> **Warning**: Changes to agent state or messages are only persisted during these specific lifecycle events, not immediately when made directly. Direct modifications will only be saved after the next trigger event occurs.
+
+
+### 2. Data Models
+
+Session data is stored using these key data models:
+
+**Session**
+
+The `Session` model is the top-level container for session data:
+
+- **Purpose**: Provides a namespace for organizing multiple agents and their interactions
+- **Key Fields**:
+    - `session_id`: Unique identifier for the session
+    - `session_type`: Type of session (currently "AGENT")
+    - `created_at`: ISO format timestamp of when the session was created
+    - `updated_at`: ISO format timestamp of when the session was last updated
+
+**SessionAgent**
+
+The `SessionAgent` model stores agent-specific data:
+
+- **Purpose**: Maintains the state and configuration of a specific agent within a session
+- **Key Fields**:
+    - `agent_id`: Unique identifier for the agent within the session
+    - `state`: Dictionary containing the agent's state data (key-value pairs)
+    - `conversation_manager_state`: Dictionary containing the state of the conversation manager
+    - `created_at`: ISO format timestamp of when the agent was created
+    - `updated_at`: ISO format timestamp of when the agent was last updated
+
+**SessionMessage**
+
+The `SessionMessage` model stores individual messages in the conversation:
+
+- **Purpose**: Preserves the conversation history with support for message redaction
+- **Key Fields**:
+    - `message`: The original message content (role, content blocks)
+    - `redact_message`: Optional redacted version of the message (used when sensitive information is detected)
+    - `message_id`: Unique identifier for the message
+    - `created_at`: ISO format timestamp of when the message was created
+    - `updated_at`: ISO format timestamp of when the message was last updated
+
+These data models work together to provide a complete representation of an agent's state and conversation history. The session management system handles serialization and deserialization of these models, including special handling for binary data using base64 encoding.
+
+### 3. Storage Structure
+
+When using `FileSessionManager`, sessions are stored in the following directory structure:
+
+```
+/<sessions_dir>/
+└── session_<session_id>/
+    ├── session.json                # Session metadata
+    └── agents/
+        └── agent_<agent_id>/
+            ├── agent.json          # Agent metadata and state
+            └── messages/
+                ├── message_<created_timestamp>_<id1>.json
+                └── message_<created_timestamp>_<id2>.json
+```
+
+When using `S3SessionManager`, a similar structure is maintained using S3 object keys.
+
+## Custom Session Repositories
+
+For advanced use cases, you can implement your own session storage backend by creating a custom session repository:
+
+```python
+from typing import Optional
+from strands import Agent
+from strands.session.repository_session_manager import RepositorySessionManager
+from strands.session.session_repository import SessionRepository
+from strands.types.session import Session, SessionAgent, SessionMessage
+
+class CustomSessionRepository(SessionRepository):
+    """Custom session repository implementation."""
+    
+    def __init__(self):
+        """Initialize with your custom storage backend."""
+        # Initialize your storage backend (e.g., database connection)
+        self.db = YourDatabaseClient()
+    
+    def create_session(self, session: Session) -> Session:
+        """Create a new session."""
+        self.db.sessions.insert(asdict(session))
+        return session
+    
+    def read_session(self, session_id: str) -> Optional[Session]:
+        """Read a session by ID."""
+        data = self.db.sessions.find_one({"session_id": session_id})
+        if data:
+            return Session.from_dict(data)
+        return None
+    
+    # Implement other required methods...
+    # create_agent, read_agent, update_agent
+    # create_message, read_message, update_message, list_messages
+
+# Use your custom repository with RepositorySessionManager
+custom_repo = CustomSessionRepository()
+session_manager = RepositorySessionManager(
+    session_id="user-789",
+    session_repository=custom_repo
+)
+
+agent = Agent(session_manager=session_manager)
+```
+
+This approach allows you to store session data in any backend system while leveraging the built-in session management logic.
+
+## Session Persistence Best Practices
+
+When implementing session persistence in your applications, consider these best practices:
+
+1. **Use Unique Session IDs**: Generate unique session IDs for each user or conversation context to prevent data overlap.
+
+2. **Consider Storage Requirements**:
+    - `FileSessionManager` is ideal for development, testing, or single-server deployments
+    - `S3SessionManager` is better for production, distributed systems, or when high availability is required
+
+3. **Security Considerations**:
+    - For `FileSessionManager`, ensure the storage directory has appropriate file permissions
+    - For `S3SessionManager`, use IAM roles with least privilege and consider server-side encryption
+    - Be mindful of storing sensitive user data in sessions
+
+4. **Session Cleanup**:
+    - Implement a strategy for cleaning up old or inactive sessions
+    - Consider adding TTL (Time To Live) for sessions in production environments
+
+5. **Understand Persistence Triggers**:
+    - Remember that changes to agent state or messages are only persisted during specific lifecycle events
+

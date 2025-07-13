@@ -66,7 +66,7 @@ Messages flow through the agent loop in a structured format:
 2. **Assistant messages**: Responses from the model that may include tool requests
 3. **Tool result messages**: Results from tool executions fed back to the model
 
-The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](state-sessions.md).
+The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](state.md).
 
 ### Tool Execution
 

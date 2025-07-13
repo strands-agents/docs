@@ -63,7 +63,7 @@ Prompting is a primary functionality of Strands that allows you to invoke tools 
 result = agent.tool.current_time(timezone="US/Pacific")
 ```
 
-This bypasses the natural language interface and directly executes the tool with the specified parameters. By default, direct tool calls are added to the [session state](state-sessions.md) but can be optionally excluded by specifying `record_direct_tool_call=False`.
+This bypasses the natural language interface and directly executes the tool with the specified parameters. By default, direct tool calls are added to the conversation but can be optionally not included by specifying `record_direct_tool_call=False`.
 
 ## Prompt Engineering
 
