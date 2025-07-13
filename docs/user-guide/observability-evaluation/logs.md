@@ -99,7 +99,6 @@ DEBUG | strands.tools.registry | tool_name=<calculator> | successfully reloaded 
 Logs related to the event loop processing:
 
 ```
-DEBUG | strands.event_loop.message_processor | message_index=<3> | replaced content with context message
 ERROR | strands.event_loop.error_handler | an exception occurred in event_loop_cycle | ContextWindowOverflowException
 DEBUG | strands.event_loop.error_handler | message_index=<5> | found message with tool results at index
 ```
