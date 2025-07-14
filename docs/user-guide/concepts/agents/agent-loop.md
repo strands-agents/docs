@@ -16,7 +16,7 @@ flowchart LR
         C --> D["Tool Execution"]
         D --> B
     end
-    
+
     Loop --> E[Response]
 ```
 
@@ -51,7 +51,6 @@ def event_loop_cycle(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    thread_pool: Optional[ThreadPoolExecutor] = None,
     **kwargs: Any,
 ) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
     # ... implementation details ...
@@ -75,18 +74,9 @@ The agent loop includes a tool execution system that:
 
 1. Validates tool requests from the model
 2. Looks up tools in the registry
-3. Executes tools with proper error handling
+3. Executes tools concurrently with proper error handling
 4. Captures and formats results
 5. Feeds results back to the model
-
-Tools can be executed in parallel or sequentially:
-
-```python
-# Configure maximum parallel tool execution
-agent = Agent(
-    max_parallel_tools=4  # Run up to 4 tools in parallel
-)
-```
 
 ## Detailed Flow
 
@@ -111,7 +101,6 @@ This initialization:
 
 - Creates a tool registry and registers tools
 - Sets up the conversation manager
-- Configures parallel processing capabilities
 - Initializes metrics collection
 
 ### 2. User Input Processing
@@ -160,7 +149,7 @@ The event loop:
 
 - Extracts and validates the tool request
 - Looks up the tool in the registry
-- Executes the tool (potentially in parallel with others)
+- Executes the tool
 - Captures the result and formats it
 
 ### 5. Tool Result Processing
