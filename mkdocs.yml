@@ -135,8 +135,11 @@ nav:
   - API Reference:
     - Agent: api-reference/agent.md
     - Event Loop: api-reference/event-loop.md
+    - Experimental: api-reference/experimental.md
     - Handlers: api-reference/handlers.md
+    - Hooks: api-reference/hooks.md
     - Models: api-reference/models.md
+    - Multiagent: api-reference/multiagent.md
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md
