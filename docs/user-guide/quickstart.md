@@ -82,20 +82,20 @@ from strands_tools import calculator, current_time, python_repl
 def letter_counter(word: str, letter: str) -> int:
     """
     Count occurrences of a specific letter in a word.
-    
+
     Args:
         word (str): The input word to search in
         letter (str): The specific letter to count
-        
+
     Returns:
         int: The number of occurrences of the letter in the word
     """
     if not isinstance(word, str) or not isinstance(letter, str):
         return 0
-    
+
     if len(letter) != 1:
         raise ValueError("The 'letter' parameter must be a single character")
-    
+
     return word.lower().count(letter.lower())
 
 # Create an agent with tools from the strands-tools example tools package
@@ -127,7 +127,7 @@ flowchart LR
         C --> D["Tool Execution"]
         D --> B
     end
-    
+
     Loop --> E[Response]
 ```
 
@@ -209,7 +209,7 @@ from strands.models import BedrockModel
 # Create a BedrockModel
 bedrock_model = BedrockModel(
     model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-    region_name='us-west-2',
+    region_name="us-west-2",
     temperature=0.3,
 )
 
@@ -229,8 +229,10 @@ Strands Agents supports several other model providers beyond Amazon Bedrock:
 - **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
+- **[Mistral](concepts/model-providers/mistral.md)** - Access to Mistral models
 - **[Ollama](concepts/model-providers/ollama.md)** - Run models locally for privacy or offline use
-- **[OpenAI](concepts/model-providers/openai.md)** - Direct API access to OpenAI or OpenAI-compatible models
+- **[OpenAI](concepts/model-providers/openai.md)** - Access to OpenAI or OpenAI-compatible models
+- **[Writer](concepts/model-providers/writer.md)** - Access to Palmyra models
 - **[Custom Providers](concepts/model-providers/custom_model_provider.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
@@ -239,7 +241,7 @@ Strands provides two main approaches to capture streaming events from an agent: 
 
 ### Async Iterators
 
-For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using `stream_async()`. This is particularly useful with async frameworks like FastAPI or Django Channels.
+For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](../api-reference/agent.md#strands.agent.agent.Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
 
 ```python
 import asyncio
@@ -254,11 +256,11 @@ agent = Agent(
 
 # Async function that iterates over streamed agent events
 async def process_streaming_response():
-    query = "What is 25 * 48 and explain the calculation"
-    
+    prompt = "What is 25 * 48 and explain the calculation"
+
     # Get an async iterator for the agent's response stream
-    agent_stream = agent.stream_async(query)
-    
+    agent_stream = agent.stream_async(prompt)
+
     # Process events as they arrive
     async for event in agent_stream:
         if "data" in event:
@@ -275,6 +277,8 @@ asyncio.run(process_streaming_response())
 The async iterator yields the same event types as the callback handler callbacks, including text generation events, tool events, and lifecycle events. This approach is ideal for integrating Strands agents with async web frameworks.
 
 See the [Async Iterators](concepts/streaming/async-iterators.md) documentation for full details.
+
+> Note, Strands also offers an [`invoke_async()`](../api-reference/agent.md#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
 
 ### Callback Handlers (Callbacks)
 

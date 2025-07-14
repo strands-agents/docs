@@ -14,7 +14,7 @@ flowchart LR
         direction TB
         C[convert_pydantic_to_tool_spec] --> D[LLM Response]
     end
-    
+
     B --> Process
     Process --> E[Validated Pydantic Model]
 ```
@@ -69,7 +69,7 @@ class PersonInfo(BaseModel):
 
 agent = Agent()
 result = agent.structured_output(
-    PersonInfo, 
+    PersonInfo,
     "John Smith is a 30-year-old software engineer"
 )
 
@@ -77,6 +77,40 @@ print(f"Name: {result.name}")      # "John Smith"
 print(f"Age: {result.age}")        # 30
 print(f"Job: {result.occupation}") # "software engineer"
 ```
+
+### Multi-Modal Input
+
+Extract structured information from prompts containing images, documents, and other content types:
+
+```python
+class PersonInfo(BaseModel):
+    name: str
+    age: int
+    occupation: str
+
+with open("path/to/document.pdf", "rb") as fp:
+    document_bytes = fp.read()
+
+agent = Agent()
+result = agent.structured_output(
+    PersonInfo,
+    [
+        {"text": "Please process this application."},
+        {
+            "document": {
+                "format": "pdf",
+                "name": "application",
+                "source": {
+                    "bytes": document_bytes,
+                },
+            },
+        },
+    ]
+)
+```
+
+For a complete list of supported content types, please refer to the [API Reference](../../../api-reference/types.md#strands.types.content.ContentBlock).
+
 
 ### Using Conversation History
 
@@ -157,6 +191,30 @@ except ValidationError as e:
     # 1. Retry with a more specific prompt
     # 2. Fall back to a simpler model
     # 3. Extract partial information from the error
+```
+
+### Async
+
+Strands also supports obtaining structured output asynchronously through [`structured_output_async`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output_async):
+
+```python
+import asyncio
+from pydantic import BaseModel
+from strands import Agent
+
+class PersonInfo(BaseModel):
+    name: str
+    age: int
+    occupation: str
+
+async def structured_output():
+    agent = Agent()
+    return await agent.structured_output_async(
+        PersonInfo,
+        "John Smith is a 30-year-old software engineer"
+    )
+
+result = asyncio.run(structured_output())
 ```
 
 
