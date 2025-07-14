@@ -57,8 +57,6 @@ Ready to learn more? Check out these resources:
 - [Example Built-in Tools](user-guide/concepts/tools/example-tools-package.md) - The {{ link_strands_tools }} package provides many powerful example tools for your agents to use during development
 - [Strands Agent Builder]({{ agent_builder_repo_home }}) - Use the accompanying {{ link_strands_builder }} agent builder to harness the power of LLMs to generate your own tools and agents
 
-!!! warning "Preview"
-
-    Strands Agents is currently available in public preview. During this preview period, we welcome your feedback and contributions to help improve the SDK. APIs may change as we refine the SDK based on user experiences.
+!!! tip "Join Our Community"
 
     [Learn how to contribute]({{ sdk_repo }}/CONTRIBUTING.md) or join our community discussions to shape the future of Strands Agents ❤️.
