@@ -77,7 +77,7 @@ nav:
         - Prompts: user-guide/concepts/agents/prompts.md
         - Hooks: user-guide/concepts/agents/hooks.md
         - Structured Output: user-guide/concepts/agents/structured-output.md
-        - Context Management: user-guide/concepts/agents/context-management.md
+        - Conversation Management: user-guide/concepts/agents/conversation-management.md
       - Tools:
         - Overview: user-guide/concepts/tools/tools_overview.md
         - Python: user-guide/concepts/tools/python-tools.md

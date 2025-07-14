@@ -79,7 +79,7 @@ agent = Agent(
 )
 ```
 
-The [`SlidingWindowConversationManager`](../../user-guide/concepts/agents/context-management.md/#slidingwindowconversationmanager) helps prevent context window overflow exceptions by maintaining a reasonable conversation history size.
+The [`SlidingWindowConversationManager`](../../user-guide/concepts/agents/conversation-management.md/#slidingwindowconversationmanager) helps prevent context window overflow exceptions by maintaining a reasonable conversation history size.
 
 ### Streaming for Responsiveness
 
@@ -146,7 +146,7 @@ Operating Strands agents in production requires careful consideration of configu
 
 ## Related Topics
 
-- [Context Management](../../user-guide/concepts/agents/context-management.md)
+- [Context Management](../../user-guide/concepts/agents/conversation-management.md)
 - [Streaming - Async Iterator](../../user-guide/concepts/streaming/async-iterators.md)
 - [Tool Development](../../user-guide/concepts/tools/tools_overview.md)
 - [Guardrails](../../user-guide/safety-security/guardrails.md)
