@@ -10,50 +10,50 @@ pip install strands-agents-tools
 
 If using `mem0_memory`, install the the additional required dependencies by running:
 
-```python
+```bash
 pip install strands-agents-tools[mem0_memory]
 ```
 
 ## Available Tools
 
-#### RAG & Memory
+### RAG & Memory
 - [`retrieve`]({{ tools_repo }}/src/strands_tools/retrieve.py): Semantically retrieve data from Amazon Bedrock Knowledge Bases for RAG, memory, and other purposes
-- [`memory`]({{ tools_repo }}/src/strands_tools/memory.py): Agent memory persistence in Amazon Bedrock Knowledge Bases
+- [`memory`]({{ tools_repo }}/src/strands_tools/memory.py): Agent memory persistence in Amazon Bedrock Knowledge Bases with flexible AWS authentication through boto3 session injection. See [Memory Tool Session Management](memory-tool-sessions.md) for detailed session configuration.
 - [`mem0_memory`]({{ tools_repo }}/src/strands_tools/mem0_memory.py): Agent memory and personalization built on top of [Mem0](https://mem0.ai)
 
-#### File Operations
+### File Operations
 - [`editor`]({{ tools_repo }}/src/strands_tools/editor.py): File editing operations like line edits, search, and undo
 - [`file_read`]({{ tools_repo }}/src/strands_tools/file_read.py): Read and parse files
 - [`file_write`]({{ tools_repo }}/src/strands_tools/file_write.py): Create and modify files
 
-#### Shell & System
+### Shell & System
 - [`environment`]({{ tools_repo }}/src/strands_tools/environment.py): Manage environment variables
 - [`shell`]({{ tools_repo }}/src/strands_tools/shell.py): Execute shell commands
 - [`cron`]({{ tools_repo }}/src/strands_tools/cron.py): Task scheduling with cron jobs
 
-#### Code Interpretation
+### Code Interpretation
 - [`python_repl`]({{ tools_repo }}/src/strands_tools/python_repl.py): Run Python code
 
-#### Web & Network
+### Web & Network
 - [`http_request`]({{ tools_repo }}/src/strands_tools/http_request.py): Make API calls, fetch web data, and call local HTTP servers
 - [`slack`]({{ tools_repo }}/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
 
-#### Multi-modal
+### Multi-modal
 - [`generate_image_stability`]({{ tools_repo }}/src/strands_tools/generate_image_stability.py): Create images with Stability AI
 - [`image_reader`]({{ tools_repo }}/src/strands_tools/image_reader.py): Process and analyze images
 - [`generate_image`]({{ tools_repo }}/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
 - [`nova_reels`]({{ tools_repo }}/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
 - [`speak`]({{ tools_repo }}/src/strands_tools/speak.py): Generate speech from text using macOS say command or Amazon Polly
 
-#### AWS Services
+### AWS Services
 - [`use_aws`]({{ tools_repo }}/src/strands_tools/use_aws.py): Interact with AWS services
 
-#### Utilities
+### Utilities
 - [`calculator`]({{ tools_repo }}/src/strands_tools/calculator.py): Perform mathematical operations
 - [`current_time`]({{ tools_repo }}/src/strands_tools/current_time.py): Get the current date and time
 - [`load_tool`]({{ tools_repo }}/src/strands_tools/load_tool.py): Dynamically load more tools at runtime
 
-#### Agents & Workflows
+### Agents & Workflows
 - [`agent_graph`]({{ tools_repo }}/src/strands_tools/agent_graph.py): Create and manage graphs of agents
 - [`journal`]({{ tools_repo }}/src/strands_tools/journal.py): Create structured tasks and logs for agents to manage and work from
 - [`swarm`]({{ tools_repo }}/src/strands_tools/swarm.py): Coordinate multiple AI agents in a swarm / network of agents
