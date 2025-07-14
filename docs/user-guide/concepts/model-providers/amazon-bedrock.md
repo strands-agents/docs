@@ -245,43 +245,28 @@ from strands.models import BedrockModel
 bedrock_model = BedrockModel(
     model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0"
 )
-
-
-# Create a message with both text and image content
-messages = [
-    {
-        "role": "user",
-        "content": [
-            {
-                "document": {
-                    "format": "txt",
-                    "name": "example",
-                    "source": {
-                        "bytes": b"Use this document in your response."
-                    }
-                }
-            },
-            {
-                "text": "Use this media in your response."
-            }
-        ]
-    },
-    {
-        "role": "assistant",
-        "content": [
-            {
-                "text": "I will reference this media in my next response."
-            }
-        ]
-    }
-]
-
-# Create an agent with the multimodal model
-agent = Agent(model=bedrock_model, messages=messages)
+agent = Agent(model=bedrock_model)
 
 # Send the multimodal message to the agent
-response = agent("Tell me about the document.")
+response = agent(
+    [
+        {
+            "document": {
+                "format": "txt",
+                "name": "example",
+                "source": {
+                    "bytes": b"Once upon a time..."
+                }
+            }
+        },
+        {
+            "text": "Tell me about the document."
+        }
+    ]
+)
 ```
+
+For a complete list of input types, please refer to the [API Reference](../../../api-reference/types.md#strands.types.content.ContentBlock).
 
 ### Guardrails
 
