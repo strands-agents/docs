@@ -128,7 +128,7 @@ TOOL_SPEC = {
 }
 
 # 2. Tool Function
-def weather_forecast(tool, invocation_state: dict[str, Any], **kwargs: Any):
+def weather_forecast(tool, **kwargs: Any):
     # Extract tool parameters
     tool_use_id = tool["toolUseId"]
     tool_input = tool["input"]
