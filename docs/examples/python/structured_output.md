@@ -25,6 +25,7 @@ Structured Output Example
 This example demonstrates how to use structured output with Strands Agents to
 get type-safe, validated responses using Pydantic models.
 """
+import asyncio
 import tempfile
 from typing import List, Optional
 from pydantic import BaseModel, Field
@@ -153,6 +154,26 @@ def complex_nested_model_example():
     print(f"Skills: {result.skills}")                # ["systems admin"]
 
 
+async def async_example():
+    """Basic example extracting structured information from text asynchronously."""
+    print("\n--- Async Example ---")
+
+    class PersonInfo(BaseModel):
+        name: str
+        age: int
+        occupation: str
+
+    agent = Agent()
+    result = await agent.structured_output_async(
+        PersonInfo,
+        "John Smith is a 30-year-old software engineer"
+    )
+
+    print(f"Name: {result.name}")      # "John Smith"
+    print(f"Age: {result.age}")        # 30
+    print(f"Job: {result.occupation}") # "software engineer"
+
+
 if __name__ == "__main__":
     print("Structured Output Examples\n")
 
@@ -160,6 +181,7 @@ if __name__ == "__main__":
     multimodal_example()
     conversation_history_example()
     complex_nested_model_example()
+    asyncio.run(async_example())
 
     print("\nExamples completed.")
 ```
@@ -168,6 +190,7 @@ if __name__ == "__main__":
 
 1. **Define a Schema**: Create a Pydantic model that defines the structure you want
 2. **Call structured_output()**: Pass your model and optionally a prompt to the agent
+   - If running async, call `structured_output_async()` instead.
 3. **Get Validated Results**: Receive a properly typed Python object matching your schema
 
 The `structured_output()` method ensures that the language model generates a response that conforms to your specified schema. It handles converting your Pydantic model into a format the model understands and validates the response.

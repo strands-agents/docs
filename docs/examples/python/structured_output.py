@@ -5,6 +5,7 @@ Structured Output Example
 This example demonstrates how to use structured output with Strands Agents to
 get type-safe, validated responses using Pydantic models.
 """
+import asyncio
 import tempfile
 
 from typing import List, Optional
@@ -134,6 +135,26 @@ def complex_nested_model_example():
     print(f"Skills: {result.skills}")                # ["systems admin"]
 
 
+async def async_example():
+    """Basic example extracting structured information from text asynchronously."""
+    print("\n--- Async Example ---")
+
+    class PersonInfo(BaseModel):
+        name: str
+        age: int
+        occupation: str
+
+    agent = Agent()
+    result = await agent.structured_output_async(
+        PersonInfo,
+        "John Smith is a 30-year-old software engineer"
+    )
+
+    print(f"Name: {result.name}")      # "John Smith"
+    print(f"Age: {result.age}")        # 30
+    print(f"Job: {result.occupation}") # "software engineer"
+
+
 if __name__ == "__main__":
     print("Structured Output Examples\n")
 
@@ -141,5 +162,6 @@ if __name__ == "__main__":
     multimodal_example()
     conversation_history_example()
     complex_nested_model_example()
+    asyncio.run(async_example())
 
     print("\nExamples completed.")
