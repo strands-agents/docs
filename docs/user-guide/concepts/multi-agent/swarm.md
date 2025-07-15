@@ -50,7 +50,7 @@ swarm = Swarm(
     max_iterations=20,
     execution_timeout=900.0,  # 15 minutes
     node_timeout=300.0,       # 5 minutes per agent
-    repetitive_handoff_detection_window=8,
+    repetitive_handoff_detection_window=8,  # There must be >= 3 unique agents in the last 8 handoffs
     repetitive_handoff_min_unique_agents=3
 )
 
@@ -73,7 +73,7 @@ In this example:
 
 ## Swarm Configuration
 
-The `Swarm` constructor allows you to control the behavior and safety parameters:
+The [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm) constructor allows you to control the behavior and safety parameters:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -86,7 +86,7 @@ The `Swarm` constructor allows you to control the behavior and safety parameters
 
 ## Multi-Modal Input Support
 
-Swarms support multi-modal inputs like text and images using ContentBlocks:
+Swarms support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/types.md#strands.types.content.ContentBlock):
 
 ```python
 from strands import Agent
@@ -166,13 +166,13 @@ You have access to swarm coordination tools if you need help from other agents o
 
 ## Asynchronous Execution
 
-You can also execute a Swarm asynchronously:
+You can also execute a Swarm asynchronously by calling the [`invoke_async`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm.invoke_async) function:
 
 ```python
 import asyncio
 
 async def run_swarm():
-    result = await swarm.execute_async("Design and implement a complex system...")
+    result = await swarm.invoke_async("Design and implement a complex system...")
     return result
 
 result = asyncio.run(run_swarm())
@@ -180,7 +180,7 @@ result = asyncio.run(run_swarm())
 
 ## Swarm Results
 
-When a Swarm completes execution, it returns a `SwarmResult` object with detailed information:
+When a Swarm completes execution, it returns a [`SwarmResult`](../../../api-reference/multiagent.md#strands.multiagent.swarm.SwarmResult) object with detailed information:
 
 ```python
 result = swarm("Design a system architecture for...")
@@ -204,6 +204,26 @@ print(f"Total iterations: {result.execution_count}")
 print(f"Execution time: {result.execution_time}ms")
 print(f"Token usage: {result.accumulated_usage}")
 ```
+
+## Swarm as a Tool
+
+Agents can dynamically create and orchestrate swarms by using the `swarm` tool available in the [Strands tools package](../tools/example-tools-package.md).
+
+```python
+from strands import Agent
+from strands_tools import swarm
+
+agent = Agent(tools=[swarm], system_prompt="Create a swarm of agents to solve the user's query.")
+
+agent("Research, analyze, and summarize the latest advancements in quantum computing")
+```
+
+In this example:
+
+1. The agent uses the `swarm` tool to dynamically create a team of specialized agents. These might include a researcher, an analyst, and a technical writer
+2. Next the agent executes the swarm
+3. The swarm agents collaborate autonomously, handing off to each other as needed
+4. The agent analyzes the swarm results and provides a comprehensive response to the user
 
 ## Safety Mechanisms
 

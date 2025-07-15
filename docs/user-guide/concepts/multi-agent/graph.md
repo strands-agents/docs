@@ -1,6 +1,6 @@
 # Graph Multi-Agent Pattern
 
-A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents or other multi-agent systems (like Swarm or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.
+A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents or other multi-agent systems (like [Swarm](./swarm.md) or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.
 
 - **Deterministic execution order** based on DAG structure
 - **Output propagation** along edges between nodes
@@ -27,9 +27,39 @@ graph TD
     C --> D
 ```
 
+## Graph Components
+
+### 1. GraphNode
+
+A [`GraphNode`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphNode) represents a node in the graph with:
+
+- **node_id**: Unique identifier for the node
+- **executor**: The Agent or MultiAgentBase instance to execute
+- **dependencies**: Set of nodes this node depends on
+- **execution_status**: Current status (PENDING, EXECUTING, COMPLETED, FAILED)
+- **result**: The NodeResult after execution
+- **execution_time**: Time taken to execute the node in milliseconds
+
+### 2. GraphEdge
+
+A [`GraphEdge`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphEdge) represents a connection between nodes with:
+
+- **from_node**: Source node
+- **to_node**: Target node
+- **condition**: Optional function that determines if the edge should be traversed
+
+### 3. GraphBuilder
+
+The [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) provides a simple interface for constructing graphs:
+
+- **add_node()**: Add an agent or multi-agent system as a node
+- **add_edge()**: Create a dependency between nodes
+- **set_entry_point()**: Define starting nodes for execution
+- **build()**: Validate and create the Graph instance
+
 ## Creating a Graph
 
-To create a Graph, you use the `GraphBuilder` to define nodes, edges, and entry points:
+To create a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph), you use the [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) to define nodes, edges, and entry points:
 
 ```python
 from strands import Agent
@@ -70,36 +100,6 @@ print(f"\nStatus: {result.status}")
 print(f"Execution order: {[node.node_id for node in result.execution_order]}")
 ```
 
-## Graph Components
-
-### 1. GraphNode
-
-A `GraphNode` represents a node in the graph with:
-
-- **node_id**: Unique identifier for the node
-- **executor**: The Agent or MultiAgentBase instance to execute
-- **dependencies**: Set of nodes this node depends on
-- **execution_status**: Current status (PENDING, EXECUTING, COMPLETED, FAILED)
-- **result**: The NodeResult after execution
-- **execution_time**: Time taken to execute the node in milliseconds
-
-### 2. GraphEdge
-
-A `GraphEdge` represents a connection between nodes with:
-
-- **from_node**: Source node
-- **to_node**: Target node
-- **condition**: Optional function that determines if the edge should be traversed
-
-### 3. GraphBuilder
-
-The `GraphBuilder` provides a simple interface for constructing graphs:
-
-- **add_node()**: Add an agent or multi-agent system as a node
-- **add_edge()**: Create a dependency between nodes
-- **set_entry_point()**: Define starting nodes for execution
-- **build()**: Validate and create the Graph instance
-
 ## Conditional Edges
 
 You can add conditional logic to edges to create dynamic workflows:
@@ -121,7 +121,7 @@ builder.add_edge("research", "analysis", condition=only_if_research_successful)
 
 ## Nested Multi-Agent Patterns
 
-You can use a Graph or Swarm as a node within another Graph:
+You can use a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph) or [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm) as a node within another Graph:
 
 ```python
 from strands import Agent
@@ -154,7 +154,7 @@ print(f"\n{result}")
 
 ## Multi-Modal Input Support
 
-Graphs support multi-modal inputs like text and images using ContentBlocks:
+Graphs support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/types.md#strands.types.content.ContentBlock):
 
 ```python
 from strands import Agent
@@ -186,13 +186,13 @@ result = graph(content_blocks)
 
 ## Asynchronous Execution
 
-You can also execute a Graph asynchronously:
+You can also execute a Graph asynchronously by calling the [`invoke_async`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph.invoke_async) function:
 
 ```python
 import asyncio
 
 async def run_graph():
-    result = await graph.execute_async("Research and analyze market trends...")
+    result = await graph.invoke_async("Research and analyze market trends...")
     return result
 
 result = asyncio.run(run_graph())
@@ -200,7 +200,7 @@ result = asyncio.run(run_graph())
 
 ## Graph Results
 
-When a Graph completes execution, it returns a `GraphResult` object with detailed information:
+When a Graph completes execution, it returns a [`GraphResult`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphResult) object with detailed information:
 
 ```python
 result = graph("Research and analyze...")
@@ -256,9 +256,9 @@ Agents can dynamically create and orchestrate graphs by using the `graph` tool a
 
 ```python
 from strands import Agent
-from strands_tools import graph
+from strands_tools import agent_graph
 
-agent = Agent(tools=[graph], system_prompt="Create a graph of agents to solve the user's query.")
+agent = Agent(tools=[agent_graph], system_prompt="Create a graph of agents to solve the user's query.")
 
 agent("Design a TypeScript REST API and then write the code for it")
 ```
