@@ -34,8 +34,16 @@ graph TD
 To create a Swarm, you need to define a collection of agents with different specializations:
 
 ```python
+import logging
 from strands import Agent
 from strands.multiagent import Swarm
+
+# Enable debug logs and print them to stderr
+logging.getLogger("strands.multiagent").setLevel(logging.DEBUG)
+logging.basicConfig(
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
+)
 
 # Create specialized agents
 researcher = Agent(name="researcher", system_prompt="You are a research specialist...")

@@ -62,8 +62,16 @@ The [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.gra
 To create a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph), you use the [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) to define nodes, edges, and entry points:
 
 ```python
+import logging
 from strands import Agent
 from strands.multiagent import GraphBuilder
+
+# Enable debug logs and print them to stderr
+logging.getLogger("strands.multiagent").setLevel(logging.DEBUG)
+logging.basicConfig(
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
+)
 
 # Create specialized agents
 researcher = Agent(name="researcher", system_prompt="You are a research specialist...")
