@@ -22,7 +22,7 @@ Strands SDK does not natively perform PII redaction within its core telemetry ge
 Leverage specialized external libraries like Langfuse, LLM Guard, Presidio, or AWS Comprehend for high-quality PII detection and redaction:
 #### Step-by-Step Integration Guide
 ##### Step 1: Install your chosen PII Redaction Library.
-Example with [LLM Guard](https://llm-guard.com/):
+Example with [LLM Guard](https://protectai.com/llm-guard):
 ````
 pip install llm-guard
 ````
@@ -112,4 +112,4 @@ service:
 ## Additional Resources
 * [PII definition](https://www.dol.gov/general/ppii)
 * [OpenTelemetry official docs](https://opentelemetry.io/docs/collector/transforming-telemetry/)
-* [LLM Guard](https://llm-guard.com/)
+* [LLM Guard](https://protectai.com/llm-guard)
