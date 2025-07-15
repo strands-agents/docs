@@ -97,7 +97,7 @@ The sliding window conversation manager:
 - Handles context window overflow exceptions by reducing context
 - Ensures conversations don't exceed model context limits
 
-See [`Context Management`](conversation-management.md) for more information about conversation managers.
+See [`Conversation Management`](conversation-management.md) for more information about conversation managers.
 
 
 ## Agent State

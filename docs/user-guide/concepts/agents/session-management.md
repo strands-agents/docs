@@ -30,7 +30,7 @@ agent = Agent(session_manager=session_manager)
 agent("Hello!")  # This conversation is persisted
 ```
 
-The conversation, and associated state, is persisted ot the underlying filesystem.
+The conversation, and associated state, is persisted to the underlying filesystem.
 
 ## Built-in Session Managers
 
@@ -105,7 +105,7 @@ agent("Tell me about AWS S3")
 ```
 #### S3 Storage Structure
 
-Just like in the  `FileSessionManager`, sessions are stored with the following structure in the s3 bucket:
+Just like in the `FileSessionManager`, sessions are stored with the following structure in the s3 bucket:
 
 ```
 <s3_key_prefix>/
