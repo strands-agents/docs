@@ -8,6 +8,9 @@
 ::: strands.multiagent.graph
     options:
       heading_level: 2
+::: strands.multiagent.swarm
+    options:
+      heading_level: 2
 ::: strands.multiagent.a2a
     options:
       heading_level: 2
