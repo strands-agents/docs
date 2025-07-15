@@ -17,7 +17,6 @@ Swarms operate on the principle of emergent intelligence - the idea that a group
 2. Can see the history of which agents have worked on the task
 3. Can access shared knowledge contributed by other agents
 4. Can decide when to hand off to another agent with different expertise
-5. Can mark a task as complete when the objective is achieved
 
 ```mermaid
 graph TD
@@ -77,7 +76,7 @@ In this example:
 3. Handoff to the `coder` to implement the API and architecture
 4. The `coder` writes the code
 5. Handoff to the `reviewer` for code review
-6. Finally, the `reviewer` completes the task with the final result
+6. Finally, the `reviewer` provides the final result
 
 ## Swarm Configuration
 
@@ -122,7 +121,7 @@ result = swarm(content_blocks)
 
 When you create a Swarm, each agent is automatically equipped with special tools for coordination:
 
-### 1. Handoff Tool
+### Handoff Tool
 
 Agents can transfer control to another agent when they need specialized help:
 
@@ -132,14 +131,6 @@ handoff_to_agent(
     message="I need help implementing this algorithm in Python",
     context={"algorithm_details": "..."}
 )
-```
-
-### 2. Completion Tool
-
-Any agent can mark the task as complete:
-
-```python
-complete_swarm_task()
 ```
 
 ## Shared Context
@@ -169,7 +160,7 @@ Agent name: data_analyst. Agent description: Analyzes data and provides deeper i
 Agent name: code_reviewer.
 Agent name: security_specialist. Agent description: Focuses on secure coding practices and vulnerability assessment
 
-You have access to swarm coordination tools if you need help from other agents or want to complete the task.
+You have access to swarm coordination tools if you need help from other agents.
 ```
 
 ## Asynchronous Execution
