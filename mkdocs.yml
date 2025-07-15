@@ -141,6 +141,7 @@ nav:
     - Hooks: api-reference/hooks.md
     - Models: api-reference/models.md
     - Multiagent: api-reference/multiagent.md
+    - Session: api-reference/session.md
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md

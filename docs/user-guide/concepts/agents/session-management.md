@@ -36,12 +36,12 @@ The conversation, and associated state, is persisted to the underlying filesyste
 
 Strands offers two built-in session managers for persisting agent sessions:
 
-1. **FileSessionManager**: Stores sessions in the local filesystem
-2. **S3SessionManager**: Stores sessions in Amazon S3 buckets
+1. [**FileSessionManager**](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager): Stores sessions in the local filesystem
+2. [**S3SessionManager**](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager): Stores sessions in Amazon S3 buckets
 
 ### FileSessionManager
 
-The `FileSessionManager` provides a simple way to persist agent sessions to the local filesystem:
+The [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager) provides a simple way to persist agent sessions to the local filesystem:
 
 ```python
 from strands import Agent
@@ -62,7 +62,7 @@ agent("Hello, I'm a new user!")
 
 #### File Storage Structure
 
-When using `FileSessionManager`, sessions are stored in the following directory structure:
+When using [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager), sessions are stored in the following directory structure:
 
 ```
 /<sessions_dir>/
@@ -78,7 +78,7 @@ When using `FileSessionManager`, sessions are stored in the following directory 
 
 ### S3SessionManager
 
-For cloud-based persistence, especially in distributed environments, use the `S3SessionManager`:
+For cloud-based persistence, especially in distributed environments, use the [`S3SessionManager`](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager):
 
 ```python
 from strands import Agent
@@ -105,7 +105,7 @@ agent("Tell me about AWS S3")
 ```
 #### S3 Storage Structure
 
-Just like in the `FileSessionManager`, sessions are stored with the following structure in the s3 bucket:
+Just like in the [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager), sessions are stored with the following structure in the s3 bucket:
 
 ```
 <s3_key_prefix>/
@@ -121,7 +121,7 @@ Just like in the `FileSessionManager`, sessions are stored with the following st
 
 #### Required S3 Permissions
 
-To use the `S3SessionManager`, your AWS credentials must have the following S3 permissions:
+To use the [`S3SessionManager`](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager), your AWS credentials must have the following S3 permissions:
 
 - `s3:PutObject` - To create and update session data
 - `s3:GetObject` - To retrieve session data
@@ -174,7 +174,7 @@ Session data is stored using these key data models:
 
 **Session**
 
-The `Session` model is the top-level container for session data:
+The [`Session`](../../../api-reference/types.md#strands.types.session.Session) model is the top-level container for session data:
 
 - **Purpose**: Provides a namespace for organizing multiple agents and their interactions
 - **Key Fields**:
@@ -185,7 +185,7 @@ The `Session` model is the top-level container for session data:
 
 **SessionAgent**
 
-The `SessionAgent` model stores agent-specific data:
+The [`SessionAgent`](../../../api-reference/types.md#strands.types.session.SessionAgent) model stores agent-specific data:
 
 - **Purpose**: Maintains the state and configuration of a specific agent within a session
 - **Key Fields**:
@@ -197,7 +197,7 @@ The `SessionAgent` model stores agent-specific data:
 
 **SessionMessage**
 
-The `SessionMessage` model stores individual messages in the conversation:
+The [`SessionMessage`](../../../api-reference/types.md#strands.types.session.SessionMessage) model stores individual messages in the conversation:
 
 - **Purpose**: Preserves the conversation history with support for message redaction
 - **Key Fields**:
