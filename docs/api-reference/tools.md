@@ -17,6 +17,9 @@
 ::: strands.tools.registry
     options:
       heading_level: 2
+::: strands.tools.structured_output
+    options:
+      heading_level: 2
 ::: strands.tools.watcher
     options:
       heading_level: 2

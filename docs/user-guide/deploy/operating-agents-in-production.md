@@ -89,26 +89,15 @@ For improved user experience in production applications, leverage streaming via 
 # For web applications
 async def stream_agent_response(prompt):
     agent = Agent(...)
-    
+
     ...
-    
+
     async for event in agent.stream_async(prompt):
         if "data" in event:
             yield event["data"]
 ```
 
 See [Async Iterators](../../user-guide/concepts/streaming/async-iterators.md) for more information.
-
-### Parallelism Settings
-
-Control parallelism for optimal resource utilization:
-
-```python
-# Limit parallel tool execution based on your infrastructure capacity
-agent = Agent(
-    max_parallel_tools=4  # Adjust based on available resources
-)
-```
 
 ### Error Handling
 

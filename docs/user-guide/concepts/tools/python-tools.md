@@ -20,7 +20,7 @@ from strands import tool
 @tool
 def weather_forecast(city: str, days: int = 3) -> str:
     """Get weather forecast for a city.
-    
+
     Args:
         city: The name of the city
         days: Number of days for the forecast
@@ -48,7 +48,7 @@ You can also optionally override the tool name or description by providing them 
 @tool(name="get_weather", description="Retrieves weather forecast for a specified location")
 def weather_forecast(city: str, days: int = 3) -> str:
     """Implementation function for weather forecasting.
-    
+
     Args:
         city: The name of the city
         days: Number of days for the forecast
@@ -65,7 +65,7 @@ By default, your function's return value is automatically formatted as a text re
 @tool
 def fetch_data(source_id: str) -> dict:
     """Fetch data from a specified source.
-    
+
     Args:
         source_id: Identifier for the data source
     """
@@ -87,6 +87,31 @@ def fetch_data(source_id: str) -> dict:
 ```
 
 For more details, see the [Tool Response Format](#tool-response-format) section below.
+
+### Async Invocation
+
+Decorated tools may also be defined async. Strands will invoke all async tools concurrently.
+
+```Python
+import asyncio
+from strands import Agent, tool
+
+
+@tool
+async def call_api() -> str:
+    """Call API asynchronously."""
+
+    await asyncio.sleep(5)  # simulated api call
+    return "API result"
+
+
+async def async_example():
+    agent = Agent(tools=[call_api])
+    await agent.invoke_async("Can you call my API?")
+
+
+asyncio.run(async_example())
+```
 
 ## Python Modules as Tools
 
@@ -132,14 +157,14 @@ def weather_forecast(tool, **kwargs: Any):
     # Extract tool parameters
     tool_use_id = tool["toolUseId"]
     tool_input = tool["input"]
-    
+
     # Get parameter values
     city = tool_input.get("city", "")
     days = tool_input.get("days", 3)
-    
+
     # Tool implementation
     result = f"Weather forecast for {city} for the next {days} days..."
-    
+
     # Return structured response
     return {
         "toolUseId": tool_use_id,
@@ -169,6 +194,34 @@ from strands import Agent
 agent = Agent(
     tools=["./weather_forecast.py"]
 )
+```
+
+### Async Invocation
+
+Similar to decorated tools, users may define their module tools async.
+
+```Python
+TOOL_SPEC = {
+    "name": "call_api",
+    "description": "Call my API asynchronously.",
+    "inputSchema": {
+        "json": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+    }
+}
+
+async def call_api(tool, **kwargs):
+    await asyncio.sleep(5)  # simulated api call
+    result = "API result"
+
+    return {
+        "toolUseId": tool["toolUseId"],
+        "status": "success",
+        "content": [{"text": result}],
+    }
 ```
 
 ### Tool Response Format

@@ -24,3 +24,6 @@
 ::: strands.agent.conversation_manager.summarizing_conversation_manager
     options:
       heading_level: 3
+::: strands.agent.state
+    options:
+      heading_level: 2

@@ -56,14 +56,6 @@ result = agent("What is 125 * 37?")
 
 When running this code with logging enabled, you'll see logs from different components of the SDK as the agent processes the request, calls the calculator tool, and generates a response. The following sections show examples of these logs:
 
-### Agent Lifecycle
-
-Logs related to agent initialization and shutdown:
-
-```
-DEBUG | strands.agent.agent | thread pool executor shutdown complete
-```
-
 ### Tool Registry and Execution
 
 Logs related to tool discovery, registration, and execution:
@@ -85,8 +77,7 @@ WARNING | strands.tools.registry | tool_name=<invalid_tool> | spec validation fa
 DEBUG | strands.tools.registry | tool_name=<calculator> | loaded dynamic tool config
 
 # Tool execution
-DEBUG | strands.tools.executor | tool_name=<calculator> | executing tool with parameters: {"expression": "125 * 37"}
-DEBUG | strands.tools.executor | tool_count=<1> | submitted tasks to parallel executor
+DEBUG | strands.event_loop.event_loop | tool_use=<calculator_tool_use_id> | streaming
 
 # Tool hot reloading
 DEBUG | strands.tools.registry | tool_name=<calculator> | searching directories for tool

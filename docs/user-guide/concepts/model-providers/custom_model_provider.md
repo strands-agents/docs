@@ -139,13 +139,13 @@ The `stream` method accepts three parameters directly:
 
 ```python
     @override
-    def stream(
-        self, 
-        messages: Messages, 
-        tool_specs: Optional[list[ToolSpec]] = None, 
+    async def stream(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
         system_prompt: Optional[str] = None,
-        **kwargs: Any,
-    ) -> Iterable[StreamEvent]:
+        **kwargs: Any
+    ) -> AsyncIterable[StreamEvent]:
         """Stream responses from the Custom model.
 
         Args:
@@ -167,12 +167,12 @@ The `stream` method accepts three parameters directly:
             "system_prompt": system_prompt,
             **self.config,  # Include model configuration
         }
-        
+
         logger.debug("request=<%s> | invoking model", request)
 
         # Invoke your model
         try:
-            response = self.client(**request)
+            response = await self.client(**request)
         except OverflowException as e:
             raise ContextWindowOverflowException() from e
 
@@ -187,7 +187,7 @@ The `stream` method accepts three parameters directly:
         }
 
         # Process each chunk from your model's response
-        for chunk in response["stream"]:
+        async for chunk in response["stream"]:
             # Convert your model's event format to Strands Agents StreamEvent
             if chunk.get("type") == "text_delta":
                 yield {
@@ -211,9 +211,9 @@ For more complex implementations, you may want to create helper methods to organ
 
 ```python
     def _format_request(
-        self, 
-        messages: Messages, 
-        tool_specs: Optional[list[ToolSpec]] = None, 
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
         system_prompt: Optional[str] = None
     ) -> dict[str, Any]:
         """Optional helper method to format requests for your model API."""
@@ -242,6 +242,8 @@ For more complex implementations, you may want to create helper methods to organ
             }
         return None
 ```
+
+> Note, `stream` must be implemented async. If your client does not support async invocation, you may consider wrapping the relevant calls in a thread so as not to block the async event loop. For an example on how to achieve this, you can check out the [BedrockModel](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py) provider implementation.
 
 ### 3. Understanding StreamEvent Types
 
@@ -329,7 +331,7 @@ To support structured output in your custom model provider, you need to implemen
 T = TypeVar('T', bound=BaseModel)
 
 @override
-def structured_output(
+async def structured_output(
     self, output_model: Type[T], prompt: Messages, **kwargs: Any
 ) -> Generator[dict[str, Union[T, Any]], None, None]:
     """Get structured output using tool calling.
@@ -344,10 +346,10 @@ def structured_output(
     tool_spec = convert_pydantic_to_tool_spec(output_model)
 
     # Use the stream method with tool specification
-    response = self.stream(messages=prompt, tool_specs=[tool_spec], **kwargs)
+    response = await self.stream(messages=prompt, tool_specs=[tool_spec], **kwargs)
 
     # Process streaming response
-    for event in process_stream(response, prompt):
+    async for event in process_stream(response, prompt):
         yield event  # Passed to callback handler configured in Agent instance
 
     stop_reason, messages, _, _ = event["stop"]
@@ -373,6 +375,8 @@ def structured_output(
 3. **Error Handling**: Provide clear error messages for parsing and validation failures
 
 For detailed structured output usage patterns, see the [Structured Output documentation](../agents/structured-output.md).
+
+> Note, similar to the `stream` method, `structured_output` must be implemented async. If your client does not support async invocation, you may consider wrapping the relevant calls in a thread so as not to block the async event loop. Again, for an example on how to achieve this, you can check out the [BedrockModel](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py) provider implementation.
 
 ### 5. Use Your Custom Model Provider
 
