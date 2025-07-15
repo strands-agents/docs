@@ -217,7 +217,7 @@ Strands traces include rich attributes that provide context for each operation:
 | `tool.status` | Execution status (success/error) |
 | `gen_ai.tool.name` | Name of the tool called |
 | `gen_ai.tool.call.id` | Unique identifier for the tool call |
-| `gen_ai.operation.name` | Gen-AI operation name | 
+| `gen_ai.operation.name` | Gen-AI operation name |
 | `gen_ai.event.start_time` | When tool execution began |
 | `gen_ai.event.end_time` | When tool execution completed |
 | `gen_ai.choice` | Formatted tool result |
@@ -281,9 +281,35 @@ For high-volume applications, you may want to implement sampling to reduce the v
 # Example: Sample 10% of traces
 os.environ["OTEL_TRACES_SAMPLER"] = "traceidratio"
 os.environ["OTEL_TRACES_SAMPLER_ARG"] = "0.5"
-
-
 ```
+
+### Configuring the exporters from source code
+
+The `StrandsTelemetry().setup_console_exporter()` and `StrandsTelemetry().setup_otlp_exporter()` methods accept keyword arguments that are passed to OpenTelemetry's [`ConsoleSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.export.html#opentelemetry.sdk.trace.export.ConsoleSpanExporter) and [`OTLPSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/exporter/otlp/otlp.html#opentelemetry.exporter.otlp.proto.http.trace_exporter.OTLPSpanExporter) initializers, respectively. This allows you to save the log lines to a file or set up the OTLP endpoints from Python code:
+
+```python
+from os import linesep
+from strands.telemetry import StrandsTelemetry
+
+strands_telemetry = StrandsTelemetry()
+
+# Save telemetry to a local file and configure the serialization format
+logfile = open("my_log.jsonl", "wt")
+strands_telemetry.setup_console_exporter(
+    out=logfile,
+    formatter=lambda span: span.to_json() + linesep,
+)
+# ... your agent-running code goes here ...
+logfile.close()
+
+# Configure OTLP endpoints programmatically
+strands_telemetry.setup_otlp_exporter(
+    endpoint="http://collector.example.com:4318",
+    headers={"key1": "value1", "key2": "value2"},
+)
+```
+
+For more information about the accepted arguments, refer to `ConsoleSpanExporter` and `OTLPSpanExporter` in the [OpenTelemetry API documentation](https://opentelemetry-python.readthedocs.io).
 
 ### Custom Attribute Tracking
 
