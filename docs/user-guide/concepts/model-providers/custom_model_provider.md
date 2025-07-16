@@ -310,6 +310,9 @@ Your custom model provider needs to convert model's response events to Strands A
         "inputTokens": 234, # Number of tokens sent in the request to the model.
         "outputTokens": 234, # Number of tokens that the model generated for the request.
         "totalTokens": 468 # Total number of tokens (input + output).
+        "cacheWriteInputTokens": 234 # Optional: Number of input tokens written to cache.
+        "cacheReadInputTokens": 0 # Optional: Number of input tokens read from cache.
+        
     }
 }
 ```
