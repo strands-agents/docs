@@ -6,201 +6,201 @@ site_url: https://strandsagents.com
 repo_url: https://github.com/strands-agents/sdk-python
 
 theme:
-  name: material
-  custom_dir: overrides
-  logo: assets/logo-light.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
-  logo_dark: assets/logo-dark.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
-  favicon: assets/logo-auto.svg
-  favicon_png: assets/logo-light.png  # Safari doesn't support SVG favicons
-  palette:
-    # Palette toggle for light mode
-    - media: "(prefers-color-scheme: light)"
-      primary: custom
-      scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    # Palette toggle for dark mode
-    - media: "(prefers-color-scheme: dark)"
-      primary: custom
-      scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
-  features:
-    - content.code.copy
-    - content.code.select
-    - navigation.instant
-    - navigation.instant.prefetch
-    - navigation.instant.progress
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - navigation.sections
-    - navigation.top
-    - search.highlight
-    - content.code.copy
+    name: material
+    custom_dir: overrides
+    logo: assets/logo-light.svg # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+    logo_dark: assets/logo-dark.svg # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+    favicon: assets/logo-auto.svg
+    favicon_png: assets/logo-light.png # Safari doesn't support SVG favicons
+    palette:
+        # Palette toggle for light mode
+        - media: "(prefers-color-scheme: light)"
+          primary: custom
+          scheme: default
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        # Palette toggle for dark mode
+        - media: "(prefers-color-scheme: dark)"
+          primary: custom
+          scheme: slate
+          toggle:
+              icon: material/brightness-4
+              name: Switch to light mode
+    features:
+        - content.code.copy
+        - content.code.select
+        - navigation.instant
+        - navigation.instant.prefetch
+        - navigation.instant.progress
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.sections
+        - navigation.top
+        - search.highlight
+        - content.code.copy
 
 markdown_extensions:
-  - admonition
-  - codehilite
-  - pymdownx.highlight
-  - pymdownx.tabbed
-  - pymdownx.details
-  - pymdownx.emoji
-  - tables
-  - pymdownx.superfences:
-      custom_fences:
-          - name: mermaid
-            class: mermaid
-            format: !!python/name:pymdownx.superfences.fence_code_format
-  - toc:
-      title: On this page
-      permalink: true
+    - admonition
+    - codehilite
+    - pymdownx.highlight
+    - pymdownx.tabbed
+    - pymdownx.details
+    - pymdownx.emoji
+    - tables
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - toc:
+          title: On this page
+          permalink: true
 
 extra_css:
-  - stylesheets/extra.css
+    - stylesheets/extra.css
 
 extra_javascript:
-  # Workaround for site_url breaking mermaid rendering; see the following for more info:
-  # https://github.com/squidfunk/mkdocs-material/issues/3742#issuecomment-1076068038
-  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+    # Workaround for site_url breaking mermaid rendering; see the following for more info:
+    # https://github.com/squidfunk/mkdocs-material/issues/3742#issuecomment-1076068038
+    - https://unpkg.com/mermaid@11/dist/mermaid.min.js
 
 nav:
-  - User Guide:
-    - Welcome: README.md
-    - Quickstart: user-guide/quickstart.md
-    - Concepts:
-      - Agents:
-        - Agent Loop: user-guide/concepts/agents/agent-loop.md
-        - State: user-guide/concepts/agents/state.md
-        - Session Management: user-guide/concepts/agents/session-management.md
-        - Prompts: user-guide/concepts/agents/prompts.md
-        - Hooks: user-guide/concepts/agents/hooks.md
-        - Structured Output: user-guide/concepts/agents/structured-output.md
-        - Conversation Management: user-guide/concepts/agents/conversation-management.md
-      - Tools:
-        - Overview: user-guide/concepts/tools/tools_overview.md
-        - Python: user-guide/concepts/tools/python-tools.md
-        - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
-        - Example Tools Package: user-guide/concepts/tools/example-tools-package.md
-      - Model Providers:
-        - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
-        - Anthropic: user-guide/concepts/model-providers/anthropic.md
-        - LiteLLM: user-guide/concepts/model-providers/litellm.md
-        - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
-        - MistralAI: user-guide/concepts/model-providers/mistral.md
-        - Ollama: user-guide/concepts/model-providers/ollama.md
-        - OpenAI: user-guide/concepts/model-providers/openai.md
-        - Writer: user-guide/concepts/model-providers/writer.md
-        - Cohere: user-guide/concepts/model-providers/cohere.md
-        - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
-      - Streaming:
-        - Async Iterators: user-guide/concepts/streaming/async-iterators.md
-        - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
-      - Multi-agent:
-        - Agent2Agent (A2A): user-guide/concepts/multi-agent/agent-to-agent.md
-        - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
-        - Swarm: user-guide/concepts/multi-agent/swarm.md
-        - Graph: user-guide/concepts/multi-agent/graph.md
-        - Workflow: user-guide/concepts/multi-agent/workflow.md
-    - Safety & Security:
-      - Responsible AI: user-guide/safety-security/responsible-ai.md
-      - Guardrails: user-guide/safety-security/guardrails.md
-      - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
-    - Observability & Evaluation:
-      - Observability: user-guide/observability-evaluation/observability.md
-      - Metrics: user-guide/observability-evaluation/metrics.md
-      - Traces: user-guide/observability-evaluation/traces.md
-      - Logs: user-guide/observability-evaluation/logs.md
-      - Evaluation: user-guide/observability-evaluation/evaluation.md
-    - Deploy:
-      - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
-      - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
-      - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
-      - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
-      - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
-  - Examples:
-    - Overview: examples/README.md
-    - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
-    - Weather Forecaster: examples/python/weather_forecaster.md
-    - Memory Agent: examples/python/memory_agent.md
-    - File Operations: examples/python/file_operations.md
-    - Agents Workflows: examples/python/agents_workflows.md
-    - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
-    - Structured Output: examples/python/structured_output.md
-    - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
-    - Meta Tooling: examples/python/meta_tooling.md
-    - MCP: examples/python/mcp_calculator.md
-    - Multi-modal: examples/python/multimodal.md
-  - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
-  - API Reference:
-    - Agent: api-reference/agent.md
-    - Event Loop: api-reference/event-loop.md
-    - Experimental: api-reference/experimental.md
-    - Handlers: api-reference/handlers.md
-    - Hooks: api-reference/hooks.md
-    - Models: api-reference/models.md
-    - Multiagent: api-reference/multiagent.md
-    - Session: api-reference/session.md
-    - Telemetry: api-reference/telemetry.md
-    - Tools: api-reference/tools.md
-    - Types: api-reference/types.md
+    - User Guide:
+          - Welcome: README.md
+          - Quickstart: user-guide/quickstart.md
+          - Concepts:
+                - Agents:
+                      - Agent Loop: user-guide/concepts/agents/agent-loop.md
+                      - State: user-guide/concepts/agents/state.md
+                      - Session Management: user-guide/concepts/agents/session-management.md
+                      - Prompts: user-guide/concepts/agents/prompts.md
+                      - Hooks: user-guide/concepts/agents/hooks.md
+                      - Structured Output: user-guide/concepts/agents/structured-output.md
+                      - Conversation Management: user-guide/concepts/agents/conversation-management.md
+                - Tools:
+                      - Overview: user-guide/concepts/tools/tools_overview.md
+                      - Python: user-guide/concepts/tools/python-tools.md
+                      - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
+                      - Example Tools Package: user-guide/concepts/tools/example-tools-package.md
+                - Model Providers:
+                      - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
+                      - Anthropic: user-guide/concepts/model-providers/anthropic.md
+                      - LiteLLM: user-guide/concepts/model-providers/litellm.md
+                      - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+                      - MistralAI: user-guide/concepts/model-providers/mistral.md
+                      - Ollama: user-guide/concepts/model-providers/ollama.md
+                      - OpenAI: user-guide/concepts/model-providers/openai.md
+                      - Writer: user-guide/concepts/model-providers/writer.md
+                      - Cohere: user-guide/concepts/model-providers/cohere.md
+                      - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
+                - Streaming:
+                      - Async Iterators: user-guide/concepts/streaming/async-iterators.md
+                      - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
+                - Multi-agent:
+                      - Agent2Agent (A2A): user-guide/concepts/multi-agent/agent-to-agent.md
+                      - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
+                      - Swarm: user-guide/concepts/multi-agent/swarm.md
+                      - Graph: user-guide/concepts/multi-agent/graph.md
+                      - Workflow: user-guide/concepts/multi-agent/workflow.md
+          - Safety & Security:
+                - Responsible AI: user-guide/safety-security/responsible-ai.md
+                - Guardrails: user-guide/safety-security/guardrails.md
+                - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
+          - Observability & Evaluation:
+                - Observability: user-guide/observability-evaluation/observability.md
+                - Metrics: user-guide/observability-evaluation/metrics.md
+                - Traces: user-guide/observability-evaluation/traces.md
+                - Logs: user-guide/observability-evaluation/logs.md
+                - Evaluation: user-guide/observability-evaluation/evaluation.md
+          - Deploy:
+                - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
+                - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
+                - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+                - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
+                - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+    - Examples:
+          - Overview: examples/README.md
+          - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
+          - Weather Forecaster: examples/python/weather_forecaster.md
+          - Memory Agent: examples/python/memory_agent.md
+          - File Operations: examples/python/file_operations.md
+          - Agents Workflows: examples/python/agents_workflows.md
+          - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
+          - Structured Output: examples/python/structured_output.md
+          - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
+          - Meta Tooling: examples/python/meta_tooling.md
+          - MCP: examples/python/mcp_calculator.md
+          - Multi-modal: examples/python/multimodal.md
+    - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
+    - API Reference:
+          - Agent: api-reference/agent.md
+          - Event Loop: api-reference/event-loop.md
+          - Experimental: api-reference/experimental.md
+          - Handlers: api-reference/handlers.md
+          - Hooks: api-reference/hooks.md
+          - Models: api-reference/models.md
+          - Multiagent: api-reference/multiagent.md
+          - Session: api-reference/session.md
+          - Telemetry: api-reference/telemetry.md
+          - Tools: api-reference/tools.md
+          - Types: api-reference/types.md
 
 exclude_docs: |
-  node_modules
-  .venv
-  _dependencies
+    node_modules
+    .venv
+    _dependencies
 
 plugins:
-  - search
-  - privacy
-  - macros
-  - mike:
-      alias_type: symlink
-      canonical_version: latest
-  - mkdocstrings:
-      handlers:
-        python:
-          options:
-            docstring_style: google
-            show_root_heading: true
-            show_source: true
-  - llmstxt:
-      sections:
-        User Guide:
-          - README.md
-          - user-guide/**/*.md
-        Examples:
-          - examples/**/*.md
-        API Reference:
-          - api-reference/*.md
+    - search
+    - privacy
+    - macros
+    - mike:
+          alias_type: symlink
+          canonical_version: latest
+    - mkdocstrings:
+          handlers:
+              python:
+                  options:
+                      docstring_style: google
+                      show_root_heading: true
+                      show_source: true
+    - llmstxt:
+          sections:
+              User Guide:
+                  - README.md
+                  - user-guide/**/*.md
+              Examples:
+                  - examples/**/*.md
+              API Reference:
+                  - api-reference/*.md
 
 extra:
-  social:
-    - icon: fontawesome/brands/github
-  version:
-    provider: mike
-  # Variables
-  docs_repo: https://github.com/strands-agents/docs/tree/main
-  sdk_pypi: https://pypi.org/project/strands-agents/
-  sdk_repo: https://github.com/strands-agents/sdk-python/blob/main
-  sdk_repo_home: https://github.com/strands-agents/sdk-python
-  tools_pypi: https://pypi.org/project/strands-agents-tools/
-  tools_repo: https://github.com/strands-agents/tools/blob/main
-  tools_repo_home: https://github.com/strands-agents/tools
-  agent_builder_pypi: https://pypi.org/project/strands-agents-builder/
-  agent_builder_repo_home: https://github.com/strands-agents/agent-builder
+    social:
+        - icon: fontawesome/brands/github
+    version:
+        provider: mike
+    # Variables
+    docs_repo: https://github.com/strands-agents/docs/tree/main
+    sdk_pypi: https://pypi.org/project/strands-agents/
+    sdk_repo: https://github.com/strands-agents/sdk-python/blob/main
+    sdk_repo_home: https://github.com/strands-agents/sdk-python
+    tools_pypi: https://pypi.org/project/strands-agents-tools/
+    tools_repo: https://github.com/strands-agents/tools/blob/main
+    tools_repo_home: https://github.com/strands-agents/tools
+    agent_builder_pypi: https://pypi.org/project/strands-agents-builder/
+    agent_builder_repo_home: https://github.com/strands-agents/agent-builder
 
-  link_strands_tools: "[`strands-agents-tools`](https://github.com/strands-agents/tools)"
-  link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
+    link_strands_tools: "[`strands-agents-tools`](https://github.com/strands-agents/tools)"
+    link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
 
 validation:
-  nav:
-    omitted_files: info
-    not_found: warn
-    absolute_links: warn
-  links:
-    not_found: warn
-    anchors: warn
-    absolute_links: warn
-    unrecognized_links: warn
+    nav:
+        omitted_files: info
+        not_found: warn
+        absolute_links: warn
+    links:
+        not_found: warn
+        anchors: warn
+        absolute_links: warn
+        unrecognized_links: warn
