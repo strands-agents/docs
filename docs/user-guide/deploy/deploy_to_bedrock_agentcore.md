@@ -58,16 +58,19 @@ pip install bedrock-agentcore
 ### Basic Setup (3 simple steps)
 
 #### Import the runtime
+
 ```python
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 ```
 
 #### Initialize the app
+
 ```python
 app = BedrockAgentCoreApp()
 ```
 
 #### Decorate your function
+
 ```python
 @app.entrypoint
 def invoke(payload):
@@ -81,6 +84,7 @@ if __name__ == "__main__":
 ### Complete Examples
 
 #### Basic Example
+
 ```python
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 from strands import Agent
@@ -100,6 +104,7 @@ if __name__ == "__main__":
 ```
 
 #### Streaming Example
+
 ```python
 from strands import Agent
 from bedrock_agentcore import BedrockAgentCoreApp
@@ -146,6 +151,7 @@ pip install bedrock-agentcore-starter-toolkit
 ```
 
 #### Project Structure
+
 ```
 your_project_directory/
 ├── agent_example.py # Your main agent code
@@ -154,6 +160,7 @@ your_project_directory/
 ```
 
 #### agent_example.py
+
 ```python
 from strands import Agent
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
@@ -173,6 +180,7 @@ if __name__ == "__main__":
 ```
 
 #### requirements.txt
+
 ```
 strands-agents
 bedrock-agentcore
@@ -268,11 +276,13 @@ This approach demonstrates how to deploy a custom agent using FastAPI and Docker
 ### Quick Start Setup
 
 #### Install uv
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 #### Create Project
+
 ```bash
 mkdir my-custom-agent && cd my-custom-agent
 uv init --python 3.11
@@ -291,6 +301,7 @@ my-custom-agent/
 ### Complete Strands Agent Example
 
 #### agent.py
+
 ```python
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -384,11 +395,13 @@ CMD ["uv", "run", "uvicorn", "agent:app", "--host", "0.0.0.0", "--port", "8080"]
 ### Build and Deploy ARM64 Image
 
 #### Setup Docker buildx
+
 ```bash
 docker buildx create --use
 ```
 
 #### Build and Test Locally
+
 ```bash
 # Build the image
 docker buildx build --platform linux/arm64 -t my-agent:arm64 --load .
@@ -403,6 +416,7 @@ docker run --platform linux/arm64 -p 8080:8080 \
 ```
 
 #### Deploy to ECR
+
 ```bash
 # Create ECR repository
 aws ecr create-repository --repository-name my-strands-agent --region us-west-2
@@ -420,6 +434,7 @@ aws ecr describe-images --repository-name my-strands-agent --region us-west-2
 ### Deploy Agent Runtime
 
 #### deploy_agent.py
+
 ```python
 import boto3
 
@@ -448,6 +463,7 @@ uv run deploy_agent.py
 ### Invoke Your Agent
 
 #### invoke_agent.py
+
 ```python
 import boto3
 import json
@@ -610,6 +626,7 @@ context.attach(ctx)
 ### Enhanced AgentCore observability with custom headers (Optional)
 
 You can invoke your agent with additional HTTP headers to provide enhanced observability options. The following example shows invocations including optional additional header requests for agents hosted in the AgentCore runtime.
+
 ```python
 import boto3
 
