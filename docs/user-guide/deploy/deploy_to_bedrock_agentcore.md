@@ -262,7 +262,7 @@ response = agent_core_client.invoke_agent_runtime(
 
 # Option B: Custom Agent
 
-> **This section is complete** - follow all steps below if you chose the custom agent approach.
+> **This section is complete** - follow all steps below if you choose the custom agent approach.
 
 This approach demonstrates how to deploy a custom agent using FastAPI and Docker, following AgentCore Runtime requirements.
 
