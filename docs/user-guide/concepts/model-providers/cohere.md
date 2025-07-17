@@ -4,7 +4,7 @@
 
 ## Installation
 
-The Strands Agents SDK provides access to Cohere models through the OpenAI compatiblity layer, configured as an optional dependency. To install, run:
+The Strands Agents SDK provides access to Cohere models through the OpenAI compatibility layer, configured as an optional dependency. To install, run:
 
 ```bash
 pip install 'strands-agents[openai]'

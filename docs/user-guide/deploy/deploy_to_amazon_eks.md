@@ -155,7 +155,7 @@ Helm packages and deploys application to Kubernetes and EKS, Helm enables deploy
 Follow the full example [`deploy_to_eks` sample project on GitHub][project_code]:
 
 1. Using eksctl creates an EKS Auto Mode cluster and a VPC
-2. Builds and push the Docker image from your Dockerfile to Amazon Elastic Container Registry (ECR). 
+2. Builds and pushes the Docker image from your Dockerfile to Amazon Elastic Container Registry (ECR). 
 3. Configure agent access to AWS services such as Amazon Bedrock by using Amazon EKS Pod Identity.
 4. Deploy the `strands-agents-weather` agent helm package to EKS
 5. Sets up an Application Load Balancer using Kubernetes Ingress and EKS Auto Mode network capabilities.

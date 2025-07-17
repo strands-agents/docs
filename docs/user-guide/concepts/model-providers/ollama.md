@@ -232,7 +232,7 @@ print(f"Rating: {result.rating}")
 
 ## Tool Support
 
-[Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands's tool system:
+[Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands' tool system:
 
 ```python
 from strands import Agent
