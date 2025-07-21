@@ -92,7 +92,7 @@ flowchart TD
        # Retrieve path
        result = agent.tool.memory(action="retrieve", query=query, min_score=0.4, max_results=9)
        # Generate response from retrieved information
-       answer = agent.use_llm(prompt=f"User question: \"{query}\"\n\nInformation from knowledge base:\n{result_str}...",
+       answer = agent.tool.use_llm(prompt=f"User question: \"{query}\"\n\nInformation from knowledge base:\n{result_str}...",
                              system_prompt=ANSWER_SYSTEM_PROMPT)
    ```
 
