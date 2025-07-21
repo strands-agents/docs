@@ -119,7 +119,7 @@ Strands agents can be deployed using various options from serverless to dedicate
 
 Built-in guides are available for several AWS services:
 
-* **Bedrock AgentCore** - Amazon Bedrock AgentCore Runtime is a secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore.md)
+* **Bedrock AgentCore** - A secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore.md)
 
 * **AWS Lambda** - Serverless option for short-lived agent interactions and batch processing with minimal infrastructure management. [Learn more](deploy_to_aws_lambda.md)
 
