@@ -27,6 +27,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+  icon:
+    admonition:
+      code: material/code-json
   features:
     - content.code.copy
     - content.code.select

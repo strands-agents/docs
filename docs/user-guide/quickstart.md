@@ -42,6 +42,7 @@ To use the examples in this guide, you'll need to configure your environment wit
 1. **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2. **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3. **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
+4. **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
 Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model. You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 
@@ -61,8 +62,8 @@ Create the directory: `mkdir my_agent`
 Now create `my_agent/requirements.txt` to include the `strands-agents` and `strands-agents-tools` packages as dependencies:
 
 ```
-strands-agents>=0.1.0
-strands-agents-tools>=0.1.0
+strands-agents>=1.0.0
+strands-agents-tools>=0.2.0
 ```
 
 Create the `my_agent/__init__.py` file:
@@ -144,6 +145,174 @@ python -u my_agent/agent.py
 
 And that's it! We now have a running agent with powerful tools and abilities in just a few lines of code 🥳.
 
+## Understanding What Agents Did
+
+After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](../api-reference/agent.md#strands.agent.agent_result.AgentResult) object with comprehensive observability data.
+
+Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](../api-reference/agent.md#strands.agent.agent_result.AgentResult), or export them using [OpenTelemetry](observability-evaluation/traces.md) to observability platforms.
+
+??? code "Example result.metrics.get_summary() output"
+
+    ```python
+    result = agent("What is the square root of 144?")
+    print(result.metrics.get_summary())
+    ```
+    ```python
+    {
+      "accumulated_metrics": {
+        "latencyMs": 6253
+      },
+      "accumulated_usage": {
+        "inputTokens": 3921,
+        "outputTokens": 83,
+        "totalTokens": 4004
+      },
+      "average_cycle_time": 0.9406174421310425,
+      "tool_usage": {
+        "calculator": {
+          "execution_stats": {
+            "average_time": 0.008260965347290039,
+            "call_count": 1,
+            "error_count": 0,
+            "success_count": 1,
+            "success_rate": 1.0,
+            "total_time": 0.008260965347290039
+          },
+          "tool_info": {
+            "input_params": {
+              "expression": "sqrt(144)",
+              "mode": "evaluate"
+            },
+            "name": "calculator",
+            "tool_use_id": "tooluse_jR3LAfuASrGil31Ix9V7qQ"
+          }
+        }
+      },
+      "total_cycles": 2,
+      "total_duration": 1.881234884262085,
+      "traces": [
+        {
+          "children": [
+            {
+              "children": [],
+              "duration": 4.476144790649414,
+              "end_time": 1747227039.938964,
+              "id": "c7e86c24-c9d4-4a79-a3a2-f0eaf42b0d19",
+              "message": {
+                "content": [
+                  {
+                    "text": "I'll calculate the square root of 144 for you."
+                  },
+                  {
+                    "toolUse": {
+                      "input": {
+                        "expression": "sqrt(144)",
+                        "mode": "evaluate"
+                      },
+                      "name": "calculator",
+                      "toolUseId": "tooluse_jR3LAfuASrGil31Ix9V7qQ"
+                    }
+                  }
+                ],
+                "role": "assistant"
+              },
+              "metadata": {},
+              "name": "stream_messages",
+              "parent_id": "78595347-43b1-4652-b215-39da3c719ec1",
+              "raw_name": null,
+              "start_time": 1747227035.462819
+            },
+            {
+              "children": [],
+              "duration": 0.008296012878417969,
+              "end_time": 1747227039.948415,
+              "id": "4f64ce3d-a21c-4696-aa71-2dd446f71488",
+              "message": {
+                "content": [
+                  {
+                    "toolResult": {
+                      "content": [
+                        {
+                          "text": "Result: 12"
+                        }
+                      ],
+                      "status": "success",
+                      "toolUseId": "tooluse_jR3LAfuASrGil31Ix9V7qQ"
+                    }
+                  }
+                ],
+                "role": "user"
+              },
+              "metadata": {
+                "toolUseId": "tooluse_jR3LAfuASrGil31Ix9V7qQ",
+                "tool_name": "calculator"
+              },
+              "name": "Tool: calculator",
+              "parent_id": "78595347-43b1-4652-b215-39da3c719ec1",
+              "raw_name": "calculator - tooluse_jR3LAfuASrGil31Ix9V7qQ",
+              "start_time": 1747227039.940119
+            },
+            {
+              "children": [],
+              "duration": 1.881267786026001,
+              "end_time": 1747227041.8299048,
+              "id": "0261b3a5-89f2-46b2-9b37-13cccb0d7d39",
+              "message": null,
+              "metadata": {},
+              "name": "Recursive call",
+              "parent_id": "78595347-43b1-4652-b215-39da3c719ec1",
+              "raw_name": null,
+              "start_time": 1747227039.948637
+            }
+          ],
+          "duration": null,
+          "end_time": null,
+          "id": "78595347-43b1-4652-b215-39da3c719ec1",
+          "message": null,
+          "metadata": {},
+          "name": "Cycle 1",
+          "parent_id": null,
+          "raw_name": null,
+          "start_time": 1747227035.46276
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "duration": 1.8811860084533691,
+              "end_time": 1747227041.829879,
+              "id": "1317cfcb-0e87-432e-8665-da5ddfe099cd",
+              "message": {
+                "content": [
+                  {
+                    "text": "\n\nThe square root of 144 is 12."
+                  }
+                ],
+                "role": "assistant"
+              },
+              "metadata": {},
+              "name": "stream_messages",
+              "parent_id": "f482cee9-946c-471a-9bd3-fae23650f317",
+              "raw_name": null,
+              "start_time": 1747227039.948693
+            }
+          ],
+          "duration": 1.881234884262085,
+          "end_time": 1747227041.829896,
+          "id": "f482cee9-946c-471a-9bd3-fae23650f317",
+          "message": null,
+          "metadata": {},
+          "name": "Cycle 2",
+          "parent_id": null,
+          "raw_name": null,
+          "start_time": 1747227039.948661
+        }
+      ]
+    }
+    ```
+
+This observability data helps you debug agent behavior, optimize performance, and understand the agent's reasoning process. For detailed information, see [Observability](observability-evaluation/observability.md), [Traces](observability-evaluation/traces.md), and [Metrics](observability-evaluation/metrics.md).
+
 ## Debug Logs
 
 To enable debug logs in our agent, configure the `strands` logger:
@@ -165,6 +334,8 @@ agent = Agent()
 
 agent("Hello!")
 ```
+
+See the [Logs documentation](observability-evaluation/logs.md) for more information.
 
 ## Model Providers
 
@@ -233,6 +404,7 @@ Strands Agents supports several other model providers beyond Amazon Bedrock:
 - **[Ollama](concepts/model-providers/ollama.md)** - Run models locally for privacy or offline use
 - **[OpenAI](concepts/model-providers/openai.md)** - Access to OpenAI or OpenAI-compatible models
 - **[Writer](concepts/model-providers/writer.md)** - Access to Palmyra models
+- **[Cohere](concepts/model-providers/cohere.md)** - Use Cohere models through an OpenAI compatible interface
 - **[Custom Providers](concepts/model-providers/custom_model_provider.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
