@@ -110,6 +110,7 @@ nav:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
       - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
+      - PII Redaction: user-guide/safety-security/pii-redaction.md
     - Observability & Evaluation:
       - Observability: user-guide/observability-evaluation/observability.md
       - Metrics: user-guide/observability-evaluation/metrics.md
