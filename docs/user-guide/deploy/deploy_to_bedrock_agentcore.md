@@ -43,33 +43,33 @@ Before you start, you need:
 
 ---
 
-# Option A: SDK Integration
+## Option A: SDK Integration
 
 The AgentCore Runtime Python SDK provides a lightweight wrapper that helps you deploy your agent functions as HTTP services.
 
-## Step 1: Install the SDK
+### Step 1: Install the SDK
 
 ```bash
 pip install bedrock-agentcore
 ```
 
-## Step 2: Prepare Your Agent Code
+### Step 2: Prepare Your Agent Code
 
-### Basic Setup (3 simple steps)
+#### Basic Setup (3 simple steps)
 
-#### Import the runtime
+##### Import the runtime
 
 ```python
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 ```
 
-#### Initialize the app
+##### Initialize the app
 
 ```python
 app = BedrockAgentCoreApp()
 ```
 
-#### Decorate your function
+##### Decorate your function
 
 ```python
 @app.entrypoint
@@ -81,9 +81,9 @@ if __name__ == "__main__":
     app.run()
 ```
 
-### Complete Examples
+#### Complete Examples
 
-#### Basic Example
+##### Basic Example
 
 ```python
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     app.run()
 ```
 
-#### Streaming Example
+##### Streaming Example
 
 ```python
 from strands import Agent
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     app.run()
 ```
 
-## Step 3: Test Locally
+### Step 3: Test Locally
 
 ```bash
 python my_agent.py
@@ -138,7 +138,7 @@ curl -X POST http://localhost:8080/invocations \
 -d '{"prompt": "Hello world!"}'
 ```
 
-## Step 4: Choose Your Deployment Method
+### Step 4: Choose Your Deployment Method
 
 > **Choose ONE of the following deployment methods:**
 
@@ -252,15 +252,14 @@ response = agent_core_client.invoke_agent_runtime(
 )
 ```
 
-## 📊 Next Steps: Set Up Observability (Optional)
+### 📊 Next Steps: Set Up Observability (Optional)
 
 > **⚠️ IMPORTANT**: Your agent is deployed, you could also set up [Observability](#observability-enablement)
->
 
 
 ---
 
-# Option B: Custom Agent
+## Option B: Custom Agent
 
 > **This section is complete** - follow all steps below if you choose the custom agent approach.
 
@@ -525,39 +524,43 @@ uv run invoke_agent.py
 
 ## Best Practices
 
-1. **Development**
-   - Test locally before deployment
-   - Use version control
-   - Keep dependencies updated
+**Development**
 
-2. **Configuration**
-   - Use appropriate IAM roles
-   - Implement proper error handling
-   - Monitor agent performance
+- Test locally before deployment
+- Use version control
+- Keep dependencies updated
 
-3. **Security**
-   - Follow the least privilege principle
-   - Secure sensitive information
-   - Regular security updates
+**Configuration**
+
+- Use appropriate IAM roles
+- Implement proper error handling
+- Monitor agent performance
+
+**Security**
+
+- Follow the least privilege principle
+- Secure sensitive information
+- Regular security updates
 
 ## Troubleshooting
 
-Common issues and solutions:
+**Deployment Failures**
 
-1. **Deployment Failures**
-   - Verify AWS credentials are configured correctly
-   - Check IAM role permissions
-   - Ensure Docker is running
+- Verify AWS credentials are configured correctly
+- Check IAM role permissions
+- Ensure Docker is running
 
-2. **Runtime Errors**
-   - Check CloudWatch logs
-   - Verify environment variables
-   - Test agent locally first
+**Runtime Errors**
 
-3. **Container Issues**
-   - Verify Docker installation
-   - Check port configurations
-   - Review Dockerfile if customized
+- Check CloudWatch logs
+- Verify environment variables
+- Test agent locally first
+
+**Container Issues**
+
+- Verify Docker installation
+- Check port configurations
+- Review Dockerfile if customized
 ---
 
 ## Observability Enablement
