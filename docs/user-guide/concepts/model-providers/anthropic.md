@@ -25,7 +25,7 @@ model = AnthropicModel(
     },
     # **model_config
     max_tokens=1028,
-    model_id="claude-3-7-sonnet-20250219",
+    model_id="claude-sonnet-4-20250514",
     params={
         "temperature": 0.7,
     }
@@ -49,7 +49,7 @@ The `model_config` configures the underlying model selected for inference. The s
 |  Parameter | Description | Example | Options |
 |------------|-------------|---------|---------|
 | `max_tokens` | Maximum number of tokens to generate before stopping | `1028` | [reference](https://docs.anthropic.com/en/api/messages#body-max-tokens)
-| `model_id` | ID of a model to use | `claude-3-7-sonnet-20250219` | [reference](https://docs.anthropic.com/en/api/messages#body-model)
+| `model_id` | ID of a model to use | `claude-sonnet-4-20250514` | [reference](https://docs.anthropic.com/en/api/messages#body-model)
 | `params` | Model specific parameters | `{"max_tokens": 1000, "temperature": 0.7}` | [reference](https://docs.anthropic.com/en/api/messages)
 
 ## Troubleshooting
@@ -82,7 +82,7 @@ model = AnthropicModel(
         "api_key": "<KEY>",
     },
     max_tokens=1028,
-    model_id="claude-3-7-sonnet-20250219",
+    model_id="claude-sonnet-4-20250514",
     params={
         "temperature": 0.7,
     }

@@ -100,7 +100,7 @@ session = boto3.Session(
 
 # Create a Bedrock model with the custom session
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     boto_session=session
 )
 ```
@@ -109,7 +109,7 @@ For complete details on credential configuration and resolution, see the [boto3 
 
 ## Basic Usage
 
-The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude 3.7 Sonnet](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-37.html) model by default. This basic example creates an agent using this default setup:
+The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude 4 Sonnet](https://aws.amazon.com/blogs/aws/claude-opus-4-anthropics-most-powerful-model-for-coding-is-now-in-amazon-bedrock/) model by default. This basic example creates an agent using this default setup:
 
 ```python
 from strands import Agent
@@ -125,7 +125,7 @@ You can specify which Bedrock model to use by passing in the model ID string dir
 from strands import Agent
 
 # Create an agent with a specific model by passing the model ID string
-agent = Agent(model="us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+agent = Agent(model="anthropic.claude-sonnet-4-20250514-v1:0")
 
 response = agent("Tell me about Amazon Bedrock.")
 ```
@@ -156,7 +156,7 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) su
 
 | Parameter                                                                                                                                                                                             | Description                                                                                                    | Default                                                                                              |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)                                                                                                              | The Bedrock model identifier                                                                                   | "us.anthropic.claude-3-7-sonnet-20250219-v1:0"                                                       |
+| [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)                                                                                                              | The Bedrock model identifier                                                                                   | "anthropic.claude-sonnet-4-20250514-v1:0"                                                       |
 | [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html)                                                                                                 | Boto Session to use when creating the Boto3 Bedrock Client                                                     | Boto Session with region: "us-west-2"                                                                |
 | [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html)                                                                                              | Botocore Configuration used when creating the Boto3 Bedrock Client                                             | -                                                                                                    |
 | [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html)                                                                                                                           | AWS region to use for the Bedrock service                                                                      | "us-west-2"                                                                                          |
@@ -195,7 +195,7 @@ boto_config = BotocoreConfig(
 
 # Create a configured Bedrock model
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     region_name="us-east-1",  # Specify a different region than the default
     temperature=0.3,
     top_p=0.8,
@@ -220,7 +220,7 @@ in order to use these models. Both modes provide the same event structure and fu
 ```python
 # Streaming model (default)
 streaming_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     streaming=True,  # This is the default
 )
 
@@ -243,7 +243,7 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model that supports multimodal inputs
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0"
 )
 agent = Agent(model=bedrock_model)
 
@@ -278,7 +278,7 @@ from strands.models import BedrockModel
 
 # Using guardrails with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     guardrail_id="your-guardrail-id",
     guardrail_version="DRAFT",
     guardrail_trace="enabled",  # Options: "enabled", "disabled", "enabled_full"
@@ -320,7 +320,7 @@ from strands.models import BedrockModel
 
 # Using system prompt caching with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     cache_prompt="default"
 )
 
@@ -350,7 +350,7 @@ from strands_tools import calculator, current_time
 
 # Using tool caching with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     cache_tools="default"
 )
 
@@ -426,7 +426,7 @@ You can update the model configuration during runtime:
 ```python
 # Create the model with initial configuration
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     temperature=0.7
 )
 
@@ -478,7 +478,7 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model with reasoning configuration
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     additional_request_fields={
         "thinking": {
             "type": "enabled",
@@ -555,13 +555,13 @@ This typically indicates that the model requires Cross-Region Inference, as docu
 Instead of: 
 
 ```
-anthropic.claude-3-7-sonnet-20250219-v1:0
+anthropic.claude-sonnet-4-20250514-v1:0
 ```
 
 Use: 
 
 ```
-us.anthropic.claude-3-7-sonnet-20250219-v1:0
+us.anthropic.claude-sonnet-4-20250514-v1:0
 ```
 
 ## Related Resources

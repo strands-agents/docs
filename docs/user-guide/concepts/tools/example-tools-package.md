@@ -8,7 +8,7 @@ Install the `strands-agents-tools` package by running:
 pip install strands-agents-tools
 ```
 
-If using `mem0_memory`, install the the additional required dependencies by running:
+If using `mem0_memory`, install the additional required dependencies by running:
 
 ```python
 pip install strands-agents-tools[mem0_memory]

@@ -27,6 +27,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+  icon:
+    admonition:
+      code: material/code-json
   features:
     - content.code.copy
     - content.code.select
@@ -72,11 +75,12 @@ nav:
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
-        - State & Sessions: user-guide/concepts/agents/state-sessions.md
+        - State: user-guide/concepts/agents/state.md
+        - Session Management: user-guide/concepts/agents/session-management.md
         - Prompts: user-guide/concepts/agents/prompts.md
         - Hooks: user-guide/concepts/agents/hooks.md
         - Structured Output: user-guide/concepts/agents/structured-output.md
-        - Context Management: user-guide/concepts/agents/context-management.md
+        - Conversation Management: user-guide/concepts/agents/conversation-management.md
       - Tools:
         - Overview: user-guide/concepts/tools/tools_overview.md
         - Python: user-guide/concepts/tools/python-tools.md
@@ -116,6 +120,7 @@ nav:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - Amazon Bedrock AgentCore : user-guide/deploy/deploy_to_bedrock_agentcore.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
   - Examples:
@@ -140,6 +145,7 @@ nav:
     - Hooks: api-reference/hooks.md
     - Models: api-reference/models.md
     - Multiagent: api-reference/multiagent.md
+    - Session: api-reference/session.md
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md

@@ -99,7 +99,7 @@ DEBUG | strands.event_loop.error_handler | message_index=<5> | found message wit
 Logs related to interactions with foundation models:
 
 ```
-DEBUG | strands.models.bedrock | config=<{'model_id': 'anthropic.claude-3-7-sonnet-20250219-v1:0'}> | initializing
+DEBUG | strands.models.bedrock | config=<{'model_id': 'us.anthropic.claude-4-sonnet-20250219-v1:0'}> | initializing
 WARNING | strands.models.bedrock | bedrock threw context window overflow error
 DEBUG | strands.models.bedrock | Found blocked output guardrail. Redacting output.
 ```

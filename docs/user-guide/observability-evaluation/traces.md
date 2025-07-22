@@ -106,7 +106,7 @@ from strands import Agent
 # Option 1: Skip StrandsTelemetry if global tracer provider and/or meter provider are already configured
 # (your existing OpenTelemetry setup will be used automatically)
 agent = Agent(
-    model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful AI assistant"
 )
 
@@ -131,7 +131,7 @@ strands_telemetry.setup_otlp_exporter().setup_console_exporter()  # Chaining sup
 
 # Create agent (tracing will be enabled automatically)
 agent = Agent(
-    model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful AI assistant"
 )
 
@@ -200,7 +200,7 @@ Strands traces include rich attributes that provide context for each operation:
 | `gen_ai.agent.name` | Name of the agent |
 | `gen_ai.user.message` | Formatted prompt sent to the model |
 | `gen_ai.assistant.message` | Formatted assistant prompt sent to the model |
-| `gen_ai.request.model` | Model ID (e.g., "us.anthropic.claude-3-7-sonnet-20250219-v1:0") |
+| `gen_ai.request.model` | Model ID (e.g., "us.anthropic.claude-sonnet-4-20250514-v1:0") |
 | `gen_ai.event.start_time` | When model invocation began |
 | `gen_ai.event.end_time` | When model invocation completed |
 | `gen_ai.choice` | Response from the model (may include tool calls) |
@@ -366,7 +366,7 @@ strands_telemetry.setup_console_exporter()   # Print traces to console
 
 # Create agent
 agent = Agent(
-    model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful AI assistant"
 )
 

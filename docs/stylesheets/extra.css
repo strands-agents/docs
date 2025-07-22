@@ -109,3 +109,9 @@
     /* Override the font color in dark mode - text is too light */
     --md-default-fg-color: rgb(240, 246, 252)
 }
+
+.md-typeset .code > .admonition-title::before,
+.md-typeset .code > summary::before {
+    -webkit-mask-image: var(--md-admonition-icon--code);
+    mask-image: var(--md-admonition-icon--code);
+}

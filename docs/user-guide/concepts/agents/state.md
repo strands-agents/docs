@@ -1,6 +1,4 @@
-# State & Sessions
-
-## State Management
+# State Management
 
 Strands Agents state is maintained in several forms:
 
@@ -10,7 +8,7 @@ Strands Agents state is maintained in several forms:
 
 Understanding how state works in Strands is essential for building agents that can maintain context across multi-turn interactions and workflows.
 
-### Conversation History
+## Conversation History
 
 Conversation history is the primary form of context in a Strands agent, directly accessible through the `agent.messages` property:
 
@@ -51,7 +49,7 @@ Conversation history is automatically:
 - Used for tool execution context
 - Managed to prevent context window overflow
 
-#### Direct Tool Calling
+### Direct Tool Calling
 
 Direct tool calls are (by default) recorded in the conversation history:
 
@@ -74,7 +72,7 @@ In this example we can see that the first `agent.tool.calculator()` call is reco
 
 The second `agent.tool.calculator()` call is **not** recorded in the history because we specified the `record_direct_tool_call=False` argument.
 
-#### Conversation Manager
+### Conversation Manager
 
 Strands uses a conversation manager to handle conversation history effectively. The default is the [`SlidingWindowConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager), which keeps recent messages and removes older ones when needed:
 
@@ -99,14 +97,14 @@ The sliding window conversation manager:
 - Handles context window overflow exceptions by reducing context
 - Ensures conversations don't exceed model context limits
 
-See [`Context Management`](context-management.md) for more information about conversation managers.
+See [`Conversation Management`](conversation-management.md) for more information about conversation managers.
 
 
-### Agent State
+## Agent State
 
 Agent state provides key-value storage for stateful information that exists outside of the conversation context. Unlike conversation history, agent state is not passed to the model during inference but can be accessed and modified by tools and application logic.
 
-#### Basic Usage
+### Basic Usage
 
 ```python
 from strands import Agent
@@ -131,7 +129,7 @@ print(all_state)  # All state data as a dictionary
 agent.state.delete("last_action")
 ```
 
-#### State Validation and Safety
+### State Validation and Safety
 
 Agent state enforces JSON serialization validation to ensure data can be persisted and restored:
 
@@ -155,7 +153,7 @@ except ValueError as e:
     print(f"Error: {e}")
 ```
 
-#### Using State in Tools
+### Using State in Tools
 
 Agent state is particularly useful for maintaining information across tool executions:
 
@@ -193,7 +191,7 @@ print(f"Actions taken: {agent.state.get('action_count')}")
 print(f"Last action: {agent.state.get('last_action')}")
 ```
 
-### Request State
+## Request State
 
 Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is **not** included in the agent's context:
 
@@ -224,107 +222,6 @@ The request state:
 - Can be modified by callback handlers
 - Is returned in the AgentResult object
 
-## Session Management
+## Persisting State Across Sessions
 
-A session represents all of the stateful information that is needed by an agent to function. For applications requiring persistent sessions across separate interactions, Strands provides several approaches:
-
-### 1. Object Persistence
-
-The simplest approach is to maintain the Agent object across requests:
-
-```python
-from strands import Agent
-
-# Create agent once
-agent = Agent()
-
-# Use in multiple requests
-def handle_request(user_message):
-    return agent(user_message)
-
-handle_request("Tell me a fun fact")
-handle_request("Tell me a related fact")
-```
-
-### 2. Serialization and Restoration
-
-For distributed systems or applications that can't maintain object references:
-
-```python
-import json
-import os
-import uuid
-from strands import Agent
-
-# Save agent state
-def save_agent_state(agent, session_id):
-    os.makedirs("sessions", exist_ok=True)
-
-    state = {
-        "messages": agent.messages,
-        "system_prompt": agent.system_prompt
-    }
-    # Store state (e.g., database, file system, cache)
-    with open(f"sessions/{session_id}.json", "w") as f:
-        json.dump(state, f)
-
-# Restore agent state
-def restore_agent_state(session_id):
-    # Retrieve state
-    with open(f"sessions/{session_id}.json", "r") as f:
-        state = json.load(f)
-    
-    # Create agent with restored state
-    return Agent(
-        messages=state["messages"],
-        system_prompt=state["system_prompt"]
-    )
-
-agent = Agent(system_prompt="Talk like a pirate")
-agent_id = uuid.uuid4()
-
-print("Initial agent:")
-agent("Where are Octopus found? 🐙")
-save_agent_state(agent, agent_id)
-
-# Create a new Agent object with the previous agent's saved state
-restored_agent = restore_agent_state(agent_id)
-print("\n\nRestored agent:")
-restored_agent("What did we just talk about?")
-
-print("\n\n")
-print(restored_agent.messages)  # Both messages and responses are in the restored agent's conversation history
-```
-
-### 3. Integrating with Web Frameworks
-
-Strands agents can be integrated with web framework session management:
-
-```python
-from flask import Flask, request, session
-from strands import Agent
-
-app = Flask(__name__)
-app.secret_key = "your-secret-key"
-
-@app.route("/chat", methods=["POST"])
-def chat():
-    user_message = request.json["message"]
-    
-    # Initialize or restore agent conversation history from session
-    if "messages" not in session:
-        session["messages"] = []
-    
-    # Create agent with session state
-    agent = Agent(messages=session["messages"])
-    
-    # Process message
-    result = agent(user_message)
-    
-    # Update session with new messages
-    session["messages"] = agent.messages
-    
-    # Return the agent's final message
-    return {"response": result.message}
-```
-
+For information on how to persist agent state and conversation history across multiple interactions or application restarts, see the [Session Management](session-management.md) documentation.

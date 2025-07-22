@@ -264,9 +264,9 @@ Agents can dynamically create and orchestrate graphs by using the `graph` tool a
 
 ```python
 from strands import Agent
-from strands_tools import agent_graph
+from strands_tools import graph
 
-agent = Agent(tools=[agent_graph], system_prompt="Create a graph of agents to solve the user's query.")
+agent = Agent(tools=[graph], system_prompt="Create a graph of agents to solve the user's query.")
 
 agent("Design a TypeScript REST API and then write the code for it")
 ```
