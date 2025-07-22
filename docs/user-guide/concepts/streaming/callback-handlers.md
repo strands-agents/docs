@@ -67,6 +67,7 @@ Callback handlers receive the same event types as [async iterators](./async-iter
 - `reasoning`: True for reasoning events
 - `reasoningText`: Text from reasoning process
 - `reasoning_signature`: Signature from reasoning process
+- `redactedContent`: Reasoning content redacted by the model
 
 ## Default Callback Handler
 
