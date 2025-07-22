@@ -234,12 +234,11 @@ agent = Agent(tools=provider.tools)
 response = agent("pick an agent and make a sample call")
 logger.info(response)
 
-# Async usage
-async def main():
-    response = await agent.invoke_async("pick an agent and make a sample call")
-    logger.info(response)
-
-asyncio.run(main())
+# Alternative Async usage
+# async def main():
+#     response = await agent.invoke_async("pick an agent and make a sample call")
+#     logger.info(response)
+# asyncio.run(main())
 ```
 
 This approach allows your Strands agent to:
