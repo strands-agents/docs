@@ -283,6 +283,26 @@ os.environ["OTEL_TRACES_SAMPLER"] = "traceidratio"
 os.environ["OTEL_TRACES_SAMPLER_ARG"] = "0.5"
 ```
 
+### Custom Attribute Tracking
+
+You can add custom attributes to any span:
+
+```python
+agent = Agent(
+    system_prompt="You are a helpful assistant that provides concise responses.",
+    tools=[http_request, calculator],
+    trace_attributes={
+        "session.id": "abc-1234",
+        "user.id": "user-email-example@domain.com",
+        "tags": [
+            "Agent-SDK",
+            "Okatank-Project",
+            "Observability-Tags",
+        ]
+    },
+)
+```
+
 ### Configuring the exporters from source code
 
 The `StrandsTelemetry().setup_console_exporter()` and `StrandsTelemetry().setup_otlp_exporter()` methods accept keyword arguments that are passed to OpenTelemetry's [`ConsoleSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.export.html#opentelemetry.sdk.trace.export.ConsoleSpanExporter) and [`OTLPSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/exporter/otlp/otlp.html#opentelemetry.exporter.otlp.proto.http.trace_exporter.OTLPSpanExporter) initializers, respectively. This allows you to save the log lines to a file or set up the OTLP endpoints from Python code:
@@ -310,26 +330,6 @@ strands_telemetry.setup_otlp_exporter(
 ```
 
 For more information about the accepted arguments, refer to `ConsoleSpanExporter` and `OTLPSpanExporter` in the [OpenTelemetry API documentation](https://opentelemetry-python.readthedocs.io).
-
-### Custom Attribute Tracking
-
-You can add custom attributes to any span:
-
-```python
-agent = Agent(
-    system_prompt="You are a helpful assistant that provides concise responses.",
-    tools=[http_request, calculator],
-    trace_attributes={
-        "session.id": "abc-1234",
-        "user.id": "user-email-example@domain.com",
-        "tags": [
-            "Agent-SDK",
-            "Okatank-Project",
-            "Observability-Tags",
-        ]
-    },
-)
-```
 
 ## Best Practices
 
