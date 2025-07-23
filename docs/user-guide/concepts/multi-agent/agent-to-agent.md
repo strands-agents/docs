@@ -71,6 +71,8 @@ The `A2AServer` constructor accepts several configuration options:
 - `port`: Port to bind to (default: 9000)
 - `version`: Version of the agent (default: "0.0.1")
 - `skills`: Custom list of agent skills (default: auto-generated from tools)
+- `http_url`: Public HTTP URL where this agent will be accessible (optional, enables path-based mounting)
+- `serve_at_root`: Forces server to serve at root path regardless of http_url path (default: False)
 
 ### Advanced Server Customization
 
@@ -98,10 +100,41 @@ starlette_app = a2a_server.to_starlette_app()
 uvicorn.run(fastapi_app, host="0.0.0.0", port=9000)
 ```
 
+#### Path-Based Mounting for Containerized Deployments
+
+The `A2AServer` supports automatic path-based mounting for deployment scenarios involving load balancers or reverse proxies. This allows you to deploy agents behind load balancers with different path prefixes.
+
+```python
+from strands import Agent
+from strands.multiagent.a2a import A2AServer
+
+# Create an agent
+agent = Agent(
+    name="Calculator Agent",
+    description="A calculator agent",
+    callback_handler=None
+)
+
+# Deploy with path-based mounting
+# The agent will be accessible at http://my-alb.amazonaws.com/calculator/
+a2a_server = A2AServer(
+    agent=agent,
+    http_url="http://my-alb.amazonaws.com/calculator"
+)
+
+# For load balancers that strip path prefixes, use serve_at_root=True
+a2a_server_with_root = A2AServer(
+    agent=agent,
+    http_url="http://my-alb.amazonaws.com/calculator",
+    serve_at_root=True  # Serves at root even though URL has /calculator path
+)
+```
+
 This flexibility allows you to:
 
 - Add custom middleware
 - Implement additional API endpoints
+- Deploy agents behind load balancers with different path prefixes
 
 ## A2A Client Examples
 
