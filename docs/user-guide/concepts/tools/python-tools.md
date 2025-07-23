@@ -1,12 +1,10 @@
 # Python Tools
 
-There are four approaches to defining python-based tools in Strands:
+There are three approaches to defining python-based tools in Strands:
 
 * **Python functions with the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator**: Transform regular Python functions into tools by adding a simple decorator. This approach leverages Python's docstrings and type hints to automatically generate tool specifications.
 
 * **Class-based tools with the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator**: Create tools within classes to maintain state and leverage object-oriented programming patterns.
-
-* **AgentTool class implementation**: Create tools by implementing the AgentTool class (or using PythonAgentTool) directly. This provides the most control over tool behavior and implementation.
 
 * **Python modules following a specific format**: Define tools by creating Python modules that contain a tool specification and a matching function. This approach gives you more control over the tool's definition and is useful for dependency-free implementations of tools.
 
@@ -165,10 +163,6 @@ agent = Agent(
 ```
 
 When you use the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator on a class method, the method becomes bound to the class instance when instantiated. This means the tool function has access to the instance's attributes and can maintain state between invocations.
-
-### Using PythonAgentTool (Alternative Approach)
-
-While you can also use the `PythonAgentTool` class directly to create class-based tools, most use cases can be satisfied using the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator approach with class methods due to its simplicity and automatic schema generation.
 
 ## Python Modules as Tools
 
