@@ -35,15 +35,16 @@ pip install strands-agents-tools strands-agents-builder
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 3.7 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model.
 
-To use the examples in this guide, you'll need to configure your environment with AWS credentials that have permissions to invoke the Claude 3.7 model. You can set up your credentials in several ways:
+To use the examples in this guide, you'll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
 
 1. **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2. **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3. **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
+4. **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 3.7 model. You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model. You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 
 ## Project Setup
 
@@ -61,8 +62,8 @@ Create the directory: `mkdir my_agent`
 Now create `my_agent/requirements.txt` to include the `strands-agents` and `strands-agents-tools` packages as dependencies:
 
 ```
-strands-agents>=0.1.0
-strands-agents-tools>=0.1.0
+strands-agents>=1.0.0
+strands-agents-tools>=0.2.0
 ```
 
 Create the `my_agent/__init__.py` file:
@@ -82,20 +83,20 @@ from strands_tools import calculator, current_time, python_repl
 def letter_counter(word: str, letter: str) -> int:
     """
     Count occurrences of a specific letter in a word.
-    
+
     Args:
         word (str): The input word to search in
         letter (str): The specific letter to count
-        
+
     Returns:
         int: The number of occurrences of the letter in the word
     """
     if not isinstance(word, str) or not isinstance(letter, str):
         return 0
-    
+
     if len(letter) != 1:
         raise ValueError("The 'letter' parameter must be a single character")
-    
+
     return word.lower().count(letter.lower())
 
 # Create an agent with tools from the strands-tools example tools package
@@ -127,7 +128,7 @@ flowchart LR
         C --> D["Tool Execution"]
         D --> B
     end
-    
+
     Loop --> E[Response]
 ```
 
@@ -143,6 +144,174 @@ python -u my_agent/agent.py
 ```
 
 And that's it! We now have a running agent with powerful tools and abilities in just a few lines of code 🥳.
+
+## Understanding What Agents Did
+
+After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](../api-reference/agent.md#strands.agent.agent_result.AgentResult) object with comprehensive observability data.
+
+Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](../api-reference/agent.md#strands.agent.agent_result.AgentResult), or export them using [OpenTelemetry](observability-evaluation/traces.md) to observability platforms.
+
+??? code "Example result.metrics.get_summary() output"
+
+    ```python
+    result = agent("What is the square root of 144?")
+    print(result.metrics.get_summary())
+    ```
+    ```python
+    {
+      "accumulated_metrics": {
+        "latencyMs": 6253
+      },
+      "accumulated_usage": {
+        "inputTokens": 3921,
+        "outputTokens": 83,
+        "totalTokens": 4004
+      },
+      "average_cycle_time": 0.9406174421310425,
+      "tool_usage": {
+        "calculator": {
+          "execution_stats": {
+            "average_time": 0.008260965347290039,
+            "call_count": 1,
+            "error_count": 0,
+            "success_count": 1,
+            "success_rate": 1.0,
+            "total_time": 0.008260965347290039
+          },
+          "tool_info": {
+            "input_params": {
+              "expression": "sqrt(144)",
+              "mode": "evaluate"
+            },
+            "name": "calculator",
+            "tool_use_id": "tooluse_jR3LAfuASrGil31Ix9V7qQ"
+          }
+        }
+      },
+      "total_cycles": 2,
+      "total_duration": 1.881234884262085,
+      "traces": [
+        {
+          "children": [
+            {
+              "children": [],
+              "duration": 4.476144790649414,
+              "end_time": 1747227039.938964,
+              "id": "c7e86c24-c9d4-4a79-a3a2-f0eaf42b0d19",
+              "message": {
+                "content": [
+                  {
+                    "text": "I'll calculate the square root of 144 for you."
+                  },
+                  {
+                    "toolUse": {
+                      "input": {
+                        "expression": "sqrt(144)",
+                        "mode": "evaluate"
+                      },
+                      "name": "calculator",
+                      "toolUseId": "tooluse_jR3LAfuASrGil31Ix9V7qQ"
+                    }
+                  }
+                ],
+                "role": "assistant"
+              },
+              "metadata": {},
+              "name": "stream_messages",
+              "parent_id": "78595347-43b1-4652-b215-39da3c719ec1",
+              "raw_name": null,
+              "start_time": 1747227035.462819
+            },
+            {
+              "children": [],
+              "duration": 0.008296012878417969,
+              "end_time": 1747227039.948415,
+              "id": "4f64ce3d-a21c-4696-aa71-2dd446f71488",
+              "message": {
+                "content": [
+                  {
+                    "toolResult": {
+                      "content": [
+                        {
+                          "text": "Result: 12"
+                        }
+                      ],
+                      "status": "success",
+                      "toolUseId": "tooluse_jR3LAfuASrGil31Ix9V7qQ"
+                    }
+                  }
+                ],
+                "role": "user"
+              },
+              "metadata": {
+                "toolUseId": "tooluse_jR3LAfuASrGil31Ix9V7qQ",
+                "tool_name": "calculator"
+              },
+              "name": "Tool: calculator",
+              "parent_id": "78595347-43b1-4652-b215-39da3c719ec1",
+              "raw_name": "calculator - tooluse_jR3LAfuASrGil31Ix9V7qQ",
+              "start_time": 1747227039.940119
+            },
+            {
+              "children": [],
+              "duration": 1.881267786026001,
+              "end_time": 1747227041.8299048,
+              "id": "0261b3a5-89f2-46b2-9b37-13cccb0d7d39",
+              "message": null,
+              "metadata": {},
+              "name": "Recursive call",
+              "parent_id": "78595347-43b1-4652-b215-39da3c719ec1",
+              "raw_name": null,
+              "start_time": 1747227039.948637
+            }
+          ],
+          "duration": null,
+          "end_time": null,
+          "id": "78595347-43b1-4652-b215-39da3c719ec1",
+          "message": null,
+          "metadata": {},
+          "name": "Cycle 1",
+          "parent_id": null,
+          "raw_name": null,
+          "start_time": 1747227035.46276
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "duration": 1.8811860084533691,
+              "end_time": 1747227041.829879,
+              "id": "1317cfcb-0e87-432e-8665-da5ddfe099cd",
+              "message": {
+                "content": [
+                  {
+                    "text": "\n\nThe square root of 144 is 12."
+                  }
+                ],
+                "role": "assistant"
+              },
+              "metadata": {},
+              "name": "stream_messages",
+              "parent_id": "f482cee9-946c-471a-9bd3-fae23650f317",
+              "raw_name": null,
+              "start_time": 1747227039.948693
+            }
+          ],
+          "duration": 1.881234884262085,
+          "end_time": 1747227041.829896,
+          "id": "f482cee9-946c-471a-9bd3-fae23650f317",
+          "message": null,
+          "metadata": {},
+          "name": "Cycle 2",
+          "parent_id": null,
+          "raw_name": null,
+          "start_time": 1747227039.948661
+        }
+      ]
+    }
+    ```
+
+This observability data helps you debug agent behavior, optimize performance, and understand the agent's reasoning process. For detailed information, see [Observability](observability-evaluation/observability.md), [Traces](observability-evaluation/traces.md), and [Metrics](observability-evaluation/metrics.md).
 
 ## Debug Logs
 
@@ -166,11 +335,13 @@ agent = Agent()
 agent("Hello!")
 ```
 
+See the [Logs documentation](observability-evaluation/logs.md) for more information.
+
 ## Model Providers
 
-### Identifying a configured model 
+### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 3.7 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/types.md#strands.types.models.Model.get_config):
+Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/models.md#strands.models.model.Model.get_config):
 
 ```python
 from strands import Agent
@@ -178,7 +349,7 @@ from strands import Agent
 agent = Agent()
 
 print(agent.model.config)
-# {'model_id': 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'}
+# {'model_id': 'us.anthropic.claude-sonnet-4-20250514-v1:0'}
 ```
 
 You can specify a different model in two ways:
@@ -194,7 +365,7 @@ The simplest way to specify a model is to pass the model ID string directly:
 from strands import Agent
 
 # Create an agent with a specific model by passing the model ID string
-agent = Agent(model="us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+agent = Agent(model="anthropic.claude-sonnet-4-20250514-v1:0")
 ```
 
 ### Amazon Bedrock (Default)
@@ -208,8 +379,8 @@ from strands.models import BedrockModel
 
 # Create a BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-    region_name='us-west-2',
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    region_name="us-west-2",
     temperature=0.3,
 )
 
@@ -229,8 +400,11 @@ Strands Agents supports several other model providers beyond Amazon Bedrock:
 - **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
+- **[Mistral](concepts/model-providers/mistral.md)** - Access to Mistral models
 - **[Ollama](concepts/model-providers/ollama.md)** - Run models locally for privacy or offline use
-- **[OpenAI](concepts/model-providers/openai.md)** - Direct API access to OpenAI or OpenAI-compatible models
+- **[OpenAI](concepts/model-providers/openai.md)** - Access to OpenAI or OpenAI-compatible models
+- **[Writer](concepts/model-providers/writer.md)** - Access to Palmyra models
+- **[Cohere](concepts/model-providers/cohere.md)** - Use Cohere models through an OpenAI compatible interface
 - **[Custom Providers](concepts/model-providers/custom_model_provider.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
@@ -239,7 +413,7 @@ Strands provides two main approaches to capture streaming events from an agent: 
 
 ### Async Iterators
 
-For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using `stream_async()`. This is particularly useful with async frameworks like FastAPI or Django Channels.
+For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](../api-reference/agent.md#strands.agent.agent.Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
 
 ```python
 import asyncio
@@ -254,11 +428,11 @@ agent = Agent(
 
 # Async function that iterates over streamed agent events
 async def process_streaming_response():
-    query = "What is 25 * 48 and explain the calculation"
-    
+    prompt = "What is 25 * 48 and explain the calculation"
+
     # Get an async iterator for the agent's response stream
-    agent_stream = agent.stream_async(query)
-    
+    agent_stream = agent.stream_async(prompt)
+
     # Process events as they arrive
     async for event in agent_stream:
         if "data" in event:
@@ -275,6 +449,8 @@ asyncio.run(process_streaming_response())
 The async iterator yields the same event types as the callback handler callbacks, including text generation events, tool events, and lifecycle events. This approach is ideal for integrating Strands agents with async web frameworks.
 
 See the [Async Iterators](concepts/streaming/async-iterators.md) documentation for full details.
+
+> Note, Strands also offers an [`invoke_async()`](../api-reference/agent.md#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
 
 ### Callback Handlers (Callbacks)
 
@@ -327,7 +503,7 @@ Ready to learn more? Check out these resources:
 - [Example Built-in Tools](concepts/tools/example-tools-package.md) - The `strands-agents-tools` package provides many powerful example tools for your agents to use during development
 - [Strands Agent Builder]({{ agent_builder_repo_home }}) - Use the accompanying `strands-agents-builder` agent builder to harness the power of LLMs to generate your own tools and agents
 - [Agent Loop](concepts/agents/agent-loop.md) - Learn how Strands agents work under the hood
-- [Sessions & State](concepts/agents/sessions-state.md) - Understand how agents maintain context and state across a conversation or workflow
+- [State & Sessions](concepts/agents/state.md) - Understand how agents maintain context and state across a conversation or workflow
 - [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together as one system, with each agent completing specialized tasks
 - [Observability & Evaluation](observability-evaluation/observability.md) - Understand how agents make decisions and improve them with data
 - [Operating Agents in Production](deploy/operating-agents-in-production.md) - Taking agents from development to production, operating them responsibly at scale

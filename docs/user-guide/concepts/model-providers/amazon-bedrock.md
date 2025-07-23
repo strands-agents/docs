@@ -16,26 +16,30 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) cl
 
 1. **AWS Account**: You need an AWS account with access to Amazon Bedrock
 2. **Model Access**: Request access to your desired models in the Amazon Bedrock console
-3. **AWS Credentials**: Configure AWS credentials with appropriate permissions, including `bedrock:InvokeModelWithResponseStream`
+3. **AWS Credentials**: Configure AWS credentials with appropriate permissions
 
 #### Required IAM Permissions
 
 To use Amazon Bedrock with Strands, your IAM user or role needs the following permissions:
 
-- `bedrock:InvokeModelWithResponseStream`
+- `bedrock:InvokeModelWithResponseStream` (for streaming mode)
+- `bedrock:InvokeModel` (for non-streaming mode)
 
 Here's a sample IAM policy that grants the necessary permissions:
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["bedrock:InvokeModelWithResponseStream"],
-      "Resource": "*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock:InvokeModelWithResponseStream",
+                "bedrock:InvokeModel"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 ```
 
@@ -57,7 +61,7 @@ The model access request is typically processed immediately. Once approved, the 
 
 For more details, see the [Amazon Bedrock documentation on modifying model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 
-#### Setting Up AWS Credentials & Region
+#### Setting Up AWS Credentials
 
 Strands uses [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) (the AWS SDK for Python) to make calls to Amazon Bedrock. Boto3 has its own credential resolution system that determines which credentials to use when making requests to AWS.
 
@@ -96,7 +100,7 @@ session = boto3.Session(
 
 # Create a Bedrock model with the custom session
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     boto_session=session
 )
 ```
@@ -105,7 +109,7 @@ For complete details on credential configuration and resolution, see the [boto3 
 
 ## Basic Usage
 
-The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude 3.7 Sonnet](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-37.html) model by default. This basic example creates an agent using this default setup:
+The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude 4 Sonnet](https://aws.amazon.com/blogs/aws/claude-opus-4-anthropics-most-powerful-model-for-coding-is-now-in-amazon-bedrock/) model by default. This basic example creates an agent using this default setup:
 
 ```python
 from strands import Agent
@@ -121,7 +125,7 @@ You can specify which Bedrock model to use by passing in the model ID string dir
 from strands import Agent
 
 # Create an agent with a specific model by passing the model ID string
-agent = Agent(model="us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+agent = Agent(model="anthropic.claude-sonnet-4-20250514-v1:0")
 
 response = agent("Tell me about Amazon Bedrock.")
 ```
@@ -152,10 +156,11 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) su
 
 | Parameter                                                                                                                                                                                             | Description                                                                                                    | Default                                                                                              |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)                                                                                                              | The Bedrock model identifier                                                                                   | "us.anthropic.claude-3-7-sonnet-20250219-v1:0"                                                       |
+| [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)                                                                                                              | The Bedrock model identifier                                                                                   | "anthropic.claude-sonnet-4-20250514-v1:0"                                                       |
 | [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html)                                                                                                 | Boto Session to use when creating the Boto3 Bedrock Client                                                     | Boto Session with region: "us-west-2"                                                                |
 | [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html)                                                                                              | Botocore Configuration used when creating the Boto3 Bedrock Client                                             | -                                                                                                    |
 | [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html)                                                                                                                           | AWS region to use for the Bedrock service                                                                      | "us-west-2"                                                                                          |
+| [`streaming`](https://docs.aws.amazon.com/bedrock/latest/userguide/api-methods.html)                                                                                                                  | Flag to enable/disable streaming mode                                                                          | True                                                                                                 |
 | [`temperature`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                          | Controls randomness (higher = more random)                                                                     | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
 | [`max_tokens`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                           | Maximum number of tokens to generate                                                                           | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
 | [`top_p`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents)                                                | Controls diversity via nucleus sampling                                                                        | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) |
@@ -190,7 +195,7 @@ boto_config = BotocoreConfig(
 
 # Create a configured Bedrock model
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     region_name="us-east-1",  # Specify a different region than the default
     temperature=0.3,
     top_p=0.8,
@@ -207,6 +212,27 @@ response = agent("Write a short story about an AI assistant.")
 
 ## Advanced Features
 
+### Streaming vs Non-Streaming Mode
+
+Certain Amazon Bedrock models only support non-streaming tool use, so you can set the `streaming` configuration to false
+in order to use these models. Both modes provide the same event structure and functionality in your agent, as the non-streaming responses are converted to the streaming format internally.
+
+```python
+# Streaming model (default)
+streaming_model = BedrockModel(
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    streaming=True,  # This is the default
+)
+
+# Non-streaming model
+non_streaming_model = BedrockModel(
+    model_id="us.meta.llama3-2-90b-instruct-v1:0",
+    streaming=False,  # Disable streaming
+)
+```
+
+See the Amazon Bedrock documentation for [Supported models and model features](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html) to learn about the streaming support for different models.
+
 ### Multimodal Support
 
 Some Bedrock models support multimodal inputs (Documents, Images, etc.). Here's how to use them:
@@ -217,45 +243,30 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model that supports multimodal inputs
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0"
 )
-
-
-# Create a message with both text and image content
-messages = [
-    {
-        "role": "user",
-        "content": [
-            {
-                "document": {
-                    "format": "txt",
-                    "name": "example",
-                    "source": {
-                        "bytes": b"Use this document in your response."
-                    }
-                }
-            },
-            {
-                "text": "Use this media in your response."
-            }
-        ]
-    },
-    {
-        "role": "assistant",
-        "content": [
-            {
-                "text": "I will reference this media in my next response."
-            }
-        ]
-    }
-]
-
-# Create an agent with the multimodal model
-agent = Agent(model=bedrock_model, messages=messages)
+agent = Agent(model=bedrock_model)
 
 # Send the multimodal message to the agent
-response = agent("Tell me about the document.")
+response = agent(
+    [
+        {
+            "document": {
+                "format": "txt",
+                "name": "example",
+                "source": {
+                    "bytes": b"Once upon a time..."
+                }
+            }
+        },
+        {
+            "text": "Tell me about the document."
+        }
+    ]
+)
 ```
+
+For a complete list of input types, please refer to the [API Reference](../../../api-reference/types.md#strands.types.content.ContentBlock).
 
 ### Guardrails
 
@@ -267,7 +278,7 @@ from strands.models import BedrockModel
 
 # Using guardrails with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     guardrail_id="your-guardrail-id",
     guardrail_version="DRAFT",
     guardrail_trace="enabled",  # Options: "enabled", "disabled", "enabled_full"
@@ -309,7 +320,7 @@ from strands.models import BedrockModel
 
 # Using system prompt caching with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     cache_prompt="default"
 )
 
@@ -339,7 +350,7 @@ from strands_tools import calculator, current_time
 
 # Using tool caching with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     cache_tools="default"
 )
 
@@ -415,7 +426,7 @@ You can update the model configuration during runtime:
 ```python
 # Create the model with initial configuration
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     temperature=0.7
 )
 
@@ -467,7 +478,7 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model with reasoning configuration
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     additional_request_fields={
         "thinking": {
             "type": "enabled",
@@ -484,6 +495,74 @@ response = agent("If a train travels at 120 km/h and needs to cover 450 km, how 
 ```
 
 > **Note**: Not all models support structured reasoning output. Check the [inference reasoning documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-reasoning.html) for details on supported models.
+
+### Structured Output
+
+Amazon Bedrock models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to Bedrock's tool specification format.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models import BedrockModel
+from typing import List, Optional
+
+class ProductAnalysis(BaseModel):
+    """Analyze product information from text."""
+    name: str = Field(description="Product name")
+    category: str = Field(description="Product category")
+    price: float = Field(description="Price in USD")
+    features: List[str] = Field(description="Key product features")
+    rating: Optional[float] = Field(description="Customer rating 1-5", ge=1, le=5)
+
+bedrock_model = BedrockModel()
+
+agent = Agent(model=bedrock_model)
+
+result = agent.structured_output(
+    ProductAnalysis,
+    """
+    Analyze this product: The UltraBook Pro is a premium laptop computer
+    priced at $1,299. It features a 15-inch 4K display, 16GB RAM, 512GB SSD,
+    and 12-hour battery life. Customer reviews average 4.5 stars.
+    """
+)
+
+print(f"Product: {result.name}")
+print(f"Category: {result.category}")
+print(f"Price: ${result.price}")
+print(f"Features: {result.features}")
+print(f"Rating: {result.rating}")
+```
+
+## Troubleshooting
+
+### Model access issue
+
+If you encounter the following error:
+
+> You don't have access to the model with the specified model ID
+
+This may indicate that the model is not enabled in your Amazon Bedrock account for the specified region. To resolve this issue follow the [instructions above](#requesting-access-to-bedrock-models) to request access to the model
+
+### On-demand throughput isn’t supported
+
+If you encounter the error:
+
+> Invocation of model ID XXXX with on-demand throughput isn’t supported. Retry your request with the ID or ARN of an inference profile that contains this model.
+
+This typically indicates that the model requires Cross-Region Inference, as documented in the [Amazon Bedrock documentation on inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html#inference-profiles-support-system).  To resolve this issue, prefix your model ID with the appropriate regional identifier (`us.`or `eu.`) based on where your agent is running. For example:
+
+Instead of: 
+
+```
+anthropic.claude-sonnet-4-20250514-v1:0
+```
+
+Use: 
+
+```
+us.anthropic.claude-sonnet-4-20250514-v1:0
+```
 
 ## Related Resources
 

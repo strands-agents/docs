@@ -44,19 +44,19 @@ agent = Agent(tools=["/path/to/my_tool.py"])
 
 Tools placed in your current working directory `./tools/` can be automatically loaded at agent initialization, and automatically reloaded when modified. This can be really useful when developing and debugging tools: simply modify the tool code and any agents using that tool will reload it to use the latest modifications!
 
-Automatic loading and reloading of tools in the `./tools/` directory is enabled by default with the `load_tools_from_directory=True` parameter passed to `Agent` during initialization. To disable this behavior, simply set `load_tools_from_directory=False`:
+Automatic loading and reloading of tools in the `./tools/` directory is disabled by default. To enable this behavior, set `load_tools_from_directory=True` during `Agent` initialization:
 
 ```python
 from strands import Agent
 
-agent = Agent(load_tools_from_directory=False)
+agent = Agent(load_tools_from_directory=True)
 ```
 
 ## Using Tools
 
 Tools can be invoked in two primary ways.
 
-Agents have context about tool calls and their results as part of conversation history. See [sessions & state](../agents/sessions-state.md#tool-state) for more information.
+Agents have context about tool calls and their results as part of conversation history. See [Using State in Tools](../agents/state.md#using-state-in-tools) for more information.
 
 ### Natural Language Invocation
 
@@ -76,6 +76,13 @@ Every tool added to an agent also becomes a method accessible directly on the ag
 result = agent.tool.file_read(path="/path/to/file.txt", mode="view")
 ```
 
+If a tool name contains hyphens, you can invoke the tool using underscores instead:
+
+```python
+# Directly invoke a tool named "read-all"
+result = agent.tool.read_all(path="/path/to/file.txt")
+```
+
 ## Building & Loading Tools
 
 ### 1. Python Tools
@@ -87,20 +94,22 @@ Build your own Python tools using the Strands SDK's tool interfaces.
 Function decorated tools can be placed anywhere in your codebase and imported in to your agent's list of tools. Define any Python function as a tool by using the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator.
 
 ```python
+import asyncio
 from strands import Agent, tool
+
 
 @tool
 def get_user_location() -> str:
-    """Get the user's location
-    """
+    """Get the user's location."""
 
     # Implement user location lookup logic here
     return "Seattle, USA"
 
+
 @tool
 def weather(location: str) -> str:
-    """Get weather information for a location
-    
+    """Get weather information for a location.
+
     Args:
         location: City or location name
     """
@@ -108,29 +117,34 @@ def weather(location: str) -> str:
     # Implement weather lookup logic here
     return f"Weather for {location}: Sunny, 72°F"
 
-agent = Agent(tools=[get_user_location, weather])
 
-# Use the agent with the custom tools
-agent("What is the weather like in my location?")
+@tool
+async def call_api() -> str:
+    """Call API asynchronously.
+
+    Strands will invoke all async tools concurrently.
+    """
+
+    await asyncio.sleep(5)  # simulated api call
+    return "API result"
+
+
+def basic_example():
+    agent = Agent(tools=[get_user_location, weather])
+    agent("What is the weather like in my location?")
+
+
+async def async_example():
+    agent = Agent(tools=[call_api])
+    await agent.invoke_async("Can you call my API?")
+
+
+def main():
+    basic_example()
+    asyncio.run(async_example())
 ```
 
 #### Module-Based Approach
-
-Tool modules can contain function decorated tools, in this example `get_user_location.py`:
-
-```python
-# get_user_location.py
-
-from strands import tool
-
-@tool
-def get_user_location() -> str:
-    """Get the user's location
-    """
-
-    # Implement user location lookup logic here
-    return "Seattle, USA"
-```
 
 Tool modules can also provide single tools that don't use the decorator pattern, instead they define the `TOOL_SPEC` variable and a function matching the tool's name. In this example `weather.py`:
 
@@ -158,13 +172,14 @@ TOOL_SPEC = {
 }
 
 # Function name must match tool name
+# May also be defined async similar to decorated tools
 def weather(tool: ToolUse, **kwargs: Any) -> ToolResult:
     tool_use_id = tool["toolUseId"]
     location = tool["input"]["location"]
-    
+
     # Implement weather lookup logic here
     weather_info = f"Weather for {location}: Sunny, 72°F"
-    
+
     return {
         "toolUseId": tool_use_id,
         "status": "success",
@@ -214,13 +229,13 @@ from strands.tools.mcp import MCPClient
 sse_mcp_client = MCPClient(lambda: sse_client("http://localhost:8000/sse"))
 
 # Create an agent with MCP tools
-with sse_mcp_server:
+with sse_mcp_client:
     # Get the tools from the MCP server
     tools = sse_mcp_client.list_tools_sync()
-    
+
     # Create an agent with the MCP server's tools
     agent = Agent(tools=tools)
-    
+
     # Use the agent with MCP tools
     agent("Calculate the square root of 144")
 ```
@@ -229,7 +244,7 @@ For more information on using MCP tools, see [MCP Tools](mcp-tools.md).
 
 ### 3. Example Built-in Tools
 
-For rapid prototyping and common tasks, Strands offers an optional [example built-in tools package]({{ tools_repo }}) with pre-built tools for development. These tools cover a wide variety of capabilities including File Operations, Shell & Local System control, Web & Network for API calls, and Agents & Workflows for orchestration. 
+For rapid prototyping and common tasks, Strands offers an optional [example built-in tools package]({{ tools_repo }}) with pre-built tools for development. These tools cover a wide variety of capabilities including File Operations, Shell & Local System control, Web & Network for API calls, and Agents & Workflows for orchestration.
 
 For a complete list of available tools and their detailed descriptions, see [Example Built-in Tools](example-tools-package.md).
 
@@ -254,13 +269,13 @@ Example of a well-described tool:
 def search_database(query: str, max_results: int = 10) -> list:
     """
     Search the product database for items matching the query string.
-    
-    Use this tool when you need to find detailed product information based on keywords, 
-    product names, or categories. The search is case-insensitive and supports fuzzy 
+
+    Use this tool when you need to find detailed product information based on keywords,
+    product names, or categories. The search is case-insensitive and supports fuzzy
     matching to handle typos and variations in search terms.
-    
-    This tool connects to the enterprise product catalog database and performs a semantic 
-    search across all product fields, providing comprehensive results with all available 
+
+    This tool connects to the enterprise product catalog database and performs a semantic
+    search across all product fields, providing comprehensive results with all available
     product metadata.
 
     Example response:
@@ -274,20 +289,20 @@ def search_database(query: str, max_results: int = 10) -> list:
             },
             ...
         ]
-    
+
     Notes:
         - This tool only searches the product catalog and does not provide
           inventory or availability information
         - Results are cached for 15 minutes to improve performance
         - The search index updates every 6 hours, so very recent products may not appear
         - For real-time inventory status, use a separate inventory check tool
-    
+
     Args:
         query: The search string (product name, category, or keywords)
                Example: "red running shoes" or "smartphone charger"
         max_results: Maximum number of results to return (default: 10, range: 1-100)
                      Use lower values for faster response when exact matches are expected
-    
+
     Returns:
         A list of matching product records, each containing:
         - id: Unique product identifier (string)
@@ -296,8 +311,7 @@ def search_database(query: str, max_results: int = 10) -> list:
         - price: Current price in USD (float)
         - category: Product category hierarchy (list)
     """
-    
+
     # Implementation
     pass
 ```
-

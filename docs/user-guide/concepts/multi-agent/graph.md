@@ -1,6 +1,23 @@
-# Agent Graphs: Building Multi-Agent Systems
+# Graph Multi-Agent Pattern
 
-An agent graph is a structured network of interconnected AI agents designed to solve complex problems through coordinated collaboration. Each agent represents a specialized node with specific capabilities, and the connections between agents define explicit communication pathways.
+A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents or other multi-agent systems (like [Swarm](./swarm.md) or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.
+
+- **Deterministic execution order** based on DAG structure
+- **Output propagation** along edges between nodes
+- **Clear dependency management** between agents
+- **Supports nested patterns** (Graph as a node in another Graph)
+- **Conditional edge traversal** for dynamic workflows
+- **Multi-modal input support** for handling text, images, and other content types
+
+## How Graphs Work
+
+The Graph pattern operates on the principle of structured, deterministic workflows where:
+
+1. Nodes represent agents or multi-agent systems
+2. Edges define dependencies and information flow between nodes
+3. Execution follows a topological sort of the graph
+4. Output from one node becomes input for dependent nodes
+5. Entry points receive the original task as input
 
 ```mermaid
 graph TD
@@ -10,300 +27,350 @@ graph TD
     C --> D
 ```
 
-Agent graphs provide precise control over information flow, allowing developers to create sophisticated multi-agent systems with predictable behavior patterns and specialized agent roles.
+## Graph Components
 
-### Components of an Agent Graph
+### 1. GraphNode
 
-An agent graph consists of three primary components:
+A [`GraphNode`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphNode) represents a node in the graph with:
 
-#### 1. Nodes (Agents)
+- **node_id**: Unique identifier for the node
+- **executor**: The Agent or MultiAgentBase instance to execute
+- **dependencies**: Set of nodes this node depends on
+- **execution_status**: Current status (PENDING, EXECUTING, COMPLETED, FAILED)
+- **result**: The NodeResult after execution
+- **execution_time**: Time taken to execute the node in milliseconds
 
-Nodes represent individual AI agents with:
+### 2. GraphEdge
 
-- **Identity**: Unique identifier within the graph
-- **Role**: Specialized function or purpose
-- **System Prompt**: Instructions defining the agent's behavior
-- **Tools**: Capabilities available to the agent
-- **Message Queue**: Buffer for incoming communications
+A [`GraphEdge`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphEdge) represents a connection between nodes with:
 
-#### 2. Edges (Connections)
+- **from_node**: Source node
+- **to_node**: Target node
+- **condition**: Optional function that determines if the edge should be traversed
 
-Edges define the communication pathways between agents:
+### 3. GraphBuilder
 
-    - **Direction**: One-way or bidirectional information flow
-    - **Relationship**: How agents relate to each other (e.g., supervisor/worker)
-    - **Message Passing**: The mechanism for transferring information
+The [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) provides a simple interface for constructing graphs:
 
-#### 3. Topology Patterns
+- **add_node()**: Add an agent or multi-agent system as a node
+- **add_edge()**: Create a dependency between nodes
+- **set_entry_point()**: Define starting nodes for execution
+- **build()**: Validate and create the Graph instance
 
-##### Star Topology
-A central coordinator with radiating specialists, ideal for centralized workflows like content creation with editorial oversight or customer service with escalation paths.
+## Creating a Graph
 
-```mermaid
-graph TD
-    Coordinator[Coordinator]
-    Specialist1[Specialist 1]
-    Specialist2[Specialist 2]
-    Specialist3[Specialist 3]
-    
-    Coordinator --> Specialist1
-    Coordinator --> Specialist2
-    Coordinator --> Specialist3
-```
-
-##### Mesh Topology
-Fully connected network where all agents can communicate directly with each other, ideal for collaborative problem-solving, debates, and consensus-building.
-
-```mermaid
-graph TD
-    AgentA[Agent A]
-    AgentB[Agent B]
-    AgentC[Agent C]
-    AgentD[Agent D]
-    AgentE[Agent E]
-    
-    AgentA <--> AgentB
-    AgentA <--> AgentC
-    AgentB <--> AgentC
-    AgentC <--> AgentD
-    AgentC <--> AgentE
-    AgentD <--> AgentE
-```
-
-##### Hierarchical Topology
-Tree structure with parent-child relationships, ideal for layered processing, project management with task delegation, and multi-level review processes.
-
-```mermaid
-graph TD
-    Executive[Executive]
-    Manager1[Manager 1]
-    Manager2[Manager 2]
-    Worker1[Worker 1]
-    Worker2[Worker 2]
-    Worker3[Worker 3]
-    Worker4[Worker 4]
-    
-    Executive --> Manager1
-    Executive --> Manager2
-    Manager1 --> Worker1
-    Manager1 --> Worker2
-    Manager2 --> Worker3
-    Manager2 --> Worker4
-```
-
-### When to Use Agent Graphs
-
-Agent graphs are ideal for:
-
-1. **Complex Communication Patterns**: Custom topologies and interaction patterns
-2. **Persistent Agent State**: Long-running agent networks that maintain context
-3. **Specialized Agent Roles**: Different agents with distinct capabilities
-4. **Fine-Grained Control**: Precise management of information flow
-
-## Implementing Agent Graphs with Strands
-
-### Hierarchical Agent Graph Example
-
-To illustrate the hierarchical topology pattern discussed above, the following example implements a three-level organizational structure with specialized roles. This hierarchical approach demonstrates one of the key topology patterns for agent graphs, showing how information flows through a tree-like structure with clear parent-child relationships.
-
-```mermaid
-graph TD
-    A((Executive<br>Coordinator)) --> B((Economic<br>Department))
-    A --> C((Technical<br>Analyst))
-    A --> D((Social<br>Analyst))
-    B --> E((Market<br>Research))
-    B --> F((Financial<br>Analysis))
-    
-    E -.-> B
-    F -.-> B
-    B -.-> A
-    C -.-> A
-    D -.-> A
-```
-
-#### 1. Level 1 - Executive Coordinator
+To create a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph), you use the [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) to define nodes, edges, and entry points:
 
 ```python
-from strands import Agent, tool
+import logging
+from strands import Agent
+from strands.multiagent import GraphBuilder
 
-# Level 1 - Executive Coordinator
-COORDINATOR_SYSTEM_PROMPT = """You are an executive coordinator who oversees complex analyses across multiple domains.
-For economic questions, use the economic_department tool.
-For technical questions, use the technical_analysis tool.
-For social impact questions, use the social_analysis tool.
-Synthesize all analyses into comprehensive executive summaries.
-
-Your process should be:
-1. Determine which domains are relevant to the query (economic, technical, social)
-2. Collect analysis from each relevant domain using the appropriate tools
-3. Synthesize the information into a cohesive executive summary
-4. Present findings with clear structure and organization
-
-Always consider multiple perspectives and provide balanced, well-rounded assessments.
-"""
-
-# Create the coordinator agent with all tools
-coordinator = Agent(
-    system_prompt=COORDINATOR_SYSTEM_PROMPT,
-    tools=[economic_department, technical_analysis, social_analysis],
-    callback_handler=None
+# Enable debug logs and print them to stderr
+logging.getLogger("strands.multiagent").setLevel(logging.DEBUG)
+logging.basicConfig(
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
 )
 
-# Process a complex task through the hierarchical agent graph
-def process_complex_task(task):
-    """Process a complex task through the multi-level hierarchical agent graph"""
-    return coordinator(f"Provide a comprehensive analysis of: {task}")
+# Create specialized agents
+researcher = Agent(name="researcher", system_prompt="You are a research specialist...")
+analyst = Agent(name="analyst", system_prompt="You are a data analysis specialist...")
+fact_checker = Agent(name="fact_checker", system_prompt="You are a fact checking specialist...")
+report_writer = Agent(name="report_writer", system_prompt="You are a report writing specialist...")
+
+# Build the graph
+builder = GraphBuilder()
+
+# Add nodes
+builder.add_node(researcher, "research")
+builder.add_node(analyst, "analysis")
+builder.add_node(fact_checker, "fact_check")
+builder.add_node(report_writer, "report")
+
+# Add edges (dependencies)
+builder.add_edge("research", "analysis")
+builder.add_edge("research", "fact_check")
+builder.add_edge("analysis", "report")
+builder.add_edge("fact_check", "report")
+
+# Set entry points (optional - will be auto-detected if not specified)
+builder.set_entry_point("research")
+
+# Build the graph
+graph = builder.build()
+
+# Execute the graph on a task
+result = graph("Research the impact of AI on healthcare and create a comprehensive report")
+
+# Access the results
+print(f"\nStatus: {result.status}")
+print(f"Execution order: {[node.node_id for node in result.execution_order]}")
 ```
 
-#### 2. Level 2 - Mid-level Manager Agent
+## Conditional Edges
+
+You can add conditional logic to edges to create dynamic workflows:
 
 ```python
-# Level 2 - Mid-level Manager Agent with its own specialized tools
-@tool
-def economic_department(query: str) -> str:
-    """Coordinate economic analysis across market and financial domains."""
-    print("📈 Economic Department coordinating analysis...")
-    econ_manager = Agent(
-        system_prompt="""You are an economic department manager who coordinates specialized economic analyses.
-        For market-related questions, use the market_research tool.
-        For financial questions, use the financial_analysis tool.
-        Synthesize the results into a cohesive economic perspective.
-        
-        Important: Make sure to use both tools for comprehensive analysis unless the query is clearly focused on just one area.
-        """,
-        tools=[market_research, financial_analysis],
-        callback_handler=None
-    )
-    return str(econ_manager(query))
+def only_if_research_successful(state):
+    """Only traverse if research was successful."""
+    research_node = state.results.get("research")
+    if not research_node:
+        return False
+    
+    # Check if research result contains success indicator
+    result_text = str(research_node.result)
+    return "successful" in result_text.lower()
+
+# Add conditional edge
+builder.add_edge("research", "analysis", condition=only_if_research_successful)
 ```
 
-#### 3. Level 3 - Specialized Analysis Agents
+## Nested Multi-Agent Patterns
 
-```python
-# Level 3 - Specialized Analysis Agents
-@tool
-def market_research(query: str) -> str:
-    """Analyze market trends and consumer behavior."""
-    print("🔍 Market Research Specialist analyzing...")
-    market_agent = Agent(
-        system_prompt="You are a market research specialist who analyzes consumer trends, market segments, and purchasing behaviors. Provide detailed insights on market conditions, consumer preferences, and emerging trends.",
-        callback_handler=None
-    )
-    return str(market_agent(query))
-
-@tool
-def financial_analysis(query: str) -> str:
-    """Analyze financial aspects and economic implications."""
-    print("💹 Financial Analyst processing...")
-    financial_agent = Agent(
-        system_prompt="You are a financial analyst who specializes in economic forecasting, cost-benefit analysis, and financial modeling. Provide insights on financial viability, economic impacts, and budgetary considerations.",
-        callback_handler=None
-    )
-    return str(financial_agent(query))
-
-@tool
-def technical_analysis(query: str) -> str:
-    """Analyze technical feasibility and implementation challenges."""
-    print("⚙️ Technical Analyst evaluating...")
-    tech_agent = Agent(
-        system_prompt="You are a technology analyst who evaluates technical feasibility, implementation challenges, and emerging technologies. Provide detailed assessments of technical aspects, implementation requirements, and potential technological hurdles.",
-        callback_handler=None
-    )
-    return str(tech_agent(query))
-
-@tool
-def social_analysis(query: str) -> str:
-    """Analyze social impacts and behavioral implications."""
-    print("👥 Social Impact Analyst investigating...")
-    social_agent = Agent(
-        system_prompt="You are a social impact analyst who focuses on how changes affect communities, behaviors, and social structures. Provide insights on social implications, behavioral changes, and community impacts.",
-        callback_handler=None
-    )
-    return str(social_agent(query))
-```
-
-This implementation demonstrates a hierarchical agent graph architecture where:
-
-1. **Multi-Level Hierarchy**: Three distinct levels form a clear organizational structure:
-
-    - Level 1: Executive Coordinator oversees the entire analysis process
-    - Level 2: Department Manager (Economic Department) coordinates its own team of specialists
-    - Level 3: Specialist Analysts provide domain-specific expertise
-
-2. **Tool-Based Communication**: Agents communicate through the tool mechanism, where higher-level agents invoke lower-level agents as tools, creating a structured information flow path.
-
-3. **Nested Delegation**: The Executive Coordinator delegates to both the Economic Department and individual specialists. The Economic Department further delegates to its own specialists, demonstrating nested responsibility.
-
-4. **Specialized Domains**: Each branch focuses on different domains (economic, technical, social), with the Economic Department having its own sub-specialties (market research and financial analysis).
-
-5. **Information Synthesis**: Each level aggregates and synthesizes information from lower levels before passing it upward, adding value at each stage of the hierarchy.
-
-## Using the Agent Graph Tool
-
-Strands Agents SDK provides a built-in `agent_graph` tool that simplifies multi-agent system implementation. The full implementation can be found in the [Strands Tools repository](https://github.com/strands-agents/tools/blob/main/src/strands_tools/agent_graph.py).
-
-### Creating and Using Agent Graphs
+You can use a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph) or [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm) as a node within another Graph:
 
 ```python
 from strands import Agent
-from strands_tools import agent_graph
+from strands.multiagent import GraphBuilder, Swarm
 
-# Create an agent with agent_graph capability
-agent = Agent(tools=[agent_graph])
+# Create a swarm of research agents
+research_agents = [
+    Agent(name="medical_researcher", system_prompt="You are a medical research specialist..."),
+    Agent(name="technology_researcher", system_prompt="You are a technology research specialist..."),
+    Agent(name="economic_researcher", system_prompt="You are an economic research specialist...")
+]
+research_swarm = Swarm(research_agents)
 
-# Create a research team with a star topology
-result = agent.tool.agent_graph(
-    action="create",
-    graph_id="research_team",
-    topology={
-        "type": "star",
-        "nodes": [
-            {
-                "id": "coordinator",
-                "role": "team_lead",
-                "system_prompt": "You are a research team leader coordinating specialists."
-            },
-            {
-                "id": "data_analyst",
-                "role": "analyst",
-                "system_prompt": "You are a data analyst specializing in statistical analysis."
-            },
-            {
-                "id": "domain_expert",
-                "role": "expert",
-                "system_prompt": "You are a domain expert with deep subject knowledge."
-            }
-        ],
-        "edges": [
-            {"from": "coordinator", "to": "data_analyst"},
-            {"from": "coordinator", "to": "domain_expert"},
-            {"from": "data_analyst", "to": "coordinator"},
-            {"from": "domain_expert", "to": "coordinator"}
-        ]
-    }
-)
+# Create a single agent node too
+analyst = Agent(system_prompt="Analyze the provided research.")
 
-# Send a task to the coordinator
-agent.tool.agent_graph(
-    action="message",
-    graph_id="research_team",
-    message={
-        "target": "coordinator",
-        "content": "Analyze the impact of remote work on productivity."
-    }
-)
+# Create a graph with the swarm as a node
+builder = GraphBuilder()
+builder.add_node(research_swarm, "research_team")
+builder.add_node(analyst, "analysis")
+builder.add_edge("research_team", "analysis")
+
+graph = builder.build()
+
+result = graph("Research the impact of AI on healthcare and create a comprehensive report")
+
+# Access the results
+print(f"\n{result}")
 ```
 
-### Key Actions
+## Multi-Modal Input Support
 
-The agent_graph tool supports five primary actions:
+Graphs support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/types.md#strands.types.content.ContentBlock):
 
-1. **create**: Build a new agent network with the specified topology
-2. **message**: Send information to a specific agent in the network
-3. **status**: Check the current state of an agent network
-4. **list**: View all active agent networks
-5. **stop**: Terminate an agent network when it's no longer needed
+```python
+from strands import Agent
+from strands.multiagent import GraphBuilder
+from strands.types.content import ContentBlock
 
-## Conclusion
+# Create agents for image processing workflow
+image_analyzer = Agent(system_prompt="You are an image analysis expert...")
+summarizer = Agent(system_prompt="You are a summarization expert...")
 
-Agent graphs provide a structured approach to building multi-agent systems with precise control over information flow and agent interactions. By organizing agents into topologies like star, mesh, or hierarchical patterns, developers can create sophisticated systems tailored to specific tasks. The Strands Agents SDK supports both custom implementations through tool-based communication and simplified creation via the agent_graph tool. Whether implementing specialized hierarchies with nested delegation or dynamic networks with persistent state, agent graphs enable complex problem-solving through coordinated collaboration of specialized AI agents working within well-defined communication pathways.
+# Build the graph
+builder = GraphBuilder()
+builder.add_node(image_analyzer, "image_analyzer")
+builder.add_node(summarizer, "summarizer")
+builder.add_edge("image_analyzer", "summarizer")
+builder.set_entry_point("image_analyzer")
+
+graph = builder.build()
+
+# Create content blocks with text and image
+content_blocks = [
+    ContentBlock(text="Analyze this image and describe what you see:"),
+    ContentBlock(image={"format": "png", "source": {"bytes": image_bytes}}),
+]
+
+# Execute the graph with multi-modal input
+result = graph(content_blocks)
+```
+
+## Asynchronous Execution
+
+You can also execute a Graph asynchronously by calling the [`invoke_async`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph.invoke_async) function:
+
+```python
+import asyncio
+
+async def run_graph():
+    result = await graph.invoke_async("Research and analyze market trends...")
+    return result
+
+result = asyncio.run(run_graph())
+```
+
+## Graph Results
+
+When a Graph completes execution, it returns a [`GraphResult`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphResult) object with detailed information:
+
+```python
+result = graph("Research and analyze...")
+
+# Check execution status
+print(f"Status: {result.status}")  # COMPLETED, FAILED, etc.
+
+# See which nodes were executed and in what order
+for node in result.execution_order:
+    print(f"Executed: {node.node_id}")
+
+# Get results from specific nodes
+analysis_result = result.results["analysis"].result
+print(f"Analysis: {analysis_result}")
+
+# Get performance metrics
+print(f"Total nodes: {result.total_nodes}")
+print(f"Completed nodes: {result.completed_nodes}")
+print(f"Failed nodes: {result.failed_nodes}")
+print(f"Execution time: {result.execution_time}ms")
+print(f"Token usage: {result.accumulated_usage}")
+```
+
+## Input Propagation
+
+The Graph automatically builds input for each node based on its dependencies:
+
+1. **Entry point nodes** receive the original task as input
+2. **Dependent nodes** receive a combined input that includes:
+   - The original task
+   - Results from all dependency nodes that have completed execution
+
+This ensures each node has access to both the original context and the outputs from its dependencies.
+
+The formatted input for dependent nodes looks like:
+
+```
+Original Task: [The original task text]
+
+Inputs from previous nodes:
+
+From [node_id]:
+  - [Agent name]: [Result text]
+  - [Agent name]: [Another result text]
+
+From [another_node_id]:
+  - [Agent name]: [Result text]
+```
+
+## Graphs as a Tool
+
+Agents can dynamically create and orchestrate graphs by using the `graph` tool available in the [Strands tools package](../tools/example-tools-package.md).
+
+```python
+from strands import Agent
+from strands_tools import graph
+
+agent = Agent(tools=[graph], system_prompt="Create a graph of agents to solve the user's query.")
+
+agent("Design a TypeScript REST API and then write the code for it")
+```
+
+In this example:
+
+1. The agent uses the `graph` tool to dynamically create nodes and edges in a graph. These nodes might be architect, coder, and reviewer agents with edges defined as architect -> coder -> reviewer
+2. Next the agent executes the graph
+3. The agent analyzes the graph results and then decides to either create another graph and execute it, or answer the user's query
+
+## Common Graph Topologies
+
+### 1. Sequential Pipeline
+
+```mermaid
+graph LR
+    A[Research] --> B[Analysis] --> C[Review] --> D[Report]
+```
+
+```python
+builder = GraphBuilder()
+builder.add_node(researcher, "research")
+builder.add_node(analyst, "analysis")
+builder.add_node(reviewer, "review")
+builder.add_node(report_writer, "report")
+
+builder.add_edge("research", "analysis")
+builder.add_edge("analysis", "review")
+builder.add_edge("review", "report")
+```
+
+### 2. Parallel Processing with Aggregation
+
+```mermaid
+graph TD
+    A[Coordinator] --> B[Worker 1]
+    A --> C[Worker 2]
+    A --> D[Worker 3]
+    B --> E[Aggregator]
+    C --> E
+    D --> E
+```
+
+```python
+builder = GraphBuilder()
+builder.add_node(coordinator, "coordinator")
+builder.add_node(worker1, "worker1")
+builder.add_node(worker2, "worker2")
+builder.add_node(worker3, "worker3")
+builder.add_node(aggregator, "aggregator")
+
+builder.add_edge("coordinator", "worker1")
+builder.add_edge("coordinator", "worker2")
+builder.add_edge("coordinator", "worker3")
+builder.add_edge("worker1", "aggregator")
+builder.add_edge("worker2", "aggregator")
+builder.add_edge("worker3", "aggregator")
+```
+
+### 3. Branching Logic
+
+```mermaid
+graph TD
+    A[Classifier] --> B[Technical Branch]
+    A --> C[Business Branch]
+    B --> D[Technical Report]
+    C --> E[Business Report]
+```
+
+```python
+def is_technical(state):
+    classifier_result = state.results.get("classifier")
+    if not classifier_result:
+        return False
+    result_text = str(classifier_result.result)
+    return "technical" in result_text.lower()
+
+def is_business(state):
+    classifier_result = state.results.get("classifier")
+    if not classifier_result:
+        return False
+    result_text = str(classifier_result.result)
+    return "business" in result_text.lower()
+
+builder = GraphBuilder()
+builder.add_node(classifier, "classifier")
+builder.add_node(tech_specialist, "tech_specialist")
+builder.add_node(business_specialist, "business_specialist")
+builder.add_node(tech_report, "tech_report")
+builder.add_node(business_report, "business_report")
+
+builder.add_edge("classifier", "tech_specialist", condition=is_technical)
+builder.add_edge("classifier", "business_specialist", condition=is_business)
+builder.add_edge("tech_specialist", "tech_report")
+builder.add_edge("business_specialist", "business_report")
+```
+
+## Best Practices
+
+1. **Design for acyclicity**: Ensure your graph has no cycles
+2. **Use meaningful node IDs**: Choose descriptive names for nodes
+3. **Validate graph structure**: The builder will check for cycles and validate entry points
+4. **Handle node failures**: Consider how failures in one node affect the overall workflow
+5. **Use conditional edges**: For dynamic workflows based on intermediate results
+6. **Consider parallelism**: Independent branches can execute concurrently
+7. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
+8. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images

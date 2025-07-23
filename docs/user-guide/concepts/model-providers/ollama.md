@@ -191,9 +191,48 @@ creative_agent = Agent(model=creative_model)
 factual_agent = Agent(model=factual_model)
 ```
 
+### Structured Output
+
+Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.ollama import OllamaModel
+
+class BookAnalysis(BaseModel):
+    """Analyze a book's key information."""
+    title: str = Field(description="The book's title")
+    author: str = Field(description="The book's author")
+    genre: str = Field(description="Primary genre or category")
+    summary: str = Field(description="Brief summary of the book")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+
+ollama_model = OllamaModel(
+    host="http://localhost:11434",
+    model_id="llama3",
+)
+
+agent = Agent(model=ollama_model)
+
+result = agent.structured_output(
+    BookAnalysis,
+    """
+    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
+    """
+)
+
+print(f"Title: {result.title}")
+print(f"Author: {result.author}")
+print(f"Genre: {result.genre}")
+print(f"Rating: {result.rating}")
+```
+
 ## Tool Support
 
-[Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands's tool system:
+[Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands' tool system:
 
 ```python
 from strands import Agent

@@ -1,6 +1,7 @@
 site_name: Strands Agents SDK
 site_description: Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
 site_dir: site
+site_url: https://strandsagents.com
 
 repo_url: https://github.com/strands-agents/sdk-python
 
@@ -26,6 +27,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+  icon:
+    admonition:
+      code: material/code-json
   features:
     - content.code.copy
     - content.code.select
@@ -59,6 +63,11 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  # Workaround for site_url breaking mermaid rendering; see the following for more info:
+  # https://github.com/squidfunk/mkdocs-material/issues/3742#issuecomment-1076068038
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+
 nav:
   - User Guide:
     - Welcome: README.md
@@ -66,9 +75,12 @@ nav:
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
-        - Sessions & State: user-guide/concepts/agents/sessions-state.md
+        - State: user-guide/concepts/agents/state.md
+        - Session Management: user-guide/concepts/agents/session-management.md
         - Prompts: user-guide/concepts/agents/prompts.md
-        - Context Management: user-guide/concepts/agents/context-management.md
+        - Hooks: user-guide/concepts/agents/hooks.md
+        - Structured Output: user-guide/concepts/agents/structured-output.md
+        - Conversation Management: user-guide/concepts/agents/conversation-management.md
       - Tools:
         - Overview: user-guide/concepts/tools/tools_overview.md
         - Python: user-guide/concepts/tools/python-tools.md
@@ -79,13 +91,17 @@ nav:
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+        - MistralAI: user-guide/concepts/model-providers/mistral.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
         - OpenAI: user-guide/concepts/model-providers/openai.md
+        - Writer: user-guide/concepts/model-providers/writer.md
+        - Cohere: user-guide/concepts/model-providers/cohere.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
       - Streaming:
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
         - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
       - Multi-agent:
+        - Agent2Agent (A2A): user-guide/concepts/multi-agent/agent-to-agent.md
         - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
         - Swarm: user-guide/concepts/multi-agent/swarm.md
         - Graph: user-guide/concepts/multi-agent/graph.md
@@ -104,6 +120,7 @@ nav:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - Amazon Bedrock AgentCore : user-guide/deploy/deploy_to_bedrock_agentcore.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
   - Examples:
@@ -114,15 +131,21 @@ nav:
     - File Operations: examples/python/file_operations.md
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
+    - Structured Output: examples/python/structured_output.md
     - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md
+    - Multi-modal: examples/python/multimodal.md
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
     - Agent: api-reference/agent.md
     - Event Loop: api-reference/event-loop.md
+    - Experimental: api-reference/experimental.md
     - Handlers: api-reference/handlers.md
+    - Hooks: api-reference/hooks.md
     - Models: api-reference/models.md
+    - Multiagent: api-reference/multiagent.md
+    - Session: api-reference/session.md
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md
@@ -146,6 +169,15 @@ plugins:
             docstring_style: google
             show_root_heading: true
             show_source: true
+  - llmstxt:
+      sections:
+        User Guide:
+          - README.md
+          - user-guide/**/*.md
+        Examples:
+          - examples/**/*.md
+        API Reference:
+          - api-reference/*.md
 
 extra:
   social:
