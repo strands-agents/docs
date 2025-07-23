@@ -43,6 +43,7 @@ pip install strands-agents-tools[mem0_memory]
 - [`image_reader`]({{ tools_repo }}/src/strands_tools/image_reader.py): Process and analyze images
 - [`generate_image`]({{ tools_repo }}/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
 - [`nova_reels`]({{ tools_repo }}/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
+- [`nova_canvas`]({{ tools_repo }}/src/strands_tools/nova_canvas.py): Create AI generated images, remove background from images, and [virtual try-on](https://docs.aws.amazon.com/nova/latest/userguide/image-gen-vto.html) with Nova Canvas on Amazon Bedrock
 - [`speak`]({{ tools_repo }}/src/strands_tools/speak.py): Generate speech from text using macOS say command or Amazon Polly
 
 #### AWS Services
