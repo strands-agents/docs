@@ -1,10 +1,12 @@
 # Python Tools
 
-There are two approaches to defining python-based tools in Strands:
+There are three approaches to defining python-based tools in Strands:
 
 * **Python functions with the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator**: Transform regular Python functions into tools by adding a simple decorator. This approach leverages Python's docstrings and type hints to automatically generate tool specifications.
 
 * **Python modules following a specific format**: Define tools by creating Python modules that contain a tool specification and a matching function. This approach gives you more control over the tool's definition and is useful for dependency-free implementations of tools.
+
+* **Class-based tools with the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator**: Create tools within classes to maintain state and leverage object-oriented programming patterns.
 
 ## Python Tool Decorators
 
@@ -281,3 +283,99 @@ When using the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator
 1. If you return a string or other simple value, it's wrapped as `{"text": str(result)}`
 2. If you return a dictionary with the proper [`ToolResult`](../../../api-reference/types.md#strands.types.tools.ToolResult) structure, it's used directly
 3. If an exception occurs, it's converted to an error response
+
+## Class-Based Tools
+
+Class-based tools allow you to create tools that maintain state and leverage object-oriented programming patterns. This approach is useful when your tools need to share resources, maintain context between invocations, or follow object-oriented design principles.
+
+### Basic Example
+
+Here's how to create a class-based tool using the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator:
+
+```python
+from strands import Agent, tool
+
+class Browser:
+    """Browser tool implementation using Playwright."""
+
+    def __init__(self):
+        self._started = False
+        self._sessions = {}
+        # Initialize other class-level resources or state
+
+    @tool
+    def browser(self, url: str, action: str = "navigate") -> str:
+        """Interact with a web browser.
+        
+        Args:
+            url: The URL to navigate to or interact with
+            action: The action to perform (navigate, click, etc.)
+        """
+        # Method implementation that can access class instance variables
+        # and maintain state between invocations
+        return f"Performed {action} on {url}"
+
+# Usage
+browser_instance = Browser()
+agent = Agent(
+    tools=[browser_instance.browser]  # Pass the bound method as a tool
+)
+```
+
+When you use the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator on a class method, the method becomes bound to the class instance when instantiated. This means the tool function has access to the instance's attributes and can maintain state between invocations.
+
+### Advantages of Class-Based Tools
+
+Class-based tools offer several advantages:
+
+1. **State Management**: Maintain context and resources between tool invocations
+2. **Resource Sharing**: Share resources efficiently across multiple tools in the same class
+3. **Encapsulation**: Group related tools and their supporting code together
+4. **Initialization Control**: Set up resources during class initialization rather than on each tool invocation
+
+### Example with Multiple Tools in a Class
+
+You can define multiple tools within the same class to create a cohesive set of related functionality:
+
+```python
+from strands import Agent, tool
+
+class DatabaseTools:
+    def __init__(self, connection_string):
+        self.connection = self._establish_connection(connection_string)
+        
+    def _establish_connection(self, connection_string):
+        # Set up database connection
+        return {"connected": True, "db": "example_db"}
+    
+    @tool
+    def query_database(self, sql: str) -> dict:
+        """Run a SQL query against the database.
+        
+        Args:
+            sql: The SQL query to execute
+        """
+        # Uses the shared connection
+        return {"results": f"Query results for: {sql}", "connection": self.connection}
+    
+    @tool
+    def insert_record(self, table: str, data: dict) -> str:
+        """Insert a new record into the database.
+        
+        Args:
+            table: The table name
+            data: The data to insert as a dictionary
+        """
+        # Also uses the shared connection
+        return f"Inserted data into {table}: {data}"
+
+# Usage
+db_tools = DatabaseTools("example_connection_string")
+agent = Agent(
+    tools=[db_tools.query_database, db_tools.insert_record]
+)
+```
+
+### Using PythonAgentTool (Alternative Approach)
+
+While you can also use the `PythonAgentTool` class directly to create class-based tools, most use cases can be satisfied using the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator approach with class methods due to its simplicity and automatic schema generation.
