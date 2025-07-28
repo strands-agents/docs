@@ -158,8 +158,7 @@ except ValueError as e:
 Agent state is particularly useful for maintaining information across tool executions:
 
 ```python
-from strands import Agent
-from strands.tools.decorator import tool
+from strands import Agent, tool
 
 @tool
 def track_user_action(action: str, agent: Agent):
