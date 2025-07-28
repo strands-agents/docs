@@ -8,10 +8,10 @@ Install the `strands-agents-tools` package by running:
 pip install strands-agents-tools
 ```
 
-If using `mem0_memory`, install the additional required dependencies by running:
+If using `use_computer` or `mem0_memory`, install the additional required dependencies by running:
 
 ```python
-pip install strands-agents-tools[mem0_memory]
+pip install strands-agents-tools[use_computer, mem0_memory]
 ```
 
 ## Available Tools
@@ -20,6 +20,7 @@ pip install strands-agents-tools[mem0_memory]
 - [`retrieve`]({{ tools_repo }}/src/strands_tools/retrieve.py): Semantically retrieve data from Amazon Bedrock Knowledge Bases for RAG, memory, and other purposes
 - [`memory`]({{ tools_repo }}/src/strands_tools/memory.py): Agent memory persistence in Amazon Bedrock Knowledge Bases
 - [`mem0_memory`]({{ tools_repo }}/src/strands_tools/mem0_memory.py): Agent memory and personalization built on top of [Mem0](https://mem0.ai)
+- [`agent_core_memory`]({{ tools_repo }}/src/strands_tools/agent_core_memory.py): Manage memories in Bedrock AgentCore Memory Service with event creation and retrieval
 
 #### File Operations
 - [`editor`]({{ tools_repo }}/src/strands_tools/editor.py): File editing operations like line edits, search, and undo
@@ -37,6 +38,8 @@ pip install strands-agents-tools[mem0_memory]
 #### Web & Network
 - [`http_request`]({{ tools_repo }}/src/strands_tools/http_request.py): Make API calls, fetch web data, and call local HTTP servers
 - [`slack`]({{ tools_repo }}/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
+- [`use_browser`]({{ tools_repo }}/src/strands_tools/use_browser.py): Browser automation with Playwright for web interaction and testing
+- [`rss`]({{ tools_repo }}/src/strands_tools/rss.py): RSS feed management, subscription, and content retrieval
 
 #### Multi-modal
 - [`generate_image_stability`]({{ tools_repo }}/src/strands_tools/generate_image_stability.py): Create images with Stability AI
@@ -44,6 +47,7 @@ pip install strands-agents-tools[mem0_memory]
 - [`generate_image`]({{ tools_repo }}/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
 - [`nova_reels`]({{ tools_repo }}/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
 - [`speak`]({{ tools_repo }}/src/strands_tools/speak.py): Generate speech from text using macOS say command or Amazon Polly
+- [`use_computer`]({{ tools_repo }}/src/strands_tools/use_computer.py): Computer vision and UI automation with screenshot taking, OCR, and interaction
 
 #### AWS Services
 - [`use_aws`]({{ tools_repo }}/src/strands_tools/use_aws.py): Interact with AWS services
@@ -52,14 +56,18 @@ pip install strands-agents-tools[mem0_memory]
 - [`calculator`]({{ tools_repo }}/src/strands_tools/calculator.py): Perform mathematical operations
 - [`current_time`]({{ tools_repo }}/src/strands_tools/current_time.py): Get the current date and time
 - [`load_tool`]({{ tools_repo }}/src/strands_tools/load_tool.py): Dynamically load more tools at runtime
+- [`sleep`]({{ tools_repo }}/src/strands_tools/sleep.py): Pause execution for a specified number of seconds
+- [`diagram`]({{ tools_repo }}/src/strands_tools/diagram.py): Create technical diagrams including AWS architecture, network, and flowcharts
 
 #### Agents & Workflows
+- [`graph`]({{ tools_repo }}/src/strands_tools/graph.py): Create and manage multi-agent systems using Strands SDK Graph implementation
 - [`agent_graph`]({{ tools_repo }}/src/strands_tools/agent_graph.py): Create and manage graphs of agents
 - [`journal`]({{ tools_repo }}/src/strands_tools/journal.py): Create structured tasks and logs for agents to manage and work from
 - [`swarm`]({{ tools_repo }}/src/strands_tools/swarm.py): Coordinate multiple AI agents in a swarm / network of agents
 - [`stop`]({{ tools_repo }}/src/strands_tools/stop.py): Force stop the agent event loop
 - [`handoff_to_user`]({{ tools_repo }}/src/strands_tools/handoff_to_user.py): Enable human-in-the-loop workflows by pausing agent execution for user input or transferring control entirely to the user
 - [`think`]({{ tools_repo }}/src/strands_tools/think.py): Perform deep thinking by creating parallel branches of agentic reasoning
+- [`use_agent`]({{ tools_repo }}/src/strands_tools/use_agent.py): Run a new AI event loop with custom prompts and different model providers
 - [`use_llm`]({{ tools_repo }}/src/strands_tools/use_llm.py): Run a new AI event loop with custom prompts
 - [`workflow`]({{ tools_repo }}/src/strands_tools/workflow.py): Orchestrate sequenced workflows
 - [`batch`]({{ tools_repo }}/src/strands_tools/batch.py): Call multiple tools from a single model request
