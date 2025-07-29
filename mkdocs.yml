@@ -94,7 +94,7 @@ nav:
         - MistralAI: user-guide/concepts/model-providers/mistral.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
         - OpenAI: user-guide/concepts/model-providers/openai.md
-        - Sagemaker: user-guide/concepts/model-providers/sagemaker.md
+        - SageMaker: user-guide/concepts/model-providers/sagemaker.md
         - Writer: user-guide/concepts/model-providers/writer.md
         - Cohere: user-guide/concepts/model-providers/cohere.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
