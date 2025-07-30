@@ -78,6 +78,34 @@ print(f"Age: {result.age}")        # 30
 print(f"Job: {result.occupation}") # "software engineer"
 ```
 
+### Using Tools and Conversation History
+
+Structured output can work with tools and conversation history, but the agent must be primed with that information before calling the `strucutred_output` function.
+
+```python
+from strands import Agent
+from pydantic import BaseModel
+from strands_tools import http_request
+
+agent = Agent(tools=[http_request])
+
+# Build up conversation context
+agent("What do you know about Paris, France?")
+agent("Can you check the weather there now?")
+
+# Extract structured information with a prompt
+class CityInfo(BaseModel):
+    city: str
+    country: str
+    weather: str
+
+# Uses existing conversation context with a prompt
+result = agent.structured_output(CityInfo, "Extract structured information about Paris")
+print(result.city)
+print(result.country)
+print(result.weather)
+```
+
 ### Multi-Modal Input
 
 Extract structured information from prompts containing images, documents, and other content types:
@@ -111,28 +139,6 @@ result = agent.structured_output(
 
 For a complete list of supported content types, please refer to the [API Reference](../../../api-reference/types.md#strands.types.content.ContentBlock).
 
-
-### Using Conversation History
-
-Structured output can work with existing conversation context:
-
-```python
-agent = Agent()
-
-# Build up conversation context
-agent("What do you know about Paris, France?")
-agent("Tell me about the weather there in spring.")
-
-# Extract structured information with a prompt
-class CityInfo(BaseModel):
-    city: str
-    country: str
-    population: Optional[int] = None
-    climate: str
-
-# Uses existing conversation context with a prompt
-result = agent.structured_output(CityInfo, "Extract structured information about Paris")
-```
 
 ### Complex Nested Models
 
