@@ -192,7 +192,7 @@ The loop completes when the model generates a final text response or an exceptio
 
 ## Troubleshooting
 
-### MaxTokensReachedException
+### EventLoopMaxTokensReachedException
 
 This exception indicates that the agent has reached an unrecoverable state because the `max_tokens` stop reason was returned from the model provider. When this occurs, the agent cannot continue processing and the loop terminates.
 
