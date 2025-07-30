@@ -19,7 +19,7 @@
       heading_level: 2
 ::: strands.types.session
     options:
-      heading_level: 2 
+      heading_level: 2
 ::: strands.types.streaming
     options:
       heading_level: 2
