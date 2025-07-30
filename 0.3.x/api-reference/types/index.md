@@ -577,6 +577,22 @@ def __init__(self, message: str) -> None:
 
 ```
 
+### `SessionException`
+
+Bases: `Exception`
+
+Exception raised when session operations fail.
+
+Source code in `strands/types/exceptions.py`
+
+```
+class SessionException(Exception):
+    """Exception raised when session operations fail."""
+
+    pass
+
+```
+
 ## `strands.types.guardrails`
 
 Guardrail-related type definitions for the SDK.
@@ -1225,1119 +1241,348 @@ class VideoSource(TypedDict):
 
 ```
 
-## `strands.types.models`
+## `strands.types.session`
 
-Model-related type definitions for the SDK.
+Data models for session management.
 
-### `Model`
+### `Session`
 
-Bases: `ABC`
+Session data model.
 
-Abstract base class for AI model implementations.
-
-This class defines the interface for all model implementations in the Strands Agents SDK. It provides a standardized way to configure, format, and process requests for different AI model providers.
-
-Source code in `strands/types/models/model.py`
+Source code in `strands/types/session.py`
 
 ```
-class Model(abc.ABC):
-    """Abstract base class for AI model implementations.
-
-    This class defines the interface for all model implementations in the Strands Agents SDK. It provides a
-    standardized way to configure, format, and process requests for different AI model providers.
-    """
-
-    @abc.abstractmethod
-    # pragma: no cover
-    def update_config(self, **model_config: Any) -> None:
-        """Update the model configuration with the provided arguments.
-
-        Args:
-            **model_config: Configuration overrides.
-        """
-        pass
-
-    @abc.abstractmethod
-    # pragma: no cover
-    def get_config(self) -> Any:
-        """Return the model configuration.
-
-        Returns:
-            The model's configuration.
-        """
-        pass
-
-    @abc.abstractmethod
-    # pragma: no cover
-    def structured_output(
-        self, output_model: Type[T], prompt: Messages
-    ) -> AsyncGenerator[dict[str, Union[T, Any]], None]:
-        """Get structured output from the model.
-
-        Args:
-            output_model: The output model to use for the agent.
-            prompt: The prompt messages to use for the agent.
-
-        Yields:
-            Model events with the last being the structured output.
-
-        Raises:
-            ValidationException: The response format from the model does not match the output_model
-        """
-        pass
-
-    @abc.abstractmethod
-    # pragma: no cover
-    def format_request(
-        self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-    ) -> Any:
-        """Format a streaming request to the underlying model.
-
-        Args:
-            messages: List of message objects to be processed by the model.
-            tool_specs: List of tool specifications to make available to the model.
-            system_prompt: System prompt to provide context to the model.
-
-        Returns:
-            The formatted request.
-        """
-        pass
-
-    @abc.abstractmethod
-    # pragma: no cover
-    def format_chunk(self, event: Any) -> StreamEvent:
-        """Format the model response events into standardized message chunks.
-
-        Args:
-            event: A response event from the model.
-
-        Returns:
-            The formatted chunk.
-        """
-        pass
-
-    @abc.abstractmethod
-    # pragma: no cover
-    def stream(self, request: Any) -> AsyncGenerator[Any, None]:
-        """Send the request to the model and get a streaming response.
-
-        Args:
-            request: The formatted request to send to the model.
-
-        Returns:
-            The model's response.
-
-        Raises:
-            ModelThrottledException: When the model service is throttling requests from the client.
-        """
-        pass
-
-    async def converse(
-        self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-    ) -> AsyncIterable[StreamEvent]:
-        """Converse with the model.
-
-        This method handles the full lifecycle of conversing with the model:
-        1. Format the messages, tool specs, and configuration into a streaming request
-        2. Send the request to the model
-        3. Yield the formatted message chunks
-
-        Args:
-            messages: List of message objects to be processed by the model.
-            tool_specs: List of tool specifications to make available to the model.
-            system_prompt: System prompt to provide context to the model.
-
-        Yields:
-            Formatted message chunks from the model.
-
-        Raises:
-            ModelThrottledException: When the model service is throttling requests from the client.
-        """
-        logger.debug("formatting request")
-        request = self.format_request(messages, tool_specs, system_prompt)
-        logger.debug("formatted request=<%s>", request)
-
-        logger.debug("invoking model")
-        response = self.stream(request)
-
-        logger.debug("got response from model")
-        async for event in response:
-            yield self.format_chunk(event)
-
-        logger.debug("finished streaming response from model")
-
-```
-
-#### `converse(messages, tool_specs=None, system_prompt=None)`
-
-Converse with the model.
-
-This method handles the full lifecycle of conversing with the model:
-
-1. Format the messages, tool specs, and configuration into a streaming request
-1. Send the request to the model
-1. Yield the formatted message chunks
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | List of message objects to be processed by the model. | *required* | | `tool_specs` | `Optional[list[ToolSpec]]` | List of tool specifications to make available to the model. | `None` | | `system_prompt` | `Optional[str]` | System prompt to provide context to the model. | `None` |
-
-Yields:
-
-| Type | Description | | --- | --- | | `AsyncIterable[StreamEvent]` | Formatted message chunks from the model. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `ModelThrottledException` | When the model service is throttling requests from the client. |
-
-Source code in `strands/types/models/model.py`
-
-```
-async def converse(
-    self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-) -> AsyncIterable[StreamEvent]:
-    """Converse with the model.
-
-    This method handles the full lifecycle of conversing with the model:
-    1. Format the messages, tool specs, and configuration into a streaming request
-    2. Send the request to the model
-    3. Yield the formatted message chunks
-
-    Args:
-        messages: List of message objects to be processed by the model.
-        tool_specs: List of tool specifications to make available to the model.
-        system_prompt: System prompt to provide context to the model.
-
-    Yields:
-        Formatted message chunks from the model.
-
-    Raises:
-        ModelThrottledException: When the model service is throttling requests from the client.
-    """
-    logger.debug("formatting request")
-    request = self.format_request(messages, tool_specs, system_prompt)
-    logger.debug("formatted request=<%s>", request)
-
-    logger.debug("invoking model")
-    response = self.stream(request)
-
-    logger.debug("got response from model")
-    async for event in response:
-        yield self.format_chunk(event)
-
-    logger.debug("finished streaming response from model")
-
-```
-
-#### `format_chunk(event)`
-
-Format the model response events into standardized message chunks.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `Any` | A response event from the model. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `StreamEvent` | The formatted chunk. |
-
-Source code in `strands/types/models/model.py`
-
-```
-@abc.abstractmethod
-# pragma: no cover
-def format_chunk(self, event: Any) -> StreamEvent:
-    """Format the model response events into standardized message chunks.
-
-    Args:
-        event: A response event from the model.
-
-    Returns:
-        The formatted chunk.
-    """
-    pass
-
-```
-
-#### `format_request(messages, tool_specs=None, system_prompt=None)`
-
-Format a streaming request to the underlying model.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | List of message objects to be processed by the model. | *required* | | `tool_specs` | `Optional[list[ToolSpec]]` | List of tool specifications to make available to the model. | `None` | | `system_prompt` | `Optional[str]` | System prompt to provide context to the model. | `None` |
-
-Returns:
-
-| Type | Description | | --- | --- | | `Any` | The formatted request. |
-
-Source code in `strands/types/models/model.py`
-
-```
-@abc.abstractmethod
-# pragma: no cover
-def format_request(
-    self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-) -> Any:
-    """Format a streaming request to the underlying model.
-
-    Args:
-        messages: List of message objects to be processed by the model.
-        tool_specs: List of tool specifications to make available to the model.
-        system_prompt: System prompt to provide context to the model.
-
-    Returns:
-        The formatted request.
-    """
-    pass
-
-```
-
-#### `get_config()`
-
-Return the model configuration.
-
-Returns:
-
-| Type | Description | | --- | --- | | `Any` | The model's configuration. |
-
-Source code in `strands/types/models/model.py`
-
-```
-@abc.abstractmethod
-# pragma: no cover
-def get_config(self) -> Any:
-    """Return the model configuration.
-
-    Returns:
-        The model's configuration.
-    """
-    pass
-
-```
-
-#### `stream(request)`
-
-Send the request to the model and get a streaming response.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `request` | `Any` | The formatted request to send to the model. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `AsyncGenerator[Any, None]` | The model's response. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `ModelThrottledException` | When the model service is throttling requests from the client. |
-
-Source code in `strands/types/models/model.py`
-
-```
-@abc.abstractmethod
-# pragma: no cover
-def stream(self, request: Any) -> AsyncGenerator[Any, None]:
-    """Send the request to the model and get a streaming response.
-
-    Args:
-        request: The formatted request to send to the model.
-
-    Returns:
-        The model's response.
-
-    Raises:
-        ModelThrottledException: When the model service is throttling requests from the client.
-    """
-    pass
-
-```
-
-#### `structured_output(output_model, prompt)`
-
-Get structured output from the model.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model` | `Type[T]` | The output model to use for the agent. | *required* | | `prompt` | `Messages` | The prompt messages to use for the agent. | *required* |
-
-Yields:
-
-| Type | Description | | --- | --- | | `AsyncGenerator[dict[str, Union[T, Any]], None]` | Model events with the last being the structured output. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `ValidationException` | The response format from the model does not match the output_model |
-
-Source code in `strands/types/models/model.py`
-
-```
-@abc.abstractmethod
-# pragma: no cover
-def structured_output(
-    self, output_model: Type[T], prompt: Messages
-) -> AsyncGenerator[dict[str, Union[T, Any]], None]:
-    """Get structured output from the model.
-
-    Args:
-        output_model: The output model to use for the agent.
-        prompt: The prompt messages to use for the agent.
-
-    Yields:
-        Model events with the last being the structured output.
-
-    Raises:
-        ValidationException: The response format from the model does not match the output_model
-    """
-    pass
-
-```
-
-#### `update_config(**model_config)`
-
-Update the model configuration with the provided arguments.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `**model_config` | `Any` | Configuration overrides. | `{}` |
-
-Source code in `strands/types/models/model.py`
-
-```
-@abc.abstractmethod
-# pragma: no cover
-def update_config(self, **model_config: Any) -> None:
-    """Update the model configuration with the provided arguments.
-
-    Args:
-        **model_config: Configuration overrides.
-    """
-    pass
-
-```
-
-### `OpenAIModel`
-
-Bases: `Model`, `ABC`
-
-Base OpenAI model provider implementation.
-
-Implements shared logic for formatting requests and responses to and from the OpenAI specification.
-
-Source code in `strands/types/models/openai.py`
-
-```
-class OpenAIModel(Model, abc.ABC):
-    """Base OpenAI model provider implementation.
-
-    Implements shared logic for formatting requests and responses to and from the OpenAI specification.
-    """
-
-    config: dict[str, Any]
-
-    @staticmethod
-    def b64encode(data: bytes) -> bytes:
-        """Base64 encode the provided data.
-
-        If the data is already base64 encoded, we do nothing.
-        Note, this is a temporary method used to provide a warning to users who pass in base64 encoded data. In future
-        versions, images and documents will be base64 encoded on behalf of customers for consistency with the other
-        providers and general convenience.
-
-        Args:
-            data: Data to encode.
-
-        Returns:
-            Base64 encoded data.
-        """
-        try:
-            base64.b64decode(data, validate=True)
-            logger.warning(
-                "issue=<%s> | base64 encoded images and documents will not be accepted in future versions",
-                "https://github.com/strands-agents/sdk-python/issues/252",
-            )
-        except ValueError:
-            data = base64.b64encode(data)
-
-        return data
+@dataclass
+class Session:
+    """Session data model."""
+
+    session_id: str
+    session_type: SessionType
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     @classmethod
-    def format_request_message_content(cls, content: ContentBlock) -> dict[str, Any]:
-        """Format an OpenAI compatible content block.
+    def from_dict(cls, env: dict[str, Any]) -> "Session":
+        """Initialize a Session from a dictionary, ignoring keys that are not class parameters."""
+        return cls(**{k: v for k, v in env.items() if k in inspect.signature(cls).parameters})
 
-        Args:
-            content: Message content.
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the Session to a dictionary representation."""
+        return asdict(self)
 
-        Returns:
-            OpenAI compatible content block.
+```
 
-        Raises:
-            TypeError: If the content block type cannot be converted to an OpenAI-compatible format.
-        """
-        if "document" in content:
-            mime_type = mimetypes.types_map.get(f".{content['document']['format']}", "application/octet-stream")
-            file_data = base64.b64encode(content["document"]["source"]["bytes"]).decode("utf-8")
-            return {
-                "file": {
-                    "file_data": f"data:{mime_type};base64,{file_data}",
-                    "filename": content["document"]["name"],
-                },
-                "type": "file",
-            }
+#### `from_dict(env)`
 
-        if "image" in content:
-            mime_type = mimetypes.types_map.get(f".{content['image']['format']}", "application/octet-stream")
-            image_data = OpenAIModel.b64encode(content["image"]["source"]["bytes"]).decode("utf-8")
+Initialize a Session from a dictionary, ignoring keys that are not class parameters.
 
-            return {
-                "image_url": {
-                    "detail": "auto",
-                    "format": mime_type,
-                    "url": f"data:{mime_type};base64,{image_data}",
-                },
-                "type": "image_url",
-            }
+Source code in `strands/types/session.py`
 
-        if "text" in content:
-            return {"text": content["text"], "type": "text"}
+```
+@classmethod
+def from_dict(cls, env: dict[str, Any]) -> "Session":
+    """Initialize a Session from a dictionary, ignoring keys that are not class parameters."""
+    return cls(**{k: v for k, v in env.items() if k in inspect.signature(cls).parameters})
 
-        raise TypeError(f"content_type=<{next(iter(content))}> | unsupported type")
+```
 
-    @classmethod
-    def format_request_message_tool_call(cls, tool_use: ToolUse) -> dict[str, Any]:
-        """Format an OpenAI compatible tool call.
+#### `to_dict()`
 
-        Args:
-            tool_use: Tool use requested by the model.
+Convert the Session to a dictionary representation.
 
-        Returns:
-            OpenAI compatible tool call.
-        """
-        return {
-            "function": {
-                "arguments": json.dumps(tool_use["input"]),
-                "name": tool_use["name"],
-            },
-            "id": tool_use["toolUseId"],
-            "type": "function",
-        }
+Source code in `strands/types/session.py`
+
+```
+def to_dict(self) -> dict[str, Any]:
+    """Convert the Session to a dictionary representation."""
+    return asdict(self)
+
+```
+
+### `SessionAgent`
+
+Agent that belongs to a Session.
+
+Source code in `strands/types/session.py`
+
+```
+@dataclass
+class SessionAgent:
+    """Agent that belongs to a Session."""
+
+    agent_id: str
+    state: Dict[str, Any]
+    conversation_manager_state: Dict[str, Any]
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     @classmethod
-    def format_request_tool_message(cls, tool_result: ToolResult) -> dict[str, Any]:
-        """Format an OpenAI compatible tool message.
-
-        Args:
-            tool_result: Tool result collected from a tool execution.
-
-        Returns:
-            OpenAI compatible tool message.
-        """
-        contents = cast(
-            list[ContentBlock],
-            [
-                {"text": json.dumps(content["json"])} if "json" in content else content
-                for content in tool_result["content"]
-            ],
+    def from_agent(cls, agent: "Agent") -> "SessionAgent":
+        """Convert an Agent to a SessionAgent."""
+        if agent.agent_id is None:
+            raise ValueError("agent_id needs to be defined.")
+        return cls(
+            agent_id=agent.agent_id,
+            conversation_manager_state=agent.conversation_manager.get_state(),
+            state=agent.state.get(),
         )
 
-        return {
-            "role": "tool",
-            "tool_call_id": tool_result["toolUseId"],
-            "content": [cls.format_request_message_content(content) for content in contents],
-        }
-
     @classmethod
-    def format_request_messages(cls, messages: Messages, system_prompt: Optional[str] = None) -> list[dict[str, Any]]:
-        """Format an OpenAI compatible messages array.
+    def from_dict(cls, env: dict[str, Any]) -> "SessionAgent":
+        """Initialize a SessionAgent from a dictionary, ignoring keys that are not class parameters."""
+        return cls(**{k: v for k, v in env.items() if k in inspect.signature(cls).parameters})
 
-        Args:
-            messages: List of message objects to be processed by the model.
-            system_prompt: System prompt to provide context to the model.
-
-        Returns:
-            An OpenAI compatible messages array.
-        """
-        formatted_messages: list[dict[str, Any]]
-        formatted_messages = [{"role": "system", "content": system_prompt}] if system_prompt else []
-
-        for message in messages:
-            contents = message["content"]
-
-            formatted_contents = [
-                cls.format_request_message_content(content)
-                for content in contents
-                if not any(block_type in content for block_type in ["toolResult", "toolUse"])
-            ]
-            formatted_tool_calls = [
-                cls.format_request_message_tool_call(content["toolUse"]) for content in contents if "toolUse" in content
-            ]
-            formatted_tool_messages = [
-                cls.format_request_tool_message(content["toolResult"])
-                for content in contents
-                if "toolResult" in content
-            ]
-
-            formatted_message = {
-                "role": message["role"],
-                "content": formatted_contents,
-                **({"tool_calls": formatted_tool_calls} if formatted_tool_calls else {}),
-            }
-            formatted_messages.append(formatted_message)
-            formatted_messages.extend(formatted_tool_messages)
-
-        return [message for message in formatted_messages if message["content"] or "tool_calls" in message]
-
-    @override
-    def format_request(
-        self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-    ) -> dict[str, Any]:
-        """Format an OpenAI compatible chat streaming request.
-
-        Args:
-            messages: List of message objects to be processed by the model.
-            tool_specs: List of tool specifications to make available to the model.
-            system_prompt: System prompt to provide context to the model.
-
-        Returns:
-            An OpenAI compatible chat streaming request.
-
-        Raises:
-            TypeError: If a message contains a content block type that cannot be converted to an OpenAI-compatible
-                format.
-        """
-        return {
-            "messages": self.format_request_messages(messages, system_prompt),
-            "model": self.config["model_id"],
-            "stream": True,
-            "stream_options": {"include_usage": True},
-            "tools": [
-                {
-                    "type": "function",
-                    "function": {
-                        "name": tool_spec["name"],
-                        "description": tool_spec["description"],
-                        "parameters": tool_spec["inputSchema"]["json"],
-                    },
-                }
-                for tool_spec in tool_specs or []
-            ],
-            **(self.config.get("params") or {}),
-        }
-
-    @override
-    def format_chunk(self, event: dict[str, Any]) -> StreamEvent:
-        """Format an OpenAI response event into a standardized message chunk.
-
-        Args:
-            event: A response event from the OpenAI compatible model.
-
-        Returns:
-            The formatted chunk.
-
-        Raises:
-            RuntimeError: If chunk_type is not recognized.
-                This error should never be encountered as chunk_type is controlled in the stream method.
-        """
-        match event["chunk_type"]:
-            case "message_start":
-                return {"messageStart": {"role": "assistant"}}
-
-            case "content_start":
-                if event["data_type"] == "tool":
-                    return {
-                        "contentBlockStart": {
-                            "start": {
-                                "toolUse": {
-                                    "name": event["data"].function.name,
-                                    "toolUseId": event["data"].id,
-                                }
-                            }
-                        }
-                    }
-
-                return {"contentBlockStart": {"start": {}}}
-
-            case "content_delta":
-                if event["data_type"] == "tool":
-                    return {
-                        "contentBlockDelta": {"delta": {"toolUse": {"input": event["data"].function.arguments or ""}}}
-                    }
-
-                if event["data_type"] == "reasoning_content":
-                    return {"contentBlockDelta": {"delta": {"reasoningContent": {"text": event["data"]}}}}
-
-                return {"contentBlockDelta": {"delta": {"text": event["data"]}}}
-
-            case "content_stop":
-                return {"contentBlockStop": {}}
-
-            case "message_stop":
-                match event["data"]:
-                    case "tool_calls":
-                        return {"messageStop": {"stopReason": "tool_use"}}
-                    case "length":
-                        return {"messageStop": {"stopReason": "max_tokens"}}
-                    case _:
-                        return {"messageStop": {"stopReason": "end_turn"}}
-
-            case "metadata":
-                return {
-                    "metadata": {
-                        "usage": {
-                            "inputTokens": event["data"].prompt_tokens,
-                            "outputTokens": event["data"].completion_tokens,
-                            "totalTokens": event["data"].total_tokens,
-                        },
-                        "metrics": {
-                            "latencyMs": 0,  # TODO
-                        },
-                    },
-                }
-
-            case _:
-                raise RuntimeError(f"chunk_type=<{event['chunk_type']} | unknown type")
-
-    @override
-    async def structured_output(
-        self, output_model: Type[T], prompt: Messages
-    ) -> AsyncGenerator[dict[str, Union[T, Any]], None]:
-        """Get structured output from the model.
-
-        Args:
-            output_model: The output model to use for the agent.
-            prompt: The prompt to use for the agent.
-
-        Yields:
-            Model events with the last being the structured output.
-        """
-        yield {"output": output_model()}
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the SessionAgent to a dictionary representation."""
+        return asdict(self)
 
 ```
 
-#### `b64encode(data)`
+#### `from_agent(agent)`
 
-Base64 encode the provided data.
+Convert an Agent to a SessionAgent.
 
-If the data is already base64 encoded, we do nothing. Note, this is a temporary method used to provide a warning to users who pass in base64 encoded data. In future versions, images and documents will be base64 encoded on behalf of customers for consistency with the other providers and general convenience.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `data` | `bytes` | Data to encode. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `bytes` | Base64 encoded data. |
-
-Source code in `strands/types/models/openai.py`
-
-```
-@staticmethod
-def b64encode(data: bytes) -> bytes:
-    """Base64 encode the provided data.
-
-    If the data is already base64 encoded, we do nothing.
-    Note, this is a temporary method used to provide a warning to users who pass in base64 encoded data. In future
-    versions, images and documents will be base64 encoded on behalf of customers for consistency with the other
-    providers and general convenience.
-
-    Args:
-        data: Data to encode.
-
-    Returns:
-        Base64 encoded data.
-    """
-    try:
-        base64.b64decode(data, validate=True)
-        logger.warning(
-            "issue=<%s> | base64 encoded images and documents will not be accepted in future versions",
-            "https://github.com/strands-agents/sdk-python/issues/252",
-        )
-    except ValueError:
-        data = base64.b64encode(data)
-
-    return data
-
-```
-
-#### `format_chunk(event)`
-
-Format an OpenAI response event into a standardized message chunk.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `dict[str, Any]` | A response event from the OpenAI compatible model. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `StreamEvent` | The formatted chunk. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `RuntimeError` | If chunk_type is not recognized. This error should never be encountered as chunk_type is controlled in the stream method. |
-
-Source code in `strands/types/models/openai.py`
-
-```
-@override
-def format_chunk(self, event: dict[str, Any]) -> StreamEvent:
-    """Format an OpenAI response event into a standardized message chunk.
-
-    Args:
-        event: A response event from the OpenAI compatible model.
-
-    Returns:
-        The formatted chunk.
-
-    Raises:
-        RuntimeError: If chunk_type is not recognized.
-            This error should never be encountered as chunk_type is controlled in the stream method.
-    """
-    match event["chunk_type"]:
-        case "message_start":
-            return {"messageStart": {"role": "assistant"}}
-
-        case "content_start":
-            if event["data_type"] == "tool":
-                return {
-                    "contentBlockStart": {
-                        "start": {
-                            "toolUse": {
-                                "name": event["data"].function.name,
-                                "toolUseId": event["data"].id,
-                            }
-                        }
-                    }
-                }
-
-            return {"contentBlockStart": {"start": {}}}
-
-        case "content_delta":
-            if event["data_type"] == "tool":
-                return {
-                    "contentBlockDelta": {"delta": {"toolUse": {"input": event["data"].function.arguments or ""}}}
-                }
-
-            if event["data_type"] == "reasoning_content":
-                return {"contentBlockDelta": {"delta": {"reasoningContent": {"text": event["data"]}}}}
-
-            return {"contentBlockDelta": {"delta": {"text": event["data"]}}}
-
-        case "content_stop":
-            return {"contentBlockStop": {}}
-
-        case "message_stop":
-            match event["data"]:
-                case "tool_calls":
-                    return {"messageStop": {"stopReason": "tool_use"}}
-                case "length":
-                    return {"messageStop": {"stopReason": "max_tokens"}}
-                case _:
-                    return {"messageStop": {"stopReason": "end_turn"}}
-
-        case "metadata":
-            return {
-                "metadata": {
-                    "usage": {
-                        "inputTokens": event["data"].prompt_tokens,
-                        "outputTokens": event["data"].completion_tokens,
-                        "totalTokens": event["data"].total_tokens,
-                    },
-                    "metrics": {
-                        "latencyMs": 0,  # TODO
-                    },
-                },
-            }
-
-        case _:
-            raise RuntimeError(f"chunk_type=<{event['chunk_type']} | unknown type")
-
-```
-
-#### `format_request(messages, tool_specs=None, system_prompt=None)`
-
-Format an OpenAI compatible chat streaming request.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | List of message objects to be processed by the model. | *required* | | `tool_specs` | `Optional[list[ToolSpec]]` | List of tool specifications to make available to the model. | `None` | | `system_prompt` | `Optional[str]` | System prompt to provide context to the model. | `None` |
-
-Returns:
-
-| Type | Description | | --- | --- | | `dict[str, Any]` | An OpenAI compatible chat streaming request. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `TypeError` | If a message contains a content block type that cannot be converted to an OpenAI-compatible format. |
-
-Source code in `strands/types/models/openai.py`
-
-```
-@override
-def format_request(
-    self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-) -> dict[str, Any]:
-    """Format an OpenAI compatible chat streaming request.
-
-    Args:
-        messages: List of message objects to be processed by the model.
-        tool_specs: List of tool specifications to make available to the model.
-        system_prompt: System prompt to provide context to the model.
-
-    Returns:
-        An OpenAI compatible chat streaming request.
-
-    Raises:
-        TypeError: If a message contains a content block type that cannot be converted to an OpenAI-compatible
-            format.
-    """
-    return {
-        "messages": self.format_request_messages(messages, system_prompt),
-        "model": self.config["model_id"],
-        "stream": True,
-        "stream_options": {"include_usage": True},
-        "tools": [
-            {
-                "type": "function",
-                "function": {
-                    "name": tool_spec["name"],
-                    "description": tool_spec["description"],
-                    "parameters": tool_spec["inputSchema"]["json"],
-                },
-            }
-            for tool_spec in tool_specs or []
-        ],
-        **(self.config.get("params") or {}),
-    }
-
-```
-
-#### `format_request_message_content(content)`
-
-Format an OpenAI compatible content block.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `content` | `ContentBlock` | Message content. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `dict[str, Any]` | OpenAI compatible content block. |
-
-Raises:
-
-| Type | Description | | --- | --- | | `TypeError` | If the content block type cannot be converted to an OpenAI-compatible format. |
-
-Source code in `strands/types/models/openai.py`
+Source code in `strands/types/session.py`
 
 ```
 @classmethod
-def format_request_message_content(cls, content: ContentBlock) -> dict[str, Any]:
-    """Format an OpenAI compatible content block.
-
-    Args:
-        content: Message content.
-
-    Returns:
-        OpenAI compatible content block.
-
-    Raises:
-        TypeError: If the content block type cannot be converted to an OpenAI-compatible format.
-    """
-    if "document" in content:
-        mime_type = mimetypes.types_map.get(f".{content['document']['format']}", "application/octet-stream")
-        file_data = base64.b64encode(content["document"]["source"]["bytes"]).decode("utf-8")
-        return {
-            "file": {
-                "file_data": f"data:{mime_type};base64,{file_data}",
-                "filename": content["document"]["name"],
-            },
-            "type": "file",
-        }
-
-    if "image" in content:
-        mime_type = mimetypes.types_map.get(f".{content['image']['format']}", "application/octet-stream")
-        image_data = OpenAIModel.b64encode(content["image"]["source"]["bytes"]).decode("utf-8")
-
-        return {
-            "image_url": {
-                "detail": "auto",
-                "format": mime_type,
-                "url": f"data:{mime_type};base64,{image_data}",
-            },
-            "type": "image_url",
-        }
-
-    if "text" in content:
-        return {"text": content["text"], "type": "text"}
-
-    raise TypeError(f"content_type=<{next(iter(content))}> | unsupported type")
-
-```
-
-#### `format_request_message_tool_call(tool_use)`
-
-Format an OpenAI compatible tool call.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool_use` | `ToolUse` | Tool use requested by the model. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `dict[str, Any]` | OpenAI compatible tool call. |
-
-Source code in `strands/types/models/openai.py`
-
-```
-@classmethod
-def format_request_message_tool_call(cls, tool_use: ToolUse) -> dict[str, Any]:
-    """Format an OpenAI compatible tool call.
-
-    Args:
-        tool_use: Tool use requested by the model.
-
-    Returns:
-        OpenAI compatible tool call.
-    """
-    return {
-        "function": {
-            "arguments": json.dumps(tool_use["input"]),
-            "name": tool_use["name"],
-        },
-        "id": tool_use["toolUseId"],
-        "type": "function",
-    }
-
-```
-
-#### `format_request_messages(messages, system_prompt=None)`
-
-Format an OpenAI compatible messages array.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | List of message objects to be processed by the model. | *required* | | `system_prompt` | `Optional[str]` | System prompt to provide context to the model. | `None` |
-
-Returns:
-
-| Type | Description | | --- | --- | | `list[dict[str, Any]]` | An OpenAI compatible messages array. |
-
-Source code in `strands/types/models/openai.py`
-
-```
-@classmethod
-def format_request_messages(cls, messages: Messages, system_prompt: Optional[str] = None) -> list[dict[str, Any]]:
-    """Format an OpenAI compatible messages array.
-
-    Args:
-        messages: List of message objects to be processed by the model.
-        system_prompt: System prompt to provide context to the model.
-
-    Returns:
-        An OpenAI compatible messages array.
-    """
-    formatted_messages: list[dict[str, Any]]
-    formatted_messages = [{"role": "system", "content": system_prompt}] if system_prompt else []
-
-    for message in messages:
-        contents = message["content"]
-
-        formatted_contents = [
-            cls.format_request_message_content(content)
-            for content in contents
-            if not any(block_type in content for block_type in ["toolResult", "toolUse"])
-        ]
-        formatted_tool_calls = [
-            cls.format_request_message_tool_call(content["toolUse"]) for content in contents if "toolUse" in content
-        ]
-        formatted_tool_messages = [
-            cls.format_request_tool_message(content["toolResult"])
-            for content in contents
-            if "toolResult" in content
-        ]
-
-        formatted_message = {
-            "role": message["role"],
-            "content": formatted_contents,
-            **({"tool_calls": formatted_tool_calls} if formatted_tool_calls else {}),
-        }
-        formatted_messages.append(formatted_message)
-        formatted_messages.extend(formatted_tool_messages)
-
-    return [message for message in formatted_messages if message["content"] or "tool_calls" in message]
-
-```
-
-#### `format_request_tool_message(tool_result)`
-
-Format an OpenAI compatible tool message.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool_result` | `ToolResult` | Tool result collected from a tool execution. | *required* |
-
-Returns:
-
-| Type | Description | | --- | --- | | `dict[str, Any]` | OpenAI compatible tool message. |
-
-Source code in `strands/types/models/openai.py`
-
-```
-@classmethod
-def format_request_tool_message(cls, tool_result: ToolResult) -> dict[str, Any]:
-    """Format an OpenAI compatible tool message.
-
-    Args:
-        tool_result: Tool result collected from a tool execution.
-
-    Returns:
-        OpenAI compatible tool message.
-    """
-    contents = cast(
-        list[ContentBlock],
-        [
-            {"text": json.dumps(content["json"])} if "json" in content else content
-            for content in tool_result["content"]
-        ],
+def from_agent(cls, agent: "Agent") -> "SessionAgent":
+    """Convert an Agent to a SessionAgent."""
+    if agent.agent_id is None:
+        raise ValueError("agent_id needs to be defined.")
+    return cls(
+        agent_id=agent.agent_id,
+        conversation_manager_state=agent.conversation_manager.get_state(),
+        state=agent.state.get(),
     )
 
-    return {
-        "role": "tool",
-        "tool_call_id": tool_result["toolUseId"],
-        "content": [cls.format_request_message_content(content) for content in contents],
-    }
+```
+
+#### `from_dict(env)`
+
+Initialize a SessionAgent from a dictionary, ignoring keys that are not class parameters.
+
+Source code in `strands/types/session.py`
+
+```
+@classmethod
+def from_dict(cls, env: dict[str, Any]) -> "SessionAgent":
+    """Initialize a SessionAgent from a dictionary, ignoring keys that are not class parameters."""
+    return cls(**{k: v for k, v in env.items() if k in inspect.signature(cls).parameters})
 
 ```
 
-#### `structured_output(output_model, prompt)`
+#### `to_dict()`
 
-Get structured output from the model.
+Convert the SessionAgent to a dictionary representation.
 
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `output_model` | `Type[T]` | The output model to use for the agent. | *required* | | `prompt` | `Messages` | The prompt to use for the agent. | *required* |
-
-Yields:
-
-| Type | Description | | --- | --- | | `AsyncGenerator[dict[str, Union[T, Any]], None]` | Model events with the last being the structured output. |
-
-Source code in `strands/types/models/openai.py`
+Source code in `strands/types/session.py`
 
 ```
-@override
-async def structured_output(
-    self, output_model: Type[T], prompt: Messages
-) -> AsyncGenerator[dict[str, Union[T, Any]], None]:
-    """Get structured output from the model.
+def to_dict(self) -> dict[str, Any]:
+    """Convert the SessionAgent to a dictionary representation."""
+    return asdict(self)
 
-    Args:
-        output_model: The output model to use for the agent.
-        prompt: The prompt to use for the agent.
+```
 
-    Yields:
-        Model events with the last being the structured output.
+### `SessionMessage`
+
+Message within a SessionAgent.
+
+Attributes:
+
+| Name | Type | Description | | --- | --- | --- | | `message` | `Message` | Message content | | `message_id` | `int` | Index of the message in the conversation history | | `redact_message` | `Optional[Message]` | If the original message is redacted, this is the new content to use | | `created_at` | `str` | ISO format timestamp for when this message was created | | `updated_at` | `str` | ISO format timestamp for when this message was last updated |
+
+Source code in `strands/types/session.py`
+
+```
+@dataclass
+class SessionMessage:
+    """Message within a SessionAgent.
+
+    Attributes:
+        message: Message content
+        message_id: Index of the message in the conversation history
+        redact_message: If the original message is redacted, this is the new content to use
+        created_at: ISO format timestamp for when this message was created
+        updated_at: ISO format timestamp for when this message was last updated
     """
-    yield {"output": output_model()}
+
+    message: Message
+    message_id: int
+    redact_message: Optional[Message] = None
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+    @classmethod
+    def from_message(cls, message: Message, index: int) -> "SessionMessage":
+        """Convert from a Message, base64 encoding bytes values."""
+        return cls(
+            message=message,
+            message_id=index,
+            created_at=datetime.now(timezone.utc).isoformat(),
+            updated_at=datetime.now(timezone.utc).isoformat(),
+        )
+
+    def to_message(self) -> Message:
+        """Convert SessionMessage back to a Message, decoding any bytes values.
+
+        If the message was redacted, return the redact content instead.
+        """
+        if self.redact_message is not None:
+            return self.redact_message
+        else:
+            return self.message
+
+    @classmethod
+    def from_dict(cls, env: dict[str, Any]) -> "SessionMessage":
+        """Initialize a SessionMessage from a dictionary, ignoring keys that are not class parameters."""
+        extracted_relevant_parameters = {k: v for k, v in env.items() if k in inspect.signature(cls).parameters}
+        return cls(**decode_bytes_values(extracted_relevant_parameters))
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the SessionMessage to a dictionary representation."""
+        return encode_bytes_values(asdict(self))  # type: ignore
+
+```
+
+#### `from_dict(env)`
+
+Initialize a SessionMessage from a dictionary, ignoring keys that are not class parameters.
+
+Source code in `strands/types/session.py`
+
+```
+@classmethod
+def from_dict(cls, env: dict[str, Any]) -> "SessionMessage":
+    """Initialize a SessionMessage from a dictionary, ignoring keys that are not class parameters."""
+    extracted_relevant_parameters = {k: v for k, v in env.items() if k in inspect.signature(cls).parameters}
+    return cls(**decode_bytes_values(extracted_relevant_parameters))
+
+```
+
+#### `from_message(message, index)`
+
+Convert from a Message, base64 encoding bytes values.
+
+Source code in `strands/types/session.py`
+
+```
+@classmethod
+def from_message(cls, message: Message, index: int) -> "SessionMessage":
+    """Convert from a Message, base64 encoding bytes values."""
+    return cls(
+        message=message,
+        message_id=index,
+        created_at=datetime.now(timezone.utc).isoformat(),
+        updated_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+```
+
+#### `to_dict()`
+
+Convert the SessionMessage to a dictionary representation.
+
+Source code in `strands/types/session.py`
+
+```
+def to_dict(self) -> dict[str, Any]:
+    """Convert the SessionMessage to a dictionary representation."""
+    return encode_bytes_values(asdict(self))  # type: ignore
+
+```
+
+#### `to_message()`
+
+Convert SessionMessage back to a Message, decoding any bytes values.
+
+If the message was redacted, return the redact content instead.
+
+Source code in `strands/types/session.py`
+
+```
+def to_message(self) -> Message:
+    """Convert SessionMessage back to a Message, decoding any bytes values.
+
+    If the message was redacted, return the redact content instead.
+    """
+    if self.redact_message is not None:
+        return self.redact_message
+    else:
+        return self.message
+
+```
+
+### `SessionType`
+
+Bases: `str`, `Enum`
+
+Enumeration of session types.
+
+As sessions are expanded to support new usecases like multi-agent patterns, new types will be added here.
+
+Source code in `strands/types/session.py`
+
+```
+class SessionType(str, Enum):
+    """Enumeration of session types.
+
+    As sessions are expanded to support new usecases like multi-agent patterns,
+    new types will be added here.
+    """
+
+    AGENT = "AGENT"
+
+```
+
+### `decode_bytes_values(obj)`
+
+Recursively decode any base64-encoded bytes values in an object.
+
+Handles dictionaries, lists, and nested structures.
+
+Source code in `strands/types/session.py`
+
+```
+def decode_bytes_values(obj: Any) -> Any:
+    """Recursively decode any base64-encoded bytes values in an object.
+
+    Handles dictionaries, lists, and nested structures.
+    """
+    if isinstance(obj, dict):
+        if obj.get("__bytes_encoded__") is True and "data" in obj:
+            return base64.b64decode(obj["data"])
+        return {k: decode_bytes_values(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [decode_bytes_values(item) for item in obj]
+    else:
+        return obj
+
+```
+
+### `encode_bytes_values(obj)`
+
+Recursively encode any bytes values in an object to base64.
+
+Handles dictionaries, lists, and nested structures.
+
+Source code in `strands/types/session.py`
+
+```
+def encode_bytes_values(obj: Any) -> Any:
+    """Recursively encode any bytes values in an object to base64.
+
+    Handles dictionaries, lists, and nested structures.
+    """
+    if isinstance(obj, bytes):
+        return {"__bytes_encoded__": True, "data": base64.b64encode(obj).decode()}
+    elif isinstance(obj, dict):
+        return {k: encode_bytes_values(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [encode_bytes_values(item) for item in obj]
+    else:
+        return obj
 
 ```
 
@@ -2744,6 +1989,10 @@ These types are modeled after the Bedrock API.
 
 Type alias for JSON Schema dictionaries.
 
+### `RunToolHandler = Callable[[ToolUse], AsyncGenerator[dict[str, Any], None]]`
+
+Callback that runs a single tool and streams back results.
+
 ### `ToolChoice = Union[dict[Literal['auto'], ToolChoiceAuto], dict[Literal['any'], ToolChoiceAny], dict[Literal['tool'], ToolChoiceTool]]`
 
 Configuration for how the model should choose tools.
@@ -2752,9 +2001,9 @@ Configuration for how the model should choose tools.
 - "any": The model must use at least one tool (any tool)
 - "tool": The model must use the specified tool
 
-### `ToolGenerator = Generator[dict[str, Any], None, ToolResult]`
+### `ToolGenerator = AsyncGenerator[Any, None]`
 
-Generator of tool events and a returned tool result.
+Generator of tool events with the last being the tool result.
 
 ### `ToolResultStatus = Literal['success', 'error']`
 
@@ -2766,7 +2015,7 @@ Bases: `ABC`
 
 Abstract base class for all SDK tools.
 
-This class defines the interface that all tool implementations must follow. Each tool must provide its name, specification, and implement an invoke method that executes the tool's functionality.
+This class defines the interface that all tool implementations must follow. Each tool must provide its name, specification, and implement a stream method that executes the tool's functionality.
 
 Source code in `strands/types/tools.py`
 
@@ -2775,7 +2024,7 @@ class AgentTool(ABC):
     """Abstract base class for all SDK tools.
 
     This class defines the interface that all tool implementations must follow. Each tool must provide its name,
-    specification, and implement an invoke method that executes the tool's functionality.
+    specification, and implement a stream method that executes the tool's functionality.
     """
 
     _is_dynamic: bool
@@ -2819,18 +2068,18 @@ class AgentTool(ABC):
 
     @abstractmethod
     # pragma: no cover
-    def invoke(self, tool: ToolUse, *args: Any, **kwargs: dict[str, Any]) -> ToolResult:
-        """Execute the tool's functionality with the given tool use request.
+    def stream(self, tool_use: ToolUse, invocation_state: dict[str, Any], **kwargs: Any) -> ToolGenerator:
+        """Stream tool events and return the final result.
 
         Args:
-            tool: The tool use request containing tool ID and parameters.
-            *args: Positional arguments to pass to the tool.
-            **kwargs: Keyword arguments to pass to the tool.
+            tool_use: The tool use request containing tool ID and parameters.
+            invocation_state: Context for the tool invocation, including agent state.
+            **kwargs: Additional keyword arguments for future extensibility.
 
-        Returns:
-            The result of the tool execution.
+        Yields:
+            Tool events with the last being the tool result.
         """
-        pass
+        ...
 
     @property
     def is_dynamic(self) -> bool:
@@ -2935,38 +2184,6 @@ def get_display_properties(self) -> dict[str, str]:
 
 ```
 
-#### `invoke(tool, *args, **kwargs)`
-
-Execute the tool's functionality with the given tool use request.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool` | `ToolUse` | The tool use request containing tool ID and parameters. | *required* | | `*args` | `Any` | Positional arguments to pass to the tool. | `()` | | `**kwargs` | `dict[str, Any]` | Keyword arguments to pass to the tool. | `{}` |
-
-Returns:
-
-| Type | Description | | --- | --- | | `ToolResult` | The result of the tool execution. |
-
-Source code in `strands/types/tools.py`
-
-```
-@abstractmethod
-# pragma: no cover
-def invoke(self, tool: ToolUse, *args: Any, **kwargs: dict[str, Any]) -> ToolResult:
-    """Execute the tool's functionality with the given tool use request.
-
-    Args:
-        tool: The tool use request containing tool ID and parameters.
-        *args: Positional arguments to pass to the tool.
-        **kwargs: Keyword arguments to pass to the tool.
-
-    Returns:
-        The result of the tool execution.
-    """
-    pass
-
-```
-
 #### `mark_dynamic()`
 
 Mark this tool as dynamically loaded.
@@ -2977,6 +2194,38 @@ Source code in `strands/types/tools.py`
 def mark_dynamic(self) -> None:
     """Mark this tool as dynamically loaded."""
     self._is_dynamic = True
+
+```
+
+#### `stream(tool_use, invocation_state, **kwargs)`
+
+Stream tool events and return the final result.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool_use` | `ToolUse` | The tool use request containing tool ID and parameters. | *required* | | `invocation_state` | `dict[str, Any]` | Context for the tool invocation, including agent state. | *required* | | `**kwargs` | `Any` | Additional keyword arguments for future extensibility. | `{}` |
+
+Yields:
+
+| Type | Description | | --- | --- | | `ToolGenerator` | Tool events with the last being the tool result. |
+
+Source code in `strands/types/tools.py`
+
+```
+@abstractmethod
+# pragma: no cover
+def stream(self, tool_use: ToolUse, invocation_state: dict[str, Any], **kwargs: Any) -> ToolGenerator:
+    """Stream tool events and return the final result.
+
+    Args:
+        tool_use: The tool use request containing tool ID and parameters.
+        invocation_state: Context for the tool invocation, including agent state.
+        **kwargs: Additional keyword arguments for future extensibility.
+
+    Yields:
+        Tool events with the last being the tool result.
+    """
+    ...
 
 ```
 
@@ -3096,94 +2345,56 @@ class ToolConfig(TypedDict):
 
 ```
 
-### `ToolHandler`
+### `ToolFunc`
 
-Bases: `ABC`
+Bases: `Protocol`
 
-Abstract base class for handling tool execution within the agent framework.
+Function signature for Python decorated and module based tools.
 
 Source code in `strands/types/tools.py`
 
 ```
-class ToolHandler(ABC):
-    """Abstract base class for handling tool execution within the agent framework."""
+class ToolFunc(Protocol):
+    """Function signature for Python decorated and module based tools."""
 
-    @abstractmethod
-    def process(
-        self,
-        tool: ToolUse,
-        *,
-        model: "Model",
-        system_prompt: Optional[str],
-        messages: "Messages",
-        tool_config: ToolConfig,
-        kwargs: dict[str, Any],
-    ) -> ToolGenerator:
-        """Process a tool use request and execute the tool.
+    __name__: str
 
-        Args:
-            tool: The tool use request to process.
-            messages: The current conversation history.
-            model: The model being used for the conversation.
-            system_prompt: The system prompt for the conversation.
-            tool_config: The tool configuration for the current session.
-            kwargs: Additional context-specific arguments.
-
-        Yields:
-            Events of the tool invocation.
+    def __call__(
+        self, *args: Any, **kwargs: Any
+    ) -> Union[
+        ToolResult,
+        Awaitable[ToolResult],
+    ]:
+        """Function signature for Python decorated and module based tools.
 
         Returns:
-            The final tool result.
+            Tool result or awaitable tool result.
         """
         ...
 
 ```
 
-#### `process(tool, *, model, system_prompt, messages, tool_config, kwargs)`
+#### `__call__(*args, **kwargs)`
 
-Process a tool use request and execute the tool.
-
-Parameters:
-
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `tool` | `ToolUse` | The tool use request to process. | *required* | | `messages` | `Messages` | The current conversation history. | *required* | | `model` | `Model` | The model being used for the conversation. | *required* | | `system_prompt` | `Optional[str]` | The system prompt for the conversation. | *required* | | `tool_config` | `ToolConfig` | The tool configuration for the current session. | *required* | | `kwargs` | `dict[str, Any]` | Additional context-specific arguments. | *required* |
-
-Yields:
-
-| Type | Description | | --- | --- | | `ToolGenerator` | Events of the tool invocation. |
+Function signature for Python decorated and module based tools.
 
 Returns:
 
-| Type | Description | | --- | --- | | `ToolGenerator` | The final tool result. |
+| Type | Description | | --- | --- | | `Union[ToolResult, Awaitable[ToolResult]]` | Tool result or awaitable tool result. |
 
 Source code in `strands/types/tools.py`
 
 ```
-@abstractmethod
-def process(
-    self,
-    tool: ToolUse,
-    *,
-    model: "Model",
-    system_prompt: Optional[str],
-    messages: "Messages",
-    tool_config: ToolConfig,
-    kwargs: dict[str, Any],
-) -> ToolGenerator:
-    """Process a tool use request and execute the tool.
-
-    Args:
-        tool: The tool use request to process.
-        messages: The current conversation history.
-        model: The model being used for the conversation.
-        system_prompt: The system prompt for the conversation.
-        tool_config: The tool configuration for the current session.
-        kwargs: Additional context-specific arguments.
-
-    Yields:
-        Events of the tool invocation.
+def __call__(
+    self, *args: Any, **kwargs: Any
+) -> Union[
+    ToolResult,
+    Awaitable[ToolResult],
+]:
+    """Function signature for Python decorated and module based tools.
 
     Returns:
-        The final tool result.
+        Tool result or awaitable tool result.
     """
     ...
 
@@ -3303,3 +2514,7 @@ class ToolUse(TypedDict):
     toolUseId: str
 
 ```
+
+## `strands.types.traces`
+
+Tracing type definitions for the SDK.

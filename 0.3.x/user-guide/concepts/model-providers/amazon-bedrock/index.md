@@ -102,7 +102,7 @@ session = boto3.Session(
 
 # Create a Bedrock model with the custom session
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     boto_session=session
 )
 
@@ -112,7 +112,7 @@ For complete details on credential configuration and resolution, see the [boto3 
 
 ## Basic Usage
 
-The [`BedrockModel`](../../../../api-reference/models/#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude 3.7 Sonnet](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-37.html) model by default. This basic example creates an agent using this default setup:
+The [`BedrockModel`](../../../../api-reference/models/#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude 4 Sonnet](https://aws.amazon.com/blogs/aws/claude-opus-4-anthropics-most-powerful-model-for-coding-is-now-in-amazon-bedrock/) model by default. This basic example creates an agent using this default setup:
 
 ```
 from strands import Agent
@@ -129,7 +129,7 @@ You can specify which Bedrock model to use by passing in the model ID string dir
 from strands import Agent
 
 # Create an agent with a specific model by passing the model ID string
-agent = Agent(model="us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+agent = Agent(model="anthropic.claude-sonnet-4-20250514-v1:0")
 
 response = agent("Tell me about Amazon Bedrock.")
 
@@ -160,7 +160,7 @@ response = agent("Tell me about Amazon Bedrock.")
 
 The [`BedrockModel`](../../../../api-reference/models/#strands.models.bedrock) supports various [configuration parameters](../../../../api-reference/models/#strands.models.bedrock.BedrockModel.BedrockConfig):
 
-| Parameter | Description | Default | | --- | --- | --- | | [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) | The Bedrock model identifier | "us.anthropic.claude-3-7-sonnet-20250219-v1:0" | | [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) | Boto Session to use when creating the Boto3 Bedrock Client | Boto Session with region: "us-west-2" | | [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html) | Botocore Configuration used when creating the Boto3 Bedrock Client | - | | [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html) | AWS region to use for the Bedrock service | "us-west-2" | | [`streaming`](https://docs.aws.amazon.com/bedrock/latest/userguide/api-methods.html) | Flag to enable/disable streaming mode | True | | [`temperature`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Controls randomness (higher = more random) | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | | [`max_tokens`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Maximum number of tokens to generate | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | | [`top_p`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Controls diversity via nucleus sampling | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | | [`stop_sequences`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | List of sequences that stop generation | - | | [`cache_prompt`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) | Cache point type for the system prompt | - | | [`cache_tools`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) | Cache point type for tools | - | | [`guardrail_id`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | ID of the guardrail to apply | - | | [`guardrail_trace`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Guardrail trace mode ("enabled", "disabled", "enabled_full") | "enabled" | | [`guardrail_version`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Version of the guardrail to apply | - | | [`guardrail_stream_processing_mode`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | The guardrail processing mode ("sync", "async") | - | | [`guardrail_redact_input`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Flag to redact input if a guardrail is triggered | True | | [`guardrail_redact_input_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | If a Bedrock guardrail triggers, replace the input with this message | "[User input redacted.]" | | [`guardrail_redact_output`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Flag to redact output if guardrail is triggered | False | | [`guardrail_redact_output_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | If a Bedrock guardrail triggers, replace output with this message | "[Assistant output redacted.]" | | [`additional_request_fields`](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | Additional inference parameters that the model supports | - | | [`additional_response_field_paths`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html#bedrock-runtime_ConverseStream-request-additionalModelResponseFieldPaths) | Additional model parameters field paths to return in the response | - | | `additional_args` | Additional arguments to include in the request. This is included for forwards compatibility of new parameters. | - |
+| Parameter | Description | Default | | --- | --- | --- | | [`model_id`](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) | The Bedrock model identifier | "anthropic.claude-sonnet-4-20250514-v1:0" | | [`boto_session`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) | Boto Session to use when creating the Boto3 Bedrock Client | Boto Session with region: "us-west-2" | | [`boto_client_config`](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html) | Botocore Configuration used when creating the Boto3 Bedrock Client | - | | [`region_name`](https://docs.aws.amazon.com/general/latest/gr/bedrock.html) | AWS region to use for the Bedrock service | "us-west-2" | | [`streaming`](https://docs.aws.amazon.com/bedrock/latest/userguide/api-methods.html) | Flag to enable/disable streaming mode | True | | [`temperature`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Controls randomness (higher = more random) | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | | [`max_tokens`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Maximum number of tokens to generate | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | | [`top_p`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | Controls diversity via nucleus sampling | [Model-specific default](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | | [`stop_sequences`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents) | List of sequences that stop generation | - | | [`cache_prompt`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) | Cache point type for the system prompt | - | | [`cache_tools`](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) | Cache point type for tools | - | | [`guardrail_id`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | ID of the guardrail to apply | - | | [`guardrail_trace`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Guardrail trace mode ("enabled", "disabled", "enabled_full") | "enabled" | | [`guardrail_version`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Version of the guardrail to apply | - | | [`guardrail_stream_processing_mode`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | The guardrail processing mode ("sync", "async") | - | | [`guardrail_redact_input`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Flag to redact input if a guardrail is triggered | True | | [`guardrail_redact_input_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | If a Bedrock guardrail triggers, replace the input with this message | "[User input redacted.]" | | [`guardrail_redact_output`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | Flag to redact output if guardrail is triggered | False | | [`guardrail_redact_output_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html) | If a Bedrock guardrail triggers, replace output with this message | "[Assistant output redacted.]" | | [`additional_request_fields`](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html) | Additional inference parameters that the model supports | - | | [`additional_response_field_paths`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html#bedrock-runtime_ConverseStream-request-additionalModelResponseFieldPaths) | Additional model parameters field paths to return in the response | - | | `additional_args` | Additional arguments to include in the request. This is included for forwards compatibility of new parameters. | - |
 
 ### Example with Configuration
 
@@ -178,7 +178,7 @@ boto_config = BotocoreConfig(
 
 # Create a configured Bedrock model
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     region_name="us-east-1",  # Specify a different region than the default
     temperature=0.3,
     top_p=0.8,
@@ -203,7 +203,7 @@ Certain Amazon Bedrock models only support non-streaming tool use, so you can se
 ```
 # Streaming model (default)
 streaming_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     streaming=True,  # This is the default
 )
 
@@ -227,46 +227,31 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model that supports multimodal inputs
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0"
 )
-
-
-# Create a message with both text and image content
-messages = [
-    {
-        "role": "user",
-        "content": [
-            {
-                "document": {
-                    "format": "txt",
-                    "name": "example",
-                    "source": {
-                        "bytes": b"Use this document in your response."
-                    }
-                }
-            },
-            {
-                "text": "Use this media in your response."
-            }
-        ]
-    },
-    {
-        "role": "assistant",
-        "content": [
-            {
-                "text": "I will reference this media in my next response."
-            }
-        ]
-    }
-]
-
-# Create an agent with the multimodal model
-agent = Agent(model=bedrock_model, messages=messages)
+agent = Agent(model=bedrock_model)
 
 # Send the multimodal message to the agent
-response = agent("Tell me about the document.")
+response = agent(
+    [
+        {
+            "document": {
+                "format": "txt",
+                "name": "example",
+                "source": {
+                    "bytes": b"Once upon a time..."
+                }
+            }
+        },
+        {
+            "text": "Tell me about the document."
+        }
+    ]
+)
 
 ```
+
+For a complete list of input types, please refer to the [API Reference](../../../../api-reference/types/#strands.types.content.ContentBlock).
 
 ### Guardrails
 
@@ -278,7 +263,7 @@ from strands.models import BedrockModel
 
 # Using guardrails with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     guardrail_id="your-guardrail-id",
     guardrail_version="DRAFT",
     guardrail_trace="enabled",  # Options: "enabled", "disabled", "enabled_full"
@@ -321,7 +306,7 @@ from strands.models import BedrockModel
 
 # Using system prompt caching with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     cache_prompt="default"
 )
 
@@ -352,7 +337,7 @@ from strands_tools import calculator, current_time
 
 # Using tool caching with BedrockModel
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     cache_tools="default"
 )
 
@@ -430,7 +415,7 @@ You can update the model configuration during runtime:
 ```
 # Create the model with initial configuration
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     temperature=0.7
 )
 
@@ -484,7 +469,7 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model with reasoning configuration
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     additional_request_fields={
         "thinking": {
             "type": "enabled",
@@ -563,14 +548,14 @@ This typically indicates that the model requires Cross-Region Inference, as docu
 Instead of:
 
 ```
-anthropic.claude-3-7-sonnet-20250219-v1:0
+anthropic.claude-sonnet-4-20250514-v1:0
 
 ```
 
 Use:
 
 ```
-us.anthropic.claude-3-7-sonnet-20250219-v1:0
+us.anthropic.claude-sonnet-4-20250514-v1:0
 
 ```
 

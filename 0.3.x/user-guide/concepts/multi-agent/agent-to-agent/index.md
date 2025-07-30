@@ -1,6 +1,6 @@
 # Agent-to-Agent (A2A) Protocol
 
-Strands Agents provides experimental support for the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/latest/), enabling seamless communication between AI agents across different platforms and implementations.
+Strands Agents supports the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/latest/), enabling seamless communication between AI agents across different platforms and implementations.
 
 ## What is Agent-to-Agent (A2A)?
 
@@ -73,6 +73,8 @@ The `A2AServer` constructor accepts several configuration options:
 - `port`: Port to bind to (default: 9000)
 - `version`: Version of the agent (default: "0.0.1")
 - `skills`: Custom list of agent skills (default: auto-generated from tools)
+- `http_url`: Public HTTP URL where this agent will be accessible (optional, enables path-based mounting)
+- `serve_at_root`: Forces server to serve at root path regardless of http_url path (default: False)
 
 ### Advanced Server Customization
 
@@ -101,10 +103,42 @@ uvicorn.run(fastapi_app, host="0.0.0.0", port=9000)
 
 ```
 
+#### Path-Based Mounting for Containerized Deployments
+
+The `A2AServer` supports automatic path-based mounting for deployment scenarios involving load balancers or reverse proxies. This allows you to deploy agents behind load balancers with different path prefixes.
+
+```
+from strands import Agent
+from strands.multiagent.a2a import A2AServer
+
+# Create an agent
+agent = Agent(
+    name="Calculator Agent",
+    description="A calculator agent",
+    callback_handler=None
+)
+
+# Deploy with path-based mounting
+# The agent will be accessible at http://my-alb.amazonaws.com/calculator/
+a2a_server = A2AServer(
+    agent=agent,
+    http_url="http://my-alb.amazonaws.com/calculator"
+)
+
+# For load balancers that strip path prefixes, use serve_at_root=True
+a2a_server_with_root = A2AServer(
+    agent=agent,
+    http_url="http://my-alb.amazonaws.com/calculator",
+    serve_at_root=True  # Serves at root even though URL has /calculator path
+)
+
+```
+
 This flexibility allows you to:
 
 - Add custom middleware
 - Implement additional API endpoints
+- Deploy agents behind load balancers with different path prefixes
 
 ## A2A Client Examples
 
@@ -124,6 +158,8 @@ from a2a.types import MessageSendParams, SendMessageRequest
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+DEFAULT_TIMEOUT = 300 # set request timeout to 5 minutes
+
 def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
     return {
         "message": {
@@ -134,7 +170,7 @@ def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
     }
 
 async def send_sync_message(message: str, base_url: str = "http://localhost:9000"):
-    async with httpx.AsyncClient() as httpx_client:
+    async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
         # Get agent card
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
         agent_card = await resolver.get_agent_card()
@@ -171,6 +207,8 @@ from a2a.types import MessageSendParams, SendStreamingMessageRequest
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+DEFAULT_TIMEOUT = 300 # set request timeout to 5 minutes
+
 def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
     return {
         "message": {
@@ -181,7 +219,7 @@ def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
     }
 
 async def send_streaming_message(message: str, base_url: str = "http://localhost:9000"):
-    async with httpx.AsyncClient() as httpx_client:
+    async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
         # Get agent card
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
         agent_card = await resolver.get_agent_card()
@@ -201,11 +239,11 @@ asyncio.run(send_streaming_message("what is 101 * 11"))
 
 ```
 
-## Native Strands A2A Tool
+## Strands A2A Tool
 
 ### Installation
 
-To use the native A2A client tool, install strands-agents-tools with the A2A extra:
+To use the A2A client tool, install strands-agents-tools with the A2A extra:
 
 ```
 pip install 'strands-agents-tools[a2a_client]'
@@ -236,12 +274,11 @@ agent = Agent(tools=provider.tools)
 response = agent("pick an agent and make a sample call")
 logger.info(response)
 
-# Async usage
-async def main():
-    response = await agent.invoke_async("pick an agent and make a sample call")
-    logger.info(response)
-
-asyncio.run(main())
+# Alternative Async usage
+# async def main():
+#     response = await agent.invoke_async("pick an agent and make a sample call")
+#     logger.info(response)
+# asyncio.run(main())
 
 ```
 

@@ -120,6 +120,54 @@ Some events come in pairs, such as Before/After events. The After event callback
 
 ## Advanced Usage
 
+### Fixed Tool Arguments
+
+Enforce specific arguments for tools, ensuring they always use particular values regardless of what the agent specifies:
+
+```
+from typing import Any
+from strands.hooks import HookProvider, HookRegistry
+from strands.experimental.hooks import BeforeToolInvocationEvent
+
+class ConstantToolArguments(HookProvider):
+    """Use constant argument values for specific parameters of a tool."""
+
+    def __init__(self, fixed_tool_arguments: dict[str, dict[str, Any]]):
+        """
+        Initialize fixed parameter values for tools.
+
+        Args:
+            fixed_tool_arguments: A dictionary mapping tool names to dictionaries of 
+                parameter names and their fixed values. These values will override any 
+                values provided by the agent when the tool is invoked.
+        """
+        self._tools_to_fix = fixed_tool_arguments
+
+    def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
+        registry.add_callback(BeforeToolInvocationEvent, self._fix_tool_arguments)
+
+    def _fix_tool_arguments(self, event: BeforeToolInvocationEvent):
+        # If the tool is in our list of parameters, then use those parameters
+        if parameters_to_fix := self._tools_to_fix.get(event.tool_use["name"]):
+            tool_input: dict[str, Any] = event.tool_use["input"]
+            tool_input.update(parameters_to_fix)
+
+```
+
+For example, to always force the `calculator` tool to use use precision of 1 digit:
+
+```
+fix_parameters = ConstantToolArguments({
+    "calculator": {
+        "precision": 1,
+    }
+})
+
+agent = Agent(tools=[calculator], hooks=[fix_parameters])
+result = agent("What is 2 / 3?")
+
+```
+
 ### Tool Interception
 
 Modify or replace tools before execution:

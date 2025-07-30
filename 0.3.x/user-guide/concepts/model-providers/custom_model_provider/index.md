@@ -68,7 +68,7 @@ from typing_extensions import Unpack
 
 from custom.model import CustomModelClient
 
-from strands.types.models import Model
+from strands.models import Model
 from strands.types.content import Messages
 from strands.types.streaming import StreamEvent
 from strands.types.tools import ToolSpec
@@ -131,38 +131,129 @@ class CustomModel(Model):
 
 ```
 
-### 2. Implement `format_request`
+### 2. Implement the `stream` Method
 
-Map the request parameters provided by Strands Agents to your Model Providers request shape:
+The core of the model interface is the `stream` method that serves as the single entry point for all model interactions. This method handles request formatting, model invocation, and response streaming.
+
+The `stream` method accepts three parameters directly:
 
 - [`Messages`](../../../../api-reference/types/#strands.types.content.Messages): A list of Strands Agents messages, containing a [Role](../../../../api-reference/types/#strands.types.content.Role) and a list of [ContentBlocks](../../../../api-reference/types/#strands.types.content.ContentBlock).
-- This type is modeled after the [BedrockAPI](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html).
 - [`list[ToolSpec]`](../../../../api-reference/types/#strands.types.tools.ToolSpec): List of tool specifications that the model can decide to use.
 - `SystemPrompt`: A system prompt string given to the Model to prompt it how to answer the user.
 
 ```
     @override
-    def format_request(
-        self, messages: Messages, tool_specs: Optional[list[ToolSpec]] = None, system_prompt: Optional[str] = None
-    ) -> dict[str, Any]:
-        """Format a Custom model request.
+    async def stream(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
+        system_prompt: Optional[str] = None,
+        **kwargs: Any
+    ) -> AsyncIterable[StreamEvent]:
+        """Stream responses from the Custom model.
 
-        Args: ...
+        Args:
+            messages: List of conversation messages
+            tool_specs: Optional list of available tools
+            system_prompt: Optional system prompt
+            **kwargs: Additional keyword arguments for future extensibility
 
-        Returns: Formatted Messages array, ToolSpecs, SystemPrompt, and additional ModelConfigs.
+        Returns:
+            Iterator of StreamEvent objects
         """
+        logger.debug("messages=<%s> tool_specs=<%s> system_prompt=<%s> | formatting request", 
+                    messages, tool_specs, system_prompt)
+
+        # Format the request for your model API
+        request = {
+            "messages": messages,
+            "tools": tool_specs,
+            "system_prompt": system_prompt,
+            **self.config,  # Include model configuration
+        }
+
+        logger.debug("request=<%s> | invoking model", request)
+
+        # Invoke your model
+        try:
+            response = await self.client(**request)
+        except OverflowException as e:
+            raise ContextWindowOverflowException() from e
+
+        logger.debug("response received | processing stream")
+
+        # Process and yield streaming events
+        # If your model doesn't return a MessageStart event, create one
+        yield {
+            "messageStart": {
+                "role": "assistant"
+            }
+        }
+
+        # Process each chunk from your model's response
+        async for chunk in response["stream"]:
+            # Convert your model's event format to Strands Agents StreamEvent
+            if chunk.get("type") == "text_delta":
+                yield {
+                    "contentBlockDelta": {
+                        "delta": {
+                            "text": chunk.get("text", "")
+                        }
+                    }
+                }
+            elif chunk.get("type") == "message_stop":
+                yield {
+                    "messageStop": {
+                        "stopReason": "end_turn"
+                    }
+                }
+
+        logger.debug("stream processing complete")
+
+```
+
+For more complex implementations, you may want to create helper methods to organize your code:
+
+```
+    def _format_request(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
+        system_prompt: Optional[str] = None
+    ) -> dict[str, Any]:
+        """Optional helper method to format requests for your model API."""
         return {
             "messages": messages,
             "tools": tool_specs,
             "system_prompt": system_prompt,
-            **self.config, # Unpack the remaining configurations needed to invoke the model
+            **self.config,
         }
+
+    def _format_chunk(self, event: Any) -> Optional[StreamEvent]:
+        """Optional helper method to format your model's response events."""
+        if event.get("type") == "text_delta":
+            return {
+                "contentBlockDelta": {
+                    "delta": {
+                        "text": event.get("text", "")
+                    }
+                }
+            }
+        elif event.get("type") == "message_stop":
+            return {
+                "messageStop": {
+                    "stopReason": "end_turn"
+                }
+            }
+        return None
 
 ```
 
-### 3. Implement `format_chunk`:
+> Note, `stream` must be implemented async. If your client does not support async invocation, you may consider wrapping the relevant calls in a thread so as not to block the async event loop. For an example on how to achieve this, you can check out the [BedrockModel](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py) provider implementation.
 
-Convert the event(s) returned by your model to the Strands Agents [StreamEvent](../../../../api-reference/types/#strands.types.streaming.StreamEvent) type (modeled after the [Bedrock API](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_Types_Amazon_Bedrock_Runtime.html)). The [StreamEvent](../../../../api-reference/types/#strands.types.streaming.StreamEvent) type is a dictionary that expects to have a single key, and whose value corresponds to one of the below types:
+### 3. Understanding StreamEvent Types
+
+Your custom model provider needs to convert model's response events to Strands Agents [StreamEvent](../../../../api-reference/types/#strands.types.streaming.StreamEvent) format. The StreamEvent type supports these event types:
 
 - [`messageStart`](../../../../api-reference/types/#strands.types.streaming.MessageStartEvent): Event signaling the start of a message in a streaming response. This should have the `role`: `assistant`
 
@@ -195,14 +286,14 @@ Convert the event(s) returned by your model to the Strands Agents [StreamEvent](
   {
       "contentBlockDelta": {
           "delta": { # Only include one of the following keys in each event
-              "text": "Some text", # String repsonse from a model
+              "text": "Some text", # String response from a model
               "reasoningContent": { # Dictionary representing the reasoning of a model.
-                  "redactedContent": b"Some encryped bytes",
+                  "redactedContent": b"Some encrypted bytes",
                   "signature": "verification token",
                   "text": "Some reasoning text"
               },
               "toolUse": { # Dictionary representing a toolUse request. This is a partial json string.
-                  "input": "Partial json serialized repsonse"
+                  "input": "Partial json serialized response"
               }
           }
       }
@@ -234,11 +325,11 @@ Convert the event(s) returned by your model to the Strands Agents [StreamEvent](
 
   ```
   {
-      "metrics" {
+      "metrics": {
           "latencyMs": 123 # Latency of the model request in milliseconds.
       },
       "usage": {
-          "inputTokens": 234, # Number of tokens sent in the request to the model..
+          "inputTokens": 234, # Number of tokens sent in the request to the model.
           "outputTokens": 234, # Number of tokens that the model generated for the request.
           "totalTokens": 468 # Total number of tokens (input + output).
       }
@@ -252,121 +343,80 @@ Convert the event(s) returned by your model to the Strands Agents [StreamEvent](
   {
       "redactContent": {
           "redactUserContentMessage": "User input Redacted",
-          "redactAssistantContentMessage": "Assitant output Redacted"
+          "redactAssistantContentMessage": "Assistant output Redacted"
       }
   }
 
   ```
 
-```
-    @override
-    def format_chunk(self, event: Any) -> StreamEvent:
-        """Format the Custom model response event into Strands Agents stream event.
+### 4. Structured Output Support
 
-        Args:
-            event: Custom model response event.
-
-        Returns: Formatted chunks.
-        """
-        return {...}
+To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model and yields a JSON output. This method leverages the unified `stream` interface with tool specifications.
 
 ```
+T = TypeVar('T', bound=BaseModel)
 
-### 4. Invoke your Model
+@override
+async def structured_output(
+    self,
+    output_model: Type[T],
+    prompt: Messages,
+    system_prompt: Optional[str] = None,
+    **kwargs: Any
+) -> Generator[dict[str, Union[T, Any]], None, None]:
+    """Get structured output using tool calling.
 
-Now that you have mapped the Strands Agents input to your models request, use this request to invoke your model. If your model does not follow the above EventStream sequence by default, you may need to yield additional events, or omit events that don't map to the Strands Agents SDK EventStream type. Be sure to map any of your model's exceptions to one of Strands Agents' expected exceptions:
+    Args:
+        output_model: The output model to use for the agent.
+        prompt: The prompt messages to use for the agent.
+        system_prompt: The system prompt to use for the agent.
+        **kwargs: Additional keyword arguments for future extensibility.
+    """
 
-- [`ContextWindowOverflowException`](../../../../api-reference/types/#strands.types.exceptions.ContextWindowOverflowException): This exception is raised when the input to a model exceeds the maximum context window size that the model can handle. This will trigger the Strands Agents SDK's [`ConversationManager.reduce_context`](../../../../api-reference/agent/#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context) function.
+    # Convert Pydantic model to tool specification
+    tool_spec = convert_pydantic_to_tool_spec(output_model)
 
-```
-    @override
-    def stream(self, request: Any) -> Iterable[Any]:
-        """Send the request to the Custom model and get the streaming response.
+    # Use the stream method with tool specification
+    response = await self.stream(messages=prompt, tool_specs=[tool_spec], system_prompt=system_prompt, **kwargs)
 
-        The items returned from this Iterable will each be formatted with `format_chunk` (automatically), then sent
-        through the Strands Agents SDK.
+    # Process streaming response
+    async for event in process_stream(response, prompt):
+        yield event  # Passed to callback handler configured in Agent instance
 
-        Args:
-            request: Custom model formatted request.
+    stop_reason, messages, _, _ = event["stop"]
 
-        Returns:
-            Custom model events.
-        """
+    # Validate tool use response
+    if stop_reason != "tool_use":
+        raise ValueError("No valid tool use found in the model response.")
 
-        # Invoke your model with the response from your format_request implemented above
-        try:
-            response = self.client(**request)
-        except OverflowException as e:
-            raise ContextWindowOverflowException() from e
+    # Extract tool use output
+    content = messages["content"]
+    for block in content:
+        if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
+            yield {"output": output_model(**block["toolUse"]["input"])}
+            return
 
-        # This model provider does not have return an event that maps to MessageStart, so we create and yield it here.
-        yield {
-            "messageStart": {
-                "role": "assistant"
-            }
-        }
-
-        # The rest of these events are mapped in the format_chunk method above.
-        for chunk in response["stream"]:
-            yield chunk
-
-```
-
-### 5. Structured Output Support
-
-To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model, and has it yield a json output. Below is an example of what this might look like for a Bedrock model, where we invoke the model with a tool spec, and check if the response contains a `toolUse` response.
-
-```
-    T = TypeVar('T', bound=BaseModel)
-
-    @override
-    def structured_output(
-        self, output_model: Type[T], prompt: Messages
-    ) -> Generator[dict[str, Union[T, Any]], None, None]:
-        """Get structured output using tool calling."""
-
-        # Convert Pydantic model to tool specification
-        tool_spec = convert_pydantic_to_tool_spec(output_model)
-
-        # Use existing converse method with tool specification
-        response = self.converse(messages=prompt, tool_specs=[tool_spec])
-
-        # Process streaming response
-        for event in process_stream(response, prompt):
-            yield event  # Passed to callback handler configured in Agent instance
-
-        stop_reason, messages, _, _ = event["stop"]
-
-        # Validate tool use response
-        if stop_reason != "tool_use":
-            raise ValueError("No valid tool use found in the model response.")
-
-        # Extract tool use output
-        content = messages["content"]
-        for block in content:
-            if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
-                yield {"output": output_model(**block["toolUse"]["input"])}
-                return
-
-        raise ValueError("No valid tool use input found in the response.")
+    raise ValueError("No valid tool use input found in the response.")
 
 ```
 
 **Implementation Suggestions:**
 
-1. **Tool Integration**: Use your existing `converse()` method with tool specifications to invoke your model
+1. **Tool Integration**: Use the `stream()` method with tool specifications to invoke your model
 1. **Response Validation**: Use `output_model(**data)` to validate the response
 1. **Error Handling**: Provide clear error messages for parsing and validation failures
 
 For detailed structured output usage patterns, see the [Structured Output documentation](../../agents/structured-output/).
 
-### 6. Use Your Custom Model Provider
+> Note, similar to the `stream` method, `structured_output` must be implemented async. If your client does not support async invocation, you may consider wrapping the relevant calls in a thread so as not to block the async event loop. Again, for an example on how to achieve this, you can check out the [BedrockModel](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py) provider implementation.
+
+### 5. Use Your Custom Model Provider
 
 Once implemented, you can use your custom model provider in your applications for regular agent invocation:
 
 ```
 from strands import Agent
-from your_org.models.custom_model import Model as CustomModel
+from your_org.models.custom_model import CustomModel
 
 # Initialize your custom model provider
 custom_model = CustomModel(
@@ -375,7 +425,6 @@ custom_model = CustomModel(
     params={
         "max_tokens": 2000,
         "temperature": 0.7,
-
     },
 )
 
@@ -391,7 +440,7 @@ Or you can use the `structured_output` feature to generate structured output:
 
 ```
 from strands import Agent
-from your_org.models.custom_model import Model as CustomModel
+from your_org.models.custom_model import CustomModel
 from pydantic import BaseModel, Field
 
 class PersonInfo(BaseModel):
@@ -413,15 +462,23 @@ print(f"Occupation: {result.occupation}")
 
 ## Key Implementation Considerations
 
-### 1. Message Formatting
+### 1. Stream Interface
+
+The model interface centers around a single `stream` method that:
+
+- Accepts `messages`, `tool_specs`, and `system_prompt` directly as parameters
+- Handles request formatting, model invocation, and response processing internally
+- Provides debug logging for better observability
+
+### 2. Message Formatting
 
 Strands Agents' internal `Message`, `ToolSpec`, and `SystemPrompt` types must be converted to your model API's expected format:
 
 - Strands Agents uses a structured message format with role and content fields
 - Your model API might expect a different structure
-- Map the message content appropriately in `format_request()`
+- Handle the message content conversion in your `stream()` method
 
-### 2. Streaming Response Handling
+### 3. Streaming Response Handling
 
 Strands Agents expects streaming responses to be formatted according to its `StreamEvent` protocol:
 
@@ -431,20 +488,19 @@ Strands Agents expects streaming responses to be formatted according to its `Str
 - `contentBlockStop`: Indicates the end of a content block
 - `messageStop`: Indicates the end of the response message with a stop reason
 - `metadata`: Indicates information about the response like input_token count, output_token count, and latency
-- `redactContent`: Used to redact either the users input, or the model's response
-- Useful when a guardrail is triggered
+- `redactContent`: Used to redact either the user's input, or the model's response
 
-Your `format_chunk()` method must transform your API's streaming format to match these expectations.
+Convert your API's streaming format to match these expectations in your `stream()` method.
 
-### 3. Tool Support
+### 4. Tool Support
 
 If your model API supports tools or function calling:
 
-- Format tool specifications appropriately in `format_request()`
-- Handle tool-related events in `format_chunk()`
+- Format tool specifications appropriately in `stream()`
+- Handle tool-related events in response processing
 - Ensure proper message formatting for tool calls and results
 
-### 4. Error Handling
+### 5. Error Handling
 
 Implement robust error handling for API communication:
 
@@ -454,9 +510,9 @@ Implement robust error handling for API communication:
 - Rate limits and quotas
 - Malformed responses
 
-### 5. Configuration Management
+### 6. Configuration Management
 
-The build in `get_config` and `update_config` methods allow for the model's configuration to be changed at runtime.
+The built-in `get_config` and `update_config` methods allow for the model's configuration to be changed at runtime:
 
 - `get_config` exposes the current model config
 - `update_config` allows for at-runtime updates to the model config

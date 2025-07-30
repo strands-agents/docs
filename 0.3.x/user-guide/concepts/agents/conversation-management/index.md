@@ -1,6 +1,6 @@
-# Context Management
+# Conversation Management
 
-In the Strands Agents SDK, context refers to the conversation history that provides the foundation for the agent's understanding and reasoning. This includes:
+In the Strands Agents SDK, context refers to the information provided to the agent for understanding and reasoning. This includes:
 
 - User messages
 - Agent responses
@@ -16,10 +16,11 @@ As conversations grow, managing this context becomes increasingly important for 
 
 ## Conversation Managers
 
-The SDK provides a flexible system for context management through the [`ConversationManager`](../../../../api-reference/agent/#strands.agent.conversation_manager.conversation_manager.ConversationManager) interface. This allows you to implement different strategies for managing conversation history. There are two key methods to implement:
+The SDK provides a flexible system for context management through the [`ConversationManager`](../../../../api-reference/agent/#strands.agent.conversation_manager.conversation_manager.ConversationManager) interface. This allows you to implement different strategies for managing conversation history. There are three key elements to implement:
 
 1. [`apply_management`](../../../../api-reference/agent/#strands.agent.conversation_manager.conversation_manager.ConversationManager.apply_management): This method is called after each event loop cycle completes to manage the conversation history. It's responsible for applying your management strategy to the messages array, which may have been modified with tool results and assistant responses. The agent runs this method automatically after processing each user input and generating a response.
 1. [`reduce_context`](../../../../api-reference/agent/#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context): This method is called when the model's context window is exceeded (typically due to token limits). It implements the specific strategy for reducing the window size when necessary. The agent calls this method when it encounters a context window overflow exception, giving your implementation a chance to trim the conversation history before retrying.
+1. `removed_messages_count` This attribute is tracked by conversation managers, and utilized by [Session Management](../session-management/) to efficiently load messages from the session storage. The count represent messages provided by the user or LLM that have been removed from the agent's messages, but not messages included by the conversation manager through something like summarization.
 
 To manage conversations, you can either leverage one of Strands's provided managers or build your own manager that matches your requirements.
 

@@ -51,8 +51,6 @@ def event_loop_cycle(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    tool_handler: Optional[ToolHandler],
-    thread_pool: Optional[ThreadPoolExecutor] = None,
     **kwargs: Any,
 ) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
     # ... implementation details ...
@@ -69,7 +67,7 @@ Messages flow through the agent loop in a structured format:
 1. **Assistant messages**: Responses from the model that may include tool requests
 1. **Tool result messages**: Results from tool executions fed back to the model
 
-The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](../state-sessions/).
+The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](../state/).
 
 ### Tool Execution
 
@@ -77,19 +75,9 @@ The agent loop includes a tool execution system that:
 
 1. Validates tool requests from the model
 1. Looks up tools in the registry
-1. Executes tools with proper error handling
+1. Executes tools concurrently with proper error handling
 1. Captures and formats results
 1. Feeds results back to the model
-
-Tools can be executed in parallel or sequentially:
-
-```
-# Configure maximum parallel tool execution
-agent = Agent(
-    max_parallel_tools=4  # Run up to 4 tools in parallel
-)
-
-```
 
 ## Detailed Flow
 
@@ -115,7 +103,6 @@ This initialization:
 
 - Creates a tool registry and registers tools
 - Sets up the conversation manager
-- Configures parallel processing capabilities
 - Initializes metrics collection
 
 ### 2. User Input Processing
@@ -166,7 +153,7 @@ The event loop:
 
 - Extracts and validates the tool request
 - Looks up the tool in the registry
-- Executes the tool (potentially in parallel with others)
+- Executes the tool
 - Captures the result and formats it
 
 ### 5. Tool Result Processing

@@ -52,15 +52,6 @@ result = agent("What is 125 * 37?")
 
 When running this code with logging enabled, you'll see logs from different components of the SDK as the agent processes the request, calls the calculator tool, and generates a response. The following sections show examples of these logs:
 
-### Agent Lifecycle
-
-Logs related to agent initialization and shutdown:
-
-```
-DEBUG | strands.agent.agent | thread pool executor shutdown complete
-
-```
-
 ### Tool Registry and Execution
 
 Logs related to tool discovery, registration, and execution:
@@ -82,8 +73,7 @@ WARNING | strands.tools.registry | tool_name=<invalid_tool> | spec validation fa
 DEBUG | strands.tools.registry | tool_name=<calculator> | loaded dynamic tool config
 
 # Tool execution
-DEBUG | strands.tools.executor | tool_name=<calculator> | executing tool with parameters: {"expression": "125 * 37"}
-DEBUG | strands.tools.executor | tool_count=<1> | submitted tasks to parallel executor
+DEBUG | strands.event_loop.event_loop | tool_use=<calculator_tool_use_id> | streaming
 
 # Tool hot reloading
 DEBUG | strands.tools.registry | tool_name=<calculator> | searching directories for tool
@@ -97,7 +87,6 @@ DEBUG | strands.tools.registry | tool_name=<calculator> | successfully reloaded 
 Logs related to the event loop processing:
 
 ```
-DEBUG | strands.event_loop.message_processor | message_index=<3> | replaced content with context message
 ERROR | strands.event_loop.error_handler | an exception occurred in event_loop_cycle | ContextWindowOverflowException
 DEBUG | strands.event_loop.error_handler | message_index=<5> | found message with tool results at index
 
@@ -108,7 +97,7 @@ DEBUG | strands.event_loop.error_handler | message_index=<5> | found message wit
 Logs related to interactions with foundation models:
 
 ```
-DEBUG | strands.models.bedrock | config=<{'model_id': 'anthropic.claude-3-7-sonnet-20250219-v1:0'}> | initializing
+DEBUG | strands.models.bedrock | config=<{'model_id': 'us.anthropic.claude-4-sonnet-20250219-v1:0'}> | initializing
 WARNING | strands.models.bedrock | bedrock threw context window overflow error
 DEBUG | strands.models.bedrock | Found blocked output guardrail. Redacting output.
 

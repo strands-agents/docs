@@ -60,7 +60,7 @@ agent = Agent(load_tools_from_directory=True)
 
 Tools can be invoked in two primary ways.
 
-Agents have context about tool calls and their results as part of conversation history. See [state & sessions](../../agents/state-sessions/#using-state-in-tools) for more information.
+Agents have context about tool calls and their results as part of conversation history. See [Using State in Tools](../../agents/state/#using-state-in-tools) for more information.
 
 ### Natural Language Invocation
 
@@ -101,19 +101,21 @@ Build your own Python tools using the Strands SDK's tool interfaces.
 Function decorated tools can be placed anywhere in your codebase and imported in to your agent's list of tools. Define any Python function as a tool by using the [`@tool`](../../../../api-reference/tools/#strands.tools.decorator.tool) decorator.
 
 ```
+import asyncio
 from strands import Agent, tool
+
 
 @tool
 def get_user_location() -> str:
-    """Get the user's location
-    """
+    """Get the user's location."""
 
     # Implement user location lookup logic here
     return "Seattle, USA"
 
+
 @tool
 def weather(location: str) -> str:
-    """Get weather information for a location
+    """Get weather information for a location.
 
     Args:
         location: City or location name
@@ -122,31 +124,35 @@ def weather(location: str) -> str:
     # Implement weather lookup logic here
     return f"Weather for {location}: Sunny, 72°F"
 
-agent = Agent(tools=[get_user_location, weather])
 
-# Use the agent with the custom tools
-agent("What is the weather like in my location?")
+@tool
+async def call_api() -> str:
+    """Call API asynchronously.
+
+    Strands will invoke all async tools concurrently.
+    """
+
+    await asyncio.sleep(5)  # simulated api call
+    return "API result"
+
+
+def basic_example():
+    agent = Agent(tools=[get_user_location, weather])
+    agent("What is the weather like in my location?")
+
+
+async def async_example():
+    agent = Agent(tools=[call_api])
+    await agent.invoke_async("Can you call my API?")
+
+
+def main():
+    basic_example()
+    asyncio.run(async_example())
 
 ```
 
 #### Module-Based Approach
-
-Tool modules can contain function decorated tools, in this example `get_user_location.py`:
-
-```
-# get_user_location.py
-
-from strands import tool
-
-@tool
-def get_user_location() -> str:
-    """Get the user's location
-    """
-
-    # Implement user location lookup logic here
-    return "Seattle, USA"
-
-```
 
 Tool modules can also provide single tools that don't use the decorator pattern, instead they define the `TOOL_SPEC` variable and a function matching the tool's name. In this example `weather.py`:
 
@@ -174,6 +180,7 @@ TOOL_SPEC = {
 }
 
 # Function name must match tool name
+# May also be defined async similar to decorated tools
 def weather(tool: ToolUse, **kwargs: Any) -> ToolResult:
     tool_use_id = tool["toolUseId"]
     location = tool["input"]["location"]

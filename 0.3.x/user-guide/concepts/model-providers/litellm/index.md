@@ -42,7 +42,7 @@ print(response)
 
 ### Client Configuration
 
-The `client_args` configure the underlying LiteLLM client. For a complete list of available arguments, please refer to the LiteLLM [source](https://github.com/BerriAI/litellm/blob/main/litellm/main.py) and [docs](https://docs.litellm.ai/docs/completion/input).
+The `client_args` configure the underlying LiteLLM `completion` API. For a complete list of available arguments, please refer to the LiteLLM [docs](https://docs.litellm.ai/docs/completion/input).
 
 ### Model Configuration
 

@@ -25,25 +25,49 @@ If you do not specify a system prompt, the model will behave according to its de
 
 These are your queries or requests to the agent. The SDK supports multiple techniques for prompting.
 
-### Direct Prompting
+### Text Prompt
 
-The simplest way to interact with an agent is through direct prompting:
+The simplest way to interact with an agent is through a text prompt:
 
 ```
 response = agent("What is the time in Seattle")
 
 ```
 
+### Multi-Modal Prompting
+
+The SDK also supports multi-modal prompts, allowing you to include images, documents, and other content types in your messages:
+
+```
+with open("path/to/image.png", "rb") as fp:
+    image_bytes = fp.read()
+
+response = agent([
+    {"text": "What can you see in this image?"},
+    {
+        "image": {
+            "format": "png",
+            "source": {
+                "bytes": image_bytes,
+            },
+        },
+    },
+])
+
+```
+
+For a complete list of supported content types, please refer to the [API Reference](../../../../api-reference/types/#strands.types.content.ContentBlock).
+
 ### Direct Tool Calls
 
-For programmatic control, you can call tools directly:
+Prompting is a primary functionality of Strands that allows you to invoke tools through natural language requests. However, if at any point you require more programmatic control, Strands also allows you to invoke tools directly:
 
 ```
 result = agent.tool.current_time(timezone="US/Pacific")
 
 ```
 
-This bypasses the natural language interface and directly executes the tool with the specified parameters. By default, direct tool calls are added to the [session state](../state-sessions/) but can be optionally not included by specifying `record_direct_tool_call=False`.
+Direct tool calls bypass the natural language interface and execute the tool using specified parameters. These calls are added to the conversation history by default. However, you can opt out of this behavior by setting `record_direct_tool_call=False`.
 
 ## Prompt Engineering
 

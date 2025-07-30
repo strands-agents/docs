@@ -15,7 +15,7 @@ The event loop allows agents to:
 1. Handle errors and recovery strategies
 1. Manage recursive execution cycles
 
-### `event_loop_cycle(model, system_prompt, messages, tool_config, tool_handler, thread_pool, event_loop_metrics, event_loop_parent_span, kwargs)`
+### `event_loop_cycle(agent, invocation_state)`
 
 Execute a single cycle of the event loop.
 
@@ -31,11 +31,11 @@ This core function processes a single conversation turn, handling model inferenc
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Model` | Provider for running model inference. | *required* | | `system_prompt` | `Optional[str]` | System prompt instructions for the model. | *required* | | `messages` | `Messages` | Conversation history messages. | *required* | | `tool_config` | `Optional[ToolConfig]` | Configuration for available tools. | *required* | | `tool_handler` | `Optional[ToolHandler]` | Handler for executing tools. | *required* | | `thread_pool` | `Optional[ThreadPoolExecutor]` | Optional thread pool for parallel tool execution. | *required* | | `event_loop_metrics` | `EventLoopMetrics` | Metrics tracking object for the event loop. | *required* | | `event_loop_parent_span` | `Optional[Span]` | Span for the parent of this event loop. | *required* | | `kwargs` | `dict[str, Any]` | Additional arguments including: request_state: State maintained across cycles event_loop_cycle_id: Unique ID for this cycle event_loop_cycle_span: Current tracing Span for this cycle | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent for which the cycle is being executed. | *required* | | `invocation_state` | `dict[str, Any]` | Additional arguments including: request_state: State maintained across cycles event_loop_cycle_id: Unique ID for this cycle event_loop_cycle_span: Current tracing Span for this cycle | *required* |
 
 Yields:
 
-| Type | Description | | --- | --- | | `AsyncGenerator[dict[str, Any], None]` | Model and tool invocation events. The last event is a tuple containing: StopReason: Reason the model stopped generating (e.g., "tool_use") Message: The generated message from the model EventLoopMetrics: Updated metrics for the event loop Any: Updated request state |
+| Type | Description | | --- | --- | | `AsyncGenerator[dict[str, Any], None]` | Model and tool stream events. The last event is a tuple containing: StopReason: Reason the model stopped generating (e.g., "tool_use") Message: The generated message from the model EventLoopMetrics: Updated metrics for the event loop Any: Updated request state |
 
 Raises:
 
@@ -44,17 +44,7 @@ Raises:
 Source code in `strands/event_loop/event_loop.py`
 
 ```
-async def event_loop_cycle(
-    model: Model,
-    system_prompt: Optional[str],
-    messages: Messages,
-    tool_config: Optional[ToolConfig],
-    tool_handler: Optional[ToolHandler],
-    thread_pool: Optional[ThreadPoolExecutor],
-    event_loop_metrics: EventLoopMetrics,
-    event_loop_parent_span: Optional[trace.Span],
-    kwargs: dict[str, Any],
-) -> AsyncGenerator[dict[str, Any], None]:
+async def event_loop_cycle(agent: "Agent", invocation_state: dict[str, Any]) -> AsyncGenerator[dict[str, Any], None]:
     """Execute a single cycle of the event loop.
 
     This core function processes a single conversation turn, handling model inference, tool execution, and error
@@ -69,22 +59,15 @@ async def event_loop_cycle(
     7. Error handling and recovery
 
     Args:
-        model: Provider for running model inference.
-        system_prompt: System prompt instructions for the model.
-        messages: Conversation history messages.
-        tool_config: Configuration for available tools.
-        tool_handler: Handler for executing tools.
-        thread_pool: Optional thread pool for parallel tool execution.
-        event_loop_metrics: Metrics tracking object for the event loop.
-        event_loop_parent_span: Span for the parent of this event loop.
-        kwargs: Additional arguments including:
+        agent: The agent for which the cycle is being executed.
+        invocation_state: Additional arguments including:
 
             - request_state: State maintained across cycles
             - event_loop_cycle_id: Unique ID for this cycle
             - event_loop_cycle_span: Current tracing Span for this cycle
 
     Yields:
-        Model and tool invocation events. The last event is a tuple containing:
+        Model and tool stream events. The last event is a tuple containing:
 
             - StopReason: Reason the model stopped generating (e.g., "tool_use")
             - Message: The generated message from the model
@@ -96,14 +79,14 @@ async def event_loop_cycle(
         ContextWindowOverflowException: If the input is too large for the model
     """
     # Initialize cycle state
-    kwargs["event_loop_cycle_id"] = uuid.uuid4()
+    invocation_state["event_loop_cycle_id"] = uuid.uuid4()
 
     # Initialize state and get cycle trace
-    if "request_state" not in kwargs:
-        kwargs["request_state"] = {}
-    attributes = {"event_loop_cycle_id": str(kwargs.get("event_loop_cycle_id"))}
-    cycle_start_time, cycle_trace = event_loop_metrics.start_cycle(attributes=attributes)
-    kwargs["event_loop_cycle_trace"] = cycle_trace
+    if "request_state" not in invocation_state:
+        invocation_state["request_state"] = {}
+    attributes = {"event_loop_cycle_id": str(invocation_state.get("event_loop_cycle_id"))}
+    cycle_start_time, cycle_trace = agent.event_loop_metrics.start_cycle(attributes=attributes)
+    invocation_state["event_loop_cycle_trace"] = cycle_trace
 
     yield {"callback": {"start": True}}
     yield {"callback": {"start_event_loop": True}}
@@ -111,16 +94,13 @@ async def event_loop_cycle(
     # Create tracer span for this event loop cycle
     tracer = get_tracer()
     cycle_span = tracer.start_event_loop_cycle_span(
-        event_loop_kwargs=kwargs, messages=messages, parent_span=event_loop_parent_span
+        invocation_state=invocation_state, messages=agent.messages, parent_span=agent.trace_span
     )
-    kwargs["event_loop_cycle_span"] = cycle_span
+    invocation_state["event_loop_cycle_span"] = cycle_span
 
     # Create a trace for the stream_messages call
     stream_trace = Trace("stream_messages", parent_id=cycle_trace.id)
     cycle_trace.add_child(stream_trace)
-
-    # Clean up orphaned empty tool uses
-    clean_orphaned_empty_tool_uses(messages)
 
     # Process messages with exponential backoff for throttling
     message: Message
@@ -131,57 +111,81 @@ async def event_loop_cycle(
     # Retry loop for handling throttling exceptions
     current_delay = INITIAL_DELAY
     for attempt in range(MAX_ATTEMPTS):
-        model_id = model.config.get("model_id") if hasattr(model, "config") else None
+        model_id = agent.model.config.get("model_id") if hasattr(agent.model, "config") else None
         model_invoke_span = tracer.start_model_invoke_span(
-            messages=messages,
+            messages=agent.messages,
             parent_span=cycle_span,
             model_id=model_id,
         )
+        with trace_api.use_span(model_invoke_span):
+            tool_specs = agent.tool_registry.get_all_tool_specs()
 
-        try:
-            # TODO: To maintain backwards compatability, we need to combine the stream event with kwargs before yielding
-            #       to the callback handler. This will be revisited when migrating to strongly typed events.
-            async for event in stream_messages(model, system_prompt, messages, tool_config):
-                if "callback" in event:
-                    yield {"callback": {**event["callback"], **(kwargs if "delta" in event["callback"] else {})}}
-
-            stop_reason, message, usage, metrics = event["stop"]
-            kwargs.setdefault("request_state", {})
-
-            if model_invoke_span:
-                tracer.end_model_invoke_span(model_invoke_span, message, usage, stop_reason)
-            break  # Success! Break out of retry loop
-
-        except ContextWindowOverflowException as e:
-            if model_invoke_span:
-                tracer.end_span_with_error(model_invoke_span, str(e), e)
-            raise e
-
-        except ModelThrottledException as e:
-            if model_invoke_span:
-                tracer.end_span_with_error(model_invoke_span, str(e), e)
-
-            if attempt + 1 == MAX_ATTEMPTS:
-                yield {"callback": {"force_stop": True, "force_stop_reason": str(e)}}
-                raise e
-
-            logger.debug(
-                "retry_delay_seconds=<%s>, max_attempts=<%s>, current_attempt=<%s> "
-                "| throttling exception encountered "
-                "| delaying before next retry",
-                current_delay,
-                MAX_ATTEMPTS,
-                attempt + 1,
+            agent.hooks.invoke_callbacks(
+                BeforeModelInvocationEvent(
+                    agent=agent,
+                )
             )
-            time.sleep(current_delay)
-            current_delay = min(current_delay * 2, MAX_DELAY)
 
-            yield {"callback": {"event_loop_throttled_delay": current_delay, **kwargs}}
+            try:
+                # TODO: To maintain backwards compatibility, we need to combine the stream event with invocation_state
+                #       before yielding to the callback handler. This will be revisited when migrating to strongly
+                #       typed events.
+                async for event in stream_messages(agent.model, agent.system_prompt, agent.messages, tool_specs):
+                    if "callback" in event:
+                        yield {
+                            "callback": {
+                                **event["callback"],
+                                **(invocation_state if "delta" in event["callback"] else {}),
+                            }
+                        }
 
-        except Exception as e:
-            if model_invoke_span:
-                tracer.end_span_with_error(model_invoke_span, str(e), e)
-            raise e
+                stop_reason, message, usage, metrics = event["stop"]
+                invocation_state.setdefault("request_state", {})
+
+                agent.hooks.invoke_callbacks(
+                    AfterModelInvocationEvent(
+                        agent=agent,
+                        stop_response=AfterModelInvocationEvent.ModelStopResponse(
+                            stop_reason=stop_reason,
+                            message=message,
+                        ),
+                    )
+                )
+
+                if model_invoke_span:
+                    tracer.end_model_invoke_span(model_invoke_span, message, usage, stop_reason)
+                break  # Success! Break out of retry loop
+
+            except Exception as e:
+                if model_invoke_span:
+                    tracer.end_span_with_error(model_invoke_span, str(e), e)
+
+                agent.hooks.invoke_callbacks(
+                    AfterModelInvocationEvent(
+                        agent=agent,
+                        exception=e,
+                    )
+                )
+
+                if isinstance(e, ModelThrottledException):
+                    if attempt + 1 == MAX_ATTEMPTS:
+                        yield {"callback": {"force_stop": True, "force_stop_reason": str(e)}}
+                        raise e
+
+                    logger.debug(
+                        "retry_delay_seconds=<%s>, max_attempts=<%s>, current_attempt=<%s> "
+                        "| throttling exception encountered "
+                        "| delaying before next retry",
+                        current_delay,
+                        MAX_ATTEMPTS,
+                        attempt + 1,
+                    )
+                    time.sleep(current_delay)
+                    current_delay = min(current_delay * 2, MAX_DELAY)
+
+                    yield {"callback": {"event_loop_throttled_delay": current_delay, **invocation_state}}
+                else:
+                    raise e
 
     try:
         # Add message in trace and mark the end of the stream messages trace
@@ -189,43 +193,25 @@ async def event_loop_cycle(
         stream_trace.end()
 
         # Add the response message to the conversation
-        messages.append(message)
+        agent.messages.append(message)
+        agent.hooks.invoke_callbacks(MessageAddedEvent(agent=agent, message=message))
         yield {"callback": {"message": message}}
 
         # Update metrics
-        event_loop_metrics.update_usage(usage)
-        event_loop_metrics.update_metrics(metrics)
+        agent.event_loop_metrics.update_usage(usage)
+        agent.event_loop_metrics.update_metrics(metrics)
 
         # If the model is requesting to use tools
         if stop_reason == "tool_use":
-            if not tool_handler:
-                raise EventLoopException(
-                    Exception("Model requested tool use but no tool handler provided"),
-                    kwargs["request_state"],
-                )
-
-            if tool_config is None:
-                raise EventLoopException(
-                    Exception("Model requested tool use but no tool config provided"),
-                    kwargs["request_state"],
-                )
-
             # Handle tool execution
             events = _handle_tool_execution(
                 stop_reason,
                 message,
-                model,
-                system_prompt,
-                messages,
-                tool_config,
-                tool_handler,
-                thread_pool,
-                event_loop_metrics,
-                event_loop_parent_span,
-                cycle_trace,
-                cycle_span,
-                cycle_start_time,
-                kwargs,
+                agent=agent,
+                cycle_trace=cycle_trace,
+                cycle_span=cycle_span,
+                cycle_start_time=cycle_start_time,
+                invocation_state=invocation_state,
             )
             async for event in events:
                 yield event
@@ -233,7 +219,7 @@ async def event_loop_cycle(
             return
 
         # End the cycle and return results
-        event_loop_metrics.end_cycle(cycle_start_time, cycle_trace, attributes)
+        agent.event_loop_metrics.end_cycle(cycle_start_time, cycle_trace, attributes)
         if cycle_span:
             tracer.end_event_loop_cycle_span(
                 span=cycle_span,
@@ -257,13 +243,13 @@ async def event_loop_cycle(
         # Handle any other exceptions
         yield {"callback": {"force_stop": True, "force_stop_reason": str(e)}}
         logger.exception("cycle failed")
-        raise EventLoopException(e, kwargs["request_state"]) from e
+        raise EventLoopException(e, invocation_state["request_state"]) from e
 
-    yield {"stop": (stop_reason, message, event_loop_metrics, kwargs["request_state"])}
+    yield {"stop": (stop_reason, message, agent.event_loop_metrics, invocation_state["request_state"])}
 
 ```
 
-### `recurse_event_loop(model, system_prompt, messages, tool_config, tool_handler, thread_pool, event_loop_metrics, event_loop_parent_span, kwargs)`
+### `recurse_event_loop(agent, invocation_state)`
 
 Make a recursive call to event_loop_cycle with the current state.
 
@@ -271,7 +257,7 @@ This function is used when the event loop needs to continue processing after too
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Model` | Provider for running model inference | *required* | | `system_prompt` | `Optional[str]` | System prompt instructions for the model | *required* | | `messages` | `Messages` | Conversation history messages | *required* | | `tool_config` | `Optional[ToolConfig]` | Configuration for available tools | *required* | | `tool_handler` | `Optional[ToolHandler]` | Handler for tool execution | *required* | | `thread_pool` | `Optional[ThreadPoolExecutor]` | Optional thread pool for parallel tool execution. | *required* | | `event_loop_metrics` | `EventLoopMetrics` | Metrics tracking object for the event loop. | *required* | | `event_loop_parent_span` | `Optional[Span]` | Span for the parent of this event loop. | *required* | | `kwargs` | `dict[str, Any]` | Arguments to pass through event_loop_cycle | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | Agent for which the recursive call is being made. | *required* | | `invocation_state` | `dict[str, Any]` | Arguments to pass through event_loop_cycle | *required* |
 
 Yields:
 
@@ -280,31 +266,14 @@ Yields:
 Source code in `strands/event_loop/event_loop.py`
 
 ```
-async def recurse_event_loop(
-    model: Model,
-    system_prompt: Optional[str],
-    messages: Messages,
-    tool_config: Optional[ToolConfig],
-    tool_handler: Optional[ToolHandler],
-    thread_pool: Optional[ThreadPoolExecutor],
-    event_loop_metrics: EventLoopMetrics,
-    event_loop_parent_span: Optional[trace.Span],
-    kwargs: dict[str, Any],
-) -> AsyncGenerator[dict[str, Any], None]:
+async def recurse_event_loop(agent: "Agent", invocation_state: dict[str, Any]) -> AsyncGenerator[dict[str, Any], None]:
     """Make a recursive call to event_loop_cycle with the current state.
 
     This function is used when the event loop needs to continue processing after tool execution.
 
     Args:
-        model: Provider for running model inference
-        system_prompt: System prompt instructions for the model
-        messages: Conversation history messages
-        tool_config: Configuration for available tools
-        tool_handler: Handler for tool execution
-        thread_pool: Optional thread pool for parallel tool execution.
-        event_loop_metrics: Metrics tracking object for the event loop.
-        event_loop_parent_span: Span for the parent of this event loop.
-        kwargs: Arguments to pass through event_loop_cycle
+        agent: Agent for which the recursive call is being made.
+        invocation_state: Arguments to pass through event_loop_cycle
 
 
     Yields:
@@ -315,7 +284,7 @@ async def recurse_event_loop(
             - EventLoopMetrics: Updated metrics for the event loop
             - Any: Updated request state
     """
-    cycle_trace = kwargs["event_loop_cycle_trace"]
+    cycle_trace = invocation_state["event_loop_cycle_trace"]
 
     # Recursive call trace
     recursive_trace = Trace("Recursive call", parent_id=cycle_trace.id)
@@ -323,17 +292,7 @@ async def recurse_event_loop(
 
     yield {"callback": {"start": True}}
 
-    events = event_loop_cycle(
-        model=model,
-        system_prompt=system_prompt,
-        messages=messages,
-        tool_config=tool_config,
-        tool_handler=tool_handler,
-        thread_pool=thread_pool,
-        event_loop_metrics=event_loop_metrics,
-        event_loop_parent_span=event_loop_parent_span,
-        kwargs=kwargs,
-    )
+    events = event_loop_cycle(agent=agent, invocation_state=invocation_state)
     async for event in events:
         yield event
 
@@ -341,125 +300,137 @@ async def recurse_event_loop(
 
 ```
 
-## `strands.event_loop.message_processor`
+### `run_tool(agent, tool_use, invocation_state)`
 
-This module provides utilities for processing and manipulating conversation messages within the event loop.
+Process a tool invocation.
 
-It includes functions for cleaning up orphaned tool uses, finding messages with specific content types, and truncating large tool results to prevent context window overflow.
-
-### `clean_orphaned_empty_tool_uses(messages)`
-
-Clean up orphaned empty tool uses in conversation messages.
-
-This function identifies and removes any toolUse entries with empty input that don't have a corresponding toolResult. This prevents validation errors that occur when the model expects matching toolResult blocks for each toolUse.
-
-The function applies fixes by either:
-
-1. Replacing a message containing only an orphaned toolUse with a context message
-1. Removing the orphaned toolUse entry from a message with multiple content items
+Looks up the tool in the registry and streams it with the provided parameters.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `messages` | `Messages` | The conversation message history. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `agent` | `Agent` | The agent for which the tool is being executed. | *required* | | `tool_use` | `ToolUse` | The tool object to process, containing name and parameters. | *required* | | `invocation_state` | `dict[str, Any]` | Context for the tool invocation, including agent state. | *required* |
 
-Returns:
+Yields:
 
-| Type | Description | | --- | --- | | `bool` | True if any fixes were applied, False otherwise. |
+| Type | Description | | --- | --- | | `ToolGenerator` | Tool events with the last being the tool result. |
 
-Source code in `strands/event_loop/message_processor.py`
+Source code in `strands/event_loop/event_loop.py`
 
 ```
-def clean_orphaned_empty_tool_uses(messages: Messages) -> bool:
-    """Clean up orphaned empty tool uses in conversation messages.
+async def run_tool(agent: "Agent", tool_use: ToolUse, invocation_state: dict[str, Any]) -> ToolGenerator:
+    """Process a tool invocation.
 
-    This function identifies and removes any toolUse entries with empty input that don't have a corresponding
-    toolResult. This prevents validation errors that occur when the model expects matching toolResult blocks for each
-    toolUse.
-
-    The function applies fixes by either:
-
-    1. Replacing a message containing only an orphaned toolUse with a context message
-    2. Removing the orphaned toolUse entry from a message with multiple content items
+    Looks up the tool in the registry and streams it with the provided parameters.
 
     Args:
-        messages: The conversation message history.
+        agent: The agent for which the tool is being executed.
+        tool_use: The tool object to process, containing name and parameters.
+        invocation_state: Context for the tool invocation, including agent state.
 
-    Returns:
-        True if any fixes were applied, False otherwise.
+    Yields:
+        Tool events with the last being the tool result.
     """
-    if not messages:
-        return False
+    logger.debug("tool_use=<%s> | streaming", tool_use)
+    tool_name = tool_use["name"]
 
-    # Dictionary to track empty toolUse entries: {tool_id: (msg_index, content_index, tool_name)}
-    empty_tool_uses: Dict[str, Tuple[int, int, str]] = {}
+    # Get the tool info
+    tool_info = agent.tool_registry.dynamic_tools.get(tool_name)
+    tool_func = tool_info if tool_info is not None else agent.tool_registry.registry.get(tool_name)
 
-    # Set to track toolResults that have been seen
-    tool_results: Set[str] = set()
+    # Add standard arguments to invocation_state for Python tools
+    invocation_state.update(
+        {
+            "model": agent.model,
+            "system_prompt": agent.system_prompt,
+            "messages": agent.messages,
+            "tool_config": ToolConfig(  # for backwards compatability
+                tools=[{"toolSpec": tool_spec} for tool_spec in agent.tool_registry.get_all_tool_specs()],
+                toolChoice=cast(ToolChoice, {"auto": ToolChoiceAuto()}),
+            ),
+        }
+    )
 
-    # Identify empty toolUse entries
-    for i, msg in enumerate(messages):
-        if msg.get("role") != "assistant":
-            continue
-
-        for j, content in enumerate(msg.get("content", [])):
-            if isinstance(content, dict) and "toolUse" in content:
-                tool_use = content.get("toolUse", {})
-                tool_id = tool_use.get("toolUseId")
-                tool_input = tool_use.get("input", {})
-                tool_name = tool_use.get("name", "unknown tool")
-
-                # Check if this is an empty toolUse
-                if tool_id and (not tool_input or tool_input == {}):
-                    empty_tool_uses[tool_id] = (i, j, tool_name)
-
-    # Identify toolResults
-    for msg in messages:
-        if msg.get("role") != "user":
-            continue
-
-        for content in msg.get("content", []):
-            if isinstance(content, dict) and "toolResult" in content:
-                tool_result = content.get("toolResult", {})
-                tool_id = tool_result.get("toolUseId")
-                if tool_id:
-                    tool_results.add(tool_id)
-
-    # Filter for orphaned empty toolUses (no corresponding toolResult)
-    orphaned_tool_uses = {tool_id: info for tool_id, info in empty_tool_uses.items() if tool_id not in tool_results}
-
-    # Apply fixes in reverse order of occurrence (to avoid index shifting)
-    if not orphaned_tool_uses:
-        return False
-
-    # Sort by message index and content index in reverse order
-    sorted_orphaned = sorted(orphaned_tool_uses.items(), key=lambda x: (x[1][0], x[1][1]), reverse=True)
-
-    # Apply fixes
-    for tool_id, (msg_idx, content_idx, tool_name) in sorted_orphaned:
-        logger.debug(
-            "tool_name=<%s>, tool_id=<%s>, message_index=<%s>, content_index=<%s> "
-            "fixing orphaned empty tool use at message index",
-            tool_name,
-            tool_id,
-            msg_idx,
-            content_idx,
+    before_event = agent.hooks.invoke_callbacks(
+        BeforeToolInvocationEvent(
+            agent=agent,
+            selected_tool=tool_func,
+            tool_use=tool_use,
+            invocation_state=invocation_state,
         )
-        try:
-            # Check if this is the sole content in the message
-            if len(messages[msg_idx]["content"]) == 1:
-                # Replace with a message indicating the attempted tool
-                messages[msg_idx]["content"] = [{"text": f"[Attempted to use {tool_name}, but operation was canceled]"}]
-                logger.debug("message_index=<%s> | replaced content with context message", msg_idx)
-            else:
-                # Simply remove the orphaned toolUse entry
-                messages[msg_idx]["content"].pop(content_idx)
-                logger.debug(
-                    "message_index=<%s>, content_index=<%s> | removed content item from message", msg_idx, content_idx
-                )
-        except Exception as e:
-            logger.warning("failed to fix orphaned tool use | %s", e)
+    )
 
-    return True
+    try:
+        selected_tool = before_event.selected_tool
+        tool_use = before_event.tool_use
+        invocation_state = before_event.invocation_state  # Get potentially modified invocation_state from hook
+
+        # Check if tool exists
+        if not selected_tool:
+            if tool_func == selected_tool:
+                logger.error(
+                    "tool_name=<%s>, available_tools=<%s> | tool not found in registry",
+                    tool_name,
+                    list(agent.tool_registry.registry.keys()),
+                )
+            else:
+                logger.debug(
+                    "tool_name=<%s>, tool_use_id=<%s> | a hook resulted in a non-existing tool call",
+                    tool_name,
+                    str(tool_use.get("toolUseId")),
+                )
+
+            result: ToolResult = {
+                "toolUseId": str(tool_use.get("toolUseId")),
+                "status": "error",
+                "content": [{"text": f"Unknown tool: {tool_name}"}],
+            }
+            # for every Before event call, we need to have an AfterEvent call
+            after_event = agent.hooks.invoke_callbacks(
+                AfterToolInvocationEvent(
+                    agent=agent,
+                    selected_tool=selected_tool,
+                    tool_use=tool_use,
+                    invocation_state=invocation_state,  # Keep as invocation_state for backward compatibility with hooks
+                    result=result,
+                )
+            )
+            yield after_event.result
+            return
+
+        async for event in selected_tool.stream(tool_use, invocation_state):
+            yield event
+
+        result = event
+
+        after_event = agent.hooks.invoke_callbacks(
+            AfterToolInvocationEvent(
+                agent=agent,
+                selected_tool=selected_tool,
+                tool_use=tool_use,
+                invocation_state=invocation_state,  # Keep as invocation_state for backward compatibility with hooks
+                result=result,
+            )
+        )
+        yield after_event.result
+
+    except Exception as e:
+        logger.exception("tool_name=<%s> | failed to process tool", tool_name)
+        error_result: ToolResult = {
+            "toolUseId": str(tool_use.get("toolUseId")),
+            "status": "error",
+            "content": [{"text": f"Error: {str(e)}"}],
+        }
+        after_event = agent.hooks.invoke_callbacks(
+            AfterToolInvocationEvent(
+                agent=agent,
+                selected_tool=selected_tool,
+                tool_use=tool_use,
+                invocation_state=invocation_state,  # Keep as invocation_state for backward compatibility with hooks
+                result=error_result,
+                exception=e,
+            )
+        )
+        yield after_event.result
 
 ```
 
@@ -733,59 +704,51 @@ def handle_message_stop(event: MessageStopEvent) -> StopReason:
 
 ```
 
-### `handle_redact_content(event, messages, state)`
+### `handle_redact_content(event, state)`
 
 Handles redacting content from the input or output.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `RedactContentEvent` | Redact Content Event. | *required* | | `messages` | `Messages` | Agent messages. | *required* | | `state` | `dict[str, Any]` | The current state of message processing. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `event` | `RedactContentEvent` | Redact Content Event. | *required* | | `state` | `dict[str, Any]` | The current state of message processing. | *required* |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
-def handle_redact_content(event: RedactContentEvent, messages: Messages, state: dict[str, Any]) -> None:
+def handle_redact_content(event: RedactContentEvent, state: dict[str, Any]) -> None:
     """Handles redacting content from the input or output.
 
     Args:
         event: Redact Content Event.
-        messages: Agent messages.
         state: The current state of message processing.
     """
-    if event.get("redactUserContentMessage") is not None:
-        messages[-1]["content"] = [{"text": event["redactUserContentMessage"]}]  # type: ignore
-
     if event.get("redactAssistantContentMessage") is not None:
         state["message"]["content"] = [{"text": event["redactAssistantContentMessage"]}]
 
 ```
 
-### `process_stream(chunks, messages)`
+### `process_stream(chunks)`
 
 Processes the response stream from the API, constructing the final message and extracting usage metrics.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `chunks` | `AsyncIterable[StreamEvent]` | The chunks of the response stream from the model. | *required* | | `messages` | `Messages` | The agents messages. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `chunks` | `AsyncIterable[StreamEvent]` | The chunks of the response stream from the model. | *required* |
 
-Returns:
+Yields:
 
 | Type | Description | | --- | --- | | `AsyncGenerator[dict[str, Any], None]` | The reason for stopping, the constructed message, and the usage metrics. |
 
 Source code in `strands/event_loop/streaming.py`
 
 ```
-async def process_stream(
-    chunks: AsyncIterable[StreamEvent],
-    messages: Messages,
-) -> AsyncGenerator[dict[str, Any], None]:
+async def process_stream(chunks: AsyncIterable[StreamEvent]) -> AsyncGenerator[dict[str, Any], None]:
     """Processes the response stream from the API, constructing the final message and extracting usage metrics.
 
     Args:
         chunks: The chunks of the response stream from the model.
-        messages: The agents messages.
 
-    Returns:
+    Yields:
         The reason for stopping, the constructed message, and the usage metrics.
     """
     stop_reason: StopReason = "end_turn"
@@ -819,7 +782,7 @@ async def process_stream(
         elif "metadata" in chunk:
             usage, metrics = extract_usage_metrics(chunk["metadata"])
         elif "redactContent" in chunk:
-            handle_redact_content(chunk["redactContent"], messages, state)
+            handle_redact_content(chunk["redactContent"], state)
 
     yield {"stop": (stop_reason, state["message"], usage, metrics)}
 
@@ -883,15 +846,15 @@ def remove_blank_messages_content_text(messages: Messages) -> Messages:
 
 ```
 
-### `stream_messages(model, system_prompt, messages, tool_config)`
+### `stream_messages(model, system_prompt, messages, tool_specs)`
 
 Streams messages to the model and processes the response.
 
 Parameters:
 
-| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Model` | Model provider. | *required* | | `system_prompt` | `Optional[str]` | The system prompt to send. | *required* | | `messages` | `Messages` | List of messages to send. | *required* | | `tool_config` | `Optional[ToolConfig]` | Configuration for the tools to use. | *required* |
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `model` | `Model` | Model provider. | *required* | | `system_prompt` | `Optional[str]` | The system prompt to send. | *required* | | `messages` | `Messages` | List of messages to send. | *required* | | `tool_specs` | `list[ToolSpec]` | The list of tool specs. | *required* |
 
-Returns:
+Yields:
 
 | Type | Description | | --- | --- | | `AsyncGenerator[dict[str, Any], None]` | The reason for stopping, the final message, and the usage metrics |
 
@@ -902,7 +865,7 @@ async def stream_messages(
     model: Model,
     system_prompt: Optional[str],
     messages: Messages,
-    tool_config: Optional[ToolConfig],
+    tool_specs: list[ToolSpec],
 ) -> AsyncGenerator[dict[str, Any], None]:
     """Streams messages to the model and processes the response.
 
@@ -910,18 +873,18 @@ async def stream_messages(
         model: Model provider.
         system_prompt: The system prompt to send.
         messages: List of messages to send.
-        tool_config: Configuration for the tools to use.
+        tool_specs: The list of tool specs.
 
-    Returns:
+    Yields:
         The reason for stopping, the final message, and the usage metrics
     """
     logger.debug("model=<%s> | streaming messages", model)
 
     messages = remove_blank_messages_content_text(messages)
-    tool_specs = [tool["toolSpec"] for tool in tool_config.get("tools", [])] or None if tool_config else None
 
-    chunks = model.converse(messages, tool_specs, system_prompt)
-    async for event in process_stream(chunks, messages):
+    chunks = model.stream(messages, tool_specs if tool_specs else None, system_prompt)
+
+    async for event in process_stream(chunks):
         yield event
 
 ```

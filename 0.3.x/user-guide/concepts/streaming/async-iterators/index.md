@@ -1,6 +1,6 @@
 # Async Iterators for Streaming
 
-Strands Agents SDK provides support for asynchronous iterators through the `stream_async` method, enabling real-time streaming of agent responses in asynchronous environments like web servers, APIs, and other async applications.
+Strands Agents SDK provides support for asynchronous iterators through the [`stream_async`](../../../../api-reference/agent/#strands.agent.agent.Agent.stream_async) method, enabling real-time streaming of agent responses in asynchronous environments like web servers, APIs, and other async applications.
 
 > **Note**: If you want to use callbacks instead of async iterators, take a look at the [callback handlers](../callback-handlers/) documentation. Async iterators are ideal for asynchronous frameworks like FastAPI, aiohttp, or Django Channels. For these environments, Strands Agents SDK offers the `stream_async` method which returns an asynchronous iterator.
 
@@ -28,6 +28,8 @@ asyncio.run(process_streaming_response())
 
 ```
 
+> Note, Strands also offers an [`invoke_async`](../../../../api-reference/agent/#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
+
 ## Event Types
 
 The async iterator yields the same event types as [callback handlers](../callback-handlers/#callback-handler-events), including:
@@ -35,7 +37,6 @@ The async iterator yields the same event types as [callback handlers](../callbac
 ### Text Generation Events
 
 - `data`: Text chunk from the model's output
-- `complete`: Boolean indicating if this is the final chunk
 - `delta`: Raw delta content from the model
 
 ### Tool Events
@@ -54,12 +55,14 @@ The async iterator yields the same event types as [callback handlers](../callbac
 - `event`: Raw event from the model stream
 - `force_stop`: True if the event loop was forced to stop
 - `force_stop_reason`: Reason for forced stop
+- `result`: The final [`AgentResult`](../../../../api-reference/agent/#strands.agent.agent_result.AgentResult)
 
 ### Reasoning Events
 
 - `reasoning`: True for reasoning events
 - `reasoningText`: Text from reasoning process
 - `reasoning_signature`: Signature from reasoning process
+- `redactedContent`: Reasoning content redacted by the model
 
 ## FastAPI Example
 

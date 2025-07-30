@@ -1,8 +1,9 @@
 # Python Tools
 
-There are two approaches to defining python-based tools in Strands:
+There are three approaches to defining python-based tools in Strands:
 
 - **Python functions with the [`@tool`](../../../../api-reference/tools/#strands.tools.decorator.tool) decorator**: Transform regular Python functions into tools by adding a simple decorator. This approach leverages Python's docstrings and type hints to automatically generate tool specifications.
+- **Class-based tools with the [`@tool`](../../../../api-reference/tools/#strands.tools.decorator.tool) decorator**: Create tools within classes to maintain state and leverage object-oriented programming patterns.
 - **Python modules following a specific format**: Define tools by creating Python modules that contain a tool specification and a matching function. This approach gives you more control over the tool's definition and is useful for dependency-free implementations of tools.
 
 ## Python Tool Decorators
@@ -91,6 +92,82 @@ def fetch_data(source_id: str) -> dict:
 
 For more details, see the [Tool Response Format](#tool-response-format) section below.
 
+### Async Invocation
+
+Decorated tools may also be defined async. Strands will invoke all async tools concurrently.
+
+```
+import asyncio
+from strands import Agent, tool
+
+
+@tool
+async def call_api() -> str:
+    """Call API asynchronously."""
+
+    await asyncio.sleep(5)  # simulated api call
+    return "API result"
+
+
+async def async_example():
+    agent = Agent(tools=[call_api])
+    await agent.invoke_async("Can you call my API?")
+
+
+asyncio.run(async_example())
+
+```
+
+## Class-Based Tools
+
+Class-based tools allow you to create tools that maintain state and leverage object-oriented programming patterns. This approach is useful when your tools need to share resources, maintain context between invocations, follow object-oriented design principles, customize tools before passing them to an agent, or create different tool configurations for different agents.
+
+### Example with Multiple Tools in a Class
+
+You can define multiple tools within the same class to create a cohesive set of related functionality:
+
+```
+from strands import Agent, tool
+
+class DatabaseTools:
+    def __init__(self, connection_string):
+        self.connection = self._establish_connection(connection_string)
+
+    def _establish_connection(self, connection_string):
+        # Set up database connection
+        return {"connected": True, "db": "example_db"}
+
+    @tool
+    def query_database(self, sql: str) -> dict:
+        """Run a SQL query against the database.
+
+        Args:
+            sql: The SQL query to execute
+        """
+        # Uses the shared connection
+        return {"results": f"Query results for: {sql}", "connection": self.connection}
+
+    @tool
+    def insert_record(self, table: str, data: dict) -> str:
+        """Insert a new record into the database.
+
+        Args:
+            table: The table name
+            data: The data to insert as a dictionary
+        """
+        # Also uses the shared connection
+        return f"Inserted data into {table}: {data}"
+
+# Usage
+db_tools = DatabaseTools("example_connection_string")
+agent = Agent(
+    tools=[db_tools.query_database, db_tools.insert_record]
+)
+
+```
+
+When you use the [`@tool`](../../../../api-reference/tools/#strands.tools.decorator.tool) decorator on a class method, the method becomes bound to the class instance when instantiated. This means the tool function has access to the instance's attributes and can maintain state between invocations.
+
 ## Python Modules as Tools
 
 An alternative approach is to define a tool as a Python module with a specific structure. This enables creating tools that don't depend on the SDK directly.
@@ -174,6 +251,35 @@ from strands import Agent
 agent = Agent(
     tools=["./weather_forecast.py"]
 )
+
+```
+
+### Async Invocation
+
+Similar to decorated tools, users may define their module tools async.
+
+```
+TOOL_SPEC = {
+    "name": "call_api",
+    "description": "Call my API asynchronously.",
+    "inputSchema": {
+        "json": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+    }
+}
+
+async def call_api(tool, **kwargs):
+    await asyncio.sleep(5)  # simulated api call
+    result = "API result"
+
+    return {
+        "toolUseId": tool["toolUseId"],
+        "status": "success",
+        "content": [{"text": result}],
+    }
 
 ```
 

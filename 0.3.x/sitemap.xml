@@ -2,262 +2,298 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://strandsagents.com/latest/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/agent/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/event-loop/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/api-reference/experimental/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/handlers/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/api-reference/hooks/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/models/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/api-reference/multiagent/</loc>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/api-reference/session/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/telemetry/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/tools/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/api-reference/types/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/cdk/deploy_to_ec2/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/cdk/deploy_to_fargate/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/cdk/deploy_to_lambda/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/deploy_to_eks/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/agents_workflows/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/cli-reference-agent/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/file_operations/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/knowledge_base_agent/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/mcp_calculator/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/memory_agent/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/meta_tooling/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/examples/python/multimodal/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/structured_output/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/weather_forecaster/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/multi_agent_example/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/examples/python/multi_agent_example/multi_agent_example/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/quickstart/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/agents/agent-loop/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
-         <loc>https://strandsagents.com/latest/user-guide/concepts/agents/context-management/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <loc>https://strandsagents.com/latest/user-guide/concepts/agents/conversation-management/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/agents/hooks/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/agents/prompts/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
-         <loc>https://strandsagents.com/latest/user-guide/concepts/agents/state-sessions/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <loc>https://strandsagents.com/latest/user-guide/concepts/agents/session-management/</loc>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/user-guide/concepts/agents/state/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/agents/structured-output/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/amazon-bedrock/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/anthropic/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/cohere/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/custom_model_provider/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/litellm/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/llamaapi/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/mistral/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/ollama/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/openai/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/sagemaker/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/model-providers/writer/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/multi-agent/agent-to-agent/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/multi-agent/agents-as-tools/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/multi-agent/graph/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/multi-agent/swarm/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/multi-agent/workflow/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/streaming/async-iterators/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/streaming/callback-handlers/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/tools/example-tools-package/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/tools/mcp-tools/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/tools/python-tools/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/concepts/tools/tools_overview/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/deploy/deploy_to_amazon_ec2/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/deploy/deploy_to_amazon_eks/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/deploy/deploy_to_aws_fargate/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/deploy/deploy_to_aws_lambda/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/user-guide/deploy/deploy_to_bedrock_agentcore/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/deploy/operating-agents-in-production/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/observability-evaluation/evaluation/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/observability-evaluation/logs/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/observability-evaluation/metrics/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/observability-evaluation/observability/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/observability-evaluation/traces/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/safety-security/guardrails/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
+    </url>
+    <url>
+         <loc>https://strandsagents.com/latest/user-guide/safety-security/pii-redaction/</loc>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/safety-security/prompt-engineering/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
     <url>
          <loc>https://strandsagents.com/latest/user-guide/safety-security/responsible-ai/</loc>
-         <lastmod>2025-07-11</lastmod>
+         <lastmod>2025-07-30</lastmod>
     </url>
 </urlset>

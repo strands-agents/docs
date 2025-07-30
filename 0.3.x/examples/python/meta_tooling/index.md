@@ -40,7 +40,7 @@ agent = Agent(
 The system prompt guides the agent in proper tool creation. The [TOOL_BUILDER_SYSTEM_PROMPT](https://github.com/strands-agents/docs/blob/main/docs/examples/python/meta_tooling.py#L17) outlines important elements to enable the agent achieve meta-tooling capabilities:
 
 - **Tool Naming Convention**: Provides the naming convention to use when building new custom tools.
-- **Tool Structure**: Enforces a standardized structure for all tools, making it possible for the agent to generate valid tools based on the `TOOL_SPEC` [provided](https://strandsagents.com/latest/user-guide/concepts/tools/python-tools/#python-modules-as-tools).
+- **Tool Structure**: Enforces a standardized structure for all tools, making it possible for the agent to generate valid tools based on the `TOOL_SPEC` [provided](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/tools/python-tools/#python-modules-as-tools).
 
 ```
 from typing import Any

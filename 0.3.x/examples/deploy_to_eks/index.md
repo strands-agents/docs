@@ -17,7 +17,7 @@ The example deploys a weather forecaster application that runs as a containerize
 - Either:
   - [Podman](https://podman.io/) installed and running
   - (or) [Docker](https://www.docker.com/) installed and running
-- Amazon Bedrock Anthropic Claude 3.7 model enabled in your AWS environment\
+- Amazon Bedrock Anthropic Claude 4 model enabled in your AWS environment\
   You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html)
 
 ## Project Structure
