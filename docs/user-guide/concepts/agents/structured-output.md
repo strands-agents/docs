@@ -80,7 +80,7 @@ print(f"Job: {result.occupation}") # "software engineer"
 
 ### Using Tools and Conversation History
 
-Structured output can work with tools and conversation history, but the agent must be primed with that information before calling the `strucutred_output` function.
+Structured output can work with tools and conversation history, but the agent must be primed with that information before calling the `structured_output` function.
 
 ```python
 from strands import Agent
