@@ -19,6 +19,17 @@ reported the issue. Please try to include as much information as you can. Detail
 * Any modifications you've made relevant to the bug
 * Anything unusual about your environment or deployment
 
+## Finding contributions to work on
+Looking at the existing issues is a great way to find something to contribute to. We label issues that are well-defined and ready for community contributions with the "ready for contribution" label.
+
+Check our "Ready for Contribution" issues for items you can work on:
+- [SDK Python Issues](https://github.com/strands-agents/sdk-python/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22ready%20for%20contribution%22)
+- [Tools Issues](https://github.com/strands-agents/tools/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22ready%20for%20contribution%22)
+
+Before starting work on any issue:
+1. Check if someone is already assigned or working on it
+2. Comment on the issue to express your interest and ask any clarifying questions
+3. Wait for maintainer confirmation before beginning significant work
 
 ## Contributing via Pull Requests
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
