@@ -69,7 +69,7 @@ pip install 'strands-agents-tools[use_computer]'
 #### Web & Network
 - [`http_request`]({{ tools_repo }}/src/strands_tools/http_request.py): Make API calls, fetch web data, and call local HTTP servers
 - [`slack`]({{ tools_repo }}/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
-- [`browser`]({{ tools_repo }}/src/strands_tools/browser.py): Automate web browser interactions
+- [`browser`]({{ tools_repo }}/src/strands_tools/browser/browser.py): Automate web browser interactions
 - [`rss`]({{ tools_repo }}/src/strands_tools/rss.py): Manage and process RSS feeds
 
 #### Multi-modal
