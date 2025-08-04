@@ -29,7 +29,7 @@ agent = Agent()
 def my_callback(event: BeforeInvocationEvent) -> None:
     print("Custom callback triggered")
 
-hooks.add_callback(BeforeInvocationEvent, my_callback)
+agent.hooks.add_callback(BeforeInvocationEvent, my_callback)
 ```
 
 ### Creating a Hook Provider
