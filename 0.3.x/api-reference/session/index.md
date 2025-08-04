@@ -14,15 +14,29 @@ Bases: `RepositorySessionManager`, `SessionRepository`
 
 File-based session manager for local filesystem storage.
 
-Creates the following filesystem structure for the session storage: // └── session\_/ ├── session.json # Session metadata └── agents/ └── agent\_/ ├── agent.json # Agent metadata └── messages/ ├── message\_.json └── message\_.json
+Creates the following filesystem structure for the session storage:
+
+```
+/<sessions_dir>/
+└── session_<session_id>/
+    ├── session.json                # Session metadata
+    └── agents/
+        └── agent_<agent_id>/
+            ├── agent.json          # Agent metadata
+            └── messages/
+                ├── message_<id1>.json
+                └── message_<id2>.json
+
+```
 
 Source code in `strands/session/file_session_manager.py`
 
-```
+````
 class FileSessionManager(RepositorySessionManager, SessionRepository):
     """File-based session manager for local filesystem storage.
 
     Creates the following filesystem structure for the session storage:
+    ```bash
     /<sessions_dir>/
     └── session_<session_id>/
         ├── session.json                # Session metadata
@@ -32,7 +46,7 @@ class FileSessionManager(RepositorySessionManager, SessionRepository):
                 └── messages/
                     ├── message_<id1>.json
                     └── message_<id2>.json
-
+    ```
     """
 
     def __init__(self, session_id: str, storage_dir: Optional[str] = None, **kwargs: Any):
@@ -214,7 +228,7 @@ class FileSessionManager(RepositorySessionManager, SessionRepository):
 
         return messages
 
-```
+````
 
 #### `__init__(session_id, storage_dir=None, **kwargs)`
 
@@ -811,15 +825,29 @@ Bases: `RepositorySessionManager`, `SessionRepository`
 
 S3-based session manager for cloud storage.
 
-Creates the following filesystem structure for the session storage: // └── session\_/ ├── session.json # Session metadata └── agents/ └── agent\_/ ├── agent.json # Agent metadata └── messages/ ├── message\_.json └── message\_.json
+Creates the following filesystem structure for the session storage:
+
+```
+/<sessions_dir>/
+└── session_<session_id>/
+    ├── session.json                # Session metadata
+    └── agents/
+        └── agent_<agent_id>/
+            ├── agent.json          # Agent metadata
+            └── messages/
+                ├── message_<id1>.json
+                └── message_<id2>.json
+
+```
 
 Source code in `strands/session/s3_session_manager.py`
 
-```
+````
 class S3SessionManager(RepositorySessionManager, SessionRepository):
     """S3-based session manager for cloud storage.
 
     Creates the following filesystem structure for the session storage:
+    ```bash
     /<sessions_dir>/
     └── session_<session_id>/
         ├── session.json                # Session metadata
@@ -829,7 +857,7 @@ class S3SessionManager(RepositorySessionManager, SessionRepository):
                 └── messages/
                     ├── message_<id1>.json
                     └── message_<id2>.json
-
+    ```
     """
 
     def __init__(
@@ -1066,7 +1094,7 @@ class S3SessionManager(RepositorySessionManager, SessionRepository):
         except ClientError as e:
             raise SessionException(f"S3 error reading messages: {e}") from e
 
-```
+````
 
 #### `__init__(session_id, bucket, prefix='', boto_session=None, boto_client_config=None, region_name=None, **kwargs)`
 

@@ -194,3 +194,15 @@ This recursive nature allows for complex workflows like:
 ### 7. Completion
 
 The loop completes when the model generates a final text response or an exception occurs that cannot be handled. At completion, metrics and traces are collected, conversation state is updated, and the final response is returned to the caller.
+
+## Troubleshooting
+
+### MaxTokensReachedException
+
+This exception indicates that the agent has reached an unrecoverable state because the `max_tokens` stop reason was returned from the model provider. When this occurs, the agent cannot continue processing and the loop terminates.
+
+**Common causes and solutions:**
+
+1. **Increase token limits**: If you have explicitly set a `max_tokens` limit in your model configuration, consider raising it to allow for longer responses.
+1. **Audit your tool specifications**: A frequent cause of this exception is tool specifications that prompt the model to return excessively large `toolUse` responses. Review your tools for large JSON schemas, tool specs with many fields or deeply nested structures can consume significant tokens. Also, consider long string requirements which may bloat the output (e.g., "provide a string that is 101k characters long").
+1. **Optimize tool design**: Consider breaking down complex tools into smaller, more focused tools, or simplifying tool input/output schemas to reduce token consumption.

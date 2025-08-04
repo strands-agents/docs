@@ -98,7 +98,7 @@ Some tools require additional dependencies. Install the additional required depe
 
 - [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py): Make API calls, fetch web data, and call local HTTP servers
 - [`slack`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
-- [`browser`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/browser.py): Automate web browser interactions
+- [`browser`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/browser/browser.py): Automate web browser interactions
 - [`rss`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/rss.py): Manage and process RSS feeds
 
 #### Multi-modal

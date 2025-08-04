@@ -524,6 +524,60 @@ class MCPClientInitializationError(Exception):
 
 ```
 
+### `MaxTokensReachedException`
+
+Bases: `Exception`
+
+Exception raised when the model reaches its maximum token generation limit.
+
+This exception is raised when the model stops generating tokens because it has reached the maximum number of tokens allowed for output generation. This can occur when the model's max_tokens parameter is set too low for the complexity of the response, or when the model naturally reaches its configured output limit during generation.
+
+Source code in `strands/types/exceptions.py`
+
+```
+class MaxTokensReachedException(Exception):
+    """Exception raised when the model reaches its maximum token generation limit.
+
+    This exception is raised when the model stops generating tokens because it has reached the maximum number of
+    tokens allowed for output generation. This can occur when the model's max_tokens parameter is set too low for
+    the complexity of the response, or when the model naturally reaches its configured output limit during generation.
+    """
+
+    def __init__(self, message: str, incomplete_message: Message):
+        """Initialize the exception with an error message and the incomplete message object.
+
+        Args:
+            message: The error message describing the token limit issue
+            incomplete_message: The valid Message object with incomplete content due to token limits
+        """
+        self.incomplete_message = incomplete_message
+        super().__init__(message)
+
+```
+
+#### `__init__(message, incomplete_message)`
+
+Initialize the exception with an error message and the incomplete message object.
+
+Parameters:
+
+| Name | Type | Description | Default | | --- | --- | --- | --- | | `message` | `str` | The error message describing the token limit issue | *required* | | `incomplete_message` | `Message` | The valid Message object with incomplete content due to token limits | *required* |
+
+Source code in `strands/types/exceptions.py`
+
+```
+def __init__(self, message: str, incomplete_message: Message):
+    """Initialize the exception with an error message and the incomplete message object.
+
+    Args:
+        message: The error message describing the token limit issue
+        incomplete_message: The valid Message object with incomplete content due to token limits
+    """
+    self.incomplete_message = incomplete_message
+    super().__init__(message)
+
+```
+
 ### `ModelThrottledException`
 
 Bases: `Exception`

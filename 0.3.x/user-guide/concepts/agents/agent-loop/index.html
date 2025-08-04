@@ -736,6 +736,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maxtokensreachedexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      MaxTokensReachedException
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2931,6 +2955,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maxtokensreachedexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      MaxTokensReachedException
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3099,6 +3147,21 @@
 </ol>
 <h3 id="7-completion">7. Completion<a class="headerlink" href="#7-completion" title="Permanent link">&para;</a></h3>
 <p>The loop completes when the model generates a final text response or an exception occurs that cannot be handled. At completion, metrics and traces are collected, conversation state is updated, and the final response is returned to the caller.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="maxtokensreachedexception">MaxTokensReachedException<a class="headerlink" href="#maxtokensreachedexception" title="Permanent link">&para;</a></h3>
+<p>This exception indicates that the agent has reached an unrecoverable state because the <code>max_tokens</code> stop reason was returned from the model provider. When this occurs, the agent cannot continue processing and the loop terminates.</p>
+<p><strong>Common causes and solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Increase token limits</strong>: If you have explicitly set a <code>max_tokens</code> limit in your model configuration, consider raising it to allow for longer responses.</p>
+</li>
+<li>
+<p><strong>Audit your tool specifications</strong>: A frequent cause of this exception is tool specifications that prompt the model to return excessively large <code>toolUse</code> responses. Review your tools for large JSON schemas, tool specs with many fields or deeply nested structures can consume significant tokens. Also, consider long string requirements which may bloat the output (e.g., "provide a string that is 101k characters long").</p>
+</li>
+<li>
+<p><strong>Optimize tool design</strong>: Consider breaking down complex tools into smaller, more focused tools, or simplifying tool input/output schemas to reduce token consumption.</p>
+</li>
+</ol>
 
 
 

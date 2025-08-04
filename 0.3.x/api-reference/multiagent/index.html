@@ -8914,7 +8914,7 @@ and converts Strands Agent responses to A2A protocol events.</p>
             <span class="n">task</span> <span class="o">=</span> <span class="n">new_task</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
             <span class="k">await</span> <span class="n">event_queue</span><span class="o">.</span><span class="n">enqueue_event</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
-        <span class="n">updater</span> <span class="o">=</span> <span class="n">TaskUpdater</span><span class="p">(</span><span class="n">event_queue</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">contextId</span><span class="p">)</span>
+        <span class="n">updater</span> <span class="o">=</span> <span class="n">TaskUpdater</span><span class="p">(</span><span class="n">event_queue</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">context_id</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_streaming</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">updater</span><span class="p">)</span>
@@ -9354,7 +9354,7 @@ and converts the agent's response to A2A events.</p>
         <span class="n">task</span> <span class="o">=</span> <span class="n">new_task</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">await</span> <span class="n">event_queue</span><span class="o">.</span><span class="n">enqueue_event</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
-    <span class="n">updater</span> <span class="o">=</span> <span class="n">TaskUpdater</span><span class="p">(</span><span class="n">event_queue</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">contextId</span><span class="p">)</span>
+    <span class="n">updater</span> <span class="o">=</span> <span class="n">TaskUpdater</span><span class="p">(</span><span class="n">event_queue</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">task</span><span class="o">.</span><span class="n">context_id</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_streaming</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">updater</span><span class="p">)</span>

@@ -152,7 +152,7 @@ from strands.models import AnthropicModel
 
 # Create a cheaper, faster model for summarization tasks
 summarization_model = AnthropicModel(
-    model_id="claude-haiku-4-20250514",  # More cost-effective for summarization
+    model_id="claude-3-5-haiku-20241022",  # More cost-effective for summarization
     max_tokens=1000,
     params={"temperature": 0.1}  # Low temperature for consistent summaries
 )

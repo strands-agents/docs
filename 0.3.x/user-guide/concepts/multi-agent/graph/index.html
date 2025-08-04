@@ -1511,6 +1511,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#custom-node-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Node Types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#multi-modal-input-support" class="md-nav__link">
     <span class="md-ellipsis">
       Multi-Modal Input Support
@@ -2926,6 +2935,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#custom-node-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Node Types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#multi-modal-input-support" class="md-nav__link">
     <span class="md-ellipsis">
       Multi-Modal Input Support
@@ -3041,19 +3059,20 @@
 
 
 <h1 id="graph-multi-agent-pattern">Graph Multi-Agent Pattern<a class="headerlink" href="#graph-multi-agent-pattern" title="Permanent link">&para;</a></h1>
-<p>A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents or other multi-agent systems (like <a href="../swarm/">Swarm</a> or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.</p>
+<p>A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents, custom nodes, or other multi-agent systems (like <a href="../swarm/">Swarm</a> or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.</p>
 <ul>
 <li><strong>Deterministic execution order</strong> based on DAG structure</li>
 <li><strong>Output propagation</strong> along edges between nodes</li>
 <li><strong>Clear dependency management</strong> between agents</li>
 <li><strong>Supports nested patterns</strong> (Graph as a node in another Graph)</li>
+<li><strong>Custom node types</strong> for deterministic business logic and hybrid workflows</li>
 <li><strong>Conditional edge traversal</strong> for dynamic workflows</li>
 <li><strong>Multi-modal input support</strong> for handling text, images, and other content types</li>
 </ul>
 <h2 id="how-graphs-work">How Graphs Work<a class="headerlink" href="#how-graphs-work" title="Permanent link">&para;</a></h2>
 <p>The Graph pattern operates on the principle of structured, deterministic workflows where:</p>
 <ol>
-<li>Nodes represent agents or multi-agent systems</li>
+<li>Nodes represent agents, custom nodes, or multi-agent systems</li>
 <li>Edges define dependencies and information flow between nodes</li>
 <li>Execution follows a topological sort of the graph</li>
 <li>Output from one node becomes input for dependent nodes</li>
@@ -3181,6 +3200,53 @@
 <span class="c1"># Access the results</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="custom-node-types">Custom Node Types<a class="headerlink" href="#custom-node-types" title="Permanent link">&para;</a></h2>
+<p>You can create custom node types by extending <a href="../../../../api-reference/multiagent/#strands.multiagent.base.MultiAgentBase"><code>MultiAgentBase</code></a> to implement deterministic business logic, data processing pipelines, and hybrid workflows.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands.multiagent.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiAgentBase</span><span class="p">,</span> <span class="n">NodeResult</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">MultiAgentResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.agent.agent_result</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strands.types.content</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContentBlock</span><span class="p">,</span> <span class="n">Message</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionNode</span><span class="p">(</span><span class="n">MultiAgentBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute deterministic Python functions as graph nodes.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">invoke_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Execute function and create AgentResult</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">task</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
+
+        <span class="n">agent_result</span> <span class="o">=</span> <span class="n">AgentResult</span><span class="p">(</span>
+            <span class="n">stop_reason</span><span class="o">=</span><span class="s2">&quot;end_turn&quot;</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="n">Message</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="p">[</span><span class="n">ContentBlock</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">))]),</span>
+            <span class="c1"># ... metrics and state</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Return wrapped in MultiAgentResult</span>
+        <span class="k">return</span> <span class="n">MultiAgentResult</span><span class="p">(</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">,</span>
+            <span class="n">results</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">NodeResult</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">agent_result</span><span class="p">,</span> <span class="o">...</span><span class="p">)},</span>
+            <span class="c1"># ... execution details</span>
+        <span class="p">)</span>
+
+<span class="c1"># Usage example</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Empty input&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;✅ Validated: </span><span class="si">{</span><span class="n">data</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span>
+
+<span class="n">validator</span> <span class="o">=</span> <span class="n">FunctionNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">validate_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;validator&quot;</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">validator</span><span class="p">,</span> <span class="s2">&quot;validator&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Custom nodes enable:</p>
+<ul>
+<li><strong>Deterministic processing</strong>: Guaranteed execution for business logic</li>
+<li><strong>Performance optimization</strong>: Skip LLM calls for deterministic operations  </li>
+<li><strong>Hybrid workflows</strong>: Combine AI creativity with deterministic control</li>
+<li><strong>Business rules</strong>: Implement complex business logic as graph nodes</li>
+</ul>
 <h2 id="multi-modal-input-support">Multi-Modal Input Support<a class="headerlink" href="#multi-modal-input-support" title="Permanent link">&para;</a></h2>
 <p>Graphs support multi-modal inputs like text and images using <a href="../../../../api-reference/types/#strands.types.content.ContentBlock"><code>ContentBlocks</code></a>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
@@ -3355,6 +3421,7 @@ From [another_node_id]:
 <li><strong>Consider parallelism</strong>: Independent branches can execute concurrently</li>
 <li><strong>Nest multi-agent patterns</strong>: Use Swarms within Graphs for complex workflows</li>
 <li><strong>Leverage multi-modal inputs</strong>: Use ContentBlocks for rich inputs including images</li>
+<li><strong>Create custom nodes for deterministic logic</strong>: Use <code>MultiAgentBase</code> for business rules and data processing</li>
 </ol>
 
 

@@ -188,6 +188,22 @@ async def event_loop_cycle(agent: "Agent", invocation_state: dict[str, Any]) -> 
                     raise e
 
     try:
+        if stop_reason == "max_tokens":
+            """
+            Handle max_tokens limit reached by the model.
+
+            When the model reaches its maximum token limit, this represents a potentially unrecoverable
+            state where the model's response was truncated. By default, Strands fails hard with an
+            MaxTokensReachedException to maintain consistency with other failure types.
+            """
+            raise MaxTokensReachedException(
+                message=(
+                    "Agent has reached an unrecoverable state due to max_tokens limit. "
+                    "For more information see: "
+                    "https://strandsagents.com/latest/user-guide/concepts/agents/agent-loop/#maxtokensreachedexception"
+                ),
+                incomplete_message=message,
+            )
         # Add message in trace and mark the end of the stream messages trace
         stream_trace.add_message(message)
         stream_trace.end()
@@ -232,7 +248,8 @@ async def event_loop_cycle(agent: "Agent", invocation_state: dict[str, Any]) -> 
         # Don't yield or log the exception - we already did it when we
         # raised the exception and we don't need that duplication.
         raise
-    except ContextWindowOverflowException as e:
+    except (ContextWindowOverflowException, MaxTokensReachedException) as e:
+        # Special cased exceptions which we want to bubble up rather than get wrapped in an EventLoopException
         if cycle_span:
             tracer.end_span_with_error(cycle_span, str(e), e)
         raise e

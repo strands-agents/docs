@@ -1,11 +1,12 @@
 # Graph Multi-Agent Pattern
 
-A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents or other multi-agent systems (like [Swarm](../swarm/) or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.
+A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents, custom nodes, or other multi-agent systems (like [Swarm](../swarm/) or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.
 
 - **Deterministic execution order** based on DAG structure
 - **Output propagation** along edges between nodes
 - **Clear dependency management** between agents
 - **Supports nested patterns** (Graph as a node in another Graph)
+- **Custom node types** for deterministic business logic and hybrid workflows
 - **Conditional edge traversal** for dynamic workflows
 - **Multi-modal input support** for handling text, images, and other content types
 
@@ -13,7 +14,7 @@ A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestratio
 
 The Graph pattern operates on the principle of structured, deterministic workflows where:
 
-1. Nodes represent agents or multi-agent systems
+1. Nodes represent agents, custom nodes, or multi-agent systems
 1. Edges define dependencies and information flow between nodes
 1. Execution follows a topological sort of the graph
 1. Output from one node becomes input for dependent nodes
@@ -162,6 +163,58 @@ result = graph("Research the impact of AI on healthcare and create a comprehensi
 print(f"\n{result}")
 
 ```
+
+## Custom Node Types
+
+You can create custom node types by extending [`MultiAgentBase`](../../../../api-reference/multiagent/#strands.multiagent.base.MultiAgentBase) to implement deterministic business logic, data processing pipelines, and hybrid workflows.
+
+```
+from strands.multiagent.base import MultiAgentBase, NodeResult, Status, MultiAgentResult
+from strands.agent.agent_result import AgentResult
+from strands.types.content import ContentBlock, Message
+
+class FunctionNode(MultiAgentBase):
+    """Execute deterministic Python functions as graph nodes."""
+
+    def __init__(self, func, name: str = None):
+        super().__init__()
+        self.func = func
+        self.name = name or func.__name__
+
+    async def invoke_async(self, task, **kwargs):
+        # Execute function and create AgentResult
+        result = self.func(task if isinstance(task, str) else str(task))
+
+        agent_result = AgentResult(
+            stop_reason="end_turn",
+            message=Message(role="assistant", content=[ContentBlock(text=str(result))]),
+            # ... metrics and state
+        )
+
+        # Return wrapped in MultiAgentResult
+        return MultiAgentResult(
+            status=Status.COMPLETED,
+            results={self.name: NodeResult(result=agent_result, ...)},
+            # ... execution details
+        )
+
+# Usage example
+def validate_data(data):
+    if not data.strip():
+        raise ValueError("Empty input")
+    return f"✅ Validated: {data[:50]}..."
+
+validator = FunctionNode(func=validate_data, name="validator")
+builder.add_node(validator, "validator")
+
+```
+
+Custom nodes enable:
+
+- **Deterministic processing**: Guaranteed execution for business logic
+- **Performance optimization**: Skip LLM calls for deterministic operations
+- **Hybrid workflows**: Combine AI creativity with deterministic control
+- **Business rules**: Implement complex business logic as graph nodes
 
 ## Multi-Modal Input Support
 
@@ -385,3 +438,4 @@ builder.add_edge("business_specialist", "business_report")
 1. **Consider parallelism**: Independent branches can execute concurrently
 1. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
 1. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
+1. **Create custom nodes for deterministic logic**: Use `MultiAgentBase` for business rules and data processing

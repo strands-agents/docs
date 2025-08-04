@@ -863,7 +863,7 @@ class BedrockModel(Model):
         stop_reason, messages, _, _ = event["stop"]
 
         if stop_reason != "tool_use":
-            raise ValueError(f"Model returned stop_reason: {stop_reason} instead of \"tool_use\".")
+            raise ValueError(f'Model returned stop_reason: {stop_reason} instead of "tool_use".')
 
         content = messages["content"]
         output_response: dict[str, Any] | None = None
@@ -1237,7 +1237,7 @@ async def structured_output(
     stop_reason, messages, _, _ = event["stop"]
 
     if stop_reason != "tool_use":
-        raise ValueError(f"Model returned stop_reason: {stop_reason} instead of \"tool_use\".")
+        raise ValueError(f'Model returned stop_reason: {stop_reason} instead of "tool_use".')
 
     content = messages["content"]
     output_response: dict[str, Any] | None = None
@@ -1681,7 +1681,7 @@ class AnthropicModel(Model):
         stop_reason, messages, _, _ = event["stop"]
 
         if stop_reason != "tool_use":
-            raise ValueError(f"Model returned stop_reason: {stop_reason} instead of \"tool_use\".")
+            raise ValueError(f'Model returned stop_reason: {stop_reason} instead of "tool_use".')
 
         content = messages["content"]
         output_response: dict[str, Any] | None = None
@@ -2082,7 +2082,7 @@ async def structured_output(
     stop_reason, messages, _, _ = event["stop"]
 
     if stop_reason != "tool_use":
-        raise ValueError(f"Model returned stop_reason: {stop_reason} instead of \"tool_use\".")
+        raise ValueError(f'Model returned stop_reason: {stop_reason} instead of "tool_use".')
 
     content = messages["content"]
     output_response: dict[str, Any] | None = None
