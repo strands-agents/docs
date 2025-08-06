@@ -21,6 +21,9 @@ Learn more about the A2A protocol:
 - [A2A Python SDK](https://github.com/a2aproject/a2a-python)
 - [A2A Documentation](https://a2aproject.github.io/A2A/latest/)
 
+!!! tip "Complete Examples Available"
+    Check out the [Native A2A Support samples](https://github.com/strands-agents/samples/tree/main/03-integrations/Native-A2A-Support) for complete, ready-to-run client, server and tool implementations.
+
 ## Installation
 
 To use A2A functionality with Strands, install the package with the A2A extra:
@@ -145,25 +148,24 @@ Here's how to create a client that communicates with an A2A server synchronously
 ```python
 import asyncio
 import logging
-from typing import Any
 from uuid import uuid4
+
 import httpx
-from a2a.client import A2ACardResolver, A2AClient
-from a2a.types import MessageSendParams, SendMessageRequest
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
+from a2a.types import Message, Part, Role, TextPart
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DEFAULT_TIMEOUT = 300 # set request timeout to 5 minutes
 
-def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
-    return {
-        "message": {
-            "role": role,
-            "parts": [{"kind": "text", "text": text}],
-            "messageId": uuid4().hex,
-        },
-    }
+def create_message(*, role: Role = Role.user, text: str) -> Message:
+    return Message(
+        kind="message",
+        role=role,
+        parts=[Part(TextPart(kind="text", text=text))],
+        message_id=uuid4().hex,
+    )
 
 async def send_sync_message(message: str, base_url: str = "http://localhost:9000"):
     async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
@@ -171,16 +173,33 @@ async def send_sync_message(message: str, base_url: str = "http://localhost:9000
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
         agent_card = await resolver.get_agent_card()
 
-        # Create client
-        client = A2AClient(httpx_client=httpx_client, agent_card=agent_card)
+        # Create client using factory
+        config = ClientConfig(
+            httpx_client=httpx_client,
+            streaming=False,  # Use non-streaming mode for sync response
+        )
+        factory = ClientFactory(config)
+        client = factory.create(agent_card)
 
-        # Send message
-        payload = create_message_payload(text=message)
-        request = SendMessageRequest(id=str(uuid4()), params=MessageSendParams(**payload))
+        # Create and send message
+        msg = create_message(text=message)
 
-        response = await client.send_message(request)
-        logger.info(response.model_dump_json(exclude_none=True, indent=2))
-        return response
+        # With streaming=False, this will yield exactly one result
+        async for event in client.send_message(msg):
+            if isinstance(event, Message):
+                logger.info(event.model_dump_json(exclude_none=True, indent=2))
+                return event
+            elif isinstance(event, tuple) and len(event) == 2:
+                # (Task, UpdateEvent) tuple
+                task, update_event = event
+                logger.info(f"Task: {task.model_dump_json(exclude_none=True, indent=2)}")
+                if update_event:
+                    logger.info(f"Update: {update_event.model_dump_json(exclude_none=True, indent=2)}")
+                return task
+            else:
+                # Fallback for other response types
+                logger.info(f"Response: {str(event)}")
+                return event
 
 # Usage
 asyncio.run(send_sync_message("what is 101 * 11"))
@@ -193,25 +212,24 @@ For streaming responses, use the streaming client:
 ```python
 import asyncio
 import logging
-from typing import Any
 from uuid import uuid4
+
 import httpx
-from a2a.client import A2ACardResolver, A2AClient
-from a2a.types import MessageSendParams, SendStreamingMessageRequest
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
+from a2a.types import Message, Part, Role, TextPart
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DEFAULT_TIMEOUT = 300 # set request timeout to 5 minutes
 
-def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
-    return {
-        "message": {
-            "role": role,
-            "parts": [{"kind": "text", "text": text}],
-            "messageId": uuid4().hex,
-        },
-    }
+def create_message(*, role: Role = Role.user, text: str) -> Message:
+    return Message(
+        kind="message",
+        role=role,
+        parts=[Part(TextPart(kind="text", text=text))],
+        message_id=uuid4().hex,
+    )
 
 async def send_streaming_message(message: str, base_url: str = "http://localhost:9000"):
     async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
@@ -219,15 +237,29 @@ async def send_streaming_message(message: str, base_url: str = "http://localhost
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
         agent_card = await resolver.get_agent_card()
 
-        # Create client
-        client = A2AClient(httpx_client=httpx_client, agent_card=agent_card)
+        # Create client using factory
+        config = ClientConfig(
+            httpx_client=httpx_client,
+            streaming=True,  # Use streaming mode
+        )
+        factory = ClientFactory(config)
+        client = factory.create(agent_card)
 
-        # Send streaming message
-        payload = create_message_payload(text=message)
-        request = SendStreamingMessageRequest(id=str(uuid4()), params=MessageSendParams(**payload))
+        # Create and send message
+        msg = create_message(text=message)
 
-        async for event in client.send_message_streaming(request):
-            logger.info(event.model_dump_json(exclude_none=True, indent=2))
+        async for event in client.send_message(msg):
+            if isinstance(event, Message):
+                logger.info(event.model_dump_json(exclude_none=True, indent=2))
+            elif isinstance(event, tuple) and len(event) == 2:
+                # (Task, UpdateEvent) tuple
+                task, update_event = event
+                logger.info(f"Task: {task.model_dump_json(exclude_none=True, indent=2)}")
+                if update_event:
+                    logger.info(f"Update: {update_event.model_dump_json(exclude_none=True, indent=2)}")
+            else:
+                # Fallback for other response types
+                logger.info(f"Response: {str(event)}")
 
 # Usage
 asyncio.run(send_streaming_message("what is 101 * 11"))
