@@ -51,7 +51,7 @@ if response.stop_reason == "guardrail_intervened":
 print(f"Conversation: {json.dumps(agent.messages, indent=4)}")
 ```
 
-Alternatively, if you want to implement your own soft-launching guardrails, you can utilize Hooks along with Bedrock's ApplyGuardrail API in shadow mode. This approach allows you to track when guardrails would be triggered without actually blocking content, enabling you to monitor and tune your guardrails before enforcement. Keep in mind that Hooks is still under preview and may change.
+Alternatively, if you want to implement your own soft-launching guardrails, you can utilize Hooks along with Bedrock's ApplyGuardrail API in shadow mode. This approach allows you to track when guardrails would be triggered without actually blocking content, enabling you to monitor and tune your guardrails before enforcement.
 
 Steps:
 1. Create a NotifyOnlyGuardrailsHook class that contains hooks
@@ -63,8 +63,7 @@ Below is a full example of implementing notify-only guardrails using Hooks:
 ````python
 import boto3
 from strands import Agent
-from strands.hooks import HookProvider, HookRegistry
-from strands.hooks import MessageAddedEvent, AfterInvocationEvent
+from strands.hooks import HookProvider, HookRegistry, MessageAddedEvent, AfterInvocationEvent
 
 class NotifyOnlyGuardrailsHook(HookProvider):
     def __init__(self, guardrail_id: str, guardrail_version: str):
