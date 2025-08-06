@@ -62,7 +62,6 @@ Below is a full example of implementing notify-only guardrails using Hooks:
 
 ````python
 import boto3
-import threading
 from strands import Agent
 from strands.hooks import HookProvider, HookRegistry
 from strands.hooks import MessageAddedEvent, AfterInvocationEvent
@@ -114,8 +113,7 @@ class NotifyOnlyGuardrailsHook(HookProvider):
             assistant_message = event.agent.messages[-1]
             content = "".join(block.get("text", "") for block in assistant_message.get("content", []))
             if content:
-                # Delay guardrail check to ensure response is fully printed, modify if needed 
-                threading.Timer(0.1, lambda: self.evaluate_content(content, "OUTPUT")).start()
+                self.evaluate_content(content, "OUTPUT")
 
 # Create agent with custom hooks
 agent = Agent(
