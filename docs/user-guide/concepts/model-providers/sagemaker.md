@@ -9,7 +9,7 @@ For example, you can expose models like [Mistral-Small-24B-Instruct-2501](https:
 SageMaker is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install 'strands-agents[sagemaker]'
+pip install 'strands-agents[sagemaker]' strands-agents-tools
 ```
 
 ## Usage

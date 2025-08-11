@@ -7,7 +7,7 @@
 LiteLLM is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install 'strands-agents[litellm]'
+pip install 'strands-agents[litellm]' strands-agents-tools
 ```
 
 ## Usage

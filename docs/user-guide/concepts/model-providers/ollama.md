@@ -16,7 +16,7 @@ The [`OllamaModel`](../../../api-reference/models.md#strands.models.ollama) clas
 
 First install the python client into your python environment:
 ```bash
-pip install 'strands-agents[ollama]'
+pip install 'strands-agents[ollama]' strands-agents-tools
 ```
 
 Next, you'll need to install and setup ollama itself.

@@ -7,7 +7,7 @@
 Writer is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install 'strands-agents[writer]'
+pip install 'strands-agents[writer]' strands-agents-tools
 ```
 
 ## Usage

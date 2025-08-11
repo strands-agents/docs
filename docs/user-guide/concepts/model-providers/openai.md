@@ -7,7 +7,7 @@
 OpenAI is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install 'strands-agents[openai]'
+pip install 'strands-agents[openai]' strands-agents-tools
 ```
 
 ## Usage

@@ -7,7 +7,7 @@
 Anthropic is configured as an optional dependency in Strands. To install, run:
 
 ```bash
-pip install 'strands-agents[anthropic]'
+pip install 'strands-agents[anthropic]' strands-agents-tools
 ```
 
 ## Usage
