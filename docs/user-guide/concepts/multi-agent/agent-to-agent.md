@@ -70,12 +70,16 @@ a2a_server.serve()
 The `A2AServer` constructor accepts several configuration options:
 
 - `agent`: The Strands Agent to wrap with A2A compatibility
-- `host`: Hostname or IP address to bind to (default: "0.0.0.0")
+- `host`: Hostname or IP address to bind to (default: "127.0.0.1")
 - `port`: Port to bind to (default: 9000)
 - `version`: Version of the agent (default: "0.0.1")
 - `skills`: Custom list of agent skills (default: auto-generated from tools)
 - `http_url`: Public HTTP URL where this agent will be accessible (optional, enables path-based mounting)
 - `serve_at_root`: Forces server to serve at root path regardless of http_url path (default: False)
+- `task_store`: Custom task storage implementation (defaults to InMemoryTaskStore)
+- `queue_manager`: Custom message queue management (optional)
+- `push_config_store`: Custom push notification configuration storage (optional)
+- `push_sender`: Custom push notification sender implementation (optional)
 
 ### Advanced Server Customization
 
@@ -100,8 +104,49 @@ starlette_app = a2a_server.to_starlette_app()
 # Customize as needed
 
 # You can then serve the customized app directly
-uvicorn.run(fastapi_app, host="0.0.0.0", port=9000)
+uvicorn.run(fastapi_app, host="127.0.0.1", port=9000)
 ```
+
+#### Configurable Request Handler Components
+
+The `A2AServer` supports configurable request handler components for advanced customization:
+
+```python
+from strands import Agent
+from strands.multiagent.a2a import A2AServer
+from a2a.server.tasks import TaskStore, PushNotificationConfigStore, PushNotificationSender
+from a2a.server.events import QueueManager
+
+# Custom task storage implementation
+class CustomTaskStore(TaskStore):
+    # Implementation details...
+    pass
+
+# Custom queue manager
+class CustomQueueManager(QueueManager):
+    # Implementation details...
+    pass
+
+# Create agent with custom components
+agent = Agent(name="My Agent", description="A customizable agent", callback_handler=None)
+
+a2a_server = A2AServer(
+    agent=agent,
+    task_store=CustomTaskStore(),
+    queue_manager=CustomQueueManager(),
+    push_config_store=MyPushConfigStore(),
+    push_sender=MyPushSender()
+)
+```
+
+**Interface Requirements:**
+
+Custom implementations must follow these interfaces:
+
+- `task_store`: Must implement `TaskStore` interface from `a2a.server.tasks`
+- `queue_manager`: Must implement `QueueManager` interface from `a2a.server.events`
+- `push_config_store`: Must implement `PushNotificationConfigStore` interface from `a2a.server.tasks`
+- `push_sender`: Must implement `PushNotificationSender` interface from `a2a.server.tasks`
 
 #### Path-Based Mounting for Containerized Deployments
 
@@ -138,6 +183,7 @@ This flexibility allows you to:
 - Add custom middleware
 - Implement additional API endpoints
 - Deploy agents behind load balancers with different path prefixes
+- Configure custom task storage and event handling components
 
 ## A2A Client Examples
 
@@ -167,7 +213,7 @@ def create_message(*, role: Role = Role.user, text: str) -> Message:
         message_id=uuid4().hex,
     )
 
-async def send_sync_message(message: str, base_url: str = "http://localhost:9000"):
+async def send_sync_message(message: str, base_url: str = "http://127.0.0.1:9000"):
     async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
         # Get agent card
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
@@ -231,7 +277,7 @@ def create_message(*, role: Role = Role.user, text: str) -> Message:
         message_id=uuid4().hex,
     )
 
-async def send_streaming_message(message: str, base_url: str = "http://localhost:9000"):
+async def send_streaming_message(message: str, base_url: str = "http://127.0.0.1:9000"):
     async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
         # Get agent card
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
@@ -287,9 +333,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Create A2A client tool provider with known agent URLs
-# Assuming you have an A2A server running on localhost:9000
+# Assuming you have an A2A server running on 127.0.0.1:9000
 # known_agent_urls is optional
-provider = A2AClientToolProvider(known_agent_urls=["http://localhost:9000"])
+provider = A2AClientToolProvider(known_agent_urls=["http://127.0.0.1:9000"])
 
 # Create agent with A2A client tools
 agent = Agent(tools=provider.tools)
