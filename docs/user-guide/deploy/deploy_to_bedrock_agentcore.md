@@ -15,8 +15,8 @@ Before you start, you need:
 
 ---
 
-## 🚨 Don't forget observability
->
+> 🚨 **Don't forget observability**
+> 
 > 📈 **[AgentCore runtime observability](#observability-enablement)** - Distributed tracing, metrics, and debugging
 >
 >  **This section is at the bottom of this document - don't skip it**
@@ -55,21 +55,21 @@ pip install bedrock-agentcore
 
 ### Step 2: Prepare Your Agent Code
 
-#### Basic Setup (3 simple steps)
+Basic Setup (3 simple steps)
 
-##### Import the runtime
+Import the runtime
 
 ```python
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 ```
 
-##### Initialize the app
+Initialize the app
 
 ```python
 app = BedrockAgentCoreApp()
 ```
 
-##### Decorate your function
+Decorate your function
 
 ```python
 @app.entrypoint
@@ -81,9 +81,9 @@ if __name__ == "__main__":
     app.run()
 ```
 
-#### Complete Examples
+Complete Examples
 
-##### Basic Example
+- Basic Example
 
 ```python
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     app.run()
 ```
 
-##### Streaming Example
+- Streaming Example
 
 ```python
 from strands import Agent
@@ -142,7 +142,7 @@ curl -X POST http://localhost:8080/invocations \
 
 > **Choose ONE of the following deployment methods:**
 
-### Method A: Starter Toolkit (For quick prototyping)
+#### Method A: Starter Toolkit (For quick prototyping)
 
 For quick prototyping with automated deployment:
 
@@ -150,7 +150,7 @@ For quick prototyping with automated deployment:
 pip install bedrock-agentcore-starter-toolkit
 ```
 
-#### Project Structure
+Project Structure
 
 ```
 your_project_directory/
@@ -159,7 +159,7 @@ your_project_directory/
 └── __init__.py # Makes the directory a Python package
 ```
 
-#### agent_example.py
+Example: agent_example.py
 
 ```python
 from strands import Agent
@@ -179,16 +179,16 @@ if __name__ == "__main__":
     app.run()
 ```
 
-#### requirements.txt
+Example: requirements.txt
 
 ```
 strands-agents
 bedrock-agentcore
 ```
 
-#### Deploy with Starter Toolkit
+Deploy with Starter Toolkit
 
-Ensure Docker is running before proceeding:
+> Ensure Docker is running before proceeding:
 
 ```bash
 # Configure your agent
@@ -204,7 +204,7 @@ agentcore launch
 agentcore invoke '{"prompt": "Hello"}'
 ```
 
-### Method B: Manual Deployment with boto3
+#### Method B: Manual Deployment with boto3
 
 For more control over the deployment process:
 
@@ -232,7 +232,7 @@ response = client.create_agent_runtime(
 )
 ```
 
-3. Invoke Your Agent
+Invoke Your Agent
 
 ```python
 import boto3
@@ -252,8 +252,8 @@ response = agent_core_client.invoke_agent_runtime(
 )
 ```
 
-### 📊 Next Steps: Set Up Observability (Optional)
-
+>📊 Next Steps: Set Up Observability (Optional)
+> 
 > **⚠️ IMPORTANT**: Your agent is deployed, you could also set up [Observability](#observability-enablement)
 
 
@@ -265,22 +265,22 @@ response = agent_core_client.invoke_agent_runtime(
 
 This approach demonstrates how to deploy a custom agent using FastAPI and Docker, following AgentCore Runtime requirements.
 
-### Requirements
+**Requirements**
 
 - **FastAPI Server**: Web server framework for handling requests
 - **/invocations Endpoint**: POST endpoint for agent interactions (REQUIRED)
 - **/ping Endpoint**: GET endpoint for health checks (REQUIRED)
 - **Docker Container**: ARM64 containerized deployment package
 
-### Quick Start Setup
+### Step 1: Quick Start Setup
 
-#### Install uv
+Install uv
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-#### Create Project
+Create Project
 
 ```bash
 mkdir my-custom-agent && cd my-custom-agent
@@ -288,7 +288,8 @@ uv init --python 3.11
 uv add fastapi uvicorn[standard] pydantic httpx strands-agents
 ```
 
-### Project Structure
+Project Structure example
+
 ```
 my-custom-agent/
 ├── agent.py                 # FastAPI application
@@ -297,9 +298,9 @@ my-custom-agent/
 └── uv.lock                 # Created automatically by uv
 ```
 
-### Complete Strands Agent Example
+### Step 2: Prepare your agent code
 
-#### agent.py
+Example: agent.py
 
 ```python
 from fastapi import FastAPI, HTTPException
@@ -350,7 +351,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
 ```
 
-### Test Locally
+### Step 3: Test Locally
 
 ```bash
 # Run the application
@@ -367,7 +368,9 @@ curl -X POST http://localhost:8080/invocations \
   }'
 ```
 
-### Create Dockerfile
+### Step 4: Prepare your docker image
+
+Create docker file
 
 ```dockerfile
 # Use uv's ARM64 Python base image
@@ -391,15 +394,13 @@ EXPOSE 8080
 CMD ["uv", "run", "uvicorn", "agent:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
 
-### Build and Deploy ARM64 Image
-
-#### Setup Docker buildx
+Setup Docker buildx
 
 ```bash
 docker buildx create --use
 ```
 
-#### Build and Test Locally
+Build and Test Locally
 
 ```bash
 # Build the image
@@ -414,7 +415,7 @@ docker run --platform linux/arm64 -p 8080:8080 \
   my-agent:arm64
 ```
 
-#### Deploy to ECR
+Deploy to ECR
 
 ```bash
 # Create ECR repository
@@ -430,9 +431,9 @@ docker buildx build --platform linux/arm64 -t <account-id>.dkr.ecr.us-west-2.ama
 aws ecr describe-images --repository-name my-strands-agent --region us-west-2
 ```
 
-### Deploy Agent Runtime
+### Step 5: Deploy Agent Runtime
 
-#### deploy_agent.py
+Example: deploy_agent.py
 
 ```python
 import boto3
@@ -455,13 +456,15 @@ print(f"Agent Runtime ARN: {response['agentRuntimeArn']}")
 print(f"Status: {response['status']}")
 ```
 
+Execute python file
+
 ```bash
 uv run deploy_agent.py
 ```
 
-### Invoke Your Agent
+### Step 6: Invoke Your Agent
 
-#### invoke_agent.py
+Example: invoke_agent.py
 
 ```python
 import boto3
@@ -484,11 +487,13 @@ response_data = json.loads(response_body)
 print("Agent Response:", response_data)
 ```
 
+Execute python file
+
 ```bash
 uv run invoke_agent.py
 ```
 
-### Expected Response Format
+Expected Response Format
 
 ```json
 {
@@ -509,11 +514,11 @@ uv run invoke_agent.py
 
 ---
 
-# Shared Information (Both Options)
+## Shared Information
 
 > **This section applies to both deployment approaches** - reference as needed regardless of which option you chose.
 
-## AgentCore Runtime Requirements Summary
+### AgentCore Runtime Requirements Summary
 
 - **Platform**: Must be linux/arm64
 - **Endpoints**: /invocations POST and /ping GET are mandatory
@@ -522,7 +527,7 @@ uv run invoke_agent.py
 - **Strands Integration**: Uses Strands Agent for AI processing
 - **Credentials**: Require AWS credentials for operation
 
-## Best Practices
+### Best Practices
 
 **Development**
 
@@ -542,7 +547,7 @@ uv run invoke_agent.py
 - Secure sensitive information
 - Regular security updates
 
-## Troubleshooting
+### Troubleshooting
 
 **Deployment Failures**
 
@@ -572,11 +577,13 @@ Amazon Bedrock AgentCore provides built-in metrics to monitor your Strands agent
 Before you can view metrics and traces, complete this one-time setup:
 
 **Via AgentCore Console**
-- Look for the "Enable Observability" button when creating a memory resource
+
+Look for the **"Enable Observability"** button when creating a memory resource
 
 >If you don't see this button while configuring your agent (for example, if you don't create a memory resource in the console), you must enable observability manually by using the CloudWatch console to enable Transaction Search as described in the following procedure.
 
 **Via CloudWatch Console**
+
 1. Open the CloudWatch console
 2. Navigate to Application Signals (APM) > Transaction search
 3. Choose "Enable Transaction Search"
@@ -586,35 +593,40 @@ Before you can view metrics and traces, complete this one-time setup:
 
 ### Step 2: Add ADOT to Your Strands Agent
 
-#### 1. Add Dependencies
-
 Add to your `requirements.txt`:
 ```text
-aws-opentelemetry-distro>=0.10.0
+aws-opentelemetry-distro>=0.10.1
 boto3
 ```
 
 Or install directly:
 ```bash
-pip install aws-opentelemetry-distro>=0.10.0 boto3
+pip install aws-opentelemetry-distro>=0.10.1 boto3
 ```
 
-#### 2. Run With Auto-Instrumentation
+Run With Auto-Instrumentation
 
-**For SDK Integration (Option A):**
+- For SDK Integration (Option A):
 ```bash
 opentelemetry-instrument python my_agent.py
 ```
 
-**For Docker Deployment:**
+- For Docker Deployment:
 ```dockerfile
 CMD ["opentelemetry-instrument", "python", "main.py"]
 ```
 
-**For Custom Agent (Option B):**
+- For Custom Agent (Option B):
 ```dockerfile
 CMD ["opentelemetry-instrument", "uvicorn", "agent:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
+
+### Step 3: Viewing Your Agent's Observability Data
+
+1. Open the CloudWatch console
+2. Navigate to the GenAI Observability page
+3. Find your agent service
+4. View traces, metrics, and logs
 
 ### Session ID support
 
@@ -643,7 +655,7 @@ def invoke_agent(agent_id, payload, session_id=None):
     return response
 ```
 
-#### Common Tracing Headers
+Common Tracing Headers Examples:
 
 | Header | Description | Sample Value |
 |--------|-------------|-------------|
@@ -654,19 +666,12 @@ def invoke_agent(agent_id, payload, session_id=None):
 
 For more supported headers details, please check [Bedrock AgentCore Runtime Observability Configuration](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
 
-### Viewing Your Agent's Observability Data
-
-1. Open the CloudWatch console
-2. Navigate to the GenAI Observability page
-3. Find your agent service
-4. View traces, metrics, and logs
-
 ### Best Practices
 
-- **Use consistent session IDs** across related requests
-- **Set appropriate sampling rates** (1% is default)
-- **Monitor key metrics** like latency, error rates, and token usage
-- **Set up CloudWatch alarms** for critical thresholds
+- Use consistent session IDs across related requests
+- Set appropriate sampling rates (1% is default)
+- Monitor key metrics like latency, error rates, and token usage
+- Set up CloudWatch alarms for critical thresholds
 
 ---
 
