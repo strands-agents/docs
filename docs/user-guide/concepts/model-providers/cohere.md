@@ -1,6 +1,6 @@
 # Cohere
 
-[Cohere](https://cohere.com) provides cutting-edge language models. These are accessible accessible through OpenAI's SDK via the Compatibility API. This allows easy and portable integration with the Strands Agents SDK using the familiar OpenAI interface.
+[Cohere](https://cohere.com) provides cutting-edge language models. These are accessible through OpenAI's SDK via the Compatibility API. This allows easy and portable integration with the Strands Agents SDK using the familiar OpenAI interface.
 
 ## Installation
 
