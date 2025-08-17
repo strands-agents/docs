@@ -83,7 +83,7 @@ Strands natively integrates with OpenTelemetry, an industry standard for distrib
 
 ## Enabling Tracing
 
-!!! warning "To enable OTEL exporting, install Strands Agents with `otel` extra dependencies: `pip install strands-agents[otel]`"
+!!! warning "To enable OTEL exporting, install Strands Agents with `otel` extra dependencies: `pip install 'strands-agents[otel]'`"
 
 
 ### Environment Variables
