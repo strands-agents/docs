@@ -64,6 +64,7 @@ pip install 'strands-agents-tools[use_computer]'
 
 #### Code Interpretation
 - [`python_repl`]({{ tools_repo }}/src/strands_tools/python_repl.py): Run Python code
+    - Not supported on Windows due to the `fcntl` module not being available on Windows.
 - [`code_interpreter`]({{ tools_repo }}/src/strands_tools/code_interpreter.py): Execute code in isolated sandboxes
 
 #### Web & Network
