@@ -396,6 +396,7 @@ More details in the [Amazon Bedrock Model Provider](concepts/model-providers/ama
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 - **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
+- **[DeepSeek](concepts/model-providers/deepseek.md)** - Access to DeepSeek's chat and reasoning models
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
 - **[Mistral](concepts/model-providers/mistral.md)** - Access to Mistral models
