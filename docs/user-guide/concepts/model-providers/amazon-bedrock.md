@@ -534,6 +534,21 @@ print(f"Features: {result.features}")
 print(f"Rating: {result.rating}")
 ```
 
+### Use private interface VPC endpoint (AWS Private Link) for Bedrock
+
+You can use AWS PrivateLink to create a private connection between your VPC and Amazon Bedrock. You can access Amazon Bedrock as if it were in your VPC, without the use of an internet gateway, NAT device, VPN connection, or AWS Direct Connect connection.
+
+Configure the `AWS_ENDPOINT_URL_BEDROCK_RUNTIME` environment variable to use your private VPC endpoint for Amazon Bedrock:
+
+```bash
+# Your private VPC endpoint for Amazon Bedrock
+export AWS_ENDPOINT_URL_BEDROCK_RUNTIME="https://vpce-xx.bedrock-runtime.region.vpce.amazonaws.com"
+```
+
+This provides secure, low‑latency access to Bedrock while keeping traffic off the public internet. 
+
+For complete details on private interface VPC endpoint configuration and resolution, see the [bedrock documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html).
+
 ## Troubleshooting
 
 ### Model access issue
