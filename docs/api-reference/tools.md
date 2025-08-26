@@ -8,9 +8,6 @@
 ::: strands.tools.decorator
     options:
       heading_level: 2
-::: strands.tools.executor
-    options:
-      heading_level: 2
 ::: strands.tools.loader
     options:
       heading_level: 2
