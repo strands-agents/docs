@@ -30,7 +30,7 @@ graph TD
 
 ## Creating a Swarm
 
-To create a Swarm, you need to define a collection of agents with different specializations:
+To create a Swarm, you need to define a collection of agents with different specializations. The first agent in the list will receive the initial user request and act as the entry point for the swarm:
 
 ```python
 import logging
@@ -71,7 +71,7 @@ print(f"Node history: {[node.node_id for node in result.node_history]}")
 
 In this example:
 
-1. The `researcher` might start by handing off to the `architect`
+1. The `researcher` receives the initial request and might start by handing off to the `architect`
 2. The `architect` designs an API and system architecture
 3. Handoff to the `coder` to implement the API and architecture
 4. The `coder` writes the code
