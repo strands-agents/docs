@@ -66,6 +66,8 @@ load_dotenv()
 # os.environ['OPENSEARCH_HOST'] = "your-opensearch-host.us-west-2.aoss.amazonaws.com"
 # os.environ['AWS_ACCESS_KEY_ID'] = "your-aws-access-key-id"
 # os.environ['AWS_SECRET_ACCESS_KEY'] = "your-aws-secret-access-key"
+# Setup optional Neptune Analytics graph backend
+# os.environ['NEPTUNE_ANALYTICS_HOST'] = "g-sample-graph-id"
 USER_ID = "mem0_user"
 
 # System prompt for the memory agent
