@@ -173,3 +173,53 @@ Key features of the `SummarizingConversationManager`:
 - **Tool Pair Preservation**: Ensures tool use and result message pairs aren't broken during summarization
 - **Flexible Configuration**: Customize summarization behavior through various parameters
 - **Fallback Safety**: Handles summarization failures gracefully
+
+#### PruningConversationManager
+
+The `PruningConversationManager` implements selective message pruning using configurable strategies. Unlike summarization which collapses multiple messages into one, pruning returns a list of messages where some have been compressed, removed, or truncated while others remain intact, preserving conversation structure and flow.
+
+**Key Features:**
+
+- **Strategy-Based Pruning**: Uses pluggable strategies to determine which messages to prune and how
+- **Selective Preservation**: Preserves initial and recent messages while pruning middle content
+- **Proactive Management**: Can automatically prune when conversation approaches token limits
+- **Tool Result Compression**: Built-in strategy for compressing large tool outputs
+- **Context-Aware Decisions**: Uses rich context information for intelligent pruning
+
+**Basic Usage:**
+
+```python
+from strands import Agent
+from strands.agent.conversation_manager import PruningConversationManager
+from strands.agent.conversation_manager.strategies import LargeToolResultPruningStrategy
+
+# Create a pruning strategy for large tool results
+tool_result_strategy = LargeToolResultPruningStrategy(
+    max_tool_result_tokens=50_000  # Compress tool results larger than 50k tokens
+)
+
+# Create the pruning conversation manager
+conversation_manager = PruningConversationManager(
+    pruning_strategies=[tool_result_strategy],
+    preserve_recent_messages=3,      # Always keep 3 most recent messages
+    preserve_initial_messages=2,     # Always keep 2 initial messages
+    enable_proactive_pruning=True,   # Enable automatic pruning
+    pruning_threshold=0.7,           # Prune when 70% of context window is used
+    context_window_size=200_000      # Context window size in tokens
+)
+
+agent = Agent(
+    conversation_manager=conversation_manager
+)
+```
+
+**Configuration Parameters:**
+
+- **`pruning_strategies`** (List[PruningStrategy]): List of strategies to apply for message pruning
+- **`preserve_initial_messages`** (int, default: 1): Number of initial messages to never prune
+- **`preserve_recent_messages`** (int, default: 2): Number of recent messages to never prune
+- **`enable_proactive_pruning`** (bool, default: True): Whether to prune proactively based on threshold
+- **`pruning_threshold`** (float, default: 0.7): Context usage threshold to trigger proactive pruning (0.1-1.0)
+- **`context_window_size`** (int, default: 200000): Maximum context window size in tokens
+
+For more details on creating custom pruning strategies and advanced usage, see the [Conversation Pruning Guide](./conversation-pruning.md) and [Pruning Examples](../../../examples/python/conversation_pruning.md).
