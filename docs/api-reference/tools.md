@@ -20,6 +20,16 @@
 ::: strands.tools.watcher
     options:
       heading_level: 2
+::: strands.tools.executors
+    options:
+      heading_level: 2
+      members: false
+::: strands.tools.executors.concurrent
+    options:
+      heading_level: 3
+::: strands.tools.executors.sequential
+    options:
+      heading_level: 3
 ::: strands.tools.mcp
     options:
       heading_level: 2

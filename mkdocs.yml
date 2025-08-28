@@ -85,6 +85,7 @@ nav:
         - Overview: user-guide/concepts/tools/tools_overview.md
         - Python: user-guide/concepts/tools/python-tools.md
         - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
+        - Executors: user-guide/concepts/tools/executors.md
         - Community Tools Package: user-guide/concepts/tools/community-tools-package.md
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
