@@ -74,7 +74,7 @@ The agent loop includes a tool execution system that:
 
 1. Validates tool requests from the model
 2. Looks up tools in the registry
-3. Executes tools concurrently with proper error handling
+3. Executes tools with proper error handling
 4. Captures and formats results
 5. Feeds results back to the model
 
