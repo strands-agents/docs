@@ -125,6 +125,15 @@ nav:
       - Amazon Bedrock AgentCore : user-guide/deploy/deploy_to_bedrock_agentcore.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+    - Experimental:
+      - Overview: experimental/README.md
+      - Configuration Loaders:
+        - Overview: experimental/config-loader/overview.md
+        - Agent Configuration: experimental/config-loader/agent-config.md
+        - Tool Configuration: experimental/config-loader/tool-config.md
+        - Swarm Configuration: experimental/config-loader/swarm-config.md
+        - Graph Configuration: experimental/config-loader/graph-config.md
+        - Structured Output Configuration: experimental/config-loader/structured-output.md
   - Examples:
     - Overview: examples/README.md
     - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
