@@ -90,6 +90,28 @@ If a tool name contains hyphens, you can invoke the tool using underscores inste
 result = agent.tool.read_all(path="/path/to/file.txt")
 ```
 
+## Tool Execution
+
+When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Agents use concurrent execution by default, but you can specify sequential execution for cases where order matters:
+
+```python
+from strands import Agent
+from strands.tools.executors import SequentialToolExecutor
+
+# Concurrent execution (default)
+agent = Agent(tools=[weather_tool, time_tool])
+agent("What is the weather and time in New York?")
+
+# Sequential execution
+agent = Agent(
+    tool_executor=SequentialToolExecutor(),
+    tools=[screenshot_tool, email_tool]
+)
+agent("Take a screenshot and email it to my friend")
+```
+
+For more details, see [Tool Executors](executors.md).
+
 ## Building & Loading Tools
 
 ### 1. Python Tools

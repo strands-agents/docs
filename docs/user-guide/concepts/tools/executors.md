@@ -21,7 +21,9 @@ agent("What is the weather and time in New York?")
 
 Assuming the model returns `weather_tool` and `time_tool` use requests, the `ConcurrentToolExecutor` will execute both concurrently.
 
-> Note: The model may decide to return one tool use request at a time. Under these circumstances, the tools will execute sequentially. Concurrency is only achieved if the model returns multiple tool use requests in a single response.
+### Sequential Behavior
+
+On certain prompts, the model may decide to return one tool use request at a time. Under these circumstances, the tools will execute sequentially. Concurrency is only achieved if the model returns multiple tool use requests in a single response. Certain models however offer additional abilities to coherce a desired behavior. For example, Anthropic exposes an explicit parallel tool use setting ([docs](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/implement-tool-use#parallel-tool-use)).
 
 ## Sequential Executor
 
