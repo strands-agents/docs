@@ -90,7 +90,7 @@ If a tool name contains hyphens, you can invoke the tool using underscores inste
 result = agent.tool.read_all(path="/path/to/file.txt")
 ```
 
-## Tool Execution
+## Tool Executors
 
 When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Agents use concurrent execution by default, but you can specify sequential execution for cases where order matters:
 
