@@ -11,7 +11,7 @@ Before you start, you need:
 
 - An AWS account with appropriate [permissions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html)
 - Python 3.10+
-- Familiarity with Docker containers (for advanced deployment)
+- Optional: A container engine (Docker, Finch, or Podman) - only required for local testing and advanced deployment scenarios
 
 ---
 
@@ -188,14 +188,12 @@ bedrock-agentcore
 
 Deploy with Starter Toolkit
 
-> Ensure Docker is running before proceeding:
-
 ```bash
 # Configure your agent
-agentcore configure --entrypoint agent_example.py -er <YOUR_IAM_ROLE_ARN>
+agentcore configure --entrypoint agent_example.py
 
-# Local testing
-agentcore launch -l
+# Optional: Local testing (requires Docker, Finch, or Podman)
+agentcore launch --local
 
 # Deploy to AWS
 agentcore launch
@@ -203,6 +201,8 @@ agentcore launch
 # Test your agent with CLI
 agentcore invoke '{"prompt": "Hello"}'
 ```
+
+> **Note**: The `agentcore launch --local` command requires a container engine (Docker, Finch, or Podman) for local deployment testing. This step is optional - you can skip directly to `agentcore launch` for AWS deployment if you don't need local testing.
 
 #### Method B: Manual Deployment with boto3
 
@@ -270,6 +270,7 @@ This approach demonstrates how to deploy a custom agent using FastAPI and Docker
 - **FastAPI Server**: Web server framework for handling requests
 - **/invocations Endpoint**: POST endpoint for agent interactions (REQUIRED)
 - **/ping Endpoint**: GET endpoint for health checks (REQUIRED)
+- **Container Engine**: Docker, Finch, or Podman (required for this example)
 - **Docker Container**: ARM64 containerized deployment package
 
 ### Step 1: Quick Start Setup
@@ -553,7 +554,7 @@ Expected Response Format
 
 - Verify AWS credentials are configured correctly
 - Check IAM role permissions
-- Ensure Docker is running
+- Ensure container engine is running (for local testing with `agentcore launch --local` or Option B custom deployments)
 
 **Runtime Errors**
 
@@ -563,7 +564,7 @@ Expected Response Format
 
 **Container Issues**
 
-- Verify Docker installation
+- Verify container engine installation (Docker, Finch, or Podman)
 - Check port configurations
 - Review Dockerfile if customized
 ---
