@@ -36,6 +36,41 @@ response = agent("What is 2+2")
 print(response)
 ```
 
+## Using LiteLLM Proxy
+
+To use a [LiteLLM Proxy Server](https://docs.litellm.ai/docs/simple_proxy), you have two options:
+
+### Option 1: Use `use_litellm_proxy` parameter
+
+```python
+from strands import Agent
+from strands.models.litellm import LiteLLMModel
+
+model = LiteLLMModel(
+    client_args={
+        "api_key": "<PROXY_KEY>",
+        "api_base": "<PROXY_URL>",
+        "use_litellm_proxy": True
+    },
+    model_id="amazon.nova-lite-v1:0"
+)
+
+agent = Agent(model=model)
+response = agent("Tell me a story")
+```
+
+### Option 2: Use `litellm_proxy/` prefix in model ID
+
+```python
+model = LiteLLMModel(
+    client_args={
+        "api_key": "<PROXY_KEY>",
+        "api_base": "<PROXY_URL>"
+    },
+    model_id="litellm_proxy/amazon.nova-lite-v1:0"
+)
+```
+
 ## Configuration
 
 ### Client Configuration
