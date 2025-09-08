@@ -1,13 +1,14 @@
 # Graph Multi-Agent Pattern
 
-A Graph is a deterministic Directed Acyclic Graph (DAG) based agent orchestration system where agents, custom nodes, or other multi-agent systems (like [Swarm](./swarm.md) or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes.
+A Graph is a deterministic directed graph based agent orchestration system where agents, custom nodes, or other multi-agent systems (like [Swarm](./swarm.md) or nested Graphs) are nodes in a graph. Nodes are executed according to edge dependencies, with output from one node passed as input to connected nodes. The Graph pattern supports both acyclic (DAG) and cyclic topologies, enabling feedback loops and iterative refinement workflows.
 
-- **Deterministic execution order** based on DAG structure
+- **Deterministic execution order** based on graph structure
 - **Output propagation** along edges between nodes
 - **Clear dependency management** between agents
 - **Supports nested patterns** (Graph as a node in another Graph)
 - **Custom node types** for deterministic business logic and hybrid workflows
 - **Conditional edge traversal** for dynamic workflows
+- **Cyclic graph support** with execution limits and state management
 - **Multi-modal input support** for handling text, images, and other content types
 
 ## How Graphs Work
@@ -16,9 +17,10 @@ The Graph pattern operates on the principle of structured, deterministic workflo
 
 1. Nodes represent agents, custom nodes, or multi-agent systems
 2. Edges define dependencies and information flow between nodes
-3. Execution follows a topological sort of the graph
+3. Execution follows the graph structure, respecting dependencies
 4. Output from one node becomes input for dependent nodes
 5. Entry points receive the original task as input
+6. Nodes can be revisited in cyclic patterns with proper exit conditions
 
 ```mermaid
 graph TD
@@ -56,6 +58,10 @@ The [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.gra
 - **add_node()**: Add an agent or multi-agent system as a node
 - **add_edge()**: Create a dependency between nodes
 - **set_entry_point()**: Define starting nodes for execution
+- **set_max_node_executions()**: Limit total node executions (useful for cyclic graphs)
+- **set_execution_timeout()**: Set maximum execution time
+- **set_node_timeout()**: Set timeout for individual nodes
+- **reset_on_revisit()**: Control whether nodes reset state when revisited
 - **build()**: Validate and create the Graph instance
 
 ## Creating a Graph
@@ -97,6 +103,9 @@ builder.add_edge("fact_check", "report")
 
 # Set entry points (optional - will be auto-detected if not specified)
 builder.set_entry_point("research")
+
+# Optional: Configure execution limits for safety
+builder.set_execution_timeout(600)   # 10 minute timeout
 
 # Build the graph
 graph = builder.build()
@@ -416,14 +425,57 @@ builder.add_edge("tech_specialist", "tech_report")
 builder.add_edge("business_specialist", "business_report")
 ```
 
+### 4. Feedback Loop
+
+```mermaid
+graph TD
+    A[Draft Writer] --> B[Reviewer]
+    B --> C{Quality Check}
+    C -->|Needs Revision| A
+    C -->|Approved| D[Publisher]
+```
+
+```python
+def needs_revision(state):
+    review_result = state.results.get("reviewer")
+    if not review_result:
+        return False
+    result_text = str(review_result.result)
+    return "revision needed" in result_text.lower()
+
+def is_approved(state):
+    review_result = state.results.get("reviewer")
+    if not review_result:
+        return False
+    result_text = str(review_result.result)
+    return "approved" in result_text.lower()
+
+builder = GraphBuilder()
+builder.add_node(draft_writer, "draft_writer")
+builder.add_node(reviewer, "reviewer")
+builder.add_node(publisher, "publisher")
+
+builder.add_edge("draft_writer", "reviewer")
+builder.add_edge("reviewer", "draft_writer", condition=needs_revision)
+builder.add_edge("reviewer", "publisher", condition=is_approved)
+
+# Set execution limits to prevent infinite loops
+builder.set_max_node_executions(10)  # Maximum 10 node executions total
+builder.set_execution_timeout(300)   # 5 minute timeout
+builder.reset_on_revisit(True)       # Reset node state when revisiting
+
+graph = builder.build()
+```
+
 ## Best Practices
 
-1. **Design for acyclicity**: Ensure your graph has no cycles
+1. **Set execution limits for cyclic graphs**: Use `set_max_node_executions()` and `set_execution_timeout()` to prevent infinite loops
 2. **Use meaningful node IDs**: Choose descriptive names for nodes
-3. **Validate graph structure**: The builder will check for cycles and validate entry points
+3. **Validate graph structure**: The builder will validate entry points and warn about potential issues
 4. **Handle node failures**: Consider how failures in one node affect the overall workflow
 5. **Use conditional edges**: For dynamic workflows based on intermediate results
 6. **Consider parallelism**: Independent branches can execute concurrently
 7. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
 8. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
 9. **Create custom nodes for deterministic logic**: Use `MultiAgentBase` for business rules and data processing
+10. **Use `reset_on_revisit` for iterative workflows**: Enable state reset when nodes are revisited in cycles
