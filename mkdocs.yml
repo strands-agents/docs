@@ -108,6 +108,7 @@ nav:
         - Swarm: user-guide/concepts/multi-agent/swarm.md
         - Graph: user-guide/concepts/multi-agent/graph.md
         - Workflow: user-guide/concepts/multi-agent/workflow.md
+        - Multi-agent Patterns Dive Deep: user-guide/concepts/multi-agent/graph-swarm-workflow-dive-deep.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
