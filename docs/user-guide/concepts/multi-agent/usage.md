@@ -1,30 +1,30 @@
-# Graph vs. Swarm vs. Workflow Dive Deep
+# Usage
 
-In the Strands, building a system with multiple agents or complex tool chains can be approached in several ways. The three primary patterns you'll encounter are Graph, Swarm, and Workflow tool. While they all aim to solve complex problems, they have differences in their structures, execution workflows, and use cases.
+In Strands, building a system with multiple agents or complex tool chains can be approached in several ways. The three primary patterns you'll encounter are Graph, Swarm, and Workflow tool. While they all aim to solve complex problems, they have differences in their structures, execution workflows, and use cases.
 
-To best help you decide which one is best for your problem, we will discuss them from core concepts, commonalities, and differences. You should at least read their individual doc page before continue reading.
+To best help you decide which one is best for your problem, we will discuss them from core concepts, commonalities, and differences. You should at least read their individual doc page before you continue reading.
 
 ## Main Idea of Multi-agent System
-Before we start comparing, Let's agree on a common concept: Multi-agent system is a system composed of multiple autonomous agents that interact with each other to achieve mutual goal that is too complex or too large for any single agent to reach alone.
+Before we start comparing, Let's agree on a common concept. Multi-agent system is a system composed of multiple autonomous agents that interact with each other to achieve a mutual goal that is too complex or too large for any single agent to reach alone.
 
 The key principles are:
 
 - Orchestration: A controlling logic or structure to manage the flow of information and tasks between agents.
-- Specialization: A agent have a specific role or expertise, and a set of tools that it could use.
-- Collaboration: Agents communicate and share information to work upon other's work.
+- Specialization: An agent has a specific role or expertise, and a set of tools that it can use.
+- Collaboration: Agents communicate and share information to work upon each other's work.
 
 Graph, Swarm, and Workflow are different methods of orchestration. Besides, Graph and Swarm are fundamental components in `strands-agents`, while you need `strands-agents-tools` to use Workflow.
 
-## High Level Commonality in Swarm, Workflow and Graph
+## High Level Commonality in Graph, Swarm and Workflow
 
 They share some common things within Strands system:
 
-- They all have ultimate goal to solve complicated problems for users.
-- They all use single Strands `Agent` as the minimal unit of actions.
+- They all have the ultimate goal to solve complicated problems for users.
+- They all use a single Strands `Agent` as the minimal unit of actions.
 - They all involve passing information between different components to move toward a final answer.
 
 
-## Difference in Swarm, Workflow and Graph
+## Difference in Graph, Swarm and Workflow
 
 | Field                   | Graph                                                                                                                                 | Swarm                                                                                                                                                             | Workflow                                                                                                                          |
 |-------------------------|---------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
@@ -38,13 +38,13 @@ They share some common things within Strands system:
 | Scalability             | Scales well with process complexity (many branches, conditions).                                                                      | Scales with the number of specialized agents in the team and the complexity of the collaborative task.                                                            | Scales well for repeatable, complex operations.                                                                                   |
 | Error handling          | Controllable.<br/> A developer can define explicit "error" edges to route the flow to a specific error-handling node if a step fails. | Agent-driven.<br/>An agent can decide to hand off to an error-handling specialist. The system relies on timeouts and handoff limits to prevent indefinite loops.  | Systemic. A failure in one task will halt all downstream dependent tasks. The entire workflow will likely enter a `Failed` state. |
 
->To be more explict, the most difference you should consider among those patterns is **how the path of execution is determined**.
+>To be more explicit, the most difference you should consider among those patterns is **how the path of execution is determined**.
 
 ## When to Use Each Pattern
 
-Now You should have some general concept about the difference between patterns. Choosing the right pattern is critical for building an effective system.
+Now you should have some general concept about the difference between patterns. Choosing the right pattern is critical for building an effective system.
 
-### When Graph
+### When to Use Graph
 When you need a structured process that requires conditional logic, branching, or loops with deterministic execution flow. A `Graph` is perfect for modeling a business process or any task where the next step is decided by the outcome of the current one.
 
 Some Examples:
@@ -52,15 +52,15 @@ Some Examples:
 - Interactive Customer Support: Routing a conversation based on user intent ("Press 1 for billing, 2 for tech support").
 - Data Validation with Error Paths: An agent validates data and, based on the outcome, a conditional edge routes it to either a "processing" node or a pre-defined "error-handling" node.
 
-### When Swarm
+### When to Use Swarm
 When your problem can be broken down into sub-tasks that benefit from different specialized perspectives. A `Swarm` is ideal for exploration, brainstorming, or synthesizing information from multiple sources through collaborative handoffs. It leverages agent specialization and shared context to generate diverse, comprehensive results.
 
 Some Examples:
 
 - Multidisciplinary Incident Response: A monitoring agent detects an issue and hands off to a network_specialist, who diagnoses it as a database problem and hands off to a database_admin.
-- Software Development: As shown in the documentation, a researcher hands off to an architect, who hands off to a coder, who hands off to a reviewer. The path is emergent.
+- Software Development: As shown in the `Graph` documentation, a researcher hands off to an architect, who hands off to a coder, who hands off to a reviewer. The path is emergent.
 
-### When Workflow
+### When to Use Workflow
 When you have a complex but repeatable process that you want to encapsulate into a single, reliable, and reusable tool. A `Workflow` is a developer-defined task graph that an agent can execute as a single, powerful action.
 
 Some Examples:
