@@ -136,6 +136,7 @@ nav:
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
     - Structured Output: examples/python/structured_output.md
     - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
+    - Cyclic Graph: examples/python/graph_loops_example.md
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md
     - Multi-modal: examples/python/multimodal.md
