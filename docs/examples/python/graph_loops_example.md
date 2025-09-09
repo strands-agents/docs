@@ -32,8 +32,13 @@ print(result)
 ## Graph Structure
 
 The example creates a feedback loop:
-```
-writer -> checker -> (loop back to writer OR proceed to finalizer)
+
+```mermaid
+graph TD
+    A[Writer] --> B[Quality Checker]
+    B --> C{Quality Check}
+    C -->|Needs Revision| A
+    C -->|Approved| D[Finalizer]
 ```
 
 The checker requires multiple iterations before approving content, demonstrating how conditional loops work in practice.

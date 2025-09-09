@@ -469,13 +469,13 @@ graph = builder.build()
 
 ## Best Practices
 
-1. **Set execution limits for cyclic graphs**: Use `set_max_node_executions()` and `set_execution_timeout()` to prevent infinite loops
-2. **Use meaningful node IDs**: Choose descriptive names for nodes
-3. **Validate graph structure**: The builder will validate entry points and warn about potential issues
-4. **Handle node failures**: Consider how failures in one node affect the overall workflow
-5. **Use conditional edges**: For dynamic workflows based on intermediate results
-6. **Consider parallelism**: Independent branches can execute concurrently
-7. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
-8. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
-9. **Create custom nodes for deterministic logic**: Use `MultiAgentBase` for business rules and data processing
-10. **Use `reset_on_revisit` for iterative workflows**: Enable state reset when nodes are revisited in cycles
+1. **Use meaningful node IDs**: Choose descriptive names for nodes
+2. **Validate graph structure**: The builder will validate entry points and warn about potential issues
+3. **Handle node failures**: Consider how failures in one node affect the overall workflow
+4. **Use conditional edges**: For dynamic workflows based on intermediate results
+5. **Consider parallelism**: Independent branches can execute concurrently
+6. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
+7. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
+8. **Create custom nodes for deterministic logic**: Use `MultiAgentBase` for business rules and data processing
+9. **Use `reset_on_revisit` for iterative workflows**: Enable state reset when nodes are revisited in cycles
+10. **Set execution limits for cyclic graphs**: Use `set_max_node_executions()` and `set_execution_timeout()` to prevent infinite loops
