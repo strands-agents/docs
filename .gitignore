@@ -7,3 +7,4 @@ site/
 __pycache__
 .venv
 .idea
+.kiro
