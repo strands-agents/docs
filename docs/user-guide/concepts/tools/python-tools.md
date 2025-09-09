@@ -42,9 +42,9 @@ agent = Agent(
 )
 ```
 
-### Overriding Tool Name and Description
+### Overriding Tool Name, Description, and Schema
 
-You can also optionally override the tool name or description by providing them as arguments to the decorator:
+You can override the tool name, description, and input schema by providing them as arguments to the decorator:
 
 ```python
 @tool(name="get_weather", description="Retrieves weather forecast for a specified location")
@@ -55,8 +55,39 @@ def weather_forecast(city: str, days: int = 3) -> str:
         city: The name of the city
         days: Number of days for the forecast
     """
-    # Implementation
     return f"Weather forecast for {city} for the next {days} days..."
+```
+
+#### Overriding Input Schema
+
+You can provide a custom JSON schema to override the automatically generated one:
+
+```python
+@tool(
+    inputSchema={
+        "json": {
+            "type": "object",
+            "properties": {
+                "shape": {
+                    "type": "string",
+                    "enum": ["circle", "rectangle"],
+                    "description": "The shape type"
+                },
+                "radius": {"type": "number", "description": "Radius for circle"},
+                "width": {"type": "number", "description": "Width for rectangle"},
+                "height": {"type": "number", "description": "Height for rectangle"}
+            },
+            "required": ["shape"]
+        }
+    }
+)
+def calculate_area(shape: str, radius: float = None, width: float = None, height: float = None) -> float:
+    """Calculate area of a shape."""
+    if shape == "circle":
+        return 3.14159 * radius ** 2
+    elif shape == "rectangle":
+        return width * height
+    return 0.0
 ```
 
 ### Dictionary Return Type
