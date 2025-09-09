@@ -91,6 +91,7 @@ nav:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
+        - llama.cpp: user-guide/concepts/model-providers/llamacpp.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
         - MistralAI: user-guide/concepts/model-providers/mistral.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
