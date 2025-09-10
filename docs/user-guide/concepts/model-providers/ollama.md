@@ -26,7 +26,7 @@ Next, you'll need to install and setup ollama itself.
 1. Install Ollama by following the instructions at [ollama.ai](https://ollama.ai)
 2. Pull your desired model:
    ```bash
-   ollama pull llama3
+   ollama pull llama3.1
    ```
 3. Start the Ollama server:
    ```bash
@@ -49,7 +49,7 @@ Next, you'll need to install and setup ollama itself.
 
 3. Pull a model using the Docker container:
    ```bash
-   docker exec -it ollama ollama pull llama3
+   docker exec -it ollama ollama pull llama3.1
    ```
 
 4. Verify the Ollama server is running:
@@ -68,7 +68,7 @@ from strands.models.ollama import OllamaModel
 # Create an Ollama model instance
 ollama_model = OllamaModel(
     host="http://localhost:11434",  # Ollama server address
-    model_id="llama3"               # Specify which model to use
+    model_id="llama3.1"               # Specify which model to use
 )
 
 # Create an agent using the Ollama model
@@ -103,7 +103,7 @@ from strands.models.ollama import OllamaModel
 # Create a configured Ollama model
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
     temperature=0.7,
     keep_alive="10m",
     stop_sequences=["###", "END"],
@@ -127,7 +127,7 @@ You can update the model configuration during runtime:
 # Create the model with initial configuration
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
     temperature=0.7
 )
 
@@ -176,7 +176,7 @@ available models here: https://ollama.com/search
 # Create models for different use cases
 creative_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
     temperature=0.8
 )
 
@@ -210,7 +210,7 @@ class BookAnalysis(BaseModel):
 
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
 )
 
 agent = Agent(model=ollama_model)
@@ -242,7 +242,7 @@ from strands_tools import calculator, current_time
 # Create an Ollama model
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3"
+    model_id="llama3.1"
 )
 
 # Create an agent with tools
