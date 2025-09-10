@@ -32,7 +32,7 @@ That's it!
 
 !!! warning ""
 
-    If you are getting an error, then check if you are using a region that does not [support inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html). If so, pass in a valid model id instead of using the default for the Agent, like so:
+    If you are getting an error (`ValidationException`), then check if you are using a region that does not [support inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html). If so, pass in a valid model id instead of using the default for the Agent, like so:
     ```python
     agent = Agent(model="anthropic.claude-3-5-sonnet-20241022-v2:0")
     ```
