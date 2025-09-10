@@ -63,6 +63,10 @@ def handler(event: Dict[str, Any], _context) -> str:
 
 ## Infrastructure
 
+!!! tip "Use Pre-built Lambda Layers"
+    
+    The easiest way to get started is to use our pre-built [Lambda Layers](lambda-layers.md) that include the Strands Agents SDK and its dependencies. You can also package your own dependencies if you need custom configurations.
+
 To deploy the above agent to Lambda using the TypeScript CDK, prepare your code for deployment by creating the Lambda definition and an associated Lambda layer ([`AgentLambdaStack.ts`][AgentLambdaStack]):
 
 ```typescript
