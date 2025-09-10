@@ -28,7 +28,14 @@ python -u agent.py
 
 That's it!
 
-> **Note**: To run this example hello world agent you will need to set up credentials for our model provider and enable model access. The default model provider is [Amazon Bedrock](user-guide/concepts/model-providers/amazon-bedrock.md) and the default model is Claude 4 Sonnet in the US Oregon (us-west-2) region.
+> **Note**: To run this example hello world agent you will need to set up credentials for our model provider and enable model access. The default model provider is [Amazon Bedrock](user-guide/concepts/model-providers/amazon-bedrock.md) and the default model is Claude 4 Sonnet inference model from the region of your credentials. For example, if you set the region to `us-east-1` then the default model id will be: `us.anthropic.claude-sonnet-4-20250514-v1:0`. 
+
+!!! warning ""
+
+    If you are getting an error, then check if you are using a region that does not [support inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html). If so, pass in a valid model id instead of using the default for the Agent, like so:
+    ```python
+    agent = Agent(model="anthropic.claude-3-5-sonnet-20241022-v2:0")
+    ```
 
 > For the default Amazon Bedrock model provider, see the [Boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html) for setting up AWS credentials. Typically for development, AWS credentials are defined in `AWS_` prefixed environment variables or configured with `aws configure`. You will also need to enable Claude 4 Sonnet model access in Amazon Bedrock, following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) to enable access.
 
