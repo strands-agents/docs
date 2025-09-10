@@ -119,6 +119,10 @@ agent = Agent()
 response = agent("Tell me about Amazon Bedrock.")
 ```
 
+> **Note:** See [Bedrock troubleshooting](amazon-bedrock.md#troubleshooting) if you encounter any issues.
+
+
+
 You can specify which Bedrock model to use by passing in the model ID string directly to the Agent constructor:
 
 ```python
@@ -563,6 +567,24 @@ Use:
 ```
 us.anthropic.claude-sonnet-4-20250514-v1:0
 ```
+
+
+### Model identifier is invalid
+If you encounter the error:
+
+> ValidationException: An error occurred (ValidationException) when calling the ConverseStream operation: The provided model identifier is invalid
+
+This is very likely due to calling Bedrock with an inference model id, such as: `us.anthropic.claude-sonnet-4-20250514-v1:0` from a region that does not [support inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html). If so, pass in a valid model id, as follows:
+```python
+agent = Agent(model="anthropic.claude-3-5-sonnet-20241022-v2:0")
+```
+
+
+!!! note ""
+
+    Strands uses a default Claude 4 Sonnet inference model from the region of your credentials when no model is provided. So if you did not pass in any model id and are getting the above error, it's very likely due to the `region` from the credentials not supporting inference profiles.
+
+
 
 ## Related Resources
 
