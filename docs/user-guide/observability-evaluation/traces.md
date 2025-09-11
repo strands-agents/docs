@@ -362,3 +362,9 @@ print(response)
 
 # Each interaction creates a complete trace that can be visualized in your tracing tool
 ```
+
+## Sending traces to CloudWatch X-ray
+There are several ways to send traces, metrics, and logs to CloudWatch. Please visit the following pages for more details and configurations:
+1. [AWS Distro for OpenTelemetry Collector](https://aws-otel.github.io/docs/getting-started/x-ray#configuring-the-aws-x-ray-exporter)
+2. [AWS CloudWatch OpenTelemetry User Guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OpenTelemetry-Sections.html)
+  - Please ensure Transaction Search is enabled in CloudWatch.
