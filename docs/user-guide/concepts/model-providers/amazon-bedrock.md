@@ -308,6 +308,22 @@ When you enable prompt caching, Amazon Bedrock creates a cache composed of **cac
 
 The cache has a five-minute Time To Live (TTL), which resets with each successful cache hit. During this period, the context in the cache is preserved. If no cache hits occur within the TTL window, your cache expires.
 
+When using prompt caching, Amazon Bedrock provides cache statistics including `CacheReadInputTokens` and `CacheWriteInputTokens`.
+
+- `CacheWriteInputTokens`: Number of input tokens written to the cache (occurs on first request with new content).
+
+- `CacheReadInputTokens`: Number of input tokens read from the cache (occurs on subsequent requests with cached content).
+
+Strands automatically captures these metrics and makes them available through multiple methods:
+
+- Method 1: AgentResult Metrics (Recommended)
+
+    Cache statistics are automatically included in the `AgentResult.metrics.accumulated_usage`
+
+- Method 2: OpenTelemetry Traces
+
+    Cache metrics are automatically recorded in OpenTelemetry traces when telemetry is enabled
+
 For detailed information about supported models, minimum token requirements, and other limitations, see the [Amazon Bedrock documentation on prompt caching](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html).
 
 #### System Prompt Caching
@@ -339,29 +355,9 @@ print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadIn
 
 # Second request will reuse the cached system prompt
 response2 = agent("Tell me about JavaScript")
-print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
-print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
+print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 ```
-
-When using prompt caching, Amazon Bedrock provides cache statistics including `CacheReadInputTokens` and `CacheWriteInputTokens`.
-
-- `CacheWriteInputTokens`: Number of input tokens written to the cache (occurs on first request with new content).
-
-- `CacheReadInputTokens`: Number of input tokens read from the cache (occurs on subsequent requests with cached content). 
-
-Strands automatically captures these metrics and makes them available through multiple methods:
-
-- Method 1: AgentResult Metrics (Recommended)
-
-    Cache statistics are automatically included in the `AgentResult.metrics.accumulated_usage`
-
-- Method 2: Real-time Monitoring with Callback Handlers
-
-    For real-time access to cache statistics during streaming responses
-
-- Method 3: OpenTelemetry Traces
-
-    Cache metrics are automatically recorded in OpenTelemetry traces when telemetry is enabled
 
 #### Tool Caching
 
@@ -385,9 +381,13 @@ agent = Agent(
 )
 # First request will cache the tools
 response1 = agent("What time is it?")
+print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 
 # Second request will reuse the cached tools
 response2 = agent("What is the square root of 1764?")
+print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 ```
 
 #### Messages Caching
