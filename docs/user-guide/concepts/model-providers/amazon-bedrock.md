@@ -334,10 +334,34 @@ agent = Agent(
 
 # First request will cache the system prompt
 response1 = agent("Tell me about Python")
+print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 
 # Second request will reuse the cached system prompt
 response2 = agent("Tell me about JavaScript")
+print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 ```
+
+When using prompt caching, Amazon Bedrock provides cache statistics including `CacheReadInputTokens` and `CacheWriteInputTokens`.
+
+- `CacheWriteInputTokens`: Number of input tokens written to the cache (occurs on first request with new content).
+
+- `CacheReadInputTokens`: Number of input tokens read from the cache (occurs on subsequent requests with cached content). 
+
+Strands automatically captures these metrics and makes them available through multiple methods:
+
+- Method 1: AgentResult Metrics (Recommended)
+
+    Cache statistics are automatically included in the `AgentResult.metrics.accumulated_usage`
+
+- Method 2: Real-time Monitoring with Callback Handlers
+
+    For real-time access to cache statistics during streaming responses
+
+- Method 3: OpenTelemetry Traces
+
+    Cache metrics are automatically recorded in OpenTelemetry traces when telemetry is enabled
 
 #### Tool Caching
 
