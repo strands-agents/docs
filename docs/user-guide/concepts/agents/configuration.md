@@ -15,7 +15,7 @@ agent = Agent(config="/path/to/agent-config.json")
 # Or from a configuration dictionary
 config = {
     "tools": ["fs_read", "fs_write"],
-    "model": "claude-3-sonnet",
+    "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
     "prompt": "You are a helpful coding assistant"
 }
 agent = Agent(config=config)
@@ -35,11 +35,11 @@ List of tools available to the agent:
 ```
 
 ### `model`
-Model ID to use for the agent:
+Model ID to use for the agent (must be full Bedrock model ID):
 
 ```json
 {
-    "model": "claude-3-sonnet"
+    "model": "us.anthropic.claude-sonnet-4-20250514-v1:0"
 }
 ```
 
@@ -63,7 +63,7 @@ Create a file named `my-agent.json`:
         "fs_write", 
         "execute_bash"
     ],
-    "model": "claude-3-sonnet",
+    "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
     "prompt": "You are an expert Python developer. Help users write clean, efficient code."
 }
 ```
@@ -83,11 +83,11 @@ print(result.message)
 Constructor parameters take precedence over configuration file values:
 
 ```python
-# Config file has model: "claude-3-haiku"
+# Config file has model: "us.anthropic.claude-3-haiku-20240307-v1:0"
 # But constructor parameter overrides it
 agent = Agent(
     config="my-agent.json",
-    model="claude-3-sonnet"  # This takes precedence
+    model="us.anthropic.claude-sonnet-4-20250514-v1:0"  # This takes precedence
 )
 ```
 
@@ -98,7 +98,7 @@ The configuration feature is fully backward compatible. Existing Agent initializ
 ```python
 # This still works exactly as before
 agent = Agent(
-    model="claude-3-sonnet",
+    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     tools=["fs_read"],
     system_prompt="You are helpful"
 )

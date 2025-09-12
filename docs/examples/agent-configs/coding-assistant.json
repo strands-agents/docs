@@ -4,6 +4,6 @@
         "fs_write",
         "execute_bash"
     ],
-    "model": "claude-3-sonnet",
+    "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
     "prompt": "You are an expert software developer. Help users write clean, efficient, and well-documented code. Always explain your reasoning and provide examples when helpful."
 }
