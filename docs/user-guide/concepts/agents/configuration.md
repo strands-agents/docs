@@ -26,11 +26,30 @@ agent = Agent(config=config)
 Currently, the following fields from the agent-format.md specification are supported:
 
 ### `tools`
-List of tools available to the agent:
+List of tools available to the agent. Tools can be specified as:
 
+1. **Tool names from strands_tools** (recommended):
 ```json
 {
-    "tools": ["file_read", "file_write", "shell"]
+    "tools": ["calculator", "shell", "current_time"]
+}
+```
+
+2. **File paths** to custom tool files:
+```json
+{
+    "tools": ["./tools/my_custom_tool.py", "/path/to/another_tool.py"]
+}
+```
+
+3. **Tool objects** (when using Python dict config):
+```python
+from strands_tools import calculator, shell
+
+config = {
+    "tools": [calculator, shell],
+    "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+    "prompt": "You are a helpful assistant"
 }
 ```
 
@@ -59,9 +78,9 @@ Create a file named `my-agent.json`:
 ```json
 {
     "tools": [
-        "file_read",
-        "file_write", 
-        "shell"
+        "calculator",
+        "shell",
+        "current_time"
     ],
     "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
     "prompt": "You are an expert Python developer. Help users write clean, efficient code."
@@ -97,9 +116,11 @@ The configuration feature is fully backward compatible. Existing Agent initializ
 
 ```python
 # This still works exactly as before
+from strands_tools import shell
+
 agent = Agent(
     model="us.anthropic.claude-sonnet-4-20250514-v1:0",
-    tools=["file_read"],
+    tools=[shell],
     system_prompt="You are helpful"
 )
 ```
