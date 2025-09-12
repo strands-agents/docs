@@ -53,7 +53,7 @@ architect = Agent(name="architect", system_prompt="You are a system architecture
 # Create a swarm with these agents, starting with the researcher
 swarm = Swarm(
     [coder, researcher, reviewer, architect],
-    entry_point="researcher",  # Start with the researcher
+    entry_point=researcher,  # Start with the researcher
     max_handoffs=20,
     max_iterations=20,
     execution_timeout=900.0,  # 15 minutes
@@ -85,7 +85,7 @@ The [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swar
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `entry_point` | Name of the agent to start with (must match an agent's name) | None (uses first agent) |
+| `entry_point` | The agent instance to start with | None (uses first agent) |
 | `max_handoffs` | Maximum number of agent handoffs allowed | 20 |
 | `max_iterations` | Maximum total iterations across all agents | 20 |
 | `execution_timeout` | Total execution timeout in seconds | 900.0 (15 min) |
