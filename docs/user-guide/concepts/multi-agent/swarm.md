@@ -30,7 +30,7 @@ graph TD
 
 ## Creating a Swarm
 
-To create a Swarm, you need to define a collection of agents with different specializations. The first agent in the list will receive the initial user request and act as the entry point for the swarm:
+To create a Swarm, you need to define a collection of agents with different specializations. By default, the first agent in the list will receive the initial user request, but you can specify any agent as the entry point using the `entry_point` parameter:
 
 ```python
 import logging
@@ -50,9 +50,10 @@ coder = Agent(name="coder", system_prompt="You are a coding specialist...")
 reviewer = Agent(name="reviewer", system_prompt="You are a code review specialist...")
 architect = Agent(name="architect", system_prompt="You are a system architecture specialist...")
 
-# Create a swarm with these agents
+# Create a swarm with these agents, starting with the researcher
 swarm = Swarm(
-    [researcher, coder, reviewer, architect],
+    [coder, researcher, reviewer, architect],
+    entry_point="researcher",  # Start with the researcher
     max_handoffs=20,
     max_iterations=20,
     execution_timeout=900.0,  # 15 minutes
@@ -84,6 +85,7 @@ The [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swar
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `entry_point` | Name of the agent to start with (must match an agent's name) | None (uses first agent) |
 | `max_handoffs` | Maximum number of agent handoffs allowed | 20 |
 | `max_iterations` | Maximum total iterations across all agents | 20 |
 | `execution_timeout` | Total execution timeout in seconds | 900.0 (15 min) |
