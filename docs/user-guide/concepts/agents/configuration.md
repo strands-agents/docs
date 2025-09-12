@@ -14,7 +14,7 @@ agent = Agent(config="/path/to/agent-config.json")
 
 # Or from a configuration dictionary
 config = {
-    "tools": ["fs_read", "fs_write"],
+    "tools": ["shell", "calculator"],
     "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
     "prompt": "You are a helpful coding assistant"
 }
@@ -30,7 +30,7 @@ List of tools available to the agent:
 
 ```json
 {
-    "tools": ["fs_read", "fs_write", "execute_bash"]
+    "tools": ["file_read", "file_write", "shell"]
 }
 ```
 
@@ -59,9 +59,9 @@ Create a file named `my-agent.json`:
 ```json
 {
     "tools": [
-        "fs_read",
-        "fs_write", 
-        "execute_bash"
+        "file_read",
+        "file_write", 
+        "shell"
     ],
     "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
     "prompt": "You are an expert Python developer. Help users write clean, efficient code."
@@ -99,7 +99,7 @@ The configuration feature is fully backward compatible. Existing Agent initializ
 # This still works exactly as before
 agent = Agent(
     model="us.anthropic.claude-sonnet-4-20250514-v1:0",
-    tools=["fs_read"],
+    tools=["file_read"],
     system_prompt="You are helpful"
 )
 ```
