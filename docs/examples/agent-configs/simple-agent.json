@@ -1,0 +1,4 @@
+{
+    "model": "claude-3-haiku",
+    "prompt": "You are a helpful assistant."
+}
