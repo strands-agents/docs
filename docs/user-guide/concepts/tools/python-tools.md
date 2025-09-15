@@ -168,7 +168,7 @@ agent("What is the tool use id?")
 
 ### Tool Streaming
 
-Async tools can yield intermediate results to provide real-time progress updates. Each yielded value becomes a streaming event (see [async iterators](../streaming/async-iterators.md) or [callback handlers](../streaming/callback-handlers.md) for more information), with the final value serving as the tool's return result:
+Async tools can yield intermediate results to provide real-time progress updates. Each yielded value becomes a [streaming event](../streaming/overview.md), with the final value serving as the tool's return result:
 
 ```python
 from datetime import datetime

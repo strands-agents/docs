@@ -100,6 +100,7 @@ nav:
         - Cohere: user-guide/concepts/model-providers/cohere.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
       - Streaming:
+        - Overview: user-guide/concepts/streaming/overview.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
         - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
       - Multi-agent:

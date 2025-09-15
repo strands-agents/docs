@@ -1,15 +1,10 @@
 # Callback Handlers
 
-Callback handlers are a powerful feature of the Strands Agents SDK that allow you to intercept and process events as they happen during agent execution. This enables real-time monitoring, custom output formatting, and integration with external systems.
+Callback handlers allow you to intercept and process events as they happen during agent execution. This enables real-time monitoring, custom output formatting, and integration with external systems through function-based event handling.
 
-Callback handlers receive events in real-time as they occur during an agent's lifecycle:
+For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./overview.md#event-types).
 
-- Text generation from the model
-- Tool selection and execution
-- Reasoning process
-- Errors and completions
-
-> **Note:** For asynchronous applications such as web servers, Strands Agents also provides [async iterators](./async-iterators.md) as an alternative to callback-based callback handlers.
+> **Note:** For asynchronous applications, consider [async iterators](./async-iterators.md) instead.
 
 ## Basic Usage
 
@@ -34,40 +29,6 @@ agent = Agent(
 
 agent("Calculate 2+2")
 ```
-
-## Callback Handler Events
-
-Callback handlers receive the same event types as [async iterators](./async-iterators.md#event-types), as keyword arguments:
-
-### Text Generation Events
-
-- `data`: Text chunk from the model's output
-- `delta`: Raw delta content from the model
-
-### Tool Events
-
-- `current_tool_use`: Information about the current tool being used, including:
-    - `toolUseId`: Unique ID for this tool use
-    - `name`: Name of the tool
-    - `input`: Tool input parameters (accumulated as streaming occurs)
-
-### Lifecycle Events
-
-- `init_event_loop`: True when the event loop is initializing
-- `start_event_loop`: True when the event loop is starting
-- `start`: True when a new cycle starts
-- `message`: Present when a new message is created
-- `event`: Raw event from the model stream
-- `force_stop`: True if the event loop was forced to stop
-- `force_stop_reason`: Reason for forced stop
-- `result`: The final [`AgentResult`](../../../api-reference/agent.md#strands.agent.agent_result.AgentResult)
-
-### Reasoning Events
-
-- `reasoning`: True for reasoning events
-- `reasoningText`: Text from reasoning process
-- `reasoning_signature`: Signature from reasoning process
-- `redactedContent`: Reasoning content redacted by the model
 
 ## Default Callback Handler
 
@@ -155,8 +116,6 @@ def event_loop_tracker(**kwargs):
         print("🔄 Event loop initialized")
     elif kwargs.get("start_event_loop", False):
         print("▶️ Event loop cycle starting")
-    elif kwargs.get("start", False):
-        print("📝 New cycle started")
     elif "message" in kwargs:
         print(f"📬 New message created: {kwargs['message']['role']}")
     elif kwargs.get("complete", False):
