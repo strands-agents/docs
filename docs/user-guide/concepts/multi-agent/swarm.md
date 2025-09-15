@@ -128,6 +128,7 @@ When you create a Swarm, each agent is automatically equipped with special tools
 Agents can transfer control to another agent when they need specialized help:
 
 ```python
+# Handoff Tool Description: Transfer control to another agent in the swarm for specialized help.
 handoff_to_agent(
     agent_name="coder",
     message="I need help implementing this algorithm in Python",
