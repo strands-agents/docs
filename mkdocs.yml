@@ -100,6 +100,7 @@ nav:
         - Writer: user-guide/concepts/model-providers/writer.md
         - Cohere: user-guide/concepts/model-providers/cohere.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
+        - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md # ALWAYS ADD A SPACE BEFORE COMMUNITY
       - Streaming:
         - Overview: user-guide/concepts/streaming/overview.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
@@ -205,6 +206,9 @@ extra:
 
   link_strands_tools: "[`strands-agents-tools`](https://github.com/strands-agents/tools)"
   link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
+  community_contribution_banner: |
+    !!! info "Community Contribution"
+        This is a community contribution. Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
 
 validation:
   nav:
