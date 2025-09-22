@@ -55,7 +55,7 @@ class WeatherForecast(BaseModel):
 Then use the `Agent.structured_output()` method as shown in the following sections.
 
 > #### Note on Usage
-> Using `structured_ouput` creates a tool with the same name as the Pydantic model you have defined, say - "SomePydanticModel".
+> For model providers that do not provide a native "structured output" API, using `structured_ouput` creates a tool with the same name as the Pydantic model you have defined, say - "SomePydanticModel".
 > `agent.structured_output` should be used to re-organize information from the existing conversation (or optional prompt) into the Pydantic model. To do this, `structured_output` expects to invoke only the SomePydanticModel tool. Attempting to use any other tool will result in errors.
 >
 > Note that the prompt attached to the `structured_output` call will not be integrated into the conversation history, therefore `structured_output` should solely be invoked to restructure data from a conversation or from the isolated optional prompt.
