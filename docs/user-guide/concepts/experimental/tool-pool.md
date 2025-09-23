@@ -3,9 +3,25 @@
 !!! warning "Experimental Feature"
     This feature is experimental and may change in future versions. Use with caution in production environments.
 
-The experimental `ToolPool` provides a clean, intuitive way to manage collections of tools with a natural constructor API.
+The experimental `ToolPool` provides a clean, intuitive way to manage collections of tools with a natural constructor API, serving as a tool registry for a single Strands runtime.
 
 ## Overview
+
+`ToolPool` is designed as a superset of tools available to the agent framework, providing an interface for customers to create their own agents by selecting from a curated list of available tools. Think of it as a tool registry that manages all tools within a single Strands runtime environment.
+
+### Key Concepts
+
+- **Tool Registry**: Centralized management of all available tools
+- **Customer Interface**: Enable customers to select tools for their custom agents
+- **Runtime Scope**: Manages tools within a single Strands runtime instance
+- **Natural API**: Clean, intuitive constructor and method interfaces
+
+### Use Cases
+
+- **Platform Providers**: Offer a curated set of tools that customers can choose from
+- **Multi-tenant Environments**: Manage tool availability per tenant or customer
+- **Agent Marketplaces**: Allow users to build custom agents from available tools
+- **Tool Governance**: Control which tools are available in different contexts
 
 `ToolPool` allows you to:
 
@@ -13,6 +29,52 @@ The experimental `ToolPool` provides a clean, intuitive way to manage collection
 - Pass tool functions directly: `ToolPool([calculator, current_time])`
 - Import entire modules of tools with `ToolPool.from_module()`
 - Integrate seamlessly with Agent instances
+- Provide customers with tool selection interfaces
+
+## Customer Interface Example
+
+Here's how a platform provider might use ToolPool to offer tool selection to customers:
+
+```python
+from strands.experimental import ToolPool, AgentConfig
+from strands_tools import calculator, web_search, file_operations, data_analysis
+
+# Platform provider creates a comprehensive tool registry
+platform_tools = ToolPool([
+    calculator,
+    web_search, 
+    file_operations,
+    data_analysis,
+    # ... more tools
+])
+
+# Customer selects tools for their specific use case
+def create_customer_agent(selected_tool_names: list[str], customer_config: dict):
+    """Allow customers to create agents with selected tools."""
+    
+    # Filter tools based on customer selection
+    customer_tools = ToolPool()
+    all_tools = platform_tools.get_tools()
+    
+    for tool in all_tools:
+        if tool.tool_name in selected_tool_names:
+            customer_tools.add_tool(tool)
+    
+    # Create customer's agent configuration
+    config = AgentConfig(customer_config)
+    
+    # Return configured agent with selected tools
+    return config.toAgent(tools=customer_tools)
+
+# Customer usage
+my_agent = create_customer_agent(
+    selected_tool_names=["calculator", "web_search"],
+    customer_config={
+        "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+        "prompt": "You are my research assistant"
+    }
+)
+```
 
 ## Basic Usage
 

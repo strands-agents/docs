@@ -8,20 +8,21 @@ Strands Agents includes experimental features that provide enhanced functionalit
 ## Available Experimental Features
 
 ### [AgentConfig](agent-config.md)
-Declarative agent configuration with enhanced instantiation patterns.
+Declarative configuration-based agent creation with enhanced instantiation patterns.
 
-- Load configurations from JSON files or dictionaries
-- Create Agent instances with the `toAgent()` method
+- Create configuration-based agents from JSON files or dictionaries
+- Use the `toAgent()` method for clean agent instantiation
 - Standardized configuration interfaces with `file://` prefix support
 - Integration with ToolPool for advanced tool management
 
 ### [ToolPool](tool-pool.md)
-Clean, intuitive tool management with natural constructor API.
+Tool registry and management system with natural constructor API.
 
+- Centralized tool registry for single Strands runtime environments
+- Customer interface for tool selection and custom agent creation
 - Direct tool function passing: `ToolPool([calculator, current_time])`
 - Module imports with `ToolPool.from_module()`
-- Mixed tool type support (AgentTool instances and `@tool` functions)
-- Seamless Agent integration
+- Platform provider capabilities for multi-tenant tool management
 
 ## Getting Started
 
