@@ -116,6 +116,10 @@ nav:
         - Graph: user-guide/concepts/multi-agent/graph.md
         - Workflow: user-guide/concepts/multi-agent/workflow.md
         - Multi-agent Patterns: user-guide/concepts/multi-agent/multi-agent-patterns.md
+      - Experimental:
+        - Overview: user-guide/concepts/experimental/index.md
+        - AgentConfig: user-guide/concepts/experimental/agent-config.md
+        - ToolPool: user-guide/concepts/experimental/tool-pool.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
