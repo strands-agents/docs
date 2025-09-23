@@ -3,14 +3,14 @@
 !!! warning "Experimental Feature"
     This feature is experimental and may change in future versions. Use with caution in production environments.
 
-The experimental `AgentConfig` provides a declarative way to configure and create Agent instances with enhanced instantiation patterns.
+The experimental `AgentConfig` provides a declarative way to create configuration-based agents with enhanced instantiation patterns.
 
 ## Overview
 
 `AgentConfig` allows you to:
 
-- Load agent configurations from JSON files or dictionaries
-- Create Agent instances with the `toAgent()` method
+- Create configuration-based agents from JSON files or dictionaries
+- Use the `toAgent()` method for clean agent instantiation
 - Integrate with ToolPool for advanced tool management
 - Use standardized configuration interfaces
 

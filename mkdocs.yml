@@ -76,7 +76,6 @@ nav:
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
-        - Configuration: user-guide/concepts/agents/configuration.md
         - State: user-guide/concepts/agents/state.md
         - Session Management: user-guide/concepts/agents/session-management.md
         - Prompts: user-guide/concepts/agents/prompts.md
