@@ -11,7 +11,7 @@ The experimental `AgentConfig` provides a declarative way to create configuratio
 
 - Create configuration-based agents from JSON files or dictionaries
 - Use the `toAgent()` method for clean agent instantiation
-- Integrate with ToolPool for advanced tool management
+- Integrate with ToolBox for advanced tool management
 - Use standardized configuration interfaces
 
 ## Basic Usage
@@ -33,7 +33,7 @@ agent = config.toAgent()
 
 ### Using Default Tools
 
-When no ToolPool is provided, AgentConfig automatically loads default tools from `strands_tools`:
+When no ToolBox is provided, AgentConfig automatically loads default tools from `strands_tools`:
 
 ```python
 from strands.experimental import AgentConfig
@@ -68,7 +68,7 @@ agent = config.toAgent()
 ```
 
 !!! warning "Requires strands_tools"
-    Default tools require `pip install strands-agents-tools`. If not installed, you will have to configure your own ToolPool with your own tools.
+    Default tools require `pip install strands-agents-tools`. If not installed, you will have to configure your own ToolBox with your own tools.
 
 ### File Configuration
 
@@ -88,16 +88,16 @@ Example `config.json`:
 }
 ```
 
-## Integration with ToolPool
+## Integration with ToolBox
 
-`AgentConfig` works seamlessly with `ToolPool` for advanced tool management:
+`AgentConfig` works seamlessly with `ToolBox` for advanced tool management:
 
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 from strands_tools import calculator, current_time
 
 # Create tool pool
-tools = ToolPool([calculator, current_time])
+tools = ToolBox([calculator, current_time])
 
 # Create agent with tools
 config = AgentConfig({
@@ -114,13 +114,13 @@ agent = config.toAgent(tools=tools)
 
 - `model`: Model identifier (string)
 - `prompt`: System prompt for the agent (string)
-- `tools`: List of tool names to select from the provided ToolPool (optional)
+- `tools`: List of tool names to select from the provided ToolBox (optional)
 
 ### Method Parameters
 
 The `toAgent()` method accepts:
 
-- `tools`: Optional ToolPool instance to override the configured tools
+- `tools`: Optional ToolBox instance to override the configured tools
 - `**kwargs`: Additional Agent constructor parameters that override config values
 
 ```python
@@ -134,7 +134,7 @@ agent = config.toAgent(
 
 ## Default Tools Behavior
 
-When no ToolPool is provided, AgentConfig attempts to create a default ToolPool with these tools from `strands_tools`:
+When no ToolBox is provided, AgentConfig attempts to create a default ToolBox with these tools from `strands_tools`:
 
 - `file_read` - File reading operations
 - `editor` - Text editing capabilities  
@@ -145,10 +145,10 @@ When no ToolPool is provided, AgentConfig attempts to create a default ToolPool 
 !!! note "Experimental Tool List"
     This is a minimum viable list of tools to enable agent building. The list is experimental and will be revisited as tools evolve.
 
-If `strands_tools` is not installed, you must provide your own ToolPool:
+If `strands_tools` is not installed, you must provide your own ToolBox:
 
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 from strands import tool
 
 @tool
@@ -156,30 +156,30 @@ def my_custom_tool(input: str) -> str:
     """My custom tool implementation."""
     return f"Processed: {input}"
 
-# Create custom ToolPool
-custom_tools = ToolPool([my_custom_tool])
+# Create custom ToolBox
+custom_tools = ToolBox([my_custom_tool])
 
 # Use with AgentConfig
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
     "prompt": "You are a helpful assistant"
-}, tool_pool=custom_tools)
+}, tool_box=custom_tools)
 ```
 
 ## Tool Selection
 
-When `tools` is specified in the configuration, AgentConfig validates and selects only those tools from the provided ToolPool:
+When `tools` is specified in the configuration, AgentConfig validates and selects only those tools from the provided ToolBox:
 
 ```python
-# Platform provider creates comprehensive ToolPool
-platform_tools = ToolPool([calculator, web_search, file_ops, data_analysis])
+# Platform provider creates comprehensive ToolBox
+platform_tools = ToolBox([calculator, web_search, file_ops, data_analysis])
 
 # Customer selects specific tools
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0", 
     "prompt": "You are a research assistant",
     "tools": ["calculator", "web_search"]  # Only these will be available
-}, tool_pool=platform_tools)
+}, tool_box=platform_tools)
 
 agent = config.toAgent()  # Agent has only calculator and web_search
 ```
@@ -211,56 +211,56 @@ except ValueError as e:
 
 ### Tool Validation Errors
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 
-# Tool not found in ToolPool
+# Tool not found in ToolBox
 try:
     config = AgentConfig({
         "model": "test-model",
         "tools": ["nonexistent_tool"]
-    }, tool_pool=ToolPool())
+    }, tool_box=ToolBox())
 except ValueError as e:
-    print(f"Error: {e}")  # Tool 'nonexistent_tool' not found in ToolPool
+    print(f"Error: {e}")  # Tool 'nonexistent_tool' not found in ToolBox
 ```
 
 ### Missing Dependencies
 ```python
-# When strands_tools not installed and no ToolPool provided
+# When strands_tools not installed and no ToolBox provided
 try:
     config = AgentConfig({"model": "test-model"})
 except ImportError as e:
     print(f"Error: {e}")  
-    # strands_tools is not available and no ToolPool was specified. 
+    # strands_tools is not available and no ToolBox was specified. 
     # Either install strands_tools with 'pip install strands-agents-tools' 
-    # or provide your own ToolPool with your own tools.
+    # or provide your own ToolBox with your own tools.
 ```
 
-### Tool Configuration Without ToolPool
+### Tool Configuration Without ToolBox
 ```python
-# Specifying tools without providing ToolPool
+# Specifying tools without providing ToolBox
 try:
     config = AgentConfig({
         "model": "test-model",
         "tools": ["calculator"]
-    })  # No tool_pool parameter
+    })  # No tool_box parameter
 except ValueError as e:
-    print(f"Error: {e}")  # Tool names specified in config but no ToolPool provided
+    print(f"Error: {e}")  # Tool names specified in config but no ToolBox provided
 ```
 
 ## Best Practices
 
 1. **Use file:// prefix**: Always prefix file paths with `file://`
 2. **Install strands_tools**: Use `pip install strands-agents-tools` for default tools
-3. **Provide custom ToolPool**: Create your own ToolPool if not using strands_tools
-4. **Validate tool selection**: Ensure tool names exist in your ToolPool before configuration
-5. **Tool registry pattern**: Use ToolPool as a registry for customer tool selection
+3. **Provide custom ToolBox**: Create your own ToolBox if not using strands_tools
+4. **Validate tool selection**: Ensure tool names exist in your ToolBox before configuration
+5. **Tool registry pattern**: Use ToolBox as a registry for customer tool selection
 6. **Override when needed**: Use kwargs to override config values dynamically
 7. **Handle errors gracefully**: Catch ImportError and ValueError for robust applications
 
 ## Example: Complete Workflow
 
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 from strands import tool
 
 # Define custom tools
@@ -277,14 +277,14 @@ def data_processor(data: str) -> str:
 
 try:
     # Create tool pool with custom tools
-    tools = ToolPool([custom_calculator, data_processor])
+    tools = ToolBox([custom_calculator, data_processor])
     
     # Load configuration with tool selection
     config = AgentConfig({
         "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
         "prompt": "You are a data analysis assistant",
         "tools": ["custom_calculator"]  # Only calculator available to agent
-    }, tool_pool=tools)
+    }, tool_box=tools)
     
     # Create agent with selected tools
     agent = config.toAgent(temperature=0.3)
@@ -294,7 +294,7 @@ try:
     
 except ImportError as e:
     print(f"Missing dependencies: {e}")
-    # Handle by installing strands_tools or providing custom ToolPool
+    # Handle by installing strands_tools or providing custom ToolBox
     
 except ValueError as e:
     print(f"Configuration error: {e}")

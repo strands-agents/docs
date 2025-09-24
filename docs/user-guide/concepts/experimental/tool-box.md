@@ -1,13 +1,13 @@
-# Experimental ToolPool
+# Experimental ToolBox
 
 !!! warning "Experimental Feature"
     This feature is experimental and may change in future versions. Use with caution in production environments.
 
-The experimental `ToolPool` provides a clean, intuitive way to manage collections of tools with a natural constructor API, serving as a tool registry for a single Strands runtime.
+The experimental `ToolBox` provides a clean, intuitive way to manage collections of tools with a natural constructor API, serving as a tool registry for a single Strands runtime.
 
 ## Overview
 
-`ToolPool` is designed as a superset of tools available to the agent framework, providing an interface for customers to create their own agents by selecting from a curated list of available tools. Think of it as a tool registry that manages all tools within a single Strands runtime environment.
+`ToolBox` is designed as a superset of tools available to the agent framework, providing an interface for customers to create their own agents by selecting from a curated list of available tools. Think of it as a tool registry that manages all tools within a single Strands runtime environment.
 
 ### Key Concepts
 
@@ -23,24 +23,24 @@ The experimental `ToolPool` provides a clean, intuitive way to manage collection
 - **Agent Marketplaces**: Allow users to build custom agents from available tools
 - **Tool Governance**: Control which tools are available in different contexts
 
-`ToolPool` allows you to:
+`ToolBox` allows you to:
 
 - Manage collections of tools with a clean constructor API
-- Pass tool functions directly: `ToolPool([calculator, current_time])`
-- Import entire modules of tools with `ToolPool.from_module()`
+- Pass tool functions directly: `ToolBox([calculator, current_time])`
+- Import entire modules of tools with `ToolBox.from_module()`
 - Integrate seamlessly with Agent instances
 - Provide customers with tool selection interfaces
 
 ## Customer Interface Example
 
-Here's how a platform provider might use ToolPool to offer tool selection to customers:
+Here's how a platform provider might use ToolBox to offer tool selection to customers:
 
 ```python
-from strands.experimental import ToolPool, AgentConfig
+from strands.experimental import ToolBox, AgentConfig
 from strands_tools import calculator, web_search, file_operations, data_analysis
 
 # Platform provider creates a comprehensive tool registry
-platform_tools = ToolPool([
+platform_tools = ToolBox([
     calculator,
     web_search, 
     file_operations,
@@ -53,8 +53,8 @@ def create_customer_agent(selected_tool_names: list[str], customer_config: dict)
     """Allow customers to create agents with selected tools."""
     
     # Filter tools based on customer selection
-    customer_tools = ToolPool()
-    all_tools = platform_tools.get_tools()
+    customer_tools = ToolBox()
+    all_tools = platform_tools.list_tools()
     
     for tool in all_tools:
         if tool.tool_name in selected_tool_names:
@@ -81,25 +81,25 @@ my_agent = create_customer_agent(
 ### Direct Tool Function Passing
 
 ```python
-from strands.experimental import ToolPool
+from strands.experimental import ToolBox
 from strands_tools import calculator, current_time
 
 # Create pool with tool functions directly
-pool = ToolPool([calculator, current_time])
+pool = ToolBox([calculator, current_time])
 
 # Use with Agent
 from strands import Agent
-agent = Agent(tools=pool.get_tools())
+agent = Agent(tools=pool.list_tools())
 ```
 
 ### Empty Pool with Manual Addition
 
 ```python
-from strands.experimental import ToolPool
+from strands.experimental import ToolBox
 from strands_tools import calculator
 
 # Create empty pool
-pool = ToolPool()
+pool = ToolBox()
 
 # Add tools manually
 pool.add_tool_function(calculator)
@@ -108,7 +108,7 @@ pool.add_tool_function(calculator)
 print(pool.list_tool_names())  # ['calculator']
 
 # Get AgentTool instances
-tools = pool.get_tools()
+tools = pool.list_tools()
 ```
 
 ## Module Import
@@ -116,14 +116,14 @@ tools = pool.get_tools()
 Import all `@tool` decorated functions from a module:
 
 ```python
-from strands.experimental import ToolPool
+from strands.experimental import ToolBox
 import strands_tools
 
 # Import all tools from module
-pool = ToolPool.from_module(strands_tools)
+pool = ToolBox.from_module(strands_tools)
 
 # Or add to existing pool
-pool = ToolPool()
+pool = ToolBox()
 pool.add_tools_from_module(strands_tools)
 ```
 
@@ -132,7 +132,7 @@ pool.add_tools_from_module(strands_tools)
 ### Constructor
 
 ```python
-ToolPool(tools: list[AgentTool | Callable] | None = None)
+ToolBox(tools: list[AgentTool | Callable] | None = None)
 ```
 
 - `tools`: Optional list of AgentTool instances or `@tool` decorated functions
@@ -151,7 +151,7 @@ def my_calculator(a: int, b: int) -> int:
     """Add two numbers."""
     return a + b
 
-pool = ToolPool()
+pool = ToolBox()
 pool.add_tool_function(my_calculator)
 ```
 
@@ -162,7 +162,7 @@ Add all `@tool` decorated functions from a module.
 ```python
 import my_tools_module
 
-pool = ToolPool()
+pool = ToolBox()
 pool.add_tools_from_module(my_tools_module)
 ```
 
@@ -171,43 +171,43 @@ pool.add_tools_from_module(my_tools_module)
 Get a list of all tool names in the pool.
 
 ```python
-pool = ToolPool([calculator, current_time])
+pool = ToolBox([calculator, current_time])
 names = pool.list_tool_names()  # ['calculator', 'current_time']
 ```
 
-#### `get_tools() -> list[AgentTool]`
+#### `list_tools() -> list[AgentTool]`
 
 Get all tools as AgentTool instances for use with Agent.
 
 ```python
-pool = ToolPool([calculator, current_time])
-agent_tools = pool.get_tools()
+pool = ToolBox([calculator, current_time])
+agent_tools = pool.list_tools()
 
 # Use with Agent
 agent = Agent(tools=agent_tools)
 ```
 
-#### `from_module(module: any) -> ToolPool` (Class Method)
+#### `from_module(module: any) -> ToolBox` (Class Method)
 
-Create a ToolPool from all `@tool` functions in a module.
+Create a ToolBox from all `@tool` functions in a module.
 
 ```python
 import strands_tools
 
 # Create pool from entire module
-pool = ToolPool.from_module(strands_tools)
+pool = ToolBox.from_module(strands_tools)
 ```
 
 ## Integration with AgentConfig
 
-ToolPool works seamlessly with the experimental AgentConfig:
+ToolBox works seamlessly with the experimental AgentConfig:
 
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 from strands_tools import calculator, web_search
 
 # Create tool pool
-tools = ToolPool([calculator, web_search])
+tools = ToolBox([calculator, web_search])
 
 # Create agent config
 config = AgentConfig({
@@ -221,10 +221,10 @@ agent = config.toAgent(tools=tools)
 
 ## Mixed Tool Types
 
-ToolPool accepts both AgentTool instances and `@tool` decorated functions:
+ToolBox accepts both AgentTool instances and `@tool` decorated functions:
 
 ```python
-from strands.experimental import ToolPool
+from strands.experimental import ToolBox
 from strands.types.tools import AgentTool
 from strands_tools import calculator
 
@@ -237,7 +237,7 @@ class CustomTool(AgentTool):
         return "Custom result"
 
 # Mix different tool types
-pool = ToolPool([
+pool = ToolBox([
     calculator,        # @tool decorated function
     CustomTool()       # AgentTool instance
 ])
@@ -246,14 +246,14 @@ pool = ToolPool([
 ## Error Handling
 
 ```python
-from strands.experimental import ToolPool
+from strands.experimental import ToolBox
 
 def not_a_tool():
     """This function is not decorated with @tool"""
     pass
 
 try:
-    pool = ToolPool([not_a_tool])
+    pool = ToolBox([not_a_tool])
 except ValueError as e:
     print(f"Error: {e}")  # Function not_a_tool is not decorated with @tool
 ```
@@ -263,13 +263,13 @@ except ValueError as e:
 1. **Use direct function passing**: Pass `@tool` decorated functions directly to the constructor
 2. **Module imports**: Use `from_module()` for importing entire tool modules
 3. **Clear naming**: Tool names are automatically derived from function names
-4. **Type safety**: ToolPool validates that functions are properly decorated
+4. **Type safety**: ToolBox validates that functions are properly decorated
 5. **Integration**: Use with AgentConfig for complete configuration management
 
 ## Example: Complete Workflow
 
 ```python
-from strands.experimental import ToolPool, AgentConfig
+from strands.experimental import ToolBox, AgentConfig
 from strands import tool
 import strands_tools
 
@@ -281,7 +281,7 @@ def custom_calculator(expression: str) -> float:
     return eval(expression)  # Note: Use safe evaluation in production
 
 # Create tool pool with mixed sources
-pool = ToolPool([custom_calculator])
+pool = ToolBox([custom_calculator])
 pool.add_tools_from_module(strands_tools)
 
 # Create agent configuration
