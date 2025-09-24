@@ -64,7 +64,7 @@ def create_customer_agent(selected_tool_names: list[str], customer_config: dict)
     config = AgentConfig(customer_config)
     
     # Return configured agent with selected tools
-    return config.toAgent(tools=customer_tools)
+    return config.to_agent(tools=customer_tools)
 
 # Customer usage
 my_agent = create_customer_agent(
@@ -216,7 +216,7 @@ config = AgentConfig({
 })
 
 # Create agent with tools
-agent = config.toAgent(tools=tools)
+agent = config.to_agent(tools=tools)
 ```
 
 ## Mixed Tool Types
@@ -291,7 +291,7 @@ config = AgentConfig({
 })
 
 # Create agent with all tools
-agent = config.toAgent(tools=pool)
+agent = config.to_agent(tools=pool)
 
 # Use the agent
 response = agent("Calculate the compound interest on $1000 at 5% for 3 years")
