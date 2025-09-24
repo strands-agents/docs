@@ -27,9 +27,48 @@ config = AgentConfig({
     "prompt": "You are a helpful assistant"
 })
 
-# Create agent instance
+# Create agent instance (uses default tools from strands_tools)
 agent = config.toAgent()
 ```
+
+### Using Default Tools
+
+When no ToolPool is provided, AgentConfig automatically loads default tools from `strands_tools`:
+
+```python
+from strands.experimental import AgentConfig
+
+# This will use the default tools: file_read, editor, http_request, shell, use_agent
+config = AgentConfig({
+    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "prompt": "You are a helpful assistant with file and web capabilities"
+})
+
+agent = config.toAgent()
+
+# Agent now has access to default tools
+response = agent("Read the contents of README.md and summarize it")
+```
+
+### Selecting from Default Tools
+
+You can also select specific tools from the default set:
+
+```python
+from strands.experimental import AgentConfig
+
+# Select only specific default tools
+config = AgentConfig({
+    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0", 
+    "prompt": "You are a file management assistant",
+    "tools": ["file_read", "editor"]  # Only file operations, no web/shell
+})
+
+agent = config.toAgent()
+```
+
+!!! warning "Requires strands_tools"
+    Default tools require `pip install strands-agents-tools`. If not installed, provide your own ToolPool.
 
 ### File Configuration
 
