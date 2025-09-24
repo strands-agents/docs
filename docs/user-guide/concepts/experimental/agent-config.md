@@ -68,7 +68,7 @@ agent = config.toAgent()
 ```
 
 !!! warning "Requires strands_tools"
-    Default tools require `pip install strands-agents-tools`. If not installed, provide your own ToolPool.
+    Default tools require `pip install strands-agents-tools`. If not installed, you will have to configure your own ToolPool with your own tools.
 
 ### File Configuration
 
