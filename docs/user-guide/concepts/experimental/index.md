@@ -13,15 +13,15 @@ Declarative configuration-based agent creation with enhanced instantiation patte
 - Create configuration-based agents from JSON files or dictionaries
 - Use the `toAgent()` method for clean agent instantiation
 - Standardized configuration interfaces with `file://` prefix support
-- Integration with ToolPool for advanced tool management
+- Integration with ToolBox for advanced tool management
 
-### [ToolPool](tool-pool.md)
+### [ToolBox](tool-box.md)
 Tool registry and management system with natural constructor API.
 
 - Centralized tool registry for single Strands runtime environments
 - Customer interface for tool selection and custom agent creation
-- Direct tool function passing: `ToolPool([calculator, current_time])`
-- Module imports with `ToolPool.from_module()`
+- Direct tool function passing: `ToolBox([calculator, current_time])`
+- Module imports with `ToolBox.from_module()`
 - Platform provider capabilities for multi-tenant tool management
 
 ## Getting Started
@@ -29,17 +29,17 @@ Tool registry and management system with natural constructor API.
 Import experimental features from the `strands.experimental` namespace:
 
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 ```
 
 ## Quick Example
 
 ```python
-from strands.experimental import AgentConfig, ToolPool
+from strands.experimental import AgentConfig, ToolBox
 from strands_tools import calculator, current_time
 
 # Create tool pool
-tools = ToolPool([calculator, current_time])
+tools = ToolBox([calculator, current_time])
 
 # Create agent configuration
 config = AgentConfig({

@@ -118,7 +118,7 @@ nav:
       - Experimental:
         - Overview: user-guide/concepts/experimental/index.md
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
-        - ToolPool: user-guide/concepts/experimental/tool-pool.md
+        - ToolBox: user-guide/concepts/experimental/tool-box.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
