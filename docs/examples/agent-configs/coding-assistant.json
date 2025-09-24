@@ -1,8 +1,5 @@
 {
-    "tools": [
-        "shell",
-        "calculator"
-    ],
-    "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
-    "prompt": "You are an expert software developer. Help users write clean, efficient, and well-documented code. Always explain your reasoning and provide examples when helpful."
+  "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+  "prompt": "You are a coding assistant. Help users write, debug, and improve their code. You have access to file operations and can execute shell commands when needed.",
+  "tools": ["shell", "file_read", "editor"]
 }
