@@ -10,7 +10,7 @@ The experimental `AgentConfig` provides a declarative way to create configuratio
 `AgentConfig` allows you to:
 
 - Create configuration-based agents from JSON files or dictionaries
-- Use the `toAgent()` method for clean agent instantiation
+- Use the `to_agent()` method for clean agent instantiation
 - Integrate with ToolBox for advanced tool management
 - Use standardized configuration interfaces
 
@@ -28,7 +28,7 @@ config = AgentConfig({
 })
 
 # Create agent instance (uses default tools from strands_tools)
-agent = config.toAgent()
+agent = config.to_agent()
 ```
 
 ### Using Default Tools
@@ -44,7 +44,7 @@ config = AgentConfig({
     "prompt": "You are a helpful assistant with file and web capabilities"
 })
 
-agent = config.toAgent()
+agent = config.to_agent()
 
 # Agent now has access to default tools
 response = agent("Read the contents of README.md and summarize it")
@@ -64,7 +64,7 @@ config = AgentConfig({
     "tools": ["file_read", "editor"]  # Only file operations, no web/shell
 })
 
-agent = config.toAgent()
+agent = config.to_agent()
 ```
 
 !!! warning "Requires strands_tools"
@@ -77,7 +77,7 @@ Configuration files must use the `file://` prefix:
 ```python
 # Load from JSON file
 config = AgentConfig("file:///path/to/config.json")
-agent = config.toAgent()
+agent = config.to_agent()
 ```
 
 Example `config.json`:
@@ -105,7 +105,7 @@ config = AgentConfig({
     "prompt": "You are a helpful assistant with access to tools"
 })
 
-agent = config.toAgent(tools=tools)
+agent = config.to_agent(tools=tools)
 ```
 
 ## Configuration Options
@@ -118,14 +118,14 @@ agent = config.toAgent(tools=tools)
 
 ### Method Parameters
 
-The `toAgent()` method accepts:
+The `to_agent()` method accepts:
 
 - `tools`: Optional ToolBox instance to override the configured tools
 - `**kwargs`: Additional Agent constructor parameters that override config values
 
 ```python
 # Override config values
-agent = config.toAgent(
+agent = config.to_agent(
     tools=my_tools,
     temperature=0.7,
     max_tokens=1000
@@ -181,7 +181,7 @@ config = AgentConfig({
     "tools": ["calculator", "web_search"]  # Only these will be available
 }, tool_box=platform_tools)
 
-agent = config.toAgent()  # Agent has only calculator and web_search
+agent = config.to_agent()  # Agent has only calculator and web_search
 ```
 
 ## File Path Requirements
@@ -287,7 +287,7 @@ try:
     }, tool_box=tools)
     
     # Create agent with selected tools
-    agent = config.toAgent(temperature=0.3)
+    agent = config.to_agent(temperature=0.3)
     
     # Use the agent
     response = agent("Calculate the compound interest on $1000 at 5% for 3 years")

@@ -11,7 +11,7 @@ Strands Agents includes experimental features that provide enhanced functionalit
 Declarative configuration-based agent creation with enhanced instantiation patterns.
 
 - Create configuration-based agents from JSON files or dictionaries
-- Use the `toAgent()` method for clean agent instantiation
+- Use the `to_agent()` method for clean agent instantiation
 - Standardized configuration interfaces with `file://` prefix support
 - Integration with ToolBox for advanced tool management
 
@@ -48,7 +48,7 @@ config = AgentConfig({
 })
 
 # Create agent
-agent = config.toAgent(tools=tools)
+agent = config.to_agent(tools=tools)
 
 # Use the agent
 response = agent("What time is it and what's 15 * 24?")
