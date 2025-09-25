@@ -38,16 +38,16 @@ When no ToolRegistry is provided, AgentConfig automatically loads default tools 
 ```python
 from strands.experimental import AgentConfig
 
-# This will use the default tools: file_read, editor, http_request, shell, use_agent
+# Simple agent without tools
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant with file and web capabilities"
+    "prompt": "You are a helpful assistant who talks like a pirate. Always respond with 'Ahoy!' and use pirate language."
 })
 
 agent = config.to_agent()
 
-# Agent now has access to default tools
-response = agent("Read the contents of README.md and summarize it")
+# Agent will respond in pirate language
+response = agent("Hello, how are you today?")
 ```
 
 ### Selecting from Default Tools
