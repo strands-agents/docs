@@ -129,11 +129,11 @@ The `to_agent()` method accepts:
 - `**kwargs`: Additional Agent constructor parameters that override config values
 
 ```python
-# Override config values
+# Override config values with valid Agent parameters
 agent = config.to_agent(
-    tools=my_tools,
-    temperature=0.7,
-    max_tokens=1000
+    agent_id="my-agent-123",
+    name="Data Analyst",
+    description="Specialized data analysis agent"
 )
 ```
 
@@ -298,8 +298,8 @@ try:
         "tools": ["custom_calculator"]  # Only calculator available to agent
     }, tool_registry=tool_registry)
     
-    # Create agent with selected tools
-    agent = config.to_agent(temperature=0.3)
+    # Create agent with selected tools and override parameters
+    agent = config.to_agent(agent_id="data-analyst-001", name="Data Analyst")
     
     # Use the agent
     response = agent("Calculate the compound interest on $1000 at 5% for 3 years")
