@@ -13,42 +13,36 @@ Declarative configuration-based agent creation with enhanced instantiation patte
 - Create configuration-based agents from JSON files or dictionaries
 - Use the `to_agent()` method for clean agent instantiation
 - Standardized configuration interfaces with `file://` prefix support
-- Integration with ToolBox for advanced tool management
-
-### [ToolBox](tool-box.md)
-Tool registry and management system with natural constructor API.
-
-- Centralized tool registry for single Strands runtime environments
-- Customer interface for tool selection and custom agent creation
-- Direct tool function passing: `ToolBox([calculator, current_time])`
-- Module imports with `ToolBox.from_module()`
-- Platform provider capabilities for multi-tenant tool management
+- Integration with built-in ToolRegistry for tool management
 
 ## Getting Started
 
 Import experimental features from the `strands.experimental` namespace:
 
 ```python
-from strands.experimental import AgentConfig, ToolBox
+from strands.experimental import AgentConfig
 ```
 
 ## Quick Example
 
 ```python
-from strands.experimental import AgentConfig, ToolBox
+from strands.experimental import AgentConfig
+from strands.tools.registry import ToolRegistry
 from strands_tools import calculator, current_time
 
-# Create tool pool
-tools = ToolBox([calculator, current_time])
+# Create tool registry
+tool_registry = ToolRegistry()
+tool_registry.process_tools([calculator, current_time])
 
 # Create agent configuration
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant with access to tools"
-})
+    "prompt": "You are a helpful assistant with access to tools",
+    "tools": ["calculator", "current_time"]
+}, tool_registry=tool_registry)
 
 # Create agent
-agent = config.to_agent(tools=tools)
+agent = config.to_agent()
 
 # Use the agent
 response = agent("What time is it and what's 15 * 24?")
