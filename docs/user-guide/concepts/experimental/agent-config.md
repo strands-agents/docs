@@ -141,11 +141,11 @@ agent = config.to_agent(
 
 When no ToolRegistry is provided, AgentConfig attempts to create a default ToolRegistry with these tools from `strands_tools`:
 
-- `file_read` - File reading operations
-- `editor` - Text editing capabilities  
-- `http_request` - HTTP requests
-- `shell` - Shell command execution
-- `use_agent` - Agent delegation
+- [`file_read`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py) - File reading operations
+- [`editor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py) - Text editing capabilities  
+- [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py) - HTTP requests
+- [`shell`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/shell.py) - Shell command execution
+- [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py) - Agent delegation
 
 !!! note "Experimental Tool List"
     This is a short list of tools that we think are useful when building agents. The list is experimental and will be revisited as tools evolve.
