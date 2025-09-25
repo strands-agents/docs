@@ -1,4 +1,4 @@
-# Experimental AgentConfig
+# AgentConfig [Experimental]
 
 !!! warning "Experimental Feature"
     This feature is experimental and may change in future versions. Use with caution in production environments.
