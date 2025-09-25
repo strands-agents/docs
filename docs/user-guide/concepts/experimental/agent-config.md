@@ -109,7 +109,7 @@ agent = config.to_agent()
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
     "prompt": "You are a helpful assistant with access to tools",
-    "tools": ["say", "current_time"] # Loads the say and current_time tool, but not the calculator tool
+    "tools": ["file_read", "editor"]
 })
 ```
 
