@@ -1,6 +1,6 @@
 # Gemini
 
-[Google Gemini](https://ai.google.dev/api) is Google's family of multimodal large language models designed for advanced reasoning, code generation, and creative tasks. The Strands Agents SDK implements a Gemini provider, allowing you to run agents against any Gemini model through Google's AI API.
+[Google Gemini](https://ai.google.dev/api) is Google's family of multimodal large language models designed for advanced reasoning, code generation, and creative tasks. The Strands Agents SDK implements a Gemini provider, allowing you to run agents against the Gemini models available through Google's AI API.
 
 ## Installation
 
@@ -14,7 +14,7 @@ pip install 'strands-agents[gemini]' strands-agents-tools
 
 ## Usage
 
-After installing `google-genai`, you can import and initialize the Strands Agents' Gemini provider as follows:
+After installing `strands-agents[gemini]`, you can import and initialize the Strands Agents' Gemini provider as follows:
 
 ```python
 from strands import Agent
@@ -97,7 +97,7 @@ For a complete list of supported models, see the [Gemini API documentation](http
 
 ### Module Not Found
 
-If you encounter the error `ModuleNotFoundError: No module named 'google.genai'`, this means you haven't installed the `google-genai` dependency in your environment. To fix, run `pip install 'strands-agents[gemini]'`.
+If you encounter the error `ModuleNotFoundError: No module named 'google.genai'`, this means the `google-genai` dependency hasn't been properly installed in your environment. To fix this, run `pip install 'strands-agents[gemini]'`.
 
 ### API Key Issues
 
