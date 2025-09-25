@@ -80,11 +80,22 @@ config = AgentConfig("file:///path/to/config.json")
 agent = config.to_agent()
 ```
 
-Example `config.json`:
+#### Simple Agent Example
+
 ```json
 {
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant specialized in data analysis"
+    "model": "us.anthropic.claude-3-haiku-20240307-v1:0",
+    "prompt": "You are a helpful assistant."
+}
+```
+
+#### Coding Assistant Example
+
+```json
+{
+  "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+  "prompt": "You are a coding assistant. Help users write, debug, and improve their code. You have access to file operations and can execute shell commands when needed.",
+  "tools": ["shell", "file_read", "editor"]
 }
 ```
 
