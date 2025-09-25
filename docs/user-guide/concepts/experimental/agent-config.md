@@ -11,7 +11,7 @@ The experimental `AgentConfig` provides a declarative way to create configuratio
 
 - Create configuration-based agents from JSON files or dictionaries
 - Use the `to_agent()` method for clean agent instantiation
-- Integrate with ToolRegistry for advanced tool management
+- Integrate with [ToolRegistry](https://strandsagents.com/latest/documentation/docs/api-reference/tools/#strands.tools.registry.ToolRegistry) for advanced tool management
 - Use standardized configuration interfaces
 
 ## Basic Usage
