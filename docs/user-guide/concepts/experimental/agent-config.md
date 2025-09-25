@@ -106,7 +106,7 @@ config = AgentConfig({
 
 ### Supported Keys
 
-- `model`: Model identifier (string)
+- `model`: Model identifier (string) - see [model provider documentation](https://strandsagents.com/latest/user-guide/quickstart/#using-a-string-model-id)
 - `prompt`: System prompt for the agent (string)
 - `tools`: List of tool names to select from the provided ToolRegistry (optional)
 
