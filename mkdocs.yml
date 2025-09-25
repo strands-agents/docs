@@ -116,7 +116,6 @@ nav:
         - Workflow: user-guide/concepts/multi-agent/workflow.md
         - Multi-agent Patterns: user-guide/concepts/multi-agent/multi-agent-patterns.md
       - Experimental:
-        - Overview: user-guide/concepts/experimental/index.md
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
