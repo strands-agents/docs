@@ -172,6 +172,101 @@ agent("What is the tool use id?")
 agent("What is the invocation state?", custom_data="You're the best agent ;)")
 ```
 
+#### Accessing Invocation State in Tools
+
+The `invocation_state` attribute in `ToolContext` provides access to data passed through the agent invocation. This is particularly useful for:
+
+1. **Configuration and Credentials**: Access API keys, database configurations, or other settings without hardcoding them in tools
+2. **Request Context**: Access session IDs, user information, or request-specific data
+3. **Multi-Agent Shared State**: In [Graph](../multi-agent/graph.md) and [Swarm](../multi-agent/swarm.md) patterns, access state shared across all agents
+4. **Custom Parameters**: Pass any additional data that tools might need
+
+```python
+@tool(context=True)
+def secure_api_call(endpoint: str, tool_context: ToolContext) -> dict:
+    """Make a secure API call using credentials from invocation state.
+    
+    Args:
+        endpoint: The API endpoint to call
+        tool_context: Context containing invocation state with credentials
+    """
+    # Access credentials and configuration from invocation state
+    api_key = tool_context.invocation_state.get("api_key")
+    base_url = tool_context.invocation_state.get("api_base_url", "https://api.example.com")
+    timeout = tool_context.invocation_state.get("timeout", 30)
+    
+    if not api_key:
+        return {"error": "API key not provided in invocation state"}
+    
+    # Make the API call using the credentials
+    response = requests.get(
+        f"{base_url}/{endpoint}",
+        headers={"Authorization": f"Bearer {api_key}"},
+        timeout=timeout
+    )
+    
+    return response.json()
+
+# Single agent usage
+agent = Agent(tools=[secure_api_call])
+result = agent(
+    "Get user profile data",
+    api_key="secret-key-123",
+    api_base_url="https://myapi.example.com",
+    timeout=60
+)
+
+# Multi-agent usage (Graph or Swarm)
+# The invocation_state is automatically propagated to all agents
+graph_result = graph(
+    "Analyze user data",
+    invocation_state={
+        "api_key": "secret-key-123",
+        "api_base_url": "https://myapi.example.com",
+        "timeout": 60
+    }
+)
+```
+
+#### Invocation State vs. Tool Parameters
+
+It's important to understand when to use invocation state versus regular tool parameters:
+
+- **Tool Parameters**: Use for data that the LLM should reason about and provide
+- **Invocation State**: Use for configuration, credentials, and context that should not appear in prompts
+
+```python
+@tool(context=True)
+def database_query(
+    query: str,  # LLM provides this based on user request
+    tool_context: ToolContext
+) -> str:
+    """Execute a database query.
+    
+    Args:
+        query: SQL query to execute (provided by LLM)
+        tool_context: Context with database configuration (from invocation state)
+    """
+    # Database config comes from invocation state (hidden from LLM)
+    db_config = tool_context.invocation_state.get("database", {})
+    
+    # Query comes from LLM reasoning about the user's request
+    connection = create_connection(**db_config)
+    return execute_query(connection, query)
+
+# The LLM decides what query to run, but uses hidden configuration
+agent = Agent(tools=[database_query])
+result = agent(
+    "Show me all users created this month",
+    database={
+        "host": "db.example.com",
+        "port": 5432,
+        "user": "readonly",
+        "password": "secret"
+    }
+)
+```
+
 ### Tool Streaming
 
 Async tools can yield intermediate results to provide real-time progress updates. Each yielded value becomes a [streaming event](../streaming/overview.md), with the final value serving as the tool's return result:
