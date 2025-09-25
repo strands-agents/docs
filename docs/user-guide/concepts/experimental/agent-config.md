@@ -33,7 +33,7 @@ agent = config.to_agent()
 
 ### Using Default Tools
 
-When no ToolRegistry is provided, AgentConfig automatically loads default tools from `strands_tools`:
+When no ToolRegistry is provided, AgentConfig automatically instantiates a default ToolRegistry with a subset of the strands_tools from which you can select for your agent:
 
 - [`file_read`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py) - File reading operations
 - [`editor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py) - Text editing capabilities  
