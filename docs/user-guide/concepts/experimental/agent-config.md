@@ -23,7 +23,7 @@ from strands.experimental import AgentConfig
 
 # Create config from dictionary
 config = AgentConfig({
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "model": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
     "prompt": "You are a helpful assistant"
 })
 
