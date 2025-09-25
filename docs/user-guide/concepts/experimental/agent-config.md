@@ -199,39 +199,56 @@ except ValueError as e:
 from strands.experimental import AgentConfig
 from strands.tools.registry import ToolRegistry
 
-# Tool not found in ToolRegistry
+# Tool not found in ToolRegistry (with raise_exception_on_missing_tool=True, default behavior)
 try:
     config = AgentConfig({
         "model": "test-model",
         "tools": ["nonexistent_tool"]
-    }, tool_registry=ToolRegistry())
+    }, tool_registry=ToolRegistry(), raise_exception_on_missing_tool=True)
 except ValueError as e:
-    print(f"Error: {e}")  # Tool 'nonexistent_tool' not found in ToolRegistry
+    print(f"Error: {e}")  # Tool(s) 'nonexistent_tool' not found in ToolRegistry
+
+# Skip missing tools instead of raising errors
+config = AgentConfig({
+    "model": "test-model",
+    "tools": ["existing_tool", "nonexistent_tool"]
+}, tool_registry=my_tool_registry, raise_exception_on_missing_tool=False)
+# Only existing_tool will be available, nonexistent_tool is silently skipped
 ```
 
 ### Missing Dependencies
 ```python
-# When strands_tools not installed and no ToolRegistry provided
+# When strands_tools not installed and no ToolRegistry provided (with raise_exception_on_missing_tool=True)
 try:
-    config = AgentConfig({"model": "test-model", "tools": ["file_read"]})
-
+    config = AgentConfig({"model": "test-model", "tools": ["file_read"]}, raise_exception_on_missing_tool=True)
 except ImportError as e:
     print(f"Error: {e}")  
     # strands_tools is not available and no ToolRegistry was specified. 
     # Either install strands_tools with 'pip install strands-agents-tools' 
     # or provide your own ToolRegistry with your own tools.
+
+# Skip missing tools when strands_tools not available
+config = AgentConfig({"model": "test-model", "tools": ["file_read"]}, raise_exception_on_missing_tool=False)
+# Will create agent without any tools since strands_tools is not available
 ```
 
 ### Tool Configuration Without ToolRegistry
 ```python
-# Specifying tools without providing ToolRegistry
+# Specifying tools without providing ToolRegistry (with raise_exception_on_missing_tool=True)
 try:
     config = AgentConfig({
         "model": "test-model",
         "tools": ["calculator"]
-    })  # No tool_registry parameter
+    }, raise_exception_on_missing_tool=True)  # No tool_registry parameter
 except ValueError as e:
-    print(f"Error: {e}")  # Tool names specified in config but no ToolRegistry provided
+    print(f"Error: {e}")  # Tool(s) not found in ToolRegistry
+
+# Skip missing tools when no ToolRegistry provided
+config = AgentConfig({
+    "model": "test-model",
+    "tools": ["calculator"]
+}, raise_exception_on_missing_tool=False)  # No tool_registry parameter
+# Will attempt to use default ToolRegistry, skip unavailable tools
 ```
 
 ## Best Practices
@@ -243,6 +260,7 @@ except ValueError as e:
 5. **Tool registry pattern**: Use ToolRegistry as a registry for customer tool selection
 6. **Override when needed**: Use kwargs to override config values dynamically
 7. **Handle errors gracefully**: Catch ImportError and ValueError for robust applications
+8. **Control error behavior**: Use `raise_exception_on_missing_tool=False` to skip missing tools instead of failing
 
 ## Example: Complete Workflow
 
