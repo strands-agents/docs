@@ -42,21 +42,22 @@ When no ToolRegistry is provided, AgentConfig automatically instantiates a defau
 - [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py) - Agent delegation
 
 !!! note "Experimental Tool List"
-    This is a minimum viable list of tools to enable agent building. The list is experimental and will be revisited as tools evolve.
+    This is a minimal list of tools to get you started with building your own agent.
 
 ```python
 from strands.experimental import AgentConfig
 
-# Simple agent without tools
+# Agent with file_read tool
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant who talks like a pirate. Always respond with 'Ahoy!' and use pirate language."
+    "prompt": "You are a helpful assistant that can help answer questions about your file system.",
+    "tools": ["file_read"]
 })
 
 agent = config.to_agent()
 
-# Agent will respond in pirate language
-response = agent("Hello, how are you today?")
+# Agent can read files and answer questions about the file system
+response = agent("What's in my README.md file?")
 ```
 
 If `strands_tools` is not installed, you must provide your own ToolRegistry:
