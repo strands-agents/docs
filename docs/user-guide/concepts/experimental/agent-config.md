@@ -97,10 +97,9 @@ Example `config.json`:
 # Create agent with tools
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant with access to tools"
+    "prompt": "You are a helpful assistant with access to tools",
+    "tools": ["say", "current_time"] # Loads the say and current_time tool, but not the calculator tool
 })
-
-agent = config.to_agent(tools=tools)
 ```
 
 ## Configuration Options
@@ -138,7 +137,7 @@ When no ToolRegistry is provided, AgentConfig attempts to create a default ToolR
 - `use_agent` - Agent delegation
 
 !!! note "Experimental Tool List"
-    This is a minimum viable list of tools to enable agent building. The list is experimental and will be revisited as tools evolve.
+    This is a short list of tools that we think are useful when building agents. The list is experimental and will be revisited as tools evolve.
 
 If `strands_tools` is not installed, you must provide your own ToolRegistry:
 
@@ -226,7 +225,8 @@ except ValueError as e:
 ```python
 # When strands_tools not installed and no ToolRegistry provided
 try:
-    config = AgentConfig({"model": "test-model"})
+    config = AgentConfig({"model": "test-model", "tools": ["file_read"]})
+
 except ImportError as e:
     print(f"Error: {e}")  
     # strands_tools is not available and no ToolRegistry was specified. 
