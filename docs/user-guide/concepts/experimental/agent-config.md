@@ -35,6 +35,15 @@ agent = config.to_agent()
 
 When no ToolRegistry is provided, AgentConfig automatically loads default tools from `strands_tools`:
 
+- [`file_read`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py) - File reading operations
+- [`editor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py) - Text editing capabilities  
+- [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py) - HTTP requests
+- [`shell`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/shell.py) - Shell command execution
+- [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py) - Agent delegation
+
+!!! note "Experimental Tool List"
+    This is a minimum viable list of tools to enable agent building. The list is experimental and will be revisited as tools evolve.
+
 ```python
 from strands.experimental import AgentConfig
 
@@ -48,6 +57,29 @@ agent = config.to_agent()
 
 # Agent will respond in pirate language
 response = agent("Hello, how are you today?")
+```
+
+If `strands_tools` is not installed, you must provide your own ToolRegistry:
+
+```python
+from strands.experimental import AgentConfig
+from strands.tools.registry import ToolRegistry
+from strands import tool
+
+@tool
+def my_custom_tool(input: str) -> str:
+    """My custom tool implementation."""
+    return f"Processed: {input}"
+
+# Create custom ToolRegistry
+custom_tool_registry = ToolRegistry()
+custom_tool_registry.process_tools([my_custom_tool])
+
+# Use with AgentConfig
+config = AgentConfig({
+    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "prompt": "You are a helpful assistant"
+}, tool_registry=custom_tool_registry)
 ```
 
 ### Selecting from Default Tools
@@ -135,42 +167,6 @@ agent = config.to_agent(
     name="Data Analyst",
     description="Specialized data analysis agent"
 )
-```
-
-## Default Tools Behavior
-
-When no ToolRegistry is provided, AgentConfig attempts to create a default ToolRegistry with these tools from `strands_tools`:
-
-- [`file_read`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py) - File reading operations
-- [`editor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py) - Text editing capabilities  
-- [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py) - HTTP requests
-- [`shell`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/shell.py) - Shell command execution
-- [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py) - Agent delegation
-
-!!! note "Experimental Tool List"
-    This is a short list of tools that we think are useful when building agents. The list is experimental and will be revisited as tools evolve.
-
-If `strands_tools` is not installed, you must provide your own ToolRegistry:
-
-```python
-from strands.experimental import AgentConfig
-from strands.tools.registry import ToolRegistry
-from strands import tool
-
-@tool
-def my_custom_tool(input: str) -> str:
-    """My custom tool implementation."""
-    return f"Processed: {input}"
-
-# Create custom ToolRegistry
-custom_tool_registry = ToolRegistry()
-custom_tool_registry.process_tools([my_custom_tool])
-
-# Use with AgentConfig
-config = AgentConfig({
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant"
-}, tool_registry=custom_tool_registry)
 ```
 
 ## Tool Selection
