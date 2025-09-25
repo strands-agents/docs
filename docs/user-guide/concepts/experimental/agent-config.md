@@ -42,7 +42,7 @@ When no ToolRegistry is provided, AgentConfig automatically instantiates a defau
 - [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py) - Agent delegation
 
 !!! note "Experimental Tool List"
-    This is a minimal list of tools to get you started with building your own agent.
+    This is a minimal list of tools to get you started with building your own agent. The list is experimental and will be revisited as tools evolve.
 
 ```python
 from strands.experimental import AgentConfig
