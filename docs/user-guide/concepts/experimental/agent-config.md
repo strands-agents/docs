@@ -83,26 +83,6 @@ config = AgentConfig({
 }, tool_registry=custom_tool_registry)
 ```
 
-### Selecting from Default Tools
-
-You can also select specific tools from the default set:
-
-```python
-from strands.experimental import AgentConfig
-
-# Select only specific default tools
-config = AgentConfig({
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0", 
-    "prompt": "You are a file management assistant",
-    "tools": ["file_read", "editor"]  # Only file operations, no web/shell
-})
-
-agent = config.to_agent()
-```
-
-!!! warning "Requires strands_tools"
-    Default tools require `pip install strands-agents-tools`. If not installed, you will have to configure your own ToolRegistry with your own tools.
-
 ### File Configuration
 
 Configuration files must use the `file://` prefix:
