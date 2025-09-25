@@ -93,13 +93,6 @@ Example `config.json`:
 `AgentConfig` works seamlessly with `ToolRegistry` for advanced tool management:
 
 ```python
-from strands.experimental import AgentConfig
-from strands.tools.registry import ToolRegistry
-from strands_tools import calculator, current_time
-
-# Create tool registry
-tool_registry = ToolRegistry()
-tool_registry.process_tools([calculator, current_time])
 
 # Create agent with tools
 config = AgentConfig({
