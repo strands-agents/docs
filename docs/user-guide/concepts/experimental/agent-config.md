@@ -257,10 +257,9 @@ config = AgentConfig({
 2. **Install strands_tools**: Use `pip install strands-agents-tools` for default tools
 3. **Provide custom ToolRegistry**: Create your own ToolRegistry if not using strands_tools
 4. **Validate tool selection**: Ensure tool names exist in your ToolRegistry before configuration
-5. **Tool registry pattern**: Use ToolRegistry as a registry for customer tool selection
-6. **Override when needed**: Use kwargs to override config values dynamically
-7. **Handle errors gracefully**: Catch ImportError and ValueError for robust applications
-8. **Control error behavior**: Use `raise_exception_on_missing_tool=False` to skip missing tools instead of failing
+5. **Override when needed**: Use kwargs in `to_agent` to override Agent parameters values dynamically
+6. **Handle errors gracefully**: Catch ImportError and ValueError for robust applications
+7. **Control error behavior**: Use `raise_exception_on_missing_tool=False` to skip missing tools instead of failing
 
 ## Example: Complete Workflow
 
