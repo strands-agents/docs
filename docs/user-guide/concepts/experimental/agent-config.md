@@ -87,10 +87,10 @@ config = AgentConfig({
 Configuration files must use the `file://` prefix:
 
 ```python
+from strands.experimental import AgentConfig
 # Load from JSON file
 config = AgentConfig("file:///path/to/config.json")
 agent = config.to_agent()
-```
 
 #### Simple Agent Example
 
