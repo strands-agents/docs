@@ -49,7 +49,6 @@ from strands.experimental import AgentConfig
 
 # Agent with file_read tool
 config = AgentConfig({
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
     "prompt": "You are a helpful assistant that can help answer questions about your file system.",
     "tools": ["file_read"]
 })
