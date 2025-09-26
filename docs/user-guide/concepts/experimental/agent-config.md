@@ -103,6 +103,32 @@ agent = config_to_agent(
 
 ## Error Handling
 
+### Configuration Validation
+
+The `config_to_agent` function validates configuration against a JSON schema and provides detailed error messages:
+
+```python
+from strands.experimental import config_to_agent
+
+# Invalid field
+try:
+    agent = config_to_agent({"model": "test-model", "invalid_field": "value"})
+except ValueError as e:
+    print(f"Error: {e}")  # Configuration validation error at root: Additional properties are not allowed ('invalid_field' was unexpected)
+
+# Wrong field type
+try:
+    agent = config_to_agent({"model": "test-model", "tools": "not-a-list"})
+except ValueError as e:
+    print(f"Error: {e}")  # Configuration validation error at tools: 'not-a-list' is not of type 'array'
+
+# Invalid tool item
+try:
+    agent = config_to_agent({"model": "test-model", "tools": ["valid-tool", 123]})
+except ValueError as e:
+    print(f"Error: {e}")  # Configuration validation error at tools -> 1: 123 is not of type 'string'
+```
+
 ### File Not Found
 ```python
 from strands.experimental import config_to_agent
