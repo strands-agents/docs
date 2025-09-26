@@ -124,7 +124,7 @@ agent = config.to_agent()
 The `to_agent()` method accepts:
 
 - `tools`: Optional ToolRegistry instance to override the configured tools
-- `**kwargs`: Additional Agent constructor parameters that override config values
+- `**kwargs`: Additional [Agent constructor parameters](https://strandsagents.com/latest/api-reference/agent/#strands.agent.agent.Agent.__init__) that override config values
 
 ```python
 # Override config values with valid Agent parameters
