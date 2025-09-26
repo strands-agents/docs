@@ -110,19 +110,6 @@ agent = config.to_agent()
 }
 ```
 
-## Integration with ToolRegistry
-
-`AgentConfig` works seamlessly with `ToolRegistry` for advanced tool management:
-
-```python
-
-# Create agent with tools
-config = AgentConfig({
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant with access to tools",
-    "tools": ["file_read", "editor"]
-})
-```
 
 ## Configuration Options
 
