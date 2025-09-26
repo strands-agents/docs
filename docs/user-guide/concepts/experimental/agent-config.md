@@ -78,7 +78,8 @@ custom_tool_registry.process_tools([my_custom_tool])
 # Use with AgentConfig
 config = AgentConfig({
     "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "prompt": "You are a helpful assistant"
+    "prompt": "You are a helpful assistant",
+    "tools": ["my_custom_tool"]
 }, tool_registry=custom_tool_registry)
 ```
 
