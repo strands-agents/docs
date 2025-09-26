@@ -16,7 +16,7 @@ Hooks enable use cases such as:
 
 ## Basic Usage
 
-Hook callbacks are registered against specific event types and receive strongly-typed event objects when those events occur during agent execution. Each event carries relevant data for that stage of the agent lifecycle - for example, `BeforeInvocationEvent` includes agent and request details, while `BeforeToolInvocationEvent` provides tool information and parameters.
+Hook callbacks are registered against specific event types and receive strongly-typed event objects when those events occur during agent execution. Each event carries relevant data for that stage of the agent lifecycle - for example, `BeforeInvocationEvent` includes agent and request details, while `BeforeToolCallEvent` provides tool information and parameters.
 
 ### Registering Individual Hook Callbacks
 
@@ -69,19 +69,19 @@ flowchart LR
   end
  subgraph Model["Model Events"]
     direction TB
-        AfterModelInvocationEvent["AfterModelInvocationEvent"]
-        BeforeModelInvocationEvent["BeforeModelInvocationEvent"]
+        AfterModelCallEvent["AfterModelCallEvent"]
+        BeforeModelCallEvent["BeforeModelCallEvent"]
         ModelMessage["MessageAddedEvent"]
-        BeforeModelInvocationEvent --> AfterModelInvocationEvent
-        AfterModelInvocationEvent --> ModelMessage
+        BeforeModelCallEvent --> AfterModelCallEvent
+        AfterModelCallEvent --> ModelMessage
   end
   subgraph Tool["Tool Events"]
     direction TB
-        AfterToolInvocationEvent["AfterToolInvocationEvent"]
-        BeforeToolInvocationEvent["BeforeToolInvocationEvent"]
+        AfterToolCallEvent["AfterToolCallEvent"]
+        BeforeToolCallEvent["BeforeToolCallEvent"]
         ToolMessage["MessageAddedEvent"]
-        BeforeToolInvocationEvent --> AfterToolInvocationEvent
-        AfterToolInvocationEvent --> ToolMessage
+        BeforeToolCallEvent --> AfterToolCallEvent
+        AfterToolCallEvent --> ToolMessage
   end
   subgraph End["Request End Events"]
     direction TB
@@ -103,25 +103,16 @@ The hooks system provides events for different stages of agent execution:
 | `BeforeInvocationEvent` | Triggered at the beginning of a new agent request (`__call__`, `stream_async`, or `structured_output`) |
 | `AfterInvocationEvent` | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering   |
 | `MessageAddedEvent`    | Triggered when a message is added to the agent's conversation history                                        |
-
-Additional *experimental events* are also available:
-
-!!! note "Experimental events are subject to change"
-
-    These events are exposed experimentally in order to gather feedback and refine the public contract. Because they are experimental, they are subject to change between releases. 
-
-| Experimental Event           | Description |
-|------------------------------|-------------|
-| `BeforeModelInvocationEvent` | Triggered before the model is invoked for inference |
-| `AfterModelInvocationEvent`  | Triggered after model invocation completes. Uses reverse callback ordering |
-| `BeforeToolInvocationEvent`  | Triggered before a tool is invoked. |
-| `AfterToolInvocationEvent`   | Triggered after tool invocation completes. Uses reverse callback ordering |
+| `BeforeModelCallEvent` | Triggered before the model is invoked for inference |
+| `AfterModelCallEvent`  | Triggered after model invocation completes. Uses reverse callback ordering |
+| `BeforeToolCallEvent`  | Triggered before a tool is invoked. |
+| `AfterToolCallEvent`   | Triggered after tool invocation completes. Uses reverse callback ordering |
 
 ## Hook Behaviors
 
 ### Event Properties
 
-Most event properties are read-only to prevent unintended modifications. However, certain properties can be modified to influence agent behavior. For example, `BeforeToolInvocationEvent.selected_tool` allows you to change which tool gets executed, while `AfterToolInvocationEvent.result` enables modification of tool results.
+Most event properties are read-only to prevent unintended modifications. However, certain properties can be modified to influence agent behavior. For example, `BeforeToolCallEvent.selected_tool` allows you to change which tool gets executed, while `AfterToolCallEvent.result` enables modification of tool results.
 
 ### Callback Ordering
 
@@ -174,8 +165,7 @@ Enforce specific arguments for tools, ensuring they always use particular values
 
 ```python
 from typing import Any
-from strands.hooks import HookProvider, HookRegistry
-from strands.experimental.hooks import BeforeToolInvocationEvent
+from strands.hooks import HookProvider, HookRegistry, BeforeToolCallEvent
 
 class ConstantToolArguments(HookProvider):
     """Use constant argument values for specific parameters of a tool."""
@@ -192,9 +182,9 @@ class ConstantToolArguments(HookProvider):
         self._tools_to_fix = fixed_tool_arguments
 
     def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
-        registry.add_callback(BeforeToolInvocationEvent, self._fix_tool_arguments)
+        registry.add_callback(BeforeToolCallEvent, self._fix_tool_arguments)
 
-    def _fix_tool_arguments(self, event: BeforeToolInvocationEvent):
+    def _fix_tool_arguments(self, event: BeforeToolCallEvent):
         # If the tool is in our list of parameters, then use those parameters
         if parameters_to_fix := self._tools_to_fix.get(event.tool_use["name"]):
             tool_input: dict[str, Any] = event.tool_use["input"]
@@ -221,9 +211,9 @@ Modify or replace tools before execution:
 ```python
 class ToolInterceptor(HookProvider):
     def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(BeforeToolInvocationEvent, self.intercept_tool)
+        registry.add_callback(BeforeToolCallEvent, self.intercept_tool)
 
-    def intercept_tool(self, event: BeforeToolInvocationEvent) -> None:
+    def intercept_tool(self, event: BeforeToolCallEvent) -> None:
         if event.tool_use.name == "sensitive_tool":
             # Replace with a safer alternative
             event.selected_tool = self.safe_alternative_tool
@@ -237,9 +227,9 @@ Modify tool results after execution:
 ```python
 class ResultProcessor(HookProvider):
     def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(AfterToolInvocationEvent, self.process_result)
+        registry.add_callback(AfterToolCallEvent, self.process_result)
 
-    def process_result(self, event: AfterToolInvocationEvent) -> None:
+    def process_result(self, event: AfterToolCallEvent) -> None:
         if event.tool_use.name == "calculator":
             # Add formatting to calculator results
             original_content = event.result["content"][0]["text"]
@@ -271,7 +261,7 @@ class RequestLoggingHook(HookProvider):
     def register_hooks(self, registry: HookRegistry) -> None:
         registry.add_callback(BeforeInvocationEvent, self.log_request)
         registry.add_callback(AfterInvocationEvent, self.log_response)
-        registry.add_callback(BeforeToolInvocationEvent, self.log_tool_use)
+        registry.add_callback(BeforeToolCallEvent, self.log_tool_use)
 
     ...
 ```
@@ -283,9 +273,9 @@ When modifying event properties, log the changes for debugging and audit purpose
 ```python
 class ResultProcessor(HookProvider):
     def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(AfterToolInvocationEvent, self.process_result)
+        registry.add_callback(AfterToolCallEvent, self.process_result)
 
-    def process_result(self, event: AfterToolInvocationEvent) -> None:
+    def process_result(self, event: AfterToolCallEvent) -> None:
         if event.tool_use.name == "calculator":
             original_content = event.result["content"][0]["text"]
             logger.info(f"Modifying calculator result: {original_content}")
