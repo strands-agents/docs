@@ -1,96 +1,43 @@
-# AgentConfig [Experimental]
+# Agent Configuration [Experimental]
 
 !!! warning "Experimental Feature"
     This feature is experimental and may change in future versions. Use with caution in production environments.
 
-The experimental `AgentConfig` provides a declarative way to create configuration-based agents with enhanced instantiation patterns.
+The experimental `config_to_agent` function provides a simple way to create agents from configuration files or dictionaries.
 
 ## Overview
 
-`AgentConfig` allows you to:
+`config_to_agent` allows you to:
 
-- Create configuration-based agents from JSON files or dictionaries
-- Use the `to_agent()` method for clean agent instantiation
-- Integrate with [ToolRegistry](https://strandsagents.com/latest/documentation/docs/api-reference/tools/#strands.tools.registry.ToolRegistry) for advanced tool management
-- Use standardized configuration interfaces
+- Create agents from JSON files or dictionaries
+- Use a simple functional interface for agent instantiation
+- Support both file paths and dictionary configurations
+- Leverage the Agent class's built-in tool loading capabilities
 
 ## Basic Usage
 
 ### Dictionary Configuration
 
 ```python
-from strands.experimental import AgentConfig
+from strands.experimental import config_to_agent
 
-# Create config from dictionary
-config = AgentConfig({
+# Create agent from dictionary
+agent = config_to_agent({
     "model": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
     "prompt": "You are a helpful assistant"
 })
-
-# Create agent instance (uses default tools from strands_tools)
-agent = config.to_agent()
-```
-
-### Using Default Tools
-
-When no ToolRegistry is provided, AgentConfig automatically instantiates a default ToolRegistry with a subset of the strands_tools from which you can select for your agent:
-
-- [`file_read`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py) - File reading operations
-- [`editor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py) - Text editing capabilities  
-- [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py) - HTTP requests
-- [`shell`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/shell.py) - Shell command execution
-- [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py) - Agent delegation
-
-!!! note "Experimental Tool List"
-    This is a minimal list of tools to get you started with building your own agent. The list is experimental and will be revisited as tools evolve.
-
-```python
-from strands.experimental import AgentConfig
-
-# Agent with file_read tool
-config = AgentConfig({
-    "prompt": "You are a helpful assistant that can help answer questions about your file system.",
-    "tools": ["file_read"]
-})
-
-agent = config.to_agent()
-
-# Agent can read files and answer questions about the file system
-response = agent("What's in my README.md file?")
-```
-
-If `strands_tools` is not installed, you must provide your own ToolRegistry:
-
-```python
-from strands.experimental import AgentConfig
-from strands.tools.registry import ToolRegistry
-from strands import tool
-
-@tool
-def my_custom_tool(input: str) -> str:
-    """My custom tool implementation."""
-    return f"Processed: {input}"
-
-# Create custom ToolRegistry
-custom_tool_registry = ToolRegistry()
-custom_tool_registry.process_tools([my_custom_tool])
-
-# Use with AgentConfig
-config = AgentConfig({
-    "prompt": "You are a helpful assistant",
-    "tools": ["my_custom_tool"]
-}, tool_registry=custom_tool_registry)
 ```
 
 ### File Configuration
 
-Configuration files must use the `file://` prefix:
-
 ```python
-from strands.experimental import AgentConfig
-# Load from JSON file
-config = AgentConfig("file:///path/to/config.json")
-agent = config.to_agent()
+from strands.experimental import config_to_agent
+
+# Load from JSON file (with or without file:// prefix)
+agent = config_to_agent("/path/to/config.json")
+# or
+agent = config_to_agent("file:///path/to/config.json")
+```
 
 #### Simple Agent Example
 
@@ -106,10 +53,9 @@ agent = config.to_agent()
 {
   "model": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
   "prompt": "You are a coding assistant. Help users write, debug, and improve their code. You have access to file operations and can execute shell commands when needed.",
-  "tools": ["shell", "file_read", "editor"]
+  "tools": ["strands_tools.file_read", "strands_tools.editor", "strands_tools.shell"]
 }
 ```
-
 
 ## Configuration Options
 
@@ -117,133 +63,120 @@ agent = config.to_agent()
 
 - `model`: Model identifier (string) - see [model provider documentation](https://strandsagents.com/latest/user-guide/quickstart/#using-a-string-model-id)
 - `prompt`: System prompt for the agent (string)
-- `tools`: List of tool names to select from the provided ToolRegistry (optional)
+- `tools`: List of tool names, module paths, or file paths (list of strings)
+- `name`: Agent name (string)
+- `agent_id`: Agent identifier (string)
+- `session_manager`: Session manager instance
+- `conversation_manager`: Conversation manager instance
+- `hooks`: List of hook providers
+- `callback_handler`: Callback handler instance
+- `state`: Initial agent state (dict)
+- `trace_attributes`: Tracing attributes (dict)
 
-### Method Parameters
+### Tool Loading
 
-The `to_agent()` method accepts:
+The `tools` configuration supports the same formats as the Agent class:
 
-- `tools`: Optional ToolRegistry instance to override the configured tools
+```json
+{
+  "tools": [
+    "strands_tools.file_read",           // Module path
+    "my_app.tools.cake_tool",            // Custom module path  
+    "/path/to/another_tool.py"           // File path
+  ]
+}
+```
+
+The Agent class handles all tool loading internally, including:
+- Loading from module paths
+- Loading from file paths
+- Error handling for missing tools
+- Tool validation
+
+## Function Parameters
+
+The `config_to_agent` function accepts:
+
+- `config`: Either a file path (string) or configuration dictionary
 - `**kwargs`: Additional [Agent constructor parameters](https://strandsagents.com/latest/api-reference/agent/#strands.agent.agent.Agent.__init__) that override config values
 
 ```python
 # Override config values with valid Agent parameters
-agent = config.to_agent(
+agent = config_to_agent(
+    "/path/to/config.json",
     agent_id="my-agent-123",
-    name="Data Analyst",
-    description="Specialized data analysis agent"
+    name="Data Analyst"
 )
-```
-
-## Tool Selection
-
-When `tools` is specified in the configuration, AgentConfig validates and selects only those tools from the provided ToolRegistry:
-
-```python
-# Platform provider creates comprehensive ToolRegistry
-platform_tool_registry = ToolRegistry()
-platform_tool_registry.process_tools([calculator, web_search, file_ops, data_analysis])
-
-# Customer selects specific tools
-config = AgentConfig({
-    "model": "anthropic.claude-3-5-sonnet-20241022-v2:0", 
-    "prompt": "You are a research assistant",
-    "tools": ["calculator", "web_search"]  # Only these will be available
-}, tool_registry=platform_tool_registry)
-
-agent = config.to_agent()  # Agent has only calculator and web_search
-```
-
-## File Path Requirements
-
-File paths must be prefixed with `file://` to maintain a standard interface:
-
-```python
-# ✅ Correct
-config = AgentConfig("file:///absolute/path/to/config.json")
-
-# ❌ Incorrect - will raise ValueError
-config = AgentConfig("/absolute/path/to/config.json")
 ```
 
 ## Error Handling
 
-### File Path Errors
+### File Not Found
 ```python
-from strands.experimental import AgentConfig
+from strands.experimental import config_to_agent
 
 try:
-    # This will raise ValueError
-    config = AgentConfig("/path/without/prefix.json")
-except ValueError as e:
-    print(f"Error: {e}")  # File paths must be prefixed with 'file://'
+    agent = config_to_agent("/nonexistent/config.json")
+except FileNotFoundError as e:
+    print(f"Error: {e}")  # Configuration file not found
 ```
 
-### Tool Validation Errors
+### Invalid JSON
 ```python
-from strands.experimental import AgentConfig
-from strands.tools.registry import ToolRegistry
-
-# Tool not found in ToolRegistry (with raise_exception_on_missing_tool=True, default behavior)
 try:
-    config = AgentConfig({
-        "model": "test-model",
-        "tools": ["nonexistent_tool"]
-    }, tool_registry=ToolRegistry(), raise_exception_on_missing_tool=True)
-except ValueError as e:
-    print(f"Error: {e}")  # Tool(s) 'nonexistent_tool' not found in ToolRegistry
+    agent = config_to_agent("/path/to/invalid.json")
+except json.JSONDecodeError as e:
+    print(f"Error: {e}")  # Invalid JSON format
+```
 
-# Skip missing tools instead of raising errors
-config = AgentConfig({
+### Invalid Configuration Type
+```python
+try:
+    agent = config_to_agent(123)  # Invalid type
+except ValueError as e:
+    print(f"Error: {e}")  # Config must be a file path string or dictionary
+```
+
+### Tool Loading Errors
+
+Tool loading errors are handled by the Agent class according to its standard behavior:
+
+```python
+# If tools cannot be loaded, Agent will raise appropriate errors
+agent = config_to_agent({
     "model": "test-model",
-    "tools": ["existing_tool", "nonexistent_tool"]
-}, tool_registry=my_tool_registry, raise_exception_on_missing_tool=False)
-# Only existing_tool will be available, nonexistent_tool is silently skipped
-```
-
-### Missing Dependencies
-```python
-# When strands_tools not installed and no ToolRegistry provided (with raise_exception_on_missing_tool=True)
-try:
-    config = AgentConfig({"model": "test-model", "tools": ["file_read"]}, raise_exception_on_missing_tool=True)
-except ImportError as e:
-    print(f"Error: {e}")  
-    # strands_tools is not available and no ToolRegistry was specified. 
-    # Either install strands_tools with 'pip install strands-agents-tools' 
-    # or provide your own ToolRegistry with your own tools.
-
-# Skip missing tools when strands_tools not available
-config = AgentConfig({"model": "test-model", "tools": ["file_read"]}, raise_exception_on_missing_tool=False)
-# Will create agent without any tools since strands_tools is not available
-```
-
-### Tool Configuration Without ToolRegistry
-```python
-# Specifying tools without providing ToolRegistry (with raise_exception_on_missing_tool=True)
-try:
-    config = AgentConfig({
-        "model": "test-model",
-        "tools": ["calculator"]
-    }, raise_exception_on_missing_tool=True)  # No tool_registry parameter
-except ValueError as e:
-    print(f"Error: {e}")  # Tool(s) not found in ToolRegistry
-
-# Skip missing tools when no ToolRegistry provided
-config = AgentConfig({
-    "model": "test-model",
-    "tools": ["calculator"]
-}, raise_exception_on_missing_tool=False)  # No tool_registry parameter
-# Will attempt to use default ToolRegistry, skip unavailable tools
+    "tools": ["nonexistent_tool"]
+})
+# This will raise an error from the Agent class during tool loading
 ```
 
 ## Best Practices
 
-1. **Use file:// prefix**: Always prefix file paths with `file://`
-2. **Install strands_tools**: Use `pip install strands-agents-tools` for default tools
-3. **Provide custom ToolRegistry**: Create your own ToolRegistry if not using strands_tools
-4. **Validate tool selection**: Ensure tool names exist in your ToolRegistry before configuration
-5. **Override when needed**: Use kwargs in `to_agent` to override Agent parameters values dynamically
-6. **Handle errors gracefully**: Catch ImportError and ValueError for robust applications
-7. **Control error behavior**: Use `raise_exception_on_missing_tool=False` to skip missing tools instead of failing
+1. **Use absolute paths**: Prefer absolute file paths for configuration files
+2. **Handle errors gracefully**: Catch FileNotFoundError and JSONDecodeError for robust applications
+3. **Override when needed**: Use kwargs to override configuration values dynamically
+4. **Leverage Agent defaults**: Only specify configuration values you want to override
+5. **Use standard tool formats**: Follow Agent class conventions for tool specifications
 
-This experimental feature provides a foundation for more advanced agent configuration patterns while maintaining compatibility with the existing Agent API.
+## Migration from AgentConfig Class
+
+If you were using the previous `AgentConfig` class, here's how to migrate:
+
+### Before (AgentConfig class)
+```python
+from strands.experimental.agent_config import AgentConfig
+
+config = AgentConfig("/path/to/config.json")
+agent = config.to_agent()
+```
+
+### After (config_to_agent function)
+```python
+from strands.experimental import config_to_agent
+
+agent = config_to_agent("/path/to/config.json")
+```
+
+The new interface is simpler and delegates all complexity to the existing Agent class, providing a more consistent experience.
+
+This experimental feature provides a foundation for more advanced agent configuration patterns while maintaining full compatibility with the existing Agent API.
