@@ -65,13 +65,6 @@ agent = config_to_agent("file:///path/to/config.json")
 - `prompt`: System prompt for the agent (string)
 - `tools`: List of tool names, module paths, or file paths (list of strings)
 - `name`: Agent name (string)
-- `agent_id`: Agent identifier (string)
-- `session_manager`: Session manager instance
-- `conversation_manager`: Conversation manager instance
-- `hooks`: List of hook providers
-- `callback_handler`: Callback handler instance
-- `state`: Initial agent state (dict)
-- `trace_attributes`: Tracing attributes (dict)
 
 ### Tool Loading
 
@@ -104,7 +97,6 @@ The `config_to_agent` function accepts:
 # Override config values with valid Agent parameters
 agent = config_to_agent(
     "/path/to/config.json",
-    agent_id="my-agent-123",
     name="Data Analyst"
 )
 ```
