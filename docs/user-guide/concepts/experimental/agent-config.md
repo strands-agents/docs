@@ -96,7 +96,6 @@ agent = config.to_agent()
 
 ```json
 {
-    "model": "us.anthropic.claude-3-haiku-20240307-v1:0",
     "prompt": "You are a helpful assistant."
 }
 ```
