@@ -99,6 +99,7 @@ nav:
         - SageMaker: user-guide/concepts/model-providers/sagemaker.md
         - Writer: user-guide/concepts/model-providers/writer.md
         - Cohere: user-guide/concepts/model-providers/cohere.md
+        - FireworksAI: user-guide/concepts/model-providers/fireworksai.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
       - Streaming:
         - Overview: user-guide/concepts/streaming/overview.md
