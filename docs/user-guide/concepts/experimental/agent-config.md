@@ -104,7 +104,7 @@ agent = config.to_agent()
 
 ```json
 {
-  "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+  "model": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
   "prompt": "You are a coding assistant. Help users write, debug, and improve their code. You have access to file operations and can execute shell commands when needed.",
   "tools": ["shell", "file_read", "editor"]
 }
