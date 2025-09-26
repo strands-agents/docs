@@ -90,6 +90,7 @@ nav:
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
+        - Gemini: user-guide/concepts/model-providers/gemini.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - llama.cpp: user-guide/concepts/model-providers/llamacpp.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md

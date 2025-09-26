@@ -11,6 +11,9 @@
 ::: strands.models.anthropic
     options:
       heading_level: 2
+::: strands.models.gemini
+    options:
+      heading_level: 2
 ::: strands.models.litellm
     options:
       heading_level: 2
