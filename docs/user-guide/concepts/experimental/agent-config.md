@@ -14,6 +14,18 @@ The experimental `config_to_agent` function provides a simple way to create agen
 - Support both file paths and dictionary configurations
 - Leverage the Agent class's built-in tool loading capabilities
 
+!!! note "Tool Loading Limitations"
+    Configuration-based agent setup only works for tools that don't require code-based instantiation. For tools that need constructor arguments or complex setup, use the programmatic approach after creating the agent:
+    
+    ```python
+    import http.client
+    from sample_module import ToolWithConfigArg
+    
+    agent = config_to_agent("config.json")
+    # Add tools that need code-based instantiation
+    agent.process_tools([ToolWithConfigArg(http.client.HTTPSConnection("localhost"))])
+    ```
+
 ## Basic Usage
 
 ### Dictionary Configuration
@@ -63,22 +75,32 @@ agent = config_to_agent("file:///path/to/config.json")
 
 - `model`: Model identifier (string) - see [model provider documentation](https://strandsagents.com/latest/user-guide/quickstart/#using-a-string-model-id)
 - `prompt`: System prompt for the agent (string)
-- `tools`: List of tool names, module paths, or file paths (list of strings)
+- `tools`: List of tool specifications (list of strings)
 - `name`: Agent name (string)
 
 ### Tool Loading
 
-The `tools` configuration supports the same formats as the Agent class:
+The `tools` configuration supports Python-specific tool loading formats:
 
 ```json
 {
   "tools": [
-    "strands_tools.file_read",           // Module path
+    "strands_tools.file_read",           // Python module path
     "my_app.tools.cake_tool",            // Custom module path  
-    "/path/to/another_tool.py"           // File path
+    "/path/to/another_tool.py",          // File path
+    "my_module.my_tool_function"         // @tool annotated function
   ]
 }
 ```
+
+!!! important "Python Tool Support Only"
+    Currently, tool loading is Python-specific and supports:
+    
+    - **File paths**: Python files containing @tool annotated functions
+    - **Module names**: Python modules with @tool annotated functions
+    - **Function references**: Specific @tool annotated functions in modules
+    
+    Support for tools in other languages will be added when MCP server support is introduced to this feature.
 
 The Agent class handles all tool loading internally, including:
 - Loading from module paths
@@ -127,6 +149,20 @@ try:
     agent = config_to_agent({"model": "test-model", "tools": ["valid-tool", 123]})
 except ValueError as e:
     print(f"Error: {e}")  # Configuration validation error at tools -> 1: 123 is not of type 'string'
+```
+
+### Tool Validation Errors
+
+The function validates that tools can be loaded and provides helpful error messages:
+
+```python
+# Tool not found
+try:
+    agent = config_to_agent({"model": "test-model", "tools": ["nonexistent_tool"]})
+except ValueError as e:
+    print(f"Error: {e}")  
+    # Tool 'nonexistent_tool' not found. The configured tool is not annotated with @tool, 
+    # and is not a module or file. To properly import this tool, you must annotate it with @tool.
 ```
 
 ### File Not Found
