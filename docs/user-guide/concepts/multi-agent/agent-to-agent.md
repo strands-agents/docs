@@ -352,11 +352,81 @@ logger.info(response)
 # asyncio.run(main())
 ```
 
-This approach allows your Strands agent to:
+The A2A client tool provides three main capabilities:
 
-- Automatically discover available A2A agents
-- Interact with them using natural language
-- Chain multiple agent interactions together
+- **Agent Discovery**: Automatically discover available A2A agents and their capabilities
+- **Protocol Communication**: Send messages to A2A agents using the standardized protocol
+- **Natural Language Interface**: Interact with remote agents using natural language commands
+
+## A2A Agent as a Tool
+
+A2A agents can be wrapped as tools within your agent's toolkit, similar to the [Agents as Tools](agents-as-tools.md) pattern but leveraging the A2A protocol for cross-platform communication.
+
+You can use a class-based approach to discover agent cards upfront and avoid repeated discovery calls:
+
+```python
+import asyncio
+from uuid import uuid4
+import httpx
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
+from a2a.types import Message, Part, Role, TextPart
+from strands import Agent, tool
+
+class A2AAgentTool:
+    def __init__(self, agent_url: str, agent_name: str):
+        self.agent_url = agent_url
+        self.agent_name = agent_name
+        self.agent_card = None
+        self.client = None
+
+        async with httpx.AsyncClient(timeout=300) as httpx_client:
+            resolver = A2ACardResolver(httpx_client=httpx_client, base_url=self.agent_url)
+            self.agent_card = await resolver.get_agent_card()
+            
+            config = ClientConfig(httpx_client=httpx_client, streaming=False)
+            factory = ClientFactory(config)
+            self.client = factory.create(self.agent_card)
+    
+    @tool
+    async def call_agent(self, message: str) -> str:
+        """
+        Send a message to the A2A agent.
+        
+        Args:
+            message: The message to send to the agent
+            
+        Returns:
+            Response from the A2A agent
+        """
+        try:            
+            msg = Message(
+                kind="message",
+                role=Role.user,
+                parts=[Part(TextPart(kind="text", text=message))],
+                message_id=uuid4().hex,
+            )
+            
+            async for event in self.client.send_message(msg):
+                if isinstance(event, Message):
+                    response_text = ""
+                    for part in event.parts:
+                        if hasattr(part, 'text'):
+                            response_text += part.text
+                    return response_text
+                    
+            return f"No response received from {self.agent_name}"
+            
+        except Exception as e:
+            return f"Error contacting {self.agent_name}: {str(e)}"
+
+# Usage
+research_agent = A2AAgentTool("http://research-agent.example.com:9000", "Research Agent")
+calculator_agent = A2AAgentTool("http://calculator-agent.example.com:9000", "Calculator Agent")
+
+orchestrator = Agent(
+    tools=[research_agent.call_agent, calculator_agent.call_agent]
+)
+```
 
 ## Troubleshooting
 
