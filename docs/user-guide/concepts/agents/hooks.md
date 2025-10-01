@@ -103,6 +103,15 @@ The hooks system provides events for different stages of agent execution:
 | `BeforeInvocationEvent` | Triggered at the beginning of a new agent request (`__call__`, `stream_async`, or `structured_output`) |
 | `AfterInvocationEvent` | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering   |
 | `MessageAddedEvent`    | Triggered when a message is added to the agent's conversation history                                        |
+
+Additional *experimental events* are also available:
+
+!!! note "Experimental events are subject to change"
+
+    These events are exposed experimentally in order to gather feedback and refine the public contract. Because they are experimental, they are subject to change between releases. 
+
+| Experimental Event           | Description |
+|------------------------------|-------------|
 | `BeforeModelCallEvent` | Triggered before the model is invoked for inference |
 | `AfterModelCallEvent`  | Triggered after model invocation completes. Uses reverse callback ordering |
 | `BeforeToolCallEvent`  | Triggered before a tool is invoked. |
@@ -125,37 +134,49 @@ Some events come in pairs, such as Before/After events. The After event callback
 
 Hook events that involve tool execution include access to `invocation_state`, which provides configuration and context data passed through the agent invocation. This is particularly useful for:
 
-1. **Configuration and Credentials**: Access API keys, database configurations, or other settings without hardcoding them
-2. **Request Context**: Access session IDs, user information, or request-specific data  
-3. **Multi-Agent Shared State**: In [Graph](../multi-agent/graph.md) and [Swarm](../multi-agent/swarm.md) patterns, access state shared across all agents
+1. **Custom Objects**: Access database client objects, connection pools, or other Python objects
+2. **Request Context**: Access session IDs, user information, settings, or request-specific data  
+3. **Multi-Agent Shared State**: In multi-agent patterns, access state shared across all agents - see [Shared State Across Multi-Agent Patterns](../multi-agent/multi-agent-patterns.md#shared-state-across-multi-agent-patterns)
 4. **Custom Parameters**: Pass any additional data that hooks might need
 
 ```python
-from strands.experimental.hooks import BeforeToolInvocationEvent
+from strands.hooks import BeforeToolCallEvent
+import logging
 
-def log_with_context(event: BeforeToolInvocationEvent) -> None:
+def log_with_context(event: BeforeToolCallEvent) -> None:
     """Log tool invocations with context from invocation state."""
     # Access invocation state from the event
     user_id = event.invocation_state.get("user_id", "unknown")
     session_id = event.invocation_state.get("session_id")
-    environment = event.invocation_state.get("environment", "production")
     
-    # Log with context
+    # Access non-JSON serializable objects like database connections
+    db_connection = event.invocation_state.get("database_connection")
+    logger_instance = event.invocation_state.get("custom_logger")
+    
+    # Use custom logger if provided, otherwise use default
+    logger = logger_instance if logger_instance else logging.getLogger(__name__)
+    
     logger.info(
-        f"User {user_id} in session {session_id} ({environment}) "
-        f"invoking tool: {event.tool_use['name']}"
+        f"User {user_id} in session {session_id} "
+        f"invoking tool: {event.tool_use['name']} "
+        f"with DB connection: {db_connection is not None}"
     )
 
 # Register the hook
 agent = Agent(tools=[my_tool])
-agent.hooks.add_callback(BeforeToolInvocationEvent, log_with_context)
+agent.hooks.add_callback(BeforeToolCallEvent, log_with_context)
 
-# Execute with context in invocation state
+# Execute with context including non-serializable objects
+import sqlite3
+custom_logger = logging.getLogger("custom")
+db_conn = sqlite3.connect(":memory:")
+
 result = agent(
     "Process the data",
     user_id="user123",
     session_id="sess456",
-    environment="staging"
+    database_connection=db_conn,  # Non-JSON serializable object
+    custom_logger=custom_logger   # Non-JSON serializable object
 )
 ```
 

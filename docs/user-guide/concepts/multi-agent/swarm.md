@@ -168,39 +168,9 @@ You have access to swarm coordination tools if you need help from other agents.
 
 ## Shared State
 
-Swarms support passing shared state to all agents through the `invocation_state` parameter. This enables sharing configuration and credentials across agents without exposing them to the LLM, keeping them separate from the shared context used for collaboration.
+Swarms support passing shared state to all agents through the `invocation_state` parameter. This enables sharing context and configuration across agents without exposing them to the LLM, keeping them separate from the shared context used for collaboration.
 
-```python
-# Execute swarm with shared state
-result = swarm(
-    "Research and analyze the data",
-    invocation_state={
-        "api_key": "bearer-token-xyz",
-        "api_base_url": "https://api.example.com",
-        "cache_enabled": True
-    }
-)
-```
-
-The `invocation_state` is automatically propagated to:
-
-- All agents in the swarm via their `**kwargs`
-- Tools via `ToolContext` when using `@tool(context=True)` - see [Python Tools](../tools/python-tools.md#accessing-invocation-state-in-tools)
-- Tool-related hooks (BeforeToolInvocationEvent, AfterToolInvocationEvent) - see [Hooks](../agents/hooks.md#accessing-invocation-state-in-hooks)
-
-```python
-# Tools access shared state through ToolContext
-@tool(context=True)
-def fetch_data(source: str, tool_context: ToolContext) -> dict:
-    api_key = tool_context.invocation_state.get("api_key")
-    base_url = tool_context.invocation_state.get("api_base_url")
-    # Use configuration for API calls...
-```
-
-**Important distinction:**
-
-- **Shared Context**: Information agents share through handoffs, visible in prompts for collaboration
-- **Shared State**: Hidden configuration passed via `invocation_state`, not visible in prompts
+For detailed information about shared state, including examples and best practices, see [Shared State Across Multi-Agent Patterns](./multi-agent-patterns.md#shared-state-across-multi-agent-patterns).
 
 ## Asynchronous Execution
 

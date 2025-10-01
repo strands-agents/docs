@@ -321,35 +321,9 @@ From [another_node_id]:
 
 ## Shared State
 
-Graphs support passing shared state to all agents through the `invocation_state` parameter. This enables sharing configuration, credentials, and other data across agents without exposing it to the LLM.
+Graphs support passing shared state to all agents through the `invocation_state` parameter. This enables sharing context and configuration across agents without exposing it to the LLM.
 
-```python
-# Execute graph with shared state
-result = graph(
-    "Analyze customer data",
-    invocation_state={
-        "api_key": "secret-key-123",
-        "database_config": {"host": "db.example.com", "port": 5432},
-        "session_id": "user-session-456"
-    }
-)
-```
-
-The `invocation_state` is automatically propagated to:
-
-- All agents in the graph via their `**kwargs`
-- Tools via `ToolContext` when using `@tool(context=True)` - see [Python Tools](../tools/python-tools.md#accessing-invocation-state-in-tools)
-- Tool-related hooks (BeforeToolInvocationEvent, AfterToolInvocationEvent) - see [Hooks](../agents/hooks.md#accessing-invocation-state-in-hooks)
-
-```python
-# Tools access shared state through ToolContext
-@tool(context=True)
-def api_call(endpoint: str, tool_context: ToolContext) -> str:
-    api_key = tool_context.invocation_state.get("api_key")
-    # Use api_key for authenticated requests...
-```
-
-Use `invocation_state` for configuration and credentials that shouldn't appear in prompts, while using normal Graph input propagation for data the LLM should reason about.
+For detailed information about shared state, including examples and best practices, see [Shared State Across Multi-Agent Patterns](./multi-agent-patterns.md#shared-state-across-multi-agent-patterns).
 
 ## Graphs as a Tool
 
