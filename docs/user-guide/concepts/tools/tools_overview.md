@@ -31,7 +31,7 @@ We can see which tools are loaded in our agent in `agent.tool_names`, along with
 ```python
 print(agent.tool_names)
 
-print(agent.tool_config)
+print(agent.tool_registry.get_all_tools_config())
 ```
 
 Tools can also be loaded by passing a file path to our agents during initialization:

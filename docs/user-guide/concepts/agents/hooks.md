@@ -103,15 +103,6 @@ The hooks system provides events for different stages of agent execution:
 | `BeforeInvocationEvent` | Triggered at the beginning of a new agent request (`__call__`, `stream_async`, or `structured_output`) |
 | `AfterInvocationEvent` | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering   |
 | `MessageAddedEvent`    | Triggered when a message is added to the agent's conversation history                                        |
-
-Additional *experimental events* are also available:
-
-!!! note "Experimental events are subject to change"
-
-    These events are exposed experimentally in order to gather feedback and refine the public contract. Because they are experimental, they are subject to change between releases. 
-
-| Experimental Event           | Description |
-|------------------------------|-------------|
 | `BeforeModelCallEvent` | Triggered before the model is invoked for inference |
 | `AfterModelCallEvent`  | Triggered after model invocation completes. Uses reverse callback ordering |
 | `BeforeToolCallEvent`  | Triggered before a tool is invoked. |
