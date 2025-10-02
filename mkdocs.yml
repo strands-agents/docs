@@ -81,6 +81,7 @@ nav:
         - Hooks: user-guide/concepts/agents/hooks.md
         - Structured Output: user-guide/concepts/agents/structured-output.md
         - Conversation Management: user-guide/concepts/agents/conversation-management.md
+        - Conversation Pruning: user-guide/concepts/agents/conversation-pruning.md
       - Tools:
         - Overview: user-guide/concepts/tools/tools_overview.md
         - Python: user-guide/concepts/tools/python-tools.md
@@ -145,6 +146,7 @@ nav:
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md
     - Multi-modal: examples/python/multimodal.md
+    - Conversation Pruning: examples/python/conversation_pruning.md
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
     - Agent: api-reference/agent.md
