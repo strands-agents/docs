@@ -389,6 +389,49 @@ print(response)
 # Each interaction creates a complete trace that can be visualized in your tracing tool
 ```
 
+## Sending traces to Opik
+
+[Opik](https://www.comet.com/opik/) is Comet's observability, evaluation, and optimization platform for LLM and agent applications. Because Strands is already instrumented with OpenTelemetry, you only need to point the OTLP exporter at the Opik collector to gain:
+
+- Rich span visualizations that preserve the Strands agent → cycle → tool hierarchy
+- Automatic token, cost, and latency tracking for every LLM call handled by Strands Telemetry
+- Error analytics and thread grouping so multi-turn conversations remain easy to debug
+
+### Configure environment variables
+
+Set the OTLP endpoint and headers that correspond to your Opik deployment before you start your Strands application:
+
+```bash wordWrap
+# Opik Cloud
+export OTEL_EXPORTER_OTLP_ENDPOINT=https://www.comet.com/opik/api/v1/private/otel
+export OTEL_EXPORTER_OTLP_HEADERS='Authorization=<your-api-key>,Comet-Workspace=<workspace>,projectName=<project>'
+
+# Opik Enterprise
+export OTEL_EXPORTER_OTLP_ENDPOINT=https://<your-comet-domain>/opik/api/v1/private/otel
+export OTEL_EXPORTER_OTLP_HEADERS='Authorization=<your-api-key>,Comet-Workspace=<workspace>,projectName=<project>'
+
+# Self-hosted Opik
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:5173/api/v1/private/otel
+export OTEL_EXPORTER_OTLP_HEADERS='projectName=<project>'
+```
+
+If you prefer to set headers inside your code, you can pass them to `setup_otlp_exporter`:
+
+```python
+from strands.telemetry import StrandsTelemetry
+
+StrandsTelemetry().setup_otlp_exporter(
+    endpoint="https://www.comet.com/opik/api/v1/private/otel",
+    headers={
+        "Authorization": "<your-api-key>",
+        "Comet-Workspace": "default",
+        "projectName": "strands-demo",
+    },
+)
+```
+
+Once configured, launch your agents as usual. Each interaction will appear in Opik's trace explorer with the same nested structure shown earlier in this guide.
+
 ## Sending traces to CloudWatch X-ray
 There are several ways to send traces, metrics, and logs to CloudWatch. Please visit the following pages for more details and configurations:
 1. [AWS Distro for OpenTelemetry Collector](https://aws-otel.github.io/docs/getting-started/x-ray#configuring-the-aws-x-ray-exporter)
