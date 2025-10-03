@@ -103,6 +103,7 @@ nav:
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
         - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md # ALWAYS ADD A SPACE BEFORE COMMUNITY
         - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
+        - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
       - Streaming:
         - Overview: user-guide/concepts/streaming/overview.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
@@ -153,6 +154,7 @@ nav:
       - Model Providers:
         - Cohere: community/model-providers/cohere.md
         - CLOVA Studio: community/model-providers/clova-studio.md
+        - Fireworks AI: community/model-providers/fireworksai.md
 
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
