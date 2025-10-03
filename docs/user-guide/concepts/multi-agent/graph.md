@@ -319,6 +319,12 @@ From [another_node_id]:
   - [Agent name]: [Result text]
 ```
 
+## Shared State
+
+Graphs support passing shared state to all agents through the `invocation_state` parameter. This enables sharing context and configuration across agents without exposing it to the LLM.
+
+For detailed information about shared state, including examples and best practices, see [Shared State Across Multi-Agent Patterns](./multi-agent-patterns.md#shared-state-across-multi-agent-patterns).
+
 ## Graphs as a Tool
 
 Agents can dynamically create and orchestrate graphs by using the `graph` tool available in the [Strands tools package](../tools/community-tools-package.md).

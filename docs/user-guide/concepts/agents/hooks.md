@@ -121,6 +121,56 @@ Some events come in pairs, such as Before/After events. The After event callback
 
 ## Advanced Usage
 
+### Accessing Invocation State in Hooks
+
+Hook events that involve tool execution include access to `invocation_state`, which provides configuration and context data passed through the agent invocation. This is particularly useful for:
+
+1. **Custom Objects**: Access database client objects, connection pools, or other Python objects
+2. **Request Context**: Access session IDs, user information, settings, or request-specific data  
+3. **Multi-Agent Shared State**: In multi-agent patterns, access state shared across all agents - see [Shared State Across Multi-Agent Patterns](../multi-agent/multi-agent-patterns.md#shared-state-across-multi-agent-patterns)
+4. **Custom Parameters**: Pass any additional data that hooks might need
+
+```python
+from strands.hooks import BeforeToolCallEvent
+import logging
+
+def log_with_context(event: BeforeToolCallEvent) -> None:
+    """Log tool invocations with context from invocation state."""
+    # Access invocation state from the event
+    user_id = event.invocation_state.get("user_id", "unknown")
+    session_id = event.invocation_state.get("session_id")
+    
+    # Access non-JSON serializable objects like database connections
+    db_connection = event.invocation_state.get("database_connection")
+    logger_instance = event.invocation_state.get("custom_logger")
+    
+    # Use custom logger if provided, otherwise use default
+    logger = logger_instance if logger_instance else logging.getLogger(__name__)
+    
+    logger.info(
+        f"User {user_id} in session {session_id} "
+        f"invoking tool: {event.tool_use['name']} "
+        f"with DB connection: {db_connection is not None}"
+    )
+
+# Register the hook
+agent = Agent(tools=[my_tool])
+agent.hooks.add_callback(BeforeToolCallEvent, log_with_context)
+
+# Execute with context including non-serializable objects
+import sqlite3
+custom_logger = logging.getLogger("custom")
+db_conn = sqlite3.connect(":memory:")
+
+result = agent(
+    "Process the data",
+    user_id="user123",
+    session_id="sess456",
+    database_connection=db_conn,  # Non-JSON serializable object
+    custom_logger=custom_logger   # Non-JSON serializable object
+)
+```
+
 ### Fixed Tool Arguments
 
 Enforce specific arguments for tools, ensuring they always use particular values regardless of what the agent specifies:

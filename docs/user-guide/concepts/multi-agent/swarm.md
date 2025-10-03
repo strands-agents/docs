@@ -166,6 +166,12 @@ Agent name: security_specialist. Agent description: Focuses on secure coding pra
 You have access to swarm coordination tools if you need help from other agents.
 ```
 
+## Shared State
+
+Swarms support passing shared state to all agents through the `invocation_state` parameter. This enables sharing context and configuration across agents without exposing them to the LLM, keeping them separate from the shared context used for collaboration.
+
+For detailed information about shared state, including examples and best practices, see [Shared State Across Multi-Agent Patterns](./multi-agent-patterns.md#shared-state-across-multi-agent-patterns).
+
 ## Asynchronous Execution
 
 You can also execute a Swarm asynchronously by calling the [`invoke_async`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm.invoke_async) function:
