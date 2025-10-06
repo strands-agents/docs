@@ -137,6 +137,8 @@ def only_if_research_successful(state):
 builder.add_edge("research", "analysis", condition=only_if_research_successful)
 ```
 
+When multiple conditional edges converge on a single node, the target node executes as soon as any one of the incoming conditional edges is satisfied. The node doesn't wait for all predecessor nodes to complete, just the first one whose condition evaluates to true.
+
 ## Nested Multi-Agent Patterns
 
 You can use a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph) or [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm) as a node within another Graph:
