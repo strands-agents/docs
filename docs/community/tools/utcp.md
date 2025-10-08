@@ -59,5 +59,5 @@ asyncio.run(main())
 
 ## Resources
 
-- **GitHub**: [utcp-community/strands-utcp](https://github.com/utcp-community/strands-utcp)
+- **GitHub**: [universal-tool-calling-protocol/python-utcp](https://github.com/universal-tool-calling-protocol/python-utcp)
 - **PyPI**: [strands-utcp](https://pypi.org/project/strands-utcp/)
