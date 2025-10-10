@@ -172,6 +172,20 @@ agent("What is the tool use id?")
 agent("What is the invocation state?", custom_data="You're the best agent ;)")
 ```
 
+To use a different parameter name for ToolContext, specify the desired name as the value of the `@tool.context` argument:
+
+```python
+from strands import tool, Agent, ToolContext
+
+@tool(context="context")
+def get_self_name(context: ToolContext) -> str:
+    return f"The agent name is {context.agent.name}"
+
+agent = Agent(tools=[get_self_name], name="Best agent")
+
+agent("What is your name?")
+```
+
 #### Accessing Invocation State in Tools
 
 The `invocation_state` attribute in `ToolContext` provides access to data passed through the agent invocation. This is particularly useful for:
