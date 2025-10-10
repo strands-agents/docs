@@ -40,9 +40,9 @@ demonstrating how conditional loops work in practice.
 """
 
 from strands import Agent
+from strands.agent.agent_result import AgentResult
 from strands.multiagent import GraphBuilder, MultiAgentBase, MultiAgentResult
 from strands.multiagent.base import NodeResult, Status
-from strands.agent.agent_result import AgentResult
 from strands.types.content import ContentBlock, Message
 
 
@@ -55,7 +55,7 @@ class QualityChecker(MultiAgentBase):
         self.iteration = 0
         self.name = "checker"
         
-    async def invoke_async(self, task, **kwargs):
+    async def invoke_async(self, task, invocation_state=None, **kwargs):
         self.iteration += 1
         approved = self.iteration >= self.approval_after
         
