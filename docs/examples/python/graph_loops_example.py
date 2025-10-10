@@ -55,7 +55,7 @@ class QualityChecker(MultiAgentBase):
         self.iteration = 0
         self.name = "checker"
         
-    async def invoke_async(self, task, invocation_state=None, **kwargs):
+    async def invoke_async(self, task, invocation_state, **kwargs):
         self.iteration += 1
         approved = self.iteration >= self.approval_after
         
