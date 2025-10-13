@@ -7,7 +7,7 @@
 Writer is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install 'strands-agents[writer]'
+pip install 'strands-agents[writer]' strands-agents-tools
 ```
 
 ## Usage
@@ -115,7 +115,7 @@ agent = Agent(
 response = agent("Research our competitor's latest product launch and draft a summary email for the leadership team")
 ```
 
-> **Note**: The `web_search` and `email_sender` tools in this example are custom tools that you would need to define. See [Python Tools](../tools/python-tools.md) for guidance on creating custom tools, or use existing tools from the [strands_tools package](../tools/example-tools-package.md).
+> **Note**: The `web_search` and `email_sender` tools in this example are custom tools that you would need to define. See [Python Tools](../tools/python-tools.md) for guidance on creating custom tools, or use existing tools from the [strands_tools package](../tools/community-tools-package.md).
 
 ### Financial analysis with Palmyra Fin
 

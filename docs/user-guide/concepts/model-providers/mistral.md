@@ -9,7 +9,7 @@ Mistral AI offers both premier models and free models, driving innovation and co
 Mistral API is configured as an optional dependency in Strands Agents. To install, run:
 
 ```bash
-pip install 'strands-agents[mistral]'
+pip install 'strands-agents[mistral]' strands-agents-tools
 ```
 
 ## Usage

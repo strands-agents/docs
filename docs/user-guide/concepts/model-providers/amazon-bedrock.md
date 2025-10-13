@@ -119,6 +119,10 @@ agent = Agent()
 response = agent("Tell me about Amazon Bedrock.")
 ```
 
+> **Note:** See [Bedrock troubleshooting](amazon-bedrock.md#troubleshooting) if you encounter any issues.
+
+
+
 You can specify which Bedrock model to use by passing in the model ID string directly to the Agent constructor:
 
 ```python
@@ -308,6 +312,22 @@ When you enable prompt caching, Amazon Bedrock creates a cache composed of **cac
 
 The cache has a five-minute Time To Live (TTL), which resets with each successful cache hit. During this period, the context in the cache is preserved. If no cache hits occur within the TTL window, your cache expires.
 
+When using prompt caching, Amazon Bedrock provides cache statistics including `CacheReadInputTokens` and `CacheWriteInputTokens`.
+
+- `CacheWriteInputTokens`: Number of input tokens written to the cache (occurs on first request with new content).
+
+- `CacheReadInputTokens`: Number of input tokens read from the cache (occurs on subsequent requests with cached content).
+
+Strands automatically captures these metrics and makes them available through multiple methods:
+
+- Method 1: AgentResult Metrics (Recommended)
+
+    Cache statistics are automatically included in the `AgentResult.metrics.accumulated_usage`
+
+- Method 2: OpenTelemetry Traces
+
+    Cache metrics are automatically recorded in OpenTelemetry traces when telemetry is enabled
+
 For detailed information about supported models, minimum token requirements, and other limitations, see the [Amazon Bedrock documentation on prompt caching](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html).
 
 #### System Prompt Caching
@@ -334,9 +354,13 @@ agent = Agent(
 
 # First request will cache the system prompt
 response1 = agent("Tell me about Python")
+print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 
 # Second request will reuse the cached system prompt
 response2 = agent("Tell me about JavaScript")
+print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 ```
 
 #### Tool Caching
@@ -361,9 +385,13 @@ agent = Agent(
 )
 # First request will cache the tools
 response1 = agent("What time is it?")
+print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 
 # Second request will reuse the cached tools
 response2 = agent("What is the square root of 1764?")
+print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 ```
 
 #### Messages Caching
@@ -563,6 +591,24 @@ Use:
 ```
 us.anthropic.claude-sonnet-4-20250514-v1:0
 ```
+
+
+### Model identifier is invalid
+If you encounter the error:
+
+> ValidationException: An error occurred (ValidationException) when calling the ConverseStream operation: The provided model identifier is invalid
+
+This is very likely due to calling Bedrock with an inference model id, such as: `us.anthropic.claude-sonnet-4-20250514-v1:0` from a region that does not [support inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html). If so, pass in a valid model id, as follows:
+```python
+agent = Agent(model="anthropic.claude-3-5-sonnet-20241022-v2:0")
+```
+
+
+!!! note ""
+
+    Strands uses a default Claude 4 Sonnet inference model from the region of your credentials when no model is provided. So if you did not pass in any model id and are getting the above error, it's very likely due to the `region` from the credentials not supporting inference profiles.
+
+
 
 ## Related Resources
 

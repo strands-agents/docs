@@ -2,7 +2,7 @@
 
 Tools are the primary mechanism for extending agent capabilities, enabling them to perform actions beyond simple text generation. Tools allow agents to interact with external systems, access data, and manipulate their environment.
 
-Strands offers built-in example tools to get started quickly experimenting with agents and tools during development. For more information, see [Example Built-in Tools](example-tools-package.md).
+Strands Agents Tools is a community-driven project that provides a powerful set of tools for your agents to use. For more information, see [Strands Agents Tools](community-tools-package.md).
 
 ## Adding Tools to Agents
 
@@ -31,7 +31,7 @@ We can see which tools are loaded in our agent in `agent.tool_names`, along with
 ```python
 print(agent.tool_names)
 
-print(agent.tool_config)
+print(agent.tool_registry.get_all_tools_config())
 ```
 
 Tools can also be loaded by passing a file path to our agents during initialization:
@@ -76,12 +76,41 @@ Every tool added to an agent also becomes a method accessible directly on the ag
 result = agent.tool.file_read(path="/path/to/file.txt", mode="view")
 ```
 
+When calling tools directly as methods, always use keyword arguments - positional arguments are *not* supported for direct method calls:
+
+```python
+# This will NOT work - positional arguments are not supported
+result = agent.tool.file_read("/path/to/file.txt", "view")  # ❌ Don't do this
+```
+
 If a tool name contains hyphens, you can invoke the tool using underscores instead:
 
 ```python
 # Directly invoke a tool named "read-all"
 result = agent.tool.read_all(path="/path/to/file.txt")
 ```
+
+## Tool Executors
+
+When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Agents use concurrent execution by default, but you can specify sequential execution for cases where order matters:
+
+```python
+from strands import Agent
+from strands.tools.executors import SequentialToolExecutor
+
+# Concurrent execution (default)
+agent = Agent(tools=[weather_tool, time_tool])
+agent("What is the weather and time in New York?")
+
+# Sequential execution
+agent = Agent(
+    tool_executor=SequentialToolExecutor(),
+    tools=[screenshot_tool, email_tool]
+)
+agent("Take a screenshot and email it to my friend")
+```
+
+For more details, see [Tool Executors](executors.md).
 
 ## Building & Loading Tools
 
@@ -242,11 +271,11 @@ with sse_mcp_client:
 
 For more information on using MCP tools, see [MCP Tools](mcp-tools.md).
 
-### 3. Example Built-in Tools
+### 3. Community Built Tools
 
-For rapid prototyping and common tasks, Strands offers an optional [example built-in tools package]({{ tools_repo }}) with pre-built tools for development. These tools cover a wide variety of capabilities including File Operations, Shell & Local System control, Web & Network for API calls, and Agents & Workflows for orchestration.
+For rapid prototyping and common tasks, Strands offers a [community-supported tools package]({{ tools_repo }}) with pre-built tools for development. These tools cover a wide variety of capabilities including File Operations, Shell & Local System control, Web & Network for API calls, and Agents & Workflows for orchestration.
 
-For a complete list of available tools and their detailed descriptions, see [Example Built-in Tools](example-tools-package.md).
+For a complete list of available tools and their detailed descriptions, see [Community Tools Package](community-tools-package.md).
 
 ## Tool Design Best Practices
 

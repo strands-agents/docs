@@ -47,7 +47,7 @@ The official documentation is available online at: https://strandsagents.com.
 python -m venv .venv
 source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 
-pip install -r requirements.txt
+pip install .
 ```
 
 ### Building and Previewing

@@ -27,7 +27,7 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: |
-          pip install -r requirements.txt
+          pip install .
       - run: |
           mike deploy --push --update-aliases 0.3.x latest
           mike set-default --push latest
