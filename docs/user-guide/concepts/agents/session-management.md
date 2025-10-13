@@ -34,10 +34,11 @@ The conversation, and associated state, is persisted to the underlying filesyste
 
 ## Built-in Session Managers
 
-Strands offers two built-in session managers for persisting agent sessions:
+Strands offers three built-in session managers for persisting agent sessions:
 
 1. [**FileSessionManager**](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager): Stores sessions in the local filesystem
 2. [**S3SessionManager**](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager): Stores sessions in Amazon S3 buckets
+3. [**DynamoDBSessionManager**](../../../api-reference/session.md#strands.session.dynamodb_session_manager.DynamoDBSessionManager): Stores sessions in Amazon DynamoDB tables
 
 ### FileSessionManager
 
@@ -150,6 +151,119 @@ Here's a sample IAM policy that grants these permissions for a specific bucket:
         }
     ]
 }
+```
+
+### DynamoDBSessionManager
+
+For high-performance, scalable session storage with low latency, use the [`DynamoDBSessionManager`](../../../api-reference/session.md#strands.session.dynamodb_session_manager.DynamoDBSessionManager):
+
+```python
+from strands import Agent
+from strands.session import DynamoDBSessionManager
+import boto3
+
+# Optional: Create a custom boto3 session
+boto_session = boto3.Session(region_name="us-east-1")
+
+# Create a session manager that stores data in DynamoDB
+session_manager = DynamoDBSessionManager(
+    session_id="user-789",
+    table_name="agent-sessions",
+    boto_session=boto_session,  # Optional boto3 session
+    region_name="us-east-1"  # Optional AWS region (if boto_session not provided)
+)
+
+# Create an agent with the session manager
+agent = Agent(session_manager=session_manager)
+
+# Use the agent normally - state and messages will be persisted to DynamoDB
+agent("What are the benefits of DynamoDB?")
+```
+
+#### DynamoDB Table Structure
+
+The [`DynamoDBSessionManager`](../../../api-reference/session.md#strands.session.dynamodb_session_manager.DynamoDBSessionManager) uses a single-table design optimized for efficient queries:
+
+**Table Schema:**
+
+- **PK (Partition Key)**: `session_<session_id>`
+- **SK (Sort Key)**: `session` | `agent_<agent_id>` | `agent_<agent_id>#message_<message_id>`
+- **entity_type**: `SESSION` | `AGENT` | `MESSAGE`
+- **data**: Serialized entity data
+
+**Example Table Contents:**
+
+| PK             | SK                     | entity_type | data           |
+|----------------|------------------------|-------------|----------------|
+| session_abc123 | session                | SESSION     | {session_json} |
+| session_abc123 | agent_agent1           | AGENT       | {agent_json}   |
+| session_abc123 | agent_agent1#message_0 | MESSAGE     | {message_json} |
+| session_abc123 | agent_agent1#message_1 | MESSAGE     | {message_json} |
+
+#### Required DynamoDB Permissions
+
+To use the [`DynamoDBSessionManager`](../../../api-reference/session.md#strands.session.dynamodb_session_manager.DynamoDBSessionManager), your AWS credentials must have the following DynamoDB permissions:
+
+- `dynamodb:PutItem` - To create and update session data
+- `dynamodb:GetItem` - To retrieve individual items
+- `dynamodb:Query` - To list messages and query session data
+- `dynamodb:BatchWriteItem` - To delete sessions efficiently
+
+Here's a sample IAM policy that grants these permissions for a specific table:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:PutItem",
+                "dynamodb:GetItem",
+                "dynamodb:Query",
+                "dynamodb:BatchWriteItem"
+            ],
+            "Resource": "arn:aws:dynamodb:us-east-1:123456789012:table/agent-sessions"
+        }
+    ]
+}
+```
+
+#### Creating the DynamoDB Table
+
+You need to create a DynamoDB table with the following configuration:
+
+```bash
+# Using AWS CLI
+aws dynamodb create-table \
+    --table-name agent-sessions \
+    --attribute-definitions \
+        AttributeName=PK,AttributeType=S \
+        AttributeName=SK,AttributeType=S \
+    --key-schema \
+        AttributeName=PK,KeyType=HASH \
+        AttributeName=SK,KeyType=RANGE \
+    --billing-mode PAY_PER_REQUEST
+```
+
+Or using AWS CDK:
+
+```typescript
+import * as cdk from "aws-cdk-lib";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+
+new dynamodb.Table(this, 'AgentSessionMessageTable', {
+      partitionKey: {
+        name: 'PK',
+        type: dynamodb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: 'SK',
+        type: dynamodb.AttributeType.STRING,
+      },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+});
 ```
 
 ## How Session Management Works
