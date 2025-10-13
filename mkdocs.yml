@@ -157,6 +157,8 @@ nav:
         - Cohere: community/model-providers/cohere.md
         - CLOVA Studio: community/model-providers/clova-studio.md
         - Fireworks AI: community/model-providers/fireworksai.md
+      - Session Managers:
+          - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
 
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
