@@ -209,6 +209,15 @@ The [`SessionMessage`](../../../api-reference/types.md#strands.types.session.Ses
 
 These data models work together to provide a complete representation of an agent's state and conversation history. The session management system handles serialization and deserialization of these models, including special handling for binary data using base64 encoding.
 
+## Third-Party Session Managers
+
+The following third-party session managers extend Strands with additional storage and memory capabilities:
+
+| Session Manager | Provider | Description | Documentation |
+|-----------------|----------|-------------|---------------|
+| AgentCoreMemorySessionManager | Amazon | Advanced memory with intelligent retrieval using Amazon Bedrock AgentCore Memory. Supports both short-term memory (STM) and long-term memory (LTM) with strategies for user preferences, facts, and session summaries. | [View Documentation](../../../community/session-managers/agent-core-memory.md) |
+| **Contribute Your Own** | Community | Have you built a session manager? Share it with the community! | [Learn How](../../../community/community-packages.md) |
+
 ## Custom Session Repositories
 
 For advanced use cases, you can implement your own session storage backend by creating a custom session repository:
