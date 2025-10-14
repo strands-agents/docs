@@ -189,7 +189,7 @@ class FunctionNode(MultiAgentBase):
         self.func = func
         self.name = name or func.__name__
         
-    async def invoke_async(self, task, **kwargs):
+    async def invoke_async(self, task, invocation_state, **kwargs):
         # Execute function and create AgentResult
         result = self.func(task if isinstance(task, str) else str(task))
         
