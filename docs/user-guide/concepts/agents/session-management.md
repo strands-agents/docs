@@ -34,10 +34,11 @@ The conversation, and associated state, is persisted to the underlying filesyste
 
 ## Built-in Session Managers
 
-Strands offers two built-in session managers for persisting agent sessions:
+Strands offers three built-in session managers for persisting agent sessions:
 
 1. [**FileSessionManager**](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager): Stores sessions in the local filesystem
 2. [**S3SessionManager**](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager): Stores sessions in Amazon S3 buckets
+3. [**DatabaseSessionManager**](../../../api-reference/session.md#strands.session.database_session_manager.DatabaseSessionManager): Stores sessions in SQL databases (PostgreSQL, MySQL, SQLite)
 
 ### FileSessionManager
 
@@ -150,6 +151,172 @@ Here's a sample IAM policy that grants these permissions for a specific bucket:
         }
     ]
 }
+```
+
+### DatabaseSessionManager
+
+For cloud-agnostic stateless architectures and cost-effective session persistence at scale, use the [`DatabaseSessionManager`](../../../api-reference/session.md#strands.session.database_session_manager.DatabaseSessionManager). This session manager stores agent sessions in SQL databases (PostgreSQL, MySQL, or SQLite), enabling horizontal scaling and serverless deployments.
+
+#### Installation
+
+Install Strands with database dependencies:
+
+```bash
+pip install strands-agents[database]
+```
+
+This installs SQLAlchemy, Alembic, and database drivers for PostgreSQL and MySQL.
+
+#### Database Schema Setup
+
+Before using `DatabaseSessionManager`, you need to create the required database tables using Alembic migrations.
+
+**Step 1: Copy Alembic Configuration**
+
+Copy the Alembic setup from the SDK repository to your project:
+
+```bash
+# Clone or download from the SDK repository
+cp -r <sdk-repo>/alembic/ your-project/
+cp <sdk-repo>/alembic.ini your-project/
+```
+
+Alternatively, create your own Alembic setup following the [Alembic documentation](https://alembic.sqlalchemy.org/).
+
+**Step 2: Configure Database Connection**
+
+Edit `alembic.ini` and set your database connection string:
+
+```ini
+# For PostgreSQL
+sqlalchemy.url = postgresql://user:password@localhost:5432/strands_db
+
+# For MySQL
+sqlalchemy.url = mysql+pymysql://user:password@localhost:3306/strands_db
+
+# For SQLite
+sqlalchemy.url = sqlite:///./strands_sessions.db
+```
+
+**Step 3: Run Migrations**
+
+Create the database tables:
+
+```bash
+# Run all pending migrations
+alembic upgrade head
+```
+
+This creates three tables:
+
+- **`strands_sessions`** - Session metadata (id, type, timestamps)
+- **`strands_agents`** - Agent state and conversation manager state (JSON columns)
+- **`strands_messages`** - Message history with optional redaction (JSON columns)
+
+All tables include foreign key constraints with cascade deletes for data integrity.
+
+#### Database Schema Structure
+
+The DatabaseSessionManager uses a relational schema with three tables:
+
+**`strands_sessions` table:**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `session_id` | String | PRIMARY KEY | Unique identifier for the session |
+| `session_type` | String | NOT NULL | Type of session (e.g., "AGENT") |
+| `created_at` | DateTime | NOT NULL | Session creation timestamp |
+| `updated_at` | DateTime | NOT NULL | Last update timestamp |
+
+**`strands_agents` table:**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `session_id` | String | FOREIGN KEY | References strands_sessions |
+| `agent_id` | String | PRIMARY KEY | Unique identifier for the agent |
+| `state` | JSON | | Agent state (key-value pairs) |
+| `conversation_manager_state` | JSON | | Conversation manager state |
+| `created_at` | DateTime | NOT NULL | Agent creation timestamp |
+| `updated_at` | DateTime | NOT NULL | Last update timestamp |
+
+**`strands_messages` table:**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `session_id` | String | FOREIGN KEY | References strands_sessions |
+| `agent_id` | String | FOREIGN KEY | References strands_agents |
+| `message_id` | String | PRIMARY KEY | Unique identifier for the message |
+| `message` | JSON | NOT NULL | Original message content |
+| `redact_message` | JSON | | Redacted message (optional) |
+| `created_at` | DateTime | NOT NULL | Message creation timestamp |
+| `updated_at` | DateTime | NOT NULL | Last update timestamp |
+
+Foreign key relationships enforce cascade deletes: deleting a session removes all associated agents and messages.
+
+#### Basic Usage
+
+```python
+from strands import Agent
+from strands.session.database_session_manager import DatabaseSessionManager
+from strands.models import OpenAIModel
+
+# Simple connection string
+session_manager = DatabaseSessionManager(
+    session_id="user-123",
+    connection_string="postgresql://user:pass@localhost:5432/strands_db"
+)
+
+agent = Agent(
+    agent_id="assistant",
+    model=OpenAIModel(model_id="gpt-4"),
+    session_manager=session_manager
+)
+
+# Use the agent - state and messages are persisted to the database
+agent("Tell me about database sessions")
+```
+
+#### Production Usage with Shared Engine
+
+For production environments, use a shared SQLAlchemy engine for connection pooling:
+
+```python
+from sqlalchemy import create_engine
+from strands.session.database_session_manager import DatabaseSessionManager
+
+# Create a shared engine once at application startup
+engine = create_engine(
+    "postgresql://user:pass@localhost:5432/strands_db",
+    pool_size=10,
+    max_overflow=20,
+    pool_pre_ping=True  # Verify connections before use
+)
+
+# Create session managers with the shared engine
+def get_session_manager(user_id: str):
+    return DatabaseSessionManager(
+        session_id=f"user-{user_id}",
+        engine=engine  # Reuse the shared engine
+    )
+
+session_manager = get_session_manager("123")
+agent = Agent(session_manager=session_manager)
+```
+
+#### Supported Database Connection Strings
+
+```python
+# PostgreSQL
+"postgresql://username:password@localhost:5432/database_name"
+
+# MySQL
+"mysql+pymysql://username:password@localhost:3306/database_name"
+
+# SQLite (file-based)
+"sqlite:///path/to/sessions.db"
+
+# SQLite (in-memory for testing)
+"sqlite:///:memory:"
 ```
 
 ## How Session Management Works
