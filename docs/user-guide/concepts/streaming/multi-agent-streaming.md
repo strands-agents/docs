@@ -8,22 +8,21 @@ Both Graph and Swarm use the same `stream_async` method pattern as single agents
 
 In addition to the standard [streaming events](./overview.md#event-types), multi-agent systems emit coordination events:
 
-### Multi-Agent Coordination Events
 - `multi_agent_node_start`: When a node begins execution
-  - `node_id`: Unique identifier for the node
-  - `node_type`: Type of node ("agent", "swarm", "graph")
+    - `node_id`: Unique identifier for the node
+    - `node_type`: Type of node ("agent", "swarm", "graph")
 - `multi_agent_node_stream`: Forwarded events from agents/multi-agents with node context
-  - `node_id`: Identifier of the node generating the event
-  - `event`: The original agent event
+    - `node_id`: Identifier of the node generating the event
+    - `event`: The original agent event, see [agent streaming events](./overview.md#event-types)
 - `multi_agent_node_stop`: When a node completes execution
-  - `node_id`: Unique identifier for the node
-  - `node_result`: Complete NodeResult with execution details, metrics, and status
+    - `node_id`: Unique identifier for the node
+    - `node_result`: Complete NodeResult with execution details, metrics, and status
 - `multi_agent_handoff`: When control is handed off between agents (Swarm only)
-  - `from_node`: Node ID handing off control
-  - `to_node`: Node ID receiving control
-  - `message`: Handoff message explaining the transfer
+    - `from_node`: Node ID handing off control
+    - `to_node`: Node ID receiving control
+    - `message`: Handoff message explaining the transfer
 - `multi_agent_result`: Final multi-agent result
-  - `result`: The final GraphResult or SwarmResult
+    - `result`: The final GraphResult or SwarmResult
 
 ## Graph Streaming
 
