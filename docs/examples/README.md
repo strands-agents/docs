@@ -39,6 +39,7 @@ Available Python examples:
 
 - [Agents Workflows](python/agents_workflows.md) - Example of a sequential agent workflow pattern
 - [CLI Reference Agent](python/cli-reference-agent.md) - Example of Command-line reference agent implementation
+- [Database Session Manager](python/database_session_manager.md) - Example of persisting agent sessions in SQL databases (PostgreSQL, MySQL, SQLite)
 - [File Operations](python/file_operations.md) - Example of agent with file manipulation capabilities
 - [MCP Calculator](python/mcp_calculator.md) - Example of agent with Model Context Protocol capabilities
 - [Meta Tooling](python/meta_tooling.md) - Example of Agent with Meta tooling capabilities 

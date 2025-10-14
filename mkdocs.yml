@@ -139,6 +139,7 @@ nav:
     - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
     - Weather Forecaster: examples/python/weather_forecaster.md
     - Memory Agent: examples/python/memory_agent.md
+    - Database Session Manager: examples/python/database_session_manager.md
     - File Operations: examples/python/file_operations.md
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
