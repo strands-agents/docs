@@ -223,6 +223,131 @@ Custom nodes enable:
 - **Hybrid workflows**: Combine AI creativity with deterministic control
 - **Business rules**: Implement complex business logic as graph nodes
 
+## Agent State and Message Reset Mechanism
+
+The Graph pattern provides several mechanisms for managing agent state and messages during execution:
+
+### Automatic Reset on Revisit
+
+When `reset_on_revisit=True` is configured, nodes automatically reset their state when revisited in cyclic graphs:
+
+```python
+builder = GraphBuilder()
+builder.reset_on_revisit(True) # Reset state when nodes are revisited
+graph = builder.build()
+```
+
+### Custom Management with Hooks
+
+For more control over when and how agents reset their state, use the hook system to implement custom reset logic:
+
+```python
+from strands.hooks import HookProvider, HookRegistry
+from strands.experimental.multiagent_hooks import AfterNodeInvocationEvent
+from strands.agent.state import AgentState
+
+class StateResetHook(HookProvider):
+    """Hook provider for custom agent state reset logic."""
+    
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(AfterNodeInvocationEvent, self.after_node_execution)
+    
+    def after_node_execution(self, event: AfterNodeInvocationEvent) -> None:
+        """Handle state management after node execution."""
+        graph = event.source
+        executed_node = graph.nodes[event.executed_node]
+        
+        #  Just defensive check
+        if hasattr(executed_node.executor, 'state'):
+            # If you just want to deletge some state data
+            executed_node.executor.state.delete('sensitive_data')
+            # Reset state only
+            executed_node.executor.state = AgentState()
+            
+            # Modify execution count
+            count = executed_node.executor.state.get('execution_count', 0)
+            executed_node.executor.state.set('execution_count', count+1)
+        #  Just defensive check
+         if hasattr(executed_node.executor, 'messages'):
+            # Reset message only
+            executed_node.executor.messages = []
+        
+        # Or, you just want to reset all message and state
+        executed_node.reset_executor_state()
+            
+# Use the hook with your graph
+hooks = HookRegistry()
+hooks.add_hook(StateResetHook())
+
+agent1 = Agent(name="agent1", system_prompt="You are agent 1. Keep responses short.")
+agent2 = Agent(name="agent2", system_prompt="You are agent 2. Keep responses short. You should finish")
+
+# Set initial state
+agent1.state.set('initial_data', 'agent1_data')
+agent2.state.set('initial_data', 'agent2_data')
+agent1.state.set('temporary_data', 'temp1')
+agent2.state.set('temporary_data', 'temp2')
+
+builder = GraphBuilder()
+builder.add_node(agent1, "agent1")
+builder.add_node(agent2, "agent2")
+builder.add_edge("agent1", "agent2")
+graph = builder.build()
+
+# Set hooks on the built graph
+graph.hooks = hooks
+result = graph("Say hello briefly and continue the conversation.")
+print(f"Agent1 messages: {agent1.messages}")
+print(f"Agent2 messages: {agent2.messages}")
+print(f"Agent1 temporary_data: {agent1.state.get('temporary_data')}")
+print(f"Agent2 temporary_data: {agent2.state.get('temporary_data')}")
+
+# Example output
+"Graph output : Hello! Nice to meet you. What brings you here today? Hello! Good to meet you too. I'm here to chat and see where our conversation takes us. What about you - what's on your mind today?"
+"Agent1 messages: []"
+"Agent2 messages: []"
+"Agent1 temporary_data: None"
+"Agent2 temporary_data: None"
+
+```
+
+### Default Hook Approach
+
+For simple cases, you can use functions directly with multiagent hooks, for all available hooks, see MultiagentHooks(TBD):
+
+```python
+from strands.experimental.multiagent_hooks import AfterNodeInvocationEvent
+
+def track_node_execution(event: AfterNodeInvocationEvent) -> None:
+    """Track and manage node execution state."""
+    graph = event.source
+    executed_node = graph.nodes[event.executed_node]
+    executed_node.reset_executor_state()
+    
+# Register function directly
+hooks = HookRegistry()
+hooks.add_callback(AfterNodeInvocationEvent, track_node_execution)
+
+builder = GraphBuilder()
+# ... add nodes and edges
+graph = builder.build()
+graph.hooks = hooks
+```
+
+### Agent-Level Hooks
+
+Since Graph calls `agent.invoke_async()` directly, any hooks registered on individual agents will automatically trigger during graph execution if you registered:
+
+```python
+# Agent hooks work automatically in Graph context
+researcher = Agent(
+    name="researcher",
+    system_prompt="You are a research specialist...",
+    hooks=agent_hooks  
+)
+```
+These hooks provide comprehensive control over agent lifecycle and state management during graph execution.For all support hooks, please see [`Hooks`](../agents/hooks.md#hook-event-lifecycle)
+
 ## Multi-Modal Input Support
 
 Graphs support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/types.md#strands.types.content.ContentBlock):

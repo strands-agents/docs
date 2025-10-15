@@ -213,6 +213,49 @@ print(f"Execution time: {result.execution_time}ms")
 print(f"Token usage: {result.accumulated_usage}")
 ```
 
+## Agent State and Message Reset Mechanism
+
+Swarms automatically reset agent state between executions to ensure clean handoffs and prevent state pollution. Each agent in a swarm maintains:
+
+- **Initial state capture**: When the swarm is created, each agent's messages and state are captured
+- **Automatic reset**: Before each agent execution, the agent is reset to its initial state
+- **Clean handoffs**: Agents receive only the shared context and handoff message, not previous execution artifacts
+
+### Default Hook Approach
+
+You can customize state reset behavior using hooks, for all available hooks, see MultiagentHooks(TBD):
+
+```python
+from strands.experimental.multiagent_hooks import AfterNodeInvocationEvent
+from strands.hooks import HookRegistry
+
+def custom_state_reset(event: AfterNodeInvocationEvent) -> None:
+    """Custom state management after agent execution."""
+    graph = event.source
+    executed_node = graph.nodes[event.executed_node]
+    
+    # Just defensive check
+    if hasattr(executed_node.executor, 'state'):
+        # Preserve certain state keys
+        important_data = executed_node.executor.state.delete('important_data')
+        # Reset state only
+        executed_node.executor.state = AgentState()
+    #  Just defensive check
+    if hasattr(executed_node.executor, 'messages'):
+        # Reset message only
+        executed_node.executor.messages = []
+        
+    # Reset message & state
+    executed_node.reset_executor_state()
+
+# Register hook
+hooks = HookRegistry()
+hooks.add_callback(AfterNodeInvocationEvent, custom_state_reset)
+
+# Create Swarm instance
+swarm = Swarm([agent1, agent2], hooks=hooks)
+```
+
 ## Swarm as a Tool
 
 Agents can dynamically create and orchestrate swarms by using the `swarm` tool available in the [Strands tools package](../tools/community-tools-package.md).
