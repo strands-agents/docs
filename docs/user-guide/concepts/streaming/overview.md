@@ -194,4 +194,5 @@ orchestrator("What is 3+3?")
 
 - Learn about [Async Iterators](async-iterators.md) for asynchronous streaming
 - Explore [Callback Handlers](callback-handlers.md) for synchronous event processing
+- See [Multi-Agent Streaming](multi-agent-streaming.md) for Graph and Swarm streaming
 - See the [Agent API Reference](../../../api-reference/agent.md) for complete method documentation
