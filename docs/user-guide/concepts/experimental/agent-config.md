@@ -14,18 +14,6 @@ The experimental `config_to_agent` function provides a simple way to create agen
 - Support both file paths and dictionary configurations
 - Leverage the Agent class's built-in tool loading capabilities
 
-!!! note "Tool Loading Limitations"
-    Configuration-based agent setup only works for tools that don't require code-based instantiation. For tools that need constructor arguments or complex setup, use the programmatic approach after creating the agent:
-    
-    ```python
-    import http.client
-    from sample_module import ToolWithConfigArg
-    
-    agent = config_to_agent("config.json")
-    # Add tools that need code-based instantiation
-    agent.process_tools([ToolWithConfigArg(http.client.HTTPSConnection("localhost"))])
-    ```
-
 ## Basic Usage
 
 ### Dictionary Configuration
@@ -93,20 +81,24 @@ The `tools` configuration supports Python-specific tool loading formats:
 }
 ```
 
-!!! important "Python Tool Support Only"
-    Currently, tool loading is Python-specific and supports:
-    
-    - **File paths**: Python files containing @tool annotated functions
-    - **Module names**: Python modules with @tool annotated functions
-    - **Function references**: Specific @tool annotated functions in modules
-    
-    Support for tools in other languages will be added when MCP server support is introduced to this feature.
-
 The Agent class handles all tool loading internally, including:
+
 - Loading from module paths
 - Loading from file paths
 - Error handling for missing tools
 - Tool validation
+
+!!! note "Tool Loading Limitations"
+    Configuration-based agent setup only works for tools that don't require code-based instantiation. For tools that need constructor arguments or complex setup, use the programmatic approach after creating the agent:
+    
+    ```python
+    import http.client
+    from sample_module import ToolWithConfigArg
+    
+    agent = config_to_agent("config.json")
+    # Add tools that need code-based instantiation
+    agent.process_tools([ToolWithConfigArg(http.client.HTTPSConnection("localhost"))])
+    ```
 
 ## Function Parameters
 
@@ -123,114 +115,10 @@ agent = config_to_agent(
 )
 ```
 
-## Error Handling
-
-### Configuration Validation
-
-The `config_to_agent` function validates configuration against a JSON schema and provides detailed error messages:
-
-```python
-from strands.experimental import config_to_agent
-
-# Invalid field
-try:
-    agent = config_to_agent({"model": "test-model", "invalid_field": "value"})
-except ValueError as e:
-    print(f"Error: {e}")  # Configuration validation error at root: Additional properties are not allowed ('invalid_field' was unexpected)
-
-# Wrong field type
-try:
-    agent = config_to_agent({"model": "test-model", "tools": "not-a-list"})
-except ValueError as e:
-    print(f"Error: {e}")  # Configuration validation error at tools: 'not-a-list' is not of type 'array'
-
-# Invalid tool item
-try:
-    agent = config_to_agent({"model": "test-model", "tools": ["valid-tool", 123]})
-except ValueError as e:
-    print(f"Error: {e}")  # Configuration validation error at tools -> 1: 123 is not of type 'string'
-```
-
-### Tool Validation Errors
-
-The function validates that tools can be loaded and provides helpful error messages:
-
-```python
-# Tool not found
-try:
-    agent = config_to_agent({"model": "test-model", "tools": ["nonexistent_tool"]})
-except ValueError as e:
-    print(f"Error: {e}")  
-    # Tool 'nonexistent_tool' not found. The configured tool is not annotated with @tool, 
-    # and is not a module or file. To properly import this tool, you must annotate it with @tool.
-```
-
-### File Not Found
-```python
-from strands.experimental import config_to_agent
-
-try:
-    agent = config_to_agent("/nonexistent/config.json")
-except FileNotFoundError as e:
-    print(f"Error: {e}")  # Configuration file not found
-```
-
-### Invalid JSON
-```python
-try:
-    agent = config_to_agent("/path/to/invalid.json")
-except json.JSONDecodeError as e:
-    print(f"Error: {e}")  # Invalid JSON format
-```
-
-### Invalid Configuration Type
-```python
-try:
-    agent = config_to_agent(123)  # Invalid type
-except ValueError as e:
-    print(f"Error: {e}")  # Config must be a file path string or dictionary
-```
-
-### Tool Loading Errors
-
-Tool loading errors are handled by the Agent class according to its standard behavior:
-
-```python
-# If tools cannot be loaded, Agent will raise appropriate errors
-agent = config_to_agent({
-    "model": "test-model",
-    "tools": ["nonexistent_tool"]
-})
-# This will raise an error from the Agent class during tool loading
-```
-
 ## Best Practices
 
-1. **Use absolute paths**: Prefer absolute file paths for configuration files
-2. **Handle errors gracefully**: Catch FileNotFoundError and JSONDecodeError for robust applications
-3. **Override when needed**: Use kwargs to override configuration values dynamically
-4. **Leverage Agent defaults**: Only specify configuration values you want to override
-5. **Use standard tool formats**: Follow Agent class conventions for tool specifications
+1. **Override when needed**: Use kwargs to override configuration values dynamically
+2. **Leverage Agent defaults**: Only specify configuration values you want to override
+3. **Use standard tool formats**: Follow Agent class conventions for tool specifications
+4. **Handle errors gracefully**: Catch FileNotFoundError and JSONDecodeError for robust applications
 
-## Migration from AgentConfig Class
-
-If you were using the previous `AgentConfig` class, here's how to migrate:
-
-### Before (AgentConfig class)
-```python
-from strands.experimental.agent_config import AgentConfig
-
-config = AgentConfig("/path/to/config.json")
-agent = config.to_agent()
-```
-
-### After (config_to_agent function)
-```python
-from strands.experimental import config_to_agent
-
-agent = config_to_agent("/path/to/config.json")
-```
-
-The new interface is simpler and delegates all complexity to the existing Agent class, providing a more consistent experience.
-
-This experimental feature provides a foundation for more advanced agent configuration patterns while maintaining full compatibility with the existing Agent API.
