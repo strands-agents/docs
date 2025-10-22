@@ -129,8 +129,8 @@ class DeleteTool:
     def __init__(self, app_name: str) -> None:
         self.app_name = app_name
 
-    @tool(name="delete_files", context=True)
-    def __call__(self, tool_context: ToolContext, paths: list[str]) -> bool:
+    @tool(context=True)
+    def delete_files(self, tool_context: ToolContext, paths: list[str]) -> bool:
         approval = tool_context.interrupt(f"{self.app_name}-approval", reason={"paths": paths})
         if approval.lower() != "y":
             return False
@@ -140,9 +140,15 @@ class DeleteTool:
         return True
 
 
+@tool
+def inspect_files(paths: list[str]) -> dict[str, Any]:
+    # Implementation here
+    pass
+
+
 agent = Agent(
     system_prompt="You delete files older than 5 days",
-    tools=[DeleteTool("myapp")],
+    tools=[DeleteTool("myapp").delete_files, inspect_files],
     callback_handler=None,
 )
 
@@ -193,6 +199,12 @@ def delete_files(paths: list[str]) -> bool:
     pass
 
 
+@tool
+def inspect_files(paths: list[str]) -> dict[str, Any]:
+    # Implementation here
+    pass
+
+
 class ApprovalHook(HookProvider):
     def __init__(self, app_name: str) -> None:
         self.app_name = app_name
@@ -204,20 +216,20 @@ class ApprovalHook(HookProvider):
         if event.tool_use["name"] != "delete_files":
             return
 
-        if event.agent.state[f"{self.app_name}-approval"] == "t":  # (t)rust
+        if event.agent.state.get(f"{self.app_name}-approval") == "t":  # (t)rust
             return
 
         approval = event.interrupt(f"{self.app_name}-approval", reason={"paths": event.tool_use["input"]["paths"]})
         if approval.lower() not in ["y", "t"]:
             event.cancel_tool = "User denied permission to delete files"
 
-        event.agent.state[f"{self.app_name}-approval"] = approval.lower()
+        event.agent.state.set(f"{self.app_name}-approval", approval.lower())
 
 
 def server(prompt: AgentInput) -> AgentResult:
     agent = Agent(
         hooks=[ApprovalHook("myapp")],
-        session_manager=FileSessionManager(session_id="myapp", storage_dir="/path/to/storage")
+        session_manager=FileSessionManager(session_id="myapp", storage_dir="/path/to/storage"),
         system_prompt="You delete files older than 5 days",
         tools=[delete_files, inspect_files],
         callback_handler=None,
@@ -247,6 +259,7 @@ def client(paths: list[str]) -> AgentResult:
         result = server(responses)
 
     return result
+
 
 paths = ["a/b/c.txt", "d/e/f.txt"]
 result = client(paths)
