@@ -2,6 +2,9 @@
     options:
       heading_level: 1
       members: false
+::: strands.session.database_session_manager
+    options:
+    heading_level: 2
 ::: strands.session.file_session_manager
     options:
       heading_level: 2
