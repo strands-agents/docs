@@ -269,6 +269,51 @@ async def run_graph():
 result = asyncio.run(run_graph())
 ```
 
+## Streaming Events
+
+Graphs support real-time streaming of events during execution using [`stream_async`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph.stream_async). This provides visibility into node execution, parallel processing, and nested multi-agent systems.
+
+```python
+from strands import Agent
+from strands.multiagent import GraphBuilder
+
+# Create specialized agents
+researcher = Agent(name="researcher", system_prompt="You are a research specialist...")
+analyst = Agent(name="analyst", system_prompt="You are an analysis specialist...")
+
+# Build the graph
+builder = GraphBuilder()
+builder.add_node(researcher, "research")
+builder.add_node(analyst, "analysis")
+builder.add_edge("research", "analysis")
+builder.set_entry_point("research")
+graph = builder.build()
+
+# Stream events during execution
+async for event in graph.stream_async("Research and analyze market trends"):
+    # Track node execution
+    if event.get("multi_agent_node_start"):
+        print(f"🔄 Node {event['node_id']} starting")
+    
+    # Monitor agent events within nodes
+    elif event.get("multi_agent_node_stream"):
+        inner_event = event["event"]
+        if "data" in inner_event:
+            print(inner_event["data"], end="")
+    
+    # Track node completion
+    elif event.get("multi_agent_node_stop"):
+        node_result = event["node_result"]
+        print(f"\n✅ Node {event['node_id']} completed in {node_result.execution_time}ms")
+    
+    # Get final result
+    elif event.get("multi_agent_result"):
+        result = event["result"]
+        print(f"Graph completed: {result.status}")
+```
+
+For more details on multi-agent streaming including event types, parallel execution, and nested graphs, see [Multi-Agent Streaming](../streaming/multi-agent-streaming.md).
+
 ## Graph Results
 
 When a Graph completes execution, it returns a [`GraphResult`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphResult) object with detailed information:
