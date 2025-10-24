@@ -171,50 +171,7 @@ result = agent(
 )
 ```
 
-### Fixed Tool Arguments
 
-Enforce specific arguments for tools, ensuring they always use particular values regardless of what the agent specifies:
-
-```python
-from typing import Any
-from strands.hooks import HookProvider, HookRegistry, BeforeToolCallEvent
-
-class ConstantToolArguments(HookProvider):
-    """Use constant argument values for specific parameters of a tool."""
-
-    def __init__(self, fixed_tool_arguments: dict[str, dict[str, Any]]):
-        """
-        Initialize fixed parameter values for tools.
-    
-        Args:
-            fixed_tool_arguments: A dictionary mapping tool names to dictionaries of 
-                parameter names and their fixed values. These values will override any 
-                values provided by the agent when the tool is invoked.
-        """
-        self._tools_to_fix = fixed_tool_arguments
-
-    def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
-        registry.add_callback(BeforeToolCallEvent, self._fix_tool_arguments)
-
-    def _fix_tool_arguments(self, event: BeforeToolCallEvent):
-        # If the tool is in our list of parameters, then use those parameters
-        if parameters_to_fix := self._tools_to_fix.get(event.tool_use["name"]):
-            tool_input: dict[str, Any] = event.tool_use["input"]
-            tool_input.update(parameters_to_fix)
-```
-
-For example, to always force the `calculator` tool to use use precision of 1 digit:
-
-```python
-fix_parameters = ConstantToolArguments({
-    "calculator": {
-        "precision": 1,
-    }
-})
-
-agent = Agent(tools=[calculator], hooks=[fix_parameters])
-result = agent("What is 2 / 3?")
-```
 
 ### Tool Interception
 
@@ -292,4 +249,114 @@ class ResultProcessor(HookProvider):
             original_content = event.result["content"][0]["text"]
             logger.info(f"Modifying calculator result: {original_content}")
             event.result["content"][0]["text"] = f"Result: {original_content}"
+```
+
+## Cookbook
+
+This section contains practical hook implementations for common use cases.
+
+### Fixed Tool Arguments
+
+Useful for enforcing security policies, maintaining consistency, or overriding agent decisions with system-level requirements. This hook ensures specific tools always use predetermined parameter values regardless of what the agent specifies.
+
+```python
+from typing import Any
+from strands.hooks import HookProvider, HookRegistry, BeforeToolCallEvent
+
+class ConstantToolArguments(HookProvider):
+    """Use constant argument values for specific parameters of a tool."""
+
+    def __init__(self, fixed_tool_arguments: dict[str, dict[str, Any]]):
+        """
+        Initialize fixed parameter values for tools.
+    
+        Args:
+            fixed_tool_arguments: A dictionary mapping tool names to dictionaries of 
+                parameter names and their fixed values. These values will override any 
+                values provided by the agent when the tool is invoked.
+        """
+        self._tools_to_fix = fixed_tool_arguments
+
+    def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
+        registry.add_callback(BeforeToolCallEvent, self._fix_tool_arguments)
+
+    def _fix_tool_arguments(self, event: BeforeToolCallEvent):
+        # If the tool is in our list of parameters, then use those parameters
+        if parameters_to_fix := self._tools_to_fix.get(event.tool_use["name"]):
+            tool_input: dict[str, Any] = event.tool_use["input"]
+            tool_input.update(parameters_to_fix)
+```
+
+For example, to always force the `calculator` tool to use precision of 1 digit:
+
+```python
+fix_parameters = ConstantToolArguments({
+    "calculator": {
+        "precision": 1,
+    }
+})
+
+agent = Agent(tools=[calculator], hooks=[fix_parameters])
+result = agent("What is 2 / 3?")
+```
+
+### Limit Tool Counts
+
+Useful for preventing runaway tool usage, implementing rate limiting, or enforcing usage quotas. This hook tracks tool invocations per request and replaces tools with error messages when limits are exceeded.
+
+```python
+from strands import tool
+from strands.hooks import HookRegistry, HookProvider, BeforeToolCallEvent, BeforeInvocationEvent
+
+class LimitToolCounts(HookProvider):
+    """Limits the number of times tools can be called per agent invocation"""
+    
+    def __init__(self, max_tool_counts: dict[str, int]):
+        """
+        Initializer.
+
+        Args:
+            max_tool_counts: A dictionary mapping tool names to max call counts for 
+                tools. If a tool is not specified in it, the tool can be called as many
+                times as desired
+        """
+        self.max_tool_counts = max_tool_counts
+        self.tool_counts = {}
+
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(BeforeInvocationEvent, self.reset_counts)
+        registry.add_callback(BeforeToolCallEvent, self.intercept_tool)
+
+    def reset_counts(self, event: BeforeInvocationEvent) -> None:
+        self.tool_counts = {}
+
+    def intercept_tool(self, event: BeforeToolCallEvent) -> None:
+        tool_name = event.tool_use["name"]
+        tool_count = self.tool_counts.setdefault(tool_name, 0) + 1
+        self.tool_counts[tool_name] = tool_count
+
+        if tool_name in self.max_tool_counts and tool_count > self.max_tool_counts[tool_name]:
+            @tool
+            def report_max_tool_use(**kwargs) -> dict:
+                error_message = (
+                    f"Tool '{tool_name}' has been invoked too many and is now being throttled. "
+                    f"DO NOT CALL THIS TOOL ANYMORE "
+                )
+
+                raise SystemError(error_message)
+
+            event.selected_tool = report_max_tool_use
+```
+
+For example, to limit the `sleep` tool to 3 invocations per invocation:
+
+```python
+limit_hook = LimitToolCounts(max_tool_counts={"sleep": 3})
+
+agent = Agent(tools=[sleep], hooks=[limit_hook])
+
+# This call will only have 3 successful sleeps
+agent("Sleep 5 times for 10ms each or until you can't anymore")
+# This will sleep successfully again because the count resets every invocation
+agent("Sleep once")
 ```
