@@ -25,7 +25,7 @@ Key benefits:
 
 ## Basic Usage
 
-Define an output structure using a Pydantic model. Then, assign the model to the `structured_output_model` parameter when invoking the agent. Then, access the Structured Output from the [`AgentResult`](../../../api-reference/agent.md#strands.agent.agent_result).
+Define an output structure using a Pydantic model. Then, assign the model to the `structured_output_model` parameter when invoking the [`agent`](../../../api-reference/agent.md#strands.agent.agent). Then, access the Structured Output from the [`AgentResult`](../../../api-reference/agent.md#strands.agent.agent_result).
 
 ```python
 from pydantic import BaseModel, Field
@@ -71,7 +71,7 @@ print(f"Job: {result.structured_output.occupation}") # "software engineer"
 
 The structured output system converts your Pydantic models into tool specifications that guide the language model to produce correctly formatted responses. All of the model providers supported in Strands can work with Structured Output.
 
-Strands handles this by accepting the `structured_output_model` parameter in agent invocations, which manages the conversion, validation, and response processing automatically. The validated result is available in the `AgentResult.structured_output` field.
+Strands handles this by accepting the `structured_output_model` parameter in [`agent`](../../../api-reference/agent.md#strands.agent.agent) invocations, which manages the conversion, validation, and response processing automatically. The validated result is available in the `AgentResult.structured_output` field.
 
 
 ### Error Handling
