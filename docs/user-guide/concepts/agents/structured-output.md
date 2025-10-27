@@ -46,9 +46,10 @@ result = agent(
 )
 
 # 3) Access the `structured_output` from the result
-print(f"Name: {result.structured_output.name}")      # "John Smith"
-print(f"Age: {result.structured_output.age}")        # 30
-print(f"Job: {result.structured_output.occupation}") # "software engineer"
+person_info: PersonInfo = result.structured_output
+print(f"Name: {person_info.name}")      # "John Smith"
+print(f"Age: {person_info.age}")        # 30
+print(f"Job: {person_info.occupation}") # "software engineer"
 ```
 
 ???+ tip "Async Support"
