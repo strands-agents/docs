@@ -251,6 +251,81 @@ result = mcp_client.call_tool_sync(
 print(f"Calculation result: {result['content'][0]['text']}")
 ```
 
+### Elicitation
+
+An MCP server can request additional information from the user by sending an elicitation request to the connecting client. The user can respond to the request by setting up an elicitation callback:
+
+```Python
+"""server.py"""
+
+from mcp.server import FastMCP
+from mcp.types import ElicitRequest, ElicitRequestParams, ElicitResult
+
+server = FastMCP("mytools")
+
+@server.tool()
+async def delete_files(paths: list[str]) -> str:
+    request = ElicitRequest(
+        params=ElicitRequestParams(
+            message=f"Do you want to delete {paths}",
+            requestedSchema={
+                "type": "object",
+                "properties": {
+                    "username": {"type": "string", "description": "Who is approving?"},
+                },
+                "required": ["username"]
+            }
+        )
+    )
+    result = await server.get_context().session.send_request(request, ElicitResult)
+
+    action = result.action
+    username = result.content["username"]
+
+    if action != "accept":
+        return f"User {username} rejected deletion"
+
+    # Implementation details
+
+    return f"User {username} approved deletion"
+
+server.run()
+```
+
+```Python
+"""client.py"""
+
+from mcp import stdio_client, StdioServerParameters
+from mcp.types import ElicitResult
+
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+async def elicitation_callback(context, params):
+    print(f"ELICITATION: {params.message}")
+
+    # Implementation details
+
+    return ElicitResult(
+        action="accept",  # or "decline" or "cancel"
+        content={"username": "myname"}
+    )
+
+client = MCPClient(
+    lambda: stdio_client(
+        StdioServerParameters(command="python", args=["/path/to/server.py"])
+    ),
+    elicitation_callback=elicitation_callback,
+)
+with client:
+    agent = Agent(tools=client.list_tools_sync(), callback_handler=None)
+
+    result = agent("Delete 'a/b/c.txt' and share the name of the approver")
+    print(f"RESULT: {result.message['content'][0]['text']}")
+```
+
+For more information on elicitation, please refer to the docs at [modelcontextprotocol.io](https://modelcontextprotocol.io/specification/draft/client/elicitation).
+
 ## Best Practices
 
 - **Tool Descriptions**: Provide clear descriptions for your tools to help the agent understand when and how to use them

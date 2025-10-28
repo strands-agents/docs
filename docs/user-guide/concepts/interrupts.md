@@ -275,9 +275,9 @@ Session managing interrupts involves the following key components:
 - `agent.state`: General purpose key-value store that can be used to persist interrupt responses
     - On subsequent tool calls, you can reference the responses stored in `agent.state` to decide whether another interrupt is necessary. For more information on `agent.state`, please refer to [here](./agents/state.md#agent-state).
 
-## MCP Elicitation 🚧
+## MCP Elicitation
 
-Under development. Please check back in later.
+Similar to interrupts, an MCP server can request additional information from the user by sending an elicitation request to the connecting client. Currently, elicitation requests are handled by conventional means of an elicitation callback. For more details, please refer to the docs [here](./tools/mcp-tools.md#elicitation).
 
 ## Multi-Agents 🚧
 
