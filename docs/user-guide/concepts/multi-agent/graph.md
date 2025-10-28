@@ -402,19 +402,6 @@ graph TD
 ```
 
 ```python
-from strands.multiagent.graph import GraphState
-from strands.multiagent.base import Status
-
-def all_workers_complete(state: GraphState) -> bool:
-    """Ensure all workers have completed before aggregation."""
-    required = ["worker1", "worker2", "worker3"]
-    for node_id in required:
-        if node_id not in state.results:
-            return False
-        if state.results[node_id].status != Status.COMPLETED:
-            return False
-    return True
-
 builder = GraphBuilder()
 builder.add_node(coordinator, "coordinator")
 builder.add_node(worker1, "worker1")
@@ -425,11 +412,9 @@ builder.add_node(aggregator, "aggregator")
 builder.add_edge("coordinator", "worker1")
 builder.add_edge("coordinator", "worker2")
 builder.add_edge("coordinator", "worker3")
-
-# Use conditional edges to ensure aggregator waits for ALL workers
-builder.add_edge("worker1", "aggregator", condition=all_workers_complete)
-builder.add_edge("worker2", "aggregator", condition=all_workers_complete)
-builder.add_edge("worker3", "aggregator", condition=all_workers_complete)
+builder.add_edge("worker1", "aggregator")
+builder.add_edge("worker2", "aggregator")
+builder.add_edge("worker3", "aggregator")
 ```
 
 ### 3. Branching Logic
