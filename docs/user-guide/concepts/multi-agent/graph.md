@@ -18,6 +18,7 @@ The Graph pattern operates on the principle of structured, deterministic workflo
 1. Nodes represent agents, custom nodes, or multi-agent systems
 2. Edges define dependencies and information flow between nodes
 3. Execution follows the graph structure, respecting dependencies
+    1. When multiple nodes have edges to a target node, the target executes as soon as **any one** dependency completes. To enable more complex traversal use cases, see the [Conditional Edges](#conditional-edges) section.
 4. Output from one node becomes input for dependent nodes
 5. Entry points receive the original task as input
 6. Nodes can be revisited in cyclic patterns with proper exit conditions
@@ -137,7 +138,28 @@ def only_if_research_successful(state):
 builder.add_edge("research", "analysis", condition=only_if_research_successful)
 ```
 
-When multiple conditional edges converge on a single node, the target node executes as soon as any one of the incoming conditional edges is satisfied. The node doesn't wait for all predecessor nodes to complete, just the first one whose condition evaluates to true.
+### Waiting for All Dependencies
+
+By default, when multiple nodes have edges to a target node, the target executes as soon as any one dependency completes. To wait for all dependencies to complete, use conditional edges that check all required nodes:
+
+```python
+from strands.multiagent.graph import GraphState
+from strands.multiagent.base import Status
+
+def all_dependencies_complete(required_nodes: list[str]):
+    """Factory function to create AND condition for multiple dependencies."""
+    def check_all_complete(state: GraphState) -> bool:
+        return all(
+            node_id in state.results and state.results[node_id].status == Status.COMPLETED
+            for node_id in required_nodes
+        )
+    return check_all_complete
+
+# Z will only execute when A AND B AND C have all completed
+builder.add_edge("A", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+builder.add_edge("B", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+builder.add_edge("C", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+```
 
 ## Nested Multi-Agent Patterns
 
@@ -380,6 +402,19 @@ graph TD
 ```
 
 ```python
+from strands.multiagent.graph import GraphState
+from strands.multiagent.base import Status
+
+def all_workers_complete(state: GraphState) -> bool:
+    """Ensure all workers have completed before aggregation."""
+    required = ["worker1", "worker2", "worker3"]
+    for node_id in required:
+        if node_id not in state.results:
+            return False
+        if state.results[node_id].status != Status.COMPLETED:
+            return False
+    return True
+
 builder = GraphBuilder()
 builder.add_node(coordinator, "coordinator")
 builder.add_node(worker1, "worker1")
@@ -390,9 +425,11 @@ builder.add_node(aggregator, "aggregator")
 builder.add_edge("coordinator", "worker1")
 builder.add_edge("coordinator", "worker2")
 builder.add_edge("coordinator", "worker3")
-builder.add_edge("worker1", "aggregator")
-builder.add_edge("worker2", "aggregator")
-builder.add_edge("worker3", "aggregator")
+
+# Use conditional edges to ensure aggregator waits for ALL workers
+builder.add_edge("worker1", "aggregator", condition=all_workers_complete)
+builder.add_edge("worker2", "aggregator", condition=all_workers_complete)
+builder.add_edge("worker3", "aggregator", condition=all_workers_complete)
 ```
 
 ### 3. Branching Logic
@@ -480,7 +517,7 @@ graph = builder.build()
 1. **Use meaningful node IDs**: Choose descriptive names for nodes
 2. **Validate graph structure**: The builder will validate entry points and warn about potential issues
 3. **Handle node failures**: Consider how failures in one node affect the overall workflow
-4. **Use conditional edges**: For dynamic workflows based on intermediate results
+4. **Understand edge logic**: By default, nodes execute when any dependency completes. Use conditional edges when you need all dependencies to complete first
 5. **Consider parallelism**: Independent branches can execute concurrently
 6. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
 7. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
