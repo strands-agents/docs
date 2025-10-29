@@ -502,7 +502,7 @@ graph = builder.build()
 1. **Use meaningful node IDs**: Choose descriptive names for nodes
 2. **Validate graph structure**: The builder will validate entry points and warn about potential issues
 3. **Handle node failures**: Consider how failures in one node affect the overall workflow
-4. **Understand edge logic**: By default, nodes execute when any dependency completes. Use conditional edges when you need all dependencies to complete first
+4. **Use conditional edges**: For dynamic workflows based on intermediate results
 5. **Consider parallelism**: Independent branches can execute concurrently
 6. **Nest multi-agent patterns**: Use Swarms within Graphs for complex workflows
 7. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
