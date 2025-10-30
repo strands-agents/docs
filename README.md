@@ -71,6 +71,16 @@ mkdocs serve
 
 This will start a server at http://127.0.0.1:8000/ for previewing the documentation.
 
+### Running Tests
+
+To run all tests:
+
+```bash
+pytest tests/ -v
+```
+
+Tests are automatically run in CI/CD on pull requests and daily builds.
+
 ## Contributing ❤️
 
 We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:

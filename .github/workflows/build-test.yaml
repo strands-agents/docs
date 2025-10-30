@@ -11,6 +11,19 @@ on:
 permissions: read-all
 
 jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          pip install .
+      - name: Run tests
+        run: |
+          pytest tests/ -v
+
   build:
     name: Build Documentation
     runs-on: ubuntu-latest
