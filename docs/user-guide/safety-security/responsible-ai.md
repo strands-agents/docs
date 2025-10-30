@@ -1,3 +1,6 @@
+---
+title: Responsible AI
+---
 # Responsible AI
 
 Strands Agents SDK provides powerful capabilities for building AI agents with access to tools and external resources. With this power comes the responsibility to ensure your AI applications are developed and deployed in an ethical, safe, and beneficial manner. This guide outlines best practices for responsible AI usage with the Strands Agents SDK. Please also reference our [Prompt Engineering](./prompt-engineering.md) page for guidance on how to effectively create agents that align with responsible AI usage, and [Guardrails](./guardrails.md) page for how to add mechanisms to ensure safety and security.

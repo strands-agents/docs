@@ -1,3 +1,6 @@
+---
+title: Session
+---
 ::: strands.session
     options:
       heading_level: 1

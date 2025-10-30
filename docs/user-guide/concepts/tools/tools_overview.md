@@ -1,3 +1,6 @@
+---
+title: Overview
+---
 # Tools Overview
 
 Tools are the primary mechanism for extending agent capabilities, enabling them to perform actions beyond simple text generation. Tools allow agents to interact with external systems, access data, and manipulate their environment.

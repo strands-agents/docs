@@ -1,3 +1,6 @@
+---
+title: Welcome
+---
 <div align="center">
   <div>
     <a href="https://strandsagents.com">

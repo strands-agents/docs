@@ -1,3 +1,6 @@
+---
+title: Hooks
+---
 ::: strands.hooks
     options:
       heading_level: 1

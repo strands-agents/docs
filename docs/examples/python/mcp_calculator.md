@@ -1,3 +1,6 @@
+---
+title: MCP
+---
 # MCP Calculator - Model Context Protocol Integration Example
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/mcp_calculator.py) demonstrates how to integrate Strands agents with external tools using the Model Context Protocol (MCP). It shows how to create a simple MCP server that provides calculator functionality and connect a Strands agent to use these tools.

@@ -1,3 +1,6 @@
+---
+title: Workflow
+---
 # Agent Workflows: Building Multi-Agent Systems with Strands Agents SDK
 
 ## Understanding Workflows

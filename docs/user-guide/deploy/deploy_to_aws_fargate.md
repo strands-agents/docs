@@ -1,3 +1,6 @@
+---
+title: AWS Fargate
+---
 # Deploying Strands Agents SDK Agents to AWS Fargate
 
 AWS Fargate is a serverless compute engine for containers that works with Amazon ECS and EKS. It allows you to run containers without having to manage servers or clusters. This makes it an excellent choice for deploying Strands Agents SDK agents as containerized applications with high availability and scalability.

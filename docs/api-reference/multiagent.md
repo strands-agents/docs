@@ -1,3 +1,6 @@
+---
+title: Multiagent
+---
 ::: strands.multiagent
     options:
       heading_level: 1

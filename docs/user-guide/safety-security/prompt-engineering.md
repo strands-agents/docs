@@ -1,3 +1,6 @@
+---
+title: Prompt Engineering
+---
 # Prompt Engineering
 
 Effective prompt engineering is crucial not only for maximizing Strands Agents' capabilities but also for securing against LLM-based threats. This guide outlines key techniques for creating secure prompts that enhance reliability, specificity, and performance, while protecting against common attack vectors. It's always recommended to systematically test prompts across varied inputs, comparing variations to identify potential vulnerabilities. Security testing should also include adversarial examples to verify prompt robustness against potential attacks.

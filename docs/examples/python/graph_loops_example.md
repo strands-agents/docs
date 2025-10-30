@@ -1,3 +1,6 @@
+---
+title: Cyclic Graph
+---
 # 🔄 Graph with Loops - Multi-Agent Feedback Cycles
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/graph_loops_example.py) demonstrates how to create multi-agent graphs with feedback loops using the Strands Agents SDK. It showcases a write-review-improve cycle where content iterates through multiple agents until quality standards are met.

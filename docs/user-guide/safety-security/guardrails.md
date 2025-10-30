@@ -1,3 +1,6 @@
+---
+title: Guardrails
+---
 # Guardrails
 
 Strands Agents SDK provides seamless integration with guardrails, enabling you to implement content filtering, topic blocking, PII protection, and other safety measures in your AI applications.

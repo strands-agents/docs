@@ -1,3 +1,6 @@
+---
+title: Fireworks AI
+---
 # FireworksAI
 
 {{ community_contribution_banner }}

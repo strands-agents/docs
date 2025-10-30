@@ -1,3 +1,6 @@
+---
+title: Async Iterators
+---
 # Async Iterators for Streaming
 
 Async iterators provide asynchronous streaming of agent events through the [`stream_async`](../../../api-reference/agent.md#strands.agent.agent.Agent.stream_async) method. This approach is ideal for asynchronous frameworks like FastAPI, aiohttp, or Django Channels where you need fine-grained control over async execution flow.

@@ -1,3 +1,6 @@
+---
+title: Meta Tooling
+---
 # Meta-Tooling Example - Strands Agent's Dynamic Tool Creation
 
 Meta-tooling refers to the ability of an AI system to create new tools at runtime, rather than being limited to a predefined set of capabilities. The following [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/meta_tooling.py) demonstrates Strands Agents' meta-tooling capabilities - allowing agents to create, load, and use custom tools at runtime.

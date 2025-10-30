@@ -1,3 +1,6 @@
+---
+title: Structured Output
+---
 # Structured Output
 
 !!! New

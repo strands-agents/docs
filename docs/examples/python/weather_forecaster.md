@@ -1,3 +1,6 @@
+---
+title: Weather Forecaster
+---
 # Weather Forecaster - Strands Agents HTTP Integration Example
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/weather_forecaster.py) demonstrates how to integrate the Strands Agents SDK with tool use, specifically using the `http_request` tool to build a weather forecasting agent that connects with the National Weather Service API. It shows how to combine natural language understanding with API capabilities to retrieve and present weather information.

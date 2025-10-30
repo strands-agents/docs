@@ -1,3 +1,6 @@
+---
+title: FireworksAI<sup> community</sup>
+---
 
 <auto-redirect />
 

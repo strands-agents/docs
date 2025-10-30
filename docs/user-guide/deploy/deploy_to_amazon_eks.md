@@ -1,3 +1,6 @@
+---
+title: Amazon EKS
+---
 # Deploying Strands Agents SDK Agents to Amazon EKS
 
 Amazon Elastic Kubernetes Service (EKS) is a managed container orchestration service that makes it easy to deploy, manage, and scale containerized applications using Kubernetes, while AWS manages the Kubernetes control plane.

@@ -1,3 +1,6 @@
+---
+title: PII Redaction
+---
 # PII Redaction 
 PII redaction is a critical aspect of protecting personal information. This document provides clear instructions and recommended practices for safely handling PII, including guidance on integrating third-party redaction solutions with Strands SDK.
 

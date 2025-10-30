@@ -1,3 +1,6 @@
+---
+title: Community Tools Package
+---
 # Community Built Tools
 
 Strands offers an optional, community-supported tools package [`strands-agents-tools`]({{ tools_pypi }}) which includes pre-built tools to get started quickly experimenting with agents and tools during development. The package is also open source and available on [GitHub]({{ tools_repo_home }}).

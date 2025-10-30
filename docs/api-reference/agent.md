@@ -1,3 +1,6 @@
+---
+title: Agent
+---
 ::: strands.agent
     options:
       heading_level: 1

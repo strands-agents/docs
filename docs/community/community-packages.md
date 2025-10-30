@@ -1,3 +1,6 @@
+---
+title: Community Packages
+---
 # Community Packages
 
 The Strands Agents ecosystem is built on community contributions that extend agent capabilities through custom tools and integrations. If you've built a useful extension for Strands Agents that solves a common problem or integrates with popular services, packaging it for distribution allows other developers to benefit from your work.

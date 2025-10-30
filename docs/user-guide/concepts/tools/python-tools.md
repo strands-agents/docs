@@ -1,3 +1,6 @@
+---
+title: Python
+---
 # Python Tools
 
 There are three approaches to defining python-based tools in Strands:

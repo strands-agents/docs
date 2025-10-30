@@ -1,3 +1,6 @@
+---
+title: Ollama
+---
 # Ollama
 
 Ollama is a framework for running open-source large language models locally. Strands provides native support for Ollama, allowing you to use locally-hosted models in your agents.

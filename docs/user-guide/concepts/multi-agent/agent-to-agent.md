@@ -1,3 +1,6 @@
+---
+title: Agent2Agent (A2A)
+---
 # Agent-to-Agent (A2A) Protocol
 
 Strands Agents supports the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/latest/), enabling seamless communication between AI agents across different platforms and implementations.

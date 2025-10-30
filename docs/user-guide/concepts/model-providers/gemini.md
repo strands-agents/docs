@@ -1,3 +1,6 @@
+---
+title: Gemini
+---
 # Gemini
 
 [Google Gemini](https://ai.google.dev/api) is Google's family of multimodal large language models designed for advanced reasoning, code generation, and creative tasks. The Strands Agents SDK implements a Gemini provider, allowing you to run agents against the Gemini models available through Google's AI API.

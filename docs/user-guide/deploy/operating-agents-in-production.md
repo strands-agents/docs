@@ -1,3 +1,6 @@
+---
+title: Operating Agents in Production
+---
 # Operating Agents in Production
 
 This guide provides best practices for deploying Strands agents in production environments, focusing on security, stability, and performance optimization.

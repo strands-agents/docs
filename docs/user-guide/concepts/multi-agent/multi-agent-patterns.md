@@ -1,3 +1,6 @@
+---
+title: Multi-agent Patterns
+---
 # Multi-agent Patterns
 
 In Strands, building a system with multiple agents or complex tool chains can be approached in several ways. The three primary patterns you'll encounter are Graph, Swarm, and Workflow. While they all aim to solve complex problems, they have differences in their structures, execution workflows, and use cases.

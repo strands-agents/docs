@@ -1,3 +1,6 @@
+---
+title: Metrics
+---
 # Metrics
 
 Metrics are essential for understanding agent performance, optimizing behavior, and monitoring resource usage. The Strands Agents SDK provides comprehensive metrics tracking capabilities that give you visibility into how your agents operate.

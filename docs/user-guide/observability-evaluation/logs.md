@@ -1,3 +1,6 @@
+---
+title: Logs
+---
 # Logging
 
 Strands SDK uses Python's standard [`logging`](https://docs.python.org/3/library/logging.html) module to provide visibility into its operations. This document explains how logging is implemented in the SDK and how you can configure it for your needs.

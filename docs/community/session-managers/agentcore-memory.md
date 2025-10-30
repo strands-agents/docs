@@ -1,3 +1,6 @@
+---
+title: Amazon AgentCore Memory
+---
 # AgentCore Memory Session Manager
 
 {{ community_contribution_banner }}

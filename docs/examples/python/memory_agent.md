@@ -1,3 +1,6 @@
+---
+title: Memory Agent
+---
 # 🧠 Mem0 Memory Agent - Personalized Context Through Persistent Memory
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/memory_agent.py) demonstrates how to create a Strands agent that leverages [mem0.ai](https://mem0.ai) to maintain context across conversations and provide personalized responses. It showcases how to store, retrieve, and utilize memories to create more intelligent and contextual AI interactions.

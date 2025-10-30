@@ -1,3 +1,6 @@
+---
+title: Tools
+---
 ::: strands.tools
     options:
       heading_level: 1

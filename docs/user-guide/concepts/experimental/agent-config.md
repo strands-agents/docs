@@ -1,3 +1,6 @@
+---
+title: AgentConfig
+---
 # Agent Configuration [Experimental]
 
 !!! warning "Experimental Feature"

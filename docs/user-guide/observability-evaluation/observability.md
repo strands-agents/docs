@@ -1,3 +1,6 @@
+---
+title: Observability
+---
 # Observability
 
 In the Strands Agents SDK, observability refers to the ability to measure system behavior and performance. Observability is the combination of instrumentation, data collection, and analysis techniques that provide insights into an agent's behavior and performance. It enables Strands Agents developers to effectively build, debug and maintain agents to better serve their unique customer needs and reliably complete their tasks. This guide provides background on what type of data (or "Primitives") makes up observability as well as best practices for implementing agent observability with the Strands Agents SDK. 

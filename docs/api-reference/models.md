@@ -1,3 +1,6 @@
+---
+title: Models
+---
 ::: strands.models
     options:
       heading_level: 1

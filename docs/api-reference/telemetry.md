@@ -1,3 +1,6 @@
+---
+title: Telemetry
+---
 ::: strands.telemetry
     options:
       heading_level: 1

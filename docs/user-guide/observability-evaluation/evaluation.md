@@ -1,3 +1,6 @@
+---
+title: Evaluation
+---
 # Evaluation
 
 This guide covers approaches to evaluating agents. Effective evaluation is essential for measuring agent performance, tracking improvements, and ensuring your agents meet quality standards.

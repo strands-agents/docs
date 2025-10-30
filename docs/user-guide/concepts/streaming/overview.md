@@ -1,3 +1,6 @@
+---
+title: Overview
+---
 # Streaming Events
 
 Strands Agents SDK provides real-time streaming capabilities that allow you to monitor and process events as they occur during agent execution. This enables responsive user interfaces, real-time monitoring, and custom output formatting.

@@ -1,3 +1,6 @@
+---
+title: Handlers
+---
 ::: strands.handlers
     options:
       heading_level: 1

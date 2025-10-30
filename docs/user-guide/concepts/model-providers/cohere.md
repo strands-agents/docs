@@ -1,3 +1,6 @@
+---
+title: Cohere<sup> community</sup>
+---
 
 <auto-redirect />
 

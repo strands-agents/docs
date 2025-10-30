@@ -1,3 +1,6 @@
+---
+title: OpenAI
+---
 # OpenAI
 
 [OpenAI](https://platform.openai.com/docs/overview) is an AI research and deployment company that provides a suite of powerful language models. The Strands Agents SDK implements an OpenAI provider, allowing you to run agents against any OpenAI or OpenAI-compatible model.

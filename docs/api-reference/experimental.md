@@ -1,3 +1,6 @@
+---
+title: Experimental
+---
 ::: strands.experimental
     options:
       heading_level: 1

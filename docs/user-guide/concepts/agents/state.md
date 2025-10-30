@@ -1,3 +1,6 @@
+---
+title: State
+---
 # State Management
 
 Strands Agents state is maintained in several forms:

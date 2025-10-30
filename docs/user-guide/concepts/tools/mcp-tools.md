@@ -1,3 +1,6 @@
+---
+title: Model Context Protocol (MCP)
+---
 # Model Context Protocol (MCP) Tools
 
 !!! warning "New: Experimental Managed MCP Integration"

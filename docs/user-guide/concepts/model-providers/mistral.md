@@ -1,3 +1,6 @@
+---
+title: MistralAI
+---
 # Mistral AI
 
 [Mistral AI](https://mistral.ai/)  is a research lab building the best open source models in the world.

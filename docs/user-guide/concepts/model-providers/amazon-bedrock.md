@@ -1,3 +1,6 @@
+---
+title: Amazon Bedrock
+---
 # Amazon Bedrock
 
 Amazon Bedrock is a fully managed service that offers a choice of high-performing foundation models from leading AI companies through a unified API. Strands provides native support for Amazon Bedrock, allowing you to use these powerful models in your agents with minimal configuration.

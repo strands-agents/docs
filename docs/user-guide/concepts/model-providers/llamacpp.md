@@ -1,3 +1,6 @@
+---
+title: llama.cpp
+---
 # llama.cpp
 
 [llama.cpp](https://github.com/ggml-org/llama.cpp) is a high-performance C++ inference engine for running large language models locally. The Strands Agents SDK implements a llama.cpp provider, allowing you to run agents against any llama.cpp server with quantized models.

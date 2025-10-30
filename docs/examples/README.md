@@ -1,3 +1,6 @@
+---
+title: Overview
+---
 # Examples Overview
 
 The examples directory provides a collection of sample implementations to help you get started with building intelligent agents using Strands Agents. This directory contains two main subdirectories: `/examples/python` for Python-based agent examples and `/examples/cdk` for Cloud Development Kit integration examples.

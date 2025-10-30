@@ -1,3 +1,6 @@
+---
+title: Types
+---
 ::: strands.types
     options:
       heading_level: 1

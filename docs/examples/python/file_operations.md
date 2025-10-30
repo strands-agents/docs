@@ -1,3 +1,6 @@
+---
+title: File Operations
+---
 # File Operations - Strands Agent for File Management
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/file_operations.py) demonstrates how to create a Strands agent specialized in file operations, allowing users to read, write, search, and modify files through natural language commands. It showcases how Strands agents can be configured to work with the filesystem in a safe and intuitive manner.

@@ -1,3 +1,6 @@
+---
+title: Amazon EC2
+---
 # Deploying Strands Agents SDK Agents to Amazon EC2
 
 Amazon EC2 (Elastic Compute Cloud) provides resizable compute capacity in the cloud, making it a flexible option for deploying Strands Agents SDK agents. This deployment approach gives you full control over the underlying infrastructure while maintaining the ability to scale as needed.

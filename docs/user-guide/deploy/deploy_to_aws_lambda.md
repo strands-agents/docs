@@ -1,3 +1,6 @@
+---
+title: AWS Lambda
+---
 # Deploying Strands Agents SDK Agents to AWS Lambda
 
 AWS Lambda is a serverless compute service that lets you run code without provisioning or managing servers. This makes it an excellent choice for deploying Strands Agents SDK agents because you only pay for the compute time you consume and don't need to manage hosts or servers.

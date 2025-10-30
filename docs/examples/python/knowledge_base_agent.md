@@ -1,3 +1,6 @@
+---
+title: Knowledge-Base Workflow
+---
 # Knowledge Base Agent - Intelligent Information Storage and Retrieval
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/knowledge_base_agent.py) demonstrates how to create a Strands agent that determines whether to store information to a knowledge base or retrieve information from it based on the user's query. It showcases a code-defined decision-making workflow that routes user inputs to the appropriate action.

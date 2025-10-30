@@ -1,3 +1,6 @@
+---
+title: Event Loop
+---
 ::: strands.event_loop
     options:
       heading_level: 1

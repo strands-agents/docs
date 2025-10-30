@@ -1,3 +1,6 @@
+---
+title: Structured Output
+---
 # Structured Output Example
 
 This example demonstrates how to use Strands' structured output feature to get type-safe, validated responses from language models using [Pydantic](https://docs.pydantic.dev/latest/concepts/models/) models. Instead of raw text that you need to parse manually, you define the exact structure you want and receive a validated Python object.

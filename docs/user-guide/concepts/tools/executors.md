@@ -1,3 +1,6 @@
+---
+title: Executors
+---
 # Tool Executors
 
 Tool executors allow users to customize the execution strategy of tools executed by the agent (e.g., concurrent vs sequential). Currently, Strands is packaged with 2 executors.

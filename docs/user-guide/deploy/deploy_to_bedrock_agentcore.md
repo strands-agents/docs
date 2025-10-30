@@ -1,3 +1,6 @@
+---
+title: Amazon Bedrock AgentCore
+---
 # Deploying Strands Agents to Amazon Bedrock AgentCore Runtime
 
 ## What is Amazon Bedrock AgentCore Runtime

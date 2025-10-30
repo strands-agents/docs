@@ -1,3 +1,6 @@
+---
+title: Multi Agents
+---
 # Teacher's Assistant - Strands Multi-Agent Architecture Example
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/teachers_assistant.py) demonstrates how to implement a multi-agent architecture using Strands Agents, where specialized agents work together under the coordination of a central orchestrator. The system uses natural language routing to direct queries to the most appropriate specialized agent based on subject matter expertise.

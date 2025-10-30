@@ -1,3 +1,6 @@
+---
+title: Writer
+---
 # Writer
 
 [Writer](https://writer.com/) is an enterprise generative AI platform offering specialized Palmyra models for finance, healthcare, creative, and general-purpose use cases. The models excel at tool calling, structured outputs, and domain-specific tasks, with Palmyra X5 supporting a 1M token context window.
