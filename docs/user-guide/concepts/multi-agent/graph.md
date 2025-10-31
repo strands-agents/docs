@@ -18,6 +18,7 @@ The Graph pattern operates on the principle of structured, deterministic workflo
 1. Nodes represent agents, custom nodes, or multi-agent systems
 2. Edges define dependencies and information flow between nodes
 3. Execution follows the graph structure, respecting dependencies
+    1. When multiple nodes have edges to a target node, the target executes as soon as **any one** dependency completes. To enable more complex traversal use cases, see the [Conditional Edges](#conditional-edges) section.
 4. Output from one node becomes input for dependent nodes
 5. Entry points receive the original task as input
 6. Nodes can be revisited in cyclic patterns with proper exit conditions
@@ -137,7 +138,28 @@ def only_if_research_successful(state):
 builder.add_edge("research", "analysis", condition=only_if_research_successful)
 ```
 
-When multiple conditional edges converge on a single node, the target node executes as soon as any one of the incoming conditional edges is satisfied. The node doesn't wait for all predecessor nodes to complete, just the first one whose condition evaluates to true.
+### Waiting for All Dependencies
+
+By default, when multiple nodes have edges to a target node, the target executes as soon as any one dependency completes. To wait for all dependencies to complete, use conditional edges that check all required nodes:
+
+```python
+from strands.multiagent.graph import GraphState
+from strands.multiagent.base import Status
+
+def all_dependencies_complete(required_nodes: list[str]):
+    """Factory function to create AND condition for multiple dependencies."""
+    def check_all_complete(state: GraphState) -> bool:
+        return all(
+            node_id in state.results and state.results[node_id].status == Status.COMPLETED
+            for node_id in required_nodes
+        )
+    return check_all_complete
+
+# Z will only execute when A AND B AND C have all completed
+builder.add_edge("A", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+builder.add_edge("B", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+builder.add_edge("C", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+```
 
 ## Nested Multi-Agent Patterns
 
@@ -189,7 +211,7 @@ class FunctionNode(MultiAgentBase):
         self.func = func
         self.name = name or func.__name__
         
-    async def invoke_async(self, task, **kwargs):
+    async def invoke_async(self, task, invocation_state, **kwargs):
         # Execute function and create AgentResult
         result = self.func(task if isinstance(task, str) else str(task))
         
