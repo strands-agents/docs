@@ -41,6 +41,33 @@ All streaming methods yield the same set of events:
 - `reasoning_signature`: Signature from reasoning process
 - `redactedContent`: Reasoning content redacted by the model
 
+### Multi-Agent Events
+
+Multi-agent systems ([Graph](../multi-agent/graph.md) and [Swarm](../multi-agent/swarm.md)) emit additional coordination events:
+
+- `multiagent_node_start`: When a node begins execution
+    - `type`: `"multiagent_node_start"`
+    - `node_id`: Unique identifier for the node
+    - `node_type`: Type of node (`"agent"`, `"swarm"`, `"graph"`)
+- `multiagent_node_stream`: Forwarded events from agents/multi-agents with node context
+    - `type`: `"multiagent_node_stream"`
+    - `node_id`: Identifier of the node generating the event
+    - `event`: The original agent event (nested)
+- `multiagent_node_stop`: When a node completes execution
+    - `type`: `"multiagent_node_stop"`
+    - `node_id`: Unique identifier for the node
+    - `node_result`: Complete NodeResult with execution details, metrics, and status
+- `multiagent_handoff`: When control is handed off between agents (Swarm) or batch transitions (Graph)
+    - `type`: `"multiagent_handoff"`
+    - `from_node_ids`: List of node IDs completing execution
+    - `to_node_ids`: List of node IDs beginning execution
+    - `message`: Optional handoff message (typically used in Swarm)
+- `multiagent_result`: Final multi-agent result
+    - `type`: `"multiagent_result"`
+    - `result`: The final GraphResult or SwarmResult
+
+See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm streaming](../multi-agent/swarm.md#streaming-events) for usage examples.
+
 ## Quick Examples
 
 ### Async Iterator Pattern
@@ -194,5 +221,4 @@ orchestrator("What is 3+3?")
 
 - Learn about [Async Iterators](async-iterators.md) for asynchronous streaming
 - Explore [Callback Handlers](callback-handlers.md) for synchronous event processing
-- See [Multi-Agent Streaming](multi-agent-streaming.md) for Graph and Swarm streaming
 - See the [Agent API Reference](../../../api-reference/agent.md) for complete method documentation

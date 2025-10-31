@@ -204,26 +204,28 @@ swarm = Swarm([coordinator, specialist])
 # Stream events during execution
 async for event in swarm.stream_async("Design and implement a REST API"):
     # Track node execution
-    if event.get("multi_agent_node_start"):
+    if event.get("type") == "multiagent_node_start":
         print(f"🔄 Agent {event['node_id']} taking control")
     
     # Monitor agent events
-    elif event.get("multi_agent_node_stream"):
+    elif event.get("type") == "multiagent_node_stream":
         inner_event = event["event"]
         if "data" in inner_event:
             print(inner_event["data"], end="")
     
     # Track handoffs
-    elif event.get("multi_agent_handoff"):
-        print(f"\n🔀 Handoff: {event['from_node']} → {event['to_node']}")
+    elif event.get("type") == "multiagent_handoff":
+        from_nodes = ", ".join(event['from_node_ids'])
+        to_nodes = ", ".join(event['to_node_ids'])
+        print(f"\n🔀 Handoff: {from_nodes} → {to_nodes}")
     
     # Get final result
-    elif event.get("multi_agent_result"):
+    elif event.get("type") == "multiagent_result":
         result = event["result"]
         print(f"\nSwarm completed: {result.status}")
 ```
 
-For more details on multi-agent streaming including event types, handoff tracking, and nested swarms, see [Multi-Agent Streaming](../streaming/multi-agent-streaming.md).
+See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
 
 ## Swarm Results
 

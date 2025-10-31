@@ -314,27 +314,27 @@ graph = builder.build()
 # Stream events during execution
 async for event in graph.stream_async("Research and analyze market trends"):
     # Track node execution
-    if event.get("multi_agent_node_start"):
+    if event.get("type") == "multiagent_node_start":
         print(f"🔄 Node {event['node_id']} starting")
     
     # Monitor agent events within nodes
-    elif event.get("multi_agent_node_stream"):
+    elif event.get("type") == "multiagent_node_stream":
         inner_event = event["event"]
         if "data" in inner_event:
             print(inner_event["data"], end="")
     
     # Track node completion
-    elif event.get("multi_agent_node_stop"):
+    elif event.get("type") == "multiagent_node_stop":
         node_result = event["node_result"]
         print(f"\n✅ Node {event['node_id']} completed in {node_result.execution_time}ms")
     
     # Get final result
-    elif event.get("multi_agent_result"):
+    elif event.get("type") == "multiagent_result":
         result = event["result"]
         print(f"Graph completed: {result.status}")
 ```
 
-For more details on multi-agent streaming including event types, parallel execution, and nested graphs, see [Multi-Agent Streaming](../streaming/multi-agent-streaming.md).
+See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
 
 ## Graph Results
 
