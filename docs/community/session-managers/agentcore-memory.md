@@ -10,29 +10,59 @@ The [AgentCore Memory Session Manager](https://github.com/aws/bedrock-agentcore-
 pip install 'bedrock-agentcore[strands-agents]'
 ```
 
+Or for local development:
+
+```bash
+git clone https://github.com/aws/bedrock-agentcore-sdk-python.git
+cd bedrock-agentcore-sdk-python
+uv sync
+source .venv/bin/activate
+```
+
 ## Usage
 
-### Basic Setup (Short-Term Memory)
+### Basic Setup (STM)
+
+
+Short-term memory provides basic conversation persistence within a session. This is the simplest way to get started with AgentCore Memory.
+
+#### Creating the Memory Resource
+
+!!! note "One-time Setup"
+    The memory resource creation shown below is typically done once, separately from your agent application. In production, you would create the memory resource through the AWS Console or a separate setup script, then use the memory ID in your agent application.
 
 ```python
-from strands import Agent
 from bedrock_agentcore.memory import MemoryClient
-from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemoryConfig
-from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
-from datetime import datetime
 
-# Create a basic memory for short-term functionality
+# This is typically done once, separately from your agent application
 client = MemoryClient(region_name="us-east-1")
 basic_memory = client.create_memory(
     name="BasicTestMemory",
     description="Basic memory for testing short-term functionality"
 )
+print(f"Created memory with ID: {basic_memory.get('id')}")
+# Save this ID for use in your agent application
+```
 
-# Configure memory
+
+### Using the Session Manager with Existing Memory
+
+```python
+import uuid
+import boto3
+from datetime import datetime
+from strands import Agent
+from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemoryConfig
+from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
+
+MEM_ID = "your-existing-memory-id"  # Replace with your actual memory ID
+ACTOR_ID = "test_actor_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
+SESSION_ID = "test_session_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
+
 agentcore_memory_config = AgentCoreMemoryConfig(
-    memory_id=basic_memory.get('id'),
-    session_id=f"session_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-    actor_id=f"user_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    memory_id=MEM_ID,
+    session_id=SESSION_ID,
+    actor_id=ACTOR_ID
 )
 
 # Create session manager
@@ -41,25 +71,38 @@ session_manager = AgentCoreMemorySessionManager(
     region_name="us-east-1"
 )
 
-# Create agent
+# Create agent with session manager
 agent = Agent(
     system_prompt="You are a helpful assistant. Use all you know about the user to provide helpful responses.",
     session_manager=session_manager,
 )
 
-# Use the agent - conversations are persisted with intelligent retrieval
+# Use the agent - conversations are automatically persisted
 agent("I like sushi with tuna")
-agent("What should I buy for lunch today?")  # Agent remembers preferences
+agent("What should I buy for lunch today?")
 ```
 
-### Advanced Setup (Long-Term Memory)
 
-For more sophisticated memory capabilities, create a memory with multiple strategies:
+## Long-Term Memory (LTM)
+
+Long-term memory provides advanced capabilities with multiple strategies for learning and storing user preferences, facts, and session summaries across conversations.
+
+### Creating LTM Memory with Strategies
+
+!!! note "One-time Setup"
+    Similar to STM, the LTM memory resource creation is typically done once, separately from your agent application. In production, you would create the memory resource with strategies through the AWS Console or a separate setup script.
+
+Bedrock AgentCore Memory supports three built-in memory strategies:
+
+1. **`summaryMemoryStrategy`**: Summarizes conversation sessions
+2. **`userPreferenceMemoryStrategy`**: Learns and stores user preferences
+3. **`semanticMemoryStrategy`**: Extracts and stores factual information
 
 ```python
-from bedrock_agentcore.memory.integrations.strands.config import RetrievalConfig
+from bedrock_agentcore.memory import MemoryClient
 
-# Create comprehensive memory with all built-in strategies
+# This is typically done once, separately from your agent application
+client = MemoryClient(region_name="us-east-1")
 comprehensive_memory = client.create_memory_and_wait(
     name="ComprehensiveAgentMemory",
     description="Full-featured memory with all built-in strategies",
@@ -84,12 +127,50 @@ comprehensive_memory = client.create_memory_and_wait(
         }
     ]
 )
+print(f"Created LTM memory with ID: {comprehensive_memory.get('id')}")
+# Save this ID for use in your agent application
+```
 
-# Configure with multiple namespace retrieval
+
+### Configuring Retrieval
+
+You can configure how the agent retrieves information from different memory namespaces:
+
+#### Single Namespace Retrieval
+
+```python
+from datetime import datetime
+from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemoryConfig, RetrievalConfig
+from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
+from strands import Agent
+
+MEM_ID = "your-existing-ltm-memory-id"  # Replace with your actual LTM memory ID
+ACTOR_ID = "test_actor_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
+SESSION_ID = "test_session_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
+
 config = AgentCoreMemoryConfig(
-    memory_id=comprehensive_memory.get('id'),
-    session_id=f"session_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-    actor_id=f"user_{datetime.now().strftime('%Y%m%d%H%M%S')}",
+    memory_id=MEM_ID,
+    session_id=SESSION_ID,
+    actor_id=ACTOR_ID,
+    retrieval_config={
+        "/preferences/{actorId}": RetrievalConfig(
+            top_k=5,
+            relevance_score=0.7
+        )
+    }
+)
+
+session_manager = AgentCoreMemorySessionManager(config, region_name='us-east-1')
+ltm_agent = Agent(session_manager=session_manager)
+```
+
+#### Multiple Namespace Retrieval
+
+```python
+config = AgentCoreMemoryConfig(
+    memory_id=MEM_ID,
+    session_id=SESSION_ID,
+    actor_id=ACTOR_ID,
     retrieval_config={
         "/preferences/{actorId}": RetrievalConfig(
             top_k=5,
@@ -107,40 +188,60 @@ config = AgentCoreMemoryConfig(
 )
 
 session_manager = AgentCoreMemorySessionManager(config, region_name='us-east-1')
-agent = Agent(session_manager=session_manager)
+agent_with_multiple_namespaces = Agent(session_manager=session_manager)
 ```
 
-## Configuration
+
+## Configuration Options
+
 
 ### Memory Strategies
 
 AgentCore Memory supports three built-in strategies:
 
-1. **summaryMemoryStrategy**: Automatically summarizes conversation sessions for efficient context retrieval
-2. **userPreferenceMemoryStrategy**: Learns and stores user preferences across sessions
-3. **semanticMemoryStrategy**: Extracts and stores factual information from conversations
+1. **`summaryMemoryStrategy`**: Automatically summarizes conversation sessions for efficient context retrieval
+2. **`userPreferenceMemoryStrategy`**: Learns and stores user preferences across sessions
+3. **`semanticMemoryStrategy`**: Extracts and stores factual information from conversations
 
 ### AgentCoreMemoryConfig Parameters
 
-- `memory_id`: ID of the Bedrock AgentCore Memory resource
-- `session_id`: Unique identifier for the conversation session
-- `actor_id`: Unique identifier for the user/actor
-- `retrieval_config`: Dictionary mapping namespaces to RetrievalConfig objects
+The `AgentCoreMemoryConfig` class accepts the following parameters:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `memory_id` | `str` | Yes | ID of the Bedrock AgentCore Memory resource |
+| `session_id` | `str` | Yes | Unique identifier for the conversation session |
+| `actor_id` | `str` | Yes | Unique identifier for the user/actor |
+| `retrieval_config` | `Dict[str, RetrievalConfig]` | No | Dictionary mapping namespaces to retrieval configurations |
 
 ### RetrievalConfig Parameters
 
-- `top_k`: Number of top results to retrieve (default: 5)
-- `relevance_score`: Minimum relevance threshold (0.0-1.0)
+Configure retrieval behavior for each namespace:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `top_k` | `int` | 10 | Number of top-scoring records to return from semantic search (1-1000) |
+| `relevance_score` | `float` | 0.2 | Minimum relevance threshold for filtering results (0.0-1.0) |
+| `strategy_id` | `Optional[str]` | None | Optional parameter to filter memory strategies |
 
 ### Namespace Patterns
 
+Namespaces follow specific patterns with variable substitution:
+
 - `/preferences/{actorId}`: User-specific preferences across sessions
-- `/facts/{actorId}`: User-specific factual information
-- `/summaries/{actorId}/{sessionId}`: Session-specific conversation summaries
+- `/facts/{actorId}`: User-specific facts across sessions
+- `/summaries/{actorId}/{sessionId}`: Session-specific summaries
+
+The `{actorId}` and `{sessionId}` placeholders are automatically replaced with the values from your configuration.
+
+See the following docs for more on namespaces: [Memory scoping with namespaces](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/session-actor-namespace.html)
+
+
 
 ## Important Notes
 
-> **Session Limitations:** Currently, only **one** agent per session is supported when using AgentCoreMemorySessionManager. Creating multiple agents with the same session will show a warning.
+!!! note "Session Limitations"
+    Currently, only **one** agent per session is supported when using AgentCoreMemorySessionManager. Creating multiple agents with the same session will show a warning.
 
 ## Resources
 
