@@ -61,7 +61,7 @@ agent = config_to_agent("file:///path/to/config.json")
 
 ### Supported Keys
 
-- `model`: Model identifier (string) - [[Only supports AWS Bedrock model provider string](../../../quickstart/#using-a-string-model-id)]
+- `model`: Model identifier (string) - [[Only supports AWS Bedrock model provider string](../../quickstart.md#using-a-string-model-id)]
 - `prompt`: System prompt for the agent (string)
 - `tools`: List of tool specifications (list of strings)
 - `name`: Agent name (string)
@@ -102,7 +102,7 @@ The Agent class handles all tool loading internally, including:
 
 ### Model Configurations
 
-The `model` property uses the [string based model id feature](../../../quickstart/#using-a-string-model-id). You can reference [AWS's Model Id's](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html) to identify a model id to use. If you want to use a different model provider, you can pass in a model as part of the `**kwargs` of the `config_to_agent` function:
+The `model` property uses the [string based model id feature](../../quickstart.md#using-a-string-model-id). You can reference [AWS's Model Id's](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html) to identify a model id to use. If you want to use a different model provider, you can pass in a model as part of the `**kwargs` of the `config_to_agent` function:
 
 ```python
 from strands.experimental import config_to_agent
@@ -144,7 +144,7 @@ agent.model = OpenAIModel(
 The `config_to_agent` function accepts:
 
 - `config`: Either a file path (string) or configuration dictionary
-- `**kwargs`: Additional [Agent constructor parameters](../../../../api-reference/agent/#strands.agent.agent.Agent.__init__) that override config values
+- `**kwargs`: Additional [Agent constructor parameters](../../../api-reference/agent.md#strands.agent.agent.Agent.__init__) that override config values
 
 ```python
 # Override config values with valid Agent parameters

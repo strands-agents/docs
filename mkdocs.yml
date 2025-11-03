@@ -118,6 +118,7 @@ nav:
       - Interrupts: user-guide/concepts/interrupts.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
+        - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
