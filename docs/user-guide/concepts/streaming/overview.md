@@ -31,8 +31,8 @@ All streaming methods yield the same set of events:
     - `toolUseId`: Unique ID for this tool use
     - `name`: Name of the tool
     - `input`: Tool input parameters (accumulated as streaming occurs)
-- `tool_stream_event`: Information about [an event streamed from a tool](../../tools/python-tools/#tool-streaming), including:
-    - `tool_use`: The [`ToolUse`](../../../api-reference/types#strands.types.tools.ToolUse) for the tool that streamed the event
+- `tool_stream_event`: Information about [an event streamed from a tool](../tools/python-tools.md#tool-streaming), including:
+    - `tool_use`: The [`ToolUse`](../../../api-reference/types.md#strands.types.tools.ToolUse) for the tool that streamed the event
     - `data`: The data streamed from the tool
 
 ### Reasoning Events
@@ -40,6 +40,33 @@ All streaming methods yield the same set of events:
 - `reasoningText`: Text from reasoning process
 - `reasoning_signature`: Signature from reasoning process
 - `redactedContent`: Reasoning content redacted by the model
+
+### Multi-Agent Events
+
+Multi-agent systems ([Graph](../multi-agent/graph.md) and [Swarm](../multi-agent/swarm.md)) emit additional coordination events:
+
+- `multiagent_node_start`: When a node begins execution
+    - `type`: `"multiagent_node_start"`
+    - `node_id`: Unique identifier for the node
+    - `node_type`: Type of node (`"agent"`, `"swarm"`, `"graph"`)
+- `multiagent_node_stream`: Forwarded events from agents/multi-agents with node context
+    - `type`: `"multiagent_node_stream"`
+    - `node_id`: Identifier of the node generating the event
+    - `event`: The original agent event (nested)
+- `multiagent_node_stop`: When a node completes execution
+    - `type`: `"multiagent_node_stop"`
+    - `node_id`: Unique identifier for the node
+    - `node_result`: Complete NodeResult with execution details, metrics, and status
+- `multiagent_handoff`: When control is handed off between agents (Swarm) or batch transitions (Graph)
+    - `type`: `"multiagent_handoff"`
+    - `from_node_ids`: List of node IDs completing execution
+    - `to_node_ids`: List of node IDs beginning execution
+    - `message`: Optional handoff message (typically used in Swarm)
+- `multiagent_result`: Final multi-agent result
+    - `type`: `"multiagent_result"`
+    - `result`: The final GraphResult or SwarmResult
+
+See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm streaming](../multi-agent/swarm.md#streaming-events) for usage examples.
 
 ## Quick Examples
 

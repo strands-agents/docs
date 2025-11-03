@@ -12,7 +12,7 @@ A session represents all of the stateful information that is needed by an agent 
 
 Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents to seamlessly continue conversations where they left off.
 
-Beyond the built-in options, [third-party session managers](./#third-party-session-managers) provide additional storage and memory capabilities.
+Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
 
 ## Basic Usage
 
