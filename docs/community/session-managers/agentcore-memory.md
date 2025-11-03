@@ -10,15 +10,6 @@ The [AgentCore Memory Session Manager](https://github.com/aws/bedrock-agentcore-
 pip install 'bedrock-agentcore[strands-agents]'
 ```
 
-Or for local development:
-
-```bash
-git clone https://github.com/aws/bedrock-agentcore-sdk-python.git
-cd bedrock-agentcore-sdk-python
-uv sync
-source .venv/bin/activate
-```
-
 ## Usage
 
 ### Basic Setup (STM)
@@ -32,6 +23,7 @@ Short-term memory provides basic conversation persistence within a session. This
     The memory resource creation shown below is typically done once, separately from your agent application. In production, you would create the memory resource through the AWS Console or a separate setup script, then use the memory ID in your agent application.
 
 ```python
+import os
 from bedrock_agentcore.memory import MemoryClient
 
 # This is typically done once, separately from your agent application
@@ -40,8 +32,11 @@ basic_memory = client.create_memory(
     name="BasicTestMemory",
     description="Basic memory for testing short-term functionality"
 )
-print(f"Created memory with ID: {basic_memory.get('id')}")
-# Save this ID for use in your agent application
+
+# Export the memory ID as an environment variable for reuse
+memory_id = basic_memory.get('id')
+print(f"Created memory with ID: {memory_id}")
+os.environ['AGENTCORE_MEMORY_ID'] = memory_id
 ```
 
 
@@ -55,7 +50,8 @@ from strands import Agent
 from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemoryConfig
 from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
 
-MEM_ID = "your-existing-memory-id"  # Replace with your actual memory ID
+
+MEM_ID = os.environ.get("AGENTCORE_MEMORY_ID", "your-existing-memory-id")
 ACTOR_ID = "test_actor_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
 SESSION_ID = "test_session_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
 
@@ -99,6 +95,7 @@ Bedrock AgentCore Memory supports three built-in memory strategies:
 3. **`semanticMemoryStrategy`**: Extracts and stores factual information
 
 ```python
+import os
 from bedrock_agentcore.memory import MemoryClient
 
 # This is typically done once, separately from your agent application
@@ -127,8 +124,11 @@ comprehensive_memory = client.create_memory_and_wait(
         }
     ]
 )
-print(f"Created LTM memory with ID: {comprehensive_memory.get('id')}")
-# Save this ID for use in your agent application
+
+# Export the LTM memory ID as an environment variable for reuse
+ltm_memory_id = comprehensive_memory.get('id')
+print(f"Created LTM memory with ID: {ltm_memory_id}")
+os.environ['AGENTCORE_LTM_MEMORY_ID'] = ltm_memory_id
 ```
 
 
@@ -144,7 +144,7 @@ from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemory
 from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
 from strands import Agent
 
-MEM_ID = "your-existing-ltm-memory-id"  # Replace with your actual LTM memory ID
+MEM_ID = os.environ.get("AGENTCORE_LTM_MEMORY_ID", "your-existing-ltm-memory-id")
 ACTOR_ID = "test_actor_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
 SESSION_ID = "test_session_id_%s" % datetime.now().strftime("%Y%m%d%H%M%S")
 
