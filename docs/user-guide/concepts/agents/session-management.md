@@ -4,7 +4,7 @@ Session management in Strands Agents provides a robust mechanism for persisting 
 
 ## Overview
 
-A session represents all of the stateful information that is needed by agents and multi-agents to function, including:
+A session represents all of stateful information that is needed by agents and multi-agent systems to function, including:
 
 **Single Agent Sessions**:
 - Conversation history (messages)
@@ -17,7 +17,7 @@ A session represents all of the stateful information that is needed by agents an
 - Cross-agent shared state and context
 - Execution flow and node transition history
 
-Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents and multi-agents  to seamlessly continue conversations where they left off.
+Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents and multi-agent systems  to seamlessly continue conversations where they left off.
 
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
 
@@ -45,7 +45,7 @@ The conversation, and associated state, is persisted to the underlying filesyste
 
 ### Multi-Agent Sessions
 
-Multi-agents(Graph/Swarm) can also use session management to persist their state:
+Multi-agent systems(Graph/Swarm) can also use session management to persist their state:
 
 ```python
 from strands.multiagent import Graph
@@ -278,7 +278,7 @@ These data models work together to provide a complete representation of an agent
 
 **Multi-Agent State**
 
-Multi-agents serialize their state as JSON objects containing:
+Multi-agent systems serialize their state as JSON objects containing:
 
 - **Orchestrator Configuration**: Settings, parameters, and execution preferences
 - **Node State**: Current execution state and node transition history
