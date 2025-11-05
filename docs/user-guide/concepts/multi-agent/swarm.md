@@ -186,6 +186,47 @@ async def run_swarm():
 result = asyncio.run(run_swarm())
 ```
 
+## Streaming Events
+
+Swarms support real-time streaming of events during execution using [`stream_async`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm.stream_async). This provides visibility into agent collaboration, handoffs, and autonomous coordination.
+
+```python
+from strands import Agent
+from strands.multiagent import Swarm
+
+# Create specialized agents
+coordinator = Agent(name="coordinator", system_prompt="You coordinate tasks...")
+specialist = Agent(name="specialist", system_prompt="You handle specialized work...")
+
+# Create swarm
+swarm = Swarm([coordinator, specialist])
+
+# Stream events during execution
+async for event in swarm.stream_async("Design and implement a REST API"):
+    # Track node execution
+    if event.get("type") == "multiagent_node_start":
+        print(f"🔄 Agent {event['node_id']} taking control")
+    
+    # Monitor agent events
+    elif event.get("type") == "multiagent_node_stream":
+        inner_event = event["event"]
+        if "data" in inner_event:
+            print(inner_event["data"], end="")
+    
+    # Track handoffs
+    elif event.get("type") == "multiagent_handoff":
+        from_nodes = ", ".join(event['from_node_ids'])
+        to_nodes = ", ".join(event['to_node_ids'])
+        print(f"\n🔀 Handoff: {from_nodes} → {to_nodes}")
+    
+    # Get final result
+    elif event.get("type") == "multiagent_result":
+        result = event["result"]
+        print(f"\nSwarm completed: {result.status}")
+```
+
+See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
+
 ## Swarm Results
 
 When a Swarm completes execution, it returns a [`SwarmResult`](../../../api-reference/multiagent.md#strands.multiagent.swarm.SwarmResult) object with detailed information:
