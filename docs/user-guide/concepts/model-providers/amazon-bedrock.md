@@ -332,25 +332,31 @@ For detailed information about supported models, minimum token requirements, and
 
 #### System Prompt Caching
 
-System prompt caching allows you to reuse a cached system prompt across multiple requests:
+System prompt caching allows you to reuse a cached system prompt across multiple requests. Strands supports two approaches for system prompt caching:
+
+**Provider-Agnostic Approach (Recommended)**
+
+Use SystemContentBlock arrays to define cache points that work across all model providers:
 
 ```python
 from strands import Agent
-from strands.models import BedrockModel
+from strands.types.content import SystemContentBlock
 
-# Using system prompt caching with BedrockModel
-bedrock_model = BedrockModel(
-    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
-    cache_prompt="default"
-)
+# Define system content with cache points
+system_content = [
+    SystemContentBlock(
+        text="You are a helpful assistant that provides concise answers. "
+             "This is a long system prompt with detailed instructions..."
+             "..." * 1600  # needs to be at least 1,024 tokens
+    ),
+    SystemContentBlock(cachePoint={"type": "default"}),
+    SystemContentBlock(
+        text="Additional instructions that will be cached together."
+    )
+]
 
-# Create an agent with the model
-agent = Agent(
-    model=bedrock_model,
-    system_prompt="You are a helpful assistant that provides concise answers. " +
-                 "This is a long system prompt with detailed instructions... "
-                 # Add enough text to reach the minimum token requirement for your model
-)
+# Create an agent with SystemContentBlock array
+agent = Agent(system_prompt=system_content)
 
 # First request will cache the system prompt
 response1 = agent("Tell me about Python")
@@ -362,6 +368,32 @@ response2 = agent("Tell me about JavaScript")
 print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
 print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
 ```
+
+**Legacy Bedrock-Specific Approach**
+
+For backwards compatibility, you can still use the Bedrock-specific `cache_prompt` configuration:
+
+```python
+from strands import Agent
+from strands.models import BedrockModel
+
+# Using legacy system prompt caching with BedrockModel
+bedrock_model = BedrockModel(
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    cache_prompt="default"  # This approach is deprecated
+)
+
+# Create an agent with the model
+agent = Agent(
+    model=bedrock_model,
+    system_prompt="You are a helpful assistant that provides concise answers. " +
+                 "This is a long system prompt with detailed instructions... "
+)
+
+response = agent("Tell me about Python")
+```
+
+> **Note**: The `cache_prompt` configuration is deprecated in favor of the provider-agnostic SystemContentBlock approach. The new approach enables caching across all model providers through a unified interface.
 
 #### Tool Caching
 
