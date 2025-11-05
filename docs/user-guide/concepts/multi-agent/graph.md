@@ -259,29 +259,40 @@ builder.reset_on_revisit(True) # Reset state when nodes are revisited
 graph = builder.build()
 ```
 
-### Custom Management with Hooks
+### Creating a [Hook Provider](../agents/hooks.md#creating-a-hook-provider)
 
 For more control over when and how agents reset their state, use the hook system to implement custom reset logic:
 
 ```python
 from strands.hooks import HookProvider, HookRegistry
-from strands.experimental.multiagent_hooks import AfterNodeInvocationEvent
+from strands.multiagent.hooks import AfterNodeCallEvent, BeforeNodeCallEvent
 from strands.agent.state import AgentState
 
 class StateResetHook(HookProvider):
     """Hook provider for custom agent state reset logic."""
     
     def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(AfterNodeInvocationEvent, self.after_node_execution)
+        registry.add_callback(AfterNodeCallEvent, self.after_node_execution)
+        registry.add_callback(BeforeNodeCallEvent, self.before_node_execution)
     
-    def after_node_execution(self, event: AfterNodeInvocationEvent) -> None:
+    def before_node_execution(self, event: BeforeNodeCallEvent) -> None:
+        """Handle state preparation before node execution."""
+        graph = event.source
+        node = graph.nodes[event.node_id]
+        
+        # Prepare node state before execution
+        if hasattr(node.executor, 'state'):
+            # Set execution context
+            node.executor.state.set('current_node_id', event.node_id)
+    
+    def after_node_execution(self, event: AfterNodeCallEvent) -> None:
         """Handle state management after node execution."""
         graph = event.source
-        executed_node = graph.nodes[event.executed_node]
+        executed_node = graph.nodes[event.node_id]
         
-        #  Just defensive check
+        # Defensive check
         if hasattr(executed_node.executor, 'state'):
-            # If you just want to deletge some state data
+            # Delete sensitive data
             executed_node.executor.state.delete('sensitive_data')
             # Reset state only
             executed_node.executor.state = AgentState()
@@ -289,8 +300,9 @@ class StateResetHook(HookProvider):
             # Modify execution count
             count = executed_node.executor.state.get('execution_count', 0)
             executed_node.executor.state.set('execution_count', count+1)
-        #  Just defensive check
-         if hasattr(executed_node.executor, 'messages'):
+        
+        # Defensive check
+        if hasattr(executed_node.executor, 'messages'):
             # Reset message only
             executed_node.executor.messages = []
         
@@ -333,27 +345,32 @@ print(f"Agent2 temporary_data: {agent2.state.get('temporary_data')}")
 
 ```
 
-### Default Hook Approach
+### Registering [Individual Hook Callbacks](../agents/hooks.md#registering-individual-hook-callbacks)
 
-For simple cases, you can use functions directly with multiagent hooks, for all available hooks, see MultiagentHooks(TBD):
+For simple cases, you can register callbacks for specific events using add_callback:
 
 ```python
-from strands.experimental.multiagent_hooks import AfterNodeInvocationEvent
+from strands.multiagent.hooks import AfterNodeCallEvent, BeforeNodeCallEvent
 
-def track_node_execution(event: AfterNodeInvocationEvent) -> None:
+def track_node_execution(event: AfterNodeCallEvent) -> None:
     """Track and manage node execution state."""
     graph = event.source
-    executed_node = graph.nodes[event.executed_node]
+    executed_node = graph.nodes[event.node_id]
     executed_node.reset_executor_state()
-    
-# Register function directly
-hooks = HookRegistry()
-hooks.add_callback(AfterNodeInvocationEvent, track_node_execution)
 
+def prepare_node_execution(event: BeforeNodeCallEvent) -> None:
+    """Prepare node before execution."""
+    graph = event.source
+    node = graph.nodes[event.node_id]
+    # Custom preparation logic here
+    
+# Register individual callbacks
 builder = GraphBuilder()
 # ... add nodes and edges
 graph = builder.build()
-graph.hooks = hooks
+
+graph.hooks.add_callback(AfterNodeCallEvent, track_node_execution)
+graph.hooks.add_callback(BeforeNodeCallEvent, prepare_node_execution)
 ```
 
 ### Agent-Level Hooks

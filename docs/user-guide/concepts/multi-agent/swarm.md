@@ -262,39 +262,42 @@ Swarms automatically reset agent state between executions to ensure clean handof
 - **Automatic reset**: Before each agent execution, the agent is reset to its initial state
 - **Clean handoffs**: Agents receive only the shared context and handoff message, not previous execution artifacts
 
-### Default Hook Approach
+### Registering [Individual Hook Callbacks](../agents/hooks.md#registering-individual-hook-callbacks)
 
-You can customize state reset behavior using hooks, for all available hooks, see MultiagentHooks(TBD):
+You can customize state reset behavior using hooks:
 
 ```python
-from strands.experimental.multiagent_hooks import AfterNodeInvocationEvent
+from strands.multiagent.hooks import AfterNodeCallEvent
 from strands.hooks import HookRegistry
 
-def custom_state_reset(event: AfterNodeInvocationEvent) -> None:
+def custom_state_reset(event: AfterNodeCallEvent) -> None:
     """Custom state management after agent execution."""
-    graph = event.source
-    executed_node = graph.nodes[event.executed_node]
+    swarm = event.source
+    executed_node = swarm.nodes[event.node_id]
     
-    # Just defensive check
+    # Defensive check
     if hasattr(executed_node.executor, 'state'):
         # Preserve certain state keys
-        important_data = executed_node.executor.state.delete('important_data')
+        important_data = executed_node.executor.state.get('important_data')
         # Reset state only
         executed_node.executor.state = AgentState()
-    #  Just defensive check
+        # Restore important data
+        if important_data:
+            executed_node.executor.state.set('important_data', important_data)
+    
+    # Defensive check
     if hasattr(executed_node.executor, 'messages'):
         # Reset message only
         executed_node.executor.messages = []
         
-    # Reset message & state
-    executed_node.reset_executor_state()
-
-# Register hook
-hooks = HookRegistry()
-hooks.add_callback(AfterNodeInvocationEvent, custom_state_reset)
+    # Or reset message & state completely
+    # executed_node.reset_executor_state()
 
 # Create Swarm instance
-swarm = Swarm([agent1, agent2], hooks=hooks)
+swarm = Swarm([agent1, agent2])
+
+# Register individual callback
+swarm.hooks.add_callback(AfterNodeCallEvent, custom_state_reset)
 ```
 
 ## Swarm as a Tool
