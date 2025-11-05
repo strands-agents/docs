@@ -21,6 +21,9 @@ Strands provides built-in session persistence capabilities that automatically ca
 
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
 
+!!! warning
+    You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories. 
+
 ## Basic Usage
 
 ### Single Agent Sessions
@@ -55,17 +58,17 @@ from strands.session.file_session_manager import FileSessionManager
 agent1 = Agent(name="researcher")
 agent2 = Agent(name="writer")
 
-# Create a session manager for the orchestrator
+# Create a session manager for the graph
 session_manager = FileSessionManager(session_id="multi-agent-session")
 
-# Create orchestrator with session management
-orchestrator = Graph(
+# Create graph with session management
+graph = Graph(
     agents={"researcher": agent1, "writer": agent2},
     session_manager=session_manager
 )
 
-# Use the orchestrator - all orchestrator state is persisted
-result = orchestrator("Research and write about AI")
+# Use the graph - all orchestrator state is persisted
+result = graph("Research and write about AI")
 ```
 
 ## Built-in Session Managers
