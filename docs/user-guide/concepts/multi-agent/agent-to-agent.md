@@ -69,7 +69,7 @@ a2a_server.serve()
 
 The `A2AServer` constructor accepts several configuration options:
 
-- `agent`: The Strands Agent to wrap with A2A compatibility
+- `agent`: The Strands agent to wrap with A2A compatibility
 - `host`: Hostname or IP address to bind to (default: "127.0.0.1")
 - `port`: Port to bind to (default: 9000)
 - `version`: Version of the agent (default: "0.0.1")

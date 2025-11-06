@@ -147,7 +147,7 @@ The `config_to_agent` function accepts:
 - `**kwargs`: Additional [Agent constructor parameters](../../../../api-reference/agent/#strands.agent.agent.Agent.__init__) that override config values
 
 ```python
-# Override config values with valid Agent parameters
+# Override config values with valid agent parameters
 agent = config_to_agent(
     "/path/to/config.json",
     name="Data Analyst"
@@ -157,7 +157,7 @@ agent = config_to_agent(
 ## Best Practices
 
 1. **Override when needed**: Use kwargs to override configuration values dynamically
-2. **Leverage Agent defaults**: Only specify configuration values you want to override
+2. **Leverage agent defaults**: Only specify configuration values you want to override
 3. **Use standard tool formats**: Follow Agent class conventions for tool specifications
 4. **Handle errors gracefully**: Catch FileNotFoundError and JSONDecodeError for robust applications
 

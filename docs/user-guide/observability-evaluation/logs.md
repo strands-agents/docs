@@ -153,7 +153,7 @@ In addition to standard logging, Strands Agents SDK provides a callback system f
 - **Logging**: Internal operations, debugging, errors (not typically visible to end users)
 - **Callbacks**: User-facing output, streaming responses, tool execution notifications
 
-The callback system is configured through the `callback_handler` parameter when creating an Agent:
+The callback system is configured through the `callback_handler` parameter when creating an agent:
 
 ```python
 from strands.handlers.callback_handler import PrintingCallbackHandler
@@ -168,7 +168,7 @@ You can create custom callback handlers to process streaming events according to
 
 ## Best Practices
 
-1. **Configure Early**: Set up logging configuration before initializing the Agent
+1. **Configure Early**: Set up logging configuration before initializing the agent
 2. **Appropriate Levels**: Use INFO for normal operation and DEBUG for troubleshooting
 3. **Structured Log Format**: Use the structured log format shown in examples for better parsing
 4. **Performance**: Be mindful of logging overhead in production environments

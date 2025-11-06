@@ -9,7 +9,7 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 | **Tool Used**      | http_request                           |
 | **API**            | National Weather Service API (no key required) |
 | **Complexity**     | Beginner                               |
-| **Agent Type**     | Single Agent                           |
+| **Agent Type**     | Single agent                           |
 | **Interaction**    | Command Line Interface                 |
 
 ## Tool Overview

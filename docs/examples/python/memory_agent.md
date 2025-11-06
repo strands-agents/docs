@@ -8,7 +8,7 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 | ------------------ | ------------------------------------------ |
 | **Tools Used**     | mem0_memory, use_llm                       |
 | **Complexity**     | Intermediate                               |
-| **Agent Type**     | Single Agent with Memory Management        |
+| **Agent Type**     | Single agent with Memory Management        |
 | **Interaction**    | Command Line Interface                     |
 | **Key Focus**      | Memory Operations & Contextual Responses   |
 
