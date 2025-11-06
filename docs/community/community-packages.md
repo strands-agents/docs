@@ -52,6 +52,44 @@ The [strands-agents-tools](https://github.com/strands-agents/tools) repository s
  - [sleep](https://github.com/strands-agents/tools/blob/main/src/strands_tools/sleep.py) - includes explicit error checking with messages that guide the caller on how to correct errors
  - [browser](https://github.com/strands-agents/tools/blob/main/src/strands_tools/browser/__init__.py) - detailing how to support multiple tools that share a common core.
 
+### Community Tool Packages
+
+#### CRM & Customer Data
+
+**[strands-hubspot](https://pypi.org/project/strands-hubspot/)**
+
+A production-ready HubSpot CRM tool designed for **READ-ONLY** operations with zero risk of data modification. Enables agents to safely access and analyze CRM data without any possibility of corrupting customer information.
+
+```bash
+pip install strands-hubspot
+```
+
+Key Features:
+- 🔍 Universal READ-ONLY access to all HubSpot object types (contacts, deals, companies, tickets)
+- 🔎 Smart search with advanced filtering and property-based queries
+- 📄 Detailed object retrieval by ID with customizable property selection
+- 🏷️ Property discovery and metadata exploration for any object type
+- 👤 User management and owner details retrieval
+- 🛡️ 100% safe design with NO CREATE, UPDATE, or DELETE operations
+
+```python
+from strands import Agent
+from strands_hubspot import hubspot
+
+agent = Agent(tools=[hubspot])
+
+# Search contacts (READ-ONLY)
+agent("find all contacts created in the last 30 days")
+
+# Get company details (READ-ONLY)  
+agent("get company information for ID 67890")
+
+# List available properties (READ-ONLY)
+agent("show me all available deal properties")
+```
+
+Perfect for sales intelligence, customer research, data analytics, and CRM workflows that require safe data access without modification risks.
+
 ## Support & Resources
 
 Building community packages extends the Strands Agents ecosystem and helps other developers solve complex problems with AI agents. Your contributions make the entire community more capable and productive.
