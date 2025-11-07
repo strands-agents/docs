@@ -7,7 +7,7 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 | Feature            | Description                            |
 | ------------------ | -------------------------------------- |
 | **Tools Used**     | http_request                           |
-| **Agent Structure**| Multi-agent Workflow (3 Agents)        |
+| **Agent Structure**| Multi-Agent Workflow (3 Agents)        |
 | **Complexity**     | Intermediate                           |
 | **Interaction**    | Command Line Interface                 |
 | **Key Technique**  | agent-to-agent Communication           |
