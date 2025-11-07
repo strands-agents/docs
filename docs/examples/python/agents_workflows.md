@@ -10,7 +10,7 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 | **Agent Structure**| Multi-Agent Workflow (3 Agents)        |
 | **Complexity**     | Intermediate                           |
 | **Interaction**    | Command Line Interface                 |
-| **Key Technique**  | agent-to-agent Communication           |
+| **Key Technique**  | Agent-to-Agent Communication           |
 
 ## Tools Overview
 
