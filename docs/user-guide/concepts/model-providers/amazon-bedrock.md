@@ -349,10 +349,7 @@ system_content = [
              "This is a long system prompt with detailed instructions..."
              "..." * 1600  # needs to be at least 1,024 tokens
     ),
-    SystemContentBlock(cachePoint={"type": "default"}),
-    SystemContentBlock(
-        text="Additional instructions that will be cached together."
-    )
+    SystemContentBlock(cachePoint={"type": "default"})
 ]
 
 # Create an agent with SystemContentBlock array
