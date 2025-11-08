@@ -69,7 +69,7 @@ from strands import Agent
 from strands_tools import calculator
 
 def process_event(event):
-    """Shared event processor for both async iterators and callback handlers"""
+    """Shared event processor for both async iterators and callback handlers."""
     # Track event loop lifecycle
     if event.get("init_event_loop", False):
         print("🔄 Event loop initialized")
