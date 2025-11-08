@@ -118,8 +118,6 @@ agent = Agent(tools=[deepgram])
 
 # Text-to-speech
 agent("convert this text to speech and save as output.mp3: Hello world")
-# Audio intelligence
-agent("analyze sentiment and topics in recording.wav")
 ```
 
 ### Programmatic Tool Invocation
@@ -173,6 +171,10 @@ agent("analyze sentiment and topics in recording.wav")
 Use the agent to convert audio to plain text quickly with no punctuation, speaker labels, or analysis.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("transcribe this audio file: path/to/audio.mp3")
 ```
 
@@ -181,6 +183,10 @@ agent("transcribe this audio file: path/to/audio.mp3")
 Use the Deepgram tool to detect sentiment and extract topics from audio recordings.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("analyze sentiment and topics in recording.wav")
 ```
 
@@ -189,6 +195,10 @@ agent("analyze sentiment and topics in recording.wav")
 Use the agent to transcribe audio in multiple languages automatically.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("transcribe audio.wav in Spanish")
 ```
 
@@ -197,6 +207,10 @@ agent("transcribe audio.wav in Spanish")
 Use the agent to identify and label different speakers in a conversation.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("transcribe meeting.mp3 with speaker identification")
 ```
 
@@ -205,6 +219,10 @@ agent("transcribe meeting.mp3 with speaker identification")
 Use the agent to add punctuation, capitalization, and number formatting for readability.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("transcribe call.wav with smart formatting")
 ```
 
@@ -213,6 +231,10 @@ agent("transcribe call.wav with smart formatting")
 Use the agent to convert text to natural-sounding speech.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("convert this text to speech: Hello, how are you today?")
 ```
 
@@ -221,6 +243,10 @@ agent("convert this text to speech: Hello, how are you today?")
 Use the agent to save spoken text as an audio file.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("convert text to speech and save as greeting.wav: Welcome to our service")
 ```
 
@@ -229,6 +255,10 @@ agent("convert text to speech and save as greeting.wav: Welcome to our service")
 Use the agent to choose a voice for speech output.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("use Aura voice to say: Thank you for your patience")
 ```
 
@@ -237,6 +267,10 @@ agent("use Aura voice to say: Thank you for your patience")
 Use the agent to detect emotions in audio.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("analyze sentiment in customer_call.mp3")
 ```
 
@@ -245,6 +279,10 @@ agent("analyze sentiment in customer_call.mp3")
 Use the agent to identify discussion topics in audio.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("identify topics discussed in meeting.wav")
 ```
 
@@ -253,6 +291,10 @@ agent("identify topics discussed in meeting.wav")
 Use the agent to analyze both sentiment and topics at once.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("analyze sentiment and topics in audio: call.mp3")
 ```
 
@@ -261,6 +303,10 @@ agent("analyze sentiment and topics in audio: call.mp3")
 Use the agent to detect customer intent from audio conversations.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
+agent = Agent(tools=[deepgram])
 agent("detect customer intent in support_call.mp3")
 ```
 
@@ -269,13 +315,19 @@ agent("detect customer intent in support_call.mp3")
 Transcribe or analyze audio directly from online sources by providing the file URL.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
 # Remote audio file
+agent = Agent(tools=[deepgram])
 agent("transcribe https://example.com/audio.mp3")
 ```
 
 Returns raw transcript text without speaker labels or punctuation.
 
 ```python
+from strands_deepgram import deepgram
+
 # With custom options
 result = deepgram(
     action="transcribe",
@@ -292,14 +344,22 @@ Returns structured JSON with transcript, speaker labels, and sentiment scores.
 Process multiple audio files at once to save time.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
 # Transcribe all audio files in a folder
+agent = Agent(tools=[deepgram])
 agent("transcribe all audio files in the recordings/ folder")
 ```
 
 Returns a list of plain text transcripts, one per file.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
 # Analyze sentiment for multiple files
+agent = Agent(tools=[deepgram])
 agent("analyze sentiment for all files: call1.mp3, call2.mp3, call3.mp3")
 ```
 
@@ -310,14 +370,22 @@ Returns a list of sentiment scores and topic tags for each audio file.
 Use specific models, voices, or advanced options to control output quality and style.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
 # Transcribe using a specific model with punctuation
+agent = Agent(tools=[deepgram])
 agent("transcribe audio.mp3 using nova-2 model with punctuation enabled")
 ```
 
 Returns formatted transcript text with punctuation and capitalization.
 
 ```python
+from strands import Agent
+from strands_deepgram import deepgram
+
 # Generate speech with slow speed
+agent = Agent(tools=[deepgram])
 agent("generate speech with slow speed: Welcome to our platform")
 ```
 

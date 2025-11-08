@@ -88,6 +88,7 @@ nav:
         - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
         - Executors: user-guide/concepts/tools/executors.md
         - Community Tools Package: user-guide/concepts/tools/community-tools-package.md
+        - Strands Deepgram: user-guide/concepts/tools/strands-deepgram.md
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
@@ -164,24 +165,25 @@ nav:
           - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
 
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
-  - API Reference:
-    - Agent: api-reference/agent.md
-    - Event Loop: api-reference/event-loop.md
-    - Experimental: api-reference/experimental.md
-    - Handlers: api-reference/handlers.md
-    - Hooks: api-reference/hooks.md
-    - Interrupt: api-reference/interrupt.md
-    - Models: api-reference/models.md
-    - Multiagent: api-reference/multiagent.md
-    - Session: api-reference/session.md
-    - Telemetry: api-reference/telemetry.md
-    - Tools: api-reference/tools.md
-    - Types: api-reference/types.md
+  # - API Reference:
+  #   - Agent: api-reference/agent.md
+  #   - Event Loop: api-reference/event-loop.md
+  #   - Experimental: api-reference/experimental.md
+  #   - Handlers: api-reference/handlers.md
+  #   - Hooks: api-reference/hooks.md
+  #   - Interrupt: api-reference/interrupt.md
+  #   - Models: api-reference/models.md
+  #   - Multiagent: api-reference/multiagent.md
+  #   - Session: api-reference/session.md
+  #   - Telemetry: api-reference/telemetry.md
+  #   - Tools: api-reference/tools.md
+  #   - Types: api-reference/types.md
 
 exclude_docs: |
   node_modules
   .venv
   _dependencies
+  api-reference-disabled
 
 plugins:
   - search
@@ -207,8 +209,8 @@ plugins:
           - community/**/*.md
         Examples:
           - examples/**/*.md
-        API Reference:
-          - api-reference/*.md
+        # API Reference:
+        #   - api-reference/*.md
 
 extra:
   social:
