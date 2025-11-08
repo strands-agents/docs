@@ -159,7 +159,6 @@ The callback system is configured through the `callback_handler` parameter when 
 from strands.handlers.callback_handler import PrintingCallbackHandler
 
 agent = Agent(
-    model="anthropic.claude-3-sonnet-20240229-v1:0",
     callback_handler=PrintingCallbackHandler()
 )
 ```
