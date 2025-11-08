@@ -1,6 +1,6 @@
-# strands-deepgram
+# Strands Deepgram
 
-strands-deepgram extends Strands Agents with advanced speech and audio processing using Deepgram's API.
+Strands Deepgram extends Strands Agents with advanced speech and audio processing using Deepgram's API.
 This tool empowers agents to:
 
 * Transcribe audio with support for 30+ languages and speaker diarization
@@ -8,11 +8,11 @@ This tool empowers agents to:
 * Perform sentiment analysis, topic detection, and intent recognition
 
 It provides type-safe, modular integration with the Strands ecosystem.
-Deepgram is a leading AI-powered speech recognition and audio intelligence platform that provides speech to text, text to speech and audio intelligence capabilities for AI agents
+Deepgram is a leading AI-powered speech recognition and audio intelligence platform that provides speech-to-text, text-to-speech, and audio intelligence capabilities for AI agents.
 
 ## Installation
 
-Install the strands-deepgram package by running
+Install the Strands Deepgram package by running
 
 ```bash
 pip install strands-deepgram
@@ -20,11 +20,11 @@ pip install strands-deepgram
 
 ### Dependencies
 
-strands-deepgram requires the following packages:
+Strands Deepgram requires the following packages:
 
 * deepgram-sdk>=3.0
 * requests
-* rich (for enhanced console output)(optional)
+* rich (for enhanced console output) (optional)
 * strands>=1.11.0
 
 If not installed automatically, you can manually install dependencies:
@@ -39,9 +39,9 @@ pip install deepgram-sdk>=3.0 requests rich strands>=1.11.0
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| DEEPGRAM_API_KEY | ✅ | - | Your Deepgram API key (get it from console.deepgram.com) |
-| DEEPGRAM_DEFAULT_MODEL | ❌ | nova-3 | Default speech-to-text model |
-| DEEPGRAM_DEFAULT_LANGUAGE | ❌ | en | Default language code |
+| **DEEPGRAM_API_KEY** | ✅ | - | Your Deepgram API key (get it from console.deepgram.com) |
+| **DEEPGRAM_DEFAULT_MODEL** | ❌ | **nova-3** | Default speech-to-text model |
+| **DEEPGRAM_DEFAULT_LANGUAGE** | ❌ | **en** | Default language code |
 
 Set up your API key:
 
@@ -51,7 +51,7 @@ export DEEPGRAM_DEFAULT_MODEL=nova-3
 export DEEPGRAM_DEFAULT_LANGUAGE=en
 ```
 
-## Agent level usage 
+## Agent Level Usage 
 
 ### 🎙️ Speech-to-Text with Deepgram Tool Integration
 
@@ -96,14 +96,14 @@ result = deepgram(
 
 | Option | Description |
 |--------|-------------|
-| diarize | Enable speaker identification and separation in multi-speaker audio |
-| smart_format | Apply intelligent formatting including punctuation, capitalization, and number formatting |
-| sentiment | Analyze emotional tone and sentiment of spoken content |
-| topics | Automatically detect and categorize discussion topics |
-| punctuate | Add punctuation marks to improve transcript readability |
-| utterances | Include detailed utterance-level information with timestamps |
-| detect_language | Automatically identify the spoken language |
-| intents | Detect speaker intentions and classify speech acts |
+| **diarize** | Enable speaker identification and separation in multi-speaker audio |
+| **smart_format** | Apply intelligent formatting including punctuation, capitalization, and number formatting |
+| **sentiment** | Analyze emotional tone and sentiment of spoken content |
+| **topics** | Automatically detect and categorize discussion topics |
+| **punctuate** | Add punctuation marks to improve transcript readability |
+| **utterances** | Include detailed utterance-level information with timestamps |
+| **detect_language** | Automatically identify the spoken language |
+| **intents** | Detect speaker intentions and classify speech acts |
 
 ### 🔊 Text-to-Speech with Deepgram Tool Integration
 
@@ -145,11 +145,11 @@ result = deepgram(
 
 | Option | Description |
 |--------|-------------|
-| voice | Select from Aura voice models (asteria, luna, stella, athena, etc.) |
-| encoding | Choose audio format (mp3, wav, flac, opus) |
-| sample_rate | Set audio quality in Hz (8000–48000) |
-| output_path | Specify file location to save generated audio |
-| play_audio | Automatically play audio after generation (boolean) |
+| **voice** | Select from Aura voice models (asteria, luna, stella, athena, etc.) |
+| **encoding** | Choose audio format (mp3, wav, flac, opus) |
+| **sample_rate** | Set audio quality in Hz (8000–48000) |
+| **output_path** | Specify file location to save generated audio |
+| **play_audio** | Automatically play audio after generation (boolean) |
 
 ### 🧠 Audio Intelligence with Deepgram Tool Integration
 
