@@ -261,7 +261,7 @@ print(f"Country: {result.structured_output.country}") # "France"
 
 ### Agent-Level Defaults
 
-You can also aet a default structured output model that applies to all agent invocations:
+You can also set a default structured output model that applies to all agent invocations:
 
 ```python
 class PersonInfo(BaseModel):
