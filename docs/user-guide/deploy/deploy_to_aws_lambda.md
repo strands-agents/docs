@@ -8,7 +8,7 @@ This guide discusses Lambda integration at a high level - for a complete example
 
 !!! note
 
-    This Lambda deployment example does not implement response streaming as described in the [Async Iterators for Streaming](../concepts/streaming/async-iterators.md) documentation. If you need streaming capabilities, consider using the [AWS Fargate deployment](deploy_to_aws_fargate.md) approach which does implement streaming responses.
+    This Lambda deployment example does not implement response streaming as described in the [Async Iterators for Streaming](../concepts/streaming/async-iterators.md) documentation. If you need streaming capabilities, consider using the [AWS Fargate deployment](deploy_to_aws_fargate.md) or [AWS App Runner deployment](deploy_to_aws_apprunner) approach which does implement streaming responses.
 
 ## Creating Your Agent in Python
 
