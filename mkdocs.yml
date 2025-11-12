@@ -97,6 +97,7 @@ nav:
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
         - MistralAI: user-guide/concepts/model-providers/mistral.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
+        - OVHcloud AI Endpoints: user-guide/concepts/model-providers/ovhcloud.md
         - OpenAI: user-guide/concepts/model-providers/openai.md
         - SageMaker: user-guide/concepts/model-providers/sagemaker.md
         - Writer: user-guide/concepts/model-providers/writer.md

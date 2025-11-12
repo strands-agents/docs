@@ -29,6 +29,9 @@
 ::: strands.models.openai
     options:
       heading_level: 2
+::: strands.models.ovhcloud
+    options:
+      heading_level: 2
 ::: strands.models.writer
     options:
       heading_level: 2
