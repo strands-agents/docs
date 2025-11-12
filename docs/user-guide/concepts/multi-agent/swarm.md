@@ -254,6 +254,52 @@ print(f"Execution time: {result.execution_time}ms")
 print(f"Token usage: {result.accumulated_usage}")
 ```
 
+## Agent State and Message Reset Mechanism
+
+Swarms automatically reset agent state between executions to ensure clean handoffs and prevent state pollution. Each agent in a swarm maintains:
+
+- **Initial state capture**: When the swarm is created, each agent's messages and state are captured
+- **Automatic reset**: Before each agent execution, the agent is reset to its initial state
+- **Clean handoffs**: Agents receive only the shared context and handoff message, not previous execution artifacts
+
+### Registering [Individual Hook Callbacks](../agents/hooks.md#registering-individual-hook-callbacks)
+
+You can customize state reset behavior using hooks:
+
+```python
+from strands.multiagent.hooks import AfterNodeCallEvent
+from strands.hooks import HookRegistry
+
+def custom_state_reset(event: AfterNodeCallEvent) -> None:
+    """Custom state management after agent execution."""
+    swarm = event.source
+    executed_node = swarm.nodes[event.node_id]
+    
+    # Defensive check
+    if hasattr(executed_node.executor, 'state'):
+        # Preserve certain state keys
+        important_data = executed_node.executor.state.get('important_data')
+        # Reset state only
+        executed_node.executor.state = AgentState()
+        # Restore important data
+        if important_data:
+            executed_node.executor.state.set('important_data', important_data)
+    
+    # Defensive check
+    if hasattr(executed_node.executor, 'messages'):
+        # Reset message only
+        executed_node.executor.messages = []
+        
+    # Or reset message & state completely
+    # executed_node.reset_executor_state()
+
+# Create Swarm instance
+swarm = Swarm([agent1, agent2])
+
+# Register individual callback
+swarm.hooks.add_callback(AfterNodeCallEvent, custom_state_reset)
+```
+
 ## Swarm as a Tool
 
 Agents can dynamically create and orchestrate swarms by using the `swarm` tool available in the [Strands tools package](../tools/community-tools-package.md).
