@@ -69,7 +69,7 @@ async def stream_response(request: PromptRequest):
     )
 ```
 
-### Example - Event Loop Lifecycle Tracking
+## Event Loop Lifecycle Tracking
 
 This async stream processor illustrates the event loop lifecycle events and how they relate to each other. It's useful for understanding the flow of execution in the Strands agent:
 
@@ -116,3 +116,116 @@ The output will show the sequence of events:
 3. New cycles may start multiple times during execution (`start`)
 4. Text generation and tool usage events occur during the cycle
 5. Finally, the cycle completes (`complete`) or may be force-stopped
+
+## Retrieving ToolResult from Tool Events
+
+When tools are executed during streaming, you can access their results through the `result` event. The [`ToolResult`](../../../api-reference/types.md#strands.types.tools.ToolResult) contains the complete response from tool execution, including status and content.
+
+```python
+import asyncio
+from strands import Agent
+from strands_tools import calculator
+
+async def process_tool_results():
+    agent = Agent(
+        tools=[calculator],
+        callback_handler=None
+    )
+    
+    async for event in agent.stream_async("Calculate 15 * 23 and then add 100"):
+        # Track when tools are being used
+        if "current_tool_use" in event:
+            tool_name = event["current_tool_use"].get("name")
+            tool_id = event["current_tool_use"].get("toolUseId")
+            if tool_name:
+                print(f"🔧 Using tool: {tool_name} (ID: {tool_id})")
+        
+        # Access the final agent result containing all tool results
+        if "result" in event:
+            agent_result = event["result"]
+            
+            # Iterate through messages to find tool results
+            for message in agent_result.messages:
+                if message.role == "user":
+                    continue
+                    
+                for content in message.content:
+                    # Check if this content is a tool result
+                    if hasattr(content, 'toolResult'):
+                        tool_result = content.toolResult
+                        print(f"📊 Tool Result:")
+                        print(f"   Status: {tool_result.status}")
+                        print(f"   Tool Use ID: {tool_result.toolUseId}")
+                        
+                        # Access the content of the tool result
+                        for result_content in tool_result.content:
+                            if 'text' in result_content:
+                                print(f"   Text: {result_content['text']}")
+                            elif 'json' in result_content:
+                                print(f"   JSON: {result_content['json']}")
+
+asyncio.run(process_tool_results())
+```
+
+### Accessing Individual Tool Results During Execution
+
+For more granular access to tool results as they complete, you can also monitor the message events:
+
+```python
+async def track_individual_tool_results():
+    agent = Agent(
+        tools=[calculator],
+        callback_handler=None
+    )
+    
+    async for event in agent.stream_async("What is 50 divided by 2, then multiply by 3?"):
+        # Check for new messages that might contain tool results
+        if "message" in event:
+            message = event["message"]
+            
+            # Look for assistant messages with tool results
+            if message.role == "assistant":
+                for content in message.content:
+                    if hasattr(content, 'toolResult'):
+                        tool_result = content.toolResult
+                        print(f"✅ Tool completed: {tool_result.toolUseId}")
+                        print(f"   Status: {tool_result.status}")
+                        
+                        # Extract the actual result content
+                        for result_content in tool_result.content:
+                            if 'text' in result_content:
+                                print(f"   Result: {result_content['text']}")
+
+asyncio.run(track_individual_tool_results())
+```
+
+### Error Handling with ToolResult
+
+ToolResult also provides error information when tools fail:
+
+```python
+async def handle_tool_errors():
+    agent = Agent(
+        tools=[calculator],
+        callback_handler=None
+    )
+    
+    async for event in agent.stream_async("Calculate the square root of -1"):
+        if "result" in event:
+            agent_result = event["result"]
+            
+            for message in agent_result.messages:
+                for content in message.content:
+                    if hasattr(content, 'toolResult'):
+                        tool_result = content.toolResult
+                        
+                        if tool_result.status == "error":
+                            print(f"❌ Tool failed: {tool_result.toolUseId}")
+                            for error_content in tool_result.content:
+                                if 'text' in error_content:
+                                    print(f"   Error: {error_content['text']}")
+                        else:
+                            print(f"✅ Tool succeeded: {tool_result.toolUseId}")
+
+asyncio.run(handle_tool_errors())
+```
