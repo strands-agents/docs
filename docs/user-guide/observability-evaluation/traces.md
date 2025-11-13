@@ -110,7 +110,6 @@ from strands import Agent
 # Option 1: Skip StrandsTelemetry if global tracer provider and/or meter provider are already configured
 # (your existing OpenTelemetry setup will be used automatically)
 agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful AI assistant"
 )
 
@@ -135,7 +134,6 @@ strands_telemetry.setup_otlp_exporter().setup_console_exporter()  # Chaining sup
 
 # Create agent (tracing will be enabled automatically)
 agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful AI assistant"
 )
 
@@ -374,7 +372,6 @@ strands_telemetry.setup_console_exporter()   # Print traces to console
 
 # Create agent
 agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful AI assistant"
 )
 

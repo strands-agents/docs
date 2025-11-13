@@ -153,7 +153,7 @@ summarization_model = AnthropicModel(
     max_tokens=1000,
     params={"temperature": 0.1}  # Low temperature for consistent summaries
 )
-custom_summarization_agent = Agent(model=summarization_model)
+custom_summarization_agent = Agent()
 
 conversation_manager = SummarizingConversationManager(
     summary_ratio=0.4,
