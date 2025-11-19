@@ -6,7 +6,7 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
 The Strands Agents SDK automatically tracks key metrics during agent execution:
 
-- **Token usage**: Input tokens, output tokens, and total tokens consumed
+- **Token usage**: Input tokens, output tokens, total tokens, and cache tokens consumed
 - **Performance metrics**: Latency and execution time measurements
 - **Tool usage**: Call counts, success rates, and execution times for each tool
 - **Event loop cycles**: Number of reasoning cycles and their durations
