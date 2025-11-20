@@ -136,6 +136,21 @@ github_http_mcp_client = MCPClient(
 )
 ```
 
+#### AWS IAM
+
+For MCP servers on AWS that use SigV4 authentication with IAM credentials, you can conveniently use the [`mcp-proxy-for-aws`](https://pypi.org/project/mcp-proxy-for-aws/) package to handle AWS credential management and request signing automatically. See the [detailed guide](https://dev.to/aws/no-oauth-required-an-mcp-client-for-aws-iam-k1o) for more information.
+
+```python
+from mcp_proxy_for_aws.client import aws_iam_streamablehttp_client
+from strands.tools.mcp import MCPClient
+
+mcp_client = MCPClient(lambda: aws_iam_streamablehttp_client(
+    endpoint="https://your-service.us-east-1.amazonaws.com/mcp",
+    aws_region="us-east-1",
+    aws_service="bedrock-agentcore"
+))
+```
+
 ### 3. Server-Sent Events (SSE)
 
 For HTTP-based MCP servers that use Server-Sent Events transport:
