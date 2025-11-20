@@ -140,6 +140,14 @@ github_http_mcp_client = MCPClient(
 
 For MCP servers on AWS that use SigV4 authentication with IAM credentials, you can conveniently use the [`mcp-proxy-for-aws`](https://pypi.org/project/mcp-proxy-for-aws/) package to handle AWS credential management and request signing automatically. See the [detailed guide](https://dev.to/aws/no-oauth-required-an-mcp-client-for-aws-iam-k1o) for more information.
 
+First, install the package:
+
+```bash
+pip install mcp-proxy-for-aws
+```
+
+Then you use it like any other transport:
+
 ```python
 from mcp_proxy_for_aws.client import aws_iam_streamablehttp_client
 from strands.tools.mcp import MCPClient
