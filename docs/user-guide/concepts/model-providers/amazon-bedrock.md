@@ -305,7 +305,7 @@ When a guardrail is triggered:
 - Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
 - Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
 - Custom redaction messages can be specified for both input and output redactions
-- Last turn only (disabled by default): When enabled, only the last conversation turn (latest user message and previous assistant response) is sent to guardrails instead of the full conversation history. This can improve performance and reduce costs while allowing conversations to recover after guardrail interventions.
+- Last turn only (disabled by default): When enabled, only the last conversation turn (most recent user message and the assistant's response to it, if present) is sent to guardrails instead of the full conversation history. This allows conversations to recover after guardrail interventions.
 
 ### Caching
 
