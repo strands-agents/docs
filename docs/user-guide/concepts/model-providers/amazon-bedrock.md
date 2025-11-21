@@ -179,6 +179,7 @@ The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) su
 | [`guardrail_redact_input_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                             | If a Bedrock guardrail triggers, replace the input with this message                                           | "[User input redacted.]"                                                                             |
 | [`guardrail_redact_output`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                    | Flag to redact output if guardrail is triggered                                                                | False                                                                                                |
 | [`guardrail_redact_output_message`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                            | If a Bedrock guardrail triggers, replace output with this message                                              | "[Assistant output redacted.]"                                                                       |
+| [`guardrail_last_turn_only`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_GuardrailStreamConfiguration.html)                                                                   | Flag to send only the last turn to guardrails instead of full conversation                                     | False                                                                                                |
 | [`additional_request_fields`](https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters.html)                                                                                             | Additional inference parameters that the model supports                                                        | -                                                                                                    |
 | [`additional_response_field_paths`](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ConverseStream.html#bedrock-runtime_ConverseStream-request-additionalModelResponseFieldPaths) | Additional model parameters field paths to return in the response                                              | -                                                                                                    |
 | `additional_args`                                                                                                                                                                                     | Additional arguments to include in the request. This is included for forwards compatibility of new parameters. | -                                                                                                    |
@@ -290,7 +291,8 @@ bedrock_model = BedrockModel(
     guardrail_redact_input=True,  # Default: True
     guardrail_redact_input_message="Blocked Input!", # Default: [User input redacted.]
     guardrail_redact_output=False,  # Default: False
-    guardrail_redact_output_message="Blocked Output!" # Default: [Assistant output redacted.]
+    guardrail_redact_output_message="Blocked Output!", # Default: [Assistant output redacted.]
+    guardrail_last_turn_only=False  # Default: False - Set to True to evaluate only the last turn
 )
 
 guardrail_agent = Agent(model=bedrock_model)
@@ -303,6 +305,7 @@ When a guardrail is triggered:
 - Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
 - Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
 - Custom redaction messages can be specified for both input and output redactions
+- Last turn only (disabled by default): When enabled, only the last conversation turn (latest user message and previous assistant response) is sent to guardrails instead of the full conversation history. This can improve performance and reduce costs while allowing conversations to recover after guardrail interventions.
 
 ### Caching
 
