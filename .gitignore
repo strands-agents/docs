@@ -9,6 +9,7 @@ __pycache__
 .idea
 .kiro
 *.egg-info
+docs/api-reference
 
 node_modules
 uv.lock
