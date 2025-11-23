@@ -37,7 +37,7 @@ The agent loop consists of several key components working together to create a s
 
 ### Event Loop Cycle
 
-The event loop cycle is the central mechanism that orchestrates the flow of information. It's implemented in the [`event_loop_cycle`](../../../api-reference/event-loop.md#strands.event_loop.event_loop.event_loop_cycle) function, which:
+The event loop cycle is the central mechanism that orchestrates the flow of information. It's implemented in the [`event_loop_cycle`](../../../api-reference/event_loop.md#strands.event_loop.event_loop.event_loop_cycle) function, which:
 
 - Processes messages with the language model
 - Handles tool execution requests

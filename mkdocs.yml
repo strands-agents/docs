@@ -168,7 +168,7 @@ nav:
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
     - Agent: api-reference/agent.md
-    - Event Loop: api-reference/event-loop.md
+    - Event Loop: api-reference/event_loop.md
     - Experimental: api-reference/experimental.md
     - Handlers: api-reference/handlers.md
     - Hooks: api-reference/hooks.md
@@ -211,6 +211,9 @@ plugins:
           - examples/**/*.md
         API Reference:
           - api-reference/*.md
+
+hooks:
+  - generate_python_api_docs.py
 
 extra:
   social:
