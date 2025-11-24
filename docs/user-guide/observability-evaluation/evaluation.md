@@ -68,7 +68,6 @@ from strands_tools import calculator
 
 # Create agent with specific configuration
 agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="You are a helpful assistant specialized in data analysis.",
     tools=[calculator]
 )
@@ -94,7 +93,7 @@ with open("test_cases.json", "r") as f:
     test_cases = json.load(f)
 
 # Create agent
-agent = Agent(model="us.anthropic.claude-sonnet-4-20250514-v1:0")
+agent = Agent()
 
 # Run tests and collect results
 results = []
@@ -134,11 +133,10 @@ from strands import Agent
 import json
 
 # Create the agent to evaluate
-agent = Agent(model="anthropic.claude-3-5-sonnet-20241022-v2:0")
+agent = Agent()
 
 # Create an evaluator agent with a stronger model
 evaluator = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     system_prompt="""
     You are an expert AI evaluator. Your job is to assess the quality of AI responses based on:
     1. Accuracy - factual correctness of the response
@@ -199,7 +197,6 @@ from strands import Agent
 from strands_tools import calculator, file_read, current_time
 # Create agent with multiple tools
 agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
     tools=[calculator, file_read, current_time],
     record_direct_tool_call = True
 )
@@ -322,12 +319,10 @@ class AgentEvaluator:
 if __name__ == "__main__":
     # Create agents with different configurations
     agent1 = Agent(
-        model="anthropic.claude-3-5-sonnet-20241022-v2:0",
         system_prompt="You are a helpful assistant."
     )
 
     agent2 = Agent(
-        model="anthropic.claude-3-5-haiku-20241022-v1:0",
         system_prompt="You are a helpful assistant."
     )
 
