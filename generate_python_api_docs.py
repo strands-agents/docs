@@ -18,6 +18,7 @@ def _find_container_modules(module_list: list[str], main_module: str) -> list[st
                     sub_modules = [m for m in module_list if m.startswith(container + '.')]
                     if len(sub_modules) > 1:
                         container_modules.add(container)
+    return container_modules
 
 def on_pre_build(config):
     """Generate API docs before build"""
@@ -25,6 +26,8 @@ def on_pre_build(config):
     temp_dir = Path('temp_python_sdk')
     sdk_path = temp_dir / 'src/strands'
     output_dir = Path('docs/api-reference')
+    # Clean up cloned repository if it already exists
+    shutil.rmtree(temp_dir, ignore_errors=True)
     
     # Clone repository
     try:

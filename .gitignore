@@ -10,3 +10,4 @@ __pycache__
 .kiro
 *.egg-info
 docs/api-reference
+temp_python_sdk
