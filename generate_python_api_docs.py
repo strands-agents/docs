@@ -5,6 +5,20 @@ import importlib
 from pathlib import Path
 from typing import Any
 
+def _find_container_modules(module_list: list[str], main_module: str) -> list[str]:
+    container_modules = set()
+    for module in module_list:
+        parts = module.split('.')
+        # Check for potential container modules (3+ parts)
+        if len(parts) > 2:
+            for i in range(2, len(parts)):
+                container = '.'.join(parts[:i+1])
+                if container not in module_list and container != main_module:
+                    # Check if this container has multiple sub-modules
+                    sub_modules = [m for m in module_list if m.startswith(container + '.')]
+                    if len(sub_modules) > 1:
+                        container_modules.add(container)
+
 def on_pre_build(config):
     """Generate API docs before build"""
     repo_url = "https://github.com/strands-agents/sdk-python.git"
@@ -56,18 +70,7 @@ def on_pre_build(config):
         main_module = f"strands.{category}"
         
         # Find container modules (modules that have sub-modules but aren't in the list)
-        container_modules = set()
-        for module in module_list:
-            parts = module.split('.')
-            # Check for potential container modules (3+ parts)
-            if len(parts) > 2:
-                for i in range(2, len(parts)):
-                    container = '.'.join(parts[:i+1])
-                    if container not in module_list and container != main_module:
-                        # Check if this container has multiple sub-modules
-                        sub_modules = [m for m in module_list if m.startswith(container + '.')]
-                        if len(sub_modules) > 1:
-                            container_modules.add(container)
+        container_modules = _find_container_modules(module_list, main_module)
         
         # Add container modules to the list
         module_list.extend(container_modules)
