@@ -16,7 +16,7 @@ flowchart LR
         C --> D["Tool Execution"]
         D --> B
     end
-    
+
     Loop --> E[Response]
 ```
 
@@ -51,9 +51,6 @@ def event_loop_cycle(
     system_prompt: Optional[str],
     messages: Messages,
     tool_config: Optional[ToolConfig],
-    callback_handler: Any,
-    tool_handler: Optional[ToolHandler],
-    tool_execution_handler: Optional[ParallelToolExecutorInterface] = None,
     **kwargs: Any,
 ) -> Tuple[StopReason, Message, EventLoopMetrics, Any]:
     # ... implementation details ...
@@ -69,7 +66,7 @@ Messages flow through the agent loop in a structured format:
 2. **Assistant messages**: Responses from the model that may include tool requests
 3. **Tool result messages**: Results from tool executions fed back to the model
 
-The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](sessions-state.md).
+The SDK automatically formats these messages into the appropriate structure for model inputs and [session state](state.md).
 
 ### Tool Execution
 
@@ -80,15 +77,6 @@ The agent loop includes a tool execution system that:
 3. Executes tools with proper error handling
 4. Captures and formats results
 5. Feeds results back to the model
-
-Tools can be executed in parallel or sequentially:
-
-```python
-# Configure maximum parallel tool execution
-agent = Agent(
-    max_parallel_tools=4  # Run up to 4 tools in parallel
-)
-```
 
 ## Detailed Flow
 
@@ -113,7 +101,6 @@ This initialization:
 
 - Creates a tool registry and registers tools
 - Sets up the conversation manager
-- Configures parallel processing capabilities
 - Initializes metrics collection
 
 ### 2. User Input Processing
@@ -162,7 +149,7 @@ The event loop:
 
 - Extracts and validates the tool request
 - Looks up the tool in the registry
-- Executes the tool (potentially in parallel with others)
+- Executes the tool
 - Captures the result and formats it
 
 ### 5. Tool Result Processing
@@ -202,3 +189,17 @@ This recursive nature allows for complex workflows like:
 ### 7. Completion
 
 The loop completes when the model generates a final text response or an exception occurs that cannot be handled. At completion, metrics and traces are collected, conversation state is updated, and the final response is returned to the caller.
+
+## Troubleshooting
+
+### MaxTokensReachedException
+
+This exception indicates that the agent has reached an unrecoverable state because the `max_tokens` stop reason was returned from the model provider. When this occurs, the agent cannot continue processing and the loop terminates.
+
+**Common causes and solutions:**
+
+1. **Increase token limits**: If you have explicitly set a `max_tokens` limit in your model configuration, consider raising it to allow for longer responses.
+
+2. **Audit your tool specifications**: A frequent cause of this exception is tool specifications that prompt the model to return excessively large `toolUse` responses. Review your tools for large JSON schemas, tool specs with many fields or deeply nested structures can consume significant tokens. Also, consider long string requirements which may bloat the output (e.g., "provide a string that is 101k characters long").
+
+3. **Optimize tool design**: Consider breaking down complex tools into smaller, more focused tools, or simplifying tool input/output schemas to reduce token consumption.

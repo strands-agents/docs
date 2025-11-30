@@ -14,15 +14,21 @@
 ::: strands.types.guardrails
     options:
       heading_level: 2
+::: strands.types.interrupt
+    options:
+      heading_level: 2
 ::: strands.types.media
     options:
       heading_level: 2
-::: strands.types.models
+::: strands.types.session
     options:
       heading_level: 2
 ::: strands.types.streaming
     options:
       heading_level: 2
 ::: strands.types.tools
+    options:
+      heading_level: 2
+::: strands.types.traces
     options:
       heading_level: 2

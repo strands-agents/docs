@@ -16,7 +16,7 @@ The [`OllamaModel`](../../../api-reference/models.md#strands.models.ollama) clas
 
 First install the python client into your python environment:
 ```bash
-pip install 'strands-agents[ollama]'
+pip install 'strands-agents[ollama]' strands-agents-tools
 ```
 
 Next, you'll need to install and setup ollama itself.
@@ -26,7 +26,7 @@ Next, you'll need to install and setup ollama itself.
 1. Install Ollama by following the instructions at [ollama.ai](https://ollama.ai)
 2. Pull your desired model:
    ```bash
-   ollama pull llama3
+   ollama pull llama3.1
    ```
 3. Start the Ollama server:
    ```bash
@@ -49,7 +49,7 @@ Next, you'll need to install and setup ollama itself.
 
 3. Pull a model using the Docker container:
    ```bash
-   docker exec -it ollama ollama pull llama3
+   docker exec -it ollama ollama pull llama3.1
    ```
 
 4. Verify the Ollama server is running:
@@ -68,7 +68,7 @@ from strands.models.ollama import OllamaModel
 # Create an Ollama model instance
 ollama_model = OllamaModel(
     host="http://localhost:11434",  # Ollama server address
-    model_id="llama3"               # Specify which model to use
+    model_id="llama3.1"               # Specify which model to use
 )
 
 # Create an agent using the Ollama model
@@ -103,7 +103,7 @@ from strands.models.ollama import OllamaModel
 # Create a configured Ollama model
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
     temperature=0.7,
     keep_alive="10m",
     stop_sequences=["###", "END"],
@@ -127,7 +127,7 @@ You can update the model configuration during runtime:
 # Create the model with initial configuration
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
     temperature=0.7
 )
 
@@ -176,7 +176,7 @@ available models here: https://ollama.com/search
 # Create models for different use cases
 creative_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3",
+    model_id="llama3.1",
     temperature=0.8
 )
 
@@ -191,9 +191,48 @@ creative_agent = Agent(model=creative_model)
 factual_agent = Agent(model=factual_model)
 ```
 
+### Structured Output
+
+Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.ollama import OllamaModel
+
+class BookAnalysis(BaseModel):
+    """Analyze a book's key information."""
+    title: str = Field(description="The book's title")
+    author: str = Field(description="The book's author")
+    genre: str = Field(description="Primary genre or category")
+    summary: str = Field(description="Brief summary of the book")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+
+ollama_model = OllamaModel(
+    host="http://localhost:11434",
+    model_id="llama3.1",
+)
+
+agent = Agent(model=ollama_model)
+
+result = agent.structured_output(
+    BookAnalysis,
+    """
+    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
+    """
+)
+
+print(f"Title: {result.title}")
+print(f"Author: {result.author}")
+print(f"Genre: {result.genre}")
+print(f"Rating: {result.rating}")
+```
+
 ## Tool Support
 
-[Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands's tool system:
+[Ollama models that support tool use](https://ollama.com/search?c=tools) can use tools through Strands' tool system:
 
 ```python
 from strands import Agent
@@ -203,7 +242,7 @@ from strands_tools import calculator, current_time
 # Create an Ollama model
 ollama_model = OllamaModel(
     host="http://localhost:11434",
-    model_id="llama3"
+    model_id="llama3.1"
 )
 
 # Create an agent with tools

@@ -38,7 +38,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r ./requirements.txt
 
 # Install Python dependencies for the app distribution
-pip install -r requirements.txt --platform manylinux2014_aarch64 --target ./packaging/_dependencies --only-binary=:all:
+pip install -r requirements.txt --python-version 3.12 --platform manylinux2014_aarch64 --target ./packaging/_dependencies --only-binary=:all:
 ```
 
 2. Bootstrap your AWS environment (if not already done):
