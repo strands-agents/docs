@@ -1,0 +1,15 @@
+[project]
+name = "docs"
+version = "0.1.0"
+description = "Strands Agents Documentation"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mike~=2.1.3",
+    "mkdocs~=1.6.1",
+    "mkdocs-macros-plugin~=1.3.7",
+    "mkdocs-material~=9.6.12",
+    "mkdocstrings-python~=1.16.10",
+    "mkdocs-llmstxt~=0.2.0",
+    "strands-agents>=1.6.0",
+]

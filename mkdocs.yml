@@ -1,6 +1,7 @@
 site_name: Strands Agents SDK
 site_description: Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
 site_dir: site
+site_url: https://strandsagents.com
 
 repo_url: https://github.com/strands-agents/sdk-python
 
@@ -26,6 +27,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+  icon:
+    admonition:
+      code: material/code-json
   features:
     - content.code.copy
     - content.code.select
@@ -59,6 +63,12 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  # Workaround for site_url breaking mermaid rendering; see the following for more info:
+  # https://github.com/squidfunk/mkdocs-material/issues/3742#issuecomment-1076068038
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+  - assets/auto-redirect.js
+
 nav:
   - User Guide:
     - Welcome: README.md
@@ -66,35 +76,54 @@ nav:
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
-        - Sessions & State: user-guide/concepts/agents/sessions-state.md
+        - State: user-guide/concepts/agents/state.md
+        - Session Management: user-guide/concepts/agents/session-management.md
         - Prompts: user-guide/concepts/agents/prompts.md
-        - Context Management: user-guide/concepts/agents/context-management.md
+        - Hooks: user-guide/concepts/agents/hooks.md
+        - Structured Output: user-guide/concepts/agents/structured-output.md
+        - Conversation Management: user-guide/concepts/agents/conversation-management.md
       - Tools:
         - Overview: user-guide/concepts/tools/tools_overview.md
         - Python: user-guide/concepts/tools/python-tools.md
         - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
-        - Example Tools Package: user-guide/concepts/tools/example-tools-package.md
+        - Executors: user-guide/concepts/tools/executors.md
+        - Community Tools Package: user-guide/concepts/tools/community-tools-package.md
       - Model Providers:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
+        - Gemini: user-guide/concepts/model-providers/gemini.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
+        - llama.cpp: user-guide/concepts/model-providers/llamacpp.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+        - MistralAI: user-guide/concepts/model-providers/mistral.md
         - Ollama: user-guide/concepts/model-providers/ollama.md
         - OpenAI: user-guide/concepts/model-providers/openai.md
         - SageMaker: user-guide/concepts/model-providers/sagemaker.md
+        - Writer: user-guide/concepts/model-providers/writer.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
+        - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md # ALWAYS ADD A SPACE BEFORE COMMUNITY
+        - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
+        - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
       - Streaming:
+        - Overview: user-guide/concepts/streaming/overview.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
         - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
       - Multi-agent:
+        - Agent2Agent (A2A): user-guide/concepts/multi-agent/agent-to-agent.md
         - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
         - Swarm: user-guide/concepts/multi-agent/swarm.md
         - Graph: user-guide/concepts/multi-agent/graph.md
         - Workflow: user-guide/concepts/multi-agent/workflow.md
+        - Multi-agent Patterns: user-guide/concepts/multi-agent/multi-agent-patterns.md
+      - Interrupts: user-guide/concepts/interrupts.md
+      - Experimental:
+        - AgentConfig: user-guide/concepts/experimental/agent-config.md
+        - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
       - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
+      - PII Redaction: user-guide/safety-security/pii-redaction.md
     - Observability & Evaluation:
       - Observability: user-guide/observability-evaluation/observability.md
       - Metrics: user-guide/observability-evaluation/metrics.md
@@ -105,8 +134,10 @@ nav:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - Amazon Bedrock AgentCore : user-guide/deploy/deploy_to_bedrock_agentcore.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+
   - Examples:
     - Overview: examples/README.md
     - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
@@ -115,15 +146,36 @@ nav:
     - File Operations: examples/python/file_operations.md
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
+    - Structured Output: examples/python/structured_output.md
     - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
+    - Cyclic Graph: examples/python/graph_loops_example.md
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md
+    - Multi-modal: examples/python/multimodal.md
+
+  - Community:
+      - Community Packages: community/community-packages.md
+      - Tools:
+        - UTCP: community/tools/utcp.md
+      - Model Providers:
+        - Cohere: community/model-providers/cohere.md
+        - CLOVA Studio: community/model-providers/clova-studio.md
+        - Fireworks AI: community/model-providers/fireworksai.md
+      - Session Managers:
+          - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+          - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
+
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
     - Agent: api-reference/agent.md
     - Event Loop: api-reference/event-loop.md
+    - Experimental: api-reference/experimental.md
     - Handlers: api-reference/handlers.md
+    - Hooks: api-reference/hooks.md
+    - Interrupt: api-reference/interrupt.md
     - Models: api-reference/models.md
+    - Multiagent: api-reference/multiagent.md
+    - Session: api-reference/session.md
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md
@@ -147,6 +199,18 @@ plugins:
             docstring_style: google
             show_root_heading: true
             show_source: true
+  - llmstxt:
+      full_output: llms-full.txt
+      sections:
+        User Guide:
+          - README.md
+          - user-guide/**/*.md
+        Community:
+          - community/**/*.md
+        Examples:
+          - examples/**/*.md
+        API Reference:
+          - api-reference/*.md
 
 extra:
   social:
@@ -166,6 +230,12 @@ extra:
 
   link_strands_tools: "[`strands-agents-tools`](https://github.com/strands-agents/tools)"
   link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
+  community_contribution_banner: |
+    !!! info "Community Contribution"
+        This is a community-maintained package that is not owned or supported by the Strands team. Validate and review 
+        the package before using it in your project.
+        
+        Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
 
 validation:
   nav:

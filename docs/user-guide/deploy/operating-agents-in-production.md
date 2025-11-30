@@ -35,7 +35,7 @@ See:
 In production environments, it's critical to control which tools are available to your agent. You should:
 
  - **Explicitly Specify Tools**: Always provide an explicit list of tools rather than loading all available tools
- - **Disable Automatic Tool Loading**: For stability in production, disable automatic loading and reloading of tools
+ - **Keep Automatic Tool Loading Disabled**: For stability in production, keep automatic loading and reloading of tools disabled (the default behavior)
  - **Audit Tool Usage**: Regularly review which tools are being used and remove any that aren't necessary for your use case
 
 ```python
@@ -43,8 +43,8 @@ agent = Agent(
     ...,
     # Explicitly specify tools
     tools=[weather_research, weather_analysis, summarizer],
-    # Disable automatic tool loading in production
-    load_tools_from_directory=False,
+    # Automatic tool loading is disabled by default (recommended for production)
+    # load_tools_from_directory=False,  # This is the default
 )
 ```
 
@@ -79,7 +79,7 @@ agent = Agent(
 )
 ```
 
-The [`SlidingWindowConversationManager`](../../user-guide/concepts/agents/context-management.md/#slidingwindowconversationmanager) helps prevent context window overflow exceptions by maintaining a reasonable conversation history size.
+The [`SlidingWindowConversationManager`](../../user-guide/concepts/agents/conversation-management.md/#slidingwindowconversationmanager) helps prevent context window overflow exceptions by maintaining a reasonable conversation history size.
 
 ### Streaming for Responsiveness
 
@@ -89,26 +89,15 @@ For improved user experience in production applications, leverage streaming via 
 # For web applications
 async def stream_agent_response(prompt):
     agent = Agent(...)
-    
+
     ...
-    
+
     async for event in agent.stream_async(prompt):
         if "data" in event:
             yield event["data"]
 ```
 
 See [Async Iterators](../../user-guide/concepts/streaming/async-iterators.md) for more information.
-
-### Parallelism Settings
-
-Control parallelism for optimal resource utilization:
-
-```python
-# Limit parallel tool execution based on your infrastructure capacity
-agent = Agent(
-    max_parallel_tools=4  # Adjust based on available resources
-)
-```
 
 ### Error Handling
 
@@ -129,6 +118,8 @@ except Exception as e:
 Strands agents can be deployed using various options from serverless to dedicated server machines.
 
 Built-in guides are available for several AWS services:
+
+* **Bedrock AgentCore** - A secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore.md)
 
 * **AWS Lambda** - Serverless option for short-lived agent interactions and batch processing with minimal infrastructure management. [Learn more](deploy_to_aws_lambda.md)
 
@@ -157,7 +148,7 @@ Operating Strands agents in production requires careful consideration of configu
 
 ## Related Topics
 
-- [Context Management](../../user-guide/concepts/agents/context-management.md)
+- [Conversation Management](../../user-guide/concepts/agents/conversation-management.md)
 - [Streaming - Async Iterator](../../user-guide/concepts/streaming/async-iterators.md)
 - [Tool Development](../../user-guide/concepts/tools/tools_overview.md)
 - [Guardrails](../../user-guide/safety-security/guardrails.md)

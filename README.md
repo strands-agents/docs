@@ -1,7 +1,7 @@
 <div align="center">
   <div>
     <a href="https://strandsagents.com">
-      <img src="https://strandsagents.com/latest/assets/logo-auto.svg" alt="Strands Agents" width="55px" height="105px">
+      <img src="https://strandsagents.com/latest/assets/logo-github.svg" alt="Strands Agents" width="55px" height="105px">
     </a>
   </div>
 
@@ -47,7 +47,7 @@ The official documentation is available online at: https://strandsagents.com.
 python -m venv .venv
 source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 
-pip install -r requirements.txt
+pip install .
 ```
 
 ### Building and Previewing
@@ -85,8 +85,3 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
-## ⚠️ Preview Status
-
-Strands Agents is currently in public preview. During this period:
-- APIs may change as we refine the SDK
-- We welcome feedback and contributions
