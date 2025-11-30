@@ -119,6 +119,21 @@ nav:
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
         - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
+        - Bidirectional Streaming:
+          - Quickstart: user-guide/concepts/experimental/bidirectional-streaming/quickstart.md
+          - Agent:
+            - Agent: user-guide/concepts/experimental/bidirectional-streaming/agent/agent.md
+            - Loop: user-guide/concepts/experimental/bidirectional-streaming/agent/loop.md
+          - Models:
+            - Nova Sonic: user-guide/concepts/experimental/bidirectional-streaming/models/nova_sonic.md
+            - Gemini Live: user-guide/concepts/experimental/bidirectional-streaming/models/gemini_live.md
+            - OpenAI Realtime: user-guide/concepts/experimental/bidirectional-streaming/models/openai_realtime.md
+          - Types:
+            - Events: user-guide/concepts/experimental/bidirectional-streaming/types/events.md
+            - IO: user-guide/concepts/experimental/bidirectional-streaming/types/io.md
+          - IO:
+            - Audio: user-guide/concepts/experimental/bidirectional-streaming/io/audio.py
+            - Text: user-guide/concepts/experimental/bidirectional-streaming/io/text.py
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
@@ -179,6 +194,14 @@ nav:
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md
+    - Bidirectional Streaming:
+      - Agent: api-reference/bidi-agent.md
+      - Loop: api-reference/bidi-loop.md
+      - Models: api-reference/bidi-models.md
+      - Types: api-reference/bidi-types.md
+      - IO: api-reference/bidi-io.md
+      - Audio: api-reference/bidi-audio.md
+      - Text: api-reference/bidi-text.md
 
 exclude_docs: |
   node_modules
