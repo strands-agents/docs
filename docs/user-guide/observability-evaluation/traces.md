@@ -243,6 +243,7 @@ Common visualization options include:
 3. **Langfuse**: For Traces, evals, prompt management, and metrics
 4. **AWS X-Ray**: For AWS-based applications
 5. **Zipkin**: Lightweight distributed tracing
+6. **Opik**: For evaluating and optimizing multi-agent systems
 
 ## Local Development Setup
 
