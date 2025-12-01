@@ -104,6 +104,7 @@ nav:
         - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md # ALWAYS ADD A SPACE BEFORE COMMUNITY
         - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
         - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
+        - OVHcloud AI Endpoints<sup> community</sup>: user-guide/concepts/model-providers/ovhcloud-ai-endpoints.md
       - Streaming:
         - Overview: user-guide/concepts/streaming/overview.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
@@ -161,6 +162,7 @@ nav:
         - Cohere: community/model-providers/cohere.md
         - CLOVA Studio: community/model-providers/clova-studio.md
         - Fireworks AI: community/model-providers/fireworksai.md
+        - OVHcloud AI Endpoints: community/model-providers/ovhcloud-ai-endpoints.md
       - Session Managers:
           - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
           - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
