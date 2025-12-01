@@ -118,6 +118,7 @@ nav:
       - Interrupts: user-guide/concepts/interrupts.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
+        - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
@@ -162,6 +163,7 @@ nav:
         - Fireworks AI: community/model-providers/fireworksai.md
       - Session Managers:
           - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+          - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
 
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
@@ -230,7 +232,10 @@ extra:
   link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
   community_contribution_banner: |
     !!! info "Community Contribution"
-        This is a community contribution. Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
+        This is a community-maintained package that is not owned or supported by the Strands team. Validate and review 
+        the package before using it in your project.
+        
+        Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
 
 validation:
   nav:

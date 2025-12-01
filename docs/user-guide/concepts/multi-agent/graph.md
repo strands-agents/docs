@@ -18,6 +18,7 @@ The Graph pattern operates on the principle of structured, deterministic workflo
 1. Nodes represent agents, custom nodes, or multi-agent systems
 2. Edges define dependencies and information flow between nodes
 3. Execution follows the graph structure, respecting dependencies
+    1. When multiple nodes have edges to a target node, the target executes as soon as **any one** dependency completes. To enable more complex traversal use cases, see the [Conditional Edges](#conditional-edges) section.
 4. Output from one node becomes input for dependent nodes
 5. Entry points receive the original task as input
 6. Nodes can be revisited in cyclic patterns with proper exit conditions
@@ -137,7 +138,28 @@ def only_if_research_successful(state):
 builder.add_edge("research", "analysis", condition=only_if_research_successful)
 ```
 
-When multiple conditional edges converge on a single node, the target node executes as soon as the condition of any one of the incoming conditional edges is satisfied. The node doesn't wait for all predecessor nodes to complete, just the first one whose condition evaluates to true.
+### Waiting for All Dependencies
+
+By default, when multiple nodes have edges to a target node, the target executes as soon as any one dependency completes. To wait for all dependencies to complete, use conditional edges that check all required nodes:
+
+```python
+from strands.multiagent.graph import GraphState
+from strands.multiagent.base import Status
+
+def all_dependencies_complete(required_nodes: list[str]):
+    """Factory function to create AND condition for multiple dependencies."""
+    def check_all_complete(state: GraphState) -> bool:
+        return all(
+            node_id in state.results and state.results[node_id].status == Status.COMPLETED
+            for node_id in required_nodes
+        )
+    return check_all_complete
+
+# Z will only execute when A AND B AND C have all completed
+builder.add_edge("A", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+builder.add_edge("B", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+builder.add_edge("C", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
+```
 
 ## Nested Multi-Agent Patterns
 
@@ -268,6 +290,51 @@ async def run_graph():
 
 result = asyncio.run(run_graph())
 ```
+
+## Streaming Events
+
+Graphs support real-time streaming of events during execution using [`stream_async`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph.stream_async). This provides visibility into node execution, parallel processing, and nested multi-agent systems.
+
+```python
+from strands import Agent
+from strands.multiagent import GraphBuilder
+
+# Create specialized agents
+researcher = Agent(name="researcher", system_prompt="You are a research specialist...")
+analyst = Agent(name="analyst", system_prompt="You are an analysis specialist...")
+
+# Build the graph
+builder = GraphBuilder()
+builder.add_node(researcher, "research")
+builder.add_node(analyst, "analysis")
+builder.add_edge("research", "analysis")
+builder.set_entry_point("research")
+graph = builder.build()
+
+# Stream events during execution
+async for event in graph.stream_async("Research and analyze market trends"):
+    # Track node execution
+    if event.get("type") == "multiagent_node_start":
+        print(f"🔄 Node {event['node_id']} starting")
+    
+    # Monitor agent events within nodes
+    elif event.get("type") == "multiagent_node_stream":
+        inner_event = event["event"]
+        if "data" in inner_event:
+            print(inner_event["data"], end="")
+    
+    # Track node completion
+    elif event.get("type") == "multiagent_node_stop":
+        node_result = event["node_result"]
+        print(f"\n✅ Node {event['node_id']} completed in {node_result.execution_time}ms")
+    
+    # Get final result
+    elif event.get("type") == "multiagent_result":
+        result = event["result"]
+        print(f"Graph completed: {result.status}")
+```
+
+See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
 
 ## Graph Results
 

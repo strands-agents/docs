@@ -4,17 +4,29 @@ Session management in Strands Agents provides a robust mechanism for persisting 
 
 ## Overview
 
-A session represents all of the stateful information that is needed by an agent to function, including:
+A session represents all of stateful information that is needed by agents and multi-agent systems to function, including:
 
+**Single Agent Sessions**:
 - Conversation history (messages)
 - Agent state (key-value storage)
 - Other stateful information (like [Conversation Manager](./state.md#conversation-manager))
 
-Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents to seamlessly continue conversations where they left off.
+**Multi-Agent Sessions**:
+- Orchestrator state and configuration
+- Individual agent states and result within the orchestrator
+- Cross-agent shared state and context
+- Execution flow and node transition history
 
-Beyond the built-in options, [third-party session managers](./#third-party-session-managers) provide additional storage and memory capabilities.
+Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents and multi-agent systems  to seamlessly continue conversations where they left off.
+
+Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
+
+!!! warning
+    You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories. 
 
 ## Basic Usage
+
+### Single Agent Sessions
 
 Simply create an agent with a session manager and use it:
 
@@ -34,6 +46,31 @@ agent("Hello!")  # This conversation is persisted
 
 The conversation, and associated state, is persisted to the underlying filesystem.
 
+### Multi-Agent Sessions
+
+Multi-agent systems(Graph/Swarm) can also use session management to persist their state:
+
+```python
+from strands.multiagent import Graph
+from strands.session.file_session_manager import FileSessionManager
+
+# Create agents
+agent1 = Agent(name="researcher")
+agent2 = Agent(name="writer")
+
+# Create a session manager for the graph
+session_manager = FileSessionManager(session_id="multi-agent-session")
+
+# Create graph with session management
+graph = Graph(
+    agents={"researcher": agent1, "writer": agent2},
+    session_manager=session_manager
+)
+
+# Use the graph - all orchestrator state is persisted
+result = graph("Research and write about AI")
+```
+
 ## Built-in Session Managers
 
 Strands offers two built-in session managers for persisting agent sessions:
@@ -43,7 +80,7 @@ Strands offers two built-in session managers for persisting agent sessions:
 
 ### FileSessionManager
 
-The [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager) provides a simple way to persist agent sessions to the local filesystem:
+The [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager) provides a simple way to persist both single agent and multi-agent sessions to the local filesystem:
 
 ```python
 from strands import Agent
@@ -60,6 +97,17 @@ agent = Agent(session_manager=session_manager)
 
 # Use the agent normally - state and messages will be persisted automatically
 agent("Hello, I'm a new user!")
+
+# Multi-agent usage
+multi_session_manager = FileSessionManager(
+    session_id="orchestrator-456",
+    storage_dir="/path/to/sessions"
+)
+graph = Graph(
+    agents={"agent1": agent1, "agent2": agent2},
+    session_manager=multi_session_manager
+)
+
 ```
 
 #### File Storage Structure
@@ -70,12 +118,15 @@ When using [`FileSessionManager`](../../../api-reference/session.md#strands.sess
 /<sessions_dir>/
 └── session_<session_id>/
     ├── session.json                # Session metadata
-    └── agents/
-        └── agent_<agent_id>/
-            ├── agent.json          # Agent metadata and state
-            └── messages/
-                ├── message_<message_id>.json
-                └── message_<message_id>.json
+    ├── agents/                     # Single agent storage
+    │   └── agent_<agent_id>/
+    │       ├── agent.json          # Agent metadata and state
+    │       └── messages/
+    │           ├── message_<message_id>.json
+    │           └── message_<message_id>.json
+    └── multi_agents/               # Multi-agent  storage
+        └── multi_agent_<orchestrator_id>/
+            └── multi_agent.json    # Orchestrator state and configuration
 ```
 
 ### S3SessionManager
@@ -104,6 +155,14 @@ agent = Agent(session_manager=session_manager)
 
 # Use the agent normally - state and messages will be persisted to S3
 agent("Tell me about AWS S3")
+
+# Use with multi-agent orchestrator
+swarm = Swarm(
+    agents=[agent1, agent2, agent3],
+    session_manager=session_manager
+)
+
+result = swarm("Coordinate the task across agents")
 ```
 #### S3 Storage Structure
 
@@ -113,12 +172,15 @@ Just like in the [`FileSessionManager`](../../../api-reference/session.md#strand
 <s3_key_prefix>/
 └── session_<session_id>/
     ├── session.json                # Session metadata
-    └── agents/
-        └── agent_<agent_id>/
-            ├── agent.json          # Agent metadata and state
-            └── messages/
-                ├── message_<message_id>.json
-                └── message_<message_id>.json
+    ├── agents/                     # Single agent storage
+    │   └── agent_<agent_id>/
+    │       ├── agent.json          # Agent metadata and state
+    │       └── messages/
+    │           ├── message_<message_id>.json
+    │           └── message_<message_id>.json
+    └── multi_agents/               # Multi-agent storage
+        └── multi_agent_<orchestrator_id>/
+            └── multi_agent.json    # Orchestrator state and configuration
 ```
 
 #### Required S3 Permissions
@@ -160,12 +222,18 @@ The session management system in Strands Agents works through a combination of e
 
 ### 1. Session Persistence Triggers
 
-Session persistence is automatically triggered by several key events in the agent lifecycle:
+Session persistence is automatically triggered by several key events in the agent and multi-agent lifecycle:
 
+**Single Agent Events**
 - **Agent Initialization**: When an agent is created with a session manager, it automatically restores any existing state and messages from the session.
 - **Message Addition**: When a new message is added to the conversation, it's automatically persisted to the session.
 - **Agent Invocation**: After each agent invocation, the agent state is synchronized with the session to capture any updates.
 - **Message Redaction**: When sensitive information needs to be redacted, the session manager can replace the original message with a redacted version while maintaining conversation flow.
+
+**Multi-Agent Events:**
+- **Multi-Agent Initialization**:  When an orchestrator is created with a session manager, it automatically restores state from the session.
+- **Node Execution**: After each node invocation, synchronizes orchestrator state after node transitions
+- **Multi-Agent Invocation**: After multiagent finished, captures final orchestrator state after execution
 
 !!! warning "After initializing the agent, direct modifications to `agent.messages` will not be persisted. Utilize the [Conversation Manager](./conversation-management.md) to help manage context of the agent in a way that can be persisted."
 
@@ -181,7 +249,7 @@ The [`Session`](../../../api-reference/types.md#strands.types.session.Session) m
 - **Purpose**: Provides a namespace for organizing multiple agents and their interactions
 - **Key Fields**:
     - `session_id`: Unique identifier for the session
-    - `session_type`: Type of session (currently "AGENT")
+    - `session_type`: Type of session (currently "AGENT" for both agent & multiagent in order to keep backward compatibility)
     - `created_at`: ISO format timestamp of when the session was created
     - `updated_at`: ISO format timestamp of when the session was last updated
 
@@ -210,6 +278,14 @@ The [`SessionMessage`](../../../api-reference/types.md#strands.types.session.Ses
     - `updated_at`: ISO format timestamp of when the message was last updated
 
 These data models work together to provide a complete representation of an agent's state and conversation history. The session management system handles serialization and deserialization of these models, including special handling for binary data using base64 encoding.
+
+**Multi-Agent State**
+
+Multi-agent systems serialize their state as JSON objects containing:
+
+- **Orchestrator Configuration**: Settings, parameters, and execution preferences
+- **Node State**: Current execution state and node transition history
+- **Shared Context**: Cross-agent shared state and variables
 
 ## Third-Party Session Managers
 
@@ -277,3 +353,4 @@ When implementing session persistence in your applications, consider these best 
 
 - **Understand Persistence Triggers**: Remember that changes to agent state or messages are only persisted during specific lifecycle events
 
+- **Concurrent Access**: Session managers are not thread-safe; use appropriate locking for concurrent access

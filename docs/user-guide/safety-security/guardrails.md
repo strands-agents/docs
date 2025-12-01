@@ -29,7 +29,7 @@ from strands.models import BedrockModel
 
 # Create a Bedrock model with guardrail configuration
 bedrock_model = BedrockModel(
-    model_id="anthropic.claude-3-5-sonnet-20241022-v2:0",
+    model_id="global.anthropic.claude-sonnet-4-5-20250929-v1:0",
     guardrail_id="your-guardrail-id",         # Your Bedrock guardrail ID
     guardrail_version="1",                    # Guardrail version
     guardrail_trace="enabled",                # Enable trace info for debugging

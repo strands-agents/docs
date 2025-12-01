@@ -52,6 +52,9 @@ from strands import Agent
 agent = Agent(load_tools_from_directory=True)
 ```
 
+!!! note "Tool Loading Implications"
+    When enabling automatic tool loading, any Python file placed in the `./tools/` directory will be executed by the agent. Under the shared responsibility model, it is your responsibility to ensure that only safe, trusted code is written to the tool loading directory, as the agent will automatically pick up and execute any tools found there.
+
 ## Using Tools
 
 Tools can be invoked in two primary ways.

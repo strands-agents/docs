@@ -94,6 +94,47 @@ If you encounter the error `ModuleNotFoundError: No module named 'litellm'`, thi
 
 ## Advanced Features
 
+### Caching
+
+LiteLLM supports provider-agnostic caching through SystemContentBlock arrays, allowing you to define cache points that work across all supported model providers. This enables you to reuse parts of previous requests, which can significantly reduce token usage and latency.
+
+#### System Prompt Caching
+
+Use SystemContentBlock arrays to define cache points in your system prompts:
+
+```python
+from strands import Agent
+from strands.models.litellm import LiteLLMModel
+from strands.types.content import SystemContentBlock
+
+# Define system content with cache points
+system_content = [
+    SystemContentBlock(
+        text="You are a helpful assistant that provides concise answers. "
+             "This is a long system prompt with detailed instructions..."
+             "..." * 1000  # needs to be at least 1,024 tokens
+    ),
+    SystemContentBlock(cachePoint={"type": "default"})
+]
+
+# Create an agent with SystemContentBlock array
+model = LiteLLMModel(
+    model_id="bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+)
+
+agent = Agent(model=model, system_prompt=system_content)
+
+# First request will cache the system prompt
+response1 = agent("Tell me about Python")
+# Cache metrics like cacheWriteInputTokens will be present in response1.metrics.accumulated_usage
+
+# Second request will reuse the cached system prompt
+response2 = agent("Tell me about JavaScript")
+# Cache metrics like cacheReadInputTokens will be present in response2.metrics.accumulated_usage
+```
+
+> **Note**: Caching availability and behavior depends on the underlying model provider accessed through LiteLLM. Some providers may have minimum token requirements or other limitations for cache creation.
+
 ### Structured Output
 
 LiteLLM supports structured output by proxying requests to underlying model providers that support tool calling. The availability of structured output depends on the specific model and provider you're using through LiteLLM.
