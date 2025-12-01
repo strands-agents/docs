@@ -9,3 +9,5 @@ __pycache__
 .idea
 .kiro
 *.egg-info
+docs/api-reference
+temp_python_sdk
