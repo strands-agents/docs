@@ -1,7 +1,7 @@
 {
   "name": "deploy_to_ec2",
   "version": "0.1.0",
-  "description": "CDK TypeScript project to deploy a sample Agent to EC2",
+  "description": "CDK TypeScript project to deploy a sample agent to EC2",
   "private": true,
   "bin": {
     "cdk-app": "bin/cdk-app.js"

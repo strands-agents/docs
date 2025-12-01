@@ -4,7 +4,7 @@ In the Strands Agents SDK, system prompts and user messages are the primary way 
 
 ## System Prompts
 
-System prompts provide high-level instructions to the model about its role, capabilities, and constraints. They set the foundation for how the model should behave throughout the conversation. You can specify the system prompt when initializing an Agent:
+System prompts provide high-level instructions to the model about its role, capabilities, and constraints. They set the foundation for how the model should behave throughout the conversation. You can specify the system prompt when initializing an agent:
 
 ```python
 from strands import Agent

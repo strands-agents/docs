@@ -1,7 +1,7 @@
 {
   "name": "deploy_to_lambda",
   "version": "0.1.0",
-  "description": "CDK TypeScript project to deploy a sample Agent Lambda function",
+  "description": "CDK TypeScript project to deploy a sample agent Lambda function",
   "private": true,
   "bin": {
     "cdk-app": "bin/cdk-app.js"

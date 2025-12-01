@@ -85,7 +85,7 @@ print(result)
 langfuse.flush()
 ```
 
-#### Complete example with a Strands Agent
+#### Complete example with a Strands agent
 
 ```python
 from strands import Agent

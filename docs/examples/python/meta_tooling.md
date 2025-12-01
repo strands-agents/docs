@@ -38,7 +38,7 @@ agent = Agent(
 ```
 
   - `editor`: Tool used to write code directly to a file named `"custom_tool_X.py"`, where "X" is the index of the tool being created.
-  - `load_tool`: Tool used to load the tool so the Agent can use it.
+  - `load_tool`: Tool used to load the tool so the agent can use it.
   - `shell`: Tool used to execute the tool. 
 
 #### 2. Agent System Prompt outlines a strict guideline for naming, structure, and creation of the new tools.
