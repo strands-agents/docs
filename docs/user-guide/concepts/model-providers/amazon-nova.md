@@ -75,4 +75,4 @@ model = NovaAPIModel(
 
 - [strands-amazon-nova GitHub Repository](https://github.com/amazon-nova-api/strands-nova)
 - [Amazon Nova](https://nova.amazon.com/)
-- **Issues**: Report bugs and feature requests in the [bedrock-agentcore-sdk-python repository](https://github.com/aws/bedrock-agentcore-sdk-python/issues/new/choose)
+- **Issues**: Report bugs and feature requests in the [strands-amazon-nova repository](https://github.com/amazon-nova-api/strands-nova/issues/new/choose)
