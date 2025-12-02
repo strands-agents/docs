@@ -436,13 +436,13 @@ More details in the [Amazon Bedrock Model Provider](concepts/model-providers/ama
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 - **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
+- **[Amazon Nova](concepts/model-providers/amazon-nova.md)** - API access to Amazon Nova models
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
 - **[Mistral](concepts/model-providers/mistral.md)** - Access to Mistral models
 - **[Ollama](concepts/model-providers/ollama.md)** - Run models locally for privacy or offline use
 - **[OpenAI](concepts/model-providers/openai.md)** - Access to OpenAI or OpenAI-compatible models
 - **[Writer](concepts/model-providers/writer.md)** - Access to Palmyra models
-- **[Amazon Nova <sup> community</sup>](../community/model-providers/amazon-nova.md)** - API access to Amazon Nova models
 - **[Cohere <sup> community</sup>](../community/model-providers/cohere.md)** - Use Cohere models through an OpenAI compatible interface
 - **[CLOVA Studio<sup> community</sup>](../community/model-providers/clova-studio.md)** - Korean-optimized AI models from Naver Cloud Platform
 - **[FireworksAI<sup> community</sup>](../community/model-providers/fireworksai.md)** - Use FireworksAI models through an OpenAI compatible interface
