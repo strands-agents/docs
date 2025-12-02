@@ -55,6 +55,7 @@ Available CDK examples:
 
 - [Deploy to EC2](cdk/deploy_to_ec2/README.md) - Guide for deploying agents to Amazon EC2 instances
 - [Deploy to Fargate](cdk/deploy_to_fargate/README.md) - Guide for deploying agents to AWS Fargate
+- [Deploy to App Runner](cdk/deploy_to_apprunner/README.md) - Guide for deploying agents to AWS App Runner
 - [Deploy to Lambda](cdk/deploy_to_lambda/README.md) - Guide for deploying agents to AWS Lambda
 
 ### Amazon EKS Example
