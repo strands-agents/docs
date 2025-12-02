@@ -16,7 +16,7 @@ After installing `strands-amazon-nova`, you can import and initialize the Amazon
 
 ```python
 from strands import Agent
-from amazon_nova import NovaAPIModel
+from strands_amazon_nova import NovaAPIModel
 
 model = NovaAPIModel(
     api_key=os.env(NOVA_API_KEY"),  # or set NOVA_API_KEY env var
@@ -43,10 +43,10 @@ export NOVA_API_KEY="your-api-key"
 ### Model Configuration
 
 ```python
-from amazon_nova import NovaAPIModel
+from strands_amazon_nova import NovaAPIModel
 
 model = NovaAPIModel(
-    api_key=os.env(NOVA_API_KEY"),              # Required: Nova API key
+    api_key=os.env(NOVA_API_KEY"),          # Required: Nova API key
     model_id="nova-2-lite-v1",              # Required: Model ID
     base_url="https://api.nova.amazon.com/v1",  # Optional, default shown
     timeout=300.0,                       # Optional, request timeout in seconds
