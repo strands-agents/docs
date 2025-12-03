@@ -25,7 +25,7 @@ To get started, let's create a sample application with a Strands agent and a sim
 web client:
 
 ```
-npx create-ag-ui-app@latest --strands
+npx create-ag-ui-app@latest --aws-strands-py
 ```
 
 ### Chat
@@ -46,7 +46,7 @@ const labels = {
 ```
 
 Learn more about the chat UI
-[in the CopilotKit docs](https://docs.copilotkit.ai/strands/agentic-chat-ui).
+[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands-py/agentic-chat-ui).
 
 ### Tool Based Generative UI (Rendering Tools)
 
@@ -68,7 +68,7 @@ useCopilotAction({
 ```
 
 Learn more about the Tool-based Generative UI
-[in the CopilotKit docs](https://docs.copilotkit.ai/strands/generative-ui/tool-based).
+[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands-py/generative-ui/tool-based).
 
 ### Shared State
 
@@ -89,7 +89,7 @@ const { state, setState } = useCoAgent<AgentState>({
 ```
 
 Learn more about shared state
-[in the CopilotKit docs](https://docs.copilotkit.ai/strands/shared-state).
+[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands-py/shared-state).
 
 ### Try it out!
 
@@ -101,8 +101,8 @@ npm install && npm run dev
 
 To see what other features you can build into your UI with AG-UI, refer to the CopilotKit docs:
 
-- [Agentic Generative UI](https://docs.copilotkit.ai/strands/generative-ui/agentic)
-- [Human in the Loop](https://docs.copilotkit.ai/strands/human-in-the-loop/agent)
-- [Frontend Actions](https://docs.copilotkit.ai/strands/frontend-actions)
+- [Agentic Generative UI](https://docs.copilotkit.ai/aws-strands-py/generative-ui/agentic)
+- [Human in the Loop](https://docs.copilotkit.ai/aws-strands-py/human-in-the-loop/agent)
+- [Frontend Actions](https://docs.copilotkit.ai/aws-strands-py/frontend-actions)
 
 Or try them out in the [AG-UI Dojo](https://dojo.ag-ui.com).
