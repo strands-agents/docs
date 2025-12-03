@@ -7,11 +7,13 @@ Session management in Strands Agents provides a robust mechanism for persisting 
 A session represents all of stateful information that is needed by agents and multi-agent systems to function, including:
 
 **Single Agent Sessions**:
+
 - Conversation history (messages)
 - Agent state (key-value storage)
 - Other stateful information (like [Conversation Manager](./state.md#conversation-manager))
 
 **Multi-Agent Sessions**:
+
 - Orchestrator state and configuration
 - Individual agent states and result within the orchestrator
 - Cross-agent shared state and context
