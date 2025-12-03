@@ -158,6 +158,7 @@ nav:
       - Community Packages: community/community-packages.md
       - Tools:
         - UTCP: community/tools/utcp.md
+        - AG-UI: community/tools/ag-ui.md
       - Model Providers:
         - Cohere: community/model-providers/cohere.md
         - CLOVA Studio: community/model-providers/clova-studio.md
