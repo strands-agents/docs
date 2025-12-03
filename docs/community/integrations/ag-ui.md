@@ -25,7 +25,7 @@ To get started, let's create a sample application with a Strands agent and a sim
 web client:
 
 ```
-npx create-ag-ui-app@latest --aws-strands-py
+npx copilotkit create -f aws-strands-py
 ```
 
 ### Chat
