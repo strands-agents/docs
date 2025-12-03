@@ -2,7 +2,7 @@
 
 Async iterators provide asynchronous streaming of agent events, allowing you to process events as they occur in real-time. This approach is ideal for asynchronous frameworks where you need fine-grained control over async execution flow.
 
-For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./overview.md#event-types).
+For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./index.md#event-types).
 
 ## Basic Usage
 

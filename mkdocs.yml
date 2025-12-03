@@ -34,6 +34,7 @@ theme:
     - content.code.copy
     - content.tabs.link
     - content.code.select
+    - navigation.indexes
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
@@ -84,7 +85,7 @@ nav:
   - User Guide:
     - Welcome: README.md
     - Quickstart:
-      - Overview: user-guide/quickstart/index.md
+      - Getting Started: user-guide/quickstart/overview.md
       - Python: user-guide/quickstart/python.md
       - TypeScript: user-guide/quickstart/typescript.md
     - Concepts:
@@ -97,7 +98,7 @@ nav:
         - Structured Output: user-guide/concepts/agents/structured-output.md
         - Conversation Management: user-guide/concepts/agents/conversation-management.md
       - Tools:
-        - Overview: user-guide/concepts/tools/tools_overview.md
+        - Overview: user-guide/concepts/tools/index.md
         - Creating Custom Tools: user-guide/concepts/tools/custom-tools.md
         - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
         - Executors: user-guide/concepts/tools/executors.md
@@ -121,7 +122,7 @@ nav:
         - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
         - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
       - Streaming:
-        - Overview: user-guide/concepts/streaming/quickstart.md
+        - Overview: user-guide/concepts/streaming/index.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
         - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
       - Multi-agent:
@@ -163,7 +164,7 @@ nav:
       - Getting Started: user-guide/evals-sdk/quickstart.md
       - Eval SOP: user-guide/evals-sdk/eval-sop.md
       - Evaluators:
-        - Overview: user-guide/evals-sdk/evaluators/overview.md
+        - Overview: user-guide/evals-sdk/evaluators/index.md
         - Output: user-guide/evals-sdk/evaluators/output_evaluator.md
         - Trajectory: user-guide/evals-sdk/evaluators/trajectory_evaluator.md
         - Interactions: user-guide/evals-sdk/evaluators/interactions_evaluator.md
@@ -175,7 +176,7 @@ nav:
         - Custom: user-guide/evals-sdk/evaluators/custom_evaluator.md
       - Experiment Generator: user-guide/evals-sdk/experiment_generator.md
       - Simulators:
-        - Overview: user-guide/evals-sdk/simulators/overview.md
+        - Overview: user-guide/evals-sdk/simulators/index.md
         - User Simulation: user-guide/evals-sdk/simulators/user_simulation.md
       - How-To Guides:
         - Experiment Management: user-guide/evals-sdk/how-to/experiment_management.md

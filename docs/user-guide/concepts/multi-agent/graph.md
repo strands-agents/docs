@@ -334,7 +334,7 @@ async for event in graph.stream_async("Research and analyze market trends"):
         print(f"Graph completed: {result.status}")
 ```
 
-See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
+See the [streaming overview](../streaming/index.md#multi-agent-events) for details on all multi-agent event types.
 
 ## Graph Results
 

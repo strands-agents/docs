@@ -662,7 +662,7 @@ while user_sim.has_next():
 
 ## Related Documentation
 
-- [Simulators Overview](overview.md): Learn about the ActorSimulator and simulator framework
+- [Simulators Overview](index.md): Learn about the ActorSimulator and simulator framework
 - [Quickstart Guide](../quickstart.md): Get started with Strands Evals
 - [Helpfulness Evaluator](../evaluators/helpfulness_evaluator.md): Evaluate conversation helpfulness
 - [Goal Success Rate Evaluator](../evaluators/goal_success_rate_evaluator.md): Assess goal completion

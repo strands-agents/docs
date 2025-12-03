@@ -6,7 +6,7 @@ Bidirectional streaming events enable real-time monitoring and processing of aud
 
 ## Event Model
 
-Bidirectional streaming uses a different event model than [standard streaming](../../streaming/overview.md):
+Bidirectional streaming uses a different event model than [standard streaming](../../streaming/index.md):
 
 **Standard Streaming:**
 
@@ -322,7 +322,7 @@ Events for tool execution during conversations. Bidirectional streaming reuses t
 
 #### ToolUseStreamEvent
 
-Emitted when the model requests tool execution. See [Tools Overview](../../tools/tools_overview.md) for details.
+Emitted when the model requests tool execution. See [Tools Overview](../../tools/index.md) for details.
 
 ```python
 {

@@ -233,7 +233,7 @@ See [Model Providers](models/nova_sonic.md) for provider-specific options.
 
 `BidiAgent` supports many of the same constructs as `Agent`:
 
-- **[Tools](../../tools/tools_overview.md)**: Function calling works identically
+- **[Tools](../../tools/index.md)**: Function calling works identically
 - **[Hooks](hooks.md)**: Lifecycle event handling with bidirectional-specific events
 - **[Session Management](session-management.md)**: Conversation persistence across sessions
 - **[Tool Executors](../../tools/executors.md)**: Concurrent and custom execution patterns

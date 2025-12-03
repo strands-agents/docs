@@ -4,7 +4,7 @@
 
 Callback handlers allow you to intercept and process events as they happen during agent execution in Python. This enables real-time monitoring, custom output formatting, and integration with external systems through function-based event handling.
 
-For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./overview.md#event-types).
+For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./index.md#event-types).
 
 > **Note:** For asynchronous applications, consider [async iterators](./async-iterators.md) instead.
 

@@ -110,7 +110,7 @@ Solutions:
 
 ### Inappropriate Tool Selection
 
-When the model consistently picks the wrong tool, the problem is usually ambiguous tool descriptions. Review the descriptions from the model's perspective. If two tools have overlapping descriptions, the model has no basis for choosing between them. See [Tools Overview](../tools/tools_overview.md) for guidance on writing effective descriptions.
+When the model consistently picks the wrong tool, the problem is usually ambiguous tool descriptions. Review the descriptions from the model's perspective. If two tools have overlapping descriptions, the model has no basis for choosing between them. See [Tools Overview](../tools/index.md) for guidance on writing effective descriptions.
 
 ### MaxTokensReachedException
 

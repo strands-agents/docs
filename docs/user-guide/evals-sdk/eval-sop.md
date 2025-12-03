@@ -231,47 +231,49 @@ Generates insights and recommendations:
 
 The evaluation plan follows a comprehensive structured format with detailed analysis and implementation guidance:
 
-    # Evaluation Plan for QA+Search Agent
+```markdown
+# Evaluation Plan for QA+Search Agent
 
-    ## 1. Evaluation Requirements
-    - **User Input:** "generate an evaluation plan for this qa agent..."
-    - **Interpreted Evaluation Requirements:** Evaluate the QA agent's ability to answer questions using web search capabilities...
+## 1. Evaluation Requirements
+- **User Input:** "generate an evaluation plan for this qa agent..."
+- **Interpreted Evaluation Requirements:** Evaluate the QA agent's ability to answer questions using web search capabilities...
 
-    ## 2. Agent Analysis
-    | **Attribute**         | **Details**                                                 |
-    | :-------------------- | :---------------------------------------------------------- |
-    | **Agent Name**        | QA+Search                                                   |
-    | **Purpose**           | Answer questions by searching the web using Tavily API... |
-    | **Core Capabilities** | Web search integration, information synthesis...            |
+## 2. Agent Analysis
+| **Attribute**         | **Details**                                                 |
+| :-------------------- | :---------------------------------------------------------- |
+| **Agent Name**        | QA+Search                                                   |
+| **Purpose**           | Answer questions by searching the web using Tavily API... |
+| **Core Capabilities** | Web search integration, information synthesis...            |
 
-    **Agent Architecture Diagram:**
-    (Mermaid diagram showing User Query → Agent → WebSearchTool → Tavily API flow)
+**Agent Architecture Diagram:**
+(Mermaid diagram showing User Query → Agent → WebSearchTool → Tavily API flow)
 
-    ## 3. Evaluation Metrics
-    ### Answer Quality Score
-    - **Evaluation Area:** Final response quality
-    - **Method:** LLM-as-Judge (using OutputEvaluator with custom rubric)
-    - **Scoring Scale:** 0.0 to 1.0
-    - **Pass Threshold:** 0.75 or higher
+## 3. Evaluation Metrics
+### Answer Quality Score
+- **Evaluation Area:** Final response quality
+- **Method:** LLM-as-Judge (using OutputEvaluator with custom rubric)
+- **Scoring Scale:** 0.0 to 1.0
+- **Pass Threshold:** 0.75 or higher
 
-    ## 4. Test Data Generation
-    - **Simple Factual Questions**: Questions requiring basic web search...
-    - **Multi-Step Reasoning Questions**: Questions requiring synthesis...
+## 4. Test Data Generation
+- **Simple Factual Questions**: Questions requiring basic web search...
+- **Multi-Step Reasoning Questions**: Questions requiring synthesis...
 
-    ## 5. Evaluation Implementation Design
-    ### 5.1 Evaluation Code Structure
-    ./                           # Repository root directory
-    ├── requirements.txt         # Consolidated dependencies
-    └── eval/                    # Evaluation workspace
-        ├── README.md            # Running instructions
-        ├── run_evaluation.py    # Strands Evals SDK implementation
-        └── results/             # Evaluation outputs
+## 5. Evaluation Implementation Design
+### 5.1 Evaluation Code Structure
+./                           # Repository root directory
+├── requirements.txt         # Consolidated dependencies
+└── eval/                    # Evaluation workspace
+    ├── README.md            # Running instructions
+    ├── run_evaluation.py    # Strands Evals SDK implementation
+    └── results/             # Evaluation outputs
 
-    ## 6. Progress Tracking
-    ### 6.1 User Requirements Log
-    | **Timestamp** | **Source** | **Requirement** |
-    | :------------ | :--------- | :-------------- |
-    | 2025-12-01    | eval sop    | Generate evaluation plan... |
+## 6. Progress Tracking
+### 6.1 User Requirements Log
+| **Timestamp** | **Source** | **Requirement** |
+| :------------ | :--------- | :-------------- |
+| 2025-12-01    | eval sop    | Generate evaluation plan... |
+```
 
 ### Generated Test Cases
 Test cases are generated in JSONL format with structured metadata:
@@ -288,58 +290,60 @@ Test cases are generated in JSONL format with structured metadata:
 
 The evaluation report provides comprehensive analysis with actionable insights:
 
-    # Agent Evaluation Report for QA+Search Agent
+```markdown
+# Agent Evaluation Report for QA+Search Agent
 
-    ## Executive Summary
-    - **Test Scale**: 2 test cases
-    - **Success Rate**: 100%
-    - **Overall Score**: 1.000 (Perfect)
-    - **Status**: Excellent
-    - **Action Priority**: Continue monitoring; consider expanding test coverage...
+## Executive Summary
+- **Test Scale**: 2 test cases
+- **Success Rate**: 100%
+- **Overall Score**: 1.000 (Perfect)
+- **Status**: Excellent
+- **Action Priority**: Continue monitoring; consider expanding test coverage...
 
-    ## Evaluation Results
-    ### Test Case Coverage
-    - **Simple Factual Questions (Geography)**: Questions requiring basic factual information...
-    - **Simple Factual Questions (Sports/Time-sensitive)**: Questions requiring current event information...
+## Evaluation Results
+### Test Case Coverage
+- **Simple Factual Questions (Geography)**: Questions requiring basic factual information...
+- **Simple Factual Questions (Sports/Time-sensitive)**: Questions requiring current event information...
 
-    ### Results
-    | **Metric**              | **Score** | **Target** | **Status** |
-    | :---------------------- | :-------- | :--------- | :--------- |
-    | Answer Quality Score    | 1.00      | 0.75+      | Pass ✅    |
-    | Overall Test Pass Rate  | 100%      | 75%+       | Pass ✅    |
+### Results
+| **Metric**              | **Score** | **Target** | **Status** |
+| :---------------------- | :-------- | :--------- | :--------- |
+| Answer Quality Score    | 1.00      | 0.75+      | Pass ✅    |
+| Overall Test Pass Rate  | 100%      | 75%+       | Pass ✅    |
 
-    ## Agent Success Analysis
-    ### Strengths
-    - **Perfect Accuracy**: The agent correctly answered 100% of test questions...
-    - **Evidence**: Both test cases scored 1.0/1.0 (perfect scores)
-    - **Contributing Factors**: Effective use of web search tool...
+## Agent Success Analysis
+### Strengths
+- **Perfect Accuracy**: The agent correctly answered 100% of test questions...
+- **Evidence**: Both test cases scored 1.0/1.0 (perfect scores)
+- **Contributing Factors**: Effective use of web search tool...
 
-    ## Agent Failure Analysis
-    ### No Failures Detected
-    The evaluation identified zero failures across all test cases...
+## Agent Failure Analysis
+### No Failures Detected
+The evaluation identified zero failures across all test cases...
 
-    ## Action Items & Recommendations
-    ### Expand Test Coverage - Priority 1 (Enhancement)
-    - **Description**: Increase the number and diversity of test cases...
-    - **Actions**:
-      - [ ] Add 5-10 additional test cases covering edge cases
-      - [ ] Include multi-step reasoning scenarios
-      - [ ] Add test cases for error conditions
+## Action Items & Recommendations
+### Expand Test Coverage - Priority 1 (Enhancement)
+- **Description**: Increase the number and diversity of test cases...
+- **Actions**:
+  - [ ] Add 5-10 additional test cases covering edge cases
+  - [ ] Include multi-step reasoning scenarios
+  - [ ] Add test cases for error conditions
 
-    ## Artifacts & Reproduction
-    ### Reference Materials
-    - **Agent Code**: `qa_agent/qa_agent.py`
-    - **Test Cases**: `eval/test-cases.jsonl`
-    - **Results**: `eval/results/.../evaluation_report.json`
+## Artifacts & Reproduction
+### Reference Materials
+- **Agent Code**: `qa_agent/qa_agent.py`
+- **Test Cases**: `eval/test-cases.jsonl`
+- **Results**: `eval/results/.../evaluation_report.json`
 
-    ### Reproduction Steps
-    source .venv/bin/activate
-    python eval/run_evaluation.py
+### Reproduction Steps
+source .venv/bin/activate
+python eval/run_evaluation.py
 
-    ## Evaluation Limitations and Improvement
-    ### Test Data Improvement
-    - **Current Limitations**: Only 2 test cases, limited scenario diversity...
-    - **Recommended Improvements**: Increase test case count to 10-20 cases...
+## Evaluation Limitations and Improvement
+### Test Data Improvement
+- **Current Limitations**: Only 2 test cases, limited scenario diversity...
+- **Recommended Improvements**: Increase test case count to 10-20 cases...
+```
 
 ## Best Practices
 

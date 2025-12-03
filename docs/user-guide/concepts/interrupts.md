@@ -156,7 +156,7 @@ agent = Agent(
 
 ```
 
-> ⚠️ Interrupts are not supported in [direct tool calls](./tools/tools_overview.md#direct-method-calls) (i.e., calls such as `agent.tool.my_tool()`).
+> ⚠️ Interrupts are not supported in [direct tool calls](./tools/index.md#direct-method-calls) (i.e., calls such as `agent.tool.my_tool()`).
 
 ### Components
 

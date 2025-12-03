@@ -193,13 +193,13 @@ The goal of this repository is to revamp this documentation repo so that it prov
 │       │   ├── streaming
 │       │   │   ├── async-iterators.md
 │       │   │   ├── callback-handlers.md
-│       │   │   └── overview.md
+│       │   │   └── index.md
 │       │   └── tools
 │       │       ├── community-tools-package.md
 │       │       ├── executors.md
 │       │       ├── mcp-tools.md
 │       │       ├── python-tools.md
-│       │       └── tools_overview.md
+│       │       └── index.md
 │       ├── deploy
 │       │   ├── deploy_to_amazon_ec2.md
 │       │   ├── deploy_to_amazon_eks.md

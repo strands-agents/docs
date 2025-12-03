@@ -48,7 +48,7 @@ agent = Agent(
 )
 ```
 
-See [Adding Tools to Agents](../concepts/tools/tools_overview.md/#adding-tools-to-agents) and [Auto reloading tools](../concepts/tools/tools_overview.md#auto-loading-and-reloading-tools) for more information.
+See [Adding Tools to Agents](../concepts/tools/index.md/#adding-tools-to-agents) and [Auto reloading tools](../concepts/tools/index.md#auto-loading-and-reloading-tools) for more information.
 
 ### Security Considerations
 
@@ -150,6 +150,6 @@ Operating Strands agents in production requires careful consideration of configu
 
 - [Conversation Management](../../user-guide/concepts/agents/conversation-management.md)
 - [Streaming - Async Iterator](../../user-guide/concepts/streaming/async-iterators.md)
-- [Tool Development](../../user-guide/concepts/tools/tools_overview.md)
+- [Tool Development](../../user-guide/concepts/tools/index.md)
 - [Guardrails](../../user-guide/safety-security/guardrails.md)
 - [Responsible AI](../../user-guide/safety-security/responsible-ai.md)

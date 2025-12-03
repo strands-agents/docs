@@ -225,7 +225,7 @@ async for event in swarm.stream_async("Design and implement a REST API"):
         print(f"\nSwarm completed: {result.status}")
 ```
 
-See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
+See the [streaming overview](../streaming/index.md#multi-agent-events) for details on all multi-agent event types.
 
 ## Swarm Results
 

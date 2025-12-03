@@ -363,7 +363,7 @@ Tools can access their execution context to interact with the invoking agent, cu
 
 === "Python"
 
-    Async tools can yield intermediate results to provide real-time progress updates. Each yielded value becomes a [streaming event](../streaming/overview.md), with the final value serving as the tool's return result:
+    Async tools can yield intermediate results to provide real-time progress updates. Each yielded value becomes a [streaming event](../streaming/index.md), with the final value serving as the tool's return result:
 
     ```python
     from datetime import datetime
