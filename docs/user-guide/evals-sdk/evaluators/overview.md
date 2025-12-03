@@ -9,12 +9,14 @@ Evaluators assess the quality and performance of conversational agents by analyz
 Evaluating conversational agents requires more than simple accuracy metrics. Agents must be assessed across multiple dimensions:
 
 **Traditional Metrics:**
+
 - Limited to exact match or similarity scores
 - Don't capture subjective qualities like helpfulness
 - Can't assess multi-turn conversation flow
 - Miss goal-oriented success patterns
 
 **Strands Evaluators:**
+
 - Assess subjective qualities using LLM-as-a-judge
 - Evaluate multi-turn conversations and trajectories
 - Measure goal completion and user satisfaction
@@ -47,16 +49,19 @@ Evaluators operate at different levels of granularity:
 ### Response Quality Evaluators
 
 **[OutputEvaluator](output_evaluator.md)**
+
 - **Level**: OUTPUT_LEVEL
 - **Purpose**: Flexible LLM-based evaluation with custom rubrics
 - **Use Case**: Assess any subjective quality (safety, relevance, tone)
 
 **[HelpfulnessEvaluator](helpfulness_evaluator.md)**
+
 - **Level**: TRACE_LEVEL  
 - **Purpose**: Evaluate response helpfulness from user perspective
 - **Use Case**: Measure user satisfaction and response utility
 
 **[FaithfulnessEvaluator](faithfulness_evaluator.md)**
+
 - **Level**: TRACE_LEVEL
 - **Purpose**: Assess factual accuracy and groundedness
 - **Use Case**: Verify responses are truthful and well-supported
@@ -64,11 +69,13 @@ Evaluators operate at different levels of granularity:
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](tool_selection_evaluator.md)**
+
 - **Level**: TRACE_LEVEL
 - **Purpose**: Evaluate whether correct tools were selected
 - **Use Case**: Assess tool choice accuracy in multi-tool scenarios
 
 **[ToolParameterEvaluator](tool_parameter_evaluator.md)**
+
 - **Level**: TRACE_LEVEL
 - **Purpose**: Evaluate accuracy of tool parameters
 - **Use Case**: Verify correct parameter values for tool calls
@@ -76,11 +83,13 @@ Evaluators operate at different levels of granularity:
 ### Conversation Flow Evaluators
 
 **[TrajectoryEvaluator](trajectory_evaluator.md)**
+
 - **Level**: SESSION_LEVEL
 - **Purpose**: Assess sequence of actions and tool usage patterns
 - **Use Case**: Evaluate multi-step reasoning and workflow adherence
 
 **[InteractionsEvaluator](interactions_evaluator.md)**
+
 - **Level**: SESSION_LEVEL
 - **Purpose**: Analyze conversation patterns and interaction quality
 - **Use Case**: Assess conversation flow and engagement patterns
@@ -88,6 +97,7 @@ Evaluators operate at different levels of granularity:
 ### Goal Achievement Evaluators
 
 **[GoalSuccessRateEvaluator](goal_success_rate_evaluator.md)**
+
 - **Level**: SESSION_LEVEL
 - **Purpose**: Determine if user goals were successfully achieved
 - **Use Case**: Measure end-to-end task completion success
@@ -97,6 +107,7 @@ Evaluators operate at different levels of granularity:
 Create domain-specific evaluators by extending the base `Evaluator` class:
 
 **[CustomEvaluator](custom_evaluator.md)**
+
 - **Purpose**: Implement specialized evaluation logic
 - **Use Case**: Domain-specific requirements not covered by built-in evaluators
 
