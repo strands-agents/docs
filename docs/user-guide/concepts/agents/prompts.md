@@ -6,17 +6,25 @@ In the Strands Agents SDK, system prompts and user messages are the primary way 
 
 System prompts provide high-level instructions to the model about its role, capabilities, and constraints. They set the foundation for how the model should behave throughout the conversation. You can specify the system prompt when initializing an Agent:
 
-```python
-from strands import Agent
+=== "Python"
 
-agent = Agent(
-    system_prompt=(
-        "You are a financial advisor specialized in retirement planning. "
-        "Use tools to gather information and provide personalized advice. "
-        "Always explain your reasoning and cite sources when possible."
+    ```python
+    from strands import Agent
+
+    agent = Agent(
+        system_prompt=(
+            "You are a financial advisor specialized in retirement planning. "
+            "Use tools to gather information and provide personalized advice. "
+            "Always explain your reasoning and cite sources when possible."
+        )
     )
-)
-```
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/prompts.ts:systemPrompt"
+    ```
 
 If you do not specify a system prompt, the model will behave according to its default settings.
 
@@ -28,29 +36,45 @@ These are your queries or requests to the agent. The SDK supports multiple techn
 
 The simplest way to interact with an agent is through a text prompt:
 
-```python
-response = agent("What is the time in Seattle")
-```
+=== "Python"
+
+    ```python
+    response = agent("What is the time in Seattle")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/prompts.ts:textPrompt"
+    ```
 
 ### Multi-Modal Prompting
-The SDK also supports multi-modal prompts, allowing you to include images, documents, and other content types in your messages:
+The SDK supports multi-modal prompts, allowing you to include images, documents, and other content types in your messages:
 
-```python
-with open("path/to/image.png", "rb") as fp:
-    image_bytes = fp.read()
+=== "Python"
 
-response = agent([
-    {"text": "What can you see in this image?"},
-    {
-        "image": {
-            "format": "png",
-            "source": {
-                "bytes": image_bytes,
+    ```python
+    with open("path/to/image.png", "rb") as fp:
+        image_bytes = fp.read()
+
+    response = agent([
+        {"text": "What can you see in this image?"},
+        {
+            "image": {
+                "format": "png",
+                "source": {
+                    "bytes": image_bytes,
+                },
             },
         },
-    },
-])
-```
+    ])
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/prompts.ts:multimodalPrompt"
+    ```
 
 For a complete list of supported content types, please refer to the [API Reference](../../../api-reference/types.md#strands.types.content.ContentBlock).
 
@@ -59,11 +83,15 @@ For a complete list of supported content types, please refer to the [API Referen
 
 Prompting is a primary functionality of Strands that allows you to invoke tools through natural language requests. However, if at any point you require more programmatic control, Strands also allows you to invoke tools directly:
 
-```python
-result = agent.tool.current_time(timezone="US/Pacific")
-```
+=== "Python"
 
-Direct tool calls bypass the natural language interface and execute the tool using specified parameters. These calls are added to the conversation history by default. However, you can opt out of this behavior by setting `record_direct_tool_call=False`.
+    ```python
+    result = agent.tool.current_time(timezone="US/Pacific")
+    ```
+
+{{ ts_not_supported_code() }}
+
+Direct tool calls bypass the natural language interface and execute the tool using specified parameters. These calls are added to the conversation history by default. However, you can opt out of this behavior by setting `record_direct_tool_call=False` in Python.
 
 ## Prompt Engineering
 

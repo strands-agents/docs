@@ -1,5 +1,8 @@
 # Gemini
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Google Gemini](https://ai.google.dev/api) is Google's family of multimodal large language models designed for advanced reasoning, code generation, and creative tasks. The Strands Agents SDK implements a Gemini provider, allowing you to run agents against the Gemini models available through Google's AI API.
 
 ## Installation
@@ -87,6 +90,7 @@ params = {
 For a complete list of supported models, see the [Gemini API documentation](https://ai.google.dev/gemini-api/docs/models).
 
 **Popular Models:**
+
 - `gemini-2.5-pro` - Most advanced model for complex reasoning and thinking
 - `gemini-2.5-flash` - Best balance of performance and cost
 - `gemini-2.5-flash-lite` - Most cost-efficient option
@@ -214,6 +218,7 @@ response = agent([
 ```
 
 **Supported formats:**
+
 - **Images**: PNG, JPEG, GIF, WebP (automatically detected via MIME type)
 - **Documents**: PDF and other binary formats (automatically detected via MIME type)
 

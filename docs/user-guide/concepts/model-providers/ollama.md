@@ -1,5 +1,8 @@
 # Ollama
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 Ollama is a framework for running open-source large language models locally. Strands provides native support for Ollama, allowing you to use locally-hosted models in your agents.
 
 The [`OllamaModel`](../../../api-reference/models.md#strands.models.ollama) class in Strands enables seamless integration with Ollama's API, supporting:

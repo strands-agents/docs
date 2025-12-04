@@ -1,0 +1,20 @@
+{
+  "entryPoints": ["sdk-typescript/src/index.ts"],
+  "out": "docs/api-reference/typescript",
+  "tsconfig": "typedoc-tsconfig.json",
+  "skipErrorChecking": true,
+  "name": "Strands Agents Typescript SDK",
+  "titleLink": "/",
+  "categorizeByGroup": true,
+  "favicon": "docs/assets/logo-auto.svg",
+  "readme": "none",
+  "hideGenerator": true,
+  "sort": ["source-order"],
+  "excludePrivate": true,
+  "includeVersion": false,
+  "navigation": true,
+  "navigationLinks": {
+    "Docs Home": "/",
+    "GitHub": "https://github.com/strands-agents/sdk-typescript"
+  }
+}

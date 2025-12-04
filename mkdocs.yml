@@ -32,7 +32,9 @@ theme:
       code: material/code-json
   features:
     - content.code.copy
+    - content.tabs.link
     - content.code.select
+    - navigation.indexes
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
@@ -47,15 +49,25 @@ markdown_extensions:
   - admonition
   - codehilite
   - pymdownx.highlight
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.details
-  - pymdownx.emoji
-  - tables
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.snippets:
+      base_path: ["docs"]
+      check_paths: true
+      dedent_subsections: true
   - pymdownx.superfences:
       custom_fences:
           - name: mermaid
             class: mermaid
             format: !!python/name:pymdownx.superfences.fence_code_format
+  - tables
   - toc:
       title: On this page
       permalink: true
@@ -72,7 +84,10 @@ extra_javascript:
 nav:
   - User Guide:
     - Welcome: README.md
-    - Quickstart: user-guide/quickstart.md
+    - Quickstart:
+      - Getting Started: user-guide/quickstart/overview.md
+      - Python: user-guide/quickstart/python.md
+      - TypeScript: user-guide/quickstart/typescript.md
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
@@ -83,13 +98,15 @@ nav:
         - Structured Output: user-guide/concepts/agents/structured-output.md
         - Conversation Management: user-guide/concepts/agents/conversation-management.md
       - Tools:
-        - Overview: user-guide/concepts/tools/tools_overview.md
-        - Python: user-guide/concepts/tools/python-tools.md
+        - Overview: user-guide/concepts/tools/index.md
+        - Creating Custom Tools: user-guide/concepts/tools/custom-tools.md
         - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
         - Executors: user-guide/concepts/tools/executors.md
         - Community Tools Package: user-guide/concepts/tools/community-tools-package.md
       - Model Providers:
+        - Overview: user-guide/concepts/model-providers/index.md
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
+        - Amazon Nova: user-guide/concepts/model-providers/amazon-nova.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
         - Gemini: user-guide/concepts/model-providers/gemini.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
@@ -101,11 +118,11 @@ nav:
         - SageMaker: user-guide/concepts/model-providers/sagemaker.md
         - Writer: user-guide/concepts/model-providers/writer.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
-        - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md # ALWAYS ADD A SPACE BEFORE COMMUNITY
+        - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md
         - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
         - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
       - Streaming:
-        - Overview: user-guide/concepts/streaming/overview.md
+        - Overview: user-guide/concepts/streaming/index.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
         - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
       - Multi-agent:
@@ -119,22 +136,59 @@ nav:
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
         - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
+        - Steering: user-guide/concepts/experimental/steering.md
+        - Bidirectional Streaming:
+          - Quickstart: user-guide/concepts/experimental/bidirectional-streaming/quickstart.md
+          - BidiAgent: user-guide/concepts/experimental/bidirectional-streaming/agent.md
+          - Models:
+            - Nova Sonic: user-guide/concepts/experimental/bidirectional-streaming/models/nova_sonic.md
+            - Gemini Live: user-guide/concepts/experimental/bidirectional-streaming/models/gemini_live.md
+            - OpenAI Realtime: user-guide/concepts/experimental/bidirectional-streaming/models/openai_realtime.md
+          - IO: user-guide/concepts/experimental/bidirectional-streaming/io.md
+          - Events: user-guide/concepts/experimental/bidirectional-streaming/events.md
+          - Interruptions: user-guide/concepts/experimental/bidirectional-streaming/interruption.md
+          - Hooks: user-guide/concepts/experimental/bidirectional-streaming/hooks.md
+          - Session Management: user-guide/concepts/experimental/bidirectional-streaming/session-management.md
+          - Observability: user-guide/concepts/experimental/bidirectional-streaming/otel.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
       - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
       - PII Redaction: user-guide/safety-security/pii-redaction.md
-    - Observability & Evaluation:
+    - Observability & Debugging:
       - Observability: user-guide/observability-evaluation/observability.md
       - Metrics: user-guide/observability-evaluation/metrics.md
       - Traces: user-guide/observability-evaluation/traces.md
       - Logs: user-guide/observability-evaluation/logs.md
-      - Evaluation: user-guide/observability-evaluation/evaluation.md
+    - Strands Evals SDK:
+      - Getting Started: user-guide/evals-sdk/quickstart.md
+      - Eval SOP: user-guide/evals-sdk/eval-sop.md
+      - Evaluators:
+        - Overview: user-guide/evals-sdk/evaluators/index.md
+        - Output: user-guide/evals-sdk/evaluators/output_evaluator.md
+        - Trajectory: user-guide/evals-sdk/evaluators/trajectory_evaluator.md
+        - Interactions: user-guide/evals-sdk/evaluators/interactions_evaluator.md
+        - Helpfulness: user-guide/evals-sdk/evaluators/helpfulness_evaluator.md
+        - Faithfulness: user-guide/evals-sdk/evaluators/faithfulness_evaluator.md
+        - Goal Success Rate: user-guide/evals-sdk/evaluators/goal_success_rate_evaluator.md
+        - Tool Selection Accuracy: user-guide/evals-sdk/evaluators/tool_selection_evaluator.md
+        - Tool Parameter Accuracy: user-guide/evals-sdk/evaluators/tool_parameter_evaluator.md
+        - Custom: user-guide/evals-sdk/evaluators/custom_evaluator.md
+      - Experiment Generator: user-guide/evals-sdk/experiment_generator.md
+      - Simulators:
+        - Overview: user-guide/evals-sdk/simulators/index.md
+        - User Simulation: user-guide/evals-sdk/simulators/user_simulation.md
+      - How-To Guides:
+        - Experiment Management: user-guide/evals-sdk/how-to/experiment_management.md
+        - Serialization: user-guide/evals-sdk/how-to/serialization.md
     - Deploy:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
-      - Amazon Bedrock AgentCore : user-guide/deploy/deploy_to_bedrock_agentcore.md
+      - Amazon Bedrock AgentCore:
+        - Overview: user-guide/deploy/deploy_to_bedrock_agentcore/index.md
+        - Python: user-guide/deploy/deploy_to_bedrock_agentcore/python.md
+        - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
 
@@ -157,19 +211,19 @@ nav:
       - Community Packages: community/community-packages.md
       - Tools:
         - UTCP: community/tools/utcp.md
+      - Integrations:
+        - AG-UI: community/integrations/ag-ui.md
       - Model Providers:
         - Cohere: community/model-providers/cohere.md
         - CLOVA Studio: community/model-providers/clova-studio.md
         - Fireworks AI: community/model-providers/fireworksai.md
       - Session Managers:
           - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
-          - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
 
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
-  - API Reference:
+  - Python API:
     - Agent: api-reference/agent.md
     - Event Loop: api-reference/event-loop.md
-    - Experimental: api-reference/experimental.md
     - Handlers: api-reference/handlers.md
     - Hooks: api-reference/hooks.md
     - Interrupt: api-reference/interrupt.md
@@ -179,6 +233,16 @@ nav:
     - Telemetry: api-reference/telemetry.md
     - Tools: api-reference/tools.md
     - Types: api-reference/types.md
+    - Experimental:
+      - Agent Config: api-reference/experimental/agent_config.md
+      - Hooks: api-reference/experimental/hooks.md
+      - Bidirectional Streaming:
+        - Agent: api-reference/experimental/bidi/agent.md
+        - IO: api-reference/experimental/bidi/io.md
+        - Models: api-reference/experimental/bidi/models.md
+        - Tools: api-reference/experimental/bidi/tools.md
+        - Types: api-reference/experimental/bidi/types.md
+  - TypeScript API: api-reference/typescript/index.html
 
 exclude_docs: |
   node_modules
@@ -188,7 +252,8 @@ exclude_docs: |
 plugins:
   - search
   - privacy
-  - macros
+  - macros:
+      module_name: macros
   - mike:
       alias_type: symlink
       canonical_version: latest
@@ -212,6 +277,8 @@ plugins:
         API Reference:
           - api-reference/*.md
 
+hooks:
+  - build-ts-docs.py
 extra:
   social:
     - icon: fontawesome/brands/github
@@ -221,7 +288,8 @@ extra:
   docs_repo: https://github.com/strands-agents/docs/tree/main
   sdk_pypi: https://pypi.org/project/strands-agents/
   sdk_repo: https://github.com/strands-agents/sdk-python/blob/main
-  sdk_repo_home: https://github.com/strands-agents/sdk-python
+  py_sdk_repo_home: https://github.com/strands-agents/sdk-python/blob/main
+  ts_sdk_repo_home: https://github.com/strands-agents/sdk-typescript/blob/main
   tools_pypi: https://pypi.org/project/strands-agents-tools/
   tools_repo: https://github.com/strands-agents/tools/blob/main
   tools_repo_home: https://github.com/strands-agents/tools
@@ -232,9 +300,9 @@ extra:
   link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
   community_contribution_banner: |
     !!! info "Community Contribution"
-        This is a community-maintained package that is not owned or supported by the Strands team. Validate and review 
+        This is a community-maintained package that is not owned or supported by the Strands team. Validate and review
         the package before using it in your project.
-        
+
         Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
 
 validation:

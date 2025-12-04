@@ -1,5 +1,7 @@
 # Session Management
 
+{{ ts_not_supported("Session Management is not currently supported in the TypeScript SDK, but will be coming soon!") }}
+
 Session management in Strands Agents provides a robust mechanism for persisting agent state and conversation history across multiple interactions. This enables agents to maintain context and continuity even when the application restarts or when deployed in distributed environments.
 
 ## Overview
@@ -7,11 +9,13 @@ Session management in Strands Agents provides a robust mechanism for persisting 
 A session represents all of stateful information that is needed by agents and multi-agent systems to function, including:
 
 **Single Agent Sessions**:
+
 - Conversation history (messages)
 - Agent state (key-value storage)
 - Other stateful information (like [Conversation Manager](./state.md#conversation-manager))
 
 **Multi-Agent Sessions**:
+
 - Orchestrator state and configuration
 - Individual agent states and result within the orchestrator
 - Cross-agent shared state and context
@@ -30,19 +34,25 @@ Beyond the built-in options, [third-party session managers](#third-party-session
 
 Simply create an agent with a session manager and use it:
 
-```python
-from strands import Agent
-from strands.session.file_session_manager import FileSessionManager
+=== "Python"
+    
+    ```python
+    from strands import Agent
+    from strands.session.file_session_manager import FileSessionManager
+    
+    # Create a session manager with a unique session ID
+    session_manager = FileSessionManager(session_id="test-session")
+    
+    # Create an agent with the session manager
+    agent = Agent(session_manager=session_manager)
+    
+    # Use the agent - all messages and state are automatically persisted
+    agent("Hello!")  # This conversation is persisted
+    ```
 
-# Create a session manager with a unique session ID
-session_manager = FileSessionManager(session_id="test-session")
+{{ ts_not_supported_code() }}
 
-# Create an agent with the session manager
-agent = Agent(session_manager=session_manager)
-
-# Use the agent - all messages and state are automatically persisted
-agent("Hello!")  # This conversation is persisted
-```
+    
 
 The conversation, and associated state, is persisted to the underlying filesystem.
 
@@ -225,12 +235,14 @@ The session management system in Strands Agents works through a combination of e
 Session persistence is automatically triggered by several key events in the agent and multi-agent lifecycle:
 
 **Single Agent Events**
+
 - **Agent Initialization**: When an agent is created with a session manager, it automatically restores any existing state and messages from the session.
 - **Message Addition**: When a new message is added to the conversation, it's automatically persisted to the session.
 - **Agent Invocation**: After each agent invocation, the agent state is synchronized with the session to capture any updates.
 - **Message Redaction**: When sensitive information needs to be redacted, the session manager can replace the original message with a redacted version while maintaining conversation flow.
 
 **Multi-Agent Events:**
+
 - **Multi-Agent Initialization**:  When an orchestrator is created with a session manager, it automatically restores state from the session.
 - **Node Execution**: After each node invocation, synchronizes orchestrator state after node transitions
 - **Multi-Agent Invocation**: After multiagent finished, captures final orchestrator state after execution
