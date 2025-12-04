@@ -314,8 +314,6 @@ async for event in agent.receive():
 !!! note "BidiInterruptionEvent vs Human-in-the-Loop Interrupts"
     `BidiInterruptionEvent` is different from [human-in-the-loop (HIL) interrupts](../../interrupts.md). BidiInterruptionEvent is emitted when the model detects user speech during audio conversations and automatically stops generating the current response. HIL interrupts pause agent execution to request human approval or input before continuing, typically used for tool execution approval. BidiInterruptionEvent is automatic and audio-specific, while HIL interrupts are programmatic and require explicit handling.
 
-See [Interruptions](agent.md#interruptions) for more details on interruption handling.
-
 ### Tool Events
 
 Events for tool execution during conversations. Bidirectional streaming reuses the standard `ToolUseStreamEvent` from Strands.

@@ -391,31 +391,24 @@ For more information on implementing MCP servers, see the [MCP documentation](ht
     ```python
     # server.py
     from mcp.server import FastMCP
-    from mcp.types import ElicitRequest, ElicitRequestParams, ElicitResult
+    from pydantic import BaseModel, Field
+
+    class ApprovalSchema(BaseModel):
+        username: str = Field(description="Who is approving?")
 
     server = FastMCP("mytools")
 
     @server.tool()
     async def delete_files(paths: list[str]) -> str:
-        request = ElicitRequest(
-            params=ElicitRequestParams(
-                message=f"Do you want to delete {paths}",
-                requestedSchema={
-                    "type": "object",
-                    "properties": {
-                        "username": {"type": "string", "description": "Who is approving?"},
-                    },
-                    "required": ["username"]
-                }
-            )
+        result = await server.get_context().elicit(
+            message=f"Do you want to delete {paths}",
+            schema=ApprovalSchema,
         )
-        result = await server.get_context().session.send_request(request, ElicitResult)
-
         if result.action != "accept":
-            return f"User {result.content['username']} rejected deletion"
+            return f"User {result.data.username} rejected deletion"
 
         # Perform deletion...
-        return f"User {result.content['username']} approved deletion"
+        return f"User {result.data.username} approved deletion"
 
     server.run()
     ```
