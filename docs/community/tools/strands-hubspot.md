@@ -20,7 +20,6 @@ This community tool provides comprehensive HubSpot integration for AI agents, of
 
 ```bash
 pip install strands-hubspot
-pip install 'strands-agents[anthropic]'
 ```
 
 ## Usage
