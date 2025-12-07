@@ -153,6 +153,7 @@ For HTTP-based MCP servers that use Streamable HTTP transport:
     streamable_http_mcp_client = MCPClient(
         lambda: streamablehttp_client("http://localhost:8000/mcp")
     )
+    ```
 
 #### AWS IAM
 
