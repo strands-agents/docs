@@ -97,6 +97,87 @@ Learn more about shared state
 npm install && npm run dev
 ```
 
+## Deploy to AgentCore
+
+Once you've built your agent with AG-UI, you can deploy it to AWS Bedrock AgentCore for production use. Install the [bedrock-agentcore](https://pypi.org/project/bedrock-agentcore/) CLI tool to get started.
+
+!!! note
+    This guide is adapted for AG-UI. For general AgentCore deployment documentation, see [Deploy to Bedrock AgentCore](../../user-guide/deploy/deploy_to_bedrock_agentcore/index.md).
+
+### Setup Authentication
+
+First, configure Cognito for authentication:
+
+```bash
+agentcore identity setup-cognito
+```
+
+This creates a Cognito user pool and outputs:
+
+- Pool ID
+- Client ID
+- Discovery URL
+
+Follow the instructions for loading the environment variables:
+
+```bash
+export $(grep -v '^#' .agentcore_identity_user.env | xargs)
+```
+
+### Configure Your Agent
+
+Navigate to your agent directory and run:
+
+```bash
+cd agent
+agentcore configure -e main.py
+```
+
+Respond to the prompts:
+
+1. **Agent name**: Press Enter to use the inferred name `main`, or provide your own
+2. **Dependency file**: Enter `pyproject.toml`
+3. **Deployment type**: Enter `2` for Container
+4. **Execution role**: Press Enter to auto-create
+5. **ECR Repository**: Press Enter to auto-create
+6. **OAuth authorizer**: Enter `yes`
+7. **OAuth discovery URL**: Paste the Discovery URL from the previous step
+8. **OAuth client IDs**: Paste the Client ID from the previous step
+9. **OAuth audience/scopes/claims**: Press Enter to skip
+10. **Request header allowlist**: Enter `no`
+11. **Memory configuration**: Enter `s` to skip
+
+### Launch Your Agent
+
+Deploy your agent with the required environment variables. AgentCore Runtime requires:
+
+- `POST /invocations` - Agent interaction endpoint (configured via `AGENT_PATH`)
+- `GET /ping` - Health check endpoint (created automatically by AG-UI)
+
+```bash
+agentcore launch --env AGENT_PORT=8080 --env AGENT_PATH=/invocations --env OPENAI_API_KEY=<your-api-key>
+```
+
+Your agent is now deployed and accessible through AgentCore!
+
+### Connect Your Frontend
+
+Return to the root directory and configure the environment variables to connect your UI to the deployed agent:
+
+```bash
+cd ..
+export STRANDS_AGENT_URL="https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/{runtime-id}/invocations?accountId={account-id}&qualifier=DEFAULT"
+export STRANDS_AGENT_BEARER_TOKEN=$(agentcore identity get-cognito-inbound-token)
+```
+
+Replace `{runtime-id}` and `{account-id}` with your actual values from the AgentCore deployment output.
+
+Start the UI:
+
+```bash
+npm run dev:ui
+```
+
 ## Resources
 
 To see what other features you can build into your UI with AG-UI, refer to the CopilotKit docs:
