@@ -106,18 +106,16 @@ def task_function(case: Case) -> dict:
     )
     
     # Run multi-turn conversation
-    all_spans = []
     user_message = case.input
     
     while simulator.has_next():
-        memory_exporter.clear()
         agent_response = agent(user_message)
         turn_spans = list(memory_exporter.get_finished_spans())
-        all_spans.extend(turn_spans)
         
         user_result = simulator.act(str(agent_response))
         user_message = str(user_result.structured_output.message)
     
+    all_spans = memory_exporter.get_finished_spans()
     # Map to session for evaluation
     mapper = StrandsInMemorySessionMapper()
     session = mapper.map_to_session(all_spans, session_id=case.session_id)

@@ -178,21 +178,15 @@ def task_function(case: Case) -> dict:
     user_message = case.input
     
     while user_sim.has_next():
-        # Clear before each agent call to avoid capturing simulator traces
-        memory_exporter.clear()
-        
         # Agent responds
         agent_response = agent(user_message)
         agent_message = str(agent_response)
-        
-        # Collect agent spans
-        turn_spans = list(memory_exporter.get_finished_spans())
-        all_spans.extend(turn_spans)
         
         # User simulator responds
         user_result = user_sim.act(agent_message)
         user_message = str(user_result.structured_output.message)
     
+    all_spans = memory_exporter.get_finished_spans()
     # Map spans to session
     mapper = StrandsInMemorySessionMapper()
     session = mapper.map_to_session(all_spans, session_id=case.session_id)
