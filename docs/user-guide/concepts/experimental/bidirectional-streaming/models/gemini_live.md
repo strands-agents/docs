@@ -11,7 +11,25 @@ The [Gemini Live API](https://ai.google.dev/gemini-api/docs/live) lets developer
 - **Session Management**: Supports managing long conversations through sessions, providing context and continuity.
 - **Secure Authentication**: Uses tokens for secure client-side authentication. 
 
+## Installation
+
+Gemini Live is configured as an optional dependency in Strands Agents. 
+
+To install it, run:
+
+```bash
+pip install 'strands-agents[bidi-gemini]'
+```
+
+Or to install all bidirectional streaming providers at once:
+
+```bash
+pip install 'strands-agents[bidi-all]'
+```
+
 ## Usage
+
+After installing `strands-agents[bidi-gemini]`, you can import and initialize the Strands Agents' Gemini Live provider as follows:
 
 ```Python
 import asyncio
@@ -64,6 +82,16 @@ For the list of supported voices and languages, see [here](https://docs.cloud.go
 ## Session Management
 
 Currently, `BidiGeminiLiveModel` does not produce a message history and so has limited compatability with the Strands [session manager](../session-management.md). However, the provider does utilize Gemini's [Session Resumption](https://ai.google.dev/gemini-api/docs/live-session) as part of the [connection restart](../agent.md#connection-restart) workflow. This allows Gemini Live connections to persist up to 24 hours. After this time limit, a new `BidiGeminiLiveModel` instance must be created to continue conversations.
+
+## Troubleshooting
+
+### Module Not Found
+
+If you encounter the error `ModuleNotFoundError: No module named 'google.genai'`, this means the `google-genai` dependency hasn't been properly installed in your environment. To fix this, run `pip install 'strands-agents[bidi-gemini]'`.
+
+### API Key Issues
+
+Make sure your Google AI API key is properly set in `client_config` or as the `GOOGLE_API_KEY` environment variable. You can obtain an API key from the [Google AI Studio](https://aistudio.google.com/app/apikey).
 
 ## References
 

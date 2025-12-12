@@ -11,7 +11,25 @@
 - Multilingual support with expressive voices and speaking styles. Expressive voices are offered, including both masculine-sounding and feminine sounding, in five languages: English (US, UK), French, Italian, German, and Spanish.
 - Recognition of varied speaking styles across all supported languages.
 
+## Installation
+
+Nova Sonic is included in the base bidirectional streaming dependencies for Strands Agents.
+
+To install it, run:
+
+```bash
+pip install 'strands-agents[bidi]'
+```
+
+Or to install all bidirectional streaming providers at once:
+
+```bash
+pip install 'strands-agents[bidi-all]'
+```
+
 ## Usage
+
+After installing `strands-agents[bidi]`, you can import and initialize the Strands Agents' Nova Sonic provider as follows:
 
 ```Python
 import asyncio
@@ -97,6 +115,13 @@ For more details on this approach, please refer to the [boto3 session docs](http
 | `inference` | Session start `inferenceConfiguration`'s (as snake_case). | `{"top_p": 0.9}` | [reference](https://docs.aws.amazon.com/nova/latest/userguide/input-events.html)
 
 ## Troubleshooting
+
+### Module Not Found
+
+If you encounter the error `ModuleNotFoundError: No module named 'aws_sdk_bedrock_runtime'`, this means the experimental Bedrock runtime dependency hasn't been properly installed in your environment. To fix this, run `pip install 'strands-agents[bidi]'`.
+
+!!! note "Python Version Requirement"
+    Nova Sonic requires Python 3.12+ due to the experimental AWS SDK dependency. If you're using an older Python version, you'll need to upgrade.
 
 ### Hanging
 

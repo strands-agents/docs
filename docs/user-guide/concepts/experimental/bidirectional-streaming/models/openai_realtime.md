@@ -10,7 +10,25 @@ The [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime) is a
 - **Tool Use and Function Calling**: Can use external tools to perform actions and get context while maintaining a real-time connection.
 - **Secure Authentication**: Uses tokens for secure client-side authentication. 
 
+## Installation
+
+OpenAI Realtime is configured as an optional dependency in Strands Agents.
+
+To install it, run:
+
+```bash
+pip install 'strands-agents[bidi-openai]'
+```
+
+Or to install all bidirectional streaming providers at once:
+
+```bash
+pip install 'strands-agents[bidi-all]'
+```
+
 ## Usage
+
+After installing `strands-agents[bidi-openai]`, you can import and initialize the Strands Agents' OpenAI Realtime provider as follows:
 
 ```Python
 import asyncio
@@ -64,6 +82,16 @@ if __name__ == "__main__":
 | `inference` | Dict of inference fields supported in the OpenAI `session.update` event. | `{"max_output_tokens": 4096}` | [reference](https://platform.openai.com/docs/api-reference/realtime-client-events/session/update)
 
 For the list of supported voices, see [here](https://platform.openai.com/docs/guides/realtime-conversations#voice-options).
+
+## Troubleshooting
+
+### Module Not Found
+
+If you encounter the error `ModuleNotFoundError: No module named 'websockets'`, this means the WebSocket dependency hasn't been properly installed in your environment. To fix this, run `pip install 'strands-agents[bidi-openai]'`.
+
+### Authentication Errors
+
+Ensure your OpenAI API key is properly configured. Set the `OPENAI_API_KEY` environment variable or pass it via the `api_key` parameter in the `client_config`.
 
 ## References
 
