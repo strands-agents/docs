@@ -91,9 +91,6 @@ cd agent-evaluation-project
 
 # Copy your agent to evaluate (must be self-contained)
 cp -r /path/to/your/agent .
-
-# Copy Strands Evals SDK (optional after public release)
-cp -r /path/to/evals-main .
 ```
 
 Expected structure:
@@ -158,10 +155,10 @@ The workflow proceeds through four phases:
 ```python
 from strands import Agent
 from strands_tools import editor, shell
-from strands_agents_sops import Eval_sop
+from strands_agents_sops import eval
 
 agent = Agent(
-    system_prompt=Eval_sop,
+    system_prompt=eval,
     tools=[editor, shell],
 )
 
