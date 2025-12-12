@@ -11,6 +11,8 @@ By exploring these reference implementations, you'll gain practical insights int
 ## Prerequisites
 
 - Python 3.10 or higher
+- strands-agents SDK
+- By default, the examples use the Claude 4 model in AWS Bedrock. Configure your environment with AWS credentials that allow access. Both the model and provider are configurable.
 - For specific examples, additional requirements may be needed (see individual example READMEs)
 
 ## Getting Started
