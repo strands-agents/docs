@@ -26,6 +26,7 @@ The following table shows all model providers supported by Strands Agents SDK an
 | [Cohere](cohere.md)                          | ✅ | ❌ |
 | [CLOVA Studio](clova-studio.md)              | ✅ | ❌ |
 | [FireworksAI](fireworksai.md)                | ✅ | ❌ |
+| [Fallback Providers](fallback.md)            | ✅ | ❌ |
 
 ## Getting Started
 
@@ -100,4 +101,5 @@ Each provider follows a similar pattern for initialization and usage. Models are
 - **[OpenAI](openai.md)** - GPT models with streaming support
 - **[Custom Providers](custom_model_provider.md)** - Build your own model integration
 - **[Anthropic](anthropic.md)** - Direct Claude API access (Python only)
+- **[Fallback](fallback.md)** - Automatic failover between models for improved reliability (Python only)
 

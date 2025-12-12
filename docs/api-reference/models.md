@@ -32,3 +32,6 @@
 ::: strands.models.writer
     options:
       heading_level: 2
+::: strands.models.fallback
+    options:
+      heading_level: 2
