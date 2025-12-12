@@ -12,6 +12,11 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 | **Interaction**    | Command Line Interface                 |
 | **Key Technique**  | Agent-to-Agent Communication           |
 
+## Prerequisites
+- Python 3.10 or higher
+- Strands Agents SDK
+- Configure your environment with AWS credentials that allows access to Claude 4 model in AWS Bedrock. You can change the model in the code.
+
 ## Tools Overview
 
 ### http_request
