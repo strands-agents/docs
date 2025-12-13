@@ -221,7 +221,7 @@ Stream structured output progressively while maintaining type safety and validat
         if "data" in event:
             print(event["data"], end="", flush=True)
         elif "result" in event:
-            print(f'The forcast for today is: {event["result"].structured_output}')
+            print(f'The forecast for today is: {event["result"].structured_output}')
     ```
 
 {{ ts_not_supported_code() }}

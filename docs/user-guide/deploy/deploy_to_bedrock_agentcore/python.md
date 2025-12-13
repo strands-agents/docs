@@ -277,7 +277,7 @@ Create Project
 ```bash
 mkdir my-custom-agent && cd my-custom-agent
 uv init --python 3.11
-uv add fastapi uvicorn[standard] pydantic httpx strands-agents
+uv add fastapi 'uvicorn[standard]' pydantic httpx strands-agents
 ```
 
 Project Structure example
