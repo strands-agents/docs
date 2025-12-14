@@ -59,12 +59,10 @@ Before using LlamaCppModel, you need a running llama.cpp server with a GGUF mode
 
 ```bash
 # Download a model (e.g., using Hugging Face CLI)
-huggingface-cli download ggml-org/Qwen2.5-7B-GGUF \
-  Qwen2.5-7B-Q4_K_M.gguf --local-dir ./models
+hf download ggml-org/Qwen3-4B-GGUF Qwen3-4B-Q4_K_M.gguf --local-dir ./models
 
 # Start the server
-llama-server -m models/Qwen2.5-7B-Q4_K_M.gguf \
-  --host 0.0.0.0 --port 8080 -c 8192 --jinja
+llama-server -m models/Qwen3-4B-Q4_K_M.gguf --host 0.0.0.0 --port 8080 -c 8192 --jinja
 ```
 
 ### Model Configuration
