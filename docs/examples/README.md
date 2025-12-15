@@ -58,6 +58,14 @@ Available CDK examples:
 - [Deploy to App Runner](cdk/deploy_to_apprunner/README.md) - Guide for deploying agents to AWS App Runner
 - [Deploy to Lambda](cdk/deploy_to_lambda/README.md) - Guide for deploying agents to AWS Lambda
 
+### TypeScript Examples
+
+The `/examples/typescript` directory contains TypeScript-based examples demonstrating agent deployment and integration patterns. These examples showcase how to build and Deploy Typescript agents.
+
+Available TypeScript examples:
+
+- [Deploy to Bedrock AgentCore](typescript/deploy_to_bedrock_agentcore/README.md) - Complete example for deploying TypeScript agents to Amazon Bedrock AgentCore Runtime.
+
 ### Amazon EKS Example
 
 The `/examples/deploy_to_eks` directory contains examples for using Amazon EKS with agents.   

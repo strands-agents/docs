@@ -48,7 +48,7 @@ agent = Agent(
 )
 ```
 
-See [Adding Tools to Agents](../concepts/tools/tools_overview.md/#adding-tools-to-agents) and [Auto reloading tools](../concepts/tools/tools_overview.md#auto-loading-and-reloading-tools) for more information.
+See [Adding Tools to Agents](../concepts/tools/index.md/#adding-tools-to-agents) and [Auto reloading tools](../concepts/tools/index.md#auto-loading-and-reloading-tools) for more information.
 
 ### Security Considerations
 
@@ -119,7 +119,7 @@ Strands agents can be deployed using various options from serverless to dedicate
 
 Built-in guides are available for several AWS services:
 
-* **Bedrock AgentCore** - A secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore.md)
+* **Bedrock AgentCore** - A secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore/index.md)
 
 * **AWS Lambda** - Serverless option for short-lived agent interactions and batch processing with minimal infrastructure management. [Learn more](deploy_to_aws_lambda.md)
 
@@ -152,6 +152,6 @@ Operating Strands agents in production requires careful consideration of configu
 
 - [Conversation Management](../../user-guide/concepts/agents/conversation-management.md)
 - [Streaming - Async Iterator](../../user-guide/concepts/streaming/async-iterators.md)
-- [Tool Development](../../user-guide/concepts/tools/tools_overview.md)
+- [Tool Development](../../user-guide/concepts/tools/index.md)
 - [Guardrails](../../user-guide/safety-security/guardrails.md)
 - [Responsible AI](../../user-guide/safety-security/responsible-ai.md)
