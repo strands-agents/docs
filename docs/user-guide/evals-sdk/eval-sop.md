@@ -155,14 +155,32 @@ The workflow proceeds through four phases:
 ```python
 from strands import Agent
 from strands_tools import editor, shell
-from strands_agents_sops import eval
+from strands_agents_sops import eval 
 
 agent = Agent(
     system_prompt=eval,
     tools=[editor, shell],
 )
 
+# Initial message to start the evaluation
 agent("Start Eval sop for evaluating my QA agent")
+
+# Multi-turn conversation loop
+while True:
+    user_input = input("\nYou: ")
+    if user_input.lower() in ("exit", "quit", "done"):
+        print("Evaluation session ended.")
+        break
+
+    agent(user_input)
+```
+
+You can bypass tool consent when running Eval SOP by setting the following environment variable:
+
+```python
+import os 
+
+os.environ["BYPASS_TOOL_CONSENT"] = "true"
 ```
 
 ### Option 3: Anthropic Skills
