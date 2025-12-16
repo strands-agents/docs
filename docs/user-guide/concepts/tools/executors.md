@@ -1,5 +1,9 @@
 # Tool Executors
 
+!!! info "Python SDK Only"
+    Tool executors are currently only exposed in the Python SDK.
+
+
 Tool executors allow users to customize the execution strategy of tools executed by the agent (e.g., concurrent vs sequential). Currently, Strands is packaged with 2 executors.
 
 ## Concurrent Executor

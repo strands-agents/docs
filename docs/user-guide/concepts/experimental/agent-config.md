@@ -1,7 +1,6 @@
 # Agent Configuration [Experimental]
 
-!!! warning "Experimental Feature"
-    This feature is experimental and may change in future versions. Use with caution in production environments.
+{{ experimental_feature_warning() }}
 
 The experimental `config_to_agent` function provides a simple way to create agents from configuration files or dictionaries.
 

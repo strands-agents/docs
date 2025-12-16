@@ -38,7 +38,7 @@ The official documentation is available online at: https://strandsagents.com.
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.10+, node 20+
 
 ### Setup and Installation
 
@@ -48,6 +48,9 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 
 pip install .
+
+# Install node dependencies
+npm install
 ```
 
 ### Building and Previewing
@@ -55,7 +58,7 @@ pip install .
 To generate the static site:
 
 ```bash
-mkdocs build
+npm run docs:clone && mkdocs build
 ```
 
 This will create the site in the `site` directory.

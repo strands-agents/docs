@@ -81,7 +81,7 @@ Both Graph and Swarm patterns support passing shared state to all agents through
 The `invocation_state` is automatically propagated to:
 
 - All agents in the pattern via their `**kwargs`
-- Tools via `ToolContext` when using `@tool(context=True)` - see [Python Tools](../tools/python-tools.md#accessing-invocation-state-in-tools)
+- Tools via `ToolContext` when using `@tool(context=True)` - see [Python Tools](../tools/custom-tools.md#accessing-state-in-tools)
 - Tool-related hooks (BeforeToolCallEvent, AfterToolCallEvent) - see [Hooks](../agents/hooks.md#accessing-invocation-state-in-hooks)
 
 ### Example Usage

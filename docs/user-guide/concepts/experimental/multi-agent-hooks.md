@@ -1,7 +1,6 @@
 # Multi-Agent Hooks [Experimental]
 
-!!! warning "Experimental Feature"
-    This feature is experimental and may change in future versions. Use with caution in production environments.
+{{ experimental_feature_warning() }}
 
 Multi-agent hooks extend the [hook system](../agents/hooks.md) to multi-agent primitives, enabling monitoring, debugging, and customization of multi-agent execution workflows. These hooks allow you to observe and modify behavior across the entire multi-agent lifecycle.
 

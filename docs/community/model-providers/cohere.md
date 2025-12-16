@@ -2,6 +2,9 @@
 
 {{ community_contribution_banner }}
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Cohere](https://cohere.com) provides cutting-edge language models. These are accessible through OpenAI's SDK via the Compatibility API. This allows easy and portable integration with the Strands Agents SDK using the familiar OpenAI interface.
 
 ## Installation
