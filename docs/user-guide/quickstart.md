@@ -70,7 +70,7 @@ To use the examples in this guide, you'll need to configure your environment wit
 3. **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4. **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model. You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
 
 ## Project Setup
 
@@ -436,6 +436,7 @@ More details in the [Amazon Bedrock Model Provider](concepts/model-providers/ama
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 - **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
+- **[Amazon Nova](concepts/model-providers/amazon-nova.md)** - API access to Amazon Nova models
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
 - **[Mistral](concepts/model-providers/mistral.md)** - Access to Mistral models

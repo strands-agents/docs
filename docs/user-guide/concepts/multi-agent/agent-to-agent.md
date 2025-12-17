@@ -86,6 +86,7 @@ The `A2AServer` constructor accepts several configuration options:
 The `A2AServer` provides access to the underlying FastAPI or Starlette application objects allowing you to further customize server behavior.
 
 ```python
+from contextlib import asynccontextmanager
 from strands import Agent
 from strands.multiagent.a2a import A2AServer
 import uvicorn
@@ -94,13 +95,22 @@ import uvicorn
 agent = Agent(name="My Agent", description="A customizable agent", callback_handler=None)
 a2a_server = A2AServer(agent=agent)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan with proper error handling."""
+    # Startup tasks
+    yield  # Application runs here
+    # Shutdown tasks
+
 # Access the underlying FastAPI app
-fastapi_app = a2a_server.to_fastapi_app()
+# Allows passing keyword arguments to FastAPI constructor for further customization
+fastapi_app = a2a_server.to_fastapi_app(app_kwargs={"lifespan": lifespan})
 # Add custom middleware, routes, or configuration
 fastapi_app.add_middleware(...)
 
 # Or access the Starlette app
-starlette_app = a2a_server.to_starlette_app()
+# Allows passing keyword arguments to FastAPI constructor for further customization
+starlette_app = a2a_server.to_starlette_app(app_kwargs={"lifespan": lifespan})
 # Customize as needed
 
 # You can then serve the customized app directly
