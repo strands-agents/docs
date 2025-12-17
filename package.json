@@ -1,0 +1,37 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "tsc --noEmit",
+    "format": "prettier --write docs",
+    "format:check": "prettier --check docs",
+    "docs:clone": "rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git",
+    "docs:ts": "typedoc --options typedoc.json",
+    "serve": "npm run docs:clone && npm run docs:ts && mkdocs serve",
+    "clean": "rm -rf docs/api-reference/typescript node_modules"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
+    "@types/express": "^5.0.5",
+    "express": "^5.1.0",
+    "prettier": "^3.6.2",
+    "typedoc": "^0.28.14",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "pino": "^9.7.0",
+    "pino-pretty": "^13.0.0",
+    "typedoc": "^0.28.14"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 120,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  }
+}

@@ -17,9 +17,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+    
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+
+      - name: Clone typescript_sdk
+        run:  git clone https://github.com/strands-agents/sdk-typescript.git/ ./sdk-typescript
+
       - name: Install dependencies
         run: |
           pip install .
+          npm install ./sdk-typescript
+          npm install
+  
       - name: Build docs
         run: |
           mkdocs build

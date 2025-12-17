@@ -1,23 +1,12 @@
-# Deploying Strands Agents to Amazon Bedrock AgentCore Runtime
+# Python Deployment to Amazon Bedrock AgentCore Runtime
 
-## What is Amazon Bedrock AgentCore Runtime
-Amazon Bedrock AgentCore Runtime is a secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools using any open-source framework including Strands Agents, LangChain, LangGraph and CrewAI. It supports any protocol such as MCP and A2A, and any model from any provider including Amazon Bedrock, OpenAI, Gemini, etc. Developers can securely and reliably run any type of agent including multi-modal, real-time, or long-running agents. AgentCore Runtime helps protect sensitive data with complete session isolation, providing dedicated microVMs for each user session - critical for AI agents that maintain complex state and perform privileged operations on users' behalf. It is highly reliable with session persistence and it can scale up to thousands of agent sessions in seconds so developers don't have to worry about managing infrastructure and only pay for actual usage. AgentCore Runtime, using AgentCore Identity, also seamlessly integrates with the leading identity providers such as Amazon Cognito, Microsoft Entra ID, and Okta, as well as popular OAuth providers such as Google and GitHub. It supports all authentication methods, from OAuth tokens and API keys to IAM roles, so developers don't have to build custom security infrastructure.
+This guide covers deploying Python-based Strands agents to [Amazon Bedrock AgentCore Runtime](index.md).
 
 ## Prerequisites
 
-Before you start, you need:
-
-- An AWS account with appropriate [permissions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html)
 - Python 3.10+
+- AWS account with appropriate [permissions](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html)
 - Optional: A container engine (Docker, Finch, or Podman) - only required for local testing and advanced deployment scenarios
-
----
-
-> 🚨 **Don't forget observability**
-> 
-> 📈 **[AgentCore runtime observability](#observability-enablement)** - Distributed tracing, metrics, and debugging
->
->  **This section is at the bottom of this document - don't skip it**
 
 ---
 
@@ -26,14 +15,18 @@ Before you start, you need:
 > ⚠️ **Important**: Choose the approach that best fits your use case. You only need to follow ONE of the two approaches below.
 
 ### 🚀 SDK Integration
+
 **[Option A: SDK Integration](#option-a-sdk-integration)**
+
 - **Use when**: You want to quickly deploy existing agent functions
 - **Best for**: Simple agents, prototyping, minimal setup
 - **Benefits**: Automatic HTTP server setup, built-in deployment tools
 - **Trade-offs**: Less control over server configuration
 
 ### 🔧 Custom Implementation
+
 **[Option B: Custom Agent](#option-b-custom-agent)**
+
 - **Use when**: You need full control over your agent's HTTP interface
 - **Best for**: Complex agents, custom middleware, production systems
 - **Benefits**: Complete FastAPI control, custom routing, advanced features
@@ -266,8 +259,8 @@ This approach demonstrates how to deploy a custom agent using FastAPI and Docker
 **Requirements**
 
 - **FastAPI Server**: Web server framework for handling requests
-- **/invocations Endpoint**: POST endpoint for agent interactions (REQUIRED)
-- **/ping Endpoint**: GET endpoint for health checks (REQUIRED)
+- **`/invocations` Endpoint**: POST endpoint for agent interactions (REQUIRED)
+- **`/ping` Endpoint**: GET endpoint for health checks (REQUIRED)
 - **Container Engine**: Docker, Finch, or Podman (required for this example)
 - **Docker Container**: ARM64 containerized deployment package
 
@@ -520,7 +513,7 @@ Expected Response Format
 ### AgentCore Runtime Requirements Summary
 
 - **Platform**: Must be linux/arm64
-- **Endpoints**: /invocations POST and /ping GET are mandatory
+- **Endpoints**: `/invocations` POST and `/ping` GET are mandatory
 - **ECR**: Images must be deployed to ECR
 - **Port**: Application runs on port 8080
 - **Strands Integration**: Uses Strands Agent for AI processing
@@ -565,12 +558,14 @@ Expected Response Format
 - Verify container engine installation (Docker, Finch, or Podman)
 - Check port configurations
 - Review Dockerfile if customized
+
 ---
 
 ## Observability Enablement
 
 Amazon Bedrock AgentCore provides built-in metrics to monitor your Strands agents. This section explains how to enable observability for your agents to view metrics, spans, and traces in CloudWatch.
 > With AgentCore, you can also view metrics for agents that aren't running in the AgentCore runtime. Additional setup steps are required to configure telemetry outputs for non-AgentCore agents. See the instructions in [Configure Observability for agents hosted outside of the AgentCore runtime](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html#observability-configure-3p) to learn more.
+
 ### Step 1: Enable CloudWatch Transaction Search
 
 Before you can view metrics and traces, complete this one-time setup:

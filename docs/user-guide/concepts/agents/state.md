@@ -10,37 +10,53 @@ Understanding how state works in Strands is essential for building agents that c
 
 ## Conversation History
 
-Conversation history is the primary form of context in a Strands agent, directly accessible through the `agent.messages` property:
+Conversation history is the primary form of context in a Strands agent, directly accessible through the agent:
 
-```python
-from strands import Agent
+=== "Python"
 
-# Create an agent
-agent = Agent()
+    ```python
+    from strands import Agent
 
-# Send a message and get a response
-agent("Hello!")
+    # Create an agent
+    agent = Agent()
 
-# Access the conversation history
-print(agent.messages)  # Shows all messages exchanged so far
-```
+    # Send a message and get a response
+    agent("Hello!")
 
-The `agent.messages` list contains all user and assistant messages, including tool calls and tool results. This is the primary way to inspect what's happening in your agent's conversation.
+    # Access the conversation history
+    print(agent.messages)  # Shows all messages exchanged so far
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/state.ts:conversation_history"
+    ```
+
+The agent messages contains all user and assistant messages, including tool calls and tool results. This is the primary way to inspect what's happening in your agent's conversation.
 
 You can initialize an agent with existing messages to continue a conversation or pre-fill your Agent's context with information:
 
-```python
-from strands import Agent
+=== "Python"
 
-# Create an agent with initial messages
-agent = Agent(messages=[
-    {"role": "user", "content": [{"text": "Hello, my name is Strands!"}]},
-    {"role": "assistant", "content": [{"text": "Hi there! How can I help you today?"}]}
-])
+    ```python
+    from strands import Agent
 
-# Continue the conversation
-agent("What's my name?")
-```
+    # Create an agent with initial messages
+    agent = Agent(messages=[
+        {"role": "user", "content": [{"text": "Hello, my name is Strands!"}]},
+        {"role": "assistant", "content": [{"text": "Hi there! How can I help you today?"}]}
+    ])
+
+    # Continue the conversation
+    agent("What's my name?")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/state.ts:message_initialization"
+    ```
 
 Conversation history is automatically:
 
@@ -53,42 +69,55 @@ Conversation history is automatically:
 
 Direct tool calls are (by default) recorded in the conversation history:
 
-```python
-from strands import Agent
-from strands_tools import calculator
+=== "Python"
 
-agent = Agent(tools=[calculator])
+    ```python
+    from strands import Agent
+    from strands_tools import calculator
 
-# Direct tool call with recording (default behavior)
-agent.tool.calculator(expression="123 * 456")
+    agent = Agent(tools=[calculator])
 
-# Direct tool call without recording
-agent.tool.calculator(expression="765 / 987", record_direct_tool_call=False)
+    # Direct tool call with recording (default behavior)
+    agent.tool.calculator(expression="123 * 456")
 
-print(agent.messages)
-```
+    # Direct tool call without recording
+    agent.tool.calculator(expression="765 / 987", record_direct_tool_call=False)
 
-In this example we can see that the first `agent.tool.calculator()` call is recorded in the agent's conversation history.
+    print(agent.messages)
+    ```
+    In this example we can see that the first `agent.tool.calculator()` call is recorded in the agent's conversation history.
 
-The second `agent.tool.calculator()` call is **not** recorded in the history because we specified the `record_direct_tool_call=False` argument.
+    The second `agent.tool.calculator()` call is **not** recorded in the history because we specified the `record_direct_tool_call=False` argument.
+
+{{ ts_not_supported_code() }}
 
 ### Conversation Manager
 
 Strands uses a conversation manager to handle conversation history effectively. The default is the [`SlidingWindowConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager), which keeps recent messages and removes older ones when needed:
 
-```python
-from strands import Agent
-from strands.agent.conversation_manager import SlidingWindowConversationManager
+=== "Python"
 
-# Create a conversation manager with custom window size
-# By default, SlidingWindowConversationManager is used even if not specified
-conversation_manager = SlidingWindowConversationManager(
-    window_size=10,  # Maximum number of message pairs to keep
-)
+    ```python
+    from strands import Agent
+    from strands.agent.conversation_manager import SlidingWindowConversationManager
 
-# Use the conversation manager with your agent
-agent = Agent(conversation_manager=conversation_manager)
-```
+    # Create a conversation manager with custom window size
+    # By default, SlidingWindowConversationManager is used even if not specified
+    conversation_manager = SlidingWindowConversationManager(
+        window_size=10,  # Maximum number of message pairs to keep
+    )
+
+    # Use the conversation manager with your agent
+    agent = Agent(conversation_manager=conversation_manager)
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/state.ts:conversation_manager_import"
+    --8<-- "user-guide/concepts/agents/state.ts:conversation_manager"
+    ```
+
 
 The sliding window conversation manager:
 
@@ -97,7 +126,7 @@ The sliding window conversation manager:
 - Handles context window overflow exceptions by reducing context
 - Ensures conversations don't exceed model context limits
 
-See [`Conversation Management`](conversation-management.md) for more information about conversation managers.
+See [Conversation Management](conversation-management.md) for more information about conversation managers.
 
 
 ## Agent State
@@ -106,122 +135,150 @@ Agent state provides key-value storage for stateful information that exists outs
 
 ### Basic Usage
 
-```python
-from strands import Agent
+=== "Python"
 
-# Create an agent with initial state
-agent = Agent(state={"user_preferences": {"theme": "dark"}, "session_count": 0})
+    ```python
+    from strands import Agent
+
+    # Create an agent with initial state
+    agent = Agent(state={"user_preferences": {"theme": "dark"}, "session_count": 0})
 
 
-# Access state values
-theme = agent.state.get("user_preferences")
-print(theme)  # {"theme": "dark"}
+    # Access state values
+    theme = agent.state.get("user_preferences")
+    print(theme)  # {"theme": "dark"}
 
-# Set new state values
-agent.state.set("last_action", "login")
-agent.state.set("session_count", 1)
+    # Set new state values
+    agent.state.set("last_action", "login")
+    agent.state.set("session_count", 1)
 
-# Get entire state
-all_state = agent.state.get()
-print(all_state)  # All state data as a dictionary
+    # Get entire state
+    all_state = agent.state.get()
+    print(all_state)  # All state data as a dictionary
 
-# Delete state values
-agent.state.delete("last_action")
-```
+    # Delete state values
+    agent.state.delete("last_action")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/state.ts:agent_state_basic"
+    ```
 
 ### State Validation and Safety
 
 Agent state enforces JSON serialization validation to ensure data can be persisted and restored:
 
-```python
-from strands import Agent
+=== "Python"
 
-agent = Agent()
+    ```python
+    from strands import Agent
 
-# Valid JSON-serializable values
-agent.state.set("string_value", "hello")
-agent.state.set("number_value", 42)
-agent.state.set("boolean_value", True)
-agent.state.set("list_value", [1, 2, 3])
-agent.state.set("dict_value", {"nested": "data"})
-agent.state.set("null_value", None)
+    agent = Agent()
 
-# Invalid values will raise ValueError
-try:
-    agent.state.set("function", lambda x: x)  # Not JSON serializable
-except ValueError as e:
-    print(f"Error: {e}")
-```
+    # Valid JSON-serializable values
+    agent.state.set("string_value", "hello")
+    agent.state.set("number_value", 42)
+    agent.state.set("boolean_value", True)
+    agent.state.set("list_value", [1, 2, 3])
+    agent.state.set("dict_value", {"nested": "data"})
+    agent.state.set("null_value", None)
+
+    # Invalid values will raise ValueError
+    try:
+        agent.state.set("function", lambda x: x)  # Not JSON serializable
+    except ValueError as e:
+        print(f"Error: {e}")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/state.ts:state_validation"
+    ```
 
 ### Using State in Tools
 
 !!! note
 
-    To use `ToolContext` in your tool function, the parameter must be named `tool_context`. See [ToolContext documentation](../tools/python-tools.md#toolcontext) for more information.
+    To use `ToolContext` in your tool function, the parameter must be named `tool_context`. See [ToolContext documentation](../tools/custom-tools.md#toolcontext) for more information.
 
 
 Agent state is particularly useful for maintaining information across tool executions:
 
-```python
-from strands import Agent, tool, ToolContext
+=== "Python"
 
-@tool(context=True)
-def track_user_action(action: str, tool_context: ToolContext):
-    """Track user actions in agent state.
-    
-    Args:
-        action: The action to track
-    """
-    # Get current action count
-    action_count = tool_context.agent.state.get("action_count") or 0
-    
-    # Update state
-    tool_context.agent.state.set("action_count", action_count + 1)
-    tool_context.agent.state.set("last_action", action)
-    
-    return f"Action '{action}' recorded. Total actions: {action_count + 1}"
+    ```python
+    from strands import Agent, tool, ToolContext
 
-@tool(context=True)
-def get_user_stats(tool_context: ToolContext):
-    """Get user statistics from agent state."""
-    action_count = tool_context.agent.state.get("action_count") or 0
-    last_action = tool_context.agent.state.get("last_action") or "none"
-    
-    return f"Actions performed: {action_count}, Last action: {last_action}"
+    @tool(context=True)
+    def track_user_action(action: str, tool_context: ToolContext):
+        """Track user actions in agent state.
+        
+        Args:
+            action: The action to track
+        """
+        # Get current action count
+        action_count = tool_context.agent.state.get("action_count") or 0
+        
+        # Update state
+        tool_context.agent.state.set("action_count", action_count + 1)
+        tool_context.agent.state.set("last_action", action)
+        
+        return f"Action '{action}' recorded. Total actions: {action_count + 1}"
 
-# Create agent with tools
-agent = Agent(tools=[track_user_action, get_user_stats])
+    @tool(context=True)
+    def get_user_stats(tool_context: ToolContext):
+        """Get user statistics from agent state."""
+        action_count = tool_context.agent.state.get("action_count") or 0
+        last_action = tool_context.agent.state.get("last_action") or "none"
+        
+        return f"Actions performed: {action_count}, Last action: {last_action}"
 
-# Use tools that modify and read state
-agent("Track that I logged in")
-agent("Track that I viewed my profile")
-print(f"Actions taken: {agent.state.get('action_count')}")
-print(f"Last action: {agent.state.get('last_action')}")
-```
+    # Create agent with tools
+    agent = Agent(tools=[track_user_action, get_user_stats])
+
+    # Use tools that modify and read state
+    agent("Track that I logged in")
+    agent("Track that I viewed my profile")
+    print(f"Actions taken: {agent.state.get('action_count')}")
+    print(f"Last action: {agent.state.get('last_action')}")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/state.ts:state_in_tools"
+    ```
 
 ## Request State
 
 Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is **not** included in the agent's context:
 
-```python
-from strands import Agent
+=== "Python"
 
-def custom_callback_handler(**kwargs):
-    # Access request state
-    if "request_state" in kwargs:
-        state = kwargs["request_state"]
-        # Use or modify state as needed
-        if "counter" not in state:
-            state["counter"] = 0
-        state["counter"] += 1
-        print(f"Callback handler event count: {state['counter']}")
+    ```python
+    from strands import Agent
 
-agent = Agent(callback_handler=custom_callback_handler)
+    def custom_callback_handler(**kwargs):
+        # Access request state
+        if "request_state" in kwargs:
+            state = kwargs["request_state"]
+            # Use or modify state as needed
+            if "counter" not in state:
+                state["counter"] = 0
+            state["counter"] += 1
+            print(f"Callback handler event count: {state['counter']}")
 
-result = agent("Hi there!")
+    agent = Agent(callback_handler=custom_callback_handler)
 
-print(result.state)
-```
+    result = agent("Hi there!")
+
+    print(result.state)
+    ```
+
+{{ ts_not_supported_code() }}
 
 The request state:
 

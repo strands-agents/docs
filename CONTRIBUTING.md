@@ -20,7 +20,7 @@ reported the issue. Please try to include as much information as you can. Detail
 * Anything unusual about your environment or deployment
 
 ## Finding contributions to work on
-Looking at the existing issues is a great way to find something to contribute to. We label issues that are well-defined and ready for community contributions with the "ready for contribution" label.
+Looking at the existing issues is a great way to find something to contribute to. We label issues that are well-defined and ready for community contributions with the "ready for contribution" label. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
 
 Check our "Ready for Contribution" issues for items you can work on:
 - [SDK Python Issues](https://github.com/strands-agents/sdk-python/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22ready%20for%20contribution%22)
@@ -49,11 +49,6 @@ To send us a pull request, please:
 
 GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
-
-
-## Finding contributions to work on
-Looking at the existing issues is a great way to find something to contribute to. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
-
 
 ## Code of Conduct
 This project has adopted the [Amazon Open Source Code of Conduct](https://aws.github.io/code-of-conduct).

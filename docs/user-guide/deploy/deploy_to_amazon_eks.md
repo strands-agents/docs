@@ -112,7 +112,7 @@ async def get_weather_streaming(request: PromptRequest):
         raise HTTPException(status_code=500, detail=str(e))
 ```
 
-The implementation above employs a [custom tool](../concepts/tools/python-tools.md#python-tool-decorators) to mark the boundary between information gathering and summary generation phases. This approach ensures that only the final, user-facing content is streamed to the client, maintaining consistency with the non-streaming endpoint while providing the benefits of incremental response delivery.
+The implementation above employs a [custom tool](../concepts/tools/custom-tools.md#creating-custom-tools) to mark the boundary between information gathering and summary generation phases. This approach ensures that only the final, user-facing content is streamed to the client, maintaining consistency with the non-streaming endpoint while providing the benefits of incremental response delivery.
 
 ## Containerization
 

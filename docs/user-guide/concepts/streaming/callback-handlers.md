@@ -1,8 +1,10 @@
 # Callback Handlers
 
-Callback handlers allow you to intercept and process events as they happen during agent execution. This enables real-time monitoring, custom output formatting, and integration with external systems through function-based event handling.
+{{ ts_not_supported("TypeScript does not support callback handlers. For real-time event handling in TypeScript, use the [async iterator pattern](./async-iterators.md) with `agent.stream()` or see [Hooks](../agents/hooks.md) for lifecycle event handling.") }}
 
-For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./overview.md#event-types).
+Callback handlers allow you to intercept and process events as they happen during agent execution in Python. This enables real-time monitoring, custom output formatting, and integration with external systems through function-based event handling.
+
+For a complete list of available events including text generation, tool usage, lifecycle, and reasoning events, see the [streaming overview](./index.md#event-types).
 
 > **Note:** For asynchronous applications, consider [async iterators](./async-iterators.md) instead.
 

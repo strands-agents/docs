@@ -116,9 +116,9 @@ Each specialized agent has a distinct system prompt, and tools in its inventory,
   - [English Assistant](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/english_assistant.py) specializes in queries related to grammar, and english comprehension.
   - [General Assistant](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/no_expertise.py) is a no specialty agent that aims to answer queries outside of the specific domains the agents are specialized in.
 
-### 3. Tool-Agent Pattern
+### 3. Agent as Tool Pattern
 
-This example demonstrates the ["Tool-Agent Pattern"](https://github.com/strands-agents/docs/blob/main/docs/user-guide/concepts/tools/python-tools.md#python-tool-decorators) where Strands agents are wrapped as tools using the `@tool` decorator. These tools are then provided to another agent (the Teacher's Assistant), creating a system where agents can use other agents as tools.
+This example demonstrates the ["Agent as Tool Pattern"](../../../user-guide/concepts/multi-agent/agent-to-agent.md) where Strands agents are wrapped as tools. These tools are then provided to another agent (the Teacher's Assistant), creating a system where agents can use other agents as tools.
 
 
 ### Sample Interactions

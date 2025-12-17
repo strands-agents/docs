@@ -1,5 +1,8 @@
 # Writer
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Writer](https://writer.com/) is an enterprise generative AI platform offering specialized Palmyra models for finance, healthcare, creative, and general-purpose use cases. The models excel at tool calling, structured outputs, and domain-specific tasks, with Palmyra X5 supporting a 1M token context window.
 
 ## Installation
@@ -115,7 +118,7 @@ agent = Agent(
 response = agent("Research our competitor's latest product launch and draft a summary email for the leadership team")
 ```
 
-> **Note**: The `web_search` and `email_sender` tools in this example are custom tools that you would need to define. See [Python Tools](../tools/python-tools.md) for guidance on creating custom tools, or use existing tools from the [strands_tools package](../tools/community-tools-package.md).
+> **Note**: The `web_search` and `email_sender` tools in this example are custom tools that you would need to define. See [Python Tools](../tools/custom-tools.md) for guidance on creating custom tools, or use existing tools from the [strands_tools package](../tools/community-tools-package.md).
 
 ### Financial analysis with Palmyra Fin
 
