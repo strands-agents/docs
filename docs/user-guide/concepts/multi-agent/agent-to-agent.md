@@ -104,13 +104,13 @@ async def lifespan(app: FastAPI):
 
 # Access the underlying FastAPI app
 # Allows passing keyword arguments to FastAPI constructor for further customization
-fastapi_app = a2a_server.to_fastapi_app(lifespan=lifespan)
+fastapi_app = a2a_server.to_fastapi_app(app_kwargs={"lifespan": lifespan})
 # Add custom middleware, routes, or configuration
 fastapi_app.add_middleware(...)
 
 # Or access the Starlette app
 # Allows passing keyword arguments to FastAPI constructor for further customization
-starlette_app = a2a_server.to_starlette_app(lifespan=lifespan)
+starlette_app = a2a_server.to_starlette_app(app_kwargs={"lifespan": lifespan})
 # Customize as needed
 
 # You can then serve the customized app directly
