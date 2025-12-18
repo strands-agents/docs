@@ -128,6 +128,18 @@ evaluators = [
     GoalSuccessRateEvaluator()
 ]
 
+# Setup test cases
+test_cases = [
+    Case(
+        input="I need to book a flight to Paris",
+        metadata={"task_description": "Flight booking confirmed"}
+    ),
+    Case(
+        input="Help me write a Python function to sort a list",
+        metadata={"task_description": "Programming assistance"}
+    )
+]
+
 experiment = Experiment(cases=test_cases, evaluators=evaluators)
 reports = experiment.run_evaluations(task_function)
 ```
