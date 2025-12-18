@@ -191,6 +191,9 @@ nav:
         - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+      - Google Cloud Run:
+        - Overview: user-guide/deploy/deploy_to_gcp_cloudrun/index.md
+        - Python: user-guide/deploy/deploy_to_gcp_cloudrun/python.md
 
   - Examples:
     - Overview: examples/README.md
