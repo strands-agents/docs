@@ -282,9 +282,6 @@ plugins:
           - examples/**/*.md
         API Reference:
           - api-reference/*.md
-
-hooks:
-  - build-ts-docs.py
 extra:
   social:
     - icon: fontawesome/brands/github
