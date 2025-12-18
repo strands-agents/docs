@@ -1,15 +1,6 @@
 # Deploying Strands Agents to Google's Cloud Run Platform
 
-Google Cloud Run is a fully managed serverless platform that automatically scales your containerized applications from zero to thousands of instances based on incoming requests. It provides a simple way to deploy and run Strands agents without managing infrastructure, offering automatic scaling, built-in load balancing, and pay-per-use pricing. Cloud Run supports any programming language and framework, making it ideal for deploying AI agents that need to handle variable workloads efficiently.
-
-## Prerequisites
-
-Before you start, you need:
-
-- Python 3.10+
-- Google Cloud account with appropriate [permissions](https://docs.cloud.google.com/run/docs/reference/iam/roles)
-- [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed and authenticated
-- A container engine: this example will use [Docker](https://www.docker.com/)
+[Google Cloud Run](https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run) is a fully managed serverless platform that automatically scales your containerized applications from zero to thousands of instances based on incoming requests. It provides a simple way to deploy and run Strands agents without managing infrastructure, offering automatic scaling, built-in load balancing, and pay-per-use pricing.
 
 ---
 
