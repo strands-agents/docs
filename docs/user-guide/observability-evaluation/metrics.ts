@@ -38,7 +38,7 @@ async function detailedMetricsTracking() {
         console.log(`Output tokens: ${event.usage.outputTokens}`)
         console.log(`Total tokens: ${event.usage.totalTokens}`)
 
-        // Cache metrics (if available)
+        // Cache metrics (when available)
         if (event.usage.cacheReadInputTokens) {
           console.log(`Cache read tokens: ${event.usage.cacheReadInputTokens}`)
         }

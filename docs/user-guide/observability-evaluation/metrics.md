@@ -8,7 +8,7 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
     The Strands Agents SDK automatically tracks key metrics during agent execution:
 
-    - **Token usage**: Input tokens, output tokens, and total tokens consumed
+    - **Token usage**: Input tokens, output tokens, total tokens consumed, and cache metrics
     - **Performance metrics**: Latency and execution time measurements
     - **Tool usage**: Call counts, success rates, and execution times for each tool
     - **Event loop cycles**: Number of reasoning cycles and their durations
@@ -29,6 +29,12 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
     print(f"Total tokens: {result.metrics.accumulated_usage['totalTokens']}")
     print(f"Execution time: {sum(result.metrics.cycle_durations):.2f} seconds")
     print(f"Tools used: {list(result.metrics.tool_metrics.keys())}")
+    
+    # Cache metrics (when available)
+    if 'cacheReadInputTokens' in result.metrics.accumulated_usage:
+        print(f"Cache read tokens: {result.metrics.accumulated_usage['cacheReadInputTokens']}")
+    if 'cacheWriteInputTokens' in result.metrics.accumulated_usage:
+        print(f"Cache write tokens: {result.metrics.accumulated_usage['cacheWriteInputTokens']}")
     ```
 
     The `metrics` attribute of `AgentResult` (an instance of [`EventLoopMetrics`](../../api-reference/telemetry.md#strands.telemetry.metrics)) provides comprehensive performance metric data about the agent's execution, while other attributes like `stop_reason`, `message`, and `state` provide context about the agent's response. This document explains the metrics available in the agent's response and how to interpret them.
@@ -79,9 +85,10 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
     - **Cycle tracking**: Number of event loop cycles and their individual durations
     - **Tool metrics**: Detailed performance data for each tool used during execution
-    - **Accumulated usage**: Input tokens, output tokens, and total tokens consumed across all model calls
+    - **Accumulated usage**: Input tokens, output tokens, total tokens consumed, and cache metrics across all model calls
     - **Accumulated metrics**: Latency measurements in milliseconds for all model requests
     - **Execution traces**: Detailed trace information for performance analysis
+
 
     For a complete list of attributes and their types, see the [`EventLoopMetrics` API reference](../../api-reference/telemetry.md#strands.telemetry.metrics.EventLoopMetrics).
 
@@ -124,7 +131,9 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
       "accumulated_usage": {
         "inputTokens": 3921,
         "outputTokens": 83,
-        "totalTokens": 4004
+        "totalTokens": 4004,
+        "cacheReadInputTokens": 150,
+        "cacheWriteInputTokens": 75
       },
       "average_cycle_time": 0.9406174421310425,
       "tool_usage": {
@@ -285,4 +294,6 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 4. **Benchmark Latency Metrics**: Monitor latency values to establish performance baselines. Compare these metrics across different agent configurations to identify optimal setups.
 
 5. **Regular Metrics Reviews**: Schedule periodic reviews of agent metrics to identify trends and opportunities for optimization. Look for gradual changes in performance that might indicate drift in tool behavior or model responses.
+
+
 
