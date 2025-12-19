@@ -1,4 +1,4 @@
-# Agentic workflow: Research Assistant - Multi-Agent Collaboration Example
+# Agentic Workflow: Research Assistant - Multi-Agent Collaboration Example
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/agents_workflow.py) shows how to create a multi-agent workflow using Strands agents to perform web research, fact-checking, and report generation. It demonstrates specialized agent roles working together in sequence to process information.
 
