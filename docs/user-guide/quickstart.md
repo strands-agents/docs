@@ -447,7 +447,7 @@ Strands Agents supports several other model providers beyond Amazon Bedrock:
 - **[CLOVA Studio<sup> community</sup>](../community/model-providers/clova-studio.md)** - Korean-optimized AI models from Naver Cloud Platform
 - **[FireworksAI<sup> community</sup>](../community/model-providers/fireworksai.md)** - Use FireworksAI models through an OpenAI compatible interface
 - **[MLX<sup> community</sup>](../community/model-providers/mlx.md)** - Run models locally on Apple Silicon with hardware acceleration
-- **[NVIDIA NIM<sup> community</sup>](../community/model-providers/nvidia-nim.md)** - Deploy optimized inference with NVIDIA's microservices
+- **[NVIDIA NIM<sup> community</sup>](../community/model-providers/nvidia-nim.md)** - Deploy optimized inference with NVIDIA NIM
 - **[Custom Providers](concepts/model-providers/custom_model_provider.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
