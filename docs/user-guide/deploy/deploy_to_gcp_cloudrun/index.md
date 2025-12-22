@@ -31,4 +31,4 @@ Deploy your TypeScript Strands agent to Cloud Run!
 - [GCP IAM Documentation](https://docs.cloud.google.com/iam/docs/overview)
 - [Docker Documentation](https://docs.docker.com/)
 - [Cloud Run Documentation](https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run)
-- [AWS IAM Documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)
+- [OpenAI Model Provider Documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers/openai/)

@@ -9,7 +9,9 @@ This guide covers deploying Typescript-based Strands agents to [Google Cloud Run
 - Node.js 20+
 - Google Cloud account with appropriate [permissions](https://docs.cloud.google.com/run/docs/reference/iam/roles)
 - [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed and authenticated
-- OpenAI API Key Credentials (Or supported model crendentials of your choice, Gemini not supported in Typescript)
+- OpenAI API Key Credentials
+  - Or supported model crendentials of your choice
+  - Gemini not supported in Typescript
 - A container engine: this example will use [Docker](https://www.docker.com/)
 
 ### Setup Google Cloud
