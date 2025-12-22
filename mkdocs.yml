@@ -196,6 +196,7 @@ nav:
       - Google Cloud Run:
         - Overview: user-guide/deploy/deploy_to_gcp_cloudrun/index.md
         - Python: user-guide/deploy/deploy_to_gcp_cloudrun/python.md
+        - Typescript: user-guide/deploy/deploy_to_gcp_cloudrun/typescript.md
 
   - Examples:
     - Overview: examples/README.md

@@ -237,7 +237,7 @@ Execute shell
 ```bash
 
 # Test /ping endpoint
-curl https://my-agent-<random-id>-uc.a.run.app/ping
+curl https://my-agent-<random-id>-central1.run.app/ping
 
 # Test /invocations endpoint
 curl -X POST https://my-agent-<random-id>-central1.run.app/invocations \
