@@ -220,6 +220,8 @@ nav:
         - Cohere: community/model-providers/cohere.md
         - CLOVA Studio: community/model-providers/clova-studio.md
         - Fireworks AI: community/model-providers/fireworksai.md
+        - MLX: community/model-providers/mlx.md
+        - NVIDIA NIM: community/model-providers/nvidia-nim.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
       - Tool Protocols:
