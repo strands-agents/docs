@@ -1,6 +1,6 @@
 # Typescript Deployment to Google's Cloud Run Platform
 
-> ⚠️ **Important**: Gemini model provider is only supported in Python SDK. This example uses the AWS Bedrock model provider.
+> ⚠️ **Important**: Gemini models are only supported in Python SDK. This example uses the OpenAI model provider.
 
 This guide covers deploying Typescript-based Strands agents to [Google Cloud Run Platform](https://docs.cloud.google.com/run/docs/quickstarts) using Express and Docker.
 
@@ -9,7 +9,7 @@ This guide covers deploying Typescript-based Strands agents to [Google Cloud Run
 - Node.js 20+
 - Google Cloud account with appropriate [permissions](https://docs.cloud.google.com/run/docs/reference/iam/roles)
 - [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) installed and authenticated
-- Bedrock API Key Credentials (Gemini not supported in Typescript)
+- OpenAI API Key Credentials (Or supported model crendentials of your choice, Gemini not supported in Typescript)
 - A container engine: this example will use [Docker](https://www.docker.com/)
 
 ### Setup Google Cloud
@@ -61,7 +61,6 @@ Create or update your `package.json` with the following configuration and depend
   },
   "dependencies": {
     "@strands-agents/sdk": "latest",
-    "@aws-sdk/client-bedrock-agentcore": "latest",
     "express": "^4.18.2",
     "zod": "^3.22.4"
   },
@@ -101,29 +100,26 @@ Create `tsconfig.json`:
 ```
 
 #### Configure credentials
-This example utilizes the default AWS Bedrock Model on Claude.
+This example utilizes the OpenAI model provider.
 User can configure API Keys for other model providers as outlined in the Quickstart Guide's "[Configuring Credentials](https://strandsagents.com/latest/documentation/docs/user-guide/quickstart/typescript/#configuring-credentials)".
 
-```bash
-export AWS_ACCESS_KEY_ID='<aws-access-key>'
-export AWS_SECRET_ACCESS_KEY='<aws-secret-access-key>'
-export AWS_SESSION_TOKEN='<aws-session-token>'
-```
 
 ### Step 2: Prepare your agent code
 
 Example: index.ts
 
 ```typescript
-import * as strands from '@strands-agents/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { OpenAIModel } from '@strands-agents/sdk/openai'
 import express, { type Request, type Response } from 'express'
 
 const PORT = process.env.PORT || 8080
-// Configure the agent with Amazon Bedrock
-const agent = new strands.Agent({
-  model: new strands.BedrockModel({
-    region: 'us-east-1', // Change to your preferred region
-  }),
+// Configure the agent with Open AI
+const agent = new Agent({
+  model: new OpenAIModel({
+    apiKey: process.env.OPENAI_API_KEY || '<openai-api-key>',
+    modelId: 'gpt-4o',
+  })
 })
 
 const app = express()
@@ -143,7 +139,7 @@ app.post('/invocations', express.raw({ type: '*/*' }), async (req, res) => {
     console.log('Request body:', req.body)
     console.log('Content-Type:', req.headers['content-type'])
 
-    // Decode binary payload from AWS SDK
+    // Decode binary payload
     const prompt = new TextDecoder().decode(req.body)
 
     // Invoke the agent
@@ -195,7 +191,7 @@ Create docker file
 
 ```dockerfile
 # Use Node 20+
-FROM public.ecr.aws/docker/library/node:20
+FROM node:20
 
 WORKDIR /app
 
@@ -226,10 +222,7 @@ docker build -t my-typescript-agent .
 **Run the container**
 
 ```bash
-docker run -p 8081:8080 \
--e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
--e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" \
--e AWS_SESSION_TOKEN="$AWS_SESSION_TOKEN" my-typescript-agent
+docker run -p 8081:8080 my-typescript-agent
 ```
 
 **Test in another terminal**
@@ -242,15 +235,7 @@ echo -n "What is artificial intelligence?" | curl -X POST http://localhost:8081/
   --data-binary @-
 ```
 
-### Step 5: Set up Bedrock IAM Role
-
-In this example, although we are deploying our container to Google Cloud Run, the agent runtime invokes AWS Bedrock. Thus, this requires an IAM role with permissions to access Bedrock and other AWS services.
-
-This can be completed by following [Step 5: Create IAM Role](../deploy_to_bedrock_agentcore/typescript.md#step-5-create-iam-role) in the [TypeScript Deployment to Amazon Bedrock AgentCore Runtime
-](../deploy_to_bedrock_agentcore/typescript.md) example. 
-
-
-### Step 6: Deploy to Cloud Run
+### Step 5: Deploy to Cloud Run
 
 ```bash
 # Build Docker Image
@@ -262,9 +247,7 @@ docker build --platform linux/amd64 -t gcr.io/<your-project-id>/my-typescript-ag
 # Deploy built image
 gcloud run deploy my-typescript-agent \
 --image gcr.io/<your-project-id>/my-typescript-agent \
---region us-central1 --project <your-project-id> \
---allow-unauthenticated \
---set-env-vars="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY,AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
+--region us-central1 --project <your-project-id> 
 
 ```
 
@@ -276,7 +259,7 @@ Service URL: https://my-typescript-agent-<random-id>-central1.run.app
 
 Save this URL as you'll need it to invoke your agent.
 
-### Step 7: Invoke Your Agent
+### Step 6: Invoke Your Agent
 
 Execute shell to test
 
@@ -318,5 +301,4 @@ Expected Response Format
 - [GCP IAM Documentation](https://docs.cloud.google.com/iam/docs/overview)
 - [Docker Documentation](https://docs.docker.com/)
 - [Cloud Run Documentation](https://docs.cloud.google.com/run/docs/overview/what-is-cloud-run)
-- [AWS IAM Documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)
-
+- [OpenAI Model Provider Documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers/openai/)
