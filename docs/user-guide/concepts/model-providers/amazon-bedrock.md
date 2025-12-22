@@ -84,6 +84,19 @@ For more details, see the [Amazon Bedrock documentation on modifying model acces
     export AWS_REGION="us-west-2"  # Used if a custom Boto3 Session is not provided
     ```
 
+    !!! warning "Region Resolution Priority"
+
+        Due to boto3's behavior, the region resolution follows this priority order:
+
+        1. Region explicitly passed to `BedrockModel(region_name="...")`
+        2. Region from boto3 session (AWS_DEFAULT_REGION or profile region from ~/.aws/config)
+        3. AWS_REGION environment variable
+        4. Default region (us-west-2)
+
+        This means `AWS_REGION` has lower priority than regions set in AWS profiles. If you're experiencing unexpected region behavior, check your AWS configuration files and consider using `AWS_DEFAULT_REGION` or explicitly passing `region_name` to the BedrockModel constructor.
+
+        For more details, see the [boto3 issue discussion](https://github.com/boto/boto3/issues/2574).
+
     **Option 3: Custom Boto3 Session**
 
     You can configure a custom [boto3 Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) and pass it to the `BedrockModel`:
