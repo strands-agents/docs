@@ -41,8 +41,9 @@ agent("What is 123.456 * 789.012?")
 
 ### Using Environment Variables (Recommended)
 
+Set your API key as an environment variable
+
 ```bash
-# Set your API key as an environment variable
 export NVIDIA_NIM_API_KEY=your-nvidia-nim-api-key
 ```
 
