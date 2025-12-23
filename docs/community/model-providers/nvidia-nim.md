@@ -115,4 +115,3 @@ pip install --upgrade strands-nvidia-nim
 - [strands-nvidia-nim GitHub Repository](https://github.com/thiago4go/strands-nvidia-nim)
 - [NVIDIA NIM Documentation](https://docs.nvidia.com/nim/)
 - [NVIDIA NGC Catalog](https://catalog.ngc.nvidia.com/)
-- [Strands Agents SDK](https://strandsagents.com/)
