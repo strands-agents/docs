@@ -120,6 +120,7 @@ nav:
         - SageMaker: user-guide/concepts/model-providers/sagemaker.md
         - Writer: user-guide/concepts/model-providers/writer.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
+        - Fallback: user-guide/concepts/model-providers/fallback.md
         - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md
         - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
         - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
