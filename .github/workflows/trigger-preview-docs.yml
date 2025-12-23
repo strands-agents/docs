@@ -46,7 +46,7 @@ jobs:
       - name: Trigger documentation deployment
         env:
           # PAT token with 'repo' scope needed to trigger repository_dispatch events in other repositories
-          GH_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN_STRANDS || secrets.PAT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PREVIEWS_PAT_TOKEN }}
         run: |
           gh api \
             --method POST \
