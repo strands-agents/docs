@@ -30,9 +30,6 @@
   </p>
 </div>
 
-
-
-
 This repository contains the documentation for the Strands Agents SDK, a simple yet powerful framework for building and running AI agents. The documentation is built using [MkDocs](https://www.mkdocs.org/) and provides guides, examples, and API references.
 
 The official documentation is available online at: https://strandsagents.com.
