@@ -52,10 +52,10 @@ jobs:
             --method POST \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/dbschmigelski/strandsagents.com/dispatches \
+            /repos/${{ github.repository_owner }}/strandsagents.com/dispatches \
             -f event_type=deploy-docs \
-            -F "client_payload[source_repo]=${{ github.repository }}" \
-            -F "client_payload[sha]=${{ github.sha }}" \
+            -F "client_payload[source_repo]=${{ github.event.pull_request.head.repo.full_name }}" \
+            -F "client_payload[sha]=${{ github.event.pull_request.head.sha }}" \
             -F "client_payload[pr_number]=${{ github.event.pull_request.number }}"
           
           echo "Deployment triggered successfully"
