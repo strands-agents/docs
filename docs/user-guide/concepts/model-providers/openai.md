@@ -161,6 +161,44 @@ OpenAI models support structured output through their native tool calling capabi
 
 {{ ts_not_supported_code("Structured output is not yet supported in the TypeScript SDK") }}
 
+### Custom client
+
+Users can pass their own custom OpenAI client to the OpenAIModel for Strands Agents to use directly. Users are responsible for handling the lifecycle (e.g., closing) of the client.
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+    from strands.models.openai import OpenAIModel
+    from openai import AsyncOpenAI
+
+    client = AsyncOpenAI(
+        api_key= "<KEY>",
+    )
+
+    agent = Agent(
+        model = OpenAIModel(
+            model_id="gpt-4o-mini-2024-07-18",
+            client=client
+        )
+    )
+
+    async def chat(prompt: str):
+        result = await agent.invoke_async(prompt)
+        print(result)
+    
+    async def main():
+        await chat("What is 2+2")
+        await chat("What is 2*2")
+        # close the client
+        client.close()
+
+    if __name__ == "__main__":
+        asyncio.run(main())
+    ```
+
+{{ ts_not_supported_code("Custom client capability is not yet supported in the TypeScript SDK") }}
+
 ## References
 
 - [API](../../../api-reference/models.md)

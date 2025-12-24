@@ -6,7 +6,7 @@
 // Imports are in openai_imports.ts
 
 import { Agent } from '@strands-agents/sdk'
-import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+import { OpenAIModel } from '@strands-agents/sdk/openai'
 
 // Basic usage
 async function basicUsage() {

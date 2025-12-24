@@ -171,6 +171,36 @@ print(f"Genre: {result.genre}")
 print(f"Sentiment: {result.sentiment}")
 ```
 
+### Custom client
+
+Users can pass their own custom Gemini client to the GeminiModel for Strands Agents to use directly. Users are responsible for handling the lifecycle (e.g., closing) of the client.
+
+```python
+from google import genai
+from strands import Agent
+from strands.models.gemini import GeminiModel
+from strands_tools import calculator
+
+client = genai.Client(api_key="<KEY>")
+
+model = GeminiModel(
+    client=client,
+    # **model_config
+    model_id="gemini-2.5-flash",
+    params={
+        # some sample model parameters 
+        "temperature": 0.7,
+        "max_output_tokens": 2048,
+        "top_p": 0.9,
+        "top_k": 40
+    }
+)
+
+agent = Agent(model=model, tools=[calculator])
+response = agent("What is 2+2")
+print(response)
+```
+
 ### Multimodal Capabilities
 
 Gemini models support text, image, and document inputs, making them ideal for multimodal applications:
