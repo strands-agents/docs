@@ -382,10 +382,6 @@ For a complete list of input types, please refer to the [API Reference](../../..
 
     Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock):
 
-    ```python
-    from strands import Agent
-    from strands.models import BedrockModel
-
     # Using guardrails with BedrockModel
     bedrock_model = BedrockModel(
         model_id="anthropic.claude-sonnet-4-20250514-v1:0",
@@ -396,9 +392,10 @@ For a complete list of input types, please refer to the [API Reference](../../..
         guardrail_redact_input=True,  # Default: True
         guardrail_redact_input_message="Blocked Input!", # Default: [User input redacted.]
         guardrail_redact_output=False,  # Default: False
-        guardrail_redact_output_message="Blocked Output!" # Default: [Assistant output redacted.]
+        guardrail_redact_output_message="Blocked Output!", # Default: [Assistant output redacted.]
+        guardrail_last_turn_only=False  # Default: False - Set to True to evaluate only the last turn
     )
-
+  
     guardrail_agent = Agent(model=bedrock_model)
 
     response = guardrail_agent("Can you tell me about the Strands SDK?")
@@ -411,9 +408,9 @@ For a complete list of input types, please refer to the [API Reference](../../..
     - Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
     - Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
     - Custom redaction messages can be specified for both input and output redactions
+    - Last turn only (disabled by default): When enabled, only the last conversation turn (most recent user message and the assistant's response to it, if present) is sent to guardrails instead of the full conversation history. This allows conversations to recover after guardrail interventions.
 
 {{ ts_not_supported_code("Guardrails are not yet supported in the TypeScript SDK") }}
-
 
 ### Caching
 
