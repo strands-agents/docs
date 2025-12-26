@@ -2,7 +2,7 @@ import subprocess
 import os
 
 
-def on_pre_build(config):
+def on_startup(command, dirty):
     """Run npm docs:ts before building the site"""
     subprocess.run(['npm', 'run', 'docs:clone'], check=True, cwd=os.getcwd())
     print("✓ TypeScript clone repository successfully")
