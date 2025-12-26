@@ -1,6 +1,6 @@
 # TypeScript Deployment to Kubernetes
 
-This guide covers deploying TypeScript-based Strands agents to Kubernetes using Kind (Kubernetes in Docker) for for local and cloud development.
+This guide covers deploying TypeScript-based Strands agents to Kubernetes using Kind (Kubernetes in Docker) for local and cloud development.
 
 ## Prerequisites
 
@@ -10,19 +10,19 @@ This guide covers deploying TypeScript-based Strands agents to Kubernetes using 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) installed
 - Model provider credentials
 
-### Setup Kind Cluster
+### Step 1: Setup Kind Cluster
 
-1. Create a Kind cluster:
+Create a Kind cluster:
 ```bash
 kind create cluster --name <cluster-name>
 ```
 
-2. Verify cluster is running:
+Verify cluster is running:
 ```bash
 kubectl get nodes
 ```
 
-### Quick Start Setup
+### Step 2: Quick Start Setup
 
 Configure Model Provider Credentials:
 ```bash
@@ -81,67 +81,8 @@ Update package.json scripts:
 
 Create index.ts:
 ```typescript
-import { Agent } from '@strands-agents/sdk'
-import express, { type Request, type Response } from 'express'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
-
-const PORT = Number(process.env.PORT) || 8080
-
-// Note: Any supported model provider can be configured
-// Automatically uses process.env.OPENAI_API_KEY
-const model = new OpenAIModel(model_id="gpt-4o")
-
-const agent = new Agent({ model })
-
-const app = express()
-
-// Middleware to parse JSON
-app.use(express.json())
-
-// Health check endpoint
-app.get('/ping', (_, res) =>
-  res.json({
-    status: 'healthy',
-  })
-)
-
-// Agent invocation endpoint
-app.post('/invocations', async (req: Request, res: Response) => {
-  try {
-    const { input } = req.body
-    const prompt = input?.prompt || ''
-
-    if (!prompt) {
-      return res.status(400).json({
-        detail: 'No prompt found in input. Please provide a "prompt" key in the input.'
-      })
-    }
-
-    // Invoke the agent
-    const result = await agent.invoke(prompt)
-
-    const response = {
-      message: result,
-      timestamp: new Date().toISOString(),
-      model: 'strands-agent',
-    }
-
-    return res.json({ output: response })
-  } catch (err) {
-    console.error('Error processing request:', err)
-    return res.status(500).json({
-      detail: `Agent processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`
-    })
-  }
-})
-
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Strands Agent Server listening on port ${PORT}`)
-  console.log(`📍 Endpoints:`)
-  console.log(`   POST http://0.0.0.0:${PORT}/invocations`)
-  console.log(`   GET  http://0.0.0.0:${PORT}/ping`)
-})
+--8<-- "user-guide/deploy/deploy_to_kubernetes/imports.ts:imports"
+--8<-- "user-guide/deploy/deploy_to_kubernetes/index.ts:agent"
 ```
 
 Create Dockerfile:
@@ -210,40 +151,39 @@ spec:
 
 ## Deploying to Kubernetes
 
-### Step 1: Build and Load Docker Image
+### Step 3: Build and Load Docker Image
 
-1. Build your Docker image:
+Build your Docker image:
 ```bash
 docker build -t <image-name>:latest .
 ```
 
-2. Load image into Kind cluster:
+Load image into Kind cluster:
 ```bash
 kind load docker-image <image-name>:latest --name <cluster-name>
 ```
 
-### Step 2: Deploy to Kubernetes
+### Step 4: Deploy to Kubernetes
 
-1. Apply the Kubernetes manifests:
+Apply the Kubernetes manifests:
 ```bash
 kubectl apply -f k8s-deployment.yaml
 ```
 
-2. Verify deployment:
+Verify deployment:
 ```bash
 kubectl get pods
 kubectl get services
 ```
 
+### Step 5: Test Your Deployment
 
-### Step 3: Test Your Deployment
-
-1. Port forward to access the service:
+Port forward to access the service:
 ```bash
 kubectl port-forward svc/<service-name> 8080:8080
 ```
 
-2. Test the endpoints:
+Test the endpoints:
 ```bash
 # Health check
 curl http://localhost:8080/ping
@@ -254,7 +194,7 @@ curl -X POST http://localhost:8080/invocations \
   -d '{"input": {"prompt": "What is artificial intelligence?"}}'
 ```
 
-### Step 4: Making Changes
+### Step 6: Making Changes
 
 When you modify your code, redeploy with:
 
@@ -289,19 +229,19 @@ kind delete cluster --name <cluster-name>
 
 Once your application works locally with Kind, you can deploy it to any cloud-hosted Kubernetes cluster:
 
+See our documentation for [Deploying Strands Agents to Amazon EKS](https://strandsagents.com/latest/documentation/docs/user-guide/deploy/deploy_to_amazon_eks/) as an example of deploying your Strands Agent to AWS Elastic Kubernetes Service.
 
-### Steps for Cloud Deployment
+### Step 1: Push Container to Repository
 
-1. **Push your image to a container registry**:
+Push your image to a container registry:
 ```bash
 # Tag and push to your registry (Docker Hub, ECR, GCR, etc.)
 docker tag <image-name>:latest <registry-url>/<image-name>:latest
 docker push <registry-url>/<image-name>:latest
 ```
+### Step 2: Update deployment configuration in `k8s-deployment.yaml`:
 
-2. **Update the deployment configuration in `k8s-deployment.yaml`**:
-
-   **Change the image pull policy:**
+Change the image pull policy:
    ```yaml
    # Current (local development): Uses local cached images
    imagePullPolicy: Never
@@ -310,7 +250,7 @@ docker push <registry-url>/<image-name>:latest
    imagePullPolicy: Always
    ```
 
-   **Update the image URL:**
+Update the image URL:
    ```yaml
    # Current (local development):
    image: <image-name>:latest
@@ -319,7 +259,7 @@ docker push <registry-url>/<image-name>:latest
    image: <registry-url>/<image-name>:latest
    ```
 
-   **Update the service type for external access:**
+Update the service type for external access:
    ```yaml
    # Current (local development):
    type: NodePort
@@ -329,7 +269,7 @@ docker push <registry-url>/<image-name>:latest
    ```
    This gives your service a public IP address that users can access directly, instead of requiring port-forwarding or node IP addresses.
 
-3. **Apply to your cloud cluster**:
+### Step 3: Apply to your cloud cluster:
 ```bash
 # Connect to your cloud cluster (varies by provider)
 kubectl config use-context <cloud-context>
