@@ -75,7 +75,9 @@ load_dotenv()
 # os.environ['NEPTUNE_DATABASE_ENDPOINT'] = "your-neptune-host.us-west-2.neptune.amazonaws.com"
 # Setup option 2: Neptune Analytics as vector and graph backend
 # os.environ['NEPTUNE_ANALYTICS_GRAPH_IDENTIFIER'] = "g-sample-graph-id"
+USER_ID = "mem0_user"
 
+# System prompt for the memory agent
 MEMORY_SYSTEM_PROMPT = f"""You are a personal assistant that maintains context by remembering user details.
 
 Capabilities:
