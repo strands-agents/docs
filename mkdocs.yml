@@ -193,6 +193,10 @@ nav:
         - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+      - Docker:
+        - Overview: user-guide/deploy/deploy_to_docker/index.md
+        - Python: user-guide/deploy/deploy_to_docker/python.md
+        - TypeScript: user-guide/deploy/deploy_to_docker/typescript.md
 
   - Examples:
     - Overview: examples/README.md
