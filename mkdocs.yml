@@ -187,6 +187,7 @@ nav:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - AWS App Runner: user-guide/deploy/deploy_to_aws_apprunner.md
       - Amazon Bedrock AgentCore:
         - Overview: user-guide/deploy/deploy_to_bedrock_agentcore/index.md
         - Python: user-guide/deploy/deploy_to_bedrock_agentcore/python.md
