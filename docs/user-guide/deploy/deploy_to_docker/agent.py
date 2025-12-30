@@ -46,7 +46,10 @@ async def invoke_agent(request: InvocationRequest):
 async def ping():
     return {"status": "healthy"}
 
-if __name__ == "__main__":
+def main():
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8080)
+
+if __name__ == "__main__":
+    main()
 # --8<-- [end: agent]

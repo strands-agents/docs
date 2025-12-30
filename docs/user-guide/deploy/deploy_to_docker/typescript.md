@@ -21,25 +21,167 @@ export OPENAI_API_KEY='<your-api-key>'
 
 **Note**: This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers.
 
-Create Project:
+For instance, to configure AWS credentials:
 ```bash
-mkdir <app-name> && cd <app-name>
+  export AWS_ACCESS_KEY_ID=<'your-access-key-id'>
+  export AWS_SECRET_ACCESS_KEY='<your-secret-access-key'>
+```
+
+### Create and Setup Project
+
+Choose your preferred setup method below:
+
+- **Quick Setup**: Copy and paste a single all-in-one bash command to create your entire project
+- **Step-by-Step**: Follow detailed instructions to manually create each file
+
+<details>
+<summary><strong>Quick Setup (All-in-One Command)</strong></summary>
+
+Copy and paste this command to create your project with all necessary files:
+
+```bash
+setup_typescript_agent() {
+# Create project directory and initialize with npm
+mkdir my-typescript-agent && cd my-typescript-agent
 npm init -y
+
+# Install required dependencies
+npm install @strands-agents/sdk express @types/express typescript ts-node
+npm install -D @types/node
+
+# Create TypeScript configuration
+cat > tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+EOF
+
+# Add npm scripts
+npm pkg set scripts.build="tsc" scripts.start="node dist/index.js" scripts.dev="ts-node index.ts"
+
+# Create the Express agent application
+cat > index.ts << 'EOF'
+import { Agent } from '@strands-agents/sdk'
+import express, { type Request, type Response } from 'express'
+import { OpenAIModel } from '@strands-agents/sdk/openai'
+
+const PORT = Number(process.env.PORT) || 8080
+
+// Note: Any supported model provider can be configured
+// Automatically uses process.env.OPENAI_API_KEY
+const model = new OpenAIModel()
+
+const agent = new Agent({ model })
+
+const app = express()
+
+// Middleware to parse JSON
+app.use(express.json())
+
+// Health check endpoint
+app.get('/ping', (_: Request, res: Response) =>
+  res.json({
+    status: 'healthy',
+  })
+)
+
+// Agent invocation endpoint
+app.post('/invocations', async (req: Request, res: Response) => {
+  try {
+    const { input } = req.body
+    const prompt = input?.prompt || ''
+
+    if (!prompt) {
+      return res.status(400).json({
+        detail: 'No prompt found in input. Please provide a "prompt" key in the input.'
+      })
+    }
+
+    // Invoke the agent
+    const result = await agent.invoke(prompt)
+
+    const response = {
+      message: result,
+      timestamp: new Date().toISOString(),
+      model: 'strands-agent',
+    }
+
+    return res.json({ output: response })
+  } catch (err) {
+    console.error('Error processing request:', err)
+    return res.status(500).json({
+      detail: `Agent processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`
+    })
+  }
+})
+
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Strands Agent Server listening on port ${PORT}`)
+  console.log(`📍 Endpoints:`)
+  console.log(`   POST http://0.0.0.0:${PORT}/invocations`)
+  console.log(`   GET  http://0.0.0.0:${PORT}/ping`)
+})
+EOF
+
+# Create Docker configuration
+cat > Dockerfile << 'EOF'
+# Use Node 20+
+FROM node:20
+
+WORKDIR /app
+
+# Copy source code
+COPY . ./
+
+# Install dependencies
+RUN npm install
+
+# Build TypeScript
+RUN npm run build
+
+# Expose port
+EXPOSE 8080
+
+# Start the application
+CMD ["npm", "start"]
+EOF
+
+echo "Setup complete! Project created in my-typescript-agent/"
+}
+
+# Run the setup
+setup_typescript_agent
+```
+
+</details>
+
+<details>
+<summary><strong>Step-by-Step Setup (Manual setup guide)</strong></summary>
+Step 1: Create project directory and initialize
+```bash
+mkdir my-typescript-agent && cd my-typescript-agent
+npm init -y
+```
+
+Step 2: Add dependencies
+```bash
 npm install @strands-agents/sdk express @types/express typescript ts-node
 npm install -D @types/node
 ```
 
-Project Structure:
-```
-<app-name>/
-├── index.ts                # Express application
-├── Dockerfile              # Container configuration
-├── package.json            # Created by npm init
-├── tsconfig.json           # TypeScript configuration
-└── package-lock.json       # Created automatically by npm
-```
-
-Create tsconfig.json:
+Step 3: Create tsconfig.json
 ```json
 {
   "compilerOptions": {
@@ -57,7 +199,7 @@ Create tsconfig.json:
 }
 ```
 
-Update package.json scripts:
+Step 4: Update package.json scripts
 ```json
 {
   "scripts": {
@@ -68,13 +210,13 @@ Update package.json scripts:
 }
 ```
 
-Create index.ts:
+Step 5: Create index.ts
 ```typescript
 --8<-- "user-guide/deploy/deploy_to_docker/imports.ts:imports"
 --8<-- "user-guide/deploy/deploy_to_docker/index.ts:agent"
 ```
 
-Create Dockerfile:
+Step 6: Create Dockerfile
 ```dockerfile
 # Use Node 20+
 FROM node:20
@@ -97,11 +239,25 @@ EXPOSE 8080
 CMD ["npm", "start"]
 ```
 
+</details>
+
+
+Your project structure will now look like:
+```
+my-typescript-app/
+├── index.ts                # Express application
+├── Dockerfile              # Container configuration
+├── package.json            # Created by npm init
+├── tsconfig.json           # TypeScript configuration
+└── package-lock.json       # Created automatically by npm
+```
+
+
 ### Step 1: Build Docker Image
 
 Build your Docker image:
 ```bash
-docker build -t <image-name>:latest .
+docker build -t my-agent-image:latest .
 ```
 
 ### Step 2: Run Docker Container
@@ -110,7 +266,16 @@ Run the container with OpenAI credentials:
 ```bash
 docker run -p 8080:8080 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  <image-name>:latest
+  my-agent-image:latest
+```
+
+This example uses OpenAI credentials by default, but any model provider credentials can be passed as environment variables when running the image. For instance, to pass AWS credentials:
+```bash
+docker run -p 8080:8080 \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -e AWS_REGION=us-east-1 \
+  my-agent-image:latest
 ```
 
 ### Step 3: Test Your Deployment
@@ -132,49 +297,37 @@ When you modify your code, rebuild and run:
 
 ```bash
 # Rebuild image
-docker build -t <image-name>:latest .
+docker build -t my-agent-image:latest .
 
 # Stop existing container (if running)
-docker stop $(docker ps -q --filter ancestor=<image-name>:latest)
+docker stop $(docker ps -q --filter ancestor=my-agent-image:latest)
 
 # Run new container
 docker run -p 8080:8080 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  <image-name>:latest
+  my-agent-image:latest
 ```
 
 ## Troubleshooting
 
-- **Container not starting**: Check logs with `docker logs <container-id>`
+- **Container not starting**: Check logs with `docker logs $(docker ps -q --filter ancestor=my-agent-image:latest)`
 - **Connection refused**: Verify app is listening on 0.0.0.0:8080
 - **Image build fails**: Check `package.json` and dependencies
 - **TypeScript compilation errors**: Check `tsconfig.json` and run `npm run build` locally
 - **"Unable to locate credentials"**: Verify model provider credentials environment variables are set
 - **Port already in use**: Use different port mapping `-p 8081:8080`
 
-## Cleanup
+## Docker Compose for Local Development
 
-Stop and remove containers:
-```bash
-# Stop all containers using your image
-docker stop $(docker ps -q --filter ancestor=<image-name>:latest)
+**Optional**: Docker Compose is only recommended for local development. Most cloud service providers only support raw Docker commands, not Docker Compose.
 
-# Remove stopped containers
-docker container prune
-
-# Remove unused images
-docker image prune
-```
-
-## Optional: Docker Compose
-
-For easier management, create a `docker-compose.yml`:
+For local development and testing, Docker Compose provides a more convenient way to manage your container:
 
 ```yaml
 # Example for OpenAI
 version: '3.8'
 services:
-  <app-name>:
+  my-typescript-agent:
     build: .
     ports:
       - "8080:8080"

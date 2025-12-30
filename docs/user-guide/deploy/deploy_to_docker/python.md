@@ -26,29 +26,141 @@ export OPENAI_API_KEY='<your-api-key>'
 
 **Note**: This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers.
 
-Create Project:
+For instance, to configure AWS credentials:
 ```bash
-mkdir <app-name> && cd <app-name>
+  export AWS_ACCESS_KEY_ID=<'your-access-key-id'>
+  export AWS_SECRET_ACCESS_KEY='<your-secret-access-key'>
+```
+
+### Create and Setup Project
+
+Choose your preferred setup method below:
+
+- **Quick Setup**: Copy and paste a single all-in-one bash command to create your entire project
+- **Step-by-Step**: Follow detailed instructions to manually create each file
+
+<details>
+<summary><strong>Quick Setup (All-in-One Command)</strong></summary>
+
+Copy and paste this command to create your project with all necessary files:
+
+```bash
+setup_agent() {
+mkdir my-python-agent && cd my-python-agent
 uv init --python 3.11
-uv add fastapi uvicorn[standard] pydantic strands-agents strands-agents[openai]
+uv add fastapi "uvicorn[standard]" pydantic strands-agents "strands-agents[openai]"
+
+# Remove the auto-generated main.py
+rm -f main.py
+
+cat > agent.py << 'EOF'
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Dict, Any
+from datetime import datetime, timezone
+from strands import Agent
+from strands.models.openai import OpenAIModel
+
+app = FastAPI(title="Strands Agent Server", version="1.0.0")
+
+# Note: Any supported model provider can be configured
+# Automatically uses process.env.OPENAI_API_KEY
+model = OpenAIModel(model_id="gpt-4o")
+
+strands_agent = Agent(model=model)
+
+class InvocationRequest(BaseModel):
+    input: Dict[str, Any]
+
+class InvocationResponse(BaseModel):
+    output: Dict[str, Any]
+
+@app.post("/invocations", response_model=InvocationResponse)
+async def invoke_agent(request: InvocationRequest):
+    try:
+        user_message = request.input.get("prompt", "")
+        if not user_message:
+            raise HTTPException(
+                status_code=400,
+                detail="No prompt found in input. Please provide a 'prompt' key in the input."
+            )
+
+        result = strands_agent(user_message)
+        response = {
+            "message": result.message,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "model": "strands-agent",
+        }
+
+        return InvocationResponse(output=response)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Agent processing failed: {str(e)}")
+
+@app.get("/ping")
+async def ping():
+    return {"status": "healthy"}
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8080)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+cat > Dockerfile << 'EOF'
+# Use uv's Python base image
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim
+
+WORKDIR /app
+
+# Copy uv files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN uv sync --frozen --no-cache
+
+# Copy agent file
+COPY agent.py ./
+
+# Expose port
+EXPOSE 8080
+
+# Run application
+CMD ["uv", "run", "python", "agent.py"]
+EOF
+
+echo "Setup complete! Project created in my-python-agent/"
+}
+
+setup_agent
+
 ```
 
-Project Structure:
-```
-<app-name>/
-├── agent.py                # FastAPI application
-├── Dockerfile              # Container configuration
-├── pyproject.toml          # Created by uv init
-└── uv.lock                 # Created automatically by uv
+</details>
+
+<details>
+<summary><strong>Step-by-Step Setup (Manual setup guide)</strong></summary>
+
+Step 1: Create project directory and initialize
+```bash
+mkdir my-python-agent && cd my-python-agent
+uv init --python 3.11
 ```
 
-Create agent.py:
+Step 2: Add dependencies
+```bash
+uv add fastapi "uvicorn[standard]" pydantic strands-agents "strands-agents[openai]"
+```
+
+Step 3: Create agent.py
 ```python
 --8<-- "user-guide/deploy/deploy_to_docker/imports.py:imports"
 --8<-- "user-guide/deploy/deploy_to_docker/agent.py:agent"
 ```
 
-Create Dockerfile:
+Step 4: Create Dockerfile
 ```dockerfile
 # Use uv's Python base image
 FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim
@@ -68,25 +180,62 @@ COPY agent.py ./
 EXPOSE 8080
 
 # Run application
-CMD ["uv", "run", "uvicorn", "agent:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uv", "run", "python", "agent.py"]
+```
 
+</details>
+
+Your project structure will now look like:
+```
+my-python-agent/
+├── agent.py                # FastAPI application
+├── Dockerfile              # Container configuration
+├── pyproject.toml          # Created by uv init
+└── uv.lock                 # Created automatically by uv
+```
+
+### Test Locally
+
+Before deploying with Docker, test your application locally:
+
+```bash
+# Run the application
+uv run python agent.py
+
+# Test /ping endpoint
+curl http://localhost:8080/ping
+
+# Test /invocations endpoint
+curl -X POST http://localhost:8080/invocations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {"prompt": "What is artificial intelligence?"}
+  }'
 ```
 
 ### Step 1: Build Docker Image
 
 Build your Docker image:
 ```bash
-docker build -t <image-name>:latest .
+docker build -t my-agent-image:latest .
 ```
 
 ### Step 2: Run Docker Container
 
 Run the container with model provider credentials:
 ```bash
-# Example for OpenAI
 docker run -p 8080:8080 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  <image-name>:latest
+  my-agent-image:latest
+```
+
+This example uses OpenAI credentials by default, but any model provider credentials can be passed as environment variables when running the image. For instance, to pass AWS credentials:
+```bash
+docker run -p 8080:8080 \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -e AWS_REGION=us-east-1 \
+  my-agent-image:latest
 ```
 
 ### Step 3: Test Your Deployment
@@ -108,48 +257,36 @@ When you modify your code, rebuild and run:
 
 ```bash
 # Rebuild image
-docker build -t <image-name>:latest .
+docker build -t my-agent-image:latest .
 
 # Stop existing container (if running)
-docker stop $(docker ps -q --filter ancestor=<image-name>:latest)
+docker stop $(docker ps -q --filter ancestor=my-agent-image:latest)
 
 # Run new container
 docker run -p 8080:8080 \
   -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  <image-name>:latest
+  my-agent-image:latest
 ```
 
 ## Troubleshooting
 
-- **Container not starting**: Check logs with `docker logs <container-id>`
+- **Container not starting**: Check logs with `docker logs $(docker ps -q --filter ancestor=my-agent-image:latest)`
 - **Connection refused**: Verify app is listening on 0.0.0.0:8080
 - **Image build fails**: Check `pyproject.toml` and dependencies
 - **Port already in use**: Use different port mapping `-p 8081:8080`
 
 
-## Cleanup
+## Docker Compose for Local Development
 
-Stop and remove containers:
-```bash
-# Stop all containers using your image
-docker stop $(docker ps -q --filter ancestor=<image-name>:latest)
+**Optional**: Docker Compose is only recommended for local development. Most cloud service providers only support raw Docker commands, not Docker Compose.
 
-# Remove stopped containers
-docker container prune
-
-# Remove unused images
-docker image prune
-```
-
-## Optional: Docker Compose
-
-For easier management, create a `docker-compose.yml`:
+For local development and testing, Docker Compose provides a more convenient way to manage your container:
 
 ```yaml
 # Example for OpenAI
 version: '3.8'
 services:
-  <app-name>:
+  my-python-agent:
     build: .
     ports:
       - "8080:8080"
