@@ -11,6 +11,8 @@ REPO_URL = "https://github.com/strands-agents/sdk-python.git"
 OUTPUT_DIR = "docs/api-reference/python"
 TEMP_DIR = Path('temp_python_sdk')
 
+nav_items = []
+
 
 def discover_modules(sdk_path: Path) -> list[str]:
     """Find all Python modules in the SDK"""
@@ -117,7 +119,7 @@ def build_nav(modules: list[str], base_path: str, parent_module: str, actual_mod
     return nav
 
 
-def on_pre_build(config):
+def on_startup(command, dirty):
     """Generate API docs before build"""
     output_dir = Path(OUTPUT_DIR)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -133,7 +135,16 @@ def on_pre_build(config):
 
     # Install the package
     try:
-        subprocess.run(['pip', 'install', f'./{TEMP_DIR}[all,bidi-all]'], check=True, capture_output=True,
+        # Check if running under uv by examining parent process
+        import psutil
+        try:
+            parent = psutil.Process().parent()
+            is_uv = parent and 'uv' in parent.name()
+        except:
+            is_uv = False
+        
+        pip_cmd = ['uv', 'pip', 'install'] if is_uv else ['pip', 'install']
+        subprocess.run(pip_cmd + [f'./{TEMP_DIR}[all,bidi-all]'], check=True, capture_output=True,
                        cwd=os.getcwd())
         print("✓ Python Package installed successfully")
     except subprocess.CalledProcessError as e:
@@ -162,7 +173,6 @@ def on_pre_build(config):
                 categories.setdefault(category, []).append(module)
 
         # Generate docs and nav for each category
-        nav_items = []
         experimental_nav = None
 
         for category in sorted(categories.keys()):
@@ -225,11 +235,6 @@ def on_pre_build(config):
         if experimental_nav:
             nav_items.append(experimental_nav)
 
-        # Update config nav
-        for item in config.get('nav', []):
-            if isinstance(item, dict) and 'Python API' in item:
-                item['Python API'] = nav_items
-                break
 
         print("✓ Updated Python API nav menu")
 
@@ -238,3 +243,10 @@ def on_pre_build(config):
         if sdk_src_path in sys.path:
             sys.path.remove(sdk_src_path)
         shutil.rmtree(TEMP_DIR, ignore_errors=True)
+
+def on_pre_build(config):
+    # Update config nav
+    for item in config.get('nav', []):
+        if isinstance(item, dict) and 'Python API' in item:
+            item['Python API'] = nav_items
+            break

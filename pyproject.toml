@@ -14,6 +14,7 @@ dependencies = [
     "mkdocs-llmstxt~=0.2.0",
     "strands-agents[all,bidi-all]",
     "pymdown-extensions>=10.16.1",
+    "psutil~=7.2.0",
 ]
 
 
