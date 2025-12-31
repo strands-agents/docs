@@ -10,9 +10,7 @@ This guide covers deploying Python-based Strands agents using Docker for for loc
 
 ---
 
-## Deploying with Docker
-
-### Quick Start Setup
+## Quick Start Setup
 
 Install uv:
 ```bash
@@ -32,17 +30,12 @@ For instance, to configure AWS credentials:
   export AWS_SECRET_ACCESS_KEY='<your-secret-access-key'>
 ```
 
-### Create and Setup Project
-
-Choose your preferred setup method below:
-
-- **Quick Setup**: Copy and paste a single all-in-one bash command to create your entire project
-- **Step-by-Step**: Follow detailed instructions to manually create each file
+### Optional: Quick Setup
 
 <details>
-<summary><strong>Quick Setup (All-in-One Command)</strong></summary>
+<summary><strong>Optional: Quick Setup (All-in-One Bash Command)</strong></summary>
 
-Copy and paste this command to create your project with all necessary files:
+Copy and paste this bash command to create your project with all necessary files and skip "Manual Project Setup" steps below:
 
 ```bash
 setup_agent() {
@@ -140,8 +133,7 @@ setup_agent
 
 </details>
 
-<details>
-<summary><strong>Step-by-Step Setup (Manual setup guide)</strong></summary>
+### Manual Project Setup
 
 Step 1: Create project directory and initialize
 ```bash
@@ -183,7 +175,6 @@ EXPOSE 8080
 CMD ["uv", "run", "python", "agent.py"]
 ```
 
-</details>
 
 Your project structure will now look like:
 ```
@@ -208,10 +199,12 @@ curl http://localhost:8080/ping
 # Test /invocations endpoint
 curl -X POST http://localhost:8080/invocations \
   -H "Content-Type: application/json" \
-  -d '{
+  -d '{ 
     "input": {"prompt": "What is artificial intelligence?"}
   }'
 ```
+
+## Deploy to Docker
 
 ### Step 1: Build Docker Image
 
@@ -316,3 +309,12 @@ Our other deployment guides build on this Docker foundation to show you how to d
 - [AWS Fargate](../deploy_to_aws_fargate.md) - Deploy to AWS's managed container service
 - [Amazon EKS](../deploy_to_amazon_eks.md) - Deploy to Kubernetes on AWS
 - [Amazon EC2](../deploy_to_amazon_ec2.md) - Deploy directly to EC2 instances
+
+
+## Additional Resources
+
+- [Strands Documentation](https://strandsagents.com/latest/)
+- [Docker Documentation](https://docs.docker.com/)
+- [uv Documentation](https://docs.astral.sh/uv/)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Python Docker Guide](https://docs.docker.com/guides/python/)
