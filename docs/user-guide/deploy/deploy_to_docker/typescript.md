@@ -25,12 +25,13 @@ For instance, to configure AWS credentials:
   export AWS_SECRET_ACCESS_KEY='<your-secret-access-key'>
 ```
 
-### Optional: Quick Setup
+### Project Setup
 
 <details>
-<summary><strong>Optional: Quick Setup (All-in-One Bash Command)</strong></summary>
-
-Copy and paste this bash command to create your project with all necessary files and skip "Manual Project Setup" steps below:
+  <summary>
+    <strong>Open Quick Setup All-in-One Bash Command</strong><br>
+    <sub>Optional: Copy and paste this bash command to create your project with all necessary files and skip remaining "Project Setup" steps below:</sub>
+  </summary>
 
 ```bash
 setup_typescript_agent() {
@@ -160,8 +161,6 @@ setup_typescript_agent
 ```
 
 </details>
-
-### Manual Project Setup
 
 Step 1: Create project directory and initialize
 ```bash
