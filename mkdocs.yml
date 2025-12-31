@@ -197,6 +197,7 @@ nav:
         - Overview: user-guide/deploy/deploy_to_docker/index.md
         - Python: user-guide/deploy/deploy_to_docker/python.md
         - TypeScript: user-guide/deploy/deploy_to_docker/typescript.md
+      - Kubernetes: user-guide/deploy/deploy_to_kubernetes.md
 
   - Examples:
     - Overview: examples/README.md
