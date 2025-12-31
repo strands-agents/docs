@@ -24,7 +24,7 @@ kubectl get nodes
 
 ## Step 2: Create Kubernetes Manifests
 
-The following assume you have completed the [Docker deployment guide](../deploy_to_docker) and have the necessary files (`agent.py` or `index.ts`, and `Dockerfile`) in your project.
+The following assume you have completed the [Docker deployment guide](../deploy_to_docker) with the following file structure:
 
 
 Project Structure (Python):
