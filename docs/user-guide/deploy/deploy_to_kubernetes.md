@@ -205,7 +205,6 @@ kubectl apply -f k8s-deployment.yaml
 
 ## Additional Resources
 
-- [Strands Documentation](https://strandsagents.com/latest/)
 - [Docker Documentation](https://docs.docker.com/)
 - [Strands Docker Deploy Documentation](../deploy_to_docker)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
