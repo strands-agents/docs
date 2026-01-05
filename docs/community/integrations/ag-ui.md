@@ -68,7 +68,7 @@ useCopilotAction({
 ```
 
 Learn more about the Tool-based Generative UI
-[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands/generative-ui/tool-based).
+[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands/generative-ui/backend-tools).
 
 ### Shared State
 
@@ -89,7 +89,7 @@ const { state, setState } = useCoAgent<AgentState>({
 ```
 
 Learn more about shared state
-[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands/shared-state).
+[in the CopilotKit docs](https://docs.copilotkit.ai/aws-strands/shared-state/in-app-agent-read).
 
 ### Try it out!
 
@@ -183,7 +183,6 @@ npm run dev:ui
 To see what other features you can build into your UI with AG-UI, refer to the CopilotKit docs:
 
 - [Agentic Generative UI](https://docs.copilotkit.ai/aws-strands/generative-ui/agentic)
-- [Human in the Loop](https://docs.copilotkit.ai/aws-strands/human-in-the-loop/agent)
 - [Frontend Actions](https://docs.copilotkit.ai/aws-strands/frontend-actions)
 
 Or try them out in the [AG-UI Dojo](https://dojo.ag-ui.com).
