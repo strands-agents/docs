@@ -1015,6 +1015,11 @@ Update `terraform/terraform.tfvars` based on your chosen provider:
     openai_api_key = "<your-openai-api-key>"
     ```
 
+    This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers. 
+
+
+    **Note:** Bedrock model provider credentials are automatically passed using App Runner's IAM role and do not need to be specified in Terraform.
+
 === "AWS Lambda"
 
     ```hcl
@@ -1022,12 +1027,24 @@ Update `terraform/terraform.tfvars` based on your chosen provider:
     openai_api_key = "<your-openai-api-key>"
     ```
 
+    This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers.
+
+    
+    **Note:** Bedrock model provider credentials are automatically passed using Lambda's IAM role and do not need to be specified in Terraform.
+
 === "Google Cloud Run"
 
     ```hcl
     gcp_project = "your-project-id"
     agent_image = "gcr.io/your-project/my-image:latest"
     openai_api_key = "<your-openai-api-key>"
+    ```
+
+    This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers. For instance, to use Bedrock model provider credentials:
+
+    ```hcl
+    aws_access_key_id = "<your-aws-access-key-id>"
+    aws_secret_access_key = "<your-aws-secret-key>"
     ```
 
 === "Azure Container Instances"
@@ -1039,12 +1056,12 @@ Update `terraform/terraform.tfvars` based on your chosen provider:
     acr_resource_group = "<your-resource-group>"
     ```
 
-This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers. For instance, to use AWS credentials:
+    This example uses OpenAI, but any supported model provider can be configured. See the [Strands documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/model-providers) for all supported model providers. For instance, to use Bedrock model provider credentials:
 
-```hcl
-aws_access_key_id = "<your-aws-access-key-id>"
-aws_secret_access_key = "<your-aws-secret-key>"
-```
+    ```hcl
+    aws_access_key_id = "<your-aws-access-key-id>"
+    aws_secret_access_key = "<your-aws-secret-key>"
+    ```
 
 ## Step 4: Deploy Infrastructure
 
