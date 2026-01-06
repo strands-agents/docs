@@ -136,23 +136,23 @@ nav:
         - Workflow: user-guide/concepts/multi-agent/workflow.md
         - Multi-agent Patterns: user-guide/concepts/multi-agent/multi-agent-patterns.md
       - Interrupts: user-guide/concepts/interrupts.md
+      - Bidirectional Streaming:
+        - Quickstart: user-guide/concepts/bidirectional-streaming/quickstart.md
+        - BidiAgent: user-guide/concepts/bidirectional-streaming/agent.md
+        - Models:
+          - Nova Sonic: user-guide/concepts/bidirectional-streaming/models/nova_sonic.md
+          - Gemini Live: user-guide/concepts/bidirectional-streaming/models/gemini_live.md
+          - OpenAI Realtime: user-guide/concepts/bidirectional-streaming/models/openai_realtime.md
+        - IO: user-guide/concepts/bidirectional-streaming/io.md
+        - Events: user-guide/concepts/bidirectional-streaming/events.md
+        - Interruptions: user-guide/concepts/bidirectional-streaming/interruption.md
+        - Hooks: user-guide/concepts/bidirectional-streaming/hooks.md
+        - Session Management: user-guide/concepts/bidirectional-streaming/session-management.md
+        - Observability: user-guide/concepts/bidirectional-streaming/otel.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
         - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
         - Steering: user-guide/concepts/experimental/steering.md
-        - Bidirectional Streaming:
-          - Quickstart: user-guide/concepts/experimental/bidirectional-streaming/quickstart.md
-          - BidiAgent: user-guide/concepts/experimental/bidirectional-streaming/agent.md
-          - Models:
-            - Nova Sonic: user-guide/concepts/experimental/bidirectional-streaming/models/nova_sonic.md
-            - Gemini Live: user-guide/concepts/experimental/bidirectional-streaming/models/gemini_live.md
-            - OpenAI Realtime: user-guide/concepts/experimental/bidirectional-streaming/models/openai_realtime.md
-          - IO: user-guide/concepts/experimental/bidirectional-streaming/io.md
-          - Events: user-guide/concepts/experimental/bidirectional-streaming/events.md
-          - Interruptions: user-guide/concepts/experimental/bidirectional-streaming/interruption.md
-          - Hooks: user-guide/concepts/experimental/bidirectional-streaming/hooks.md
-          - Session Management: user-guide/concepts/experimental/bidirectional-streaming/session-management.md
-          - Observability: user-guide/concepts/experimental/bidirectional-streaming/otel.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
