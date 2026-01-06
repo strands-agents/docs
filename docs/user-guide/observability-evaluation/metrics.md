@@ -123,7 +123,7 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
             print(f"  Cycle {cycle.event_loop_cycle_id}: {cycle.usage}")
 
     # Or print the summary (includes all invocations)
-    print(response.metrics.get_summary())
+    print(result2.metrics.get_summary())
     ```
 
     For a complete list of attributes and their types, see the [`EventLoopMetrics` API reference](../../api-reference/python/telemetry/metrics.md#strands.telemetry.metrics.EventLoopMetrics).

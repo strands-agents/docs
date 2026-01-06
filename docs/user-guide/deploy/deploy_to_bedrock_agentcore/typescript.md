@@ -40,7 +40,7 @@ Create or update your `package.json` with the following configuration and depend
     "@strands-agents/sdk": "latest",
     "@aws-sdk/client-bedrock-agentcore": "latest",
     "express": "^4.18.2",
-    "zod": "^3.22.4"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
