@@ -80,5 +80,5 @@ Ensure you're using a model ID compatible with Nebius Token Factory (e.g., `deep
 * [Nebius Token Factory API Reference](https://docs.tokenfactory.nebius.com/api-reference)
 * [Nebius Token Factory Models](https://docs.tokenfactory.nebius.com/ai-models-inference/overview)
 * [OpenAI Python SDK](https://github.com/openai/openai-python)
-* [Strands Agents API](../../api-reference/models.md)
+* [Strands Agents API](../../api-reference/python/models/model.md)
 
