@@ -35,7 +35,7 @@ bedrock_model = BedrockModel(
     guardrail_id="your-guardrail-id",         # Your Bedrock guardrail ID
     guardrail_version="1",                    # Guardrail version
     guardrail_trace="enabled",                # Enable trace info for debugging
-    guardrail_last_turn_only=False,           # Set to True to evaluate only the last turn
+    guardrail_latest_message=False,           # Set to True to evaluate only the latest user message
 )
 
 # Create agent with the guardrail-protected model
@@ -54,7 +54,7 @@ if response.stop_reason == "guardrail_intervened":
 print(f"Conversation: {json.dumps(agent.messages, indent=4)}")
 ```
 
-**Performance Optimization**: Set `guardrail_last_turn_only=True` to evaluate only the most recent conversation turn (user message and assistant's response to it, if present) instead of the full history. This allows conversations to recover after guardrail interventions. See the [Amazon Bedrock documentation](../concepts/model-providers/amazon-bedrock.md#guardrails) for more details.
+**Performance Optimization**: Set `guardrail_latest_message=True` to evaluate only the latest user message instead of the full conversation history. This can help conversations recover after guardrail interventions and reduces evaluation overhead. See the [Amazon Bedrock documentation](../concepts/model-providers/amazon-bedrock.md#guardrails) for more details.
 
 Alternatively, if you want to implement your own soft-launching guardrails, you can utilize Hooks along with Bedrock's ApplyGuardrail API in shadow mode. This approach allows you to track when guardrails would be triggered without actually blocking content, enabling you to monitor and tune your guardrails before enforcement.
 

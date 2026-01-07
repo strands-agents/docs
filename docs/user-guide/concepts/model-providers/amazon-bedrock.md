@@ -380,7 +380,7 @@ For a complete list of input types, please refer to the [API Reference](../../..
         guardrail_redact_input_message="Blocked Input!", # Default: [User input redacted.]
         guardrail_redact_output=False,  # Default: False
         guardrail_redact_output_message="Blocked Output!", # Default: [Assistant output redacted.]
-        guardrail_last_turn_only=False  # Default: False - Set to True to evaluate only the last turn
+        guardrail_latest_message=False  # Default: False - Set to True to evaluate only the latest user message
     )
   
     guardrail_agent = Agent(model=bedrock_model)
@@ -395,7 +395,7 @@ For a complete list of input types, please refer to the [API Reference](../../..
     - Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
     - Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
     - Custom redaction messages can be specified for both input and output redactions
-    - Last turn only (disabled by default): When enabled, only the last conversation turn (most recent user message and the assistant's response to it, if present) is sent to guardrails instead of the full conversation history. This allows conversations to recover after guardrail interventions.
+    - Latest message only (disabled by default): When enabled, only the latest user message (text and image content) is wrapped for guardrail evaluation instead of the full conversation history. This can help conversations recover after guardrail interventions and reduces evaluation overhead.
 
 {{ ts_not_supported_code("Guardrails are not yet supported in the TypeScript SDK") }}
 
@@ -831,4 +831,3 @@ This is very likely due to calling Bedrock with an inference model id, such as: 
 - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 - [Bedrock Model IDs Reference](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)
 - [Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
-
