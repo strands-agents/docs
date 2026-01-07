@@ -347,4 +347,4 @@ For additional best practices on performance considerations, error handling, com
 - [Agent](agent.md) - Learn about BidiAgent configuration and lifecycle
 - [Session Management](session-management.md) - Persist conversations across sessions
 - [Events](events.md) - Complete guide to bidirectional streaming events
-- [API Reference](../../../../docs/api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
+- [API Reference](../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation

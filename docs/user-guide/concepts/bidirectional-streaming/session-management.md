@@ -212,4 +212,4 @@ For best practices on session ID management, session cleanup, error handling, st
 - [Agent](agent.md) - Learn about BidiAgent configuration and lifecycle
 - [Hooks](hooks.md) - Extend agent functionality with hooks
 - [Events](events.md) - Complete guide to bidirectional streaming events
-- [API Reference](../../../../docs/api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
+- [API Reference](../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
