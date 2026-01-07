@@ -2,7 +2,11 @@
 
 The Strands community extends the SDK's capabilities through bug fixes, new tools, and improved documentation. Whether you're scratching your own itch or helping others, we're glad you're here.
 
+Every contribution makes Strands better—from fixing a typo in the docs to building a new integration that helps thousands of developers. This section guides you through the different ways to contribute and helps you find the right path for your contribution.
+
 ## Contributing
+
+Start here to find the right contribution guide for your needs. Each guide walks you through the specific process, requirements, and best practices for that contribution type.
 
 | I want to... | Guide |
 |--------------|-------|
@@ -13,6 +17,8 @@ The Strands community extends the SDK's capabilities through bug fixes, new tool
 
 ## Extensions
 
+The Strands ecosystem includes three tiers of extensions—core, partner, and community. Understanding how this works helps you decide where your contribution belongs and sets the right expectations for support and maintenance.
+
 | Topic | Guide |
 |-------|-------|
 | Understanding the tiered ecosystem | [Extensions Overview](./extensions/index.md) |
@@ -22,7 +28,7 @@ The Strands community extends the SDK's capabilities through bug fixes, new tool
 
 ## Response times
 
-We aim to respond to contributions within these timeframes.
+We aim to respond to contributions within these timeframes. These are goals, not guarantees—complex contributions might take longer to review thoroughly.
 
 | Type | Target |
 |------|--------|

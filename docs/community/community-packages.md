@@ -1,13 +1,15 @@
 # Community catalog
 
-The Strands community has built tools and integrations for a variety of use cases. This catalog helps you discover what's available.
+The Strands community has built tools and integrations for a variety of use cases. This catalog helps you discover what's available and find packages that solve your specific needs.
+
+Browse by category below to find tools, model providers, session managers, and platform integrations built by the community.
 
 !!! info "Community maintained"
     These packages are maintained by their authors, not the Strands team. Review packages before using them in production. Quality and support may vary.
 
 ## Tools
 
-The following tools extend Strands with integrations to popular services.
+Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
 
 | Package | Description |
 |---------|-------------|
@@ -20,7 +22,7 @@ The following tools extend Strands with integrations to popular services.
 
 ## Model providers
 
-These packages add support for additional LLM providers.
+Model providers add support for additional LLM services beyond the built-in providers. Use these to integrate with specialized or regional LLM platforms.
 
 | Package | Description |
 |---------|-------------|
@@ -31,7 +33,7 @@ These packages add support for additional LLM providers.
 
 ## Session managers
 
-These packages provide alternative session storage backends.
+Session managers provide alternative storage backends for conversation history. Use these when you need persistent, scalable, or distributed session storage.
 
 | Package | Description |
 |---------|-------------|
@@ -40,7 +42,7 @@ These packages provide alternative session storage backends.
 
 ## Integrations
 
-These packages provide integrations with external platforms.
+Platform integrations help you connect Strands agents with external services and user interfaces.
 
 | Package | Description |
 |---------|-------------|
@@ -50,10 +52,16 @@ These packages provide integrations with external platforms.
 
 ## Add your package
 
-Built something useful? We'd love to list it here.
+Built something useful? We'd love to list it here. Publishing your package to the catalog makes it discoverable to thousands of developers.
 
-1. Publish your package to PyPI — See our [publishing guide](./extensions/publishing.md)
-2. Add the `strands-tool` topic to your GitHub repository
-3. [Submit a request](https://github.com/strands-agents/docs/issues/new?template=content_addition.yml) with your package name, PyPI link, description, and usage examples
+**Requirements:**
 
-We review submissions and add packages that provide clear value to the community.
+1. **Publish your package to PyPI** — See our [publishing guide](./extensions/publishing.md) for step-by-step instructions
+2. **Add the `strands-tool` topic** to your GitHub repository so developers can find you
+3. **Submit a request** using our [content addition template](https://github.com/strands-agents/docs/issues/new?template=content_addition.yml) with:
+    - Package name and PyPI link
+    - Clear description of what it does
+    - Usage examples showing basic integration
+    - Documentation link (README or dedicated docs)
+
+We review submissions within 3 days and add packages that provide clear value to the community. Well-documented packages with tests and examples get priority.
