@@ -20,7 +20,7 @@ Some contributions don't fit the core SDK. Understanding this upfront saves you 
 
 - **Large refactors without prior discussion** — Major architectural changes require RFC approval
 - **Breaking changes without RFC approval** — We maintain backward compatibility carefully
-- **External tools** — [Publish your own package](../extensions/publishing.md) instead for full ownership
+- **External tools** — [Publish your own package](../publishing/publishing.md) instead for full ownership
 - **Changes without tests** — Tests ensure quality and prevent regressions (documentation changes excepted)
 - **Niche features** — Features serving narrow use cases belong in extensions
 

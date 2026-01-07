@@ -2,29 +2,29 @@
 
 The Strands community extends the SDK's capabilities through bug fixes, new tools, and improved documentation. Whether you're scratching your own itch or helping others, we're glad you're here.
 
-Every contribution makes Strands better—from fixing a typo in the docs to building a new integration that helps thousands of developers. This section guides you through the different ways to contribute and helps you find the right path for your contribution.
+## I want to fix a bug
 
-## Contributing
+Found something broken in the SDK? Bug fixes are always welcome. Check if there's an existing issue first, then submit a PR with a test that verifies your fix.
 
-Start here to find the right contribution guide for your needs. Each guide walks you through the specific process, requirements, and best practices for that contribution type.
+→ [Contributing to Core SDK](./contributing/core-sdk.md)
 
-| I want to... | Guide |
-|--------------|-------|
-| Fix a bug or improve the SDK | [Contributing to Core SDK](./contributing/core-sdk.md) |
-| Build and publish a tool or extension | [Publishing Extensions](./extensions/publishing.md) |
-| Improve documentation | [Contributing to Documentation](./contributing/documentation.md) |
-| Propose a significant feature | [Feature Proposals](./contributing/feature-proposals.md) |
+## I want to add a new feature
 
-## Extensions
+Have an idea for improving the SDK? For small changes, open an issue to discuss your approach. For larger features, we use an RFC process to align on direction before you invest significant time.
 
-The Strands ecosystem includes three tiers of extensions—core, partner, and community. Understanding how this works helps you decide where your contribution belongs and sets the right expectations for support and maintenance.
+→ [Feature Proposals](./contributing/feature-proposals.md)
 
-| Topic | Guide |
-|-------|-------|
-| Understanding the tiered ecosystem | [Extensions Overview](./extensions/index.md) |
-| Publishing your own extension | [Publishing Guide](./extensions/publishing.md) |
-| Building high-quality extensions | [Best Practices](./extensions/best-practices.md) |
-| Finding community packages | [Community Catalog](./community-packages.md) |
+## I want to build a tool or integration
+
+Built something useful? Publish it as your own package on PyPI. We provide templates to make this easy, and list community packages in our catalog so others can discover your work.
+
+→ [Publishing Your Component](./publishing/index.md)
+
+## I want to improve the docs
+
+Spotted a typo, unclear explanation, or missing example? Documentation improvements help everyone learn faster. From fixing typos to adding new guides, all improvements are welcome.
+
+→ [Contributing to Documentation](./contributing/documentation.md)
 
 ## Response times
 
@@ -36,8 +36,9 @@ We aim to respond to contributions within these timeframes. These are goals, not
 | Follow-up responses | < 3 days between review rounds |
 | Security issues | < 24 hours |
 
-## Quick links
+## Community resources
 
+- [Community Catalog](./community-packages.md) — Discover community-built tools and integrations
 - [GitHub Discussions](https://github.com/strands-agents/sdk-python/discussions) — Ask questions, share ideas
 - [Roadmap](https://github.com/orgs/strands-agents/projects/1) — See what we're working on
 - [Design Principles](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md#development-tenets) — What guides our decisions

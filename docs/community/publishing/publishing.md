@@ -1,6 +1,6 @@
-# Publishing extensions
+# Publishing your component
 
-You've built a useful tool or integration for Strands. Now you want to share it with others so they can benefit from your work. This guide walks you through publishing your extension to PyPI so anyone can install it with `pip install`.
+You've built a useful tool or integration for Strands. Now you want to share it with others so they can benefit from your work. This guide walks you through publishing your component to PyPI so anyone can install it with `pip install`.
 
 We'll use our GitHub template to handle the boilerplate—package structure, CI/CD, testing setup, dependency management—so you can focus on your tool code. By the end, you'll have a published package and know how to release updates.
 
@@ -235,5 +235,5 @@ Your `README.md` is the first thing users see. Make it count.
 
 ## Next steps
 
-- [Extension best practices](./best-practices.md) — Guidelines for building high-quality extensions
+- [Component best practices](./best-practices.md) — Guidelines for building high-quality components
 - [Community catalog](../community-packages.md) — See what others have built

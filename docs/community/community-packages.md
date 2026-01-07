@@ -2,7 +2,7 @@
 
 The Strands community has built tools and integrations for a variety of use cases. This catalog helps you discover what's available and find packages that solve your specific needs.
 
-Browse by category below to find tools, model providers, session managers, and platform integrations built by the community.
+Browse by category below to find tools, model providers, session managers, and platform integrations built by the community. You can also browse community projects dynamically at [strands.my](https://strands.my/).
 
 !!! info "Community maintained"
     These packages are maintained by their authors, not the Strands team. Review packages before using them in production. Quality and support may vary.
@@ -56,7 +56,7 @@ Built something useful? We'd love to list it here. Publishing your package to th
 
 **Requirements:**
 
-1. **Publish your package to PyPI** — See our [publishing guide](./extensions/publishing.md) for step-by-step instructions
+1. **Publish your package to PyPI** — See our [publishing guide](./publishing/publishing.md) for step-by-step instructions
 2. **Add the `strands-tool` topic** to your GitHub repository so developers can find you
 3. **Submit a request** using our [content addition template](https://github.com/strands-agents/docs/issues/new?template=content_addition.yml) with:
     - Package name and PyPI link

@@ -1,12 +1,12 @@
-# Extension Best Practices
+# Component best practices
 
-When you build an extension, you're creating something other developers will rely on. A well-designed extension is easy to understand, predictable in behavior, and helpful when things go wrong.
+When you build a component, you're creating something other developers will rely on. A well-designed component is easy to understand, predictable in behavior, and helpful when things go wrong.
 
-This guide covers patterns we've seen work well across the Strands ecosystem. Following these practices helps your extension integrate smoothly, makes it easier for others to contribute, and reduces support burden.
+This guide covers patterns we've seen work well across the Strands ecosystem. Following these practices helps your component integrate smoothly, makes it easier for others to contribute, and reduces support burden.
 
 ## General principles
 
-These principles apply to all extension types. They're the foundation of quality extensions.
+These principles apply to all component types. They're the foundation of quality components.
 
 | Principle | Why it matters | How to apply |
 |-----------|----------------|--------------|
