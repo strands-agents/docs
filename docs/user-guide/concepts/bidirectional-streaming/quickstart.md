@@ -507,5 +507,5 @@ Ready to learn more? Check out these resources:
     - [Nova Sonic](models/nova_sonic.md) - Amazon Bedrock's bidirectional streaming model
     - [OpenAI Realtime](models/openai_realtime.md) - OpenAI's Realtime API
     - [Gemini Live](models/gemini_live.md) - Google's Gemini Live API
-- [API Reference](../../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
+- [API Reference](../../../../docs/api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
 

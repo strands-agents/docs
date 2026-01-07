@@ -443,4 +443,4 @@ The agent automatically cleans up background tasks, model connections, I/O chann
 - [I/O Channels](io.md) - Building custom input/output channels
 - [Model Providers](models/nova_sonic.md) - Provider-specific configuration
 - [Quickstart](quickstart.md) - Getting started guide
-- [API Reference](../../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
+- [API Reference](../../../../docs/api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
