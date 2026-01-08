@@ -225,6 +225,7 @@ nav:
         - CLOVA Studio: community/model-providers/clova-studio.md
         - Fireworks AI: community/model-providers/fireworksai.md
         - Nebius Token Factory: community/model-providers/nebius-token-factory.md
+        - SGLang: community/model-providers/sglang.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
       - Tool Protocols:
