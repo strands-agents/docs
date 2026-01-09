@@ -82,7 +82,7 @@ MAX_TOOL_ITERATIONS = 5
 _client_cache: dict[str, SGLangClient] = {}
 
 def get_client(args) -> SGLangClient:
-    """Get shared client for connection pooling (like SLIME)."""
+    """Get shared client for connection pooling (like Slime)."""
     base_url = f"http://{args.sglang_router_ip}:{args.sglang_router_port}"
     if base_url not in _client_cache:
         _client_cache[base_url] = SGLangClient.from_slime_args(args)
@@ -167,12 +167,12 @@ from strands_sglang import SGLangClient, SGLangModel
 client = SGLangClient(
     base_url="http://localhost:30000",
     max_connections=1000,  # Default: 1000
-    timeout=None,          # Default: None (infinite, like SLIME)
+    timeout=None,          # Default: None (infinite, like Slime)
     max_retries=60,        # Default: 60 (aggressive retry for RL stability)
     retry_delay=1.0,       # Default: 1.0 seconds
 )
 
-# Option 2: From Slime training args
+# Option 2: Adaptive to Slime's training args
 client = SGLangClient.from_slime_args(args)
 
 model = SGLangModel(tokenizer=tokenizer, client=client)
