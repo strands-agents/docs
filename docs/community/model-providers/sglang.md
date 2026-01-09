@@ -5,9 +5,9 @@
 !!! info "Language Support"
     This provider is only supported in Python.
 
-[strands-sglang](https://github.com/horizon-rl/strands-sglang) is an SGLang model provider for Strands Agents SDK with Token-In/Token-Out (TITO) support for agentic RL training. It provides direct integration with SGLang servers using the native `/generate` endpoint, optimized for reinforcement learning workflows.
+[strands-sglang](https://github.com/horizon-rl/strands-sglang) is an [SGLang](https://docs.sglang.io/) model provider for Strands Agents SDK with Token-In/Token-Out (TITO) support for agentic RL training. It provides direct integration with SGLang servers using the native `/generate` endpoint, optimized for reinforcement learning workflows.
 
-## Features
+**Features:**
 
 - **SGLang Native API**: Uses SGLang's native `/generate` endpoint with non-streaming POST for optimal parallelism
 - **TITO Support**: Tracks complete token trajectories with logprobs for RL training - no retokenization drift
@@ -23,18 +23,9 @@ Install strands-sglang along with the Strands Agents SDK:
 pip install strands-sglang strands-agents-tools
 ```
 
-Or install from source with development dependencies:
-
-```bash
-git clone https://github.com/horizon-rl/strands-sglang.git
-cd strands-sglang
-pip install -e ".[dev]"
-```
 
 ## Requirements
 
-- Python 3.10+
-- Strands Agents SDK 1.7.0+
 - SGLang server running with your model
 - HuggingFace tokenizer for the model
 
@@ -215,5 +206,4 @@ If TITO data doesn't match expected output, ensure you call `model.reset()` befo
 * [strands-sglang Repository](https://github.com/horizon-rl/strands-sglang)
 * [SGLang Documentation](https://docs.sglang.io/)
 * [Slime RL Training Framework](https://github.com/THUDM/slime/)
-* [Strands Agents SDK](https://github.com/strands-agents/sdk-python)
 * [Strands Agents API](../../api-reference/python/models/model.md)
