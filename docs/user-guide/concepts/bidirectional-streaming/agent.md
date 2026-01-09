@@ -236,7 +236,7 @@ See [Model Providers](models/nova_sonic.md) for provider-specific options.
 - **[Tools](../../tools/index.md)**: Function calling works identically
 - **[Hooks](hooks.md)**: Lifecycle event handling with bidirectional-specific events
 - **[Session Management](session-management.md)**: Conversation persistence across sessions
-- **[Tool Executors](../../tools/executors.md)**: Concurrent and custom execution patterns
+- **[Tool Executors](../tools/executors.md)**: Concurrent and custom execution patterns
 
 
 ## Lifecycle Management
