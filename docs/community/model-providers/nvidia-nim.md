@@ -1,4 +1,4 @@
-# Nvidia NIM
+# NVIDIA NIM
 
 {{ community_contribution_banner }}
 
