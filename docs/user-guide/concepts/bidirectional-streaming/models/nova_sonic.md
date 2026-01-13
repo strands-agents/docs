@@ -13,6 +13,9 @@
 
 ## Installation
 
+!!! warning "Python 3.12+ Required"
+    Nova Sonic requires Python 3.12 or higher due to its experimental AWS SDK dependency.
+
 Nova Sonic is included in the base bidirectional streaming dependencies for Strands Agents.
 
 To install it, run:

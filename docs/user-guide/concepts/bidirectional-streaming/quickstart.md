@@ -10,7 +10,7 @@ After completing this guide, you can build voice assistants, interactive chatbot
 
 Before starting, ensure you have:
 
-- Python 3.12+ installed
+- Python 3.10+ installed (3.12+ required for Nova Sonic)
 - Audio hardware (microphone and speakers) for voice conversations
 - Model provider credentials configured (AWS, OpenAI, or Google)
 
