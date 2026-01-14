@@ -73,7 +73,7 @@ while True:
     responses = []
     for interrupt in result.interrupts:
         if interrupt.name == "myapp-approval":
-            user_input = input(f"Do you want to delete {interrupt.reason["paths"]} (y/N): ")
+            user_input = input(f"Do you want to delete {interrupt.reason['paths']} (y/N): ")
             responses.append({
                 "interruptResponse": {
                     "interruptId": interrupt.id, 
@@ -248,7 +248,7 @@ def client(paths: list[str]) -> AgentResult:
         responses = []
         for interrupt in result.interrupts:
             if interrupt.name == "myapp-approval":
-                user_input = input(f"Do you want to delete {interrupt.reason["paths"]} (t/y/N): ")
+                user_input = input(f"Do you want to delete {interrupt.reason['paths']} (t/y/N): ")
                 responses.append({
                     "interruptResponse": {
                         "interruptId": interrupt.id, 
@@ -279,6 +279,92 @@ Session managing interrupts involves the following key components:
 
 Similar to interrupts, an MCP server can request additional information from the user by sending an elicitation request to the connecting client. Currently, elicitation requests are handled by conventional means of an elicitation callback. For more details, please refer to the docs [here](./tools/mcp-tools.md#elicitation).
 
-## Multi-Agents 🚧
+## Multi-Agents
+
+Interrupts are supported in multi-agent patterns, enabling human-in-the-loop workflows across agent orchestration systems. The interfaces mirror those used for single-agent interrupts. You can raise interrupts from `BeforeNodeCallEvent` hooks executed before each node or from within the nodes themselves. Session management is also supported, allowing you to persist and resume your interrupted multi-agents.
+
+!!! warning "Experimental"
+    Multi-agent hook events are currently experimental and imported from `strands.experimental.hooks.multiagent`.
+
+### Swarm
+
+A [Swarm](./multi-agent/swarm.md) is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. The following example demonstrates interrupting your swarm invocation through a `BeforeNodeCallEvent` hook.
+
+```python
+import json
+
+from strands import Agent
+from strands.experimental.hooks.multiagent import BeforeNodeCallEvent
+from strands.hooks import HookProvider, HookRegistry
+from strands.multiagent import Swarm, Status
+
+
+class ApprovalHook(HookProvider):
+    def __init__(self, app_name: str) -> None:
+        self.app_name = app_name
+
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(BeforeNodeCallEvent, self.approve)
+
+    def approve(self, event: BeforeNodeCallEvent) -> None:
+        if event.node_id != "cleanup":
+            return
+
+        approval = event.interrupt(f"{self.app_name}-approval", reason={"resources": "example"})
+        if approval.lower() != "y":
+            event.cancel_node = "User denied permission to cleanup resources"
+
+
+swarm = Swarm(
+    [
+        Agent(name="cleanup", system_prompt="You clean up resources older than 5 days.", callback_handler=None),
+    ],
+    hooks=[ApprovalHook("myapp")],
+)
+
+result = swarm("Clean up my resources")
+while result.status == Status.INTERRUPTED:
+    responses = []
+    for interrupt in result.interrupts:
+        if interrupt.name == "myapp-approval":
+            user_input = input(f"Do you want to cleanup {interrupt.reason['resources']} (y/N): ")
+            responses.append({
+                "interruptResponse": {
+                    "interruptId": interrupt.id,
+                    "response": user_input,
+                },
+            })
+
+    result = swarm(responses)
+
+print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message)}")
+```
+
+Swarms also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
+
+#### Components
+
+- `event.interrupt` - Raises an interrupt with a unique name and optional reason
+    - The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
+    - You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable. 
+- `result.status`: Check if the swarm stopped due to `Status.INTERRUPTED`
+- `result.interrupts` - List of interrupts that were raised
+    - Each `interrupt` contains the user provided name and reason, along with an instance id.
+- `interruptResponse` - Content block type for configuring the interrupt responses.
+    - Each `response` is uniquely identified by their interrupt's id and will be returned from the associated interrupt call when invoked the second time around. Note, the `response` must be JSON-serializable.
+- `event.cancel_node` - Cancel node execution based on interrupt response
+    - You can either set `cancel_node` to `True` or provide a custom cancellation message.
+
+#### Rules
+
+Strands enforces the following rules for interrupts in swarm:
+
+- All hooks configured on the interrupted event will execute
+- All hooks configured on the interrupted event are allowed to raise an interrupt
+- A single hook can raise multiple interrupts but only one at a time
+    - In other words, within a single hook, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+- A single node can raise multiple interrupts following any of the single-agent interrupt patterns outlined above.
+
+### Graph 🚧
 
 Under development. Please check back in later.
