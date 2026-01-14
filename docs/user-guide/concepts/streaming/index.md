@@ -23,7 +23,7 @@ All streaming methods yield the same set of events:
     - **`event`**: Raw event from the model stream
     - **`force_stop`**: True if the event loop was forced to stop
         - **`force_stop_reason`**: Reason for forced stop
-    - **`result`**: The final [`AgentResult`](../../../api-reference/agent.md#strands.agent.agent_result.AgentResult)
+    - **`result`**: The final [`AgentResult`](../../../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult)
 
 === "TypeScript"
 
@@ -71,7 +71,7 @@ All streaming methods yield the same set of events:
         - **`name`**: Name of the tool
         - **`input`**: Tool input parameters (accumulated as streaming occurs)
     - **`tool_stream_event`**: Information about [an event streamed from a tool](../tools/custom-tools.md#tool-streaming), including:
-        - **`tool_use`**: The [`ToolUse`](../../../api-reference/types.md#strands.types.tools.ToolUse) for the tool that streamed the event
+        - **`tool_use`**: The [`ToolUse`](../../../api-reference/python/types/tools.md#strands.types.tools.ToolUse) for the tool that streamed the event
         - **`data`**: The data streamed from the tool
 === "TypeScript"
     - **`BeforeToolsEvent`**: Information about the current tool being used, including:
@@ -272,4 +272,4 @@ Utilizing both [agents as a tool](../multi-agent/agents-as-tools.md) and [tool s
 
 - Learn about [Async Iterators](async-iterators.md) for asynchronous streaming
 - Explore [Callback Handlers](callback-handlers.md) for synchronous event processing
-- See the [Agent API Reference](../../../api-reference/agent.md) for complete method documentation
+- See the [Agent API Reference](../../../api-reference/python/agent/agent.md) for complete method documentation

@@ -101,7 +101,7 @@ Interrupts in Strands are comprised of the following components:
 - `event.cancel_tool` - Cancel tool execution based on interrupt response
     - You can either set `cancel_tool` to `True` or provide a custom cancellation message.
 
-For additional details on each of these components, please refer to the [API Reference](../../api-reference/types.md#strands.types.interrupt) pages.
+For additional details on each of these components, please refer to the [API Reference](../../api-reference/python/types/interrupt.md#strands.types.interrupt) pages.
 
 ### Rules
 

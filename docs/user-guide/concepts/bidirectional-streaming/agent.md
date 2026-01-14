@@ -236,7 +236,7 @@ See [Model Providers](models/nova_sonic.md) for provider-specific options.
 - **[Tools](../../tools/index.md)**: Function calling works identically
 - **[Hooks](hooks.md)**: Lifecycle event handling with bidirectional-specific events
 - **[Session Management](session-management.md)**: Conversation persistence across sessions
-- **[Tool Executors](../../tools/executors.md)**: Concurrent and custom execution patterns
+- **[Tool Executors](../tools/executors.md)**: Concurrent and custom execution patterns
 
 
 ## Lifecycle Management
@@ -443,4 +443,4 @@ The agent automatically cleans up background tasks, model connections, I/O chann
 - [I/O Channels](io.md) - Building custom input/output channels
 - [Model Providers](models/nova_sonic.md) - Provider-specific configuration
 - [Quickstart](quickstart.md) - Getting started guide
-- [API Reference](../../../../api-reference/experimental/bidi/agent.md) - Complete API documentation
+- [API Reference](../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation

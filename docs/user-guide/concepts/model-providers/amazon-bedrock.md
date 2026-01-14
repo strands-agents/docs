@@ -84,6 +84,19 @@ For more details, see the [Amazon Bedrock documentation on modifying model acces
     export AWS_REGION="us-west-2"  # Used if a custom Boto3 Session is not provided
     ```
 
+    !!! warning "Region Resolution Priority"
+
+        Due to boto3's behavior, the region resolution follows this priority order:
+
+        1. Region explicitly passed to `BedrockModel(region_name="...")`
+        2. Region from boto3 session (AWS_DEFAULT_REGION or profile region from ~/.aws/config)
+        3. AWS_REGION environment variable
+        4. Default region (us-west-2)
+
+        This means `AWS_REGION` has lower priority than regions set in AWS profiles. If you're experiencing unexpected region behavior, check your AWS configuration files and consider using `AWS_DEFAULT_REGION` or explicitly passing `region_name` to the BedrockModel constructor.
+
+        For more details, see the [boto3 issue discussion](https://github.com/boto/boto3/issues/2574).
+
     **Option 3: Custom Boto3 Session**
 
     You can configure a custom [boto3 Session](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html) and pass it to the `BedrockModel`:
@@ -145,7 +158,7 @@ For more details, see the [Amazon Bedrock documentation on modifying model acces
 
 === "Python"
 
-    The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4](https://aws.amazon.com/blogs/aws/claude-opus-4-anthropics-most-powerful-model-for-coding-is-now-in-amazon-bedrock/) model by default. This basic example creates an agent using this default setup:
+    The [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4](https://aws.amazon.com/blogs/aws/claude-opus-4-anthropics-most-powerful-model-for-coding-is-now-in-amazon-bedrock/) model by default. This basic example creates an agent using this default setup:
 
     ```python
     from strands import Agent
@@ -190,7 +203,7 @@ For more details, see the [Amazon Bedrock documentation on modifying model acces
 
 === "Python"
 
-    For more control over model configuration, you can create an instance of the [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) class:
+    For more control over model configuration, you can create an instance of the [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock) class:
 
     ```python
     from strands import Agent
@@ -222,7 +235,7 @@ For more details, see the [Amazon Bedrock documentation on modifying model acces
 
 === "Python"
 
-    The [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) supports various configuration parameters. For a complete list of available options, see the [BedrockModel API reference](../../../api-reference/models.md#strands.models.bedrock).
+    The [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock) supports various configuration parameters. For a complete list of available options, see the [BedrockModel API reference](../../../api-reference/python/models/bedrock.md#strands.models.bedrock).
 
     Common configuration parameters include:
 
@@ -361,13 +374,13 @@ Some Bedrock models support multimodal inputs (Documents, Images, etc.). Here's 
     --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:multimodal_full"
     ```
 
-For a complete list of input types, please refer to the [API Reference](../../../api-reference/types.md).
+For a complete list of input types, please refer to the [API Reference](../../../api-reference/python/types/content.md).
 
 ### Guardrails
 
 === "Python"
 
-    Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock):
+    Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock):
 
     ```python
     from strands import Agent
@@ -525,7 +538,7 @@ Tool caching allows you to reuse a cached tool definition across multiple reques
 
 === "Python"
 
-    Messages caching allows you to reuse a cached conversation across multiple requests. This is not enabled via a configuration in the [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock) class, but instead by including a `cachePoint` in the Agent's Messages array:
+    Messages caching allows you to reuse a cached conversation across multiple requests. This is not enabled via a configuration in the [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock) class, but instead by including a `cachePoint` in the Agent's Messages array:
 
     ```python
     from strands import Agent
@@ -694,7 +707,7 @@ Amazon Bedrock models can provide detailed reasoning steps when generating respo
 
 === "Python"
 
-    Strands allows you to enable and configure reasoning capabilities with your [`BedrockModel`](../../../api-reference/models.md#strands.models.bedrock):
+    Strands allows you to enable and configure reasoning capabilities with your [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock):
 
     ```python
     from strands import Agent

@@ -15,7 +15,7 @@ A bidirectional streaming session represents all stateful information needed by 
 
 Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing `BidiAgent` to seamlessly continue conversations where they left off, even after connection timeouts or application restarts.
 
-For a comprehensive introduction to session management concepts and general patterns, see the [Session Management documentation](../../agents/session-management.md). This guide focuses on bidirectional streaming-specific considerations and use cases.
+For a comprehensive introduction to session management concepts and general patterns, see the [Session Management documentation](../agents/session-management.md). This guide focuses on bidirectional streaming-specific considerations and use cases.
 
 ## Basic Usage
 
@@ -205,11 +205,11 @@ agent = BidiAgent(
 
 The `BidiMessageAddedEvent` is emitted after the message is persisted, ensuring hooks see the saved state.
 
-For best practices on session ID management, session cleanup, error handling, storage considerations, and troubleshooting, see the [Session Management documentation](../../agents/session-management.md).
+For best practices on session ID management, session cleanup, error handling, storage considerations, and troubleshooting, see the [Session Management documentation](../agents/session-management.md).
 
 ## Next Steps
 
 - [Agent](agent.md) - Learn about BidiAgent configuration and lifecycle
 - [Hooks](hooks.md) - Extend agent functionality with hooks
 - [Events](events.md) - Complete guide to bidirectional streaming events
-- [API Reference](../../../../api-reference/experimental/bidi/agent.md) - Complete API documentation
+- [API Reference](../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation

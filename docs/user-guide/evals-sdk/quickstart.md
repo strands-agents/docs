@@ -304,6 +304,74 @@ You'll see detailed results showing:
 - Pass/fail rates by category
 - Detailed judge explanations
 
+## Async Evaluation
+
+For improved performance, you can run evaluations asynchronously using `run_evaluations_async`. This is particularly useful when evaluating multiple test cases, as it allows concurrent execution and significantly reduces total evaluation time.
+
+### Basic Async Example (Applies to Trace-based evaluators)
+
+Here's how to convert the basic output evaluation to use async:
+
+```python
+import asyncio
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import OutputEvaluator
+
+# Define async task function
+async def get_response_async(case: Case) -> str:
+    agent = Agent(
+        system_prompt="You are a helpful assistant that provides accurate information.",
+        callback_handler=None
+    )
+    response = await agent.invoke_async(case.input)
+    return str(response)
+
+# Create test cases (same as before)
+test_cases = [
+    Case[str, str](
+        name="knowledge-1",
+        input="What is the capital of France?",
+        expected_output="The capital of France is Paris.",
+        metadata={"category": "knowledge"}
+    ),
+    Case[str, str](
+        name="knowledge-2", 
+        input="What is 2 + 2?",
+        expected_output="4",
+        metadata={"category": "math"}
+    ),
+]
+
+# Create evaluator
+evaluator = OutputEvaluator(
+    rubric="""
+    Evaluate the response based on:
+    1. Accuracy - Is the information factually correct?
+    2. Completeness - Does it fully answer the question?
+    3. Clarity - Is it easy to understand?
+    
+    Score 1.0 if all criteria are met excellently.
+    Score 0.5 if some criteria are partially met.
+    Score 0.0 if the response is inadequate or incorrect.
+    """,
+    include_inputs=True
+)
+
+# Run async evaluation
+async def run_async_evaluation():
+    experiment = Experiment[str, str](cases=test_cases, evaluators=[evaluator])
+    reports = await experiment.run_evaluations_async(get_response_async)
+    
+    reports[0].run_display()
+    
+    return reports[0]
+
+# Execute the async evaluation
+if __name__ == "__main__":
+    report = asyncio.run(run_async_evaluation())
+```
+
 ## Understanding Evaluation Results
 
 Each evaluation returns comprehensive results:

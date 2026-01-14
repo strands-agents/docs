@@ -11,49 +11,42 @@ on:
 permissions: read-all
 
 jobs:
-  build:
+  build-and-link-check:
     name: Build Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-    
+      - name: Install PortAudio dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev python3-all-dev
       - name: Set up Node.js
         uses: actions/setup-node@v6
+        with:
+          node-version: '24'
 
       - name: Clone typescript_sdk
-        run:  git clone https://github.com/strands-agents/sdk-typescript.git/ ./sdk-typescript
+        run: git clone https://github.com/strands-agents/sdk-typescript ./sdk-typescript
 
       - name: Install dependencies
         run: |
           pip install .
           npm install ./sdk-typescript
           npm install
-  
       - name: Build docs
         run: |
-          mkdocs build
-
-  check_links:
-    name: Check Links
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
+          mkdocs build --clean
       - name: Restore lychee cache
         uses: actions/cache@v4
         with:
           path: .lycheecache
           key: cache-lychee-${{ github.sha }}
           restore-keys: cache-lychee-
-
       - name: Check links with lychee
         id: lychee
-        uses: lycheeverse/lychee-action@v2
+        uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0
         with:
-          args: "--cache --max-cache-age 1d 'docs/**/*.md'"
+          args: '--offline --root-dir "$(pwd)" --cache --max-cache-age 1d .'
+          workingDirectory: './site'
+

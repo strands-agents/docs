@@ -35,7 +35,7 @@ graph TD
 
 ### 1. GraphNode
 
-A [`GraphNode`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphNode) represents a node in the graph with:
+A [`GraphNode`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.GraphNode) represents a node in the graph with:
 
 - **node_id**: Unique identifier for the node
 - **executor**: The Agent or MultiAgentBase instance to execute
@@ -46,7 +46,7 @@ A [`GraphNode`](../../../api-reference/multiagent.md#strands.multiagent.graph.Gr
 
 ### 2. GraphEdge
 
-A [`GraphEdge`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphEdge) represents a connection between nodes with:
+A [`GraphEdge`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.GraphEdge) represents a connection between nodes with:
 
 - **from_node**: Source node
 - **to_node**: Target node
@@ -54,7 +54,7 @@ A [`GraphEdge`](../../../api-reference/multiagent.md#strands.multiagent.graph.Gr
 
 ### 3. GraphBuilder
 
-The [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) provides a simple interface for constructing graphs:
+The [`GraphBuilder`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.GraphBuilder) provides a simple interface for constructing graphs:
 
 - **add_node()**: Add an agent or multi-agent system as a node
 - **add_edge()**: Create a dependency between nodes
@@ -67,7 +67,7 @@ The [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.gra
 
 ## Creating a Graph
 
-To create a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph), you use the [`GraphBuilder`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphBuilder) to define nodes, edges, and entry points:
+To create a [`Graph`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.Graph), you use the [`GraphBuilder`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.GraphBuilder) to define nodes, edges, and entry points:
 
 ```python
 import logging
@@ -163,7 +163,7 @@ builder.add_edge("C", "Z", condition=all_dependencies_complete(["A", "B", "C"]))
 
 ## Nested Multi-Agent Patterns
 
-You can use a [`Graph`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph) or [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm) as a node within another Graph:
+You can use a [`Graph`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.Graph) or [`Swarm`](../../../api-reference/python/multiagent/swarm.md#strands.multiagent.swarm.Swarm) as a node within another Graph:
 
 ```python
 from strands import Agent
@@ -196,7 +196,7 @@ print(f"\n{result}")
 
 ## Custom Node Types
 
-You can create custom node types by extending [`MultiAgentBase`](../../../api-reference/multiagent.md#strands.multiagent.base.MultiAgentBase) to implement deterministic business logic, data processing pipelines, and hybrid workflows.
+You can create custom node types by extending [`MultiAgentBase`](../../../api-reference/python/multiagent/base.md#strands.multiagent.base.MultiAgentBase) to implement deterministic business logic, data processing pipelines, and hybrid workflows.
 
 ```python
 from strands.multiagent.base import MultiAgentBase, NodeResult, Status, MultiAgentResult
@@ -247,7 +247,7 @@ Custom nodes enable:
 
 ## Multi-Modal Input Support
 
-Graphs support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/types.md#strands.types.content.ContentBlock):
+Graphs support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/python/types/content.md#strands.types.content.ContentBlock):
 
 ```python
 from strands import Agent
@@ -279,7 +279,7 @@ result = graph(content_blocks)
 
 ## Asynchronous Execution
 
-You can also execute a Graph asynchronously by calling the [`invoke_async`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph.invoke_async) function:
+You can also execute a Graph asynchronously by calling the [`invoke_async`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.Graph.invoke_async) function:
 
 ```python
 import asyncio
@@ -293,7 +293,7 @@ result = asyncio.run(run_graph())
 
 ## Streaming Events
 
-Graphs support real-time streaming of events during execution using [`stream_async`](../../../api-reference/multiagent.md#strands.multiagent.graph.Graph.stream_async). This provides visibility into node execution, parallel processing, and nested multi-agent systems.
+Graphs support real-time streaming of events during execution using [`stream_async`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.Graph.stream_async). This provides visibility into node execution, parallel processing, and nested multi-agent systems.
 
 ```python
 from strands import Agent
@@ -338,7 +338,7 @@ See the [streaming overview](../streaming/index.md#multi-agent-events) for detai
 
 ## Graph Results
 
-When a Graph completes execution, it returns a [`GraphResult`](../../../api-reference/multiagent.md#strands.multiagent.graph.GraphResult) object with detailed information:
+When a Graph completes execution, it returns a [`GraphResult`](../../../api-reference/python/multiagent/graph.md#strands.multiagent.graph.GraphResult) object with detailed information:
 
 ```python
 result = graph("Research and analyze...")

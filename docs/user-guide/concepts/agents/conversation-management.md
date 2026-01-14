@@ -14,7 +14,7 @@ As conversations grow, managing this context becomes increasingly important for 
 3. **Relevance**: Older messages may become less relevant to the current conversation
 4. **Coherence**: Maintaining logical flow and preserving important information
 
-## Conversation Managers
+## Built-in Conversation Managers
 
 The SDK provides a flexible system for context management through the ConversationManager interface. This allows you to implement different strategies for managing conversation history. You can either leverage one of Strands's provided managers:
 
@@ -25,9 +25,9 @@ The SDK provides a flexible system for context management through the Conversati
 or [build your own manager](#creating-a-conversationmanager) that matches your requirements.
 
 
-#### NullConversationManager
+### NullConversationManager
 
-The [`NullConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.null_conversation_manager.NullConversationManager) is a simple implementation that does not modify the conversation history. It's useful for:
+The [`NullConversationManager`](../../../api-reference/python/agent/conversation_manager/null_conversation_manager.md#strands.agent.conversation_manager.null_conversation_manager.NullConversationManager) is a simple implementation that does not modify the conversation history. It's useful for:
 
 - Short conversations that won't exceed context limits
 - Debugging purposes
@@ -52,9 +52,9 @@ The [`NullConversationManager`](../../../api-reference/agent.md#strands.agent.co
     --8<-- "user-guide/concepts/agents/conversation-management.ts:null_conversation_manager"
     ```
 
-#### SlidingWindowConversationManager
+### SlidingWindowConversationManager
 
-The [`SlidingWindowConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager) implements a sliding window strategy that maintains a fixed number of recent messages. This is the default conversation manager used by the Agent class.
+The [`SlidingWindowConversationManager`](../../../api-reference/python/agent/conversation_manager/sliding_window_conversation_manager.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager) implements a sliding window strategy that maintains a fixed number of recent messages. This is the default conversation manager used by the Agent class.
 
 === "Python"
 
@@ -87,13 +87,47 @@ Key features of the `SlidingWindowConversationManager`:
 - **Dangling Message Cleanup**: Removes incomplete message sequences to maintain valid conversation state.
 - **Overflow Trimming**: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.
 - **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed.
+- **Per-Turn Management**: Optionally apply context management proactively during the agent loop execution, not just at the end.
 
-#### SummarizingConversationManager
+**Per-Turn Management**:
+
+By default, the `SlidingWindowConversationManager` applies context management only after the agent loop completes. The `per_turn` parameter allows you to proactively manage context during execution, which is useful for long-running agent loops with many tool calls.
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+    from strands.agent.conversation_manager import SlidingWindowConversationManager
+
+    # Apply management before every model call
+    conversation_manager = SlidingWindowConversationManager(
+        per_turn=True,  # Apply management before each model call
+    )
+
+    # Or apply management every N model calls
+    conversation_manager = SlidingWindowConversationManager(
+        per_turn=3,  # Apply management every 3 model calls
+    )
+
+    agent = Agent(
+        conversation_manager=conversation_manager
+    )
+    ```
+
+{{ ts_not_supported_code() }}
+
+The `per_turn` parameter accepts:
+
+- `False` (default): Only apply management after the agent loop completes
+- `True`: Apply management before every model call
+- An integer `N` (must be > 0): Apply management every N model calls
+
+### SummarizingConversationManager
 
 <!-- https://github.com/strands-agents/sdk-typescript/issues/279 -->
 {{ ts_not_supported("") }}
 
-The [`SummarizingConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.summarizing_conversation_manager.SummarizingConversationManager) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
+The [`SummarizingConversationManager`](../../../api-reference/python/agent/conversation_manager/summarizing_conversation_manager.md#strands.agent.conversation_manager.summarizing_conversation_manager.SummarizingConversationManager) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
 
 Configuration parameters:
 
@@ -212,19 +246,21 @@ Key features of the `SummarizingConversationManager`:
 - **Flexible Configuration**: Customize summarization behavior through various parameters
 - **Fallback Safety**: Handles summarization failures gracefully
 
-
 ## Creating a ConversationManager
 
 === "Python"
 
-    To create a custom conversation manager, implement the [`ConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.conversation_manager.ConversationManager) interface, which is composed of three key elements:
+    To create a custom conversation manager, implement the [`ConversationManager`](../../../api-reference/python/agent/conversation_manager/conversation_manager.md#strands.agent.conversation_manager.conversation_manager.ConversationManager) interface, which is composed of three key elements:
 
-    1. [`apply_management`](../../../api-reference/agent.md#strands.agent.conversation_manager.conversation_manager.ConversationManager.apply_management): This method is called after each event loop cycle completes to manage the conversation history. It's responsible for applying your management strategy to the messages array, which may have been modified with tool results and assistant responses. The agent runs this method automatically after processing each user input and generating a response.
+    1. [`apply_management`](../../../api-reference/python/agent/conversation_manager/conversation_manager.md#strands.agent.conversation_manager.conversation_manager.ConversationManager.apply_management): This method is called after each event loop cycle completes to manage the conversation history. It's responsible for applying your management strategy to the messages array, which may have been modified with tool results and assistant responses. The agent runs this method automatically after processing each user input and generating a response.
 
-    2. [`reduce_context`](../../../api-reference/agent.md#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context): This method is called when the model's context window is exceeded (typically due to token limits). It implements the specific strategy for reducing the window size when necessary. The agent calls this method when it encounters a context window overflow exception, giving your implementation a chance to trim the conversation history before retrying.
+    2. [`reduce_context`](../../../api-reference/python/agent/conversation_manager/conversation_manager.md#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context): This method is called when the model's context window is exceeded (typically due to token limits). It implements the specific strategy for reducing the window size when necessary. The agent calls this method when it encounters a context window overflow exception, giving your implementation a chance to trim the conversation history before retrying.
 
-    3. `removed_messages_count`: This attribute is tracked by conversation managers, and utilized by [Session Management](./session-management.md) to efficiently load messages from the session storage. The count represents messages provided by the user or LLM that have been removed from the agent's messages, but not messages included by the conversation manager through something like summarization.
+    3. `removed_message_count`: This attribute is tracked by conversation managers, and utilized by [Session Management](./session-management.md) to efficiently load messages from the session storage. The count represents messages provided by the user or LLM that have been removed from the agent's messages, but not messages included by the conversation manager through something like summarization.
+
+    4. `register_hooks` (optional): Override this method to integrate with [hooks](./hooks.md). This enables proactive context management patterns, such as trimming context before model calls. Always call `super().register_hooks` when overriding.
    
+    See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py) implementation as a reference example.
 
 === "TypeScript"
 
@@ -236,10 +272,3 @@ Key features of the `SummarizingConversationManager`:
     - Register for the `AfterModelCallEvent` to handle reactive context trimming when the model's context window is exceeded
 
     See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
-
-
-
-
-
-
-

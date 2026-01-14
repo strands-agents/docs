@@ -12,6 +12,11 @@ dependencies = [
     "mkdocs-material~=9.6.12",
     "mkdocstrings-python~=1.16.10",
     "mkdocs-llmstxt~=0.2.0",
-    "strands-agents>=1.19.0",
+    "strands-agents[all,bidi-all]",
     "pymdown-extensions>=10.16.1",
+    "psutil~=7.2.0",
 ]
+
+
+[tool.setuptools]
+py-modules = []

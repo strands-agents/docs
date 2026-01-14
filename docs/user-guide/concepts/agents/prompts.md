@@ -4,7 +4,7 @@ In the Strands Agents SDK, system prompts and user messages are the primary way 
 
 ## System Prompts
 
-System prompts provide high-level instructions to the model about its role, capabilities, and constraints. They set the foundation for how the model should behave throughout the conversation. You can specify the system prompt when initializing an Agent:
+System prompts provide high-level instructions to the model about its role, capabilities, and constraints. They set the foundation for how the model should behave throughout the conversation. You can specify the system prompt when initializing an agent:
 
 === "Python"
 
@@ -76,7 +76,7 @@ The SDK supports multi-modal prompts, allowing you to include images, documents,
     --8<-- "user-guide/concepts/agents/prompts.ts:multimodalPrompt"
     ```
 
-For a complete list of supported content types, please refer to the [API Reference](../../../api-reference/types.md#strands.types.content.ContentBlock).
+For a complete list of supported content types, please refer to the [API Reference](../../../api-reference/python/types/content.md#strands.types.content.ContentBlock).
 
 
 ### Direct Tool Calls

@@ -171,9 +171,9 @@ And that's it! We now have a running agent with powerful tools and abilities in 
 
 ## Understanding What Agents Did
 
-After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](../../api-reference/agent.md#strands.agent.agent_result.AgentResult) object with comprehensive observability data.
+After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](../../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult) object with comprehensive observability data.
 
-Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](../../api-reference/agent.md#strands.agent.agent_result.AgentResult), or export them using [OpenTelemetry](../observability-evaluation/traces.md) to observability platforms.
+Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](../../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult), or export them using [OpenTelemetry](../observability-evaluation/traces.md) to observability platforms.
 
 ??? code "Example result.metrics.get_summary() output"
 
@@ -379,7 +379,7 @@ See the [Logs documentation](../observability-evaluation/logs.md) for more infor
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../../api-reference/models.md#strands.models.model.Model.get_config):
+Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../../api-reference/python/models/model.md#strands.models.model.Model.get_config):
 
 ```python
 from strands import Agent
@@ -453,7 +453,7 @@ Strands provides two main approaches to capture streaming events from an agent: 
 
 ### Async Iterators
 
-For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](../../api-reference/agent.md#strands.agent.agent.Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
+For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](../../api-reference/python/agent/agent.md#strands.agent.agent.Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
 
 ```python
 import asyncio
@@ -490,7 +490,7 @@ The async iterator yields the same event types as the callback handler callbacks
 
 See the [Async Iterators](../concepts/streaming/async-iterators.md) documentation for full details.
 
-> Note, Strands also offers an [`invoke_async()`](../../api-reference/agent.md#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
+> Note, Strands also offers an [`invoke_async()`](../../api-reference/python/agent/agent.md#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
 
 ### Callback Handlers (Callbacks)
 

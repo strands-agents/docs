@@ -184,8 +184,8 @@ The core of the model interface is the `stream` method that serves as the single
 
     The `stream` method accepts three parameters:
 
-    - [`Messages`](../../../api-reference/types.md#strands.types.content.Messages): A list of Strands Agents messages, containing a [Role](../../../api-reference/types.md#strands.types.content.Role) and a list of [ContentBlocks](../../../api-reference/types.md#strands.types.content.ContentBlock).
-    - [`list[ToolSpec]`](../../../api-reference/types.md#strands.types.tools.ToolSpec): List of tool specifications that the model can decide to use.
+    - [`Messages`](../../../api-reference/python/types/content.md#strands.types.content.Messages): A list of Strands Agents messages, containing a [Role](../../../api-reference/python/types/content.md#strands.types.content.Role) and a list of [ContentBlocks](../../../api-reference/python/types/content.md#strands.types.content.ContentBlock).
+    - [`list[ToolSpec]`](../../../api-reference/python/types/tools.md#strands.types.tools.ToolSpec): List of tool specifications that the model can decide to use.
     - `SystemPrompt`: A system prompt string given to the Model to prompt it how to answer the user.
 
     ```python
@@ -310,9 +310,9 @@ Your custom model provider needs to convert your model's response events to Stra
 
 === "Python"
 
-    The Python SDK uses dictionary-based [StreamEvent](../../../api-reference/types.md#strands.types.streaming.StreamEvent) format:
+    The Python SDK uses dictionary-based [StreamEvent](../../../api-reference/python/types/streaming.md#strands.types.streaming.StreamEvent) format:
 
-    * [`messageStart`](../../../api-reference/types.md#strands.types.streaming.MessageStartEvent): Event signaling the start of a message in a streaming response. This should have the `role`: `assistant`
+    * [`messageStart`](../../../api-reference/python/types/streaming.md#strands.types.streaming.MessageStartEvent): Event signaling the start of a message in a streaming response. This should have the `role`: `assistant`
     ```python
     {
         "messageStart": {
@@ -320,7 +320,7 @@ Your custom model provider needs to convert your model's response events to Stra
         }
     }
     ```
-    * [`contentBlockStart`](../../../api-reference/types.md#strands.types.streaming.ContentBlockStartEvent): Event signaling the start of a content block. If this is the first event of a tool use request, then set the `toolUse` key to have the value [ContentBlockStartToolUse](../../../api-reference/types.md#strands.types.content.ContentBlockStartToolUse)
+    * [`contentBlockStart`](../../../api-reference/python/types/streaming.md#strands.types.streaming.ContentBlockStartEvent): Event signaling the start of a content block. If this is the first event of a tool use request, then set the `toolUse` key to have the value [ContentBlockStartToolUse](../../../api-reference/python/types/content.md#strands.types.content.ContentBlockStartToolUse)
     ```python
     {
         "contentBlockStart": {
@@ -331,7 +331,7 @@ Your custom model provider needs to convert your model's response events to Stra
         }
     }
     ```
-    * [`contentBlockDelta`](../../../api-reference/types.md#strands.types.streaming.ContentBlockDeltaEvent): Event continuing a content block. This event can be sent several times, and each piece of content will be appended to the previously sent content.
+    * [`contentBlockDelta`](../../../api-reference/python/types/streaming.md#strands.types.streaming.ContentBlockDeltaEvent): Event continuing a content block. This event can be sent several times, and each piece of content will be appended to the previously sent content.
     ```python
     {
         "contentBlockDelta": {
@@ -349,13 +349,13 @@ Your custom model provider needs to convert your model's response events to Stra
         }
     }
     ```
-    * [`contentBlockStop`](../../../api-reference/types.md#strands.types.streaming.ContentBlockStopEvent): Event marking the end of a content block. Once this event is sent, all previous events between the previous [ContentBlockStartEvent](../../../api-reference/types.md#strands.types.streaming.ContentBlockStartEvent) and this one can be combined to create a [ContentBlock](../../../api-reference/types.md#strands.types.content.ContentBlock)
+    * [`contentBlockStop`](../../../api-reference/python/types/streaming.md#strands.types.streaming.ContentBlockStopEvent): Event marking the end of a content block. Once this event is sent, all previous events between the previous [ContentBlockStartEvent](../../../api-reference/python/types/streaming.md#strands.types.streaming.ContentBlockStartEvent) and this one can be combined to create a [ContentBlock](../../../api-reference/python/types/content.md#strands.types.content.ContentBlock)
     ```python
     {
         "contentBlockStop": {}
     }
     ```
-    * [`messageStop`](../../../api-reference/types.md#strands.types.streaming.MessageStopEvent): Event marking the end of a streamed response, and the [StopReason](../../../api-reference/types.md#strands.types.event_loop.StopReason). No more content block events are expected after this event is returned.
+    * [`messageStop`](../../../api-reference/python/types/streaming.md#strands.types.streaming.MessageStopEvent): Event marking the end of a streamed response, and the [StopReason](../../../api-reference/python/types/event_loop.md#strands.types.event_loop.StopReason). No more content block events are expected after this event is returned.
     ```python
     {
         "messageStop": {
@@ -363,7 +363,7 @@ Your custom model provider needs to convert your model's response events to Stra
         }
     }
     ```
-    * [`metadata`](../../../api-reference/types.md#strands.types.streaming.MetadataEvent): Event representing the metadata of the response. This contains the input, output, and total token count, along with the latency of the request.
+    * [`metadata`](../../../api-reference/python/types/streaming.md#strands.types.streaming.MetadataEvent): Event representing the metadata of the response. This contains the input, output, and total token count, along with the latency of the request.
     ```python
     {
         "metrics": {
@@ -376,7 +376,7 @@ Your custom model provider needs to convert your model's response events to Stra
         }
     }
     ```
-    * [`redactContent`](../../../api-reference/types.md#strands.types.streaming.RedactContentEvent): Event that is used to redact the users input message, or the generated response of a model. This is useful for redacting content if a guardrail gets triggered.
+    * [`redactContent`](../../../api-reference/python/types/streaming.md#strands.types.streaming.RedactContentEvent): Event that is used to redact the users input message, or the generated response of a model. This is useful for redacting content if a guardrail gets triggered.
     ```python
     {
         "redactContent": {

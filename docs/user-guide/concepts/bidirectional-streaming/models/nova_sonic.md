@@ -13,6 +13,9 @@
 
 ## Installation
 
+!!! warning "Python 3.12+ Required"
+    Nova Sonic requires Python 3.12 or higher due to its experimental AWS SDK dependency.
+
 Nova Sonic is included in the base bidirectional streaming dependencies for Strands Agents.
 
 To install it, run:
@@ -111,7 +114,7 @@ For more details on this approach, please refer to the [boto3 session docs](http
 
 | Parameter | Description | Example | Options |
 | --------- | ----------- | ------- | ------- |
-| `audio` | `AudioConfig` instance. | `{"voice": "tiffany"}` | [reference](../../../../../api-reference/experimental/bidi/types.md#strands.experimental.bidi.types.model.AudioConfig) |
+| `audio` | `AudioConfig` instance. | `{"voice": "tiffany"}` | [reference](../../../../api-reference/python/experimental/bidi/types/model.md#strands.experimental.bidi.types.model.AudioConfig) |
 | `inference` | Session start `inferenceConfiguration`'s (as snake_case). | `{"top_p": 0.9}` | [reference](https://docs.aws.amazon.com/nova/latest/userguide/input-events.html)
 
 ## Troubleshooting
@@ -133,4 +136,4 @@ As a reminder, Nova Sonic is only available in us-east-1, eu-north-1, and ap-nor
 
 - [Nova Sonic](https://docs.aws.amazon.com/nova/latest/userguide/speech.html)
 - [Experimental Bedrock Client](https://github.com/awslabs/aws-sdk-python/tree/develop/clients/aws-sdk-bedrock-runtime)
-- [Provider API Reference](../../../../../api-reference/experimental/bidi/models.md#strands.experimental.bidi.models.nova_sonic.BidiNovaSonicModel)
+- [Provider API Reference](../../../../api-reference/python/experimental/bidi/models/nova_sonic.md#strands.experimental.bidi.models.nova_sonic.BidiNovaSonicModel)

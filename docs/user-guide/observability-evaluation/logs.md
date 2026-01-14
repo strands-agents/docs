@@ -227,7 +227,7 @@ The Strands Agents SDK uses standard log levels:
 
 === "Python"
 
-    1. **Configure Early**: Set up logging configuration before initializing the Agent
+    1. **Configure Early**: Set up logging configuration before initializing the agent
     2. **Appropriate Levels**: Use INFO for normal operation and DEBUG for troubleshooting
     3. **Structured Log Format**: Use the structured log format shown in examples for better parsing
     4. **Performance**: Be mindful of logging overhead in production environments

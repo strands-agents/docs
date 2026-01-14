@@ -10,7 +10,7 @@ After completing this guide, you can build voice assistants, interactive chatbot
 
 Before starting, ensure you have:
 
-- Python 3.12+ installed
+- Python 3.10+ installed (3.12+ required for Nova Sonic)
 - Audio hardware (microphone and speakers) for voice conversations
 - Model provider credentials configured (AWS, OpenAI, or Google)
 
@@ -507,5 +507,5 @@ Ready to learn more? Check out these resources:
     - [Nova Sonic](models/nova_sonic.md) - Amazon Bedrock's bidirectional streaming model
     - [OpenAI Realtime](models/openai_realtime.md) - OpenAI's Realtime API
     - [Gemini Live](models/gemini_live.md) - Google's Gemini Live API
-- [API Reference](../../../../api-reference/experimental/bidi/agent.md) - Complete API documentation
+- [API Reference](../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
 

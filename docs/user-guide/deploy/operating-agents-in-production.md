@@ -135,10 +135,10 @@ Built-in guides are available for several AWS services:
 
 For production deployments, implement comprehensive monitoring:
 
-1. **Tool Execution Metrics**: Monitor execution time and error rates for each tool
-2. **Token Usage**: Track token consumption for cost optimization
-3. **Response Times**: Monitor end-to-end response times
-4. **Error Rates**: Track and alert on agent errors
+1. **Tool Execution Metrics**: Monitor execution time and error rates for each tool.
+2. **Token Usage**: Track token consumption for cost optimization.
+3. **Response Times**: Monitor end-to-end response times.
+4. **Error Rates**: Track and alert on agent errors.
 
 Consider integrating with AWS CloudWatch for metrics collection and alerting.
 

@@ -130,7 +130,25 @@ The hooks system provides events for different stages of agent execution:
 
 ### Event Properties
 
-Most event properties are read-only to prevent unintended modifications. However, certain properties can be modified to influence agent behavior.
+Most event properties are read-only to prevent unintended modifications. However, certain properties can be modified to influence agent behavior:
+
+=== "Python"
+
+    - [`AfterModelCallEvent`](../../../api-reference/python/hooks/events.md#strands.hooks.events.AfterModelCallEvent)
+        - `retry` - Request a retry of the model invocation. See [Model Call Retry](#model-call-retry).
+
+    - [`BeforeToolCallEvent`](../../../api-reference/python/hooks/events.md#strands.hooks.events.BeforeToolCallEvent)
+        - `cancel_tool` - Cancel tool execution with a message. See [Limit Tool Counts](#limit-tool-counts).
+        - `selected_tool` - Replace the tool to be executed. See [Tool Interception](#tool-interception).
+        - `tool_use` - Modify tool parameters before execution. See [Fixed Tool Arguments](#fixed-tool-arguments).
+
+    - [`AfterToolCallEvent`](../../../api-reference/python/hooks/events.md#strands.hooks.events.AfterToolCallEvent)
+        - `result` - Modify the tool result. See [Result Modification](#result-modification).
+
+=== "TypeScript"
+
+    - `AfterModelCallEvent`
+        - `retryModelCall` - Request a retry of the model invocation (typically after reducing context size).
 
 ### Callback Ordering
 
@@ -394,6 +412,64 @@ For example, to limit the `sleep` tool to 3 invocations per invocation:
     agent("Sleep 5 times for 10ms each or until you can't anymore")
     # This will sleep successfully again because the count resets every invocation
     agent("Sleep once")
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
+### Model Call Retry
+
+Useful for implementing custom retry logic for model invocations. The `AfterModelCallEvent.retry` field allows hooks to request retries based on any criteria—exceptions, response validation, content quality checks, or any custom logic. This example demonstrates retrying on exceptions with exponential backoff:
+
+=== "Python"
+
+    ```python
+    import asyncio
+    import logging
+    from strands.hooks import HookProvider, HookRegistry, BeforeInvocationEvent, AfterModelCallEvent
+
+    logger = logging.getLogger(__name__)
+
+    class RetryOnServiceUnavailable(HookProvider):
+        """Retry model calls when ServiceUnavailable errors occur."""
+
+        def __init__(self, max_retries: int = 3):
+            self.max_retries = max_retries
+            self.retry_count = 0
+
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(BeforeInvocationEvent, self.reset_counts)
+            registry.add_callback(AfterModelCallEvent, self.handle_retry)
+
+        def reset_counts(self, event: BeforeInvocationEvent = None) -> None:
+            self.retry_count = 0
+
+        async def handle_retry(self, event: AfterModelCallEvent) -> None:
+            if event.exception:
+                if "ServiceUnavailable" in str(event.exception):
+                    logger.info("ServiceUnavailable encountered")
+                    if self.retry_count < self.max_retries:
+                        logger.info("Retrying model call")
+                        self.retry_count += 1
+                        event.retry = True
+                        await asyncio.sleep(2 ** self.retry_count)  # Exponential backoff
+            else:
+                # Reset counts on successful call
+                self.reset_counts()
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
+For example, to retry up to 3 times on service unavailable errors:
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+
+    retry_hook = RetryOnServiceUnavailable(max_retries=3)
+    agent = Agent(hooks=[retry_hook])
+
+    result = agent("What is the capital of France?")
     ```
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}

@@ -102,6 +102,6 @@ Ensure your deployed model supports OpenAI-compatible chat completion APIs and v
 
 ## References
 
-- [API Reference](../../../api-reference/models.md)
+- [API Reference](../../../api-reference/python/models/model.md)
 - [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)
 - [SageMaker Runtime API](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html)

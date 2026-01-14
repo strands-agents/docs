@@ -13,9 +13,12 @@ __pycache__
 node_modules
 uv.lock
 
+temp_python_sdk
 sdk-typescript
 package-lock.json
 
-# Generated TypeScript documentation
-docs/api-reference/typescript/
+# Generated documentation
+docs/api-reference/
 __*__/
+
+

@@ -80,4 +80,4 @@ Ensure you're using a model ID compatible with Fireworks AI (e.g., `accounts/fir
 * [Fireworks AI API Reference](https://docs.fireworks.ai/api-reference)
 * [Fireworks AI Models](https://fireworks.ai/models)
 * [OpenAI Python SDK](https://github.com/openai/openai-python)
-* [Strands Agents API](../../api-reference/models.md)
+* [Strands Agents API](../../api-reference/python/models/model.md)

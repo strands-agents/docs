@@ -93,7 +93,7 @@ Direct tool calls are (by default) recorded in the conversation history:
 
 ### Conversation Manager
 
-Strands uses a conversation manager to handle conversation history effectively. The default is the [`SlidingWindowConversationManager`](../../../api-reference/agent.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager), which keeps recent messages and removes older ones when needed:
+Strands uses a conversation manager to handle conversation history effectively. The default is the [`SlidingWindowConversationManager`](../../../api-reference/python/agent/conversation_manager/sliding_window_conversation_manager.md#strands.agent.conversation_manager.sliding_window_conversation_manager.SlidingWindowConversationManager), which keeps recent messages and removes older ones when needed:
 
 === "Python"
 

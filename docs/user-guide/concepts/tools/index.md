@@ -211,7 +211,7 @@ Build your own tools using the Strands SDK's tool interfaces. Both Python and Ty
 
 === "Python"
 
-    Define any Python function as a tool by using the [`@tool`](../../../api-reference/tools.md#strands.tools.decorator.tool) decorator. Function decorated tools can be placed anywhere in your codebase and imported in to your agent's list of tools. 
+    Define any Python function as a tool by using the [`@tool`](../../../api-reference/python/tools/decorator.md#strands.tools.decorator.tool) decorator. Function decorated tools can be placed anywhere in your codebase and imported in to your agent's list of tools. 
 
     ```python
     import asyncio
@@ -378,7 +378,7 @@ Pre-built tools are available in both Python and TypeScript to help you get star
 
     **Vended Tools**
 
-    TypeScript vended tools are included in the SDK at [`vended_tools/`]({{ ts_sdk_repo_home }}/vended_tools). 
+    TypeScript vended tools are included in the SDK at [`vended-tools/`]({{ ts_sdk_repo_home }}/src/vended-tools).
     The Community Tools Package (`strands-agents-tools`) is Python-only.
 
     ```typescript

@@ -99,4 +99,4 @@ With these components in place, a continuous improvement flywheel emerges which 
 
 ## Conclusion
 
-Effective observability is crucial for developing agents which reliably complete customers’ tasks. The key to success is treating observability not as an afterthought, but as a core component of agent engineering from day one. This investment will pay dividends in improved reliability, faster development cycles, and better customer experiences.
+Effective observability is crucial for developing agents that reliably complete customers’ tasks. The key to success is treating observability not as an afterthought, but as a core component of agent engineering from day one. This investment will pay dividends in improved reliability, faster development cycles, and better customer experiences.

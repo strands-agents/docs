@@ -283,7 +283,7 @@ Ensure your Writer API key is valid and has the necessary permissions. You can g
 
 ## References
 
-- [API Reference](../../../api-reference/models.md)
+- [API Reference](../../../api-reference/python/models/model.md)
 - [Writer Documentation](https://dev.writer.com/)
 - [Writer Models Guide](https://dev.writer.com/home/models)
 - [Writer API Reference](https://dev.writer.com/api-reference)

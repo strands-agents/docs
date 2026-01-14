@@ -36,7 +36,7 @@ def add(x: int, y: int) -> int:
 mcp.run(transport="streamable-http")
 ```
 
-### Now, connect the server to the Strands Agent
+### Now, connect the server to the Strands agent
 
 Now let's walk through how to connect a Strands agent to our MCP server:
 

@@ -12,3 +12,7 @@ https?://.*\.openai\.com.*
 
 # Network error: error sending request for url - but verified it works
 https?://opentelemetry\.io.*
+
+# Links in code samples being triggered
+file:///path/to/config.json
+file://bedrock-policy.json

@@ -38,7 +38,7 @@ agent = Agent(
 ```
 
   - `editor`: Tool used to write code directly to a file named `"custom_tool_X.py"`, where "X" is the index of the tool being created.
-  - `load_tool`: Tool used to load the tool so the Agent can use it.
+  - `load_tool`: Tool used to load the tool so the agent can use it.
   - `shell`: Tool used to execute the tool. 
 
 #### 2. Agent System Prompt outlines a strict guideline for naming, structure, and creation of the new tools.
@@ -47,7 +47,7 @@ The system prompt guides the agent in proper tool creation. The [TOOL_BUILDER_SY
 
   -  **Tool Naming Convention**: Provides the naming convention to use when building new custom tools.
 
-  -  **Tool Structure**: Enforces a standardized structure for all tools, making it possible for the agent to generate valid tools based on the `TOOL_SPEC` [provided](../../user-guide/concepts/tools/custom-tools.md#modules-as-tools). 
+  -  **Tool Structure**: Enforces a standardized structure for all tools, making it possible for the agent to generate valid tools based on the `TOOL_SPEC` [provided](../../user-guide/concepts/tools/custom-tools.md#module-based-tools-python-only). 
 
 
 ```python

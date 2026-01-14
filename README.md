@@ -58,7 +58,7 @@ npm install
 To generate the static site:
 
 ```bash
-npm run docs:clone && mkdocs build
+mkdocs build
 ```
 
 This will create the site in the `site` directory.
