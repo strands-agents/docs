@@ -230,6 +230,7 @@ nav:
         - MLX: community/model-providers/mlx.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+        - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
       - Tool Protocols:
         - UTCP: community/tools/utcp.md
       - Tools:
