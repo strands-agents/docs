@@ -153,32 +153,7 @@ For HTTP-based MCP servers that use Streamable HTTP transport:
     streamable_http_mcp_client = MCPClient(
         lambda: streamablehttp_client("http://localhost:8000/mcp")
     )
-    ```
 
-#### AWS IAM
-
-For MCP servers on AWS that use SigV4 authentication with IAM credentials, you can conveniently use the [`mcp-proxy-for-aws`](https://pypi.org/project/mcp-proxy-for-aws/) package to handle AWS credential management and request signing automatically. See the [detailed guide](https://dev.to/aws/no-oauth-required-an-mcp-client-for-aws-iam-k1o) for more information.
-
-First, install the package:
-
-```bash
-pip install mcp-proxy-for-aws
-```
-
-Then you use it like any other transport:
-
-```python
-from mcp_proxy_for_aws.client import aws_iam_streamablehttp_client
-from strands.tools.mcp import MCPClient
-
-mcp_client = MCPClient(lambda: aws_iam_streamablehttp_client(
-    endpoint="https://your-service.us-east-1.amazonaws.com/mcp",
-    aws_region="us-east-1",
-    aws_service="bedrock-agentcore"
-))
-```
-
-### 3. Server-Sent Events (SSE)
     with streamable_http_mcp_client:
         tools = streamable_http_mcp_client.list_tools_sync()
         agent = Agent(tools=tools)
@@ -197,6 +172,29 @@ mcp_client = MCPClient(lambda: aws_iam_streamablehttp_client(
             headers={"Authorization": f"Bearer {os.getenv('MCP_PAT')}"}
         )
     )
+    ```
+
+    #### AWS IAM 
+
+    For MCP servers on AWS that use SigV4 authentication with IAM credentials, you can conveniently use the [`mcp-proxy-for-aws`](https://pypi.org/project/mcp-proxy-for-aws/) package to handle AWS credential management and request signing automatically. See the [detailed guide](https://dev.to/aws/no-oauth-required-an-mcp-client-for-aws-iam-k1o) for more information.
+
+    First, install the package:
+
+    ```bash
+    pip install mcp-proxy-for-aws
+    ```
+
+    Then you use it like any other transport:
+
+    ```python
+    from mcp_proxy_for_aws.client import aws_iam_streamablehttp_client
+    from strands.tools.mcp import MCPClient
+
+    mcp_client = MCPClient(lambda: aws_iam_streamablehttp_client(
+        endpoint="https://your-service.us-east-1.amazonaws.com/mcp",
+        aws_region="us-east-1",
+        aws_service="bedrock-agentcore"
+    ))
     ```
 
 === "TypeScript"
