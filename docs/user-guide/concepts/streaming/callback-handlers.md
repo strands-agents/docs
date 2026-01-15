@@ -120,8 +120,8 @@ def event_loop_tracker(**kwargs):
         print("▶️ Event loop cycle starting")
     elif "message" in kwargs:
         print(f"📬 New message created: {kwargs['message']['role']}")
-    elif kwargs.get("complete", False):
-        print("✅ Cycle completed")
+    elif "result" in kwargs:
+        print("✅ Agent completed with result")
     elif kwargs.get("force_stop", False):
         print(f"🛑 Event loop force-stopped: {kwargs.get('force_stop_reason', 'unknown reason')}")
         
@@ -152,7 +152,7 @@ The output will show the sequence of events:
 2. Then the cycle begins (`start_event_loop`)
 3. New cycles may start multiple times during execution (`start`)
 4. Text generation and tool usage events occur during the cycle
-5. Finally, the cycle completes (`complete`) or may be force-stopped
+5. Finally, the agent completes with a `result` event or may be force-stopped
 
 ## Best Practices
 

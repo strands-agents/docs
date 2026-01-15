@@ -615,6 +615,8 @@ The `content` field is a list of content blocks, where each block can contain:
 
     ```python
     # weather_forecast.py
+    from typing import Any
+
 
     # 1. Tool Specification
     TOOL_SPEC = {

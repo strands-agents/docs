@@ -25,13 +25,7 @@ Best practices for publishing include:
 
 Once your package is published to PyPI, you can request to have it featured in the Strands Agents documentation. Featured packages should provide clear utility to the community and meet high quality standards including comprehensive documentation, thorough testing, and reliable functionality.
 
-Submit your package for consideration by creating an issue in the [Strands Agents documentation repository](https://github.com/strands-agents/docs/issues). Include:
-
- - Package Name: the name your package name and PyPI link
- - Description: a brief description of functionality including why it benefits the community.
- - Usage examples: how strands customers would wire up and use the components 
-
-Accepted packages will be featured in the Community Package documentation with package descriptions and installation instructions, usage examples showing integration with Strands Agents, and links to the project repository and documentation.
+See our [Get Featured](./get-featured.md) guide for step-by-step instructions on adding your package to the docs.
 
 ## Best Practices and Examples
 

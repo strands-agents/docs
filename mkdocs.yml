@@ -219,6 +219,7 @@ nav:
 
   - Community:
       - Community Packages: community/community-packages.md
+      - Get Featured: community/get-featured.md
       - Integrations:
         - AG-UI: community/integrations/ag-ui.md
       - Model Providers:
@@ -231,6 +232,7 @@ nav:
         - MLX: community/model-providers/mlx.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+        - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
       - Tool Protocols:
         - UTCP: community/tools/utcp.md
       - Tools:

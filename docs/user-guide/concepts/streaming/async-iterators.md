@@ -119,8 +119,8 @@ This async stream processor illustrates the event loop lifecycle events and how 
             print("▶️ Event loop cycle starting")
         elif "message" in event:
             print(f"📬 New message created: {event['message']['role']}")
-        elif event.get("complete", False):
-            print("✅ Cycle completed")
+        elif "result" in event:
+            print("✅ Agent completed with result")
         elif event.get("force_stop", False):
             print(f"🛑 Event loop force-stopped: {event.get('force_stop_reason', 'unknown reason')}")
 
@@ -142,7 +142,7 @@ This async stream processor illustrates the event loop lifecycle events and how 
     2. Then the cycle begins (`start_event_loop`)
     3. New cycles may start multiple times during execution (`start_event_loop`)
     4. Text generation and tool usage events occur during the cycle
-    5. Finally, the cycle completes (`complete`) or may be force-stopped (`force_stop`)
+    5. Finally, the agent completes with a `result` event or may be force-stopped (`force_stop`)
 
 === "TypeScript"
 
