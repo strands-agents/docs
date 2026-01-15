@@ -1,9 +1,5 @@
 *.js
 !jest.config.js
-*.d.ts
-node_modules
-.venv/
-output.json
 
 # Installed dependencies for container image
 _dependencies
