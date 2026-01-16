@@ -41,3 +41,34 @@ class RetryStrategy(HookProvider):
 ```
 
 Higher-level abstractions require additional interface definitions, but this tradeoff provides an improved developer experience through explicit contracts. Developers with edge cases can still drop to raw `HookProvider` (and `agent.hooks`) when needed — optimizing for the common path while preserving that escape hatch.
+
+
+## Prefer Flat Namespaces Over Nested Modules
+
+**Date**: Jan 16, 2026
+
+### Decision
+
+Public APIs should expose commonly-used functionality through flat, top-level namespaces rather than requiring users to import from deeply nested module paths.
+
+### Rationale
+
+Fewer imports are simpler to use and more discoverable when using IDE autocompletion & documentation. It also aligns with the Python ethos "Flat is better than nested" (PEP 20 - The Zen of Python).
+
+We don't want users continually importing additional modules for common functionality. The goal is to optimize for the 80% case where users need standard features, while still allowing advanced users to import from specific submodules when needed.
+
+For example, we prefer exporting all hook events from a single module:
+
+```python
+from strands.hooks import MultiAgentInitializedEvent
+```
+
+instead of categorizing them based on their purpose
+
+```python
+from strands.hooks.multiagent import MultiAgentInitializedEvent
+```
+
+this is even more important when the event names already indicate their grouping (**MultiAgent**InitializeEvent). 
+
+Internal module organization can remain nested for code maintainability — the key is re-exporting public symbols at common locations.
