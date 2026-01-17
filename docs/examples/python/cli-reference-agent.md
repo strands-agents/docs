@@ -6,13 +6,11 @@ The Strands CLI is Open-Source and available [strands-agents/agent-builder](http
 
 ## Prerequisites
 
-Before installing the Strands CLI, ensure you have:
+In addition to the prerequisites listed for [examples](../README.md), this example requires the following:
 
-- Python 3.10 or higher
-- pip (Python package installer)
-- git
-- AWS account with Bedrock access (for using Bedrock models)
-- AWS credentials configured (for AWS integrations)
+- Python package installer (`pip`)
+- [pipx](https://github.com/pypa/pipx) for isolated Python package installation
+- Git
 
 ## Standard Installation
 
