@@ -29,23 +29,47 @@ flowchart LR
 
 ## Steering
 
-When agents attempt tool calls, steering handlers evaluate the action and provide guidance:
+Steering handlers can intercept agent behavior at two points: before tool calls and after model responses.
+
+### Tool Steering
+
+When agents attempt tool calls, steering handlers evaluate the action via `steer_before_tool()`:
 
 ```mermaid
 flowchart LR
     A[Tool Call Attempt] --> B[BeforeToolCallEvent]
-    B --> C["Handler.steer()"]
-    C --> D{SteeringAction}
+    B --> C["Handler.steer_before_tool()"]
+    C --> D{ToolSteeringAction}
     D -->|Proceed| E[Tool Executes]
     D -->|Guide| F[Cancel + Feedback]
     D -->|Interrupt| G[Human Input]
 ```
 
-**SteeringHandler** intercepts tool calls via BeforeToolCallEvent, evaluates using local `steering_context`, and returns a **SteeringAction**:
+**Tool steering** returns a `ToolSteeringAction`:
 
 - **Proceed**: Tool executes immediately
 - **Guide**: Tool cancelled, agent receives contextual feedback
 - **Interrupt**: Tool execution paused for human input
+
+### Model Steering
+
+After each model response, steering handlers can evaluate output via `steer_after_model()`:
+
+```mermaid
+flowchart LR
+    A[Model Response] --> B[AfterModelCallEvent]
+    B --> C["Handler.steer_after_model()"]
+    C --> D{ModelSteeringAction}
+    D -->|Proceed| E[Response Accepted]
+    D -->|Guide| F[Discard + Retry]
+```
+
+**Model steering** returns a `ModelSteeringAction`:
+
+- **Proceed**: Accept the response as-is
+- **Guide**: Discard the response and retry with guidance injected into the conversation
+
+This enables handlers to validate model responses, ensure required tools are used before completion, or guide conversation flow based on output.
 
 ## Getting Started
 
@@ -95,7 +119,7 @@ sequenceDiagram
     participant A as Agent
     participant S as Steering Handler
     participant T as Tool
-    
+
     U->>A: "Send frustrated email to client"
     A->>A: Reason about request
     A->>S: Evaluate send_email tool call
@@ -104,8 +128,46 @@ sequenceDiagram
     A->>U: "Let me reframe this more positively..."
 ```
 
+### Model Steering Example
 
+Model steering handlers can enforce requirements on agent completion. This example ensures an agent uses a required tool before finishing:
 
+```python
+from strands import Agent, tool
+from strands.experimental.steering import SteeringHandler, Proceed, Guide
+
+@tool
+def log_activity(activity: str) -> str:
+    """Log an activity to the audit system."""
+    return f"Logged: {activity}"
+
+class ForceToolUsageHandler(SteeringHandler):
+    """Ensures a required tool is used before the agent completes."""
+
+    def __init__(self, required_tool: str):
+        super().__init__()
+        self.required_tool = required_tool
+
+    async def steer_after_model(self, agent, message, stop_reason, **kwargs):
+        if stop_reason != "end_turn":
+            return Proceed(reason="Model still processing")
+
+        # Check if required tool was used in this response
+        for block in message.get("content", []):
+            if "toolUse" in block and block["toolUse"].get("name") == self.required_tool:
+                return Proceed(reason="Required tool was used")
+
+        # Force tool usage before completing
+        return Guide(reason=f"You MUST use the {self.required_tool} tool before completing.")
+
+# Agent will retry until it uses the required tool
+agent = Agent(
+    tools=[log_activity],
+    hooks=[ForceToolUsageHandler("log_activity")]
+)
+
+response = agent("Help me with a task")  # Agent will be guided to use log_activity
+```
 
 
 ## Built-in Context Providers
