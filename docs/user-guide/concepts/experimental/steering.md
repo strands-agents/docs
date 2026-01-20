@@ -135,6 +135,7 @@ Model steering handlers can enforce requirements on agent completion. This examp
 ```python
 from strands import Agent, tool
 from strands.experimental.steering import SteeringHandler, Proceed, Guide
+from strands.hooks import BeforeToolCallEvent
 
 @tool
 def log_activity(activity: str) -> str:
@@ -147,15 +148,19 @@ class ForceToolUsageHandler(SteeringHandler):
     def __init__(self, required_tool: str):
         super().__init__()
         self.required_tool = required_tool
+        self.tool_was_used = False
+
+    def before_tool_call(self, event: BeforeToolCallEvent, **kwargs):
+        """Track when the required tool is called."""
+        if event.tool_name == self.required_tool:
+            self.tool_was_used = True
 
     async def steer_after_model(self, agent, message, stop_reason, **kwargs):
         if stop_reason != "end_turn":
             return Proceed(reason="Model still processing")
 
-        # Check if required tool was used in this response
-        for block in message.get("content", []):
-            if "toolUse" in block and block["toolUse"].get("name") == self.required_tool:
-                return Proceed(reason="Required tool was used")
+        if self.tool_was_used:
+            return Proceed(reason="Required tool was used")
 
         # Force tool usage before completing
         return Guide(reason=f"You MUST use the {self.required_tool} tool before completing.")
