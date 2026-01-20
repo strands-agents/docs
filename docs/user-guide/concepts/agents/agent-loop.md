@@ -122,6 +122,94 @@ When the model's response exceeds the configured token limit, the loop raises a 
 
 Handle this exception by reducing context size, increasing the token limit, or breaking the task into smaller steps.
 
+## Agent Resumption
+
+When an agent loop is interrupted by an error—such as API throttling, network timeouts, or transient failures—you don't need to start over. The agent preserves its conversation history, allowing you to resume from where it left off.
+
+### How Resumption Works
+
+The agent maintains its conversation state across invocations. When you call the agent without providing a new prompt, it continues processing based on its existing conversation history:
+
+- If the last message was a tool use request, the agent executes the pending tools and continues
+- If the last message was a tool result, the agent invokes the model with that result and continues
+- If the conversation is complete, the agent returns the existing result
+
+This behavior enables graceful recovery from transient failures without losing progress.
+
+### Basic Usage
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+
+    agent = Agent()
+
+    try:
+        result = agent("Analyze this large codebase for security issues")
+    except Exception as e:
+        print(f"Failed: {e}")
+        
+        # Resume from where it left off
+        result = agent()
+    ```
+
+{{ ts_not_supported_code() }}
+
+### Retry Pattern
+
+For operations prone to throttling or transient errors, implement a retry loop:
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+    import time
+
+    agent = Agent()
+    max_retries = 5
+
+    try:
+        result = agent("Process all files in the repository")
+    except Exception as e:
+        print(f"Initial attempt failed: {e}")
+        
+        for attempt in range(max_retries):
+            try:
+                # Wait before retrying (exponential backoff)
+                time.sleep(2 ** attempt)
+                
+                # Resume without a new prompt
+                result = agent()
+                print("Successfully resumed and completed")
+                break
+            except Exception as retry_error:
+                print(f"Retry {attempt + 1} failed: {retry_error}")
+        else:
+            print("All retries exhausted")
+    ```
+
+{{ ts_not_supported_code() }}
+
+### When to Use Resumption
+
+Resumption is particularly useful for:
+
+- **Long-running tasks**: Operations that may take several minutes and are susceptible to timeouts
+- **Rate-limited APIs**: When model provider throttling interrupts multi-step workflows
+- **Unreliable networks**: Environments where connectivity may be intermittent
+- **Expensive operations**: Tasks where restarting would waste significant compute or API costs
+
+### Limitations
+
+Resumption relies on the agent's in-memory conversation history. Consider these constraints:
+
+- **Process boundaries**: If the Python process terminates, conversation history is lost. Use [Session Management](session-management.md) to persist state across process restarts.
+- **State consistency**: External state (files, databases) may have changed between the failure and resumption. The agent continues with its recorded context, which may no longer reflect reality.
+- **Idempotency**: Ensure tools are idempotent or handle duplicate execution gracefully, as a tool may have partially executed before the failure.
+
+For production systems requiring robust recovery, combine resumption with session persistence and idempotent tool design.
+
 ## What Comes Next
 
 The agent loop is the execution primitive. Higher-level patterns build on top of it:
