@@ -13,6 +13,9 @@ Hooks enable use cases such as:
 - Monitoring agent execution and tool usage
 - Modifying tool execution behavior
 - Adding validation and error handling
+- Monitoring multi-agent execution flow and node transitions
+- Debugging complex orchestration patterns
+- Implementing custom logging and metrics collection
 
 ## Basic Usage
 
@@ -40,9 +43,26 @@ You can register callbacks for specific events using `agent.hooks` after the fac
     --8<-- "user-guide/concepts/agents/hooks.ts:individual_callback"
     ```
 
+For multi-agent orchestrators, you can register callbacks for orchestration events:
+
+=== "Python"
+
+    ```python
+    # Create your orchestrator (Graph or Swarm)
+    orchestrator = Graph(...)
+    
+    # Register individual callbacks
+    def my_callback(event: BeforeNodeCallEvent) -> None:
+        print(f"Custom callback triggered")
+    
+    orchestrator.hooks.add_callback(BeforeNodeCallEvent, my_callback)
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
 ### Creating a Hook Provider
 
-The `HookProvider` protocol allows a single object to register callbacks for multiple events:
+The `HookProvider` protocol allows a single object to register callbacks for multiple events, similar pattern also work for multi-agent orchestrators:
 
 === "Python"
 
@@ -72,6 +92,8 @@ The `HookProvider` protocol allows a single object to register callbacks for mul
     ```
 
 ## Hook Event Lifecycle
+
+### Single-Agent Lifecycle
 
 The following diagram shows when hook events are emitted during a typical agent invocation where tools are invoked:
 
@@ -108,23 +130,53 @@ Model <--> Tool
 Tool --> End
 ```
 
+### Multi-Agent Lifecycle
+
+The following diagram shows when multi-agent hook events are emitted during orchestrator execution:
+
+```mermaid
+flowchart LR
+subgraph Init["Initialization"]
+    direction TB
+    MultiAgentInitializedEvent["MultiAgentInitializedEvent"]
+end
+subgraph Invocation["Invocation Lifecycle"]
+    direction TB
+    BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
+    AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
+    BeforeMultiAgentInvocationEvent --> NodeExecution
+    NodeExecution --> AfterMultiAgentInvocationEvent
+end
+subgraph NodeExecution["Node Execution (Repeated)"]
+    direction TB
+    BeforeNodeCallEvent["BeforeNodeCallEvent"]
+    AfterNodeCallEvent["AfterNodeCallEvent"]
+    BeforeNodeCallEvent --> AfterNodeCallEvent
+end
+Init --> Invocation
+```
 
 ### Available Events
 
 The hooks system provides events for different stages of agent execution:
 
-| Event                                          | Description                                                                                                       |
-|------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
-| `AgentInitializedEvent`                        | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor.     |
-| `BeforeInvocationEvent`                        | Triggered at the beginning of a new agent invocation request |
-| `AfterInvocationEvent`                         | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering        |
-| `MessageAddedEvent`                            | Triggered when a message is added to the agent's conversation history                                             |
-| `BeforeModelCallEvent`                         | Triggered before the model is invoked for inference                                                               |
-| `AfterModelCallEvent`                          | Triggered after model invocation completes. Uses reverse callback ordering                                        |
-| `BeforeToolCallEvent`                          | Triggered before a tool is invoked.                                                                               |
-| `AfterToolCallEvent`                           | Triggered after tool invocation completes. Uses reverse callback ordering                                         |
-| `BeforeToolsEvent` <br /> **(TypeScript only)**      | Triggered before tools are executed in a batch.                                                                   |
-| `AfterToolsEvent` <br /> **(TypeScript only)** | Triggered after tools are executed in a batch. Uses reverse callback ordering                                     |
+| Event                                                       | Description                                                                                                   |
+|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| `AgentInitializedEvent`                                     | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor. |
+| `BeforeInvocationEvent`                                     | Triggered at the beginning of a new agent invocation request                                                  |
+| `AfterInvocationEvent`                                      | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering    |
+| `MessageAddedEvent`                                         | Triggered when a message is added to the agent's conversation history                                         |
+| `BeforeModelCallEvent`                                      | Triggered before the model is invoked for inference                                                           |
+| `AfterModelCallEvent`                                       | Triggered after model invocation completes. Uses reverse callback ordering                                    |
+| `BeforeToolCallEvent`                                       | Triggered before a tool is invoked.                                                                           |
+| `AfterToolCallEvent`                                        | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
+| `BeforeToolsEvent` <br /> **(TypeScript only)**             | Triggered before tools are executed in a batch.                                                               |
+| `AfterToolsEvent` <br /> **(TypeScript only)**              | Triggered after tools are executed in a batch. Uses reverse callback ordering                                 |
+| `MultiAgentInitializedEvent` <br /> **(Python only)**       | Triggered when multi-agent orchestrator is initialized                                                        |
+| `BeforeMultiAgentInvocationEvent`  <br /> **(Python only)** | Triggered before orchestrator execution starts                                                                |
+| `AfterMultiAgentInvocationEvent`  <br /> **(Python only)**  | Triggered after orchestrator execution completes. Uses reverse callback ordering                              |
+| `BeforeNodeCallEvent`  <br /> **(Python only)**             | Triggered before individual node execution starts                                                             |
+| `AfterNodeCallEvent`  <br /> **(Python only)**              | Triggered after individual node execution completes. Uses reverse callback ordering                           |
 
 ## Hook Behaviors
 
@@ -150,10 +202,21 @@ Most event properties are read-only to prevent unintended modifications. However
     - `AfterModelCallEvent`
         - `retryModelCall` - Request a retry of the model invocation (typically after reducing context size).
 
+Multi-agent hook events provide access to:
+
+- **source**: The multi-agent orchestrator instance (for example: Graph/Swarm)
+- **node_id**: Identifier of the node being executed (for node-level events)
+- **invocation_state**: Configuration and context data passed through the orchestrator invocation
+
 ### Callback Ordering
 
 Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
 
+### Accessing Agent and Orchestrator State
+
+Single-agent hooks can access the agent instance directly through event properties, enabling inspection of the agent's current state, configuration, and execution context.
+
+Multi-agent hooks can access the orchestrator instance directly through the `source` property, enabling inspection of the orchestrator's current state, configuration, and execution context.
 
 ## Advanced Usage
 
@@ -211,6 +274,8 @@ Hook events that involve tool execution include access to invocation state, whic
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
 
+Multi-agent hooks also include access to `invocation_state`, which provides configuration and context data passed through the orchestrator's lifecycle:
+
 ### Tool Interception
 
 Modify or replace tools before execution:
@@ -251,6 +316,31 @@ Modify tool results after execution:
 
 {{ ts_not_supported_code("Changing of tool results is not yet available in TypeScript SDK") }}
 
+### Conditional Node Execution
+
+Implement custom logic to modify orchestration behavior in multi-agent systems:
+
+=== "Python"
+
+    ```python
+    class ConditionalExecutionHook(HookProvider):
+        def __init__(self, skip_conditions: dict[str, callable]):
+            self.skip_conditions = skip_conditions
+    
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(BeforeNodeCallEvent, self.check_execution_conditions)
+    
+        def check_execution_conditions(self, event: BeforeNodeCallEvent) -> None:
+            node_id = event.node_id
+            if node_id in self.skip_conditions:
+                condition_func = self.skip_conditions[node_id]
+                if condition_func(event.invocation_state):
+                    print(f"Skipping node {node_id} due to condition")
+                    # Note: Actual node skipping would require orchestrator-specific implementation
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
 ## Best Practices
 
 ### Composability
@@ -290,6 +380,96 @@ When modifying event properties, log the changes for debugging and audit purpose
     ```
 
 {{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+
+### Performance Considerations
+
+Keep hook callbacks lightweight since they execute synchronously. For multi-agent hooks, this is especially important as they may be called frequently during orchestration:
+
+=== "Python"
+
+    ```python
+    class AsyncMultiAgentProcessor(HookProvider):
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(AfterNodeCallEvent, self.queue_node_processing)
+    
+        def queue_node_processing(self, event: AfterNodeCallEvent) -> None:
+            # Queue heavy processing for background execution
+            self.background_queue.put({
+                'node_id': event.node_id,
+                'orchestrator_type': type(event.source).__name__,
+                'timestamp': time.time()
+            })
+    ```
+{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+
+### Orchestrator-Agnostic Design
+
+Design multi-agent hooks to work with different orchestrator types:
+
+=== "Python"
+
+    ```python
+    class UniversalMultiAgentHook(HookProvider):
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(BeforeNodeCallEvent, self.handle_node_execution)
+    
+        def handle_node_execution(self, event: BeforeNodeCallEvent) -> None:
+            orchestrator_type = type(event.source).__name__
+            print(f"Executing node {event.node_id} in {orchestrator_type} orchestrator")
+            
+            # Handle orchestrator-specific logic if needed
+            if orchestrator_type == "Graph":
+                self.handle_graph_node(event)
+            elif orchestrator_type == "Swarm":
+                self.handle_swarm_node(event)
+    
+        def handle_graph_node(self, event: BeforeNodeCallEvent) -> None:
+            # Graph-specific handling
+            pass
+    
+        def handle_swarm_node(self, event: BeforeNodeCallEvent) -> None:
+            # Swarm-specific handling
+            pass
+    ```
+{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+
+## Integration with Multi-Agent Systems
+
+Multi-agent hooks complement single-agent hooks. Individual agents within the orchestrator can still have their own hooks, creating a layered monitoring and customization system:
+
+=== "Python"
+
+    ```python
+    # Single-agent hook for individual agents
+    class AgentLevelHook(HookProvider):
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(BeforeToolCallEvent, self.log_tool_use)
+    
+        def log_tool_use(self, event: BeforeToolCallEvent) -> None:
+            print(f"Agent tool call: {event.tool_use['name']}")
+    
+    # Multi-agent hook for orchestrator
+    class OrchestratorLevelHook(HookProvider):
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(BeforeNodeCallEvent, self.log_node_execution)
+    
+        def log_node_execution(self, event: BeforeNodeCallEvent) -> None:
+            print(f"Orchestrator node execution: {event.node_id}")
+    
+    # Create agents with individual hooks
+    agent1 = Agent(tools=[tool1], hooks=[AgentLevelHook()])
+    agent2 = Agent(tools=[tool2], hooks=[AgentLevelHook()])
+    
+    # Create orchestrator with multi-agent hooks
+    orchestrator = Graph(
+        agents={"agent1": agent1, "agent2": agent2},
+        hooks=[OrchestratorLevelHook()]
+    )
+    ```
+
+{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+
+This layered approach provides comprehensive observability and control across both individual agent execution and orchestrator-level coordination.
 
 ## Cookbook
 
