@@ -151,7 +151,6 @@ nav:
         - Observability: user-guide/concepts/bidirectional-streaming/otel.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
-        - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
         - Steering: user-guide/concepts/experimental/steering.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md

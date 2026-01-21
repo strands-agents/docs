@@ -283,9 +283,6 @@ Similar to interrupts, an MCP server can request additional information from the
 
 Interrupts are supported in multi-agent patterns, enabling human-in-the-loop workflows across agent orchestration systems. The interfaces mirror those used for single-agent interrupts. You can raise interrupts from `BeforeNodeCallEvent` hooks executed before each node or from within the nodes themselves. Session management is also supported, allowing you to persist and resume your interrupted multi-agents.
 
-!!! warning "Experimental"
-    Multi-agent hook events are currently experimental and imported from `strands.experimental.hooks.multiagent`.
-
 ### Swarm
 
 A [Swarm](./multi-agent/swarm.md) is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. The following example demonstrates interrupting your swarm invocation through a `BeforeNodeCallEvent` hook.
@@ -294,8 +291,7 @@ A [Swarm](./multi-agent/swarm.md) is a collaborative agent orchestration system 
 import json
 
 from strands import Agent
-from strands.experimental.hooks.multiagent import BeforeNodeCallEvent
-from strands.hooks import HookProvider, HookRegistry
+from strands.hooks import BeforeNodeCallEvent, HookProvider, HookRegistry
 from strands.multiagent import Swarm, Status
 
 

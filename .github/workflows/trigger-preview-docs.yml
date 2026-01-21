@@ -6,9 +6,10 @@ on:
 
 jobs:
   authorization-check:
+    permissions: read-all
     runs-on: ubuntu-latest
     outputs:
-      should-deploy: ${{ steps.collab-check.outputs.result }}
+      approval-env: ${{ steps.collab-check.outputs.result }}
     steps:
       - name: Collaborator Check
         uses: actions/github-script@v8
@@ -24,23 +25,23 @@ jobs:
               });
               const permission = permissionResponse.data.permission;
               const hasWriteAccess = ['write', 'admin'].includes(permission);
-              
+
               if (!hasWriteAccess) {
                 console.log(`User ${context.payload.pull_request.user.login} does not have write access to the repository (permission: ${permission})`);
-                return "false"
+                return "manual-approval"
               } else {
-                console.log(`Verified ${context.payload.pull_request.user.login} has write access. Approving documentation deployment.`)
-                return "true"
+                console.log(`Verified ${context.payload.pull_request.user.login} has write access. Auto approving documentation deployment.`)
+                return "auto-approve"
               }
             } catch (error) {
-              console.log(`${context.payload.pull_request.user.login} does not have write access. Denying documentation deployment.`)
-              return "false"
+              console.log(`${context.payload.pull_request.user.login} does not have write access. Requiring manual approval to deploy documentation.`)
+              return "manual-approval"
             }
 
   trigger-docs-deploy:
     runs-on: ubuntu-latest
     needs: [authorization-check]
-    if: needs.authorization-check.outputs.should-deploy == 'true'
+    environment: ${{ needs.authorization-check.outputs.approval-env }}
     
     steps:
       - name: Trigger documentation deployment
