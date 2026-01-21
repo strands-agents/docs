@@ -96,6 +96,7 @@ nav:
         - State: user-guide/concepts/agents/state.md
         - Session Management: user-guide/concepts/agents/session-management.md
         - Prompts: user-guide/concepts/agents/prompts.md
+        - Retry Strategies: user-guide/concepts/agents/retry-strategies.md
         - Hooks: user-guide/concepts/agents/hooks.md
         - Structured Output: user-guide/concepts/agents/structured-output.md
         - Conversation Management: user-guide/concepts/agents/conversation-management.md
