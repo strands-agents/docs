@@ -72,3 +72,30 @@ from strands.hooks.multiagent import MultiAgentInitializedEvent
 this is even more important when the event names already indicate their grouping (**MultiAgent**InitializeEvent). 
 
 Internal module organization can remain nested for code maintainability — the key is re-exporting public symbols at common locations.
+
+## When Internal Interfaces Should Extend HookProvider
+
+**Date**: Jan 21, 2026
+
+### Decision
+
+Internal interfaces that integrate with the agent lifecycle (such as `RetryStrategy`, `SessionManager`, and `ConversationManager`) SHOULD extend `HookProvider`. When uncertain whether a new interface requires `HookProvider`, prefer a simple domain interface—it can always be evolved to extend `HookProvider` later, but the reverse migration breaks existing implementations.
+
+### Rationale
+
+The team considered two approaches for `RetryStrategy`: extending `HookProvider` or exposing a simple domain interface with methods like `should_retry(exception, attempt) -> bool`.
+
+While `RetryStrategy` is simple enough that a non-`HookProvider` interface would suffice, extending `HookProvider` maintains a uniform pattern across all agent constructor parameters that integrate with the lifecycle. Users implementing any of these interfaces learn one composition model. This aligns with the **composability** tenet: primitives are building blocks with each other.
+
+The tradeoff is that `HookProvider` exposure can leak implementation details for interfaces with single decision points. Use the following criteria for future interfaces:
+
+**Use a simple interface when:**
+
+- The interface has a single responsibility expressible as one or two methods
+- The interface does not need to respond to multiple lifecycle events
+- Consistency with existing interfaces is not a priority
+
+**Extend HookProvider when:**
+
+- The capability requires responding to multiple distinct lifecycle events
+- Users need to customize which events to subscribe to or add callbacks beyond base class defaults
