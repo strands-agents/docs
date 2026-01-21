@@ -202,12 +202,6 @@ Most event properties are read-only to prevent unintended modifications. However
     - `AfterModelCallEvent`
         - `retryModelCall` - Request a retry of the model invocation (typically after reducing context size).
 
-Multi-agent hook events provide access to:
-
-- **source**: The multi-agent orchestrator instance (for example: Graph/Swarm)
-- **node_id**: Identifier of the node being executed (for node-level events)
-- **invocation_state**: Configuration and context data passed through the orchestrator invocation
-
 ### Callback Ordering
 
 Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
@@ -215,11 +209,6 @@ Some events come in pairs, such as Before/After events. The After event callback
 ## Advanced Usage
 
 ### Accessing Invocation State in Hooks
-
-Hook events include access to invocation state and the source agent or orchestrator instance:
-
-- **Single-agent hooks**: Access the agent instance directly through event properties (e.g., `event.agent`), enabling inspection of the agent's current state, configuration, and execution context
-- **Multi-agent hooks**: Access the orchestrator instance through the `source` property (e.g., `event.source`), enabling inspection of the orchestrator's current state, configuration, and execution context
 
 Invocation state provides configuration and context data passed through the agent or orchestrator invocation. This is particularly useful for:
 
@@ -273,7 +262,13 @@ Invocation state provides configuration and context data passed through the agen
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
 
-Multi-agent hooks also include access to `invocation_state`, which provides configuration and context data passed through the orchestrator's lifecycle.
+Multi-agent hook events provide access to:
+
+- **source**: The multi-agent orchestrator instance (for example: Graph/Swarm)
+- **node_id**: Identifier of the node being executed (for node-level events)
+- **invocation_state**: Configuration and context data passed through the orchestrator invocation
+
+Multi-agent hooks provide configuration and context data passed through the orchestrator's lifecycle.
 
 ### Tool Interception
 
