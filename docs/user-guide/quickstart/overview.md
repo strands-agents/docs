@@ -12,7 +12,7 @@ Create your first Python Strands agent!
 
 ## :material-language-typescript: **TypeScript Quickstart**
 
-!!! info "Experimental SDK"
+!!! info "New Experimental SDK"
     The TypeScript SDK is experimental
 
 Create your first TypeScript Strands agent!
