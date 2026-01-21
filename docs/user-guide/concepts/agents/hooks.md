@@ -62,7 +62,7 @@ For multi-agent orchestrators, you can register callbacks for orchestration even
 
 ### Creating a Hook Provider
 
-The `HookProvider` protocol allows a single object to register callbacks for multiple events, similar pattern also work for multi-agent orchestrators:
+The `HookProvider` protocol allows a single object to register callbacks for multiple events. This pattern works for both single-agent and multi-agent orchestrators:
 
 === "Python"
 
@@ -158,7 +158,7 @@ Init --> Invocation
 
 ### Available Events
 
-The hooks system provides events for different stages of agent execution:
+The hooks system provides events for different stages of execution. Events marked **(Python only)** are specific to multi-agent orchestrators and are not available in TypeScript.
 
 | Event                                                       | Description                                                                                                   |
 |-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -212,17 +212,16 @@ Multi-agent hook events provide access to:
 
 Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
 
-### Accessing Agent and Orchestrator State
-
-Single-agent hooks can access the agent instance directly through event properties, enabling inspection of the agent's current state, configuration, and execution context.
-
-Multi-agent hooks can access the orchestrator instance directly through the `source` property, enabling inspection of the orchestrator's current state, configuration, and execution context.
-
 ## Advanced Usage
 
 ### Accessing Invocation State in Hooks
 
-Hook events that involve tool execution include access to invocation state, which provides configuration and context data passed through the agent invocation. This is particularly useful for:
+Hook events include access to invocation state and the source agent or orchestrator instance:
+
+- **Single-agent hooks**: Access the agent instance directly through event properties (e.g., `event.agent`), enabling inspection of the agent's current state, configuration, and execution context
+- **Multi-agent hooks**: Access the orchestrator instance through the `source` property (e.g., `event.source`), enabling inspection of the orchestrator's current state, configuration, and execution context
+
+Invocation state provides configuration and context data passed through the agent or orchestrator invocation. This is particularly useful for:
 
 1. **Custom Objects**: Access database client objects, connection pools, or other Python objects
 2. **Request Context**: Access session IDs, user information, settings, or request-specific data  
@@ -274,7 +273,7 @@ Hook events that involve tool execution include access to invocation state, whic
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
 
-Multi-agent hooks also include access to `invocation_state`, which provides configuration and context data passed through the orchestrator's lifecycle:
+Multi-agent hooks also include access to `invocation_state`, which provides configuration and context data passed through the orchestrator's lifecycle.
 
 ### Tool Interception
 
@@ -381,27 +380,6 @@ When modifying event properties, log the changes for debugging and audit purpose
 
 {{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
 
-### Performance Considerations
-
-Keep hook callbacks lightweight since they execute synchronously. For multi-agent hooks, this is especially important as they may be called frequently during orchestration:
-
-=== "Python"
-
-    ```python
-    class AsyncMultiAgentProcessor(HookProvider):
-        def register_hooks(self, registry: HookRegistry) -> None:
-            registry.add_callback(AfterNodeCallEvent, self.queue_node_processing)
-    
-        def queue_node_processing(self, event: AfterNodeCallEvent) -> None:
-            # Queue heavy processing for background execution
-            self.background_queue.put({
-                'node_id': event.node_id,
-                'orchestrator_type': type(event.source).__name__,
-                'timestamp': time.time()
-            })
-    ```
-{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
-
 ### Orchestrator-Agnostic Design
 
 Design multi-agent hooks to work with different orchestrator types:
@@ -431,7 +409,7 @@ Design multi-agent hooks to work with different orchestrator types:
             # Swarm-specific handling
             pass
     ```
-{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
 
 ## Integration with Multi-Agent Systems
 
@@ -467,7 +445,7 @@ Multi-agent hooks complement single-agent hooks. Individual agents within the or
     )
     ```
 
-{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
 
 This layered approach provides comprehensive observability and control across both individual agent execution and orchestrator-level coordination.
 
