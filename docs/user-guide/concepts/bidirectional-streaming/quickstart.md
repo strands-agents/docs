@@ -454,7 +454,7 @@ Debug logs show:
 
 ### Audio Feedback Loop in a Python Console
 
-⚠️ BidiAudioIO uses PyAudio, which does not support echo cancellation. A headset is required to prevent audio feedback loops.
+BidiAudioIO uses PyAudio, which does not support echo cancellation. A headset is required to prevent audio feedback loops.
 
 ### No Audio Output
 
