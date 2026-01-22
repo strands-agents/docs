@@ -110,6 +110,7 @@ Bidirectional streaming supports multiple model providers. Choose one based on y
 
 Now let's create a simple voice-enabled agent that can have real-time conversations:
 
+
 ```python
 import asyncio
 from strands.experimental.bidi import BidiAgent, BidiAudioIO
@@ -451,6 +452,10 @@ Debug logs show:
 - Event processing flow
 
 ## Common Issues
+
+### Audio Feedback Loop in a Python Console
+
+⚠️ BidiAudioIO uses PyAudio, which does not support echo cancellation. A headset is required to prevent audio feedback loops.
 
 ### No Audio Output
 
