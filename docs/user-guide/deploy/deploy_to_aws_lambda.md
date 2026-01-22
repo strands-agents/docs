@@ -245,9 +245,9 @@ When using [Model Context Protocol (MCP)](../concepts/tools/mcp-tools.md) tools 
 
 ### Transport Selection
 
-**stdio transport does not work on Lambda.** The standard stdio transport relies on spawning local processes using commands like `uvx` or `npx`, which are not available in the Lambda execution environment.
+**HTTP-based transports are recommended for Lambda.** While stdio transport can work if you package an MCP server with your Lambda, it requires spawning a subprocess on each invocation which adds latency. Common tools like `uvx` and `npx` that download and run MCP servers on-the-fly are not available in the Lambda environment.
 
-Instead, use HTTP-based transports:
+Instead, use HTTP-based transports that connect to remote MCP servers:
 
 - **Streamable HTTP** - Recommended for most use cases
 - **SSE (Server-Sent Events)** - For servers that support SSE transport
@@ -276,27 +276,19 @@ def handler(event, context):
 
 ### MCP Connection Lifecycle
 
-**Create a new MCP context manager for each Lambda invocation.** The MCP connection should be established within the handler function, not at module level. This ensures:
-
-1. **Clean connection state** - Each invocation gets a fresh connection
-2. **Proper resource cleanup** - The context manager ensures connections are closed
-3. **Cold start handling** - Connections are established when needed, not at import time
+**Establish a new MCP connection for each Lambda invocation.** Creating the `MCPClient` object itself is inexpensive - the costly operation is establishing the actual connection to the server. Use context managers to ensure connections are properly opened and closed:
 
 ```python
 from mcp.client.streamable_http import streamablehttp_client
 from strands import Agent
 from strands.tools.mcp import MCPClient
 
-# ❌ Don't create MCP client at module level
-# mcp_client = MCPClient(...)
-
 def handler(event, context):
-    # ✅ Create MCP client within the handler
     mcp_client = MCPClient(
         lambda: streamablehttp_client("https://your-mcp-server.example.com/mcp")
     )
 
-    # ✅ Use context manager to manage connection lifecycle
+    # Context manager ensures connection is opened and closed safely
     with mcp_client:
         tools = mcp_client.list_tools_sync()
         agent = Agent(tools=tools)
@@ -305,8 +297,33 @@ def handler(event, context):
     return str(response)
 ```
 
+**Advanced: Reusing connections across invocations**
+
+For optimization, you can establish the connection at module level using `start()` to reuse it across Lambda warm invocations:
+
+```python
+from mcp.client.streamable_http import streamablehttp_client
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+# Create and start connection at module level (reused across warm invocations)
+mcp_client = MCPClient(
+    lambda: streamablehttp_client("https://your-mcp-server.example.com/mcp")
+)
+mcp_client.start()
+
+def handler(event, context):
+    tools = mcp_client.list_tools_sync()
+    agent = Agent(tools=tools)
+    response = agent(event.get("prompt"))
+    return str(response)
+```
+
+!!! warning "Multi-tenancy Considerations"
+    MCP connections are typically stateful to a particular conversation. Reusing a connection across invocations can lead to state leakage between different users or conversations. **Start with the context manager approach** and only optimize to connection reuse if needed, with careful consideration of your tenancy model.
+
 !!! tip "HTTP Transport Performance"
-    Creating an HTTP-based MCP connection per invocation is lightweight - it's simply establishing an HTTP connection to a remote server. This is very different from stdio transport, which spawns a subprocess and may download dependencies at runtime (e.g., when using `uvx`). The per-invocation pattern shown above adds minimal overhead for HTTP-based transports.
+    For HTTP-based transports, the connection cost per invocation is minimal - it's simply establishing an HTTP connection to a remote server. This is very different from stdio transport, which spawns a subprocess and may download dependencies at runtime (e.g., when using `uvx`).
 
 ### AWS IAM Authentication
 

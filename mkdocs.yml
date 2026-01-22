@@ -189,7 +189,7 @@ nav:
           - Overview: user-guide/deploy/deploy_to_bedrock_agentcore/index.md
           - Python: user-guide/deploy/deploy_to_bedrock_agentcore/python.md
           - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
-      - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
+      - AWS Lambda<sup> new</sup>: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
