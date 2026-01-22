@@ -110,7 +110,6 @@ Bidirectional streaming supports multiple model providers. Choose one based on y
 
 Now let's create a simple voice-enabled agent that can have real-time conversations:
 
-
 ```python
 import asyncio
 from strands.experimental.bidi import BidiAgent, BidiAudioIO
