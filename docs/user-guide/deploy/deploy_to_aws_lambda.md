@@ -10,6 +10,64 @@ This guide discusses Lambda integration at a high level - for a complete example
 
     This Lambda deployment example does not implement response streaming as described in the [Async Iterators for Streaming](../concepts/streaming/async-iterators.md) documentation. If you need streaming capabilities, consider using the [AWS Fargate deployment](deploy_to_aws_fargate.md) approach which does implement streaming responses.
 
+## Using the Strands Agents Lambda Layer
+
+The fastest way to get started with Strands Agents on Lambda is to use the official Lambda layer. This eliminates the need to package dependencies yourself - simply add the layer to your function and start writing agent code.
+
+### Layer ARN Format
+
+```
+arn:aws:lambda:{region}:856699698935:layer:strands-agents-py{python_version}-{architecture}:{layer_version}
+```
+
+**Example:**
+
+```
+arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
+```
+
+### Available Variants
+
+| Component | Options |
+|-----------|---------|
+| **Python Versions** | `py3_10`, `py3_11`, `py3_12`, `py3_13` |
+| **Architectures** | `x86_64`, `aarch64` |
+| **Regions** | `us-east-1`, `us-east-2`, `us-west-1`, `us-west-2`, `eu-west-1`, `eu-west-2`, `eu-west-3`, `eu-central-1`, `eu-north-1`, `ap-southeast-1`, `ap-southeast-2`, `ap-northeast-1`, `ap-northeast-2`, `ap-northeast-3`, `ap-south-1`, `sa-east-1`, `ca-central-1` |
+
+!!! tip "Layer Contents"
+    The Lambda layer includes the base `strands-agents` package. If you need additional tools from `strands-agents-tools` or other dependencies, you can either package them in a separate layer or include them with your function code.
+
+### Using the Layer with CDK
+
+```typescript
+const weatherFunction = new lambda.Function(this, "AgentLambda", {
+  runtime: lambda.Runtime.PYTHON_3_12,
+  functionName: "AgentFunction",
+  handler: "agent_handler.handler",
+  code: lambda.Code.fromAsset("./lambda"),
+  timeout: Duration.seconds(30),
+  memorySize: 128,
+  architecture: lambda.Architecture.X86_64,
+  layers: [
+    lambda.LayerVersion.fromLayerVersionArn(
+      this,
+      "StrandsAgentsLayer",
+      "arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1"
+    ),
+  ],
+});
+```
+
+### Using the Layer via AWS Console or CLI
+
+Add the layer ARN directly when creating or updating your Lambda function:
+
+```bash
+aws lambda update-function-configuration \
+  --function-name MyAgentFunction \
+  --layers arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
+```
+
 ## Creating Your Agent in Python
 
 The core of your Lambda deployment is the agent handler code. This Python script initializes your Strands Agents SDK agent and processes incoming requests. 
@@ -63,7 +121,11 @@ def handler(event: Dict[str, Any], _context) -> str:
 
 ## Infrastructure
 
-To deploy the above agent to Lambda using the TypeScript CDK, prepare your code for deployment by creating the Lambda definition and an associated Lambda layer ([`AgentLambdaStack.ts`][AgentLambdaStack]):
+To deploy the above agent to Lambda using the TypeScript CDK, prepare your code for deployment by creating the Lambda definition. You can either use the [official Strands Agents Lambda layer](#using-the-strands-agents-lambda-layer) or create a custom layer with additional dependencies.
+
+### Using a Custom Dependencies Layer
+
+If you need packages beyond the base `strands-agents` SDK (such as `strands-agents-tools`), you can create a custom layer ([`AgentLambdaStack.ts`][AgentLambdaStack]):
 
 ```typescript
 const packagingDirectory = path.join(__dirname, "../packaging");
@@ -177,14 +239,114 @@ aws lambda invoke --function-name AgentFunction \
 jq -r '.' ./output.json
 ```
 
+## Using MCP Tools on Lambda
+
+When using [Model Context Protocol (MCP)](../concepts/tools/mcp-tools.md) tools with Lambda, there are important considerations for transport selection and connection lifecycle management.
+
+### Transport Selection
+
+**stdio transport does not work on Lambda.** The standard stdio transport relies on spawning local processes using commands like `uvx` or `npx`, which are not available in the Lambda execution environment.
+
+Instead, use HTTP-based transports:
+
+- **Streamable HTTP** - Recommended for most use cases
+- **SSE (Server-Sent Events)** - For servers that support SSE transport
+
+```python
+from mcp.client.streamable_http import streamablehttp_client
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+def handler(event, context):
+    # Use HTTP-based transport instead of stdio
+    mcp_client = MCPClient(
+        lambda: streamablehttp_client("https://your-mcp-server.example.com/mcp")
+    )
+
+    with mcp_client:
+        tools = mcp_client.list_tools_sync()
+        agent = Agent(
+            system_prompt="You are a helpful assistant.",
+            tools=tools,
+        )
+        response = agent(event.get("prompt"))
+
+    return str(response)
+```
+
+### MCP Connection Lifecycle
+
+**Create a new MCP context manager for each Lambda invocation.** The MCP connection should be established within the handler function, not at module level. This ensures:
+
+1. **Clean connection state** - Each invocation gets a fresh connection
+2. **Proper resource cleanup** - The context manager ensures connections are closed
+3. **Cold start handling** - Connections are established when needed, not at import time
+
+```python
+from mcp.client.streamable_http import streamablehttp_client
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+# ❌ Don't create MCP client at module level
+# mcp_client = MCPClient(...)
+
+def handler(event, context):
+    # ✅ Create MCP client within the handler
+    mcp_client = MCPClient(
+        lambda: streamablehttp_client("https://your-mcp-server.example.com/mcp")
+    )
+
+    # ✅ Use context manager to manage connection lifecycle
+    with mcp_client:
+        tools = mcp_client.list_tools_sync()
+        agent = Agent(tools=tools)
+        response = agent(event.get("prompt"))
+
+    return str(response)
+```
+
+!!! tip "HTTP Transport Performance"
+    Creating an HTTP-based MCP connection per invocation is lightweight - it's simply establishing an HTTP connection to a remote server. This is very different from stdio transport, which spawns a subprocess and may download dependencies at runtime (e.g., when using `uvx`). The per-invocation pattern shown above adds minimal overhead for HTTP-based transports.
+
+### AWS IAM Authentication
+
+For MCP servers hosted on AWS that require SigV4 authentication, use the `mcp-proxy-for-aws` package:
+
+```python
+from mcp_proxy_for_aws.client import aws_iam_streamablehttp_client
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+def handler(event, context):
+    mcp_client = MCPClient(
+        lambda: aws_iam_streamablehttp_client(
+            endpoint="https://your-service.us-east-1.amazonaws.com/mcp",
+            aws_region="us-east-1",
+            aws_service="bedrock-agentcore"
+        )
+    )
+
+    with mcp_client:
+        tools = mcp_client.list_tools_sync()
+        agent = Agent(tools=tools)
+        response = agent(event.get("prompt"))
+
+    return str(response)
+```
+
+!!! note
+    If using `mcp-proxy-for-aws`, add it to your Lambda layer or package it with your function code.
+
 ## Summary
 
 The above steps covered:
 
+ - Using the official Strands Agents Lambda layer for quick deployment
  - Creating a Python handler that Lambda invokes to trigger an agent
  - Creating the CDK infrastructure to deploy to Lambda
- - Packaging up the Lambda handler and dependencies 
+ - Packaging up the Lambda handler and dependencies (when not using the layer)
  - Deploying the agent and infrastructure to an AWS account
+ - Using MCP tools with HTTP-based transports on Lambda
  - Manually testing the Lambda function  
 
 Possible follow-up tasks would be to:
