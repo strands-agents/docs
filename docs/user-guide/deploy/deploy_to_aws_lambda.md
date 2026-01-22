@@ -253,9 +253,6 @@ def handler(event, context):
 !!! warning "Multi-tenancy Considerations"
     MCP connections are typically stateful to a particular conversation. Reusing a connection across invocations can lead to state leakage between different users or conversations. **Start with the context manager approach** and only optimize to connection reuse if needed, with careful consideration of your tenancy model.
 
-!!! tip "HTTP Transport Performance"
-    For HTTP-based transports, the connection cost per invocation is minimal - it's simply establishing an HTTP connection to a remote server. This is very different from stdio transport, which spawns a subprocess and may download dependencies at runtime (e.g., when using `uvx`).
-
 ## Summary
 
 The above steps covered:
