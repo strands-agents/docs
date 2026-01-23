@@ -15,7 +15,6 @@ def user_task_function(case: Case) -> dict:
     """Execute agent with tools and capture trajectory."""
     memory_exporter.clear()
     agent = Agent(
-        trace_attributes={"gen_ai.conversation.id": case.session_id, "session.id": case.session_id},
         tools=[calculator],
         callback_handler=None,
     )

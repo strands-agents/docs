@@ -189,7 +189,6 @@ def task_function(case: Case) -> dict:
     ]
     
     agent = Agent(
-        trace_attributes={"gen_ai.conversation.id": case.session_id, "session.id": case.session_id},
         system_prompt="You are a helpful e-commerce assistant that can manage inventory, customer profiles, and process payments.",
         tools=all_tools,
         callback_handler=None,
@@ -214,29 +213,16 @@ async def main():
     # Create test cases for e-commerce assistant operations
     test_cases = [
         Case(
-            name="Check inventory for out-of-stock item",
-            input="Can you check the inventory for the Stainless Steel Water Bottle? I need to know if it's in stock.",
-            session_id="session_1"
-        ),
-        Case(
             name="Update inventory after restocking",
-            input="We just received 50 units of PROD-003 (Stainless Steel Water Bottle). Please update the inventory to add these items.",
-            session_id="session_2"
+            input="We just received 50 units of PROD-003 (Stainless Steel Water Bottle). Please update the inventory to add these items."
         ),
         Case(
             name="Get customer profile for premium customer",
-            input="I need to look up the customer profile for customer ID CUST-12345. They're calling about their recent order.",
-            session_id="session_3"
+            input="I need to look up the customer profile for customer ID CUST-12345. They're calling about their recent order."
         ),
         Case(
             name="Process payment for a customer",
-            input="Process a payment of $149.99 for customer CUST-67890 using their credit card ending in 1234.",
-            session_id="session_4"
-        ),
-        Case(
-            name="Complex multi-tool scenario",
-            input="Customer CUST-55555 wants to buy 2 Gaming Mechanical Keyboards. Check if we have enough inventory, then process the payment of $299.98 with their PayPal account.",
-            session_id="session_5"
+            input="Process a payment of $149.99 for customer CUST-67890 using their credit card ending in 1234."
         )
     ]
     
