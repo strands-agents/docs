@@ -22,47 +22,19 @@ on:
 
 jobs:
   authorization-check:
-    if: startsWith(github.event.comment.body, '/strands') || github.event_name == 'workflow_dispatch'
+    name: Check access
     permissions: read-all
     runs-on: ubuntu-latest
     outputs:
-      approval-env: ${{ steps.collab-check.outputs.result || steps.auto-approve.outputs.result }}
+      approval-env: ${{ steps.auth.outputs.result }}
     steps:
-      - name: Collaborator Check
-        if: github.event_name != 'workflow_dispatch'
-        uses: actions/github-script@v8
-        id: collab-check
+      - name: Check Authorization
+        id: auth
+        uses: strands-agents/devtools/authorization-check@main
         with:
-          result-encoding: string
-          script: |
-            try {
-              const permissionResponse = await github.rest.repos.getCollaboratorPermissionLevel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                username: context.payload.comment.user.login,
-              });
-              const role_name = permissionResponse.data.role_name;
-              const hasWriteAccess = ['triage', 'write', 'admin'].includes(role_name);
-              if (!hasWriteAccess) {
-                console.log(`User ${context.payload.comment.user.login} does not have write access to the repository (permission: ${permission})`);
-                return "manual-approval"
-              } else {
-                console.log(`Verified ${context.payload.comment.user.login} has write access. Auto Approving strands command.`)
-                return "auto-approve"
-              }
-            } catch (error) {
-              console.log(`${context.payload.comment.user.login} does not have write access. Requiring Manual Approval to run strands command.`)
-              return "manual-approval"
-            }
-
-      - name: Auto-approve for workflow dispatch
-        if: github.event_name == 'workflow_dispatch'
-        id: auto-approve
-        uses: actions/github-script@v8
-        with:
-          result-encoding: string
-          script: |
-            return "auto-approve"
+          skip-check: ${{ github.event_name == 'workflow_dispatch' }}
+          username: ${{ github.event.comment.user.login || 'invalid' }}
+          allowed-roles: 'triage,write,admin'
   
   setup-and-process:
     needs: [authorization-check]
