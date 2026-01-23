@@ -11,9 +11,12 @@
 
 - **OpenAI-Compatible API**: Uses vLLM's OpenAI-compatible `/v1/chat/completions` endpoint with streaming
 - **TITO Support**: Captures `prompt_token_ids` and `token_ids` directly from vLLM - no retokenization drift
-- **Tool Call Validation**: Hook-based validation to reject unknown tools and invalid JSON inputs (RL-friendly error feedback)
+- **Tool Call Validation**: Optional hooks for RL-friendly error messages (allowed tools list, schema validation)
 - **Agent Lightning Integration**: Automatically adds token IDs to OpenTelemetry spans for RL training data extraction
 - **Streaming**: Full streaming support with token ID capture via `VLLMTokenRecorder`
+
+!!! tip "Why TITO?"
+    Traditional retokenization can cause drift in RL training—the same text may tokenize differently during inference vs. training (e.g., "HAVING" → `H`+`AVING` vs. `HAV`+`ING`). TITO captures exact tokens from vLLM, eliminating this issue. See [No More Retokenization Drift](https://blog.vllm.ai/2025/10/22/agent-lightning.html) for details.
 
 ## Installation
 
@@ -86,9 +89,9 @@ print(f"Prompt tokens: {len(recorder.prompt_token_ids or [])}")
 print(f"Response tokens: {len(recorder.token_ids or [])}")
 ```
 
-### 3. Tool Call Validation (Recommended for RL)
+### 3. Tool Call Validation (Optional, Recommended for RL)
 
-vLLM tool parsers can post-process model outputs, potentially creating tool calls for unknown tools. Use `VLLMToolValidationHooks` to validate tool calls before execution:
+Strands SDK already handles unknown tools and malformed JSON gracefully. `VLLMToolValidationHooks` adds RL-friendly enhancements:
 
 ```python
 import os
@@ -102,7 +105,6 @@ model = VLLMModel(
     return_token_ids=True,
 )
 
-# Add validation hook - rejects unknown tools with deterministic error feedback
 agent = Agent(
     model=model,
     tools=[calculator],
@@ -113,12 +115,12 @@ result = agent("Compute 17 * 19 using the calculator tool.")
 print(result)
 ```
 
-The hook validates:
+**What it adds beyond Strands defaults:**
 
-- **Tool name**: Must exist in agent's tool registry
-- **Tool input**: If input is a JSON string, must be valid JSON (catches `JSONDecodeError`)
+- **Unknown tool errors include allowed tools list** — helps RL training learn valid tool names
+- **Schema validation** — catches missing required args and unknown args before tool execution
 
-Invalid tool calls receive a deterministic error `toolResult`, providing clean RL signals.
+Invalid tool calls receive deterministic error messages, providing cleaner RL training signals.
 
 ### 4. Agent Lightning Integration
 
@@ -222,25 +224,19 @@ The `VLLMModel` accepts the following parameters:
 | `inner` | Inner callback handler to chain | `None` |
 | `add_to_span` | Add token IDs to OpenTelemetry spans | `True` |
 
-### VLLMToolValidationHooks
+### VLLMToolValidationHooks Configuration
 
-No configuration required. Simply add to agent's hooks:
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| `include_allowed_tools_in_errors` | Include list of allowed tools in error messages | `True` |
+| `max_allowed_tools_in_error` | Maximum tool names to show in error messages | `25` |
+| `validate_input_shape` | Validate required/unknown args against schema | `True` |
 
-```python
-agent = Agent(model=model, tools=[...], hooks=[VLLMToolValidationHooks()])
-```
+**Example error messages** (more informative than Strands defaults):
 
-## Why TITO Matters
-
-In agent RL training, retokenization drift can cause training instability:
-
-1. **Non-unique tokenization**: The word "HAVING" might be tokenized as `H` + `AVING` during generation but `HAV` + `ING` when retokenized
-2. **Tool-call serialization**: Tool call JSON may be normalized/reformatted by parsers
-3. **Chat template differences**: Different frameworks may use different chat templates
-
-Using vLLM's `return_token_ids` feature captures the exact tokens used during inference, eliminating these issues.
-
-Reference: [No More Retokenization Drift](https://blog.vllm.ai/2025/10/22/agent-lightning.html)
+- Unknown tool: `Error: unknown tool: fake_tool | allowed_tools=[calculator, search, ...]`
+- Missing argument: `Error: tool_name=<calculator> | missing required argument(s): expression`
+- Unknown argument: `Error: tool_name=<calculator> | unknown argument(s): invalid_param`
 
 ## Troubleshooting
 
@@ -261,9 +257,9 @@ Ensure:
 2. `return_token_ids=True` is set on `VLLMModel`
 3. Your vLLM server supports `return_token_ids` in streaming mode
 
-### Tool calls for unknown tools
+### RL training needs cleaner error signals
 
-If vLLM's tool parser produces tool calls for tools not in your registry, add `VLLMToolValidationHooks` to get deterministic error feedback instead of crashes.
+Strands handles unknown tools gracefully, but for RL training you may want more informative errors. Add `VLLMToolValidationHooks` to get errors that include the list of allowed tools and validate argument schemas.
 
 ### Model only supports single tool calls
 
