@@ -378,7 +378,7 @@ Pre-built tools are available in both Python and TypeScript to help you get star
 
     **Vended Tools**
 
-    TypeScript vended tools are included in the SDK at [`vended_tools/`]({{ ts_sdk_repo_home }}/vended_tools). 
+    TypeScript vended tools are included in the SDK at [`vended-tools/`]({{ ts_sdk_repo_home }}/src/vended-tools).
     The Community Tools Package (`strands-agents-tools`) is Python-only.
 
     ```typescript

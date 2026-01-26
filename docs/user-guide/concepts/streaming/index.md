@@ -159,8 +159,8 @@ This example demonstrates how to identify event emitted from an agent:
             print("▶️ Event loop cycle starting")
         elif "message" in event:
             print(f"📬 New message created: {event['message']['role']}")
-        elif event.get("complete", False):
-            print("✅ Cycle completed")
+        elif "result" in event:
+            print("✅ Agent completed with result")
         elif event.get("force_stop", False):
             print(f"🛑 Event loop force-stopped: {event.get('force_stop_reason', 'unknown reason')}")
 

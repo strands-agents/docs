@@ -31,7 +31,7 @@ pip install 'strands-agents[bidi-all]'
 
 After installing `strands-agents[bidi-gemini]`, you can import and initialize the Strands Agents' Gemini Live provider as follows:
 
-```Python
+```python
 import asyncio
 
 from strands.experimental.bidi import BidiAgent
@@ -74,7 +74,7 @@ For details on the supported client configs, see [here](https://googleapis.githu
 
 | Parameter | Description | Example | Options |
 | --------- | ----------- | ------- | ------- |
-| `audio` | `AudioConfig` instance. | `{"voice": "Kore"}` | [reference](../../../../../api-reference/python/experimental/bidi/types/model.md#strands.experimental.bidi.types.model.AudioConfig) |
+| `audio` | `AudioConfig` instance. | `{"voice": "Kore"}` | [reference](../../../../api-reference/python/experimental/bidi/types/model.md#strands.experimental.bidi.types.model.AudioConfig) |
 | `inference` | Dict of inference fields specified in the Gemini `LiveConnectConfig`. | `{"temperature": 0.7}` | [reference](https://googleapis.github.io/python-genai/genai.html#genai.types.LiveConnectConfig)
 
 For the list of supported voices and languages, see [here](https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types).
@@ -97,4 +97,4 @@ Make sure your Google AI API key is properly set in `client_config` or as the `G
 
 - [Gemini Live API](https://ai.google.dev/gemini-api/docs/live)
 - [Gemini API Reference](https://googleapis.github.io/python-genai/genai.html#)
-- [Provider API Reference](../../../../../api-reference/python/experimental/bidi/models/gemini_live.md#strands.experimental.bidi.models.gemini_live.BidiGeminiLiveModel)
+- [Provider API Reference](../../../../api-reference/python/experimental/bidi/models/gemini_live.md#strands.experimental.bidi.models.gemini_live.BidiGeminiLiveModel)

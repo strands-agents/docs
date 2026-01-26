@@ -64,4 +64,4 @@ Built something useful? We'd love to list it here. Publishing your package to th
     - Usage examples showing basic integration
     - Documentation link (README or dedicated docs)
 
-We review submissions within 3 days and add packages that provide clear value to the community. Well-documented packages with tests and examples get priority.
+See our [Get Featured](./get-featured.md) guide for step-by-step instructions on adding your package to the docs.

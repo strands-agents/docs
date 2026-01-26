@@ -61,7 +61,7 @@ See the [MCP server documentation](https://github.com/strands-agents/mcp-server)
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model. To modify the default model, refer to [the Model Providers section](#model-providers)
 
 To use the examples in this guide, you'll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
 

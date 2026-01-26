@@ -30,7 +30,7 @@ pip install 'strands-agents[bidi-all]'
 
 After installing `strands-agents[bidi-openai]`, you can import and initialize the Strands Agents' OpenAI Realtime provider as follows:
 
-```Python
+```python
 import asyncio
 
 from strands.experimental.bidi import BidiAgent
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
 | Parameter | Description | Example | Options |
 | --------- | ----------- | ------- | ------- |
-| `audio` | `AudioConfig` instance. | `{"voice": "coral"}` | [reference](../../../../../api-reference/python/experimental/bidi/types/model.md#strands.experimental.bidi.types.model.AudioConfig) |
+| `audio` | `AudioConfig` instance. | `{"voice": "coral"}` | [reference](../../../../api-reference/python/experimental/bidi/types/model.md#strands.experimental.bidi.types.model.AudioConfig) |
 | `inference` | Dict of inference fields supported in the OpenAI `session.update` event. | `{"max_output_tokens": 4096}` | [reference](https://platform.openai.com/docs/api-reference/realtime-client-events/session/update)
 
 For the list of supported voices, see [here](https://platform.openai.com/docs/guides/realtime-conversations#voice-options).
@@ -97,4 +97,4 @@ Ensure your OpenAI API key is properly configured. Set the `OPENAI_API_KEY` envi
 
 - [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime)
 - [OpenAI API Reference](https://platform.openai.com/docs/api-reference/realtime)
-- [Provider API Reference](../../../../../api-reference/python/experimental/bidi/models/openai_realtime.md#strands.experimental.bidi.models.openai_realtime.BidiOpenAIRealtimeModel)
+- [Provider API Reference](../../../../api-reference/python/experimental/bidi/models/openai_realtime.md#strands.experimental.bidi.models.openai_realtime.BidiOpenAIRealtimeModel)

@@ -8,7 +8,7 @@ Hooks provide a composable extensibility mechanism for extending `BidiAgent` fun
 
 The bidirectional streaming hooks system extends the standard agent hooks with additional events specific to real-time streaming conversations, such as connection lifecycle, interruptions, and connection restarts.
 
-For a comprehensive introduction to the hooks concept and general patterns, see the [Hooks documentation](../../agents/hooks.md). This guide focuses on bidirectional streaming-specific events and use cases.
+For a comprehensive introduction to the hooks concept and general patterns, see the [Hooks documentation](../agents/hooks.md). This guide focuses on bidirectional streaming-specific events and use cases.
 
 A **Hook Event** is a specific event in the lifecycle that callbacks can be associated with. A **Hook Callback** is a callback function that is invoked when the hook event is emitted.
 
@@ -340,11 +340,11 @@ class MyHook:
         await self.save_to_database(event.message)
 ```
 
-For additional best practices on performance considerations, error handling, composability, and advanced patterns, see the [Hooks documentation](../../agents/hooks.md).
+For additional best practices on performance considerations, error handling, composability, and advanced patterns, see the [Hooks documentation](../agents/hooks.md).
 
 ## Next Steps
 
 - [Agent](agent.md) - Learn about BidiAgent configuration and lifecycle
 - [Session Management](session-management.md) - Persist conversations across sessions
 - [Events](events.md) - Complete guide to bidirectional streaming events
-- [API Reference](../../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation
+- [API Reference](../../../api-reference/python/experimental/bidi/agent/agent.md) - Complete API documentation

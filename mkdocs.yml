@@ -136,23 +136,22 @@ nav:
         - Workflow: user-guide/concepts/multi-agent/workflow.md
         - Multi-agent Patterns: user-guide/concepts/multi-agent/multi-agent-patterns.md
       - Interrupts: user-guide/concepts/interrupts.md
+      - Bidirectional Streaming:
+        - Quickstart: user-guide/concepts/bidirectional-streaming/quickstart.md
+        - BidiAgent: user-guide/concepts/bidirectional-streaming/agent.md
+        - Models:
+          - Nova Sonic: user-guide/concepts/bidirectional-streaming/models/nova_sonic.md
+          - Gemini Live: user-guide/concepts/bidirectional-streaming/models/gemini_live.md
+          - OpenAI Realtime: user-guide/concepts/bidirectional-streaming/models/openai_realtime.md
+        - IO: user-guide/concepts/bidirectional-streaming/io.md
+        - Events: user-guide/concepts/bidirectional-streaming/events.md
+        - Interruptions: user-guide/concepts/bidirectional-streaming/interruption.md
+        - Hooks: user-guide/concepts/bidirectional-streaming/hooks.md
+        - Session Management: user-guide/concepts/bidirectional-streaming/session-management.md
+        - Observability: user-guide/concepts/bidirectional-streaming/otel.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
-        - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
         - Steering: user-guide/concepts/experimental/steering.md
-        - Bidirectional Streaming:
-          - Quickstart: user-guide/concepts/experimental/bidirectional-streaming/quickstart.md
-          - BidiAgent: user-guide/concepts/experimental/bidirectional-streaming/agent.md
-          - Models:
-            - Nova Sonic: user-guide/concepts/experimental/bidirectional-streaming/models/nova_sonic.md
-            - Gemini Live: user-guide/concepts/experimental/bidirectional-streaming/models/gemini_live.md
-            - OpenAI Realtime: user-guide/concepts/experimental/bidirectional-streaming/models/openai_realtime.md
-          - IO: user-guide/concepts/experimental/bidirectional-streaming/io.md
-          - Events: user-guide/concepts/experimental/bidirectional-streaming/events.md
-          - Interruptions: user-guide/concepts/experimental/bidirectional-streaming/interruption.md
-          - Hooks: user-guide/concepts/experimental/bidirectional-streaming/hooks.md
-          - Session Management: user-guide/concepts/experimental/bidirectional-streaming/session-management.md
-          - Observability: user-guide/concepts/experimental/bidirectional-streaming/otel.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
       - Guardrails: user-guide/safety-security/guardrails.md
@@ -190,7 +189,7 @@ nav:
           - Overview: user-guide/deploy/deploy_to_bedrock_agentcore/index.md
           - Python: user-guide/deploy/deploy_to_bedrock_agentcore/python.md
           - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
-      - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
+      - AWS Lambda<sup> new</sup>: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
@@ -199,6 +198,7 @@ nav:
         - Python: user-guide/deploy/deploy_to_docker/python.md
         - TypeScript: user-guide/deploy/deploy_to_docker/typescript.md
       - Kubernetes: user-guide/deploy/deploy_to_kubernetes.md
+      - Terraform: user-guide/deploy/deploy_to_terraform.md
 
   - Examples:
     - Overview: examples/README.md
@@ -217,6 +217,7 @@ nav:
 
   - Community:
       - Community Packages: community/community-packages.md
+      - Get Featured: community/get-featured.md
       - Integrations:
         - AG-UI: community/integrations/ag-ui.md
       - Model Providers:
@@ -224,8 +225,13 @@ nav:
         - CLOVA Studio: community/model-providers/clova-studio.md
         - Fireworks AI: community/model-providers/fireworksai.md
         - Nebius Token Factory: community/model-providers/nebius-token-factory.md
+        - NVIDIA NIM: community/model-providers/nvidia-nim.md
+        - SGLang: community/model-providers/sglang.md
+        - vLLM: community/model-providers/vllm.md
+        - MLX: community/model-providers/mlx.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+        - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
       - Tool Protocols:
         - UTCP: community/tools/utcp.md
       - Tools:

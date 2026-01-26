@@ -200,7 +200,7 @@ Function tools may also be defined async. Strands will invoke all async tools co
 
 === "Python"
 
-    ```Python
+    ```python
     import asyncio
     from strands import Agent, tool
 
@@ -615,6 +615,8 @@ The `content` field is a list of content blocks, where each block can contain:
 
     ```python
     # weather_forecast.py
+    from typing import Any
+
 
     # 1. Tool Specification
     TOOL_SPEC = {
@@ -694,7 +696,7 @@ The `content` field is a list of content blocks, where each block can contain:
 
     Similar to decorated tools, users may define their module tools async.
 
-    ```Python
+    ```python
     TOOL_SPEC = {
         "name": "call_api",
         "description": "Call my API asynchronously.",
