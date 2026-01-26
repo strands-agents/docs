@@ -17,9 +17,11 @@ We're looking for contributions that improve the developer experience. Documenta
 | New examples | Code samples and tutorials | Working code showing real-world usage |
 | API reference | Improvements to reference documentation | Better parameter descriptions, return value docs |
 | New guides | Complete tutorials or concept pages | Step-by-step workflows, architecture explanations |
-| Translations | Contact us first to coordinate | Non-English documentation (requires coordination) |
 
 ## Setup
+
+!!! warning "Migration in progress"
+    This section will be rewritten as we migrate to a new CMS.
 
 Let's get the docs running locally so you can preview your changes as you work. The docs are built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
 

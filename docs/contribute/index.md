@@ -1,0 +1,29 @@
+# Contribute
+
+There are different ways to contribute to the Strands ecosystem. You can improve the core SDK, help with documentation, or build extensions that others can use.
+
+## Core SDK
+
+Contributions that improve the SDK powering every Strands agent.
+
+| I want to... | What it involves | Guide |
+|--------------|------------------|-------|
+| Fix a bug | Check for existing issues, submit a PR with tests that verify your fix | [Core SDK](./contributing/core-sdk.md) |
+| Add a new feature | For small changes, open an issue first. For larger features, go through the ADR process to align on direction | [Feature Proposals](./contributing/feature-proposals.md) |
+| Improve the docs | Fix typos, clarify explanations, add examples, or write new guides | [Documentation](./contributing/documentation.md) |
+
+## Extensions
+
+Tools, model providers, hooks, and session managers that extend Strands capabilities. You publish these as your own packages.
+
+| I want to... | What it involves | Guide |
+|--------------|------------------|-------|
+| Build an extension | Use our template to publish your own package on PyPI. Get listed in our community catalog | [Extensions](./contributing/extensions.md) |
+
+## Community resources
+
+- [Community Catalog](../community/community-packages.md) — Discover community-built extensions
+- [GitHub Discussions](https://github.com/strands-agents/sdk-python/discussions) — Ask questions, share ideas
+- [Roadmap](https://github.com/orgs/strands-agents/projects/8/views/1) — See what we're working on
+- [Development Tenets](https://github.com/strands-agents/docs/blob/main/team/TENETS.md) — Principles that guide SDK design
+- [Decision Records](https://github.com/strands-agents/docs/blob/main/team/DECISIONS.md) — Past design decisions with rationale

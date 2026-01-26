@@ -11,7 +11,7 @@ We welcome contributions that improve the SDK for everyone. Focus on changes tha
 - **Bug fixes with tests** that verify the fix and prevent regression
 - **Performance improvements with benchmarks** showing measurable gains
 - **Documentation improvements** including docstrings, code examples, and guides
-- **Features that align with our [roadmap](https://github.com/orgs/strands-agents/projects/1)** and development tenets
+- **Features that align with our [roadmap](https://github.com/orgs/strands-agents/projects/8/views/1)** and development tenets
 - **Small, focused changes** that solve a specific problem clearly
 
 ## What we don't accept
@@ -20,7 +20,7 @@ Some contributions don't fit the core SDK. Understanding this upfront saves you 
 
 - **Large refactors without prior discussion** — Major architectural changes require RFC approval
 - **Breaking changes without RFC approval** — We maintain backward compatibility carefully
-- **External tools** — [Publish your own package](../publishing/publishing.md) instead for full ownership
+- **External tools** — [Build your own extension](./extensions.md) instead for full ownership
 - **Changes without tests** — Tests ensure quality and prevent regressions (documentation changes excepted)
 - **Niche features** — Features serving narrow use cases belong in extensions
 
@@ -116,17 +116,9 @@ Once you've made your changes, here's how to submit them for review. Following t
 7. **Submit a pull request** referencing the issue number in the description
 8. **Respond to feedback** — we'll review within 3 days and may request changes
 
-**Quality requirements:**
-
-- All tests must pass (unit and integration tests where applicable)
-- Code coverage must meet minimums (Python: varies by module, TypeScript: 80%+)
-- Linting and formatting must pass without errors
-- Conventional commit format required
-- PR description must explain the change clearly (see our [PR guidelines](https://github.com/strands-agents/sdk-python/blob/main/docs/PR.md))
-
 The pre-commit hooks help catch issues before you push, but you can also run checks manually anytime.
 
 ## Related guides
 
 - [Feature proposals](./feature-proposals.md) — For significant features requiring discussion
-- [Design principles](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md#development-tenets) — What guides our decisions
+- [Team documentation](https://github.com/strands-agents/docs/tree/main/team) — Our tenets, decisions, and API review process

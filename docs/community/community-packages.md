@@ -56,8 +56,8 @@ Built something useful? We'd love to list it here. Publishing your package to th
 
 **Requirements:**
 
-1. **Publish your package to PyPI** — See our [publishing guide](./publishing/publishing.md) for step-by-step instructions
-2. **Add the `strands-tool` topic** to your GitHub repository so developers can find you
+1. **Publish your package to PyPI** — See our [extensions guide](../contribute/contributing/extensions.md) for step-by-step instructions
+2. **Add the `strands-agents` topic** to your GitHub repository so developers can find you
 3. **Submit a request** using our [content addition template](https://github.com/strands-agents/docs/issues/new?template=content_addition.yml) with:
     - Package name and PyPI link
     - Clear description of what it does
