@@ -580,6 +580,50 @@ Tool caching allows you to reuse a cached tool definition across multiple reques
 
 > **Note**: Each model has its own minimum token requirement for creating cache checkpoints. If your system prompt or tool definitions don't meet this minimum token threshold, a cache checkpoint will not be created. For optimal caching, ensure your system prompts and tool definitions are substantial enough to meet these requirements.
 
+#### Automatic Message Caching with PromptCachingHook (Simplified)
+
+=== "Python"
+
+    For a simpler approach that automatically manages cache points, you can use the `PromptCachingHook`. This hook automatically adds and removes cache points before and after model invocation, keeping your message history clean:
+
+    ```python
+    from strands import Agent
+    from strands.models import BedrockModel
+    from strands.hooks.bedrock import PromptCachingHook
+
+    # Create a Bedrock model
+    bedrock_model = BedrockModel(
+        model_id="anthropic.claude-sonnet-4-20250514-v1:0"
+    )
+
+    # Create an agent with the PromptCachingHook
+    agent = Agent(
+        model=bedrock_model,
+        hooks=[PromptCachingHook()]  # Automatically manages cache points
+    )
+
+    # First request will cache the last message
+    response1 = agent("Tell me about Python")
+    print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+    print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
+
+    # Second request will reuse the cached message
+    response2 = agent("Tell me about JavaScript")
+    print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+    print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
+    ```
+
+    This hook simplifies prompt caching by:
+    - Automatically adding a cache point to the last message before model invocation
+    - Removing the cache point after invocation to keep message history clean
+    - Working transparently with minimal configuration (just add it to the `hooks` parameter)
+
+    > **Note**: For cache checkpoints to be created, your content (system prompt, tools, or messages) must meet the minimum token requirement for your model. Typically, this is at least 1,024 tokens. If your content doesn't meet this threshold, the cache checkpoint will not be created, and you won't see `cacheWriteInputTokens` in your metrics.
+
+=== "TypeScript"
+
+    {{ ts_not_supported_code("PromptCachingHook is not yet supported in the TypeScript SDK") }}
+
 #### Cache Metrics
 
 When using prompt caching, Amazon Bedrock provides cache statistics to help you monitor cache performance:
