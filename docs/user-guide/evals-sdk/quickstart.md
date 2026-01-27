@@ -1,8 +1,19 @@
 # Strands Evaluation Quickstart
 
-This quickstart guide shows you how to create your first evaluation experiment, use built-in evaluators to assess agent performance, generate test cases automatically, and analyze results. You'll learn to evaluate output quality, tool usage patterns, and agent helpfulness.
+Strands Evaluation is a framework for evaluating AI agents and LLM applications. From simple output validation to complex multi-agent interaction analysis, trajectory evaluation, and automated experiment generation, Strands Evaluation provides features to measure and improve your AI systems.
 
-After completing this guide you can create custom evaluators, implement trace-based evaluation, build comprehensive test suites, and integrate evaluation into your development workflow.
+## What Strands Evaluation Provides
+
+- **Multiple Evaluation Types**: Output evaluation, trajectory analysis, tool usage assessment, and interaction evaluation
+- **Dynamic Simulators**: Multi-turn conversation simulation with realistic user behavior and goal-oriented interactions
+- **LLM-as-a-Judge**: Built-in evaluators using language models for sophisticated assessment with structured scoring
+- **Trace-based Evaluation**: Analyze agent behavior through OpenTelemetry execution traces
+- **Automated Experiment Generation**: Generate comprehensive test suites from context descriptions
+- **Custom Evaluators**: Extensible framework for domain-specific evaluation logic
+- **Experiment Management**: Save, load, and version your evaluation experiments with JSON serialization
+- **Built-in Scoring Tools**: Helper functions for exact, in-order, and any-order trajectory matching
+
+This quickstart guide shows you how to create your first evaluation experiment, use built-in evaluators to assess agent performance, generate test cases automatically, and analyze results. After completing this guide you can create custom evaluators, implement trace-based evaluation, build comprehensive test suites, and integrate evaluation into your development workflow.
 
 ## Install the SDK
 
@@ -229,6 +240,9 @@ print("\nExperiment saved to ./experiment_files/trajectory_evaluation.json")
 
 For more advanced evaluation, let's assess agent helpfulness using execution traces:
 
+!!! warning "Required: Session ID Trace Attributes"
+    When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment
@@ -246,6 +260,8 @@ def user_task_function(case: Case) -> dict:
     
     agent = Agent(
         tools=[calculator],
+        # IMPORTANT: trace_attributes with session IDs are required when using StrandsInMemorySessionMapper
+        # to prevent spans from different test cases from being mixed together in the memory exporter
         trace_attributes={
             "gen_ai.conversation.id": case.session_id,
             "session.id": case.session_id
