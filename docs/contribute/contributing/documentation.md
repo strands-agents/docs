@@ -61,7 +61,7 @@ The submission process varies based on the size of your change. Small fixes can 
 
 ## Style guidelines
 
-We aim for documentation that teaches, not just describes. A reader should finish understanding the "why" before the "how." This section covers our voice, writing style, and code example conventions.
+We aim for documentation that teaches, not just describes. A reader finishes understanding the "why" before the "how." This section covers our voice, writing style, and code example conventions.
 
 ### Voice and tone
 
@@ -115,4 +115,3 @@ agent = Agent(
 agent("What's the weather like?")
 ```
 
-For more detailed style guidance, see the [complete documentation style guide](https://github.com/strands-agents/docs/blob/main/STYLE_GUIDE.md) in the docs repository.

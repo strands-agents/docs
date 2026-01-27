@@ -2,7 +2,7 @@
 
 The Strands community has built tools and integrations for a variety of use cases. This catalog helps you discover what's available and find packages that solve your specific needs.
 
-Browse by category below to find tools, model providers, session managers, and platform integrations built by the community. You can also browse community projects dynamically at [strands.my](https://strands.my/).
+Browse by category below to find tools, model providers, session managers, and platform integrations built by the community. 
 
 !!! info "Community maintained"
     These packages are maintained by their authors, not the Strands team. Review packages before using them in production. Quality and support may vary.

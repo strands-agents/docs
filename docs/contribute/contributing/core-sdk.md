@@ -19,7 +19,7 @@ We welcome contributions that improve the SDK for everyone. Focus on changes tha
 Some contributions don't fit the core SDK. Understanding this upfront saves you time and helps us maintain focus on what matters most.
 
 - **Large refactors without prior discussion** — Major architectural changes require a [feature proposal](./feature-proposals.md)
-- **Breaking changes without approval** — We maintain backward compatibility carefully; breaking changes require a [feature proposal](./feature-proposals.md)
+- **Breaking changes without approval** — We maintain backward compatibility carefully. Breaking changes require a [feature proposal](./feature-proposals.md)
 - **External tools** — [Build your own extension](./extensions.md) instead for full ownership
 - **Changes without tests** — Tests ensure quality and prevent regressions (documentation changes excepted)
 - **Niche features** — Features serving narrow use cases belong in extensions

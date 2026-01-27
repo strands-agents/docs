@@ -4,7 +4,7 @@ There are different ways to contribute to the Strands ecosystem. You can improve
 
 ## Core SDK
 
-Contributions that improve the SDK powering every Strands agent.
+These contributions improve the SDK powering every Strands agent.
 
 | I want to... | What it involves | Guide |
 |--------------|------------------|-------|
@@ -14,7 +14,7 @@ Contributions that improve the SDK powering every Strands agent.
 
 ## Extensions
 
-Share your tools, model providers, hooks, and session managers with the community by publishing them as packages.
+You can share your tools, model providers, hooks, and session managers with the community by publishing them as packages.
 
 | I want to... | What it involves | Guide |
 |--------------|------------------|-------|
