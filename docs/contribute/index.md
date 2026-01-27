@@ -27,3 +27,5 @@ Tools, model providers, hooks, and session managers that extend Strands capabili
 - [Roadmap](https://github.com/orgs/strands-agents/projects/8/views/1) — See what we're working on
 - [Development Tenets](https://github.com/strands-agents/docs/blob/main/team/TENETS.md) — Principles that guide SDK design
 - [Decision Records](https://github.com/strands-agents/docs/blob/main/team/DECISIONS.md) — Past design decisions with rationale
+- [Code of Conduct](https://aws.github.io/code-of-conduct) — Community guidelines
+- [Report a Security Issue](https://aws.amazon.com/security/vulnerability-reporting/) — For vulnerabilities, not public issues
