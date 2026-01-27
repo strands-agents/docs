@@ -52,16 +52,8 @@ Platform integrations help you connect Strands agents with external services and
 
 ## Add your package
 
-Built something useful? We'd love to list it here. Publishing your package to the catalog makes it discoverable to thousands of developers.
+Built something useful? We'd love to feature it here.
 
-**Requirements:**
+→ [Extensions guide](../contribute/contributing/extensions.md) — How to build and publish your package
 
-1. **Publish your package to PyPI** — See our [extensions guide](../contribute/contributing/extensions.md) for step-by-step instructions
-2. **Add the `strands-agents` topic** to your GitHub repository so developers can find you
-3. **Submit a request** using our [content addition template](https://github.com/strands-agents/docs/issues/new?template=content_addition.yml) with:
-    - Package name and PyPI link
-    - Clear description of what it does
-    - Usage examples showing basic integration
-    - Documentation link (README or dedicated docs)
-
-See our [Get Featured](./get-featured.md) guide for step-by-step instructions on adding your package to the docs.
+→ [Get Featured guide](./get-featured.md) — How to get listed in this catalog
