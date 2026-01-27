@@ -136,7 +136,7 @@ print("=== Basic Output Evaluation Results ===")
 reports[0].run_display()
 
 # Save experiment for later analysis
-experiment.to_file("basic_evaluation", "json")
+experiment.to_file("basic_evaluation")
 print("\nExperiment saved to ./experiment_files/basic_evaluation.json")
 ```
 
@@ -221,7 +221,7 @@ print("=== Tool Usage Evaluation Results ===")
 reports[0].run_display()
 
 # Save experiment
-experiment.to_file("trajectory_evaluation", "json")
+experiment.to_file("trajectory_evaluation")
 print("\nExperiment saved to ./experiment_files/trajectory_evaluation.json")
 ```
 
@@ -239,10 +239,11 @@ from strands_tools import calculator
 
 # Setup telemetry for trace capture
 telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+memory_exporter = telemetry.in_memory_exporter
 
 def user_task_function(case: Case) -> dict:
     # Clear previous traces
-    telemetry.memory_exporter.clear()
+    memory_exporter.clear()
     
     agent = Agent(
         tools=[calculator],
@@ -255,7 +256,7 @@ def user_task_function(case: Case) -> dict:
     response = agent(case.input)
     
     # Map spans to session for evaluation
-    finished_spans = telemetry.memory_exporter.get_finished_spans()
+    finished_spans = memory_exporter.get_finished_spans()
     mapper = StrandsInMemorySessionMapper()
     session = mapper.map_to_session(finished_spans, session_id=case.session_id)
     
@@ -420,7 +421,7 @@ async def generate_experiment():
     )
     
     # Save generated experiment
-    experiment.to_file("generated_experiment", "json")
+    experiment.to_file("generated_experiment")
     print("Generated experiment saved!")
     
     return experiment
