@@ -18,8 +18,8 @@ We welcome contributions that improve the SDK for everyone. Focus on changes tha
 
 Some contributions don't fit the core SDK. Understanding this upfront saves you time and helps us maintain focus on what matters most.
 
-- **Large refactors without prior discussion** — Major architectural changes require RFC approval
-- **Breaking changes without RFC approval** — We maintain backward compatibility carefully
+- **Large refactors without prior discussion** — Major architectural changes require a [feature proposal](./feature-proposals.md)
+- **Breaking changes without approval** — We maintain backward compatibility carefully; breaking changes require a [feature proposal](./feature-proposals.md)
 - **External tools** — [Build your own extension](./extensions.md) instead for full ownership
 - **Changes without tests** — Tests ensure quality and prevent regressions (documentation changes excepted)
 - **Niche features** — Features serving narrow use cases belong in extensions
@@ -62,6 +62,12 @@ Let's get your local environment ready for development. This process differs sli
     hatch fmt --formatter       # Auto-format code with ruff
     ```
 
+    To run all quality checks at once (format, lint, and tests across all Python versions), use the prepare script.
+
+    ```bash
+    hatch run prepare           # Run all checks before committing
+    ```
+
     **Development tips:**
 
     - Use `hatch run test-integ` to run integration tests with real model providers
@@ -78,21 +84,26 @@ Let's get your local environment ready for development. This process differs sli
     npm install
     ```
 
-    The TypeScript SDK uses npm for dependency management and includes automated quality checks through git hooks.
-
-    Install the git hooks for automatic quality checks.
+    The TypeScript SDK uses npm for dependency management and includes automated quality checks through git hooks. The `prepare` script builds the project and sets up Husky git hooks.
 
     ```bash
     npm run prepare
     ```
 
-    Now let's verify everything works.
+    Now let's verify everything works by running all quality checks.
+
+    ```bash
+    npm run check               # Run all checks (lint, format, type-check, tests)
+    ```
+
+    You can also run individual checks.
 
     ```bash
     npm test                    # Run unit tests
     npm run test:coverage       # Run with coverage (80%+ required)
     npm run lint                # Run ESLint
     npm run format              # Format code with Prettier
+    npm run type-check          # TypeScript type checking
     ```
 
     **Development tips:**
@@ -101,20 +112,27 @@ Let's get your local environment ready for development. This process differs sli
     - Run `npm run test:all` to test in both Node.js and browser environments
     - Check [CONTRIBUTING.md](https://github.com/strands-agents/sdk-typescript/blob/main/CONTRIBUTING.md) for detailed requirements
 
+## Find something to work on
+
+Looking for a place to start? Check our issues labeled "ready for contribution"—these are well-defined and ready for community work.
+
+- [Python SDK issues](https://github.com/strands-agents/sdk-python/issues?q=is%3Aissue+state%3Aopen+label%3A%22ready+for+contribution%22)
+- [TypeScript SDK issues](https://github.com/strands-agents/sdk-typescript/issues?q=is%3Aissue+state%3Aopen+label%3A%22ready+for+contribution%22)
+
+Before starting work on any issue, check if someone is already assigned or working on it.
+
 ## Submit your contribution
 
-Once you've made your changes, here's how to submit them for review. Following these steps helps us review your contribution quickly.
+Once you've made your changes, here's how to submit them for review.
 
-1. **Check existing issues** to see if your bug or feature is already tracked or being worked on
-2. **Open an issue first** for non-trivial changes to discuss your approach and get feedback
-3. **Fork and create a branch** with a descriptive name like `fix/session-memory-leak` or `feat/add-hooks-support`
-4. **Write tests** for your changes—tests are required for all code changes
-5. **Run quality checks** before committing to ensure everything passes:
-    - Python: `hatch fmt --formatter && hatch fmt --linter && hatch test`
-    - TypeScript: `npm run format && npm run lint && npm test`
-6. **Use [conventional commits](https://www.conventionalcommits.org/)** like `fix: resolve memory leak in session manager` or `feat: add streaming support to tools`
-7. **Submit a pull request** referencing the issue number in the description
-8. **Respond to feedback** — we'll review within 3 days and may request changes
+1. **Fork and create a branch** with a descriptive name like `fix/session-memory-leak` or `feat/add-hooks-support`
+2. **Write tests** for your changes—tests are required for all code changes
+3. **Run quality checks** before committing to ensure everything passes:
+    - Python: `hatch run prepare`
+    - TypeScript: `npm run check`
+4. **Use [conventional commits](https://www.conventionalcommits.org/)** like `fix: resolve memory leak in session manager` or `feat: add streaming support to tools`
+5. **Submit a pull request** referencing the issue number in the description
+6. **Respond to feedback** — we'll review within a few days and may request changes
 
 The pre-commit hooks help catch issues before you push, but you can also run checks manually anytime.
 

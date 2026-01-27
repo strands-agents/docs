@@ -30,8 +30,12 @@ Let's get the docs running locally so you can preview your changes as you work. 
 git clone https://github.com/strands-agents/docs.git
 cd docs
 
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+
 # Install dependencies
-pip install -r requirements.txt
+pip install -e .
 
 # Start the local development server
 mkdocs serve

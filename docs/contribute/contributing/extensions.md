@@ -17,7 +17,7 @@ When you build something useful, publishing it as your own package gives you con
 
 We provide a GitHub template with everything pre-configured—package structure, CI/CD, testing setup, and publishing workflows.
 
-1. **Use the template** — Go to [strands-agents/strands-template](https://github.com/strands-agents/strands-template) and click "Use this template"
+1. **Use the template** — Go to [strands-agents/strands-python-extension-template](https://github.com/strands-agents/strands-python-extension-template) and click "Use this template"
 2. **Run setup** — Clone your repo and run `python setup_template.py`
 3. **Add your code** — Implement your extension
 4. **Publish** — Create a GitHub release to automatically publish to PyPI
@@ -109,12 +109,3 @@ After publishing:
 2. **Submit to catalog** — Get listed in our [community catalog](../../community/community-packages.md)
 
 → [Get Featured guide](../../community/get-featured.md)
-
-## Tips for quality extensions
-
-| Principle | How to apply |
-|-----------|--------------|
-| Clear naming | Use verb-noun pairs like `search_database`, not `query` |
-| Detailed docstrings | Include parameter explanations, examples, and edge cases |
-| Error handling | Catch specific exceptions and provide actionable messages |
-| Type hints | Use type annotations on all parameters and returns |
