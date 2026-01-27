@@ -54,6 +54,4 @@ Platform integrations help you connect Strands agents with external services and
 
 Built something useful? We'd love to feature it here.
 
-→ [Extensions guide](../contribute/contributing/extensions.md) — How to build and publish your package
-
-→ [Get Featured guide](./get-featured.md) — How to get listed in this catalog
+See the [Extensions guide](../contribute/contributing/extensions.md) for how to build and publish your package, and the [Get Featured guide](./get-featured.md) for how to get listed in this catalog.

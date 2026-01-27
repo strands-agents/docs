@@ -14,11 +14,11 @@ Contributions that improve the SDK powering every Strands agent.
 
 ## Extensions
 
-Tools, model providers, hooks, and session managers that extend Strands capabilities. You publish these as your own packages.
+Share your tools, model providers, hooks, and session managers with the community by publishing them as packages.
 
 | I want to... | What it involves | Guide |
 |--------------|------------------|-------|
-| Build an extension | Use our template to publish your own package on PyPI. Get listed in our community catalog | [Extensions](./contributing/extensions.md) |
+| Publish an extension | Package your component and publish to PyPI so others can use it | [Publishing Extensions](./contributing/extensions.md) |
 
 ## Community resources
 

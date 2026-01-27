@@ -1,111 +1,48 @@
-# Building Extensions
+# Publishing extensions
 
-Extensions are tools, model providers, hooks, and session managers that extend Strands capabilities. You publish these as your own packages on PyPI.
+You've built a tool that calls your company's internal API. Or a model provider for a regional LLM service. Or a session manager that persists to Redis. It works great for your project—now you want to share it with others.
 
-## Why build an extension
+This guide walks you through packaging and publishing your Strands components so other developers can install them with `pip install`.
 
-When you build something useful, publishing it as your own package gives you control and visibility.
+## Why publish
 
-| Benefit | Description |
-|---------|-------------|
-| **Ownership** | You control the roadmap, features, and release schedule |
-| **Speed** | Release updates immediately without waiting for core SDK releases |
-| **Credit** | Your name and contribution are front and center |
-| **Discoverability** | Listed in our community catalog for thousands of developers to find |
+When you build a useful component, you have two choices: keep it in your project, or publish it as a package.
 
-## Quick start
+Publishing makes sense when your component solves a problem others face too. A Slack integration, a database session manager, a provider for a popular LLM service—these help the broader community. Publishing also means you own the package. You control when to release updates, what features to add, and how to prioritize bugs.
 
-We provide a GitHub template with everything pre-configured—package structure, CI/CD, testing setup, and publishing workflows.
+Your package can get listed in our [community catalog](../../community/community-packages.md), making it discoverable to developers looking for exactly what you built.
 
-1. **Use the template** — Go to [strands-agents/strands-python-extension-template](https://github.com/strands-agents/strands-python-extension-template) and click "Use this template"
-2. **Run setup** — Clone your repo and run `python setup_template.py`
-3. **Add your code** — Implement your extension
-4. **Publish** — Create a GitHub release to automatically publish to PyPI
+## What you can publish
 
-## Step-by-step guide
+Strands has several extension points. Each serves a different purpose in the agent lifecycle.
 
-### Prerequisites
+| Component | Purpose | Learn more |
+|-----------|---------|------------|
+| **Tools** | Add capabilities to agents—call APIs, access databases, interact with services | [Custom tools](../../user-guide/concepts/tools/python-tools.md) |
+| **Model providers** | Integrate LLM APIs beyond the built-in providers | [Custom model providers](../../user-guide/concepts/model-providers/custom_model_provider.md) |
+| **Hook providers** | React to agent lifecycle events like invocations, tool calls, and model calls | [Hooks](../../user-guide/concepts/agents/hooks.md) |
+| **Session managers** | Persist conversations to external storage for resumption or sharing | [Session management](../../user-guide/concepts/agents/session-management.md) |
+| **Conversation managers** | Control how message history grows—trim old messages or summarize context | [Conversation management](../../user-guide/concepts/agents/conversation-management.md) |
 
-- **GitHub account** — For hosting your repository and CI/CD
-- **PyPI account** — Create one at [pypi.org/account/register](https://pypi.org/account/register/)
+Tools are the most common extension type. They let agents interact with specific services like Slack, databases, or internal APIs.
 
-### Create your repository
+## Get started
 
-Go to [strands-agents/strands-template](https://github.com/strands-agents/strands-template) and click "Use this template".
+We provide a Python template that handles the boilerplate: package structure, CI/CD workflows, testing setup, and automatic PyPI publishing on release.
 
-Clone it locally and run the setup script:
+Use [strands-agents/strands-python-extension-template](https://github.com/strands-agents/strands-python-extension-template) to create your repository. Click "Use this template" on GitHub. The template includes skeleton files for all extension types, a setup script that configures your package metadata, and GitHub Actions workflows for testing and publishing.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/your-repo-name
-cd your-repo-name
-python setup_template.py
-```
+The template README walks through each step: running the setup script, adding your code, configuring PyPI trusted publishing, and creating releases.
 
-The script prompts for your package name, author info, and description.
-
-### Implement your extension
-
-The template includes skeleton implementations for all extension types:
-
-| File | Component | Purpose |
-|------|-----------|---------|
-| `tool.py` | Tool | Add capabilities to agents using the `@tool` decorator |
-| `model.py` | Model provider | Integrate custom LLM APIs |
-| `hook_provider.py` | Hook provider | React to agent lifecycle events |
-| `session_manager.py` | Session manager | Persist conversations across restarts |
-
-**Keep what you need, delete the rest.** Most packages only need one or two components.
-
-For implementation guidance:
-
-- [Creating custom tools](../../user-guide/concepts/tools/custom-tools.md)
-- [Custom model providers](../../user-guide/concepts/model-providers/custom_model_provider.md)
-- [Hooks](../../user-guide/concepts/agents/hooks.md)
-- [Session management](../../user-guide/concepts/agents/session-management.md)
-
-### Test your code
-
-```bash
-pip install -e ".[dev]"
-hatch run prepare  # Runs format, lint, typecheck, test
-```
-
-### Configure PyPI publishing
-
-The template includes a GitHub Actions workflow that publishes to PyPI on release.
-
-To enable it, configure PyPI trusted publishing:
-
-1. Go to [PyPI](https://pypi.org) → Your projects → Publishing
-2. Add a new pending publisher with your GitHub repo details
-3. Set environment name to `pypi`
-
-### Publish
-
-1. Go to your repository on GitHub
-2. Click "Releases" → "Create a new release"
-3. Create a tag following [semantic versioning](https://semver.org/) (e.g., `v0.1.0`)
-4. Click "Publish release"
-
-GitHub Actions builds and publishes your package. Anyone can now install it:
-
-```bash
-pip install strands-yourname
-```
-
-## Naming conventions
-
-| Item | Convention | Example |
-|------|------------|---------|
-| PyPI package | `strands-{name}` | `strands-slack` |
-| Python module | `strands_{name}` | `strands_slack` |
-| GitHub topic | `strands-agents` | For discoverability |
+!!! info "TypeScript"
+    A TypeScript extension template is coming soon.
 
 ## Get discovered
 
-After publishing:
+Publishing to PyPI makes your package installable, but developers need to find it first.
 
-1. **Add GitHub topics** — Add `strands-agents` to your repository
-2. **Submit to catalog** — Get listed in our [community catalog](../../community/community-packages.md)
+First you can add the `strands-agents` topic to your GitHub repository, so developers browsing GitHub can find Strands-related projects. Go to your repo settings, click the gear icon next to "About", and add topics.
 
-→ [Get Featured guide](../../community/get-featured.md)
+Additionally you can submit your package to our [community catalog](../../community/community-packages.md), which lists extensions the community has built. Getting listed puts your package in front of developers actively looking for Strands extensions. 
+
+See the [Get Featured guide](../../community/get-featured.md) for step-by-step instructions on submitting your package.
