@@ -47,6 +47,37 @@ response = agent("What's trending on X right now?")
 print(response.message)
 ```
 
+### With Strands Tools
+
+You can use regular Strands tools just like with any other model provider:
+
+```python
+from strands import Agent, tool
+from strands_xai import xAIModel
+
+@tool
+def calculate(expression: str) -> str:
+    """Evaluate a mathematical expression."""
+    try:
+        result = eval(expression)
+        return f"Result: {result}"
+    except Exception as e:
+        return f"Error: {e}"
+
+@tool
+def get_weather(city: str) -> str:
+    """Get the current weather for a city."""
+    return f"Weather in {city}: Sunny, 22°C"
+
+model = xAIModel(
+    client_args={"api_key": "xai-key"},
+    model_id="grok-4-1-fast-non-reasoning-latest",
+)
+
+agent = Agent(model=model, tools=[calculate, get_weather])
+response = agent("What's 15 * 7 and what's the weather in Paris?")
+```
+
 ## Configuration
 
 ### Environment Variables
@@ -127,7 +158,7 @@ response = agent("Find trending hashtags related to AI and summarize the discuss
 
 ### Hybrid Tool Usage
 
-Combine xAI's server-side tools with your own Strands tools:
+Combine xAI's server-side tools with your own Strands tools for maximum flexibility:
 
 ```python
 from strands import Agent, tool
@@ -135,19 +166,35 @@ from strands_xai import xAIModel
 from xai_sdk.tools import x_search
 
 @tool
-def calculate_engagement_rate(likes: int, retweets: int, followers: int) -> float:
-    """Calculate social media engagement rate."""
-    return ((likes + retweets) / followers) * 100
+def calculate(expression: str) -> str:
+    """Evaluate a mathematical expression."""
+    try:
+        result = eval(expression)
+        return f"Result: {result}"
+    except Exception as e:
+        return f"Error: {e}"
+
+@tool
+def get_weather(city: str) -> str:
+    """Get the current weather for a city."""
+    return f"Weather in {city}: Sunny, 22°C"
 
 model = xAIModel(
     client_args={"api_key": "xai-key"},
     model_id="grok-4-1-fast-reasoning-latest",
-    xai_tools=[x_search()],
+    xai_tools=[x_search()],  # Server-side X search
 )
 
-agent = Agent(model=model, tools=[calculate_engagement_rate])
-response = agent("Search X for posts about AI and calculate engagement rates for top posts")
+# Combine server-side and client-side tools
+agent = Agent(model=model, tools=[calculate, get_weather])
+response = agent("Search X for AI news, calculate 15*7, and tell me the weather in Tokyo")
 ```
+
+This powerful combination allows the agent to:
+- Search X platform in real-time (server-side)
+- Perform calculations (client-side)
+- Get weather information (client-side)
+- All in a single conversation!
 
 ### Reasoning Models
 
