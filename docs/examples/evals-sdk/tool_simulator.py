@@ -1,9 +1,9 @@
-import asyncio
 from typing import Dict, Any
 
-from strands import Agent, tool
-from strands_evals import Case, Experiment, ActorSimulator
-from strands_evals.evaluators import HelpfulnessEvaluator, ToolParameterAccuracyEvaluator, ToolSelectionAccuracyEvaluator
+from strands import Agent
+from strands.tools.decorator import tool
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import HelpfulnessEvaluator
 from strands_evals.simulation.tool_simulator import ToolSimulator
 from strands_evals.mappers import StrandsInMemorySessionMapper
 from strands_evals.telemetry import StrandsEvalsTelemetry
@@ -11,10 +11,14 @@ from strands_evals.telemetry import StrandsEvalsTelemetry
 # Clear previous registrations
 ToolSimulator.clear_registry()
 
+# Setup telemetry
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+memory_exporter = telemetry.in_memory_exporter
+
 # Function tool for room temperature and humidity (dynamic mode)
 @ToolSimulator.function_tool(
     share_state_id="room_environment",
-    initial_state_description="Room environment: temperature 72°F, humidity 45%, HVAC target temp 72°F in cool mode",
+    initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off",
     mode="dynamic"
 )
 def get_room_temperature_humidity() -> Dict[str, Any]:
@@ -25,7 +29,7 @@ def get_room_temperature_humidity() -> Dict[str, Any]:
 def mock_hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
     """Mock HVAC system logic that affects room environment."""
     energy_cost = abs(temperature - 70) * 0.05  # Cost increases with temperature difference
-    return {
+    result = {
         "target_temperature": temperature,
         "mode": mode,
         "estimated_runtime": f"{abs(temperature - 70) * 10} minutes",
@@ -33,6 +37,7 @@ def mock_hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
         "efficiency_rating": "high" if abs(temperature - 70) < 3 else "medium",
         "humidity_impact": "increases" if mode == "heat" else "decreases"
     }
+    return result
 
 hvac_schema = {
     "name": "hvac_controller",
@@ -41,7 +46,7 @@ hvac_schema = {
         "type": "object",
         "properties": {
             "temperature": {"type": "number", "description": "Target temperature in Fahrenheit"},
-            "mode": {"type": "string", "enum": ["heat", "cool", "auto"], "description": "HVAC mode"}
+            "mode": {"type": "string", "enum": ["heat", "cool", "auto", "off"], "description": "HVAC mode"}
         },
         "required": ["temperature", "mode"]
     }
@@ -68,7 +73,6 @@ def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
             "temperature": 45,
             "condition": "cloudy",
             "humidity": 65,
-            "recommendation": "Indoor heating suggested"
         }
     }
 )
@@ -76,88 +80,91 @@ def weather_service(location: str) -> Dict[str, Any]:
     """Get current weather information."""
     pass
 
-# Agent-as-tool
-@tool  
-def room_comfort_advisor(query: str) -> str:
-    """Consult room comfort expert for temperature and humidity optimization advice."""
+# Create simulators
+simulator = ToolSimulator()
+
+# Create sub-agent (agent-as-tool) with simulated tools
+@tool
+def hvac_control_assistant(query: str) -> str:
+    """HVAC control assistant that uses room sensors and weather data to control the HVAC system based on user requests."""
     try:
-        # Get simulator instance for tool access
         simulator = ToolSimulator._get_instance()
+        temp_tool = simulator.get_tool("get_room_temperature_humidity")
+        hvac_tool = simulator.get_tool("hvac_controller")
+        weather_tool = simulator.get_tool("weather_service")
         
-        advisor_agent = Agent(
-            system_prompt="You are a room comfort advisor. Provide practical advice for optimizing room temperature and humidity for comfort. Consider current weather conditions and room environment.",
-            tools=[
-                simulator.get_room_temperature_humidity,
-                simulator.hvac_controller, 
-                simulator.weather_service,
-            ],
+        control_agent = Agent(
+            system_prompt="You are an HVAC control assistant. Your job is to control the HVAC system using the hvac_controller tool based on information from room temperature/humidity sensors and weather conditions. Always check current room conditions first, consider outdoor weather, then make appropriate HVAC adjustments to meet the user's request.",
+            tools=[temp_tool, hvac_tool, weather_tool],
             callback_handler=None,
         )
-        response = advisor_agent(f"Room comfort question: {query}")
+        response = control_agent(f"HVAC control request: {query}")
         return str(response)
+
     except Exception as e:
-        return f"Room comfort advisor error: {str(e)}"
+        return f"HVAC control assistant error: {str(e)}"
 
 # Define a task function
-async def task_function(case: Case) -> dict:
-    # Setup telemetry
-    telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
-    memory_exporter = telemetry.in_memory_exporter
-
-    # Create simulator and user simulator
-    simulator = ToolSimulator.from_case_for_tool_simulator(case)
-    user_sim = ActorSimulator.from_case_for_user_simulator(case=case, max_turns=3)
-
-    # Create agent with tools
+def user_task_function(case: Case) -> dict:
+    # Create agent with simulated tool and sub-agent
+    simulator = ToolSimulator._get_instance()
+    temp_tool = simulator.get_tool("get_room_temperature_humidity")
+    
+    # Inspect initial shared state "room_environment"
+    initial_state = simulator._state_registry.get_state("room_environment")
+    print(f"[Room state (before agent invocation)]:")
+    print(f"  Initial state: {initial_state.get('initial_state')}")
+    print(f"  Previous calls: {initial_state.get('previous_calls', [])}")
+    
+    # Showcase how user-agent interaction changes room environment state
     agent = Agent(
-        system_prompt="You are a smart home assistant. Help users manage room comfort and optimize temperature and humidity.",
+        trace_attributes={"gen_ai.conversation.id": case.session_id, "session.id": case.session_id},
+        system_prompt="You are a smart home assistant Alessa. You can check room temperature and humidity conditions. For temperature adjustments, you must consult the hvac_control_assistant who has access to the HVAC system.",
         tools=[
-            simulator.get_room_temperature_humidity,
-            room_comfort_advisor,
+            temp_tool,
+            hvac_control_assistant,
         ],
         callback_handler=None,
     )
 
-    # Multi-turn conversation
-    user_message = case.input
-    while user_sim.has_next():
-        memory_exporter.clear()  # Clear before each agent call
-        agent_response = await agent.invoke_async(user_message)
-        agent_message = str(agent_response)
-        user_result = user_sim.act(agent_message)
-        user_message = str(user_result.structured_output.message)
+    try:
+        agent_response = agent(case.input)
+    except Exception as e:
+        agent_response = f"Agent execution error: {e}"
 
-    # Map session
-    mapper = StrandsInMemorySessionMapper()
+    print(f"[User]: {case.input}")
+    print(f"[Agent]: {agent_response}")
+
+    # Inspect final shared state "room_environment" after agent interaction
+    final_state = simulator._state_registry.get_state("room_environment")
+    print(f"[Room state (after agent invocation)]:")
+    print(f"  Initial state: {final_state.get('initial_state')}")
+    print(f"  Previous calls:")
+    for i, call in enumerate(final_state.get('previous_calls', [])):
+        print(f"    {i}. Tool: {call.get('tool_name')}, Type: {call.get('tool_type')}")
+        print(f"       Response: {str(call.get('response', {}))[:100]}...")
+
     finished_spans = memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
     session = mapper.map_to_session(finished_spans, session_id=case.session_id)
 
-    return {"output": agent_message, "trajectory": session}
+    return {"output": str(agent_response), "trajectory": session}
 
 # Create test cases
 test_cases = [
     Case(
         name="temperature_control", 
-        input="It's getting cold outside, adjust my home temperature",
+        input="Turn on the heat to 72 degree",
         metadata={"category": "hvac"},
     ),
 ]
 
-async def main():
-    # Create and run experiment
-    experiment = Experiment[str, str](
-        cases=test_cases,
-        evaluators=[
-            HelpfulnessEvaluator(),
-            ToolParameterAccuracyEvaluator(),
-            ToolSelectionAccuracyEvaluator(),
-        ]
-    )
-    reports = await experiment.run_evaluations_async(task_function)
-    
-    # Display results
-    for report in reports:
-        report.run_display()
+# Create evaluators
+evaluators = [HelpfulnessEvaluator()]
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# Create an experiment
+experiment = Experiment[str, str](cases=test_cases, evaluators=evaluators)
+
+# Run evaluations
+reports = experiment.run_evaluations(user_task_function)
+reports[0].run_display()
