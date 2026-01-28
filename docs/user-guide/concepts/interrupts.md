@@ -162,7 +162,7 @@ agent = Agent(
 
 Tool interrupts work similiarly to hook interrupts with only a few notable differences:
 
-- `tool_context`: Strands object that defines the interrupt call
+- `tool_context` - Strands object that defines the interrupt call
     - You can learn more about `tool_context` [here](./tools/custom-tools.md#toolcontext).
 - `tool_context.interrupt` - Raises an interrupt with a unique name and optional reason
     - The `name` must be unique only among interrupt calls configured in the same tool definition. It is still advisable however to namespace your interrupts so as to more easily distinguish the calls when constructing responses outside the agent.
@@ -270,9 +270,9 @@ print(f"MESSAGE: {json.dumps(result.message)}")
 
 Session managing interrupts involves the following key components:
 
-- `session_manager`: Automatically persists the agent interrupt state between tear down and start up
+- `session_manager` - Automatically persists the agent interrupt state between tear down and start up
     - For more information on session management in Strands, please refer to [here](./agents/session-management.md).
-- `agent.state`: General purpose key-value store that can be used to persist interrupt responses
+- `agent.state` - General purpose key-value store that can be used to persist interrupt responses
     - On subsequent tool calls, you can reference the responses stored in `agent.state` to decide whether another interrupt is necessary. For more information on `agent.state`, please refer to [here](./agents/state.md#agent-state).
 
 ## MCP Elicitation
@@ -343,7 +343,7 @@ Swarms also support interrupts raised from within the nodes themselves following
 - `event.interrupt` - Raises an interrupt with a unique name and optional reason
     - The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     - You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable. 
-- `result.status`: Check if the swarm stopped due to `Status.INTERRUPTED`
+- `result.status` - Check if the swarm stopped due to `Status.INTERRUPTED`
 - `result.interrupts` - List of interrupts that were raised
     - Each `interrupt` contains the user provided name and reason, along with an instance id.
 - `interruptResponse` - Content block type for configuring the interrupt responses.
@@ -421,14 +421,14 @@ print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message, indent=2)
 Graphs also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
 
 !!! warning
-    Support for raising interrupts from multi-agent nodes is still under development. For status updates, please see https://github.com/strands-agents/sdk-python/issues/204.
+    Support for raising interrupts from multi-agent nodes is still under development. For status updates, please see [here](https://github.com/strands-agents/sdk-python/issues/204).
 
 #### Components
 
 - `event.interrupt` - Raises an interrupt with a unique name and optional reason
     - The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     - You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable. 
-- `result.status`: Check if the graph stopped due to `Status.INTERRUPTED`
+- `result.status` - Check if the graph stopped due to `Status.INTERRUPTED`
 - `result.interrupts` - List of interrupts that were raised
     - Each `interrupt` contains the user provided name and reason, along with an instance id.
 - `interruptResponse` - Content block type for configuring the interrupt responses
