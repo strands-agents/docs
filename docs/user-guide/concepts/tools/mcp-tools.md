@@ -21,11 +21,9 @@ MCP enables communication between agents and MCP servers that provide additional
         )
     ))
 
-    # Use with context manager for lifecycle management
-    with mcp_client:
-        tools = mcp_client.list_tools_sync()
-        agent = Agent(tools=tools)
-        agent("What is AWS Lambda?")
+    # Pass MCP client directly to agent - lifecycle managed automatically
+    agent = Agent(tools=[mcp_client])
+    agent("What is AWS Lambda?")
     ```
 
 === "TypeScript"
@@ -38,9 +36,9 @@ MCP enables communication between agents and MCP servers that provide additional
 
 === "Python"
 
-    **Manual Context Management**
+    **Managed Integration (Recommended)**
 
-    Python requires explicit context management using `with` statements to manage the MCP connection lifecycle:
+    The `MCPClient` implements the `ToolProvider` interface, enabling direct usage in the Agent constructor with automatic lifecycle management:
 
     ```python
     from mcp import stdio_client, StdioServerParameters
@@ -54,26 +52,20 @@ MCP enables communication between agents and MCP servers that provide additional
         )
     ))
 
-    # Manual lifecycle management
+    # Direct usage - connection lifecycle managed automatically
+    agent = Agent(tools=[mcp_client])
+    response = agent("What is AWS Lambda?")
+    ```
+
+    **Manual Context Management**
+
+    For cases requiring explicit control over the MCP session lifecycle, use context managers:
+
+    ```python
     with mcp_client:
         tools = mcp_client.list_tools_sync()
         agent = Agent(tools=tools)
         agent("What is AWS Lambda?")  # Must be within context
-    ```
-
-    This approach provides direct control over the MCP session lifecycle but requires careful management to avoid connection errors.
-
-    **Managed Integration (Experimental)**
-
-    !!! warning "Experimental Feature"
-        The managed integration feature is experimental and may change in future versions. For production applications, use the manual context management approach.
-
-    The `MCPClient` implements the experimental `ToolProvider` interface, enabling direct usage in the Agent constructor with automatic lifecycle management:
-
-    ```python
-    # Direct usage - connection lifecycle managed automatically
-    agent = Agent(tools=[mcp_client])
-    response = agent("What is AWS Lambda?")
     ```
 
 === "TypeScript"
@@ -250,7 +242,7 @@ Combine tools from multiple MCP servers in a single agent:
         tools = sse_mcp_client.list_tools_sync() + stdio_mcp_client.list_tools_sync()
         agent = Agent(tools=tools)
 
-    # Managed approach (experimental)
+    # Managed approach
     agent = Agent(tools=[sse_mcp_client, stdio_mcp_client])
     ```
 
