@@ -363,7 +363,7 @@ Strands enforces the following rules for interrupts in swarm:
 
 ### Graph
 
-A [Graph](./multi-agent/graph.md) is a deterministic directed graph based agent orchestration system where agents are nodes executed according to edge dependencies. The following example demonstrates interrupting your graph invocation through a `BeforeNodeCallEvent` hook.
+A [Graph](./multi-agent/graph.md) is a deterministic agent orchestration system based on a directed graph, where agents are nodes executed according to edge dependencies. The following example demonstrates interrupting your graph invocation through a `BeforeNodeCallEvent` hook.
 
 ```python
 import json
