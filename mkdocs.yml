@@ -229,6 +229,7 @@ nav:
         - SGLang: community/model-providers/sglang.md
         - vLLM: community/model-providers/vllm.md
         - MLX: community/model-providers/mlx.md
+        - xAI: community/model-providers/xai.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
         - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
