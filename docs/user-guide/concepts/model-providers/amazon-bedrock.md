@@ -15,8 +15,7 @@ The `BedrockModel` class in Strands enables seamless integration with Amazon Bed
 ### Prerequisites
 
 1. **AWS Account**: You need an AWS account with access to Amazon Bedrock
-2. **Model Access**: Request access to your desired models in the Amazon Bedrock console
-3. **AWS Credentials**: Configure AWS credentials with appropriate permissions
+2. **AWS Credentials**: Configure AWS credentials with appropriate permissions
 
 #### Required IAM Permissions
 
@@ -44,22 +43,6 @@ Here's a sample IAM policy that grants the necessary permissions:
 ```
 
 For production environments, it's recommended to scope down the `Resource` to specific model ARNs.
-
-#### Requesting Access to Bedrock Models
-
-Before you can use a model in Amazon Bedrock, you need to request access to it:
-
-1. Sign in to the AWS Management Console and open the Amazon Bedrock console
-2. In the navigation pane, choose **Model access**
-3. Choose **Manage model access**
-4. Select the checkbox next to each model you want to access
-5. Choose **Request model access**
-6. Review the terms and conditions, then select **I accept these terms**
-7. Choose **Request model access**
-
-The model access request is typically processed immediately. Once approved, the model status will change to "Access granted" in the console.
-
-For more details, see the [Amazon Bedrock documentation on modifying model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 
 #### Setting Up AWS Credentials
 
@@ -784,14 +767,6 @@ Amazon Bedrock models can provide detailed reasoning steps when generating respo
 {{ ts_not_supported_code("Structured output is not yet supported in the TypeScript SDK") }}
 
 ## Troubleshooting
-
-### Model access issue
-
-If you encounter the following error:
-
-> You don't have access to the model with the specified model ID
-
-This may indicate that the model is not enabled in your Amazon Bedrock account for the specified region. To resolve this issue follow the [instructions above](#requesting-access-to-bedrock-models) to request access to the model
 
 ### On-demand throughput isn’t supported
 

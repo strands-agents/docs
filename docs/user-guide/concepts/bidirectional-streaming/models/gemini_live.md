@@ -31,7 +31,7 @@ pip install 'strands-agents[bidi-all]'
 
 After installing `strands-agents[bidi-gemini]`, you can import and initialize the Strands Agents' Gemini Live provider as follows:
 
-```Python
+```python
 import asyncio
 
 from strands.experimental.bidi import BidiAgent

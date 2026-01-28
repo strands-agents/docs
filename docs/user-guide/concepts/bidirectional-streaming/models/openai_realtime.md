@@ -30,7 +30,7 @@ pip install 'strands-agents[bidi-all]'
 
 After installing `strands-agents[bidi-openai]`, you can import and initialize the Strands Agents' OpenAI Realtime provider as follows:
 
-```Python
+```python
 import asyncio
 
 from strands.experimental.bidi import BidiAgent

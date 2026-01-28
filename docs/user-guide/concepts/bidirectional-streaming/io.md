@@ -25,7 +25,7 @@ Both protocols include optional lifecycle methods (`start` and `stop`) for resou
 
 Implementation of these protocols will look as follows:
 
-```Python
+```python
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.tools import stop_conversation
 from strands.experimental.bidi.types.events import BidiOutputEvent
@@ -62,7 +62,7 @@ class MyBidiOutput(BidiOutput):
 
 To connect your I/O channels into the agent loop, you can pass them as arguments into the agent `run()` method.
 
-```Python
+```python
 import asyncio
 
 from strands.experimental.bidi import BidiAgent
@@ -167,7 +167,7 @@ Note, the agent provides a preview of what it is about to say before producing t
 
 WebSockets are a common I/O channel for bidi-agents. To learn how to setup WebSockets with `run()`, consider the following server example:
 
-```Python
+```python
 # server.py
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 
@@ -191,7 +191,7 @@ async def text_chat(websocket: WebSocket) -> None:
 
 To start this server, you can run `unvicorn server:app --reload`. To interact, open a separate terminal window and run the following client script:
 
-```Python
+```python
 # client.py
 import asyncio
 import json
