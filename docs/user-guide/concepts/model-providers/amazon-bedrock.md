@@ -402,19 +402,15 @@ For a complete list of input types, please refer to the [API Reference](../../..
 
 Strands supports caching system prompts, tools, and messages to improve performance and reduce costs. Caching allows you to reuse parts of previous requests, which can significantly reduce token usage and latency.
 
-When you enable prompt caching, Amazon Bedrock creates a cache composed of **cache checkpoints**. These are markers that define the contiguous subsection of your prompt that you wish to cache (often referred to as a prompt prefix). These prompt prefixes should be static between requests; alterations to the prompt prefix in subsequent requests will result in a cache miss.
+When you enable prompt caching, Amazon Bedrock creates a cache composed of **cache checkpoints**. These are markers that define the contiguous subsection of your prompt that you wish to cache. Cached content must remain unchanged between requests - any alteration invalidates the cache.
 
-The cache has a five-minute Time To Live (TTL), which resets with each successful cache hit. During this period, the context in the cache is preserved. If no cache hits occur within the TTL window, your cache expires.
+Prompt caching is supported for Anthropic Claude and Amazon Nova models on Bedrock. Each model has a minimum token requirement (e.g., 1,024 tokens for Claude Sonnet, 4,096 tokens for Claude Haiku), and cached content expires after 5 minutes of inactivity. Cache writes cost more than regular input tokens, but cache reads cost significantly less - see [Amazon Bedrock pricing](https://aws.amazon.com/bedrock/pricing/) for model-specific rates.
 
-For detailed information about supported models, minimum token requirements, and other limitations, see the [Amazon Bedrock documentation on prompt caching](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html).
+For complete details on supported models, token requirements, and cache field support, see the [Amazon Bedrock prompt caching documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-models).
 
 #### System Prompt Caching
 
-System prompt caching allows you to reuse a cached system prompt across multiple requests. Strands supports two approaches for system prompt caching:
-
-**Provider-Agnostic Approach (Recommended)**
-
-Use SystemContentBlock arrays to define cache points that work across all model providers:
+Cache system prompts that remain static across multiple requests. This is useful when your system prompt contains no variables, timestamps, or dynamic content, exceeds the minimum cacheable token threshold for your model, and you make multiple requests with the same system prompt.
 
 === "Python"
 
@@ -422,12 +418,9 @@ Use SystemContentBlock arrays to define cache points that work across all model 
     from strands import Agent
     from strands.types.content import SystemContentBlock
 
-    # Define system content with cache points
     system_content = [
         SystemContentBlock(
-            text="You are a helpful assistant that provides concise answers. "
-                 "This is a long system prompt with detailed instructions..."
-                 "..." * 1600  # needs to be at least 1,024 tokens
+            text="You are a helpful assistant..." * 1600  # Must exceed minimum tokens
         ),
         SystemContentBlock(cachePoint={"type": "default"})
     ]
@@ -445,32 +438,6 @@ Use SystemContentBlock arrays to define cache points that work across all model 
     print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
     print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
     ```
-
-    **Legacy Bedrock-Specific Approach**
-
-    For backwards compatibility, you can still use the Bedrock-specific `cache_prompt` configuration:
-
-    ```python
-    from strands import Agent
-    from strands.models import BedrockModel
-
-    # Using legacy system prompt caching with BedrockModel
-    bedrock_model = BedrockModel(
-        model_id="anthropic.claude-sonnet-4-20250514-v1:0",
-        cache_prompt="default"  # This approach is deprecated
-    )
-
-    # Create an agent with the model
-    agent = Agent(
-        model=bedrock_model,
-        system_prompt="You are a helpful assistant that provides concise answers. " +
-                     "This is a long system prompt with detailed instructions... "
-    )
-
-    response = agent("Tell me about Python")
-    ```
-
-    > **Note**: The `cache_prompt` configuration is deprecated in favor of the provider-agnostic SystemContentBlock approach. The new approach enables caching across all model providers through a unified interface.
 
 === "TypeScript"
 
@@ -519,66 +486,67 @@ Tool caching allows you to reuse a cached tool definition across multiple reques
 
 #### Messages Caching
 
-=== "Python"
+Messages caching allows you to reuse cached conversation context across multiple requests. By default, message caching is not enabled. To enable it, choose Option A for automatic cache management in agent workflows, or Option B for manual control over cache placement.
 
-    Messages caching allows you to reuse a cached conversation across multiple requests. This is not enabled via a configuration in the [`BedrockModel`](../../../api-reference/python/models/bedrock.md#strands.models.bedrock) class, but instead by including a `cachePoint` in the Agent's Messages array:
+**Option A: Automatic Cache Strategy (Claude models only)**
+
+Enable automatic cache point management for agent workflows with repeated tool calls and multi-turn conversations. The SDK automatically places a cache point at the end of each assistant message to maximize cache hits without requiring manual management.
+
+=== "Python"
 
     ```python
     from strands import Agent
-    from strands.models import BedrockModel
+    from strands.models import BedrockModel, CacheConfig
 
-    # Create a conversation, and add a messages cache point to cache the conversation up to that point
-    messages = [
-        {
-            "role": "user",
-            "content": [
-                {
-                    "document": {
-                        "format": "txt",
-                        "name": "example",
-                        "source": {
-                            "bytes": b"This is a sample document!"
-                        }
-                    }
-                },
-                {
-                    "text": "Use this document in your response."
-                },
-                {
-                    "cachePoint": {"type": "default"}
-                },
-            ],
-        },
-        {
-            "role": "assistant",
-            "content": [
-                {
-                    "text": "I will reference that document in my following responses."
-                }
-            ]
-        }
-    ]
-
-    # Create an agent with the model and messages
-    agent = Agent(
-        messages=messages
+    model = BedrockModel(
+        model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        cache_config=CacheConfig(strategy="auto")
     )
-    # First request will cache the message
-    response1 = agent("What is in that document?")
+    agent = Agent(model=model)
 
-    # Second request will reuse the cached message
-    response2 = agent("How long is the document?")
+    # Each response automatically gets a cache point
+    response1 = agent("What is Python?")
+    response2 = agent("What is JavaScript?")  # Previous context hits cache
     ```
 
 === "TypeScript"
 
-    Messages caching allows you to reuse a cached conversation across multiple requests. This is not enabled via a configuration in the [`BedrockModel`](../../../api-reference/typescript/classes/BedrockModel.html) class, but instead by including a `cachePoint` in the Agent's Messages array:
+    {{ ts_not_supported_code("Automatic cache strategy is not yet supported in the TypeScript SDK") }}
+
+> **Note**: Cache misses occur if you intentionally modify past conversation context (e.g., summarization or editing previous messages).
+
+**Option B: Manual Cache Points**
+
+Place cache points explicitly at specific locations in your conversation when you need fine-grained control over cache placement based on your workload characteristics. This is useful for static use cases with repeated query patterns where you want to cache only up to a specific point. For agent loops or multi-turn conversations with manual cache control, use [Hooks](https://strandsagents.com/latest/documentation/docs/api-reference/python/hooks/events/) to dynamically control cache points based on specific events.
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"text": "What is Python?"},
+                {"cachePoint": {"type": "default"}}
+            ]
+        },
+        {
+            "role": "assistant",
+            "content": [{"text": "Python is a programming language..."}]
+        }
+    ]
+
+    agent = Agent(messages=messages)
+    response = agent("Tell me more about Python")
+    ```
+
+=== "TypeScript"
 
     ```typescript
     --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:messages_caching_full"
     ```
-
-> **Note**: Each model has its own minimum token requirement for creating cache checkpoints. If your system prompt or tool definitions don't meet this minimum token threshold, a cache checkpoint will not be created. For optimal caching, ensure your system prompts and tool definitions are substantial enough to meet these requirements.
 
 #### Cache Metrics
 
