@@ -1,14 +1,16 @@
-# Architecture Decision Records (ADRs)
+# Design Documents
 
-This folder contains Architecture Decision Records for significant features and changes to Strands Agents. ADRs document the context, decision, and consequences of architectural choices.
+This folder contains design documents for significant features and changes to Strands Agents. These documents capture the context, decision, and consequences of architectural choices.
 
-## What is an ADR?
+For lightweight architecture decision records, see [DECISIONS.md](../team/DECISIONS.md).
 
-An ADR is a design document that captures an important architectural decision along with its context and consequences. Once approved and merged, it becomes part of the project's decision history.
+## What is a design document?
 
-## When to write an ADR
+A design document proposes a significant change or new feature. It describes the problem, proposed solution, and tradeoffs. Once approved and merged, it becomes an accepted design and part of the project's decision history.
 
-Write an ADR for:
+## When to write a design document
+
+Write a design document for:
 
 - New major features affecting multiple parts of the SDK
 - Breaking changes to existing APIs
@@ -16,22 +18,22 @@ Write an ADR for:
 - Large contributions (> 1 week of work)
 - Features that introduce new concepts
 
-Skip the ADR process for bug fixes, small improvements, documentation updates, and new extensions in your own repository.
+Skip the design process for bug fixes, small improvements, documentation updates, and new extensions in your own repository.
 
-## How to submit an ADR
+## How to submit a feature proposal
 
 1. **Check the [roadmap](https://github.com/orgs/strands-agents/projects/8/views/1)** — See if your idea aligns with our direction
 2. **Fork the [docs repository](https://github.com/strands-agents/docs)**
-3. **Create your ADR** — Add a new file: `adrs/NNNN-feature-name.md` using the template below
+3. **Create your design** — Add a new file: `designs/NNNN-feature-name.md` using the template below
 4. **Submit a pull request** — We'll review and discuss
 5. **Iterate based on feedback** — Address comments and questions
 6. **Get approval** — Once approved and merged, implement the feature
-7. **Reference the ADR** — Link to it in your implementation PR
+7. **Reference the design** — Link to it in your implementation PR
 
-## ADR template
+## Design document template
 
 ```markdown
-# ADR: [Feature Name]
+# [Feature Name]
 
 **Status**: Proposed | Accepted | Deprecated | Superseded
 
@@ -78,6 +80,6 @@ Are you willing to implement this if approved?
 Yes / No / Maybe with guidance
 ```
 
-## Accepted ADRs
+## Accepted Designs
 
-*No ADRs have been accepted yet.*
+*No designs have been accepted yet.*
