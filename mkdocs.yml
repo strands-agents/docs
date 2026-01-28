@@ -90,6 +90,7 @@ nav:
       - Getting Started: user-guide/quickstart/overview.md
       - Python: user-guide/quickstart/python.md
       - TypeScript: user-guide/quickstart/typescript.md
+    - Versioning & Support: user-guide/versioning-and-support.md
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
