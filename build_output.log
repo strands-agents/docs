@@ -1,0 +1,248 @@
+
+> docs@1.0.0 docs:clone
+> rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git
+
+Cloning into 'sdk-typescript'...
+
+> docs@1.0.0 docs:ts
+> typedoc --options typedoc.json
+
+[93m[warning][0m HookRegistry, defined in @strands-agents/sdk/src/hooks/registry.ts, is referenced by HookRegistry but not included in the documentation
+[93m[warning][0m RuntimeConfig, defined in @strands-agents/sdk/src/mcp.ts, is referenced by McpClientConfig but not included in the documentation
+[93m[warning][0m ModelContentBlockStopEventData, defined in @strands-agents/sdk/src/models/streaming.ts, is referenced by ModelStreamEvent but not included in the documentation
+[93m[warning][0m ModelStreamEventHook, defined in @strands-agents/sdk/src/hooks/events.ts, is referenced by AgentStreamEvent but not included in the documentation
+[93m[warning][0m JsonBlockData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by JsonBlock but not included in the documentation
+[93m[warning][0m SystemContentBlockData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by SystemPromptData but not included in the documentation
+[93m[warning][0m ZodInferred, defined in @strands-agents/sdk/src/tools/zod-tool.ts, is referenced by tool but not included in the documentation
+[93m[warning][0m ToolResultContentData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by ToolResultBlockData.content but not included in the documentation
+[93m[warning][0m ToolRegistry, defined in @strands-agents/sdk/src/registry/tool-registry.ts, is referenced by Agent.toolRegistry but not included in the documentation
+[93m[warning][0m HookCleanup, defined in @strands-agents/sdk/src/hooks/types.ts, is referenced by HookRegistry.addCallback but not included in the documentation
+[93m[warning][0m McpTool, defined in @strands-agents/sdk/src/tools/mcp-tool.ts, is referenced by McpClient.listTools but not included in the documentation
+[93m[warning][0m StreamAggregatedResult, defined in @strands-agents/sdk/src/models/model.ts, is referenced by BedrockModel.streamAggregated but not included in the documentation
+[93m[warning][0m ToolConfig, defined in @strands-agents/sdk/src/tools/zod-tool.ts, is referenced by tool.config but not included in the documentation
+[93m[warning][0m InvokeArgs, defined in @strands-agents/sdk/src/agent/agent.ts, is referenced by Agent.invoke.args but not included in the documentation
+[93m[warning][0m FunctionToolConfig, defined in @strands-agents/sdk/src/tools/function-tool.ts, is referenced by FunctionTool.constructor.config but not included in the documentation
+[96m[info][0m html generated at ./docs/api-reference/typescript
+[93m[warning][0m Found 0 errors and 15 warnings
+INFO    -  DeprecationWarning: strands.experimental.hooks.multiagent is deprecated. Use strands.hooks instead.
+  File "/home/runner/work/docs/docs/temp_python_sdk/src/strands/experimental/hooks/multiagent/__init__.py", line 6, in <module>
+    from .events import (
+  File "/home/runner/work/docs/docs/temp_python_sdk/src/strands/experimental/hooks/multiagent/events.py", line 16, in <module>
+    warnings.warn(
+
+✓ TypeScript clone repository successfully
+✓ TypeScript documentation generated successfully
+✓ Python Repository cloned successfully
+Failed to install package: Command '['pip', 'install', './temp_python_sdk[all,bidi-all]']' returned non-zero exit status 1.
+Generating Python API docs...
+Found module: strands.interrupt
+Found module: strands.agent.agent
+Found module: strands.agent.state
+Found module: strands.agent.agent_result
+Found module: strands.agent.base
+Found module (with import issues): strands.models.writer - No module named 'writerai'
+Found module (with import issues): strands.models.litellm - No module named 'litellm'
+Found module (with import issues): strands.models.openai - No module named 'openai'
+Found module: strands.models.llamacpp
+Found module (with import issues): strands.models.sagemaker - No module named 'mypy_boto3_sagemaker_runtime'
+Found module (with import issues): strands.models.gemini - cannot import name 'genai' from 'google' (unknown location)
+Found module (with import issues): strands.models.llamaapi - No module named 'llama_api_client'
+Found module (with import issues): strands.models.ollama - No module named 'ollama'
+Found module: strands.models.bedrock
+Found module (with import issues): strands.models.mistral - No module named 'mistralai'
+Found module: strands.models.model
+Found module (with import issues): strands.models.anthropic - No module named 'anthropic'
+Found module: strands.types.interrupt
+Found module: strands.types.agent
+Found module: strands.types.event_loop
+Found module: strands.types.traces
+Found module: strands.types.multiagent
+Found module: strands.types.collections
+Found module: strands.types.citations
+Found module: strands.types.exceptions
+Found module: strands.types.session
+Found module: strands.types.json_dict
+Found module: strands.types.content
+Found module: strands.types.media
+Found module: strands.types.guardrails
+Found module: strands.types.streaming
+Found module: strands.types.tools
+Found module: strands.multiagent.graph
+Found module: strands.multiagent.swarm
+Found module: strands.multiagent.base
+Found module: strands.event_loop.event_loop
+Found module: strands.event_loop.streaming
+Found module: strands.handlers.callback_handler
+Found module: strands.telemetry.metrics
+Found module: strands.telemetry.tracer
+Found module: strands.telemetry.metrics_constants
+Found module: strands.telemetry.config
+Found module: strands.session.session_repository
+Found module: strands.session.session_manager
+Found module: strands.session.repository_session_manager
+Found module: strands.session.file_session_manager
+Found module: strands.session.s3_session_manager
+Found module: strands.tools.loader
+Found module: strands.tools.watcher
+Found module: strands.tools.tool_provider
+Found module: strands.tools.decorator
+Found module: strands.tools.registry
+Found module: strands.tools.tools
+Found module: strands.hooks.events
+Found module: strands.hooks.registry
+Found module: strands.experimental.agent_config
+Found module: strands.experimental.hooks.events
+Found module: strands.experimental.steering.core.context
+Found module: strands.experimental.steering.core.handler
+Found module: strands.experimental.steering.core.action
+Found module: strands.experimental.steering.context_providers.ledger_provider
+Found module: strands.experimental.steering.handlers.llm.mappers
+Found module: strands.experimental.steering.handlers.llm.llm_handler
+Found module: strands.experimental.hooks.multiagent.events
+Found module (with import issues): strands.experimental.bidi.agent.agent - No module named 'pyaudio'
+Found module: strands.experimental.bidi.agent.loop
+Found module (with import issues): strands.experimental.bidi.models.openai_realtime - No module named 'websockets'
+Found module (with import issues): strands.experimental.bidi.models.gemini_live - cannot import name 'genai' from 'google' (unknown location)
+Found module (with import issues): strands.experimental.bidi.models.nova_sonic - No module named 'aws_sdk_bedrock_runtime'
+Found module: strands.experimental.bidi.models.model
+Found module: strands.experimental.bidi.types.agent
+Found module: strands.experimental.bidi.types.events
+Found module: strands.experimental.bidi.types.model
+Found module: strands.experimental.bidi.types.io
+Found module (with import issues): strands.experimental.bidi.io.audio - No module named 'pyaudio'
+Found module (with import issues): strands.experimental.bidi.io.text - No module named 'pyaudio'
+Found module (with import issues): strands.experimental.bidi.tools.stop_conversation - No module named 'pyaudio'
+Found module: strands.tools.mcp.mcp_types
+Found module: strands.tools.mcp.mcp_agent_tool
+Found module: strands.tools.mcp.mcp_instrumentation
+Found module: strands.tools.mcp.mcp_client
+Found module: strands.tools.executors.sequential
+Found module: strands.tools.executors.concurrent
+Found module: strands.tools.structured_output.structured_output_utils
+Found module: strands.tools.structured_output.structured_output_tool
+Found module (with import issues): strands.multiagent.a2a.server - No module named 'a2a'
+Found module (with import issues): strands.multiagent.a2a.executor - No module named 'a2a'
+Found module: strands.agent.conversation_manager.conversation_manager
+Found module: strands.agent.conversation_manager.sliding_window_conversation_manager
+Found module: strands.agent.conversation_manager.null_conversation_manager
+Found module: strands.agent.conversation_manager.summarizing_conversation_manager
+Generated docs/api-reference/python/agent/agent.md
+Generated docs/api-reference/python/agent/state.md
+Generated docs/api-reference/python/agent/agent_result.md
+Generated docs/api-reference/python/agent/base.md
+Generated docs/api-reference/python/agent/conversation_manager/conversation_manager.md
+Generated docs/api-reference/python/agent/conversation_manager/sliding_window_conversation_manager.md
+Generated docs/api-reference/python/agent/conversation_manager/null_conversation_manager.md
+Generated docs/api-reference/python/agent/conversation_manager/summarizing_conversation_manager.md
+Generated docs/api-reference/python/event_loop/event_loop.md
+Generated docs/api-reference/python/event_loop/streaming.md
+Generated docs/api-reference/python/experimental/agent_config.md
+Generated docs/api-reference/python/experimental/hooks/events.md
+Generated docs/api-reference/python/experimental/steering/core/context.md
+Generated docs/api-reference/python/experimental/steering/core/handler.md
+Generated docs/api-reference/python/experimental/steering/core/action.md
+Generated docs/api-reference/python/experimental/steering/context_providers/ledger_provider.md
+Generated docs/api-reference/python/experimental/steering/handlers/llm/mappers.md
+Generated docs/api-reference/python/experimental/steering/handlers/llm/llm_handler.md
+Generated docs/api-reference/python/experimental/hooks/multiagent/events.md
+Generated docs/api-reference/python/experimental/bidi/agent/agent.md
+Generated docs/api-reference/python/experimental/bidi/agent/loop.md
+Generated docs/api-reference/python/experimental/bidi/models/openai_realtime.md
+Generated docs/api-reference/python/experimental/bidi/models/gemini_live.md
+Generated docs/api-reference/python/experimental/bidi/models/nova_sonic.md
+Generated docs/api-reference/python/experimental/bidi/models/model.md
+Generated docs/api-reference/python/experimental/bidi/types/agent.md
+Generated docs/api-reference/python/experimental/bidi/types/events.md
+Generated docs/api-reference/python/experimental/bidi/types/model.md
+Generated docs/api-reference/python/experimental/bidi/types/io.md
+Generated docs/api-reference/python/experimental/bidi/io/audio.md
+Generated docs/api-reference/python/experimental/bidi/io/text.md
+Generated docs/api-reference/python/experimental/bidi/tools/stop_conversation.md
+Generated docs/api-reference/python/handlers/callback_handler.md
+Generated docs/api-reference/python/hooks/events.md
+Generated docs/api-reference/python/hooks/registry.md
+Generated docs/api-reference/python/interrupt/index.md
+Generated docs/api-reference/python/models/writer.md
+Generated docs/api-reference/python/models/litellm.md
+Generated docs/api-reference/python/models/openai.mdINFO    -  [macros] - Found local Python module 'macros' in: /home/runner/work/docs/docs
+INFO    -  [macros] - Found external Python module 'macros' in: /home/runner/work/docs/docs
+INFO    -  [macros] - Functions found: define_env,on_pre_page_macros,on_post_page_macros,on_post_build
+INFO    -  [macros] - Config variables: ['extra', 'config', 'environment', 'plugin', 'git', 'social', 'version', 'docs_repo', 'sdk_pypi', 'sdk_repo', 'py_sdk_repo_home', 'ts_sdk_repo_home', 'tools_pypi', 'tools_repo', 'tools_repo_home', 'agent_builder_pypi', 'agent_builder_repo_home', 'link_strands_tools', 'link_strands_builder', 'community_contribution_banner', 'macros', 'filters', 'filters_builtin']
+INFO    -  [macros] - Config macros: ['context', 'macros_info', 'now', 'fix_url', 'ts_not_supported', 'ts_not_supported_code', 'experimental_feature_warning']
+INFO    -  [macros] - Config filters: ['pretty', 'relative_url']
+INFO    -  Cleaning site directory
+INFO    -  Building documentation to directory: /home/runner/work/docs/docs/site
+INFO    -  Downloading external file: https://unpkg.com/mermaid@11/dist/mermaid.min.js
+INFO    -  The following pages exist in the docs directory, but are not included in the "nav" configuration:
+  - examples/cdk/deploy_to_ec2/README.md
+  - examples/cdk/deploy_to_fargate/README.md
+  - examples/cdk/deploy_to_lambda/README.md
+  - examples/deploy_to_eks/README.md
+  - examples/python/multi_agent_example/index.md
+  - examples/typescript/deploy_to_bedrock_agentcore/README.md
+  - user-guide/quickstart.md
+  - user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard.md
+  - user-guide/observability-evaluation/evaluation.md
+WARNING -  griffe: /opt/hostedtoolcache/Python/3.13.11/x64/lib/python3.13/site-packages/strands/types/_events.py:63: No type or annotation for parameter 'invocation_state'
+WARNING -  griffe: /opt/hostedtoolcache/Python/3.13.11/x64/lib/python3.13/site-packages/strands/types/_events.py:63: Parameter 'invocation_state' does not appear in the function signature
+INFO    -  mkdocstrings_handlers: Formatting signatures requires either Black or Ruff to be installed.
+WARNING -  griffe: /opt/hostedtoolcache/Python/3.13.11/x64/lib/python3.13/site-packages/strands/types/interrupt.py:86: Failed to get 'name: description' pair from 'Must be unique across hook callbacks.'
+ERROR   -  mkdocstrings: strands.tools.tool_provider could not be found
+ERROR   -  Error reading page 'api-reference/python/tools/tool_provider.md':
+ERROR   -  Could not collect 'strands.tools.tool_provider'
+
+Generated docs/api-reference/python/models/llamacpp.md
+Generated docs/api-reference/python/models/sagemaker.md
+Generated docs/api-reference/python/models/gemini.md
+Generated docs/api-reference/python/models/llamaapi.md
+Generated docs/api-reference/python/models/ollama.md
+Generated docs/api-reference/python/models/bedrock.md
+Generated docs/api-reference/python/models/mistral.md
+Generated docs/api-reference/python/models/model.md
+Generated docs/api-reference/python/models/anthropic.md
+Generated docs/api-reference/python/multiagent/graph.md
+Generated docs/api-reference/python/multiagent/swarm.md
+Generated docs/api-reference/python/multiagent/base.md
+Generated docs/api-reference/python/multiagent/a2a/server.md
+Generated docs/api-reference/python/multiagent/a2a/executor.md
+Generated docs/api-reference/python/session/session_repository.md
+Generated docs/api-reference/python/session/session_manager.md
+Generated docs/api-reference/python/session/repository_session_manager.md
+Generated docs/api-reference/python/session/file_session_manager.md
+Generated docs/api-reference/python/session/s3_session_manager.md
+Generated docs/api-reference/python/telemetry/metrics.md
+Generated docs/api-reference/python/telemetry/tracer.md
+Generated docs/api-reference/python/telemetry/metrics_constants.md
+Generated docs/api-reference/python/telemetry/config.md
+Generated docs/api-reference/python/tools/loader.md
+Generated docs/api-reference/python/tools/watcher.md
+Generated docs/api-reference/python/tools/tool_provider.md
+Generated docs/api-reference/python/tools/decorator.md
+Generated docs/api-reference/python/tools/registry.md
+Generated docs/api-reference/python/tools/tools.md
+Generated docs/api-reference/python/tools/mcp/mcp_types.md
+Generated docs/api-reference/python/tools/mcp/mcp_agent_tool.md
+Generated docs/api-reference/python/tools/mcp/mcp_instrumentation.md
+Generated docs/api-reference/python/tools/mcp/mcp_client.md
+Generated docs/api-reference/python/tools/executors/sequential.md
+Generated docs/api-reference/python/tools/executors/concurrent.md
+Generated docs/api-reference/python/tools/structured_output/structured_output_utils.md
+Generated docs/api-reference/python/tools/structured_output/structured_output_tool.md
+Generated docs/api-reference/python/types/interrupt.md
+Generated docs/api-reference/python/types/agent.md
+Generated docs/api-reference/python/types/event_loop.md
+Generated docs/api-reference/python/types/traces.md
+Generated docs/api-reference/python/types/multiagent.md
+Generated docs/api-reference/python/types/collections.md
+Generated docs/api-reference/python/types/citations.md
+Generated docs/api-reference/python/types/exceptions.md
+Generated docs/api-reference/python/types/session.md
+Generated docs/api-reference/python/types/json_dict.md
+Generated docs/api-reference/python/types/content.md
+Generated docs/api-reference/python/types/media.md
+Generated docs/api-reference/python/types/guardrails.md
+Generated docs/api-reference/python/types/streaming.md
+Generated docs/api-reference/python/types/tools.md
+✓ Updated Python API nav menu
+
+Aborted with a BuildError!
