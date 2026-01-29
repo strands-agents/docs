@@ -9,7 +9,12 @@
     "docs:clone": "rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git",
     "docs:ts": "typedoc --options typedoc.json",
     "serve": "npm run docs:clone && npm run docs:ts && mkdocs serve",
-    "clean": "rm -rf docs/api-reference/typescript node_modules"
+    "clean": "rm -rf docs/api-reference/typescript node_modules",
+    "cms:dev": "astro dev",
+    "cms:start": "astro dev",
+    "cms:build": "astro build",
+    "cms:preview": "astro preview",
+    "astro": "astro"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -23,9 +28,17 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "@astrojs/starlight": "^0.37.3",
+    "astro": "^5.6.1",
+    "astro-auto-import": "^0.5.1",
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0",
-    "typedoc": "^0.28.14"
+    "remark-stringify": "^11.0.0",
+    "remark-parse": "^11.0.0",
+    "typedoc": "^0.28.14",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0",
+    "vitest": "^4.0.18"
   },
   "prettier": {
     "semi": false,

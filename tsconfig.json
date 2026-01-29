@@ -1,4 +1,5 @@
 {
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
@@ -27,6 +28,6 @@
     "sourceMap": true,
     "removeComments": false,
   },
-  "include": ["docs/**/*.ts"],
+  "include": ["docs/**/*.ts", ".astro/types.d.ts", "src/**/*"],
   "exclude": ["node_modules", "dist", "docs/examples/cdk", "docs/examples/typescript"],
 }
