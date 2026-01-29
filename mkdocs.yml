@@ -152,7 +152,6 @@ nav:
         - Observability: user-guide/concepts/bidirectional-streaming/otel.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
-        - MultiAgentHooks: user-guide/concepts/experimental/multi-agent-hooks.md
         - Steering: user-guide/concepts/experimental/steering.md
     - Safety & Security:
       - Responsible AI: user-guide/safety-security/responsible-ai.md
@@ -191,7 +190,7 @@ nav:
           - Overview: user-guide/deploy/deploy_to_bedrock_agentcore/index.md
           - Python: user-guide/deploy/deploy_to_bedrock_agentcore/python.md
           - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
-      - AWS Lambda: user-guide/deploy/deploy_to_aws_lambda.md
+      - AWS Lambda<sup> new</sup>: user-guide/deploy/deploy_to_aws_lambda.md
       - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
       - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
       - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
@@ -229,6 +228,7 @@ nav:
         - Nebius Token Factory: community/model-providers/nebius-token-factory.md
         - NVIDIA NIM: community/model-providers/nvidia-nim.md
         - SGLang: community/model-providers/sglang.md
+        - vLLM: community/model-providers/vllm.md
         - MLX: community/model-providers/mlx.md
       - Session Managers:
         - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md

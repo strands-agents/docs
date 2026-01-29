@@ -15,6 +15,8 @@ def user_task_function(case: Case) -> dict:
     """Execute agent with tools and capture trajectory."""
     memory_exporter.clear()
     agent = Agent(
+        # IMPORTANT: trace_attributes with session IDs are required when using StrandsInMemorySessionMapper
+        # to prevent spans from different test cases from being mixed together in the memory exporter
         trace_attributes={"gen_ai.conversation.id": case.session_id, "session.id": case.session_id},
         tools=[calculator],
         callback_handler=None,

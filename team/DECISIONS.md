@@ -41,3 +41,61 @@ class RetryStrategy(HookProvider):
 ```
 
 Higher-level abstractions require additional interface definitions, but this tradeoff provides an improved developer experience through explicit contracts. Developers with edge cases can still drop to raw `HookProvider` (and `agent.hooks`) when needed — optimizing for the common path while preserving that escape hatch.
+
+
+## Prefer Flat Namespaces Over Nested Modules
+
+**Date**: Jan 16, 2026
+
+### Decision
+
+Public APIs should expose commonly-used functionality through flat, top-level namespaces rather than requiring users to import from deeply nested module paths.
+
+### Rationale
+
+Fewer imports are simpler to use and more discoverable when using IDE autocompletion & documentation. While inspired by Python's "Flat is better than nested" (PEP 20 - The Zen of Python), this principle applies across SDK languages.
+
+We don't want users continually importing additional modules for common functionality. The goal is to optimize for the 80% case where users need standard features, while still allowing advanced users to import from specific submodules when needed.
+
+For example, we prefer exporting all hook events from a single module:
+
+```python
+from strands.hooks import MultiAgentInitializedEvent
+```
+
+instead of categorizing them based on their purpose
+
+```python
+from strands.hooks.multiagent import MultiAgentInitializedEvent
+```
+
+this is even more important when the event names already indicate their grouping (**MultiAgent**InitializeEvent). 
+
+Internal module organization can remain nested for code maintainability — the key is re-exporting public symbols at common locations.
+
+## When Internal Interfaces Should Extend HookProvider
+
+**Date**: Jan 21, 2026
+
+### Decision
+
+Internal interfaces that integrate with the agent lifecycle (such as `RetryStrategy`, `SessionManager`, and `ConversationManager`) SHOULD extend `HookProvider`. When uncertain whether a new interface requires `HookProvider`, prefer a simple domain interface—it can always be evolved to extend `HookProvider` later, but the reverse migration breaks existing implementations.
+
+### Rationale
+
+The team considered two approaches for `RetryStrategy`: extending `HookProvider` or exposing a simple domain interface with methods like `should_retry(exception, attempt) -> bool`.
+
+While `RetryStrategy` is simple enough that a non-`HookProvider` interface would suffice, extending `HookProvider` maintains a uniform pattern across all agent constructor parameters that integrate with the lifecycle. Users implementing any of these interfaces learn one composition model. This aligns with the **composability** tenet: primitives are building blocks with each other.
+
+The tradeoff is that `HookProvider` exposure can leak implementation details for interfaces with single decision points. Use the following criteria for future interfaces:
+
+**Use a simple interface when:**
+
+- The interface has a single responsibility expressible as one or two methods
+- The interface does not need to respond to multiple lifecycle events
+- Consistency with existing interfaces is not a priority
+
+**Extend HookProvider when:**
+
+- The capability requires responding to multiple distinct lifecycle events
+- Users need to customize which events to subscribe to or add callbacks beyond base class defaults
