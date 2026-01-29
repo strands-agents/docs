@@ -17,6 +17,7 @@ Create a new directory for your project and initialize it:
 mkdir my-agent
 cd my-agent
 npm init -y
+npm pkg set type=module
 ```
 
 Learn more about the [npm init command](https://docs.npmjs.com/cli/v8/commands/npm-init) and its options.
