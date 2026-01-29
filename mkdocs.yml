@@ -241,7 +241,13 @@ nav:
         - telegram: community/tools/strands-telegram.md
         - telegram-listener: community/tools/strands-telegram-listener.md
 
-  - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
+  - Contribute ❤️:
+      - Overview: contribute/index.md
+      - Contribution Types:
+        - Core SDK: contribute/contributing/core-sdk.md
+        - Documentation: contribute/contributing/documentation.md
+        - Feature Proposals: contribute/contributing/feature-proposals.md
+        - Extensions: contribute/contributing/extensions.md
   - Python API: []
   - TypeScript API: api-reference/typescript/index.html
 
