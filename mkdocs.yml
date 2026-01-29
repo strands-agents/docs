@@ -199,6 +199,7 @@ nav:
         - TypeScript: user-guide/deploy/deploy_to_docker/typescript.md
       - Kubernetes: user-guide/deploy/deploy_to_kubernetes.md
       - Terraform: user-guide/deploy/deploy_to_terraform.md
+    - Versioning & Support: user-guide/versioning-and-support.md
 
   - Examples:
     - Overview: examples/README.md
