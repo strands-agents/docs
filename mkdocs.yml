@@ -90,7 +90,6 @@ nav:
       - Getting Started: user-guide/quickstart/overview.md
       - Python: user-guide/quickstart/python.md
       - TypeScript: user-guide/quickstart/typescript.md
-    - Versioning & Support: user-guide/versioning-and-support.md
     - Concepts:
       - Agents:
         - Agent Loop: user-guide/concepts/agents/agent-loop.md
@@ -200,6 +199,7 @@ nav:
         - TypeScript: user-guide/deploy/deploy_to_docker/typescript.md
       - Kubernetes: user-guide/deploy/deploy_to_kubernetes.md
       - Terraform: user-guide/deploy/deploy_to_terraform.md
+    - Versioning & Support: user-guide/versioning-and-support.md
 
   - Examples:
     - Overview: examples/README.md
