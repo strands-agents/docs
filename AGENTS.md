@@ -13,6 +13,17 @@ The goal of this repository is to revamp this documentation repo so that it prov
 
 **For human contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and contribution guidelines.
 
+## Team Process Documents
+
+When working on SDK features or documentation, familiarize yourself with these team processes:
+
+* **[Feature Lifecycle Process](team/FEATURE_LIFECYCLE.md)**: How features are added, versioned, deprecated, and graduated from experimental status
+* **[API Bar Raising](team/API_BAR_RAISING.md)**: Standards for API design quality
+* **[Decisions](team/DECISIONS.md)**: Key architectural and design decisions
+* **[Tenets](team/TENETS.md)**: Core principles guiding SDK development
+
+These documents define the standards and processes that ensure consistency and quality across the Strands SDK.
+
 ## Directory Structure
 
 ```
