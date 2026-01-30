@@ -359,6 +359,56 @@ Some Bedrock models support multimodal inputs (Documents, Images, etc.). Here's 
 
 For a complete list of input types, please refer to the [API Reference](../../../api-reference/python/types/content.md).
 
+#### S3 Location Support
+
+As an alternative to providing media content as bytes, Amazon Bedrock supports referencing documents, images, and videos stored in Amazon S3 directly. This is useful when working with large files or when your content is already stored in S3.
+
+!!! note "IAM Permissions Required"
+
+    To use S3 locations, the IAM role or user making the Bedrock API call must have `s3:GetObject` permission on the S3 bucket and objects being referenced.
+
+=== "Python"
+
+    ```python
+    from strands import Agent
+    from strands.models import BedrockModel
+
+    agent = Agent(model=BedrockModel())
+
+    response = agent(
+        [
+            {
+                "document": {
+                    "format": "pdf",
+                    "name": "report.pdf",
+                    "source": {
+                        "s3Location": {
+                            "uri": "s3://my-bucket/documents/report.pdf",
+                            "bucketOwner": "123456789012"  # Optional: for cross-account access
+                        }
+                    }
+                }
+            },
+            {
+                "text": "Summarize this document."
+            }
+        ]
+    )
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:s3_location"
+    ```
+
+!!! tip "Supported Media Types"
+
+    The same `s3Location` pattern works for images and videos:
+
+    - **Images**: Use the `image` block with `s3Location` source
+    - **Videos**: Use the `video` block with `s3Location` source (supports files up to 1GB)
+
 ### Guardrails
 
 === "Python"

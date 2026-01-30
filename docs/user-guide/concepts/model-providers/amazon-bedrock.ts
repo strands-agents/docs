@@ -194,6 +194,27 @@ async function multimodalSupport() {
   // --8<-- [end:multimodal_full]
 }
 
+// S3 location support for multimodal content
+async function s3LocationSupport() {
+  // --8<-- [start:s3_location]
+  const agent = new Agent({ model: new BedrockModel() })
+
+  const response = await agent.invoke([
+    new DocumentBlock({
+      format: 'pdf',
+      name: 'report.pdf',
+      source: {
+        s3Location: {
+          uri: 's3://my-bucket/documents/report.pdf',
+          bucketOwner: '123456789012', // Optional: for cross-account access
+        },
+      },
+    }),
+    'Summarize this document.',
+  ])
+  // --8<-- [end:s3_location]
+}
+
 // System prompt caching
 async function systemPromptCachingFull() {
   // --8<-- [start:system_prompt_caching_full]
@@ -209,7 +230,7 @@ async function systemPromptCachingFull() {
   // First request will cache the system prompt
   let cacheWriteTokens = 0
   let cacheReadTokens = 0
-  
+
   for await (const event of agent.stream('Tell me about Python')) {
     if (event.type === 'modelMetadataEvent' && event.usage) {
       cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
