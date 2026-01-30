@@ -19,7 +19,7 @@ service:
 !!! note "Language Support"
     This provider is only supported in Python.
 
-[xAI](https://x.ai/) is an AI company that develops the Grok family of large language models designed to deliver truthful, insightful answers with advanced reasoning capabilities. The [`strands-xai`](https://pypi.org/project/strands-xai/) package ([GitHub](https://github.com/Cerrix/strands-xai)) provides a community-maintained integration for the Strands Agents SDK, enabling seamless use of xAI's Grok models with powerful server-side tools including real-time X platform access, web search, and code execution.
+[xAI](https://x.ai/) is an AI company that develops the Grok family of large language models with advanced reasoning capabilities. The [`strands-xai`](https://pypi.org/project/strands-xai/) package ([GitHub](https://github.com/Cerrix/strands-xai)) provides a community-maintained integration for the Strands Agents SDK, enabling seamless use of xAI's Grok models with powerful server-side tools including real-time X platform access, web search, and code execution.
 
 ## Installation
 
@@ -31,7 +31,10 @@ pip install strands-agents strands-xai
 
 ## Usage
 
-After installing `strands-xai`, you can import and initialize the xAI provider:
+After installing `strands-xai`, you can import and initialize the xAI provider.
+
+!!! note "API Key Required"
+    Ensure `XAI_API_KEY` is set in your environment, or pass it via `client_args={"api_key": "your-key"}`.
 
 ```python
 from strands import Agent
