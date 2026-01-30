@@ -72,6 +72,25 @@ To use the examples in this guide, you'll need to configure your environment wit
 
 Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
 
+## Hello, World!
+
+Let's verify your setup works by creating the simplest possible agent. Create a file called `hello.py`:
+
+```python
+from strands import Agent
+
+agent = Agent()
+agent("Say hello world")
+```
+
+Run it:
+
+```bash
+python hello.py
+```
+
+If everything is configured correctly, you'll see the agent respond with a greeting. Now let's build something more interesting!
+
 ## Project Setup
 
 Now we'll create our Python project where our agent will reside. We'll use this directory structure:
