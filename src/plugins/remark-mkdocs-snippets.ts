@@ -36,12 +36,12 @@ function extractSection(content: string, sectionName: string): string | null {
     const startMatch = line.match(START_MARKER_PATTERN)
     const endMatch = line.match(END_MARKER_PATTERN)
 
-    if (startMatch && startMatch[1].trim() === sectionName.trim()) {
+    if (startMatch && startMatch[1]?.trim() === sectionName.trim()) {
       inSection = true
       continue
     }
 
-    if (endMatch && endMatch[1].trim() === sectionName.trim()) {
+    if (endMatch && endMatch[1]?.trim() === sectionName.trim()) {
       break
     }
 
@@ -59,7 +59,7 @@ function extractSection(content: string, sectionName: string): string | null {
   const minIndent = Math.min(
     ...nonEmptyLines.map((line) => {
       const match = line.match(/^(\s*)/)
-      return match ? match[1].length : 0
+      return match?.[1]?.length ?? 0
     })
   )
 
@@ -89,7 +89,7 @@ export default function remarkMkdocsSnippets(options: RemarkMkdocsSnippetsOption
         }
 
         hasSnippets = true
-        const reference = match[1]
+        const reference = match[1]!
 
         // Parse "path:section" or just "path" (handle Windows paths with drive letters)
         const colonIndex = reference.lastIndexOf(':')
