@@ -51,6 +51,9 @@ A session passes the evaluation only if the score is 1.0 (all goals achieved).
 
 ## Basic Usage
 
+!!! warning "Required: Session ID Trace Attributes"
+    When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment

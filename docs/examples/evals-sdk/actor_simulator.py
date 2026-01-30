@@ -17,6 +17,8 @@ def task_function(case: Case) -> dict:
 
     # Create target agent
     agent = Agent(
+        # IMPORTANT: trace_attributes with session IDs are required when using StrandsInMemorySessionMapper
+        # to prevent spans from different test cases from being mixed together in the memory exporter
         trace_attributes={"gen_ai.conversation.id": case.session_id, "session.id": case.session_id},
         system_prompt="You are a helpful travel assistant.",
         callback_handler=None,
