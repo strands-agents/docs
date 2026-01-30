@@ -177,28 +177,6 @@ When models return multiple tool requests, you can control whether they execute 
 
 {{ ts_not_supported_code() }}
 
-## Tool Executors
-
-When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Agents use concurrent execution by default, but you can specify sequential execution for cases where order matters:
-
-```python
-from strands import Agent
-from strands.tools.executors import SequentialToolExecutor
-
-# Concurrent execution (default)
-agent = Agent(tools=[weather_tool, time_tool])
-agent("What is the weather and time in New York?")
-
-# Sequential execution
-agent = Agent(
-    tool_executor=SequentialToolExecutor(),
-    tools=[screenshot_tool, email_tool]
-)
-agent("Take a screenshot and email it to my friend")
-```
-
-For more details, see [Tool Executors](executors.md).
-
 ## Building & Loading Tools
 
 ### 1. Custom Tools
