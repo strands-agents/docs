@@ -7,6 +7,13 @@ import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://strandsagents.com',
+  vite: {
+    // TODO once we separate out CMS build from TS verification, fix this
+    // https://github.com/withastro/astro/issues/14117
+		ssr: {
+			noExternal: ['zod'],
+		},
+	},
   markdown: {
     remarkPlugins: [remarkMkdocsSnippets],
   },
