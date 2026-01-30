@@ -10,7 +10,9 @@ __pycache__
 .kiro
 *.egg-info
 
+dist
 node_modules
+.astro
 uv.lock
 
 temp_python_sdk
