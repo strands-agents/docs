@@ -14,7 +14,7 @@
     "cms:start": "astro dev",
     "cms:build": "astro build",
     "cms:preview": "astro preview",
-    "cms:test": "vitest",
+    "cms:test": "vitest run",
     "astro": "astro"
   },
   "author": "",
