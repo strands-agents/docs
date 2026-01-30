@@ -78,10 +78,17 @@ Python web-servers commonly implement streaming through the use of iterators, an
 
 ```python
 async def run_weather_agent_and_stream_response(prompt: str):
+    """
+    A helper function to yield summary text chunks one by one as they come in, allowing the web server to emit
+    them to caller live
+    """
     is_summarizing = False
 
     @tool
     def ready_to_summarize():
+        """
+        A tool that is intended to be called by the agent right before summarize the response.
+        """
         nonlocal is_summarizing
         is_summarizing = True
         return "Ok - continue providing the summary!"
@@ -98,8 +105,9 @@ async def run_weather_agent_and_stream_response(prompt: str):
         if "data" in item:
             yield item['data']
 
-@app.route('/weather-streaming', methods=['POST'])
+@app.post('/weather-streaming')
 async def get_weather_streaming(request: PromptRequest):
+    """Endpoint to stream the weather summary as it comes it, not all at once at the end."""
     try:
         prompt = request.prompt
 
@@ -118,7 +126,7 @@ The implementation above employs a [custom tool](../concepts/tools/custom-tools.
 
 ## Containerization
 
-To deploy your agent to App Runner, you need to containerize it using Podman or Docker. The Dockerfile defines how your application is packaged and run.  Below is an example Docker file that installs all needed dependencies, the application, and configures the FastAPI server to run via unicorn ([Dockerfile][dockerfile]):
+To deploy your agent to App Runner, you need to containerize it using Podman or Docker. The Dockerfile defines how your application is packaged and run.  Below is an example Docker file that installs all needed dependencies, the application, and configures the FastAPI server to run via Uvicorn ([Dockerfile][dockerfile]):
 
 ```dockerfile
 FROM public.ecr.aws/docker/library/python:3.12-slim
