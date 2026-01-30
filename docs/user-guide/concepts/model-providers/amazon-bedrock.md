@@ -404,10 +404,7 @@ As an alternative to providing media content as bytes, Amazon Bedrock supports r
 
 !!! tip "Supported Media Types"
 
-    The same `s3Location` pattern works for images and videos:
-
-    - **Images**: Use the `image` block with `s3Location` source
-    - **Videos**: Use the `video` block with `s3Location` source (supports files up to 1GB)
+    The same `s3Location` pattern also works for images and videos.
 
 ### Guardrails
 
