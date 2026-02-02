@@ -495,18 +495,34 @@ Enable automatic cache point management for agent workflows with repeated tool c
 === "Python"
 
     ```python
-    from strands import Agent
+    from strands import Agent, tool
     from strands.models import BedrockModel, CacheConfig
+
+    @tool
+    def web_search(query: str) -> str:
+        """Search the web for information."""
+        return f"""
+        Search results for '{query}':
+        1. Comprehensive Guide - [Long article with detailed explanations...]
+        2. Research Paper - [Detailed findings and methodology...]
+        3. Stack Overflow - [Multiple answers and code snippets...]
+        """
 
     model = BedrockModel(
         model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
         cache_config=CacheConfig(strategy="auto")
     )
-    agent = Agent(model=model)
+    agent = Agent(model=model, tools=[web_search])
 
-    # Each response automatically gets a cache point
-    response1 = agent("What is Python?")
-    response2 = agent("What is JavaScript?")  # Previous context hits cache
+    # Agent call with tool uses - cache write and read occur as context accumulates
+    response1 = agent("Search for Python async patterns, then compare with error handling")
+    print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+    print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
+
+    # Follow-up reuses cached context from previous conversation
+    response2 = agent("Summarize the key differences")
+    print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+    print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
     ```
 
 === "TypeScript"
@@ -528,18 +544,26 @@ Place cache points explicitly at specific locations in your conversation when yo
         {
             "role": "user",
             "content": [
-                {"text": "What is Python?"},
-                {"cachePoint": {"type": "default"}}
+                {"text": """Here is a technical document:
+                [Long document content with multiple sections covering architecture,
+                implementation details, code examples, and best practices spanning
+                over 1000 tokens...]"""},
+                {"cachePoint": {"type": "default"}}  # Cache only up to this point
             ]
-        },
-        {
-            "role": "assistant",
-            "content": [{"text": "Python is a programming language..."}]
         }
     ]
 
     agent = Agent(messages=messages)
-    response = agent("Tell me more about Python")
+
+    # First request writes the document to cache
+    response1 = agent("Summarize the key points from the document")
+    print(f"Cache write tokens: {response1.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+    print(f"Cache read tokens: {response1.metrics.accumulated_usage.get('cacheReadInputTokens')}")
+
+    # Subsequent requests read the cached document
+    response2 = agent("What are the implementation recommendations?")
+    print(f"Cache write tokens: {response2.metrics.accumulated_usage.get('cacheWriteInputTokens')}")
+    print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
     ```
 
 === "TypeScript"
