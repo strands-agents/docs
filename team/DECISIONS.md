@@ -141,4 +141,4 @@ The `run` method builds on these to abstract the complexity. Users provide IO ca
 await agent.run(inputs=[audio_input], outputs=[audio_output, text_output])
 ```
 
-This pattern aligns with **progressive disclosure** from UX design: show users what they need for common tasks while making advanced capabilities discoverable when needed.
+This pattern aligns with progressive disclosure from UX design: show users what they need for common tasks while making advanced capabilities discoverable when needed.
