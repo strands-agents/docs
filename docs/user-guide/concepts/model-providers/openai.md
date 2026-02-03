@@ -18,9 +18,6 @@ OpenAI is configured as an optional dependency in Strands Agents. To install, ru
     npm install @strands-agents/sdk openai
     ```
 
-    !!! note "Peer Dependency"
-        The `openai` package is a required peer dependency. You must install it alongside the SDK to use the OpenAI provider.
-
 ## Usage
 
 After installing dependencies, you can import and initialize the Strands Agents' OpenAI provider as follows:
