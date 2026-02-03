@@ -504,19 +504,20 @@ import logging
 from strands import Agent
 from strands_tools import shell
 
-logger = logging.getLogger("my_agent")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 # Define a simple callback handler that logs instead of printing
 tool_use_ids = []
 def callback_handler(**kwargs):
     if "data" in kwargs:
-        # Log the streamed data chunks
-        logger.info(kwargs["data"], end="")
+        # Log the streamed chunks
+        logger.info(f"{kwargs['delta']}")
     elif "current_tool_use" in kwargs:
         tool = kwargs["current_tool_use"]
         if tool["toolUseId"] not in tool_use_ids:
             # Log the tool use
-            logger.info(f"\n[Using tool: {tool.get('name')}]")
+            logger.info(f"[Using tool: {tool.get('name')}]")
             tool_use_ids.append(tool["toolUseId"])
 
 # Create an agent with the callback handler
@@ -529,7 +530,7 @@ agent = Agent(
 result = agent("What operating system am I using?")
 
 # Print only the last response
-print(result.message)
+print(f"\n{result}")
 ```
 
 The callback handler is called in real-time as the agent thinks, uses tools, and responds.
