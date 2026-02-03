@@ -125,6 +125,7 @@ nav:
         - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
         - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
         - Nebius Token Factory<sup> community</sup>: user-guide/concepts/model-providers/nebius-token-factory.md
+        - xAI<sup> community</sup>: user-guide/concepts/model-providers/xai.md
       - Streaming:
         - Overview: user-guide/concepts/streaming/index.md
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
