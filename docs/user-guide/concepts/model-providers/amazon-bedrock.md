@@ -525,9 +525,7 @@ Enable automatic cache point management for agent workflows with repeated tool c
     print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadInputTokens')}")
     ```
 
-=== "TypeScript"
-
-    {{ ts_not_supported_code("Automatic cache strategy is not yet supported in the TypeScript SDK") }}
+{{ ts_not_supported_code("Automatic cache strategy is not yet supported in the TypeScript SDK") }}
 
 > **Note**: Cache misses occur if you intentionally modify past conversation context (e.g., summarization or editing previous messages).
 
