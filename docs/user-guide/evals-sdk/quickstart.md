@@ -239,11 +239,10 @@ from strands_tools import calculator
 
 # Setup telemetry for trace capture
 telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
-memory_exporter = telemetry.in_memory_exporter
 
 def user_task_function(case: Case) -> dict:
     # Clear previous traces
-    memory_exporter.clear()
+    telemetry.in_memory_exporter.clear()
     
     agent = Agent(
         tools=[calculator],
@@ -256,7 +255,7 @@ def user_task_function(case: Case) -> dict:
     response = agent(case.input)
     
     # Map spans to session for evaluation
-    finished_spans = memory_exporter.get_finished_spans()
+    finished_spans = telemetry.in_memory_exporter.get_finished_spans()
     mapper = StrandsInMemorySessionMapper()
     session = mapper.map_to_session(finished_spans, session_id=case.session_id)
     
