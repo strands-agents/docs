@@ -149,7 +149,6 @@ nav:
         - Interruptions: user-guide/concepts/bidirectional-streaming/interruption.md
         - Hooks: user-guide/concepts/bidirectional-streaming/hooks.md
         - Session Management: user-guide/concepts/bidirectional-streaming/session-management.md
-        - Observability: user-guide/concepts/bidirectional-streaming/otel.md
       - Experimental:
         - AgentConfig: user-guide/concepts/experimental/agent-config.md
         - Steering: user-guide/concepts/experimental/steering.md
