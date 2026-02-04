@@ -8,162 +8,101 @@
 
 ## Context
 
-### What is the issue?
+### The Problem
 
-Users want to load specialized instruction packages (skills) for their agents without managing complex prompt engineering. Skills are reusable packages of instructions that teach agents how to perform specialized tasks, following the [AgentSkills.io](https://agentskills.io) specification developed by Anthropic.
+Imagine you're building an agent that reviews code. You've carefully crafted instructions covering security analysis, best practices, and common pitfalls. Now you want to reuse those instructions across multiple agents, share them with your team, or swap them out depending on the task.
 
-### What task are you trying to accomplish?
+Today, you'd need to:
 
-- Load relevant knowledge/instruction files depending on specific tasks
-- Reuse agents for different tasks by adding/removing skills
-- Organize complex agent instructions into shareable packages
-- Integrate with the existing skills ecosystem (Anthropic skills, AgentSkills.io)
+1. Manually read instruction files and concatenate them into your system prompt
+2. Build your own logic to manage which instructions are active
+3. Handle the plumbing of loading, parsing, and injecting skill content
 
-### What makes it difficult today?
-
-Currently, users must:
-- Manually read SKILL.md files and inject into system prompts
-- Build their own skill management logic
-- Use the `skills` tool from strands-tools (runtime only, no static configuration)
-
-### Who experiences this problem?
-
-- Developers building agents that need specialized behaviors
-- Teams sharing agent capabilities across projects
-- Users of Anthropic's skills who want SDK integration
+This is exactly the kind of repetitive work that should be handled by the SDK.
 
 ### What Are Skills?
 
-Skills are self-contained packages consisting of:
-- **SKILL.md file**: YAML frontmatter (metadata) + markdown body (instructions)
-- **Optional resources**: Scripts, reference docs, templates in subdirectories
-
-**SKILL.md Format:**
+Skills are reusable instruction packages that follow the [AgentSkills.io](https://agentskills.io) specification—an open standard developed by Anthropic. A skill is simply a folder containing a `SKILL.md` file with metadata and instructions:
 
 ```markdown
 ---
 name: code-review
 description: Reviews code for bugs, security vulnerabilities, and best practices
-license: Apache-2.0
 allowed-tools: file_read, shell
 ---
 
 # Code Review Instructions
 
 When reviewing code, follow these steps:
-1. Security Analysis: Check for common vulnerabilities
-2. Code Quality: Look for bugs and edge cases
-3. Best Practices: Verify coding standards
+
+1. **Security Analysis**: Check for SQL injection, XSS, and auth issues
+2. **Code Quality**: Look for bugs, edge cases, and logic errors
+3. **Best Practices**: Verify coding standards and patterns
+
+## Examples
 ...
 ```
 
-**Directory Structure:**
+Skills can also include supporting resources like scripts and reference docs:
 
 ```
 skills/
 ├── code-review/
 │   ├── SKILL.md
 │   ├── scripts/
+│   │   └── analyze.py
 │   └── references/
+│       └── security-checklist.md
 └── documentation/
     └── SKILL.md
 ```
 
+### Who Needs This?
+
+- **Developers** building agents that need specialized behaviors for different tasks
+- **Teams** sharing agent capabilities across projects
+- **Anyone** using Anthropic's skills or the AgentSkills.io ecosystem
+
 ## Decision
 
-Add a `skills` parameter to the Agent class that accepts skill paths or Skill objects, with support for dynamic skill management and active skill tracking.
-
-### API Changes
-
-#### Agent Parameter
+We're adding a `skills` parameter to the Agent class. Point it at a directory, and your agent gains access to those skills.
 
 ```python
-class Agent:
-    def __init__(
-        self,
-        # ... existing parameters ...
-        skills: str | Path | Sequence[str | Path | Skill] | None = None,
-    ):
-        """
-        Args:
-            skills: Skills to make available to the agent. Can be:
-                - String/Path to a directory containing skill subdirectories
-                - Sequence of paths to individual skill directories
-                - Sequence of Skill objects
-                - Mix of the above
-                
-                Skills are evaluated at each invocation, so changes to this
-                property take effect on the next agent call.
-        """
-    
-    @property
-    def skills(self) -> list[Skill] | None:
-        """Currently configured skills. Mutable - changes apply to next invocation."""
-        
-    @skills.setter
-    def skills(self, value: str | Path | Sequence[str | Path | Skill] | None) -> None:
-        """Set skills. Accepts same types as __init__ parameter."""
-    
-    @property
-    def active_skill(self) -> Skill | None:
-        """The skill currently being used, if any."""
+from strands import Agent
+
+agent = Agent(
+    skills="./skills",
+    tools=[file_read]
+)
 ```
 
-#### Skill Class
+That's the happy path. For more control, you can pass specific skill paths, `Skill` objects, or mix them:
 
 ```python
-@dataclass
-class Skill:
-    """A skill that provides specialized instructions to an agent."""
-    name: str
-    description: str
-    instructions: str = ""
-    path: Path | None = None
-    allowed_tools: list[str] | None = None
-    metadata: dict[str, Any] = field(default_factory=dict)
-    
-    @classmethod
-    def from_path(cls, skill_path: str | Path) -> "Skill":
-        """Load a skill from a directory or SKILL.md file."""
+agent = Agent(
+    skills=[
+        "./skills/code-review",
+        "./skills/documentation",
+        my_custom_skill,
+    ]
+)
 ```
 
-#### Loader Functions
+### How It Works
 
-```python
-def load_skills(skills_dir: str | Path) -> list[Skill]:
-    """Load all skills from a directory."""
+When you set `skills`, the SDK:
 
-def load_skill(skill_path: str | Path) -> Skill:
-    """Load a single skill from a directory or SKILL.md file."""
-```
+1. Loads skill metadata (name, description, location) from each `SKILL.md`
+2. Appends this metadata to your system prompt
+3. Re-evaluates skills on each invocation, so you can change them between calls
 
-#### Module Exports
-
-```python
-# strands/__init__.py
-from strands.skills import Skill
-
-# strands/skills/__init__.py
-from strands.skills.skill import Skill
-from strands.skills.loader import load_skills, load_skill
-from strands.skills.errors import SkillLoadError
-
-__all__ = ["Skill", "load_skills", "load_skill", "SkillLoadError"]
-```
-
-### How It Integrates
-
-**System Prompt Composition:**
-
-When `skills` is set, skill metadata is appended to the system prompt:
+The agent sees something like this in its system prompt:
 
 ```
-[User's system_prompt]
-
 ## Available Skills
 
-You have access to specialized skills that provide detailed instructions.
-When a task matches a skill's description, read its full instructions.
+You have access to specialized skills. When a task matches a skill's 
+description, read its full instructions from the location shown.
 
 - **code-review**: Reviews code for bugs, security vulnerabilities...
   Location: /path/to/skills/code-review/SKILL.md
@@ -172,49 +111,137 @@ When a task matches a skill's description, read its full instructions.
   Location: /path/to/skills/documentation/SKILL.md
 ```
 
-**Dynamic Evaluation:**
+The agent then uses `file_read` (or similar) to load full instructions when it decides a skill applies. This is progressive disclosure—metadata upfront, full content on demand.
 
-Skills are processed at each invocation, not at init. This allows:
-- Changing skills between calls
-- Adding/removing skills programmatically
-- Session-based skill management
+### Dynamic Skill Management
 
-**allowed_tools Enforcement:**
-
-When a skill with `allowed_tools` is active, tool calls are filtered via `BeforeToolCallEvent`:
+Skills aren't baked in at init time. You can change them between invocations:
 
 ```python
-# Internal hook enforces tool restrictions
-class SkillToolEnforcer(HookProvider):
-    def check_tool_allowed(self, event: BeforeToolCallEvent):
-        if active_skill and active_skill.allowed_tools:
-            if tool_name not in active_skill.allowed_tools:
-                event.cancel_tool = f"Tool '{tool_name}' not allowed by skill"
+agent = Agent(tools=[file_read])
+
+# Start with no skills
+agent("Hello!")
+
+# Add skills for a code task
+agent.skills = "./skills"
+agent("Review this function for security issues")
+
+# Switch to different skills
+agent.skills = ["./skills/documentation"]  
+agent("Write API docs for this module")
+
+# Clear skills entirely
+agent.skills = None
+agent("What's the weather?")
 ```
 
-**Session Manager Integration:**
+### Tracking the Active Skill
 
-Skills state persists with SessionManager:
+The SDK tracks which skill the agent is currently using via `agent.active_skill`:
 
 ```python
-# Session stores:
-{
-    "skills": {
-        "configured": ["./skills/code-review", "./skills/docs"],
-        "active_skill_name": "code-review"
-    }
-}
+result = agent("Review my authentication code")
+
+if agent.active_skill:
+    print(f"Agent used: {agent.active_skill.name}")
 ```
 
-### Relationship to `skills` Tool
+This is useful for analytics, conditional logic, and session persistence. The active skill is detected when the agent reads a `SKILL.md` file during invocation.
 
-| SDK `skills` param | `skills` tool |
-|-------------------|---------------|
-| Static config at init/runtime | Dynamic discovery by agent |
+### Tool Restrictions with `allowed_tools`
+
+Skills can specify which tools they're allowed to use:
+
+```yaml
+---
+name: safe-analyzer
+description: Analyzes files without executing code
+allowed-tools: file_read
+---
+```
+
+When this skill is active, the SDK blocks calls to tools not in the list. If the agent tries to use `shell`, it receives an error message explaining the restriction. This enforcement happens via the existing `BeforeToolCallEvent` hook.
+
+### Session Persistence
+
+When you use a SessionManager, skill configuration persists across sessions:
+
+```python
+agent = Agent(
+    skills="./skills",
+    session_manager=FileSessionManager("./sessions"),
+    session_id="project-alpha"
+)
+```
+
+The session stores which skills are configured and which skill was last active. When you restore the session, skills are reloaded from their paths.
+
+### API Surface
+
+**Agent changes:**
+
+```python
+class Agent:
+    def __init__(
+        self,
+        # ... existing parameters ...
+        skills: str | Path | Sequence[str | Path | Skill] | None = None,
+    ): ...
+    
+    @property
+    def skills(self) -> list[Skill] | None: ...
+    
+    @skills.setter
+    def skills(self, value: str | Path | Sequence[str | Path | Skill] | None): ...
+    
+    @property
+    def active_skill(self) -> Skill | None: ...
+```
+
+**New Skill class:**
+
+```python
+@dataclass
+class Skill:
+    name: str
+    description: str
+    instructions: str = ""
+    path: Path | None = None
+    allowed_tools: list[str] | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+    
+    @classmethod
+    def from_path(cls, skill_path: str | Path) -> "Skill": ...
+```
+
+**Helper functions:**
+
+```python
+def load_skills(skills_dir: str | Path) -> list[Skill]: ...
+def load_skill(skill_path: str | Path) -> Skill: ...
+```
+
+**Module exports:**
+
+```python
+# strands/__init__.py exports Skill
+# strands/skills/__init__.py exports Skill, load_skills, load_skill, SkillLoadError
+```
+
+### Relationship to the `skills` Tool
+
+The `skills` tool in strands-tools handles runtime skill discovery—the agent decides when to look for and activate skills. The SDK `skills` parameter handles static configuration—you decide which skills are available.
+
+They complement each other:
+
+| SDK `skills` parameter | `skills` tool |
+|------------------------|---------------|
+| You control which skills | Agent discovers skills |
+| Configured at init or between calls | Activated during invocation |
 | Metadata in system prompt | Full progressive disclosure |
-| Developer controls which skills | Agent decides when to activate |
 
-They complement each other - use SDK param for "always available" skills, use tool for "discover as needed".
+Use the SDK parameter for "always available" skills. Use the tool for "discover as needed" scenarios.
 
 ## Developer Experience
 
@@ -224,58 +251,29 @@ They complement each other - use SDK param for "always available" skills, use to
 from strands import Agent
 from strands_tools import file_read
 
-# Point to skills directory - that's it
 agent = Agent(
     skills="./skills",
     tools=[file_read]
 )
 
 result = agent("Review my code for security issues")
-print(f"Used skill: {agent.active_skill.name if agent.active_skill else 'none'}")
 ```
 
-### Dynamic Skill Management
-
-```python
-agent = Agent(tools=[file_read])
-
-# No skills initially
-agent("Hello")
-
-# Add skills dynamically
-agent.skills = "./skills"
-agent("Review my code")
-
-# Switch skills
-agent.skills = ["./skills/documentation"]
-agent("Write docs for this API")
-
-# Clear skills
-agent.skills = None
-```
-
-### With Custom System Prompt
+### Combining with a Custom System Prompt
 
 ```python
 agent = Agent(
-    system_prompt="You are a senior engineer at Acme Corp.",
+    system_prompt="You are a senior engineer at Acme Corp. Be thorough.",
     skills="./company-skills",
     tools=[file_read, shell]
 )
 ```
 
-### Tool Restrictions
+Your system prompt comes first, then the skills metadata is appended.
 
-```python
-# SKILL.md with: allowed-tools: file_read
+### Creating Skills Programmatically
 
-agent = Agent(
-    skills=["./skills/safe-analyzer"],
-    tools=[file_read, shell, http_request]  # shell, http blocked when skill active
-)
-```
-
-### Programmatic Skills
+You don't need `SKILL.md` files. Define skills in code:
 
 ```python
 from strands import Agent, Skill
@@ -283,101 +281,106 @@ from strands import Agent, Skill
 review_skill = Skill(
     name="quick-review",
     description="Quick code review focusing on obvious issues",
-    instructions="# Guidelines\n\n1. Focus on bugs\n2. Check security...",
+    instructions="""
+# Quick Review Guidelines
+
+Focus on:
+1. Obvious bugs and typos
+2. Missing error handling  
+3. Security red flags
+
+Skip style nitpicks and optimization suggestions.
+""",
     allowed_tools=["file_read"]
 )
 
 agent = Agent(skills=[review_skill])
 ```
 
-### Session Persistence
+### Filtering Skills
 
 ```python
-from strands.session import FileSessionManager
+from strands.skills import load_skills
 
-agent = Agent(
-    skills="./skills",
-    session_manager=FileSessionManager("./sessions"),
-    session_id="project-alpha"
-)
+all_skills = load_skills("./skills")
 
-# Skills config persists across sessions
+# Only allow specific skills
+safe_skills = [s for s in all_skills if s.name in ["docs", "summarizer"]]
+
+# Or filter out skills that can execute code
+safe_skills = [s for s in all_skills 
+               if not s.allowed_tools or "shell" not in s.allowed_tools]
+
+agent = Agent(skills=safe_skills)
 ```
 
-### Active Skill in Hooks
+### Using Active Skill in Hooks
 
 ```python
+from strands.hooks import HookProvider, AfterInvocationEvent
+
 class SkillAnalytics(HookProvider):
+    def __init__(self):
+        self.usage = {}
+    
     def register_hooks(self, registry):
         registry.add_callback(AfterInvocationEvent, self.track)
     
     def track(self, event):
-        if event.agent.active_skill:
-            print(f"Used skill: {event.agent.active_skill.name}")
+        skill = event.agent.active_skill
+        if skill:
+            self.usage[skill.name] = self.usage.get(skill.name, 0) + 1
+
+analytics = SkillAnalytics()
+agent = Agent(skills="./skills", hooks=[analytics])
 ```
 
 ## Alternatives Considered
 
-### 1. Skills as a Separate Package
+### Skills as a Separate Package
 
-**Approach**: Keep skills entirely in `strands-tools` or a separate `strands-skills` package.
+We considered keeping skills entirely in strands-tools or a separate package. This would be less discoverable and wouldn't integrate with the agent lifecycle (sessions, hooks). Skills are simple enough that they belong in the core SDK.
 
-**Why not chosen**: 
-- Less discoverable
-- Requires additional dependency
-- Doesn't integrate with Agent lifecycle (session, hooks)
+### Skill Modes (inject/tool/agent)
 
-### 2. Deep Integration with Skill Modes
+We considered adding a `skill_mode` parameter to control how skills are activated—injected into prompts, loaded via tool calls, or run in sub-agents. This adds complexity without clear benefit. The single approach (metadata in prompt, full content on demand) covers most cases. Users who need different patterns can build them using hooks.
 
-**Approach**: Add `skill_mode` parameter with options like "inject", "tool", "agent" for different skill activation patterns.
+### SkillProvider Interface
 
-**Why not chosen**:
-- Adds complexity without clear benefit
-- Single mode (system prompt injection) covers most cases
-- Users can build custom modes using hooks if needed
+We considered a `SkillProvider` protocol similar to `ToolProvider`. Skills are simpler than tools—they're just data, not executable code. A list of `Skill` objects is sufficient.
 
-### 3. SkillProvider Interface
+### Skill-Specific Hooks
 
-**Approach**: Create a `SkillProvider` protocol similar to `ToolProvider`.
-
-**Why not chosen**:
-- Over-engineering for the use case
-- Skills are simpler than tools (just data, no execution)
-- List of Skill objects is sufficient
-
-### 4. Skill-Specific Hooks
-
-**Approach**: Add `SkillActivatedEvent`, `SkillDeactivatedEvent`, etc.
-
-**Why not chosen**:
-- Existing hooks + `active_skill` property provide same capability
-- Follows decision record: "Hooks as Low-Level Primitives"
+We considered adding `SkillActivatedEvent` and similar hooks. The existing hooks combined with `agent.active_skill` provide the same capability without new abstractions.
 
 ## Consequences
 
-### What becomes easier
+### What Becomes Easier
 
-- Loading and using skills from directories
+- Loading skills from directories with a single parameter
 - Sharing skills across agents and projects
-- Tracking which skill is being used
-- Restricting tools when skills are active
+- Changing skills dynamically between invocations
+- Tracking which skill the agent is using
+- Restricting tools when specific skills are active
 - Persisting skill state across sessions
 
-### What becomes more difficult
+### What Becomes More Difficult
 
-- Nothing significant - the feature is additive
+Nothing significant. The feature is additive.
 
 ### Future Extensions
 
-The design allows for future additions:
+This design allows for:
+
 - Remote skill registries
 - Skill versioning
-- Multiple active skills
-- Custom prompt templates
+- Multiple simultaneous active skills
+- Custom prompt templates for skill metadata
 
 ## Willingness to Implement
 
 Yes, with guidance on:
-- Exact placement of skills processing in the event loop
-- Session manager schema changes
+
+- Exact placement of skills processing in the invocation flow
+- Session manager schema for skill state
 - Test coverage expectations
