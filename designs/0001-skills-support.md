@@ -147,7 +147,9 @@ if agent.active_skill:
     print(f"Agent used: {agent.active_skill.name}")
 ```
 
-This is useful for analytics, conditional logic, and session persistence. The active skill is detected when the agent reads a `SKILL.md` file during invocation.
+**How detection works:** When the agent calls `file_read` on a path matching a configured skill's `SKILL.md`, that skill becomes active. The active skill resets to `None` at the start of each invocation.
+
+This is useful for analytics, conditional logic, and session persistence.
 
 ### Tool Restrictions with `allowed_tools`
 
@@ -190,13 +192,19 @@ class Agent:
     ): ...
     
     @property
-    def skills(self) -> list[Skill] | None: ...
+    def skills(self) -> list[Skill] | None:
+        """Configured skills, or None if no skills are set."""
+        ...
     
     @skills.setter
-    def skills(self, value: str | Path | Sequence[str | Path | Skill] | None): ...
+    def skills(self, value: str | Path | Sequence[str | Path | Skill] | None) -> None:
+        """Set skills from a directory path, list of paths, Skill objects, or None to clear."""
+        ...
     
     @property
-    def active_skill(self) -> Skill | None: ...
+    def active_skill(self) -> Skill | None:
+        """The skill currently in use, or None. Set when the agent reads a SKILL.md file."""
+        ...
 ```
 
 **New Skill class:**
@@ -208,26 +216,54 @@ class Skill:
     description: str
     instructions: str = ""
     path: Path | None = None
-    allowed_tools: list[str] | None = None
+    allowed_tools: list[str] | None = None  # None means all tools allowed
     metadata: dict[str, Any] = field(default_factory=dict)
     
     @classmethod
-    def from_path(cls, skill_path: str | Path) -> "Skill": ...
+    def from_path(cls, skill_path: str | Path) -> "Skill":
+        """Load a skill from a directory containing SKILL.md.
+        
+        Raises:
+            SkillLoadError: If SKILL.md is missing or malformed.
+        """
+        ...
 ```
 
 **Helper functions:**
 
 ```python
-def load_skills(skills_dir: str | Path) -> list[Skill]: ...
-def load_skill(skill_path: str | Path) -> Skill: ...
+def load_skills(skills_dir: str | Path) -> list[Skill]:
+    """Load all skills from subdirectories of skills_dir.
+    
+    Each subdirectory must contain a SKILL.md file. Subdirectories
+    without SKILL.md are silently skipped.
+    """
+    ...
+
+def load_skill(skill_path: str | Path) -> Skill:
+    """Load a single skill from a directory.
+    
+    Raises:
+        SkillLoadError: If SKILL.md is missing or malformed.
+    """
+    ...
 ```
 
 **Module exports:**
 
 ```python
-# strands/__init__.py exports Skill
-# strands/skills/__init__.py exports Skill, load_skills, load_skill, SkillLoadError
+# Top-level export for common usage
+from strands import Agent, Skill
+
+# Submodule for helpers and errors
+from strands.skills import load_skills, load_skill, SkillLoadError
 ```
+
+**Error handling:**
+
+- `SkillLoadError` raised when `SKILL.md` is missing or has invalid YAML frontmatter
+- Invalid paths in `Agent(skills=...)` raise `SkillLoadError` at init time
+- Skills with `allowed_tools` referencing non-existent tools log a warning but don't fail
 
 ### Relationship to the `skills` Tool
 
@@ -347,7 +383,7 @@ We considered adding a `skill_mode` parameter to control how skills are activate
 
 ### SkillProvider Interface
 
-We considered a `SkillProvider` protocol similar to `ToolProvider`. Skills are simpler than tools—they're just data, not executable code. A list of `Skill` objects is sufficient.
+We considered a `SkillProvider` protocol similar to `ToolProvider`, or having `Skill` extend `HookProvider`. Skills are simpler than tools or lifecycle integrations—they're just data (name, description, instructions). A plain dataclass is sufficient. Per [When Internal Interfaces Should Extend HookProvider](https://github.com/strands-agents/docs/blob/main/team/DECISIONS.md), skills don't need to respond to multiple lifecycle events, so a simple interface is appropriate.
 
 ### Skill-Specific Hooks
 
