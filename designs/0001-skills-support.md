@@ -161,70 +161,7 @@ allowed-tools: file_read
 ---
 ```
 
-When this skill is active, the SDK **filters tools before sending them to the model**. The model only sees tools it's allowed to use—it never even knows about tools that are restricted.
-
-This is implemented via **pre-filtering at model invocation time**:
-
-1. When `agent.tool_registry.get_all_tool_specs()` is called (in `event_loop.py`)
-2. If an active skill has `allowed_tools`, the returned specs are filtered to only include those tools
-3. The model receives a reduced tool list and can only call what it sees
-
-This approach is cleaner than post-hoc validation because:
-- **No wasted tokens**: The model doesn't waste context or reasoning on tools it can't use
-- **No confusing errors**: The model never tries to call a tool and gets rejected
-- **Simpler mental model**: Tools you can see are tools you can use
-
-#### Implementation: Tool Pre-Filtering
-
-The filtering happens in the event loop, where tools are prepared for model invocation. Here's the flow:
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          Agent Invocation                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│  1. User calls agent("Review this code")                                │
-│                                                                         │
-│  2. Event loop prepares for model call                                  │
-│     └─ get_tool_specs_for_invocation() checks:                          │
-│        ├─ Is there an active skill?                                     │
-│        ├─ Does it have allowed_tools?                                   │
-│        └─ If yes, filter tool_specs to only allowed tools               │
-│                                                                         │
-│  3. Model receives filtered tool list                                   │
-│     └─ Only sees: file_read (not shell, not python_repl, etc.)          │
-│                                                                         │
-│  4. Model can only call tools it sees                                   │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-The key modification is in the event loop's model invocation flow. Instead of:
-
-```python
-# Current: all tools sent to model
-tool_specs = agent.tool_registry.get_all_tool_specs()
-```
-
-It becomes:
-
-```python
-# With skills: filtered tools sent to model
-tool_specs = agent.get_tool_specs_for_invocation()
-
-# Inside get_tool_specs_for_invocation():
-def get_tool_specs_for_invocation(self) -> list[ToolSpec]:
-    all_specs = self.tool_registry.get_all_tool_specs()
-    
-    if self.active_skill and self.active_skill.allowed_tools:
-        allowed = set(self.active_skill.allowed_tools)
-        return [spec for spec in all_specs if spec["name"] in allowed]
-    
-    return all_specs
-```
-
-This approach:
-- **Keeps the model honest**: It physically can't call restricted tools
-- **Reduces context usage**: Fewer tool definitions = more room for conversation
-- **Requires no error handling**: No need to handle "tool not allowed" errors
+When this skill is active, the SDK filters tool specs before sending them to the model. The model only sees tools in the `allowed_tools` list—it can't call what it can't see.
 
 ### Session Persistence
 
@@ -418,13 +355,7 @@ We considered adding `SkillActivatedEvent` and similar hooks. The existing hooks
 
 ### Hook-Based Tool Enforcement
 
-We considered using a `BeforeToolCallEvent` hook to validate tool calls after the model makes them—rejecting calls to tools not in the skill's `allowed_tools` list. This was rejected for several reasons:
-
-1. **Wasteful**: The model spends tokens reasoning about tools it can't use, then gets an error
-2. **Confusing UX**: The model sees tools, tries to use them, and fails—this creates a poor experience
-3. **Complex error handling**: We'd need to handle rejected tool calls gracefully and help the model recover
-
-**Pre-filtering is the better approach**: By filtering tools *before* sending them to the model, the model only sees what it can use. This is cleaner, more efficient, and requires no error recovery logic.
+We considered using `BeforeToolCallEvent` to reject calls to restricted tools. Pre-filtering is simpler—don't show the model tools it can't use.
 
 ## Consequences
 
