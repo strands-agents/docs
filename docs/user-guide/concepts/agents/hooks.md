@@ -196,6 +196,7 @@ Most event properties are read-only to prevent unintended modifications. However
 
     - [`AfterToolCallEvent`](../../../api-reference/python/hooks/events.md#strands.hooks.events.AfterToolCallEvent)
         - `result` - Modify the tool result. See [Result Modification](#result-modification).
+        - `exception` *(read-only)* - The original exception if the tool raised one, otherwise `None`. See [Exception Handling](#exception-handling).
 
 === "TypeScript"
 
@@ -309,6 +310,41 @@ Modify tool results after execution:
     ```
 
 {{ ts_not_supported_code("Changing of tool results is not yet available in TypeScript SDK") }}
+
+### Exception Handling
+
+When a tool raises an exception, the agent converts it to an error result and returns it to the model, allowing the model to adjust its approach and retry. This works well for expected errors like validation failures, but for unexpected errors—assertion failures, configuration errors, or bugs—you may want to fail immediately rather than let the model retry futilely. The `exception` property on `AfterToolCallEvent` provides access to the original exception, enabling hooks to inspect error types and selectively propagate those that shouldn't be retried:
+
+=== "Python"
+
+    ```python
+    class PropagateUnexpectedExceptions(HookProvider):
+        """Re-raise unexpected exceptions instead of returning them to the model."""
+
+        def __init__(self, allowed_exceptions: tuple[type[Exception], ...] = (ValueError,)):
+            self.allowed_exceptions = allowed_exceptions
+
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(AfterToolCallEvent, self._check_exception)
+
+        def _check_exception(self, event: AfterToolCallEvent) -> None:
+            if event.exception is None:
+                return  # Tool succeeded
+            if isinstance(event.exception, self.allowed_exceptions):
+                return  # Let model retry these
+            raise event.exception  # Propagate unexpected errors
+    ```
+
+    ```python
+    # Usage
+    agent = Agent(
+        model=model,
+        tools=[my_tool],
+        hooks=[PropagateUnexpectedExceptions(allowed_exceptions=(ValueError, ValidationError))],
+    )
+    ```
+
+{{ ts_not_supported_code("Exception inspection is not yet available in TypeScript SDK") }}
 
 ### Conditional Node Execution
 
