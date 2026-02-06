@@ -118,7 +118,7 @@ Each specialized agent has a distinct system prompt, and tools in its inventory,
 
 ### 3. Agent as Tool Pattern
 
-This example demonstrates the ["Agent as Tool Pattern"](../../../user-guide/concepts/multi-agent/agent-to-agent.md) where Strands agents are wrapped as tools. These tools are then provided to another agent (the Teacher's Assistant), creating a system where agents can use other agents as tools.
+This example demonstrates the ["Agent as Tool Pattern"](../../../user-guide/concepts/multi-agent/agents-as-tools.md) where Strands agents are wrapped as tools. These tools are then provided to another agent (the Teacher's Assistant), creating a system where agents can use other agents as tools.
 
 
 ### Sample Interactions
