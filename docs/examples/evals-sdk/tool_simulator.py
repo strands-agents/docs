@@ -11,34 +11,21 @@ from strands_evals.telemetry import StrandsEvalsTelemetry
 # Clear previous registrations
 ToolSimulator.clear_registry()
 
-# Setup telemetry
+# Setup telemetry and tool simulator upfront
 telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
 memory_exporter = telemetry.in_memory_exporter
+tool_simulator = ToolSimulator()
 
-# Function tool for room temperature and humidity (dynamic mode)
+# Function tool for room temperature and humidity
 @ToolSimulator.function_tool(
     share_state_id="room_environment",
-    initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off",
-    mode="dynamic"
+    initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off"
 )
 def get_room_temperature_humidity() -> Dict[str, Any]:
     """Get current room temperature and humidity levels."""
     pass
 
-# MCP tool (mock mode, shares state with room environment)
-def mock_hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
-    """Mock HVAC system logic that affects room environment."""
-    energy_cost = abs(temperature - 70) * 0.05  # Cost increases with temperature difference
-    result = {
-        "target_temperature": temperature,
-        "mode": mode,
-        "estimated_runtime": f"{abs(temperature - 70) * 10} minutes",
-        "energy_cost_per_hour": round(energy_cost, 2),
-        "efficiency_rating": "high" if abs(temperature - 70) < 3 else "medium",
-        "humidity_impact": "increases" if mode == "heat" else "decreases"
-    }
-    return result
-
+# MCP tool (shares state with room environment)
 hvac_schema = {
     "name": "hvac_controller",
     "description": "Control home heating/cooling system that affects room temperature and humidity",
@@ -54,44 +41,29 @@ hvac_schema = {
 
 @ToolSimulator.mcp_tool(
     schema=hvac_schema, 
-    mode="mock", 
-    mock_function=mock_hvac_controller,
     share_state_id="room_environment"
 )
 def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
     """Control home HVAC system."""
     pass
 
-# API tool (static mode)
+# API tool
 @ToolSimulator.api_tool(
     path="/weather/current",
-    method="GET",
-    mode="static",
-    static_response={
-        "status": 200,
-        "data": {
-            "temperature": 45,
-            "condition": "cloudy",
-            "humidity": 65,
-        }
-    }
+    method="GET"
 )
 def weather_service(location: str) -> Dict[str, Any]:
     """Get current weather information."""
     pass
-
-# Create simulators
-simulator = ToolSimulator()
 
 # Create sub-agent (agent-as-tool) with simulated tools
 @tool
 def hvac_control_assistant(query: str) -> str:
     """HVAC control assistant that uses room sensors and weather data to control the HVAC system based on user requests."""
     try:
-        simulator = ToolSimulator._get_instance()
-        temp_tool = simulator.get_tool("get_room_temperature_humidity")
-        hvac_tool = simulator.get_tool("hvac_controller")
-        weather_tool = simulator.get_tool("weather_service")
+        temp_tool = tool_simulator.get_tool("get_room_temperature_humidity")
+        hvac_tool = tool_simulator.get_tool("hvac_controller")
+        weather_tool = tool_simulator.get_tool("weather_service")
         
         control_agent = Agent(
             system_prompt="You are an HVAC control assistant. Your job is to control the HVAC system using the hvac_controller tool based on information from room temperature/humidity sensors and weather conditions. Always check current room conditions first, consider outdoor weather, then make appropriate HVAC adjustments to meet the user's request.",
@@ -107,11 +79,10 @@ def hvac_control_assistant(query: str) -> str:
 # Define a task function
 def user_task_function(case: Case) -> dict:
     # Create agent with simulated tool and sub-agent
-    simulator = ToolSimulator._get_instance()
-    temp_tool = simulator.get_tool("get_room_temperature_humidity")
+    temp_tool = tool_simulator.get_tool("get_room_temperature_humidity")
     
     # Inspect initial shared state "room_environment"
-    initial_state = simulator._state_registry.get_state("room_environment")
+    initial_state = tool_simulator.get_state("room_environment")
     print(f"[Room state (before agent invocation)]:")
     print(f"  Initial state: {initial_state.get('initial_state')}")
     print(f"  Previous calls: {initial_state.get('previous_calls', [])}")
@@ -136,7 +107,7 @@ def user_task_function(case: Case) -> dict:
     print(f"[Agent]: {agent_response}")
 
     # Inspect final shared state "room_environment" after agent interaction
-    final_state = simulator._state_registry.get_state("room_environment")
+    final_state = tool_simulator.get_state("room_environment")
     print(f"[Room state (after agent invocation)]:")
     print(f"  Initial state: {final_state.get('initial_state')}")
     print(f"  Previous calls:")
