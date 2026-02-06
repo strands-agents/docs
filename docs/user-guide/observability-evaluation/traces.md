@@ -241,10 +241,11 @@ Traces can be visualized and analyzed using any OpenTelemetry-compatible tool:
 Common visualization options include:
 
 1. **Jaeger**: Open-source, end-to-end distributed tracing
-2. **Langfuse**: For Traces, evals, prompt management, and metrics
-3. **AWS X-Ray**: For AWS-based applications
-4. **Zipkin**: Lightweight distributed tracing
-5. **Opik**: For evaluating and optimizing multi-agent systems
+2. **MLflow**: [Open-source](https://github.com/mlflow/mlflow/tree/master) LLMOps platform for tracing and evaluation. Managed version is available in [SageMaker AI](https://aws.amazon.com/jp/sagemaker/ai/experiments/).
+3. **Langfuse**: For Traces, evals, prompt management, and metrics
+4. **AWS X-Ray**: For AWS-based applications
+5. **Zipkin**: Lightweight distributed tracing
+6. **Opik**: For evaluating and optimizing multi-agent systems
 
 ## Local Development Setup
 
