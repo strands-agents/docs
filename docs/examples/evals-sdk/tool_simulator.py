@@ -1,4 +1,6 @@
 from typing import Dict, Any
+from enum import Enum
+from pydantic import BaseModel, Field
 
 from strands import Agent
 from strands.tools.decorator import tool
@@ -16,8 +18,23 @@ telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
 memory_exporter = telemetry.in_memory_exporter
 tool_simulator = ToolSimulator()
 
-# Function tool for room temperature and humidity
-@ToolSimulator.function_tool(
+# Define HVAC controller output schema based on provided reference
+class HVACMode(str, Enum):
+    """HVAC operating modes."""
+    HEAT = "heat"
+    COOL = "cool"
+    AUTO = "auto"
+    OFF = "off"
+
+class HVACControllerResponse(BaseModel):
+    """Response model for HVAC controller operations."""
+    temperature: float = Field(..., description="Target temperature in Fahrenheit")
+    mode: HVACMode = Field(..., description="HVAC mode")
+    status: str = Field(default="success", description="Operation status")
+    message: str = Field(default="", description="Additional status message")
+
+# Tool for room temperature and humidity
+@tool_simulator.tool(
     share_state_id="room_environment",
     initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off"
 )
@@ -25,33 +42,17 @@ def get_room_temperature_humidity() -> Dict[str, Any]:
     """Get current room temperature and humidity levels."""
     pass
 
-# MCP tool (shares state with room environment)
-hvac_schema = {
-    "name": "hvac_controller",
-    "description": "Control home heating/cooling system that affects room temperature and humidity",
-    "inputSchema": {
-        "type": "object",
-        "properties": {
-            "temperature": {"type": "number", "description": "Target temperature in Fahrenheit"},
-            "mode": {"type": "string", "enum": ["heat", "cool", "auto", "off"], "description": "HVAC mode"}
-        },
-        "required": ["temperature", "mode"]
-    }
-}
-
-@ToolSimulator.mcp_tool(
-    schema=hvac_schema, 
-    share_state_id="room_environment"
+# HVAC controller tool (shares state with room environment)
+@tool_simulator.tool(
+    share_state_id="room_environment",
+    output_schema=HVACControllerResponse
 )
 def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
-    """Control home HVAC system."""
+    """Control home heating/cooling system that affects room temperature and humidity."""
     pass
 
-# API tool
-@ToolSimulator.api_tool(
-    path="/weather/current",
-    method="GET"
-)
+# Weather service tool
+@tool_simulator.tool()
 def weather_service(location: str) -> Dict[str, Any]:
     """Get current weather information."""
     pass
