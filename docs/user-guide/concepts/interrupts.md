@@ -420,9 +420,6 @@ print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message, indent=2)
 
 Graphs also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
 
-!!! warning
-    Support for raising interrupts from multi-agent nodes is still under development. For status updates, please see [here](https://github.com/strands-agents/sdk-python/issues/204).
-
 #### Components
 
 - `event.interrupt` - Raises an interrupt with a unique name and optional reason
