@@ -2,16 +2,12 @@ from typing import Dict, Any
 from enum import Enum
 from pydantic import BaseModel, Field
 
-from strands import Agent
-from strands.tools.decorator import tool
+from strands import Agent, tool
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import HelpfulnessEvaluator
 from strands_evals.simulation.tool_simulator import ToolSimulator
 from strands_evals.mappers import StrandsInMemorySessionMapper
 from strands_evals.telemetry import StrandsEvalsTelemetry
-
-# Clear previous registrations
-ToolSimulator.clear_registry()
 
 # Setup telemetry and tool simulator upfront
 telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
@@ -38,6 +34,7 @@ class HVACControllerResponse(BaseModel):
     share_state_id="room_environment",
     initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off"
 )
+@tool
 def get_room_temperature_humidity() -> Dict[str, Any]:
     """Get current room temperature and humidity levels."""
     pass
@@ -47,12 +44,14 @@ def get_room_temperature_humidity() -> Dict[str, Any]:
     share_state_id="room_environment",
     output_schema=HVACControllerResponse
 )
+@tool
 def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
     """Control home heating/cooling system that affects room temperature and humidity."""
     pass
 
 # Weather service tool
 @tool_simulator.tool()
+@tool
 def weather_service(location: str) -> Dict[str, Any]:
     """Get current weather information."""
     pass
