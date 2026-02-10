@@ -85,7 +85,7 @@ The Strands Agents SDK uses standard log levels:
 
     ```python
     from strands import Agent
-    from strands.tools.calculator import calculator
+    from strands_tools import calculator
 
     # Create an agent with the calculator tool
     agent = Agent(tools=[calculator])
