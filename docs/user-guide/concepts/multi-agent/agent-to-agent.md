@@ -36,6 +36,8 @@ This installs the core Strands SDK along with the necessary A2A protocol depende
 
 ## Consuming Remote Agents
 
+{{ ts_not_supported("`A2AAgent` class is not currently supported in the TypeScript SDK, but will be coming soon!") }}
+
 The `A2AAgent` class provides the simplest way to consume remote A2A agents. It wraps the A2A protocol communication and presents a familiar interface—you can invoke it just like a regular Strands `Agent`.
 
 Without `A2AAgent`, you need to manually resolve agent cards, configure HTTP clients, build protocol messages, and parse responses. The `A2AAgent` class handles all of this automatically.
