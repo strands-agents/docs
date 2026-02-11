@@ -1,22 +1,18 @@
-# Contributing to Documentation
+# Contributing to documentation
 
-Good documentation helps developers succeed with Strands. We welcome contributions that make our docs clearer, more complete, or more helpful.
-
-When documentation is missing, unclear, or outdated, developers struggle. Your contributions—whether fixing a typo, clarifying a concept, or adding a new guide—directly improve the experience for thousands of developers.
-
-Documentation lives in the [docs repository](https://github.com/strands-agents/docs).
+Good documentation helps developers succeed with Strands. We welcome contributions that make our docs clearer, more complete, or more helpful. Our documentation lives in the [docs repository](https://github.com/strands-agents/docs).
 
 ## What we accept
 
 We're looking for contributions that improve the developer experience. Documentation changes can range from small typo fixes to complete new guides.
 
-| Type | Description | Examples |
-|------|-------------|----------|
-| Typo fixes | Spelling, grammar, and formatting corrections | Fix misspelled function names, correct punctuation |
-| Clarifications | Rewording confusing sections | Simplify complex explanations, add missing context |
-| New examples | Code samples and tutorials | Working code showing real-world usage |
-| API reference | Improvements to reference documentation | Better parameter descriptions, return value docs |
-| New guides | Complete tutorials or concept pages | Step-by-step workflows, architecture explanations |
+| Type | Description |
+|------|-------------|
+| Typo fixes | Spelling, grammar, and formatting corrections |
+| Clarifications | Rewording confusing sections |
+| New examples | Code samples and tutorials |
+| New guides | Complete tutorials or concept pages |
+| Community extensions | Documentation for community-built packages |
 
 ## Setup
 
@@ -90,13 +86,11 @@ Keep prose tight and focused. Readers scan documentation looking for answers.
 
 Code examples are critical—they show developers exactly what to do. Always test your examples before submitting.
 
-**Requirements:**
-
-- **Test all code** — Every example must actually work
-- **Include both languages** — Provide Python and TypeScript when both are supported
-- **Start simple** — Show the minimal example first, then add complexity
-- **Add comments** — Explain non-obvious parts
-- **Use realistic names** — Avoid foo/bar, use descriptive names
+- Test all code — every example must actually work
+- Include both languages — provide Python and TypeScript when both are supported
+- Start simple — show the minimal example first, then add complexity
+- Add comments — explain non-obvious parts
+- Use realistic names — avoid foo/bar, use descriptive names
 
 ```python
 # Good: Start simple

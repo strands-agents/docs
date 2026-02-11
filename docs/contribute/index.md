@@ -2,14 +2,14 @@
 
 There are different ways to contribute to the Strands ecosystem. You can improve the core SDK, help with documentation, or build extensions that others can use.
 
-## Core SDK
+## SDK contributions
 
 These contributions improve the SDK powering every Strands agent.
 
 | I want to... | What it involves | Guide |
 |--------------|------------------|-------|
-| Fix a bug | Check for existing issues, submit a PR with tests that verify your fix | [Core SDK](./contributing/core-sdk.md) |
-| Add a new feature | For small changes, open an issue first. For larger features, go through the ADR process to align on direction | [Feature Proposals](./contributing/feature-proposals.md) |
+| Fix a bug | Check for existing issues, submit a PR with tests that verify your fix | [SDK](./contributing/core-sdk.md) |
+| Add a new feature | For small changes, open an issue first. For larger features, write a design document to align on direction | [Feature Proposals](./contributing/feature-proposals.md) |
 | Improve the docs | Fix typos, clarify explanations, add examples, or write new guides | [Documentation](./contributing/documentation.md) |
 
 ## Extensions

@@ -217,7 +217,7 @@ nav:
     - Multi-modal: examples/python/multimodal.md
 
   - Community:
-      - Community Packages: community/community-packages.md
+      - Community Catalog: community/community-packages.md
       - Get Featured: community/get-featured.md
       - Integrations:
         - AG-UI: community/integrations/ag-ui.md
@@ -245,7 +245,7 @@ nav:
   - Contribute ❤️:
       - Overview: contribute/index.md
       - Contribution Types:
-        - Core SDK: contribute/contributing/core-sdk.md
+        - SDK: contribute/contributing/core-sdk.md
         - Documentation: contribute/contributing/documentation.md
         - Feature Proposals: contribute/contributing/feature-proposals.md
         - Extensions: contribute/contributing/extensions.md

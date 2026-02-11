@@ -20,7 +20,7 @@ Strands has several extension points. Each serves a different purpose in the age
 |-----------|---------|------------|
 | **Tools** | Add capabilities to agents—call APIs, access databases, interact with services | [Custom tools](../../user-guide/concepts/tools/custom-tools.md) |
 | **Model providers** | Integrate LLM APIs beyond the built-in providers | [Custom model providers](../../user-guide/concepts/model-providers/custom_model_provider.md) |
-| **Hook providers** | React to agent lifecycle events like invocations, tool calls, and model calls | [Hooks](../../user-guide/concepts/agents/hooks.md) |
+| **Hook providers** | Extend or modify agent behavior during lifecycle events such as invocations, tool calls, and model calls | [Hooks](../../user-guide/concepts/agents/hooks.md) |
 | **Session managers** | Persist conversations to external storage for resumption or sharing | [Session management](../../user-guide/concepts/agents/session-management.md) |
 | **Conversation managers** | Control how message history grows—trim old messages or summarize context | [Conversation management](../../user-guide/concepts/agents/conversation-management.md) |
 

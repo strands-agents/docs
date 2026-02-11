@@ -1,8 +1,17 @@
-# Contributing to core SDK
+# Contributing to the SDK
 
-The core SDK powers every Strands agent—the agent loop, model integrations, tool execution, and streaming. When you fix a bug or improve performance here, you're helping every developer who uses Strands.
+The SDK powers every Strands agent—the agent loop, model integrations, tool execution, and streaming. When you fix a bug or improve performance here, you're helping every developer who uses Strands.
 
 This guide walks you through contributing to sdk-python and sdk-typescript. We'll cover what types of contributions we accept, how to set up your development environment, and how to submit your changes for review.
+
+## Find something to work on
+
+Looking for a place to start? Check our issues labeled "ready for contribution"—these are well-defined and ready for community work.
+
+- [Python SDK issues](https://github.com/strands-agents/sdk-python/issues?q=is%3Aissue+state%3Aopen+label%3A%22ready+for+contribution%22)
+- [TypeScript SDK issues](https://github.com/strands-agents/sdk-typescript/issues?q=is%3Aissue+state%3Aopen+label%3A%22ready+for+contribution%22)
+
+Before starting work on any issue, check if someone is already assigned or working on it.
 
 ## What we accept
 
@@ -111,15 +120,6 @@ Let's get your local environment ready for development. This process differs sli
     - Use `npm run test:integ` to run integration tests
     - Run `npm run test:all` to test in both Node.js and browser environments
     - Check [CONTRIBUTING.md](https://github.com/strands-agents/sdk-typescript/blob/main/CONTRIBUTING.md) for detailed requirements
-
-## Find something to work on
-
-Looking for a place to start? Check our issues labeled "ready for contribution"—these are well-defined and ready for community work.
-
-- [Python SDK issues](https://github.com/strands-agents/sdk-python/issues?q=is%3Aissue+state%3Aopen+label%3A%22ready+for+contribution%22)
-- [TypeScript SDK issues](https://github.com/strands-agents/sdk-typescript/issues?q=is%3Aissue+state%3Aopen+label%3A%22ready+for+contribution%22)
-
-Before starting work on any issue, check if someone is already assigned or working on it.
 
 ## Submit your contribution
 

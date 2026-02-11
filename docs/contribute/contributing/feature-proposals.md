@@ -6,13 +6,21 @@ Building a significant feature takes time. Before you invest that effort, we wan
 
 Not every contribution needs a design document. Use this process for changes that have broad impact or require significant time investment.
 
-| Write a design document for | Skip the design process for |
-|-------------|--------------|
-| New major features affecting multiple parts of the SDK | Bug fixes with clear solutions |
-| Breaking changes to existing APIs | Small improvements and enhancements |
-| Architectural changes requiring design discussion | Documentation updates |
-| Large contributions (> 1 week of work) | New extensions in your own repository |
-| Features that introduce new concepts | Performance optimizations |
+**Write a design document for:**
+
+- New major features affecting multiple parts of the SDK
+- Breaking changes to existing APIs
+- Architectural changes requiring design discussion
+- Large contributions (> 1 week of work)
+- Features that introduce new concepts
+
+**Skip the design process for:**
+
+- Bug fixes with clear solutions
+- Small improvements and enhancements
+- Documentation updates
+- New extensions in your own repository
+- Performance optimizations
 
 When in doubt, open an issue first. We'll tell you if a design document is needed.
 
