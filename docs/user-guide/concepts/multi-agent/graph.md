@@ -197,7 +197,7 @@ print(f"\n{result}")
 
 ## Remote Agents with A2AAgent
 
-Graphs support remote A2A agents as nodes through the [`A2AAgent`](agent-to-agent.md#a2aagent-consuming-remote-agents) class. The `A2AAgent` implements `AgentBase`, so you can add it directly to a graph just like a local agent. This enables distributed architectures where orchestration happens locally while specialized tasks run on remote services.
+Graphs support remote A2A agents as nodes through the [`A2AAgent`](agent-to-agent.md#a2aagent-consuming-remote-agents) class. You can add it directly to a graph just like a local agent. This enables distributed architectures where orchestration happens locally while specialized tasks run on remote services.
 
 ```mermaid
 graph TD
@@ -256,13 +256,6 @@ async def main():
 
 asyncio.run(main())
 ```
-
-This pattern provides several benefits:
-
-- **Scalability**: Remote services scale independently
-- **Specialization**: Use purpose-built services for specific tasks
-- **Resource isolation**: ML workloads run on appropriate hardware
-- **Maintainability**: Update remote services without changing the graph
 
 ## Custom Node Types
 

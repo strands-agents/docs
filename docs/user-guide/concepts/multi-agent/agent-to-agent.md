@@ -34,7 +34,7 @@ pip install 'strands-agents[a2a]'
 
 This installs the core Strands SDK along with the necessary A2A protocol dependencies.
 
-## A2AAgent: Consuming Remote Agents
+## Consuming Remote Agents
 
 The `A2AAgent` class provides the simplest way to consume remote A2A agents. It wraps the A2A protocol communication and presents a familiar interface—you can invoke it just like a regular Strands `Agent`.
 
@@ -122,7 +122,7 @@ asyncio.run(main())
 
 ## A2AAgent in Multi-Agent Patterns
 
-The `A2AAgent` class implements the `AgentBase` interface, so it integrates seamlessly with all Strands multi-agent patterns. You can use remote A2A agents anywhere you would use a local agent.
+The `A2AAgent` class integrates with Strands multi-agent patterns that support it. Currently, you can use remote A2A agents in [Graph](graph.md) workflows and as [tools in an orchestrator agent](#as-a-tool).
 
 ### As a Tool
 
@@ -155,20 +155,8 @@ The `A2AAgent` works as a node in [Graph](graph.md) workflows. See [Remote Agent
 
 ### In Swarm Patterns
 
-The `A2AAgent` can participate in [Swarm](swarm.md) collaborations alongside local agents:
-
-```python
-from strands import Agent
-from strands.agent.a2a_agent import A2AAgent
-from strands.multiagent import Swarm
-
-researcher = Agent(name="researcher", system_prompt="You research topics thoroughly.")
-writer = Agent(name="writer", system_prompt="You write engaging content.")
-remote_fact_checker = A2AAgent(endpoint="http://factcheck-service:9000", name="fact_checker")
-
-swarm = Swarm([researcher, remote_fact_checker, writer], entry_point=researcher)
-result = swarm("Write an article about renewable energy trends")
-```
+!!! note "Not yet supported"
+    `A2AAgent` is not currently supported in Swarm patterns. Swarm coordination relies on tool-based handoffs that require capabilities not yet available in the A2A protocol. Use [Graph](graph.md) workflows for multi-agent patterns with remote A2A agents.
 
 ## Creating an A2A Server
 
