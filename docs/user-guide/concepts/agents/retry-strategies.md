@@ -53,7 +53,7 @@ To disable automatic retries entirely:
     from strands import Agent, ModelRetryStrategy
     
     agent = Agent(
-        retry_strategy=ModelRetryStrategy(max_attempts=1)
+        retry_strategy=None
     )
     ```
 

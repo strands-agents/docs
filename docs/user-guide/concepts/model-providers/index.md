@@ -26,6 +26,7 @@ The following table shows all model providers supported by Strands Agents SDK an
 | [Cohere](cohere.md)                          | ✅ | ❌ |
 | [CLOVA Studio](clova-studio.md)              | ✅ | ❌ |
 | [FireworksAI](fireworksai.md)                | ✅ | ❌ |
+| [xAI](xai.md)                                | ✅ | ❌ |
 
 ## Getting Started
 

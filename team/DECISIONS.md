@@ -101,6 +101,27 @@ The tradeoff is that `HookProvider` exposure can leak implementation details for
 - Users need to customize which events to subscribe to or add callbacks beyond base class defaults
 
 
+## Pay for Play: Opt-In Breaking Changes Are Acceptable
+
+**Date**: Jan 28, 2026
+
+### Decision
+
+Small breaking changes that follow the "pay for play" principle are acceptable without a major version bump. Programs can call new APIs to access new features, but programs that choose not to do so are unaffected — old code continues to work as it did before.
+
+### Rationale
+
+Strict semver adherence can slow SDK development when the breaking change only affects users who explicitly adopt new functionality. If existing code paths remain unaffected, the practical impact on users is minimal.
+
+For example, converting a `TypedDict` to `total=False` is technically breaking change - code that creates instances of that `TypedDict` without the new field will still work, but code that *reads* from the `TypedDict` and expects the field to always be present would break. However, if the old field is only missing when using a new tool, users who don't adopt that tool never encounter the missing field. The break is "pay for play": you only see it if you opt into the new functionality.
+
+This applies when the breaking change is gated behind new functionality — users who don't touch the new feature never see the break, and those who do will find the breakage more obvious since it's tied to something they just added.
+
+This doesn't apply when existing code breaks without any user action, or when the change affects default behavior. If someone upgrades and their code stops working with no obvious reason why, that's a bad experience we want to avoid.
+
+See also: [Raymond Chen on "pay for play" in API design](https://devblogs.microsoft.com/oldnewthing/20260127-00/?p=112018)
+
+
 ## Provide Both Low-Level and High-Level APIs
 
 **Date**: Jan 30, 2026
