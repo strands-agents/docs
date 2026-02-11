@@ -196,6 +196,7 @@ Most event properties are read-only to prevent unintended modifications. However
 
     - [`AfterToolCallEvent`](../../../api-reference/python/hooks/events.md#strands.hooks.events.AfterToolCallEvent)
         - `result` - Modify the tool result. See [Result Modification](#result-modification).
+        - `retry` - Request a retry of the tool invocation. See [Tool Call Retry](#tool-call-retry).
 
 === "TypeScript"
 
@@ -623,6 +624,76 @@ For example, to retry up to 3 times on service unavailable errors:
     agent = Agent(hooks=[retry_hook])
 
     result = agent("What is the capital of France?")
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
+### Tool Call Retry
+
+Useful for implementing custom retry logic for tool invocations. The `AfterToolCallEvent.retry` field allows hooks to request that a tool be re-executed—for example, to handle transient errors, timeouts, or flaky external services. When `retry` is set to `True`, the tool executor discards the current result and invokes the tool again with the same `tool_use_id`.
+
+!!! note "Streaming behavior"
+    When a tool call is retried, intermediate streaming events (`ToolStreamEvent`) from discarded attempts will have already been emitted to callers. Only the final attempt's `ToolResultEvent` is emitted and added to conversation history. Callers consuming streamed events should be prepared to handle events from discarded attempts.
+
+=== "Python"
+
+    ```python
+    import logging
+    from strands.hooks import HookProvider, HookRegistry, AfterToolCallEvent
+
+    logger = logging.getLogger(__name__)
+
+    class RetryOnToolError(HookProvider):
+        """Retry tool calls that fail with errors."""
+
+        def __init__(self, max_retries: int = 1):
+            self.max_retries = max_retries
+            self._attempt_counts: dict[str, int] = {}
+
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(AfterToolCallEvent, self.handle_retry)
+
+        def handle_retry(self, event: AfterToolCallEvent) -> None:
+            tool_use_id = str(event.tool_use.get("toolUseId", ""))
+            tool_name = event.tool_use.get("name", "unknown")
+
+            # Track attempts per tool_use_id
+            attempt = self._attempt_counts.get(tool_use_id, 0) + 1
+            self._attempt_counts[tool_use_id] = attempt
+
+            if event.result.get("status") == "error" and attempt <= self.max_retries:
+                logger.info(f"Retrying tool '{tool_name}' (attempt {attempt}/{self.max_retries})")
+                event.retry = True
+            elif event.result.get("status") != "error":
+                # Clean up tracking on success
+                self._attempt_counts.pop(tool_use_id, None)
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
+For example, to retry failed tool calls once:
+
+=== "Python"
+
+    ```python
+    from strands import Agent, tool
+
+    @tool
+    def flaky_api_call(query: str) -> str:
+        """Call an external API that sometimes fails.
+
+        Args:
+            query: The query to send.
+        """
+        import random
+        if random.random() < 0.5:
+            raise RuntimeError("Service temporarily unavailable")
+        return f"Result for: {query}"
+
+    retry_hook = RetryOnToolError(max_retries=1)
+    agent = Agent(tools=[flaky_api_call], hooks=[retry_hook])
+
+    result = agent("Look up the weather")
     ```
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
