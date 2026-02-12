@@ -10,7 +10,7 @@ Developers building AI agents for complex multi-step tasks face a key prompting 
 
 To address this, developers often decompose these agents into graph structures with predefined nodes and edges that control execution flow. While this improves predictability and reduces prompt complexity, it severely limits the agent's adaptive reasoning capabilities that make AI valuable in the first place, and is costly to develop and maintain.
 
-Strands Steering solves this challenge through **modular prompting with progressive disclosure**. Instead of front-loading all instructions, developers define context-aware steering handlers that provide feedback at the right moment. These handlers define the business rules that need to be followed and the lifecycle hooks where agent behavior should be validated, like before a tool call or before returning output to the user.
+Strands Steering solves this challenge through **modular prompting**. Instead of front-loading all instructions, developers define context-aware steering handlers that provide feedback at the right moment. These handlers define the business rules that need to be followed and the lifecycle hooks where agent behavior should be validated, like before a tool call or before returning output to the user.
 
 ## Context Population
 
@@ -152,4 +152,4 @@ Workflow frameworks force you to specify discrete steps and control flow logic u
 
 ### Steering vs. Traditional Prompting
 
-Traditional prompting requires front-loading all instructions into a single prompt. For complex tasks with 30+ steps, this leads to prompt bloat where agents ignore instructions, hallucinate behaviors, or fail to follow critical procedures. Strands Steering uses progressive disclosure where context-aware reminders appear at the right moment, like post-it notes that guide agents when they need specific information. This keeps context windows lean while maintaining agent effectiveness on complex tasks.
+Traditional prompting requires front-loading all instructions into a single prompt. For complex tasks with 30+ steps, this leads to prompt bloat where agents ignore instructions, hallucinate behaviors, or fail to follow critical procedures. Strands Steering provides context-aware reminders that appear at the right moment, like post-it notes that guide agents when they need specific information. This keeps context windows lean while maintaining agent effectiveness on complex tasks.
