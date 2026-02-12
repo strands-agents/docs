@@ -26,17 +26,6 @@ Strands has several extension points. Each serves a different purpose in the age
 
 Tools are the most common extension type. They let agents interact with specific services like Slack, databases, or internal APIs.
 
-## Get started
-
-!!! info "TypeScript"
-    A TypeScript extension template is coming soon.
-
-We provide a Python template that handles the boilerplate: package structure, CI/CD workflows, testing setup, and automatic PyPI publishing on release.
-
-Use [strands-agents/strands-python-extension-template](https://github.com/strands-agents/strands-python-extension-template) to create your repository. Click "Use this template" on GitHub. The template includes skeleton files for all extension types, a setup script that configures your package metadata, and GitHub Actions workflows for testing and publishing.
-
-The template README walks through each step: running the setup script, adding your code, configuring PyPI trusted publishing, and creating releases.
-
 
 ## Get discovered
 
