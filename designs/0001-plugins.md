@@ -27,7 +27,7 @@ Anthropic skills represent one of the many ways to build an Agent, but with some
 
 Strands SDK has defined its **low-level primitives** in such a way that any of these "agent-building techniques" are possible to implement, but there are issues with the recommended path.
 
-The current recommended approach in the sdk to add new functionality is to either introduce a new initialization parameter to the agent, or create a `HookProvider` which introduces this functionality. We cannot reasonably add `n` number of new parameters to the Agent, so the best path forward is to start creating and vending new `HookProvider` in the sdk. 
+The current recommended approach in the sdk to add new functionality is to either introduce a new initialization parameter to the agent, or create a `HookProvider` which introduces this functionality. While we could add `n` number of new parameters to the Agent, the devex starts to suffer and it makes it harder for customers to "fall into the pit of success", so instead a better path forward is to start creating and vending new `HookProvider` in the sdk. 
 
 Hook Providers ultimately solve our problem since they are composable, provide the necessary functionality to integrate rich features throughout an agents execution, and have been battle tested by many of our existing **high-level abstractions**.
 
@@ -40,7 +40,6 @@ agent = Agent(hooks=[AnthropicSkills()])
 
 agent = Agent(plugins=[AnthropicSkills()])
 ```
-**Note**: `Extension` is another option, but I am just biased toward plugins. Either way, we need a new named term to represent the introduction of these features in the sdk.
 
 I go into more detail about [Plugins and Hooks](#plugins-and-hooks) below.
 
@@ -52,7 +51,7 @@ I go into more detail about [Plugins and Hooks](#plugins-and-hooks) below.
 We will provide an abstraction for customers to implement their own plugins. While we may ship some with the sdk, customers are welcome to develop their own as well.
 
 #### Composable
-Multiple `Plugins` can be applied to a single agent. We make no garantees around plugins not conflicting as to provide maximum flexibility over what they can do.
+Multiple `Plugins` can be applied to a single agent. We make no guarantees around plugins not conflicting as to provide maximum flexibility over what they can do.
 
 #### Sharable
 Similar to our guidance on **low-level primitives**, we will recommend that community members share their own plugins by vending their own packages through some distributions mechanism (pypi, npm, github, etc).
@@ -73,7 +72,7 @@ From the backwards compatibility perspective, we cannot just remove these featur
 
 That being said, some features have a large impact on a majority of agents, or only make sense if there is "one" instance of it, so giving them a top-level agent initialization parameter help distinguish them from the feature-set of other `Plugins`. This also helps signal that they are "mostly" cross-compatible with any other `Plugin`.
 
-A good example of this is the Session Manager, where persisting and restoring an agent is a common and useful feature, and can contain additional functionality of persisting the state of other plugins ([see Appendix](#persisting-the-state-of-plugins)). We can decide to uplevel a plugin to an Agent class attribute based on its use case.
+A good example of this is the Session Manager, where persisting and restoring an agent is a common and useful feature, and can contain additional functionality of persisting the state of other plugins ([see Appendix](#persisting-the-state-of-plugins)). We can decide to up-level a plugin to an Agent class attribute based on its use case.
 
 
 ## Proposed SDK Changes
@@ -84,7 +83,7 @@ Add a `plugins` agent init parameter, and deprecate `hooks`.
 
 class Plugin(Protocol):
     name: str
-    def init_plugin(self, agent: Agent):
+    async def init_plugin(self, agent: Agent):
         ...
 
 agent = Agent(
@@ -121,7 +120,7 @@ A `hook` registered on an agent will invoke a callback function at a specified l
 # Plugin example
 class LoggingPlugin(Plugin):
     # Protocol method for a Plugin
-    def init_plugin(self, agent: Agent) -> None:
+    async def init_plugin(self, agent: Agent) -> None:
         agent.add_hook(BeforeInvocationEvent, self.log_start)
 
     def log_start(self, event: BeforeInvocationEvent) -> None:
@@ -139,16 +138,22 @@ agent.add_hook(BeforeInvocationEvent, log_start)
 
 While both of these examples attach a hook to the agent, there is room for improvement to meet our [We are accessible to humans and agents](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md?plain=1#L46) tenet where we say, "We don’t take shortcuts on curated DX for humans".
 
-To help improve this devex, a new `@hook_callback` decorator can be introduced to make it easy to wrap a function as a plugin, and then pass it into agent initialization. This aligns more closely with our "curated DX for humans" that the Strands team attempts to excel in.
+To help improve this devex, a new `@hook` decorator can be introduced to make it easy to wrap a function as a plugin, and then pass it into agent initialization. This aligns more closely with our "curated DX for humans" that the Strands team attempts to excel in.
 
 ```python
-@hook_callback
+@hook
 def log_calls(event: BeforeModelCallEvent): 
     print(f"Calling model...")
 
 agent = Agent(plugins=[log_calls])
 ```
-**Note**: `hook_callback` naming isn't decided upon yet, but the issue presented here is still valid. We should introduce an easy devex for authoring a simple `hook` callback. 
+**Note**: `hook` naming isn't decided upon yet, but the issue presented here is still valid. We should introduce an easy devex for authoring a simple `hook` callback. 
+
+### Follow-up items
+- Revisit and align on ["Simple `hook` callback authoring"](#simple-hook-callback-authoring)
+- Explore how persistence and state will be handled for `Plugins`
+- Build out and improve the `Plugin` protocol (like including convenience methods for adding hooks to the agent)
+- Provide a mechanism to order how `Plugins` are applied: https://github.com/strands-agents/sdk-python/issues/1593
 
 # Appendix
 
@@ -164,7 +169,7 @@ These features have related responsibilities, but their differences are nuanced,
 - **Plugin**: A high-level abstraction of the Strands SDK. A plugin represents some change to the standard behavior of an Agent, modifying the agents core attributes in order to elicit a desired behavior.
 - **Hooks**: A low-level primitive of the Strands SDK. A hook is a mechanism to execute code at a specific lifecycle event in the SDK, and gives relevant context at that specific lifecycle event in order to change the standard agents behavior.
 
-`Plugins` basically represent the usage/modification of **low-level primitives** like: system prompt, messages, tools, model, and **hooks**. The problem with this definition of `Plugins` is that it overlaps with the `HookProvider` abstraction currently present in the SDK. Well defined abstractions with clear separation of concerns align with the tenant [**The obvious path is the happy path**](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md?plain=1#L45), but including both of these goes against this tenant and can lead to customer confusion on which abstraction to choose. The code example below helps highlight this issue:
+`Plugins` basically represent the usage/modification of **low-level primitives** like: system prompt, messages, tools, model, and **hooks**. The problem with this definition of `Plugins` is that it overlaps with the `HookProvider` abstraction currently present in the SDK. Well defined abstractions with clear separation of concerns align with the tenet [**The obvious path is the happy path**](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md?plain=1#L45), but including both of these goes against this tenet and can lead to customer confusion on which abstraction to choose. The code example below helps highlight this issue:
 
 ```python
 # HookProvider example
@@ -186,7 +191,7 @@ agent = Agent(hooks=[LoggingHook()])
 # Note: Shape here is an example, not finalized
 class LoggingPlugin(Plugin):
     # Protocol method for a Plugin
-    def init_plugin(self, agent: Agent) -> None:
+    async def init_plugin(self, agent: Agent) -> None:
         agent.add_hook(BeforeInvocationEvent, self.log_start)
         agent.add_hook(AfterInvocationEvent, self.log_end)
 
