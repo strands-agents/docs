@@ -52,7 +52,7 @@ I go into more detail about [Plugins and Hooks](#plugins-and-hooks) below.
 We will provide an abstraction for customers to implement their own plugins. While we may ship some with the sdk, customers are welcome to develop their own as well.
 
 #### Composable
-Multiple `Plugins` can be applied to a single agent. While we cannot guarantee that these plugins will not conflict with one another, it leads to maximum flexibility over what they can do.
+Multiple `Plugins` can be applied to a single agent. We make no garantees around plugins not conflicting as to provide maximum flexibility over what they can do.
 
 #### Sharable
 Similar to our guidance on **low-level primitives**, we will recommend that community members share their own plugins by vending their own packages through some distributions mechanism (pypi, npm, github, etc).
