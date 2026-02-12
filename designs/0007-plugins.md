@@ -1,4 +1,4 @@
-# Strands High Level Features
+# Strands High Level Features - Plugins
 
 ## Where we are
 
@@ -71,15 +71,98 @@ All of these features have been built into the sdk before the introduction of th
 
 From the backwards compatibility perspective, we cannot just remove these features and make turn them into plugins, but we can re-think how we categorize these features. If a feature needs to perform an action that cannot be accomplished with the existing **low-level primitives** offered by the sdk, then the feature would likely not be considered a plugin. OTEL, for example, is a feature that may need to operate behind the scenes of the existing primitives (creating traces around the execution of primitives), so it does not fit well into the `Plugin` terminology. However the rest of the features mentioned in the list above can be reasonably defined as a `Plugin`.
 
-That being said, some features have a large impact on a majority of agents, so giving them a top-level agent initialization parameter help distinguish them from the feature-set of other `Plugins`. This also helps signal that they are "mostly" cross-compatible with any other `Plugin`.
+That being said, some features have a large impact on a majority of agents, or only make sense if there is "one" instance of it, so giving them a top-level agent initialization parameter help distinguish them from the feature-set of other `Plugins`. This also helps signal that they are "mostly" cross-compatible with any other `Plugin`.
 
 A good example of this is the Session Manager, where persisting and restoring an agent is a common and useful feature, and can contain additional functionality of persisting the state of other plugins ([see Appendix](#persisting-the-state-of-plugins)). We can decide to uplevel a plugin to an Agent class attribute based on its use case.
 
-### Plugins and Hooks
+
+## Proposed SDK Changes
+
+Add a `plugins` agent init parameter, and deprecate `hooks`.
+
+```python
+
+class Plugin(Protocol):
+    name: str
+    def init_plugin(self, agent: Agent):
+        ...
+
+agent = Agent(
+    plugins=[
+        SkillsPlugin(),
+        CodeActPlugin()
+    ],
+    hooks=[]    # Deprecated
+)
+
+```
+
+With this approach: 
+- We deprecate `HookProviders` (see [Why not HookProviders? below](#why-not-hookproviders)) and the top-level `hooks` parameter
+- Introduce a new `Plugin` protocol and `plugins` agent initialization argument
+- Start vending Agent behavior changing features as `Plugins` (like steering, skills, context management, etc).
+
+### Additional changes
+
+#### Introduce `add_hook` method to the agent class
+
+An `add_hook` method is easier to write, and is just as clear as the previous method for registers a callback to the specified lifecycle event.
+```python
+# Before
+agent.hooks.add_callback(BeforeInvocationEvent, self.log_start)
+# After
+agent.add_hook(BeforeModelCallEvent, callback)
+```
+
+#### Simple `hook` callback authoring
+A `hook` registered on an agent will invoke a callback function at a specified lifecycle event. While a user can simply define an agent, then use the `agent.add_hook` method to attach the hook to the agent, there isn't a simple way to create attach a `hook` during agent initialization. Lets looks at a simple logging use case:
+
+```python
+# Plugin example
+class LoggingPlugin(Plugin):
+    # Protocol method for a Plugin
+    def init_plugin(self, agent: Agent) -> None:
+        agent.add_hook(BeforeInvocationEvent, self.log_start)
+
+    def log_start(self, event: BeforeInvocationEvent) -> None:
+        print(f"Request started for agent: {event.agent.name}")
+
+agent = Agent(plugins=[LoggingPlugin()])
+
+# Post agent initialization example
+def log_start(self, event: BeforeInvocationEvent) -> None:
+    print(f"Request started for agent: {event.agent.name}")
+
+agent = Agent()
+agent.add_hook(BeforeInvocationEvent, log_start)
+```
+
+While both of these examples attach a hook to the agent, there is room for improvement to meet our [We are accessible to humans and agents](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md?plain=1#L46) tenet where we say, "We don’t take shortcuts on curated DX for humans".
+
+To help improve this devex, a new `@hook_callback` decorator can be introduced to make it easy to wrap a function as a plugin, and then pass it into agent initialization. This aligns more closely with our "curated DX for humans" that the Strands team attempts to excel in.
+
+```python
+@hook_callback
+def log_calls(event: BeforeModelCallEvent): 
+    print(f"Calling model...")
+
+agent = Agent(plugins=[log_calls])
+```
+**Note**: `hook_callback` naming isn't decided upon yet, but the issue presented here is still valid. We should introduce an easy devex for authoring a simple `hook` callback. 
+
+# Appendix
+
+## Persisting the state of Plugins
+The Session Manager has the responsibility of persisting and restoring the state of an agent, along with any attached plugins. The recommended way to accomplish this for now would be to have plugins maintain their state in the `agent.state`. Then during initialization, session manager would restore `agent.state`, and each plugin could restore themselves in turn from `agent.state`.
+
+This persistence feature can be expand in the future to be more feature rich. We can add ser/de methods to plugins, and introduce namespaces in agent state so plugins can persist and restore their state during session restoration.
+
+
+## Why not HookProviders?
 These features have related responsibilities, but their differences are nuanced, so here are definitions to show how they differ:
 
-- **Hooks**: A low-level primitive of the Strands SDK. A hook is a mechanism to execute code at a specific lifecycle event in the SDK, and gives relevant context at that specific lifecycle event in order to change the standard agents behavior.
 - **Plugin**: A high-level abstraction of the Strands SDK. A plugin represents some change to the standard behavior of an Agent, modifying the agents core attributes in order to elicit a desired behavior.
+- **Hooks**: A low-level primitive of the Strands SDK. A hook is a mechanism to execute code at a specific lifecycle event in the SDK, and gives relevant context at that specific lifecycle event in order to change the standard agents behavior.
 
 `Plugins` basically represent the usage/modification of **low-level primitives** like: system prompt, messages, tools, model, and **hooks**. The problem with this definition of `Plugins` is that it overlaps with the `HookProvider` abstraction currently present in the SDK. Well defined abstractions with clear separation of concerns align with the tenant [**The obvious path is the happy path**](https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md?plain=1#L45), but including both of these goes against this tenant and can lead to customer confusion on which abstraction to choose. The code example below helps highlight this issue:
 
@@ -104,8 +187,8 @@ agent = Agent(hooks=[LoggingHook()])
 class LoggingPlugin(Plugin):
     # Protocol method for a Plugin
     def init_plugin(self, agent: Agent) -> None:
-        agent.hooks.add_callback(BeforeInvocationEvent, self.log_start)
-        agent.hooks.add_callback(AfterInvocationEvent, self.log_end)
+        agent.add_hook(BeforeInvocationEvent, self.log_start)
+        agent.add_hook(AfterInvocationEvent, self.log_end)
 
     def log_start(self, event: BeforeInvocationEvent) -> None:
         print(f"Request started for agent: {event.agent.name}")
@@ -119,61 +202,4 @@ agent = Agent(plugins=[LoggingPlugin()])
 
 The usage of each abstraction is essentially the same, so in order to avoid the customer confusion of which to choose, I'm proposing that we deprecate `HookProvider` in favor of `Plugin` moving forward. There is a world where `Plugins` can depend on `HookProviders`, and extend the behavior, but I think this leads to more indirection rather than proper abstractions. 
 
-That being said, we are not deprecating the concepts of `hooks` in the SDK, which is the **low-level primitive** for running code at lifecycle events of an agent. A mechanism to easily write targeted `hooks` should also be included so developers can write a hook in a few lines of code, like the `@hooks` decorator [proposed in this pr](https://github.com/strands-agents/sdk-python/pull/1581):
-
-```python
-# Simple hook can still be defined as a plugin with a decorator
-@hook
-def log_calls(event: BeforeModelCallEvent): 
-    print(f"Got event: {event}")
-
-# Usage
-agent = Agent(
-    plugins=[log_calls]
-)
-```
----
-
-## Proposed SDK Architecture Changes
-
-Add a `plugins` agent init parameter, and deprecate `hooks`.
-
-```python
-
-class Plugin(Protocol):
-    def init_plugin(self, agent: Agent):
-        ...
-
-agent = Agent(
-    plugins=[
-        SkillsPlugin(),
-        CodeActPlugin()
-    ],
-    hooks=[]    # Deprecated
-)
-
-# Simple hook can still be defined as a plugin with a decorator
-@hook
-def log_calls(event: BeforeModelCallEvent): 
-    print(f"Calling model...")
-
-# Usage
-agent = Agent(
-    plugins=[log_calls]
-)
-
-# Or applied with direct-access
-agent.hooks.add_callback(BeforeInvocationEvent, log_calls)
-```
-
-With this approach, we deprecate `HookProviders` and the top-level `hooks` parameter, introduce a new `Plugin` protocol and `plugins` agent init arg, and start vending Agent behavior changing features as `Plugins` (like steering).
-
-An easy way to introduce low-level hooks is still valuable, so we can introduce a `@hook` decorator where you can wrap a function as a simple plugin.
-
-# Appendix
-
-## Persisting the state of Plugins
-The Session Manager has the responsibility of persisting and restoring the state of an agent, along with any attached plugins. The recommended way to accomplish this for now would be to have plugins maintain their state in the `agent.state`. Then during initialization, session manager would restore `agent.state`, and each plugin could restore themselves in turn from `agent.state`.
-
-This persistence feature can be expand in the future to be more feature rich. We can add ser/de methods to plugins, and introduce namespaces in agent state so plugins can persist and restore their state during session restoration.
-
+To be clear, we are not deprecating the concepts of `hooks` in the SDK, which is the **low-level primitive** for running code at lifecycle events of an agent. We are just renaming the previous abstraction of `HookProvider` to `Plugin` to better communicate its intended functionality to customers.
