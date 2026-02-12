@@ -61,21 +61,20 @@ agentcore_memory_config = AgentCoreMemoryConfig(
     actor_id=ACTOR_ID
 )
 
-# Create session manager
-session_manager = AgentCoreMemorySessionManager(
+# Use context manager to ensure messages are flushed on exit
+with AgentCoreMemorySessionManager(
     agentcore_memory_config=agentcore_memory_config,
     region_name="us-east-1"
-)
+) as session_manager:
+    # Create agent with session manager
+    agent = Agent(
+        system_prompt="You are a helpful assistant. Use all you know about the user to provide helpful responses.",
+        session_manager=session_manager,
+    )
 
-# Create agent with session manager
-agent = Agent(
-    system_prompt="You are a helpful assistant. Use all you know about the user to provide helpful responses.",
-    session_manager=session_manager,
-)
-
-# Use the agent - conversations are automatically persisted
-agent("I like sushi with tuna")
-agent("What should I buy for lunch today?")
+    # Use the agent - conversations are automatically persisted
+    agent("I like sushi with tuna")
+    agent("What should I buy for lunch today?")
 ```
 
 
@@ -213,6 +212,7 @@ The `AgentCoreMemoryConfig` class accepts the following parameters:
 | `session_id` | `str` | Yes | Unique identifier for the conversation session |
 | `actor_id` | `str` | Yes | Unique identifier for the user/actor |
 | `retrieval_config` | `Dict[str, RetrievalConfig]` | No | Dictionary mapping namespaces to retrieval configurations |
+| `batch_size` | `int` | No (default: 1) | Number of messages to buffer before sending (1-100). Set to 1 for immediate sending. |
 
 ### RetrievalConfig Parameters
 
@@ -237,11 +237,73 @@ The `{actorId}` and `{sessionId}` placeholders are automatically replaced with t
 See the following docs for more on namespaces: [Memory scoping with namespaces](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/session-actor-namespace.html)
 
 
+## Message Batching
+
+By default, each message is sent to AgentCore Memory immediately (`batch_size=1`). When you set `batch_size` to a value greater than 1, messages are buffered locally and sent in a single API call once the buffer reaches the configured size. This reduces the number of API calls and can improve throughput for high-volume conversations.
+
+!!! warning "Flush buffered messages before exiting"
+    When using `batch_size > 1`, messages remain in a local buffer until the batch is full. You **must** use a `with` block (recommended) or call `close()` explicitly to flush any remaining messages at the end of your session. Otherwise, buffered messages will be lost.
+
+### Context Manager (Recommended)
+
+The context manager pattern automatically flushes pending messages when the block exits, even if an exception occurs:
+
+```python
+from strands import Agent
+from bedrock_agentcore.memory.integrations.strands.config import AgentCoreMemoryConfig
+from bedrock_agentcore.memory.integrations.strands.session_manager import AgentCoreMemorySessionManager
+
+config = AgentCoreMemoryConfig(
+    memory_id="your-memory-id",
+    session_id="your-session-id",
+    actor_id="your-actor-id",
+    batch_size=10,  # Buffer 10 messages before sending
+)
+
+with AgentCoreMemorySessionManager(config, region_name="us-east-1") as session_manager:
+    agent = Agent(
+        system_prompt="You are a helpful assistant.",
+        session_manager=session_manager,
+    )
+    agent("Hello!")
+    agent("Tell me about Python.")
+# All buffered messages are automatically flushed here
+```
+
+### Explicit close()
+
+If you cannot use a context manager, call `close()` in a `finally` block to ensure messages are flushed:
+
+```python
+session_manager = AgentCoreMemorySessionManager(config, region_name="us-east-1")
+try:
+    agent = Agent(
+        system_prompt="You are a helpful assistant.",
+        session_manager=session_manager,
+    )
+    agent("Hello!")
+    agent("Tell me about Python.")
+finally:
+    session_manager.close()  # Flush any remaining buffered messages
+```
+
+### Checking Buffer Status
+
+Use `pending_message_count()` to check how many messages are waiting in the buffer:
+
+```python
+count = session_manager.pending_message_count()
+print(f"{count} messages pending in buffer")
+```
+
 
 ## Important Notes
 
 !!! note "Session Limitations"
     Currently, only **one** agent per session is supported when using AgentCoreMemorySessionManager. Creating multiple agents with the same session will show a warning.
+
+!!! note "Flush Buffered Messages"
+    When using `batch_size > 1`, always use a `with` block or call `close()` when your session is complete. Any messages remaining in the buffer that are not flushed will be lost.
 
 ## Resources
 
