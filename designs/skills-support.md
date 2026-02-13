@@ -118,14 +118,9 @@ class SkillsPlugin(Plugin):
     name = "skills"
 
     def __init__(self, skills: list[str | Path | Skill]):
-        self._skills_config = skills
-        self._loaded_skills: list[Skill] = []
+        self._loaded_skills = self._resolve_skills(skills)
         self._active_skill: Skill | None = None
         self._filtered_tools: list[Tool] | None = None
-
-    async def init_plugin(self, agent: Agent):
-        self._loaded_skills = self._resolve_skills(self._skills_config)
-        # Tools and hooks are auto-registered via decorators
 
     @tool
     def skills(self, action: str, skill_name: str) -> str:
