@@ -161,6 +161,7 @@ More details in the [Amazon Bedrock Model Provider](../concepts/model-providers/
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 - **[OpenAI](../concepts/model-providers/openai.md)** - Access to OpenAI or OpenAI-compatible models
+- **[Gemini](../concepts/model-providers/gemini.md)** - Access to Google's Gemini models
 
 ## Capturing Streamed Data & Events
 
