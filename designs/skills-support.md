@@ -86,11 +86,11 @@ agent = Agent(
 result = agent("Review my code for security issues")
 ```
 
-The plugin auto-registers everything it needs during `init_plugin`: a `skills` tool, hooks for system prompt management, and hooks for tool filtering. You don't wire anything up manually.
+The plugin loads skills in `__init__` and auto-registers everything it needs when passed to the Agent: a `skills` tool, hooks for system prompt management, and hooks for tool filtering. You don't wire anything up manually.
 
 ### How it works
 
-The `SkillsPlugin` implements the `Plugin` protocol. When `init_plugin` is called:
+The `SkillsPlugin` implements the `Plugin` protocol. During `__init__`, it loads all skills. When the plugin is passed to the Agent:
 
 1. Loads skill metadata (name, description, location) from each `SKILL.md`
 2. Registers a `skills` tool on the agent with `activate` and `deactivate` actions
@@ -148,7 +148,7 @@ class SkillsPlugin(Plugin):
         ...
 ```
 
-The `@tool` and `@hook` decorators inside the plugin class auto-register with the agent during `init_plugin`. This is the DX we want: declare what you need, the plugin protocol handles the wiring.
+The `@tool` and `@hook` decorators inside the plugin class auto-register with the agent when the plugin is passed to the Agent constructor. This is the DX we want: declare what you need, the plugin protocol handles the wiring.
 
 ### Resources and script execution
 
