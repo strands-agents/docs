@@ -155,6 +155,28 @@ class SkillsPlugin(Plugin):
 
 The `@tool` and `@hook` decorators inside the plugin class auto-register with the agent during `init_plugin`. This is the DX we want: declare what you need, the plugin protocol handles the wiring.
 
+### Resources and script execution
+
+The `SkillsPlugin` deliberately does not register tools for reading skill resources or executing skill scripts. The AgentSkills.io spec defines `scripts/`, `references/`, and `assets/` directories, but how those are accessed and executed depends entirely on the agent's environment.
+
+Code execution within skills is dependent on agent configuration. Skills as a concept does not prescribe how to execute code or access resources — that design choice is left to the developer. You can add a `shell` tool to run scripts in a terminal, use AgentCore Code Interpreter, a Python REPL, or any other execution environment. The same applies to resources: the most basic implementation reads from the filesystem, but resources could just as well be S3 URLs accessed via `http_request`.
+
+In practice, you select where to host your skills and how to execute their scripts by configuring the agent's tools:
+
+```python
+from strands import Agent
+from strands.plugins import SkillsPlugin
+from strands_tools import file_read, shell
+
+# Filesystem skills with shell execution
+agent = Agent(
+    plugins=[SkillsPlugin(skills=["./skills"])],
+    tools=[file_read, shell]
+)
+```
+
+This keeps the plugin focused on skill discovery and activation, while the execution surface stays under the developer's control.
+
 ### Skill sources
 
 The `skills` parameter accepts a list. Each entry can be:
