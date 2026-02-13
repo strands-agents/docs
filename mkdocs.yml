@@ -219,7 +219,7 @@ nav:
     - Multi-modal: examples/python/multimodal.md
 
   - Community:
-      - Community Packages: community/community-packages.md
+      - Community Catalog: community/community-packages.md
       - Get Featured: community/get-featured.md
       - Integrations:
         - AG-UI: community/integrations/ag-ui.md
@@ -245,7 +245,13 @@ nav:
         - telegram: community/tools/strands-telegram.md
         - telegram-listener: community/tools/strands-telegram-listener.md
 
-  - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
+  - Contribute ❤️:
+      - Overview: contribute/index.md
+      - Contribution Types:
+        - SDK: contribute/contributing/core-sdk.md
+        - Documentation: contribute/contributing/documentation.md
+        - Feature Proposals: contribute/contributing/feature-proposals.md
+        - Extensions: contribute/contributing/extensions.md
   - Python API: []
   - TypeScript API: api-reference/typescript/index.html
 

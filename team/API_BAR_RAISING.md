@@ -1,8 +1,8 @@
-API Bar Raising
+# API Bar Raising
 
 ## Introduction
 
-API Bar-Raising is a mechanism intended to ensure the SDK maintains a high-quality, consistent, and future-proof API surface across the SDK when developing new features, while conforming to our expectations and [tenets for the SDK](https://github.com/strands-agents/docs/blob/main/team/TENETS.md). It **is** intended to act as a quality gate while attempting to minimize the friction of integrating new features into the SDK.
+API Bar-Raising is a mechanism intended to ensure the SDK maintains a high-quality, consistent, and future-proof API surface across the SDK when developing new features, while conforming to our expectations and [tenets for the SDK](./TENETS.md). It **is** intended to act as a quality gate while attempting to minimize the friction of integrating new features into the SDK.
 
 The process focuses exclusively on public API design and customer-facing contracts—not implementation details or internal/private APIs.
 
@@ -33,8 +33,8 @@ The API reviewer focuses exclusively on customer usage and the public API—not 
 
 **Key questions to ask:**
 
-- Does it conform to the [SDK tenets](https://github.com/strands-agents/docs/blob/main/team/TENETS.md)?
-- Does it conform to the [Decision Records](https://github.com/strands-agents/docs/blob/main/team/DECISIONS.md)?
+- Does it conform to the [SDK tenets](./TENETS.md)?
+- Does it conform to the [Decision Records](./DECISIONS.md)?
 - If extensibility is a goal:
   - What is customizable and what is not?
   - Is it the proper level of abstraction?
@@ -42,7 +42,7 @@ The API reviewer focuses exclusively on customer usage and the public API—not 
 - Are the default parameters/behavior the most common?
   - If not, why did we choose them?
 
-If an API review session yields a decision that can guide future API designs, [document it as a decision record](https://github.com/strands-agents/docs/pull/420). This is a sign of successful bar-raising.
+If an API review session yields a decision that can guide future API designs, document it as a decision record. This is a sign of successful bar-raising.
 
 ### API Proposer Role
 
@@ -73,4 +73,4 @@ To indicate that a PR requires API review, add the `needs-api-review` label. Onc
 
 For **larger features** that require more extensive discussion, schedule a meeting with your designated API reviewer to walk through use cases and API design decisions. These sessions can be formal or informal depending on feature complexity. Individual or medium-sized features can take 30-60 minutes of discussion, while larger features may benefit from multiple sessions throughout the design and implementation phases. The goal is to catch potential issues early while maintaining fast iterations on feature development.
 
-Alternatively, **team consensus** can be used in lieu of a designated API reviewer. This approach works well when broad alignment is needed or when the API introduces patterns the whole team will build upon - for example, the BiDirectional agents API benefited from team-wide discussion. However, use team consensus judiciously for APIs where the investment is justified, as a 30-minute meeting with 10 people represents 5 hours of collective effort. 
+Alternatively, **team consensus** can be used in lieu of a designated API reviewer. This approach works well when broad alignment is needed or when the API introduces patterns the whole team will build upon - for example, the BiDirectional agents API benefited from team-wide discussion. However, use team consensus judiciously for APIs where the investment is justified, as a 30-minute meeting with 10 people represents 5 hours of collective effort.
