@@ -6,6 +6,8 @@
 
 Gemini is configured as an optional dependency in Strands Agents.
 
+To install it, run:
+
 === "Python"
 
     ```bash
@@ -100,25 +102,23 @@ After installing dependencies, you can import and initialize the Strands Agents'
     |------------|-------------|---------|---------|
     | `modelId` | ID of a Gemini model to use | `'gemini-2.5-flash'` | [Available models](#available-models) |
     | `params` | Model specific parameters | `{ temperature: 0.7, maxOutputTokens: 2048 }` | [Parameter reference](#model-parameters) |
-    | `apiKey` | Gemini API key (falls back to `GEMINI_API_KEY` env var) | `'your-api-key'` | |
 
 ### Model Parameters
 
 For a complete list of supported parameters, see the [Gemini API documentation](https://ai.google.dev/api/generate-content#generationconfig).
 
-**Common Parameters:**
-| Parameter | Description | Type |
-|-----------|-------------|------|
-| `temperature` | Controls randomness in responses | `float` |
-| `max_output_tokens` / `maxOutputTokens` | Maximum tokens to generate | `int` |
-| `top_p` / `topP` | Nucleus sampling parameter | `float` |
-| `top_k` / `topK` | Top-k sampling parameter | `int` |
-| `candidate_count` | Number of response candidates | `int` |
-| `stop_sequences` | Custom stopping sequences | `list[str]` / `string[]` |
-
-**Example:**
-
 === "Python"
+
+    | Parameter | Description | Type |
+    |-----------|-------------|------|
+    | `temperature` | Controls randomness in responses | `float` |
+    | `max_output_tokens` | Maximum tokens to generate | `int` |
+    | `top_p` | Nucleus sampling parameter | `float` |
+    | `top_k` | Top-k sampling parameter | `int` |
+    | `candidate_count` | Number of response candidates | `int` |
+    | `stop_sequences` | Custom stopping sequences | `list[str]` |
+
+    **Example:**
 
     ```python
     params = {
@@ -132,6 +132,17 @@ For a complete list of supported parameters, see the [Gemini API documentation](
     ```
 
 === "TypeScript"
+
+    | Parameter | Description | Type |
+    |-----------|-------------|------|
+    | `temperature` | Controls randomness in responses | `number` |
+    | `maxOutputTokens` | Maximum tokens to generate | `number` |
+    | `topP` | Nucleus sampling parameter | `number` |
+    | `topK` | Top-k sampling parameter | `number` |
+    | `candidateCount` | Number of response candidates | `number` |
+    | `stopSequences` | Custom stopping sequences | `string[]` |
+
+    **Example:**
 
     ```typescript
     const params = {
@@ -312,54 +323,129 @@ Users can pass their own custom Gemini client to the GeminiModel for Strands Age
 
 ### Multimodal Capabilities
 
-Gemini models support text, image, and document inputs, making them ideal for multimodal applications:
+Gemini models support text, image, document, and video inputs, making them ideal for multimodal applications.
 
-```python
-from strands import Agent
-from strands.models.gemini import GeminiModel
+#### Image Input
 
-model = GeminiModel(
-    client_args={"api_key": "<KEY>"},
-    model_id="gemini-2.5-flash",
-    params={
-        "temperature": 0.5,
-        "max_output_tokens": 2048,
-        "top_p": 0.9
-    }
-)
+=== "Python"
 
-agent = Agent(model=model)
+    ```python
+    from strands import Agent
+    from strands.models.gemini import GeminiModel
 
-# Process image with text
-response = agent([
-    {
-        "role": "user",
-        "content": [
-            {"text": "What do you see in this image?"},
-            {"image": {"format": "png", "source": {"bytes": image_bytes}}}
-        ]
-    }
-])
-```
+    model = GeminiModel(
+        client_args={"api_key": "<KEY>"},
+        model_id="gemini-2.5-flash",
+        params={
+            "temperature": 0.5,
+            "max_output_tokens": 2048,
+            "top_p": 0.9
+        }
+    )
 
-The implementation also supports document inputs:
+    agent = Agent(model=model)
 
-```python
-response = agent([
-    {
-        "role": "user", 
-        "content": [
-            {"text": "Summarize this document"},
-            {"document": {"format": "pdf", "source": {"bytes": document_bytes}}}
-        ]
-    }
-])
-```
+    # Process image with text
+    response = agent([
+        {
+            "role": "user",
+            "content": [
+                {"text": "What do you see in this image?"},
+                {"image": {"format": "png", "source": {"bytes": image_bytes}}}
+            ]
+        }
+    ])
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { Agent, ImageBlock, TextBlock } from '@strands-agents/sdk'
+    import { GeminiModel } from '@strands-agents/sdk/gemini'
+
+    const model = new GeminiModel({
+      apiKey: '<KEY>',
+      modelId: 'gemini-2.5-flash',
+    })
+
+    const agent = new Agent({ model })
+
+    // Process image with text
+    const result = await agent.invoke([
+      new TextBlock('What do you see in this image?'),
+      new ImageBlock({
+        format: 'png',
+        source: { bytes: imageBytes },
+      }),
+    ])
+    ```
+
+#### Document Input
+
+=== "Python"
+
+    ```python
+    response = agent([
+        {
+            "role": "user",
+            "content": [
+                {"text": "Summarize this document"},
+                {"document": {"format": "pdf", "source": {"bytes": document_bytes}}}
+            ]
+        }
+    ])
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { DocumentBlock, TextBlock } from '@strands-agents/sdk'
+
+    const result = await agent.invoke([
+      new TextBlock('Summarize this document'),
+      new DocumentBlock({
+        name: 'my-document',
+        format: 'pdf',
+        source: { bytes: pdfBytes },
+      }),
+    ])
+    ```
+
+#### Video Input
+
+=== "Python"
+
+    ```python
+    response = agent([
+        {
+            "role": "user",
+            "content": [
+                {"text": "Describe what happens in this video"},
+                {"video": {"format": "mp4", "source": {"bytes": video_bytes}}}
+            ]
+        }
+    ])
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { VideoBlock, TextBlock } from '@strands-agents/sdk'
+
+    const result = await agent.invoke([
+      new TextBlock('Describe what happens in this video'),
+      new VideoBlock({
+        format: 'mp4',
+        source: { bytes: videoBytes },
+      }),
+    ])
+    ```
 
 **Supported formats:**
 
 - **Images**: PNG, JPEG, GIF, WebP (automatically detected via MIME type)
 - **Documents**: PDF and other binary formats (automatically detected via MIME type)
+- **Video**: MP4 and other video formats (automatically detected via MIME type)
 
 ## References
 
