@@ -185,6 +185,10 @@ response = orchestrator(customer_query)
 
 This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer. By following the best practices outlined earlier and leveraging Strands Agents SDK's capabilities, you can build sophisticated multi-agent systems that handle complex tasks through specialized expertise and coordinated collaboration.
 
+## Remote Agents with A2A
+
+You can also use remote agents as tools through the [Agent-to-Agent (A2A) protocol](agent-to-agent.md). The `A2AAgent` class lets you wrap a remote A2A-compatible agent as a tool in your orchestrator, following the same pattern described above but communicating over the network. See [A2AAgent as a Tool](agent-to-agent.md#as-a-tool) for details.
+
 ## Complete Working Example
 
 For a fully implemented example of the "Agents as Tools" pattern, check out the ["Teacher's Assistant"](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/multi_agent_example.md) example in our repository. This example demonstrates a practical implementation of the concepts discussed in this document, showing how multiple specialized agents can work together to provide comprehensive assistance in an educational context.

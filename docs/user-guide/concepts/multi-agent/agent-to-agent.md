@@ -34,6 +34,132 @@ pip install 'strands-agents[a2a]'
 
 This installs the core Strands SDK along with the necessary A2A protocol dependencies.
 
+## Consuming Remote Agents
+
+{{ ts_not_supported("`A2AAgent` class is not currently supported in the TypeScript SDK.") }}
+
+The `A2AAgent` class provides the simplest way to consume remote A2A agents. It wraps the A2A protocol communication and presents a familiar interface—you can invoke it just like a regular Strands `Agent`.
+
+Without `A2AAgent`, you need to manually resolve agent cards, configure HTTP clients, build protocol messages, and parse responses. The `A2AAgent` class handles all of this automatically.
+
+### Basic Usage
+
+```python
+from strands.agent.a2a_agent import A2AAgent
+
+# Create an A2AAgent pointing to a remote A2A server
+a2a_agent = A2AAgent(endpoint="http://localhost:9000")
+
+# Invoke it just like a regular Agent
+result = a2a_agent("Show me 10 ^ 6")
+print(result.message)
+# {'role': 'assistant', 'content': [{'text': '10^6 = 1,000,000'}]}
+```
+
+The `A2AAgent` returns an `AgentResult` just like a local `Agent`, making it easy to integrate remote agents into your existing code.
+
+### Configuration Options
+
+The `A2AAgent` constructor accepts these parameters.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `endpoint` | `str` | Required | Base URL of the remote A2A agent |
+| `name` | `str` | None | Agent name (auto-populated from agent card if not provided) |
+| `description` | `str` | None | Agent description (auto-populated from agent card if not provided) |
+| `timeout` | `int` | 300 | Timeout for HTTP operations in seconds |
+| `a2a_client_factory` | `ClientFactory` | None | Optional pre-configured A2A client factory |
+
+### Asynchronous Invocation
+
+For async workflows, use `invoke_async`:
+
+```python
+import asyncio
+from strands.agent.a2a_agent import A2AAgent
+
+async def main():
+    a2a_agent = A2AAgent(endpoint="http://localhost:9000")
+    result = await a2a_agent.invoke_async("Calculate the square root of 144")
+    print(result.message)
+
+asyncio.run(main())
+```
+
+### Streaming Responses
+
+For real-time streaming of responses, use `stream_async`:
+
+```python
+import asyncio
+from strands.agent.a2a_agent import A2AAgent
+
+async def main():
+    a2a_agent = A2AAgent(endpoint="http://localhost:9000")
+    
+    async for event in a2a_agent.stream_async("Explain quantum computing"):
+        if "data" in event:
+            print(event["data"], end="", flush=True)
+
+asyncio.run(main())
+```
+
+### Fetching the Agent Card
+
+You can retrieve the remote agent's metadata using `get_agent_card`:
+
+```python
+import asyncio
+from strands.agent.a2a_agent import A2AAgent
+
+async def main():
+    a2a_agent = A2AAgent(endpoint="http://localhost:9000")
+    card = await a2a_agent.get_agent_card()
+    print(f"Agent: {card.name}")
+    print(f"Description: {card.description}")
+    print(f"Skills: {card.skills}")
+
+asyncio.run(main())
+```
+
+## A2AAgent in Multi-Agent Patterns
+
+The `A2AAgent` class integrates with Strands multi-agent patterns that support it. Currently, you can use remote A2A agents in [Graph](graph.md) workflows and as [tools in an orchestrator agent](#as-a-tool).
+
+### As a Tool
+
+You can wrap an `A2AAgent` as a tool in an orchestrator agent's toolkit:
+
+```python
+from strands import Agent, tool
+from strands.agent.a2a_agent import A2AAgent
+
+calculator_agent = A2AAgent(
+    endpoint="http://calculator-service:9000",
+    name="calculator"
+)
+
+@tool
+def calculate(expression: str) -> str:
+    """Perform a mathematical calculation."""
+    result = calculator_agent(expression)
+    return str(result.message["content"][0]["text"])
+
+orchestrator = Agent(
+    system_prompt="You are a helpful assistant. Use the calculate tool for math.",
+    tools=[calculate]
+)
+```
+
+### In Graph Workflows
+
+The `A2AAgent` works as a node in [Graph](graph.md) workflows. See [Remote Agents with A2AAgent](graph.md#remote-agents-with-a2aagent) for detailed examples of mixing local and remote agents in graph-based pipelines.
+
+### In Swarm Patterns
+
+!!! note "Not yet supported"
+    `A2AAgent` is not currently supported in Swarm patterns. Swarm coordination relies on tool-based handoffs that require capabilities not yet available in the A2A protocol. Use [Graph](graph.md) workflows for multi-agent patterns with remote A2A agents.
+
 ## Creating an A2A Server
 
 ### Basic Server Setup
@@ -368,7 +494,10 @@ The A2A client tool provides three main capabilities:
 - **Protocol Communication**: Send messages to A2A agents using the standardized protocol
 - **Natural Language Interface**: Interact with remote agents using natural language commands
 
-## A2A Agent as a Tool
+## A2A Agent as a Tool (Manual Approach)
+
+!!! note "Consider using A2AAgent"
+    The `A2AAgent` class (described above) provides a simpler way to consume remote A2A agents. The manual approach below gives you more control but requires more code.
 
 A2A agents can be wrapped as tools within your agent's toolkit, similar to the [Agents as Tools](agents-as-tools.md) pattern but leveraging the A2A protocol for cross-platform communication.
 
