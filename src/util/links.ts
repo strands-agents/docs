@@ -4,6 +4,28 @@
  */
 
 /**
+ * Get the site's base URL path, stripped of trailing slash for consistent concatenation.
+ * This is used to build URLs that work correctly when the site is deployed at a subpath.
+ */
+export function getBase(): string {
+  return import.meta.env.BASE_URL.replace(/\/$/, '')
+}
+
+/**
+ * Build a URL path with the site's base path prefix.
+ * Ensures the path works correctly when deployed at a subpath (e.g., example.com/docs/).
+ *
+ * @param path - The path to prefix (e.g., `/api/python/` or `api/python/`)
+ * @returns The path with base prefix (e.g., `/docs/api/python/`)
+ */
+export function pathWithBase(path: string): string {
+  const base = getBase()
+  // Ensure path starts with /
+  const normalizedPath = path.startsWith('/') ? path : '/' + path
+  return base + normalizedPath
+}
+
+/**
  * Normalize a file path or href to a slug by removing extensions and index/README suffixes.
  * This is the shared logic used by both content collection ID generation and link resolution.
  *
