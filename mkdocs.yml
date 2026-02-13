@@ -289,7 +289,7 @@ plugins:
         Python API:
           - docs/api-reference/python/**/*.md
         TypeScript API:
-          - docs/api-reference/typescript/*.html
+          - docs/api-reference/typescript/**/*.html
 
 
 hooks:
