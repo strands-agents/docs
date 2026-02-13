@@ -15,7 +15,7 @@ The following table shows all model providers supported by Strands Agents SDK an
 | [Amazon Nova](amazon-nova.md)                | ✅ | ❌ |
 | [OpenAI](openai.md)                          | ✅ | ✅ |
 | [Anthropic](anthropic.md)                    | ✅ | ❌ |
-| [Gemini](gemini.md)                          | ✅ | ❌ |
+| [Gemini](gemini.md)                          | ✅ | ✅ |
 | [LiteLLM](litellm.md)                        | ✅ | ❌ |
 | [llama.cpp](llamacpp.md)                     | ✅ | ❌ |
 | [LlamaAPI](llamaapi.md)                      | ✅ | ❌ |
@@ -99,6 +99,7 @@ Each provider follows a similar pattern for initialization and usage. Models are
 
 - **[Amazon Bedrock](amazon-bedrock.md)** - Default provider with wide model selection, enterprise features, and full Python/TypeScript support
 - **[OpenAI](openai.md)** - GPT models with streaming support
+- **[Gemini](gemini.md)** - Google's Gemini models with tool calling support
 - **[Custom Providers](custom_model_provider.md)** - Build your own model integration
 - **[Anthropic](anthropic.md)** - Direct Claude API access (Python only)
 
