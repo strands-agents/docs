@@ -457,6 +457,70 @@ For more information on implementing MCP servers, see the [MCP documentation](ht
 
     For more information on elicitation, see the [MCP specification](https://modelcontextprotocol.io/specification/draft/client/elicitation).
 
+    ### Task-augmented execution (experimental)
+
+    Some MCP tools perform long-running operations—data processing jobs, complex API orchestrations, or multi-step workflows—that can take minutes to complete. Standard `call_tool` blocks until the tool finishes, which can lead to timeouts on both the client and server side.
+
+    MCP Tasks solve this with an asynchronous create-poll-get workflow. Instead of waiting for the tool to finish, the client creates a task, polls for status updates, and retrieves the result when the task completes. Strands handles this workflow automatically when you opt in.
+
+    !!! warning "Experimental feature"
+
+        Task-augmented execution is an experimental feature in the [MCP specification (2025-11-25)](https://modelcontextprotocol.io/specification/2025-11-25/basic/utilities/tasks). Both the specification and the Strands Agents implementation are subject to change.
+
+    **Enabling tasks**
+
+    Pass `tasks_config` to `MCPClient` to opt in. An empty dict enables tasks with default settings:
+
+    ```python
+    from strands import Agent
+    from strands.tools.mcp import MCPClient
+
+    # Enable task-augmented execution with defaults
+    client = MCPClient(
+        transport_callable,
+        tasks_config={},
+    )
+
+    agent = Agent(tools=[client])
+    agent("Run the long data processing job")
+    ```
+
+    **Configuring timeouts**
+
+    Use `TasksConfig` to customize the task time-to-live (TTL) and polling timeout:
+
+    ```python
+    from datetime import timedelta
+    from strands.tools.mcp import MCPClient, TasksConfig
+
+    client = MCPClient(
+        transport_callable,
+        tasks_config=TasksConfig(
+            ttl=timedelta(minutes=2),           # How long the server keeps the task (default: 1 minute)
+            poll_timeout=timedelta(minutes=10),  # How long the client polls before giving up (default: 5 minutes)
+        ),
+    )
+    ```
+
+    The configuration options are listed below.
+
+    | Parameter | Type | Default | Description |
+    |-----------|------|---------|-------------|
+    | `ttl` | `timedelta` | 1 minute | Task time-to-live on the server |
+    | `poll_timeout` | `timedelta` | 5 minutes | Maximum time the client polls for task completion |
+
+    **How the decision logic works**
+
+    When `tasks_config` is set, Strands automatically decides whether each tool call uses task-augmented execution or a direct call. Task-augmented execution is used when all three conditions are met:
+
+    1. **Client opt-in** — You provided `tasks_config` (not `None`)
+    2. **Server capability** — The MCP server advertises task support during the initial handshake
+    3. **Tool support** — The tool declares `taskSupport` as `required` or `optional`
+
+    If any condition is not met, the tool executes via a direct `call_tool` as before. Tools that declare `taskSupport` as `forbidden` (the default) always use direct calls regardless of client or server configuration.
+
+    This means enabling `tasks_config` is safe—it never changes behavior for tools that don't support tasks.
+
 {{ ts_not_supported_code() }}
 
 ## Best Practices
