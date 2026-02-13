@@ -42,7 +42,7 @@ See the full template in the [designs folder README](https://github.com/strands-
 
 **Tips for effective proposals:**
 
-- Focus on the problem first—solution comes second
+- Focus on the problem first, solution comes second
 - Include concrete examples showing current pain and proposed improvement
-- Be open to feedback—the best solution might differ from your initial idea
+- Be open to feedback, the best solution might differ from your initial idea
 - Align with our [development tenets](https://github.com/strands-agents/docs/blob/main/team/TENETS.md)
