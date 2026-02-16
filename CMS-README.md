@@ -223,7 +223,45 @@ Replaces the default anchor element to enable MkDocs-style relative linking. Res
 These override default Starlight components:
 
 - **`Head.astro`**: Adds Mermaid diagram support by transforming code blocks with `language="mermaid"` into rendered diagrams.
+- **`Header.astro`**: Custom header with navigation tabs and theme-aware logos (see [Header Navigation](#header-navigation) below).
 - **`MarkdownContent.astro`**: Injects the custom frontmatter banners (experimental, community, languages) at the top of page content.
+
+### Header Navigation
+
+The custom header (`src/components/overrides/Header.astro`) replicates the navigation tabs from the MkDocs Material theme used on strandsagents.com.
+
+**Features:**
+- Navigation tabs displayed below the main header row on desktop
+- Mobile dropdown menu next to the search bar for small screens
+- Theme-aware logos (`logo-header-light.svg` / `logo-header-dark.svg`)
+- Active state detection using longest-match path logic
+
+**Configuring Navigation Links:**
+
+Edit `src/config/navbar.ts` to add, remove, or reorder navigation links:
+
+```typescript
+const rawNavLinks: NavLink[] = [
+  {
+    label: 'Home',
+    href: '/',
+  },
+  {
+    label: 'User Guide',
+    href: '/user-guide/quickstart/overview/',
+    basePath: '/user-guide/',  // Used for active state detection
+  },
+  {
+    label: 'Contribute ❤️',
+    href: 'https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md',
+    external: true,  // Opens in new tab with arrow icon
+  },
+]
+```
+
+**Active state logic:** The header uses `findCurrentNavSection()` from `src/route-middleware.ts` to determine which tab is active. It finds the nav link with the longest matching `basePath` (or `href` if no `basePath`) that the current URL starts with.
+
+**Theme-aware logos:** The header renders both `logo-header-light.svg` and `logo-header-dark.svg`, using CSS to show the appropriate one based on the `[data-theme]` attribute. Logo files are in `src/assets/`.
 
 ### Internal Aside Components
 
