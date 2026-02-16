@@ -5,6 +5,11 @@ import { pathWithBase } from './util/links'
 import { navLinks, type NavLink } from './config/navbar'
 
 type SidebarEntry = StarlightRouteData['sidebar'][number]
+type SidebarGroup = Extract<SidebarEntry, { type: 'group' }>
+
+function isSidebarGroup(entry: SidebarEntry): entry is SidebarGroup {
+  return entry.type === 'group'
+}
 
 /**
  * Find which nav section the current page belongs to based on URL path.
@@ -17,6 +22,8 @@ export function findCurrentNavSection(currentPath: string, links: NavLink[]): Na
   for (const link of links) {
     if (link.external) continue
     const basePath = link.basePath || link.href
+    // Note: Home ("/") matches all paths but longest-match ensures specificity.
+    // This provides implicit fallback behavior when no other nav section matches.
     if (currentPath.startsWith(basePath) && basePath.length > bestMatchLength) {
       bestMatch = link
       bestMatchLength = basePath.length
@@ -45,8 +52,9 @@ export function filterSidebarByBasePath(entries: SidebarEntry[], basePath: strin
     .filter((entry): entry is SidebarEntry => entry !== null)
 
   // If we have a single top-level group, unwrap it to show its entries directly
-  if (filtered.length === 1 && filtered[0]?.type === 'group') {
-    return (filtered[0] as { entries: SidebarEntry[] }).entries
+  const firstEntry = filtered[0]
+  if (filtered.length === 1 && firstEntry && isSidebarGroup(firstEntry)) {
+    return firstEntry.entries
   }
 
   return filtered
