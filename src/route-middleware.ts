@@ -139,6 +139,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     return
   }
 
+  // Otherwise filter it down to the major section that we're in
   const basePath = currentNav.basePath || currentNav.href
   const filteredSidebar = filterSidebarByBasePath(sidebar, basePath)
   starlightRoute.sidebar = expandFirstLevelGroups(filteredSidebar)

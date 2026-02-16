@@ -3,8 +3,10 @@
 ## Before launch:
 - [ ] Remove Vite SSR workaround for zod in `astro.config.mjs` once CMS build is separated from TS verification (see https://github.com/withastro/astro/issues/14117)
 - [X] Fix relative links to pages (e.g., `../some-page.md` style links need to be converted to Starlight-compatible paths)
-- [ ] Add API documentation generation/integration for Python and TypeScript SDKs
+- [X] Add API documentation generation/integration for Python and TypeScript SDKs
 - [ ] Fix type-checking
+- [ ] Look into markdown 
+- [ ] Add header links to Python/TypeScript method sections (api/python/strands.agent.agent/)
 
 ## After Launch
 - [ ] Move asset files to proper location (currently in `docs/assets/`, should be in `src/content/docs/assets/`)
