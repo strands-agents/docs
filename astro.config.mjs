@@ -56,7 +56,8 @@ export default defineConfig({
     },
     components: {
       Head: './src/components/overrides/Head.astro',
-      MarkdownContent: './src/components/overrides/MarkdownContent.astro'
+      MarkdownContent: './src/components/overrides/MarkdownContent.astro',
+      Sidebar: './src/components/overrides/Sidebar.astro',
     },
   }),
   AutoImport({
