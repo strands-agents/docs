@@ -136,6 +136,7 @@ class InvocationState:
     event_loop_metrics: EventLoopMetrics
     trace_span: trace_api.Span | None
     interrupt_state: _InterruptState
+    ...
 ```
 
 The agent instance would retain only configuration: model, tools, system prompt, hooks, callback handler, conversation manager, etc. In the future, configuration could also be extracted into its own isolated object to allow per-invocation overrides, but this document focuses on invocation state to highlight the core problem and start the discussion.
@@ -163,7 +164,7 @@ async def stream_async(self, prompt, *, invocation_key=None, **kwargs):
 
 Because each invocation would operate on its own state object, there would be no shared mutable state on the agent. The `threading.Lock` and `ConcurrencyException` would no longer be needed.
 
-### Default behavior could preserve backwards compatibility
+### Default behavior and backwards compatibility
 
 One idea is to introduce a default in-memory session manager. Each agent instance would get a default invocation key that is stable across calls:
 
@@ -187,7 +188,9 @@ When no invocation key is supplied, the agent would use a default key tied to th
 
 - Sequential calls accumulate conversation history, just like today.
 - A single agent instance with no invocation key behaves identically to the current implementation.
-- No code changes required for existing users.
+- No code changes required for existing users who interact with the agent through `__call__` or `invoke_async`.
+
+However, code that directly accesses instance fields like `agent.messages` or `agent.state` would be affected. These fields would no longer live on the agent instance, so existing patterns like `print(agent.messages)` or `agent.state["key"] = value` would need to change. This is the primary backwards compatibility concern and is discussed further in the Consequences section.
 
 ### Concurrent usage with invocation keys
 
