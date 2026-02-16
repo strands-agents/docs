@@ -224,6 +224,20 @@ These override default Starlight components:
 
 - **`Head.astro`**: Adds Mermaid diagram support by transforming code blocks with `language="mermaid"` into rendered diagrams.
 - **`MarkdownContent.astro`**: Injects the custom frontmatter banners (experimental, community, languages) at the top of page content.
+- **`Sidebar.astro`** and **`SidebarSublist.astro`**: Custom sidebar navigation that mimics MkDocs Material theme's `navigation.sections` behavior.
+
+#### Sidebar Navigation Style
+
+The custom sidebar components provide a flatter navigation style.
+
+**How it works:**
+1. Top-level groups render as non-collapsible section headers (uppercase labels)
+2. Nested groups are collapsible with a caret icon
+3. Group labels link to their first child page (clickable navigation)
+4. Groups auto-expand when they contain the current page
+5. Indentation only starts at depth 2+ (first level under section headers has no indent)
+
+**Why:** Starlight's default sidebar shows all groups as collapsible accordions. This override provides a cleaner hierarchy where top-level sections are always visible, and nested groups can be both navigated to and expanded.
 
 ### Internal Aside Components
 
