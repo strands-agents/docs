@@ -213,9 +213,9 @@ asyncio.run(main())
 
 Each key would get its own isolated messages, agent state, metrics, and trace span. No lock contention, no `ConcurrencyException`.
 
-### Graph could become simpler
+### Multi-agent patterns could become simpler
 
-With isolated state, graph nodes could reuse the same agent instance. The graph would pass a unique invocation key per node execution:
+With isolated state, multi-agent patterns that reuse the same agent instance become possible. For example, graph nodes could share a single agent and rely on unique invocation keys per execution:
 
 ```python
 from strands import Agent
@@ -296,7 +296,7 @@ await agent.session_manager.clear(invocation_key)
 - Internal code that currently reads `self.messages` or `self.state` would need to be updated to read from the invocation state object
   - For example, hook callbacks that receive the agent and access `agent.messages` would need to be adapted
 - Session manager becomes a required concept (though a default in-memory implementation could make it invisible for simple use cases)
-- The `threading.Lock` and `CurrencyException` would be removed, which means users who relied on the exception as a signal would need to adapt
+- The `threading.Lock` and `ConcurrencyException` would be removed, which means users who relied on the exception as a signal would need to adapt
 
 ### Backwards compatibility is the biggest concern
 
