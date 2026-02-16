@@ -121,7 +121,7 @@ describe('findCurrentNavSection', () => {
 
 describe('Sidebar filtering with live mkdocs.yml data', () => {
   const mkdocsPath = path.resolve('./mkdocs.yml')
-  const docsDir = path.resolve('./docs')
+  const docsDir = path.resolve('./src/content/docs')
   const buildTimeSidebar = loadSidebarFromMkdocs(mkdocsPath, docsDir)
   const runtimeSidebar = convertToRuntimeFormat(buildTimeSidebar)
 
@@ -185,7 +185,7 @@ describe('Sidebar filtering with live mkdocs.yml data', () => {
 
 describe('Integration: Full filtering flow', () => {
   const mkdocsPath = path.resolve('./mkdocs.yml')
-  const docsDir = path.resolve('./docs')
+  const docsDir = path.resolve('./src/content/docs')
   const buildTimeSidebar = loadSidebarFromMkdocs(mkdocsPath, docsDir)
   const runtimeSidebar = convertToRuntimeFormat(buildTimeSidebar)
 

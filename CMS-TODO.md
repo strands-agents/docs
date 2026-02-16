@@ -10,6 +10,7 @@
 
 ## After Launch
 - [ ] Move asset files to proper location (currently in `docs/assets/`, should be in `src/content/docs/assets/`)
+- [ ] Migrate sidebar from mkdocs.yml to something astro specific (and combine with the navbar?)
 - [ ] Remove symlink at `src/content/docs` → `../../docs` and move content to actual location
 - [ ] Inline TypeScript code examples directly in markdown and verify via separate type-checking step (e.g., `tsc` on extracted code blocks) instead of snippet includes
 - [ ] Update astro-auto-import once https://github.com/delucis/astro-auto-import/pull/110 is merged
