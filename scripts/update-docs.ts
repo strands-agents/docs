@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, mkdir, rm, unlink } from "fs/promises";
+import { readdir, readFile, writeFile, mkdir, unlink } from "fs/promises";
 import { join, dirname } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
 import { getCommunityLabeledFiles } from "../src/sidebar.js";
@@ -739,13 +739,7 @@ async function main() {
   console.log(`Scanning ${DOCS_DIR} for markdown files...`);
   console.log(`Output directory: ${OUTPUT_DIR}`);
 
-  // Clean and recreate output directory
-  try {
-    await rm(OUTPUT_DIR, { recursive: true });
-    console.log(`✓ Cleaned existing ${OUTPUT_DIR}`);
-  } catch {
-    // Directory doesn't exist, that's fine
-  }
+  // Ensure output directory exists (use docs:revert to clean before re-running)
   await mkdir(OUTPUT_DIR, { recursive: true });
 
   // Load community-labeled files from mkdocs.yml nav

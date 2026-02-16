@@ -19,6 +19,8 @@ export const collections = {
         "user-guide/**/*.mdx",
         "community/**/*.mdx",
         "examples/**/[!index]*.mdx",
+        "api/python/**/*.mdx",
+        "api/typescript/**/*.(md|mdx)",
       ],
       generateId: generateDocsId,
     }),
@@ -29,6 +31,8 @@ export const collections = {
         languages: z.union([z.string(), z.array(z.string())]).optional(),
         community: z.boolean().default(false),
         experimental: z.boolean().default(false),
+        // Category for TypeScript API docs (classes, interfaces, type-aliases, functions)
+        category: z.string().optional(),
       }),
     }),
   }),
