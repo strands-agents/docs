@@ -1,12 +1,19 @@
 ---
 /**
- * Custom Head override to add Mermaid diagram support.
+ * Custom Head override to add Mermaid diagram support and favicon.
  * See ARCHITECTURE.md for details.
  */
 const { head } = Astro.locals.starlightRoute
+
+// Get base path for favicon
+const base = import.meta.env.BASE_URL || '/'
+const faviconHref = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon.svg`
 ---
 
 {head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
+
+<!-- Favicon - uses logo-auto.svg which adapts to light/dark mode via prefers-color-scheme -->
+<link rel="icon" type="image/svg+xml" href={faviconHref} />
 
 <script>
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
