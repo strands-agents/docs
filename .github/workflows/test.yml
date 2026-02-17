@@ -19,8 +19,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build CMS
-        run: npm run cms:build
-
-      - name: Run tests
-        run: npm test
+      - name: Build CMS and run tests
+        run: npm run cms:build && npm run test
