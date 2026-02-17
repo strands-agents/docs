@@ -16,6 +16,7 @@ import Search from 'virtual:starlight/components/Search';
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
 // @ts-expect-error - Virtual modules are resolved at build time by Starlight
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import { Icon } from '@astrojs/starlight/components';
 
 import { navLinks, type NavLink } from '../../config/navbar';
 import { findCurrentNavSection } from '../../route-middleware';
@@ -54,9 +55,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
               <span class="mobile-nav-current">
                 {activeNav?.label || 'Navigate'}
               </span>
-              <svg class="mobile-nav-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/>
-              </svg>
+              <Icon name="down-caret" class="mobile-nav-caret" size="1rem" />
             </summary>
             <div class="mobile-nav-menu">
               {navLinks.map((link: NavLink) => {
