@@ -32,13 +32,25 @@ export default defineConfig({
     remarkPlugins: [remarkMkdocsSnippets],
   },
   integrations: [
-    astroExpressiveCode(),
+    astroExpressiveCode({
+      // Use themes that complement the Strands color scheme
+      themes: ['github-light', 'github-dark'],
+      styleOverrides: {
+        // Match the accent color from the site theme
+        frames: {
+          shadowColor: 'transparent',
+        },
+      },
+    }),
     mdx(),
     starlight({
     title: 'Strands Agents SDK',
     description: 'A model-driven approach to building AI agents in just a few lines of code.',
     sidebar: sidebar,
     routeMiddleware: './src/route-middleware.ts',
+    customCss: [
+      './src/styles/custom.css',
+    ],
     logo: {
       light: './src/assets/logo-light.svg',
       dark: './src/assets/logo-dark.svg',
