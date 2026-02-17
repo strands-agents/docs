@@ -1,4 +1,4 @@
-name: Typecheck files
+name: Lint
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     types: [ opened, synchronize, reopened, ready_for_review, review_requested, review_request_removed ]
 
 jobs:
-  setup:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,11 +16,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Clone typescript_sdk
-        run:  git clone https://github.com/strands-agents/sdk-typescript.git/ ./sdk-typescript
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install SDK
-        run:  npm install ./sdk-typescript
-
-      - name: Run tests
-        run: npm run test
+      - name: Typecheck
+        run: npm run typecheck

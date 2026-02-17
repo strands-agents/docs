@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "astro build",
-    "test": "tsc --noEmit",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write docs",
     "format:check": "prettier --check docs",
     "docs:clone": "rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git",
@@ -15,7 +16,6 @@
     "cms:start": "astro dev",
     "cms:build": "npm run sdk:clone && npm run sdk:generate && npm run docs:revert && npm run docs:update && npm run build",
     "cms:preview": "astro preview",
-    "cms:test": "vitest run",
     "docs:update": "tsx scripts/update-docs.ts",
     "docs:revert": "git checkout HEAD -- docs/ && git clean -d -f src/content/docs",
     "sdk:clone": "tsx scripts/clone-sdks.ts",
