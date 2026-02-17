@@ -465,3 +465,76 @@ extend: z.object({
 ```
 
 This allows the content collection to validate and expose the category for sidebar generation.
+
+
+## Custom Landing Page
+
+The landing page uses a custom layout that provides the Starlight header without the full documentation page structure, allowing for full-width marketing content.
+
+### Landing Layout (`src/layouts/LandingLayout.astro`)
+
+**What it does:** Provides a minimal layout with the Starlight header, theme support, and CSS variables, but without the sidebar, table of contents, or content constraints of documentation pages.
+
+**Key features:**
+- Mocks `Astro.locals.starlightRoute` with minimal data needed for the Header component
+- Mocks `Astro.locals.t` translation function (with `.all()` method for Search component)
+- Loads Figtree font from Google Fonts for landing page typography
+
+**Usage:**
+```astro
+---
+import LandingLayout from '../layouts/LandingLayout.astro'
+---
+
+<LandingLayout title="Page Title" description="Optional description">
+  <!-- Full-width content here -->
+</LandingLayout>
+```
+
+### Landing Page (`src/pages/index.astro`)
+
+The main landing page includes:
+- Animated parallax curves background (replicating strandsagents.com effect)
+- Hero section with frosted glass effect
+- Feature cards that expand on hover to show descriptions
+- Testimonials slider with fade transitions and auto-play
+
+**Assets:**
+- `src/assets/curve-primary.svg` and `src/assets/curve-secondary.svg` - Animated strand patterns
+- `src/assets/icons/icon-*.svg` - Feature card icons
+
+## Testimonials Content Collection
+
+Testimonials are managed as a content collection, allowing them to be stored separately and potentially shared across projects.
+
+### Schema (`src/content.config.ts`)
+
+```typescript
+const testimonialSchema = z.object({
+  quote: z.string(),
+  name: z.string(),
+  title: z.string().optional(),
+  icon: z.string().optional(),  // Company logo URL
+  order: z.number().default(0),
+})
+```
+
+### Content Location
+
+Default: `src/content/testimonials/*.json`
+
+The base path can be overridden via the `TESTIMONIALS_PATH` environment variable for projects that store testimonials in a different location.
+
+### File Format
+
+Each testimonial is a JSON file:
+
+```json
+{
+  "quote": "The testimonial text...",
+  "name": "Person Name",
+  "title": "Job Title, Company Name",
+  "icon": "https://example.com/company-logo.png",
+  "order": 1
+}
+```
