@@ -7,7 +7,24 @@ import { slug as githubSlug } from 'github-slugger'
 import { glob } from 'astro/loaders'
 import { normalizePathToSlug } from './util/links'
 
+const testimonialSchema = z.object({
+  quote: z.string(),
+  name: z.string(),
+  title: z.string().optional(),
+  icon: z.string().optional(),
+  order: z.number().default(0),
+})
+
+const testimonialsBase = import.meta.env.TESTIMONIALS_PATH || 'src/content/testimonials'
+
 export const collections = {
+  testimonials: defineCollection({
+    loader: glob({
+      base: testimonialsBase,
+      pattern: '**/*.json',
+    }),
+    schema: testimonialSchema,
+  }),
   docs: defineCollection({
     loader: glob({
       base: "src/content/docs",

@@ -106,6 +106,16 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
 </div>
 
 <style>
+  /* Strands brand colors - must be defined here for use in scoped styles */
+  :global(:root) {
+    --strands-logo-green: #00cc5f;
+    --strands-green-bright: #00FF77;
+    --strands-green-hover: #00D965;
+    --strands-green-active: #00B353;
+    --strands-dark-text: #0E0E0E;
+    --strands-light-text: white;
+  }
+
   /* Override the nav height to account for the additional tabs row on desktop */
   :global(:root) {
     --sl-nav-height: 3.5rem;
@@ -199,15 +209,24 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     }
 
     .nav-tab:hover {
-      color: var(--sl-color-text-accent);
-      text-decoration: underline;
-      text-underline-offset: 0.5em;
+      color: var(--strands-dark-text);
+      background-color: rgba(0, 255, 119, 0.1);
+      border-radius: 8px;
+      text-decoration: none;
     }
 
     .nav-tab.active {
-      color: var(--sl-color-text-accent);
-      text-decoration: underline;
-      text-underline-offset: 0.5em;
+      color: var(--strands-dark-text);
+      text-decoration: none;
+    }
+
+    :global([data-theme='dark']) .nav-tab:hover {
+      color: var(--strands-light-text);
+      background-color: rgba(0, 255, 119, 0.05);
+    }
+
+    :global([data-theme='dark']) .nav-tab.active {
+      color: var(--strands-light-text);
     }
 
     .external-icon {
@@ -292,11 +311,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     }
 
     .mobile-nav-link:hover {
-      background-color: var(--sl-color-gray-6);
+      background-color: rgba(0, 255, 119, 0.1);
+    }
+
+    :global([data-theme='dark']) .mobile-nav-link:hover {
+      background-color: rgba(0, 255, 119, 0.05);
     }
 
     .mobile-nav-link.active {
-      color: var(--sl-color-text-accent);
+      color: var(--sl-color-white);
       font-weight: 600;
     }
 

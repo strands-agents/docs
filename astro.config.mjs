@@ -33,7 +33,6 @@ export default defineConfig({
   },
   integrations: [
     astroExpressiveCode({
-      // Use themes that complement the Strands color scheme
       themes: ['github-light', 'github-dark'],
       styleOverrides: {
         // Match the accent color from the site theme
