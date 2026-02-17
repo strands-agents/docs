@@ -1,5 +1,8 @@
 # Mistral AI
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Mistral AI](https://mistral.ai/)  is a research lab building the best open source models in the world.
 
 Mistral AI offers both premier models and free models, driving innovation and convenience for the developer community. Mistral AI models are state-of-the-art for their multilingual, code generation, maths, and advanced reasoning capabilities.
@@ -85,5 +88,5 @@ If you encounter the error `ModuleNotFoundError: No module named 'mistralai'`, t
 
 ## References
 
-- [API Reference](../../../api-reference/models.md)
+- [API Reference](../../../api-reference/python/models/model.md)
 - [Mistral AI Documentation](https://docs.mistral.ai/)

@@ -2,6 +2,9 @@
 
 {{ community_contribution_banner }}
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Fireworks AI](https://fireworks.ai) provides blazing fast inference for open-source language models. Fireworks AI is accessible through OpenAI's SDK via full API compatibility, allowing easy and portable integration with the Strands Agents SDK using the familiar OpenAI interface.
 
 ## Installation
@@ -77,4 +80,4 @@ Ensure you're using a model ID compatible with Fireworks AI (e.g., `accounts/fir
 * [Fireworks AI API Reference](https://docs.fireworks.ai/api-reference)
 * [Fireworks AI Models](https://fireworks.ai/models)
 * [OpenAI Python SDK](https://github.com/openai/openai-python)
-* [Strands Agents API](../../api-reference/models.md)
+* [Strands Agents API](../../api-reference/python/models/model.md)

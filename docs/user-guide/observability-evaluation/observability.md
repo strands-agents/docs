@@ -1,12 +1,14 @@
 # Observability
 
+{{ ts_not_supported("The 0.1.0 release of the TypeScript SDK does not include OpenTelemetry observability features. Support is planned for a future version. See issue [#69](https://github.com/strands-agents/sdk-typescript/issues/69) to track progress or contribute to the implementation.") }}
+
 In the Strands Agents SDK, observability refers to the ability to measure system behavior and performance. Observability is the combination of instrumentation, data collection, and analysis techniques that provide insights into an agent's behavior and performance. It enables Strands Agents developers to effectively build, debug and maintain agents to better serve their unique customer needs and reliably complete their tasks. This guide provides background on what type of data (or "Primitives") makes up observability as well as best practices for implementing agent observability with the Strands Agents SDK. 
 
 ##  Embedded in Strands Agents
-All observability APIs are embedded directly within the Strands Agents SDK. 
+All observability APIs are embedded directly within the Strands Agents SDK.
 
 While this document provides high-level information about observability, look to the following specific documents on how to instrument these primitives in your system:
- 
+
  * [Metrics](./metrics.md)
  * [Traces](./traces.md)
  * [Logs](./logs.md)
@@ -97,4 +99,4 @@ With these components in place, a continuous improvement flywheel emerges which 
 
 ## Conclusion
 
-Effective observability is crucial for developing agents which reliably complete customers’ tasks. The key to success is treating observability not as an afterthought, but as a core component of agent engineering from day one. This investment will pay dividends in improved reliability, faster development cycles, and better customer experiences.
+Effective observability is crucial for developing agents that reliably complete customers’ tasks. The key to success is treating observability not as an afterthought, but as a core component of agent engineering from day one. This investment will pay dividends in improved reliability, faster development cycles, and better customer experiences.

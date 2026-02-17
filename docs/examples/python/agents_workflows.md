@@ -21,9 +21,9 @@ The `http_request` tool enables the agent to make HTTP requests to retrieve info
 
 The Research Assistant example implements a three-agent workflow where each agent has a specific role and works with other agents to complete tasks that require multiple steps of processing:
 
-1. **Researcher Agent**: Gathers information from web sources using http_request tool
-2. **Analyst Agent**: Verifies facts and identifies key insights from research findings
-3. **Writer Agent**: Creates a final report based on the analysis
+1. **Researcher agent**: Gathers information from web sources using http_request tool
+2. **Analyst agent**: Verifies facts and identifies key insights from research findings
+3. **Writer agent**: Creates a final report based on the analysis
 
 ## Code Structure and Implementation
 
@@ -32,7 +32,7 @@ The Research Assistant example implements a three-agent workflow where each agen
 Each agent in the workflow is created with a system prompt that defines its role:
 
 ```python
-# Researcher Agent with web capabilities
+# Researcher agent with web capabilities
 researcher_agent = Agent(
     system_prompt=(
         "You are a Researcher Agent that gathers information from the web. "
@@ -44,7 +44,7 @@ researcher_agent = Agent(
     tools=[http_request]
 )
 
-# Analyst Agent for verification and insight extraction
+# Analyst agent for verification and insight extraction
 analyst_agent = Agent(
     callback_handler=None,
     system_prompt=(
@@ -55,7 +55,7 @@ analyst_agent = Agent(
     ),
 )
 
-# Writer Agent for final report creation
+# Writer agent for final report creation
 writer_agent = Agent(
     system_prompt=(
         "You are a Writer Agent that creates clear reports. "
@@ -72,19 +72,19 @@ The workflow is orchestrated through a function that passes information between 
 
 ```python
 def run_research_workflow(user_input):
-    # Step 1: Researcher Agent gathers web information
+    # Step 1: Researcher agent gathers web information
     researcher_response = researcher_agent(
         f"Research: '{user_input}'. Use your available tools to gather information from reliable sources.",
     )
     research_findings = str(researcher_response)
     
-    # Step 2: Analyst Agent verifies facts
+    # Step 2: Analyst agent verifies facts
     analyst_response = analyst_agent(
         f"Analyze these findings about '{user_input}':\n\n{research_findings}",
     )
     analysis = str(analyst_response)
     
-    # Step 3: Writer Agent creates report
+    # Step 3: Writer agent creates report
     final_report = writer_agent(
         f"Create a report on '{user_input}' based on this analysis:\n\n{analysis}"
     )
@@ -94,12 +94,12 @@ def run_research_workflow(user_input):
 
 ### 3. Output Suppression
 
-The example suppresses intermediate outputs during the initialization of the agents, showing users only the final result from the `Writer Agent`:
+The example suppresses intermediate outputs during the initialization of the agents, showing users only the final result from the `Writer agent`:
 
 ```python
 researcher_agent = Agent(
     system_prompt=(
-        "You are a Researcher Agent that gathers information from the web. "
+        "You are a Researcher agent that gathers information from the web. "
         "1. Determine if the input is a research query or factual claim "
         "2. Use your research tools (http_request, retrieve) to find relevant information "
         "3. Include source URLs and keep findings under 500 words"
@@ -113,9 +113,9 @@ Without this suppression, the default [callback_handler](https://github.com/stra
 
 ```python
 print("\nProcessing: '{user_input}'")
-print("\nStep 1: Researcher Agent gathering web information...")
+print("\nStep 1: Researcher agent gathering web information...")
 print("Research complete")
-print("Passing research findings to Analyst Agent...\n")
+print("Passing research findings to Analyst agent...\n")
 ```
 
 ## Sample Queries and Responses
@@ -202,8 +202,8 @@ print("Passing research findings to Analyst Agent...\n")
 Here are some ways to extend this agents workflow example:
 
 1. **Add User Feedback Loop**: Allow users to ask for more detail after receiving the report
-2. **Implement Parallel Research**: Modify the Researcher Agent to gather information from multiple sources simultaneously
-3. **Add Visual Content**: Enhance the Writer Agent to include images or charts in the report
+2. **Implement Parallel Research**: Modify the Researcher agent to gather information from multiple sources simultaneously
+3. **Add Visual Content**: Enhance the Writer agent to include images or charts in the report
 4. **Create a Web Interface**: Build a web UI for the workflow
 5. **Add Memory**: Implement session memory so the system remembers previous research sessions
 

@@ -81,7 +81,7 @@ In this example:
 
 ## Swarm Configuration
 
-The [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm) constructor allows you to control the behavior and safety parameters:
+The [`Swarm`](../../../api-reference/python/multiagent/swarm.md#strands.multiagent.swarm.Swarm) constructor allows you to control the behavior and safety parameters:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -95,7 +95,7 @@ The [`Swarm`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swar
 
 ## Multi-Modal Input Support
 
-Swarms support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/types.md#strands.types.content.ContentBlock):
+Swarms support multi-modal inputs like text and images using [`ContentBlocks`](../../../api-reference/python/types/content.md#strands.types.content.ContentBlock):
 
 ```python
 from strands import Agent
@@ -174,7 +174,7 @@ For detailed information about shared state, including examples and best practic
 
 ## Asynchronous Execution
 
-You can also execute a Swarm asynchronously by calling the [`invoke_async`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm.invoke_async) function:
+You can also execute a Swarm asynchronously by calling the [`invoke_async`](../../../api-reference/python/multiagent/swarm.md#strands.multiagent.swarm.Swarm.invoke_async) function:
 
 ```python
 import asyncio
@@ -188,7 +188,7 @@ result = asyncio.run(run_swarm())
 
 ## Streaming Events
 
-Swarms support real-time streaming of events during execution using [`stream_async`](../../../api-reference/multiagent.md#strands.multiagent.swarm.Swarm.stream_async). This provides visibility into agent collaboration, handoffs, and autonomous coordination.
+Swarms support real-time streaming of events during execution using [`stream_async`](../../../api-reference/python/multiagent/swarm.md#strands.multiagent.swarm.Swarm.stream_async). This provides visibility into agent collaboration, handoffs, and autonomous coordination.
 
 ```python
 from strands import Agent
@@ -225,11 +225,11 @@ async for event in swarm.stream_async("Design and implement a REST API"):
         print(f"\nSwarm completed: {result.status}")
 ```
 
-See the [streaming overview](../streaming/overview.md#multi-agent-events) for details on all multi-agent event types.
+See the [streaming overview](../streaming/index.md#multi-agent-events) for details on all multi-agent event types.
 
 ## Swarm Results
 
-When a Swarm completes execution, it returns a [`SwarmResult`](../../../api-reference/multiagent.md#strands.multiagent.swarm.SwarmResult) object with detailed information:
+When a Swarm completes execution, it returns a [`SwarmResult`](../../../api-reference/python/multiagent/swarm.md#strands.multiagent.swarm.SwarmResult) object with detailed information:
 
 ```python
 result = swarm("Design a system architecture for...")

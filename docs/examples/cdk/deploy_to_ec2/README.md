@@ -120,7 +120,7 @@ Note that this example demonstrates a simple deployment approach with some impor
 - The application code is deployed only during the initial instance creation via user data script
 - Updating the application requires implementing a custom update mechanism
 - The example exposes the application directly on port 8000 without a load balancer
-- For production workloads, consider using ECS/Fargate which provides built-in support for application updates, scaling, and high availability
+- For production workloads, consider using ECS/Fargate/App Runner which provides built-in support for application updates, scaling, and high availability
 
 
 ## Additional Resources

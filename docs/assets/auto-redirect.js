@@ -6,7 +6,9 @@
 class AutoRedirect extends HTMLElement {
     connectedCallback() {
         const currentUrl = window.location.href;
-        const link = this.parentElement.closest(".md-content")?.querySelector("a[href]")
+        const links = this.parentElement.closest(".md-content")?.querySelectorAll("a[href]") || [];
+        // exclude links to github as those are edit links
+        const link = Array.from(links).find(a => !a.href.includes("github.com"));
 
         if (link) {
             // immediately redirecting makes a flash of content, so do it after a second

@@ -48,7 +48,7 @@ agent = Agent(
 )
 ```
 
-See [Adding Tools to Agents](../concepts/tools/tools_overview.md/#adding-tools-to-agents) and [Auto reloading tools](../concepts/tools/tools_overview.md#auto-loading-and-reloading-tools) for more information.
+See [Adding Tools to Agents](../concepts/tools/index.md/#adding-tools-to-agents) and [Auto reloading tools](../concepts/tools/index.md#auto-loading-and-reloading-tools) for more information.
 
 ### Security Considerations
 
@@ -119,11 +119,13 @@ Strands agents can be deployed using various options from serverless to dedicate
 
 Built-in guides are available for several AWS services:
 
-* **Bedrock AgentCore** - A secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore.md)
+* **Bedrock AgentCore** - A secure, serverless runtime purpose-built for deploying and scaling dynamic AI agents and tools. [Learn more](deploy_to_bedrock_agentcore/index.md)
 
 * **AWS Lambda** - Serverless option for short-lived agent interactions and batch processing with minimal infrastructure management. [Learn more](deploy_to_aws_lambda.md)
 
 * **AWS Fargate** - Containerized deployment with streaming support, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](deploy_to_aws_fargate.md)
+
+* **AWS App Runner** - Containerized deployment with streaming support, automated deployment, scaling, and load balancing, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](deploy_to_aws_apprunner.md)
 
 * **Amazon EKS** - Containerized deployment with streaming support, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](deploy_to_amazon_eks.md)
 
@@ -133,10 +135,10 @@ Built-in guides are available for several AWS services:
 
 For production deployments, implement comprehensive monitoring:
 
-1. **Tool Execution Metrics**: Monitor execution time and error rates for each tool
-2. **Token Usage**: Track token consumption for cost optimization
-3. **Response Times**: Monitor end-to-end response times
-4. **Error Rates**: Track and alert on agent errors
+1. **Tool Execution Metrics**: Monitor execution time and error rates for each tool.
+2. **Token Usage**: Track token consumption for cost optimization.
+3. **Response Times**: Monitor end-to-end response times.
+4. **Error Rates**: Track and alert on agent errors.
 
 Consider integrating with AWS CloudWatch for metrics collection and alerting.
 
@@ -150,6 +152,6 @@ Operating Strands agents in production requires careful consideration of configu
 
 - [Conversation Management](../../user-guide/concepts/agents/conversation-management.md)
 - [Streaming - Async Iterator](../../user-guide/concepts/streaming/async-iterators.md)
-- [Tool Development](../../user-guide/concepts/tools/tools_overview.md)
+- [Tool Development](../../user-guide/concepts/tools/index.md)
 - [Guardrails](../../user-guide/safety-security/guardrails.md)
 - [Responsible AI](../../user-guide/safety-security/responsible-ai.md)

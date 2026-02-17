@@ -9,3 +9,16 @@ __pycache__
 .idea
 .kiro
 *.egg-info
+
+node_modules
+uv.lock
+
+temp_python_sdk
+sdk-typescript
+package-lock.json
+
+# Generated documentation
+docs/api-reference/
+__*__/
+
+

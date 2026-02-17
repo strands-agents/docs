@@ -1,8 +1,11 @@
 # Ollama
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 Ollama is a framework for running open-source large language models locally. Strands provides native support for Ollama, allowing you to use locally-hosted models in your agents.
 
-The [`OllamaModel`](../../../api-reference/models.md#strands.models.ollama) class in Strands enables seamless integration with Ollama's API, supporting:
+The [`OllamaModel`](../../../api-reference/python/models/ollama.md#strands.models.ollama) class in Strands enables seamless integration with Ollama's API, supporting:
 
 - Text generation
 - Image understanding
@@ -80,7 +83,7 @@ agent("Tell me about Strands agents.") # Prints model output to stdout by defaul
 
 ## Configuration Options
 
-The [`OllamaModel`](../../../api-reference/models.md#strands.models.ollama) supports various [configuration parameters](../../../api-reference/models.md#strands.models.ollama.OllamaModel.OllamaConfig):
+The [`OllamaModel`](../../../api-reference/python/models/ollama.md#strands.models.ollama) supports various [configuration parameters](../../../api-reference/python/models/ollama.md#strands.models.ollama.OllamaModel.OllamaConfig):
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -193,7 +196,7 @@ factual_agent = Agent(model=factual_model)
 
 ### Structured Output
 
-Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
+Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/python/agent/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
 
 ```python
 from pydantic import BaseModel, Field

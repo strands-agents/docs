@@ -9,7 +9,7 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 | **Tool Used**      | http_request                           |
 | **API**            | National Weather Service API (no key required) |
 | **Complexity**     | Beginner                               |
-| **Agent Type**     | Single Agent                           |
+| **Agent Type**     | Single agent                           |
 | **Interaction**    | Command Line Interface                 |
 
 ## Tool Overview
@@ -66,7 +66,7 @@ The weather agent can be used in two primary ways:
 
 #### 1. Natural Language Instructions
 
-Users can interact with the National Weather Service API through conversational queries:
+Natural language interaction provides flexibility, allowing the agent to understand user intent and select the appropriate tool actions based on context. Users can interact with the National Weather Service API through conversational queries:
 
 ```python
 # Let the agent handle the API details
@@ -110,7 +110,7 @@ The agent transforms this technical data into conversational responses by:
 
 #### 2. Direct Tool Calls
 
-For developers who need programmatic control, Strands also supports direct method calls to the same API:
+For developers requiring programmatic control, Strands also supports direct method calls to the same API. This approach provides explicit control and is recommended for scenarios that benefit from predictable execution, such as API integrations with validation or transformation, database operations, or payment processing.
 
 ```python
 # Direct API method calls with Strands

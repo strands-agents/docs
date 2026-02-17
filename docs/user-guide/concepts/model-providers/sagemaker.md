@@ -1,5 +1,8 @@
 # Amazon SageMaker
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a fully managed machine learning service that provides infrastructure and tools for building, training, and deploying ML models at scale. The Strands Agents SDK implements a SageMaker provider, allowing you to run agents against models deployed on SageMaker inference endpoints, including both pre-trained models from SageMaker JumpStart and custom fine-tuned models. The provider is designed to work with models that support OpenAI-compatible chat completion APIs.
 
 For example, you can expose models like [Mistral-Small-24B-Instruct-2501](https://aws.amazon.com/blogs/machine-learning/mistral-small-24b-instruct-2501-is-now-available-on-sagemaker-jumpstart-and-amazon-bedrock-marketplace/) on SageMaker, which has demonstrated reliable performance for conversational AI and tool calling scenarios.
@@ -99,6 +102,6 @@ Ensure your deployed model supports OpenAI-compatible chat completion APIs and v
 
 ## References
 
-- [API Reference](../../../api-reference/models.md)
+- [API Reference](../../../api-reference/python/models/model.md)
 - [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)
 - [SageMaker Runtime API](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html)

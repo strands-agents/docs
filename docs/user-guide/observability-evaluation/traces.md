@@ -1,5 +1,7 @@
 # Traces
 
+{{ ts_not_supported("The 0.1.0 release of the TypeScript SDK does not include OpenTelemetry observability features. Support is planned for a future version. See issue [#69](https://github.com/strands-agents/sdk-typescript/issues/69) to track progress or contribute to the implementation.") }}
+
 Tracing is a fundamental component of the Strands SDK's observability framework, providing detailed insights into your agent's execution. Using the OpenTelemetry standard, Strands traces capture the complete journey of a request through your agent, including LLM interactions, retrievers, tool usage, and event loop processing.
 
 ## Understanding Traces in Strands
@@ -242,6 +244,7 @@ Common visualization options include:
 2. **Langfuse**: For Traces, evals, prompt management, and metrics
 3. **AWS X-Ray**: For AWS-based applications
 4. **Zipkin**: Lightweight distributed tracing
+5. **Opik**: For evaluating and optimizing multi-agent systems
 
 ## Local Development Setup
 

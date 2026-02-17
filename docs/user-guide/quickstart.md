@@ -61,7 +61,7 @@ See the [MCP server documentation](https://github.com/strands-agents/mcp-server)
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model. To change the default model, refer to [the Model Providers section](./quickstart/python.md#model-providers).
 
 To use the examples in this guide, you'll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
 
@@ -70,7 +70,7 @@ To use the examples in this guide, you'll need to configure your environment wit
 3. **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4. **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model. You'll need to enable model access in the Amazon Bedrock console following the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
 
 ## Project Setup
 
@@ -171,9 +171,9 @@ And that's it! We now have a running agent with powerful tools and abilities in 
 
 ## Understanding What Agents Did
 
-After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](../api-reference/agent.md#strands.agent.agent_result.AgentResult) object with comprehensive observability data.
+After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult) object with comprehensive observability data.
 
-Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](../api-reference/agent.md#strands.agent.agent_result.AgentResult), or export them using [OpenTelemetry](observability-evaluation/traces.md) to observability platforms.
+Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult), or export them using [OpenTelemetry](observability-evaluation/traces.md) to observability platforms.
 
 ??? code "Example result.metrics.get_summary() output"
 
@@ -379,7 +379,7 @@ See the [Logs documentation](observability-evaluation/logs.md) for more informat
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/models.md#strands.models.model.Model.get_config):
+Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/python/models/model.md#strands.models.model.Model.get_config):
 
 ```python
 from strands import Agent
@@ -436,6 +436,7 @@ More details in the [Amazon Bedrock Model Provider](concepts/model-providers/ama
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 - **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
+- **[Amazon Nova](concepts/model-providers/amazon-nova.md)** - API access to Amazon Nova models
 - **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
 - **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
 - **[Mistral](concepts/model-providers/mistral.md)** - Access to Mistral models
@@ -453,7 +454,7 @@ Strands provides two main approaches to capture streaming events from an agent: 
 
 ### Async Iterators
 
-For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](../api-reference/agent.md#strands.agent.agent.Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
+For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](../api-reference/python/agent/agent.md#strands.agent.agent.Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
 
 ```python
 import asyncio
@@ -490,7 +491,7 @@ The async iterator yields the same event types as the callback handler callbacks
 
 See the [Async Iterators](concepts/streaming/async-iterators.md) documentation for full details.
 
-> Note, Strands also offers an [`invoke_async()`](../api-reference/agent.md#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
+> Note, Strands also offers an [`invoke_async()`](../api-reference/python/agent/agent.md#strands.agent.agent.Agent.invoke_async) method for non-iterative async invocations.
 
 ### Callback Handlers (Callbacks)
 
@@ -503,19 +504,20 @@ import logging
 from strands import Agent
 from strands_tools import shell
 
-logger = logging.getLogger("my_agent")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 # Define a simple callback handler that logs instead of printing
 tool_use_ids = []
 def callback_handler(**kwargs):
     if "data" in kwargs:
-        # Log the streamed data chunks
-        logger.info(kwargs["data"], end="")
+        # Log the streamed chunks
+        logger.info(f"{kwargs['delta']}")
     elif "current_tool_use" in kwargs:
         tool = kwargs["current_tool_use"]
         if tool["toolUseId"] not in tool_use_ids:
             # Log the tool use
-            logger.info(f"\n[Using tool: {tool.get('name')}]")
+            logger.info(f"[Using tool: {tool.get('name')}]")
             tool_use_ids.append(tool["toolUseId"])
 
 # Create an agent with the callback handler
@@ -528,7 +530,7 @@ agent = Agent(
 result = agent("What operating system am I using?")
 
 # Print only the last response
-print(result.message)
+print(f"\n{result}")
 ```
 
 The callback handler is called in real-time as the agent thinks, uses tools, and responds.

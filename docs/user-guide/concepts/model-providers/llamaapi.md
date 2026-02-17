@@ -1,5 +1,8 @@
 # Llama API
 
+!!! info "Language Support"
+    This provider is only supported in Python.
+
 [Llama API](https://llama.developer.meta.com?utm_source=partner-strandsagent&utm_medium=website) is a Meta-hosted API service that helps you integrate Llama models into your applications quickly and efficiently.
 
 Llama API provides access to Llama models through a simple API interface, with inference provided by Meta, so you can focus on building AI-powered solutions without managing your own inference infrastructure.
@@ -67,7 +70,7 @@ If you encounter the error `ModuleNotFoundError: No module named 'llamaapi'`, th
 
 ### Structured Output
 
-Llama API models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that Llama models can understand.
+Llama API models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](../../../api-reference/python/agent/agent.md#strands.agent.agent.Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that Llama models can understand.
 
 ```python
 from pydantic import BaseModel, Field
@@ -106,5 +109,5 @@ print(f"Rating: {result.rating}")
 
 ## References
 
-- [API](../../../api-reference/models.md)
+- [API](../../../api-reference/python/models/model.md)
 - [LlamaAPI](https://llama.developer.meta.com/docs/)

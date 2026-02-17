@@ -66,9 +66,14 @@ load_dotenv()
 # os.environ['OPENSEARCH_HOST'] = "your-opensearch-host.us-west-2.aoss.amazonaws.com"
 # os.environ['AWS_ACCESS_KEY_ID'] = "your-aws-access-key-id"
 # os.environ['AWS_SECRET_ACCESS_KEY'] = "your-aws-secret-access-key"
-# Setup Neptune Analytics vector backend
-# os.environ['NEPTUNE_ANALYTICS_GRAPH_IDENTIFIER_VECTOR'] = "g-sample-graph-id"
-# Setup optional Neptune Analytics graph backend
+
+# For graph memory with Neptune, see:
+# https://docs.mem0.ai/open-source/features/graph-memory
+# Two options are available for Neptune integration:
+
+# Setup option 1: Neptune Database as graph backend
+# os.environ['NEPTUNE_DATABASE_ENDPOINT'] = "your-neptune-host.us-west-2.neptune.amazonaws.com"
+# Setup option 2: Neptune Analytics as vector and graph backend
 # os.environ['NEPTUNE_ANALYTICS_GRAPH_IDENTIFIER'] = "g-sample-graph-id"
 USER_ID = "mem0_user"
 

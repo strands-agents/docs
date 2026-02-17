@@ -11,7 +11,11 @@ By exploring these reference implementations, you'll gain practical insights int
 ## Prerequisites
 
 - Python 3.10 or higher
+- Strands Agents SDK
+- AWS credentials configured with access to a Bedrock model provider using the Claude 4 model (modifiable as needed)
 - For specific examples, additional requirements may be needed (see individual example READMEs)
+
+For more information, see the [Getting Started](../user-guide/quickstart.md) guide.
 
 ## Getting Started
 
@@ -41,7 +45,7 @@ Available Python examples:
 - [CLI Reference Agent](python/cli-reference-agent.md) - Example of Command-line reference agent implementation
 - [File Operations](python/file_operations.md) - Example of agent with file manipulation capabilities
 - [MCP Calculator](python/mcp_calculator.md) - Example of agent with Model Context Protocol capabilities
-- [Meta Tooling](python/meta_tooling.md) - Example of Agent with Meta tooling capabilities 
+- [Meta Tooling](python/meta_tooling.md) - Example of agent with Meta tooling capabilities 
 - [Multi-Agent Example](python/multi_agent_example/multi_agent_example.md) - Example of a multi-agent system
 - [Weather Forecaster](python/weather_forecaster.md) - Example of a weather forecasting agent with http_request capabilities
 
@@ -55,7 +59,16 @@ Available CDK examples:
 
 - [Deploy to EC2](cdk/deploy_to_ec2/README.md) - Guide for deploying agents to Amazon EC2 instances
 - [Deploy to Fargate](cdk/deploy_to_fargate/README.md) - Guide for deploying agents to AWS Fargate
+- [Deploy to App Runner](cdk/deploy_to_apprunner/README.md) - Guide for deploying agents to AWS App Runner
 - [Deploy to Lambda](cdk/deploy_to_lambda/README.md) - Guide for deploying agents to AWS Lambda
+
+### TypeScript Examples
+
+The `/examples/typescript` directory contains TypeScript-based examples demonstrating agent deployment and integration patterns. These examples showcase how to build and Deploy Typescript agents.
+
+Available TypeScript examples:
+
+- [Deploy to Bedrock AgentCore](typescript/deploy_to_bedrock_agentcore/README.md) - Complete example for deploying TypeScript agents to Amazon Bedrock AgentCore Runtime.
 
 ### Amazon EKS Example
 

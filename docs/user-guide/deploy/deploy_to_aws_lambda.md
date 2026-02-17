@@ -63,7 +63,39 @@ def handler(event: Dict[str, Any], _context) -> str:
 
 ## Infrastructure
 
-To deploy the above agent to Lambda using the TypeScript CDK, prepare your code for deployment by creating the Lambda definition and an associated Lambda layer ([`AgentLambdaStack.ts`][AgentLambdaStack]):
+To deploy the above agent to Lambda using the TypeScript CDK, prepare your code for deployment by creating the Lambda definition. You can use the official Strands Agents Lambda layer for quick setup, or create a custom layer if you need additional dependencies.
+
+### Using the Strands Agents Lambda Layer
+
+The fastest way to get started is to use the official Lambda layer, which includes the base `strands-agents` package:
+
+```
+arn:aws:lambda:{region}:856699698935:layer:strands-agents-py{python_version}-{architecture}:{layer_version}
+```
+
+**Example:**
+
+```
+arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
+```
+
+| Component | Options |
+|-----------|---------|
+| **Python Versions** | `3.10`, `3.11`, `3.12`, `3.13` |
+| **Architectures** | `x86_64`, `aarch64` |
+| **Regions** | `us-east-1`, `us-east-2`, `us-west-1`, `us-west-2`, `eu-west-1`, `eu-west-2`, `eu-west-3`, `eu-central-1`, `eu-north-1`, `ap-southeast-1`, `ap-southeast-2`, `ap-northeast-1`, `ap-northeast-2`, `ap-northeast-3`, `ap-south-1`, `sa-east-1`, `ca-central-1` |
+
+To check the size and details of a layer version:
+
+```bash
+aws lambda get-layer-version \
+    --layer-name arn:aws:lambda:{region}:856699698935:layer:strands-agents-py{python_version}-{architecture} \
+    --version-number {layer_version}
+```
+
+### Using a Custom Dependencies Layer
+
+If you need packages beyond the base `strands-agents` SDK (such as `strands-agents-tools`), create a custom layer ([`AgentLambdaStack.ts`][AgentLambdaStack]):
 
 ```typescript
 const packagingDirectory = path.join(__dirname, "../packaging");
@@ -177,14 +209,67 @@ aws lambda invoke --function-name AgentFunction \
 jq -r '.' ./output.json
 ```
 
+## Using MCP Tools on Lambda
+
+When using [Model Context Protocol (MCP)](../concepts/tools/mcp-tools.md) tools with Lambda, there are important considerations for connection lifecycle management.
+
+### MCP Connection Lifecycle
+
+**Establish a new MCP connection for each Lambda invocation.** Creating the `MCPClient` object itself is inexpensive - the costly operation is establishing the actual connection to the server. Use context managers to ensure connections are properly opened and closed:
+
+```python
+from mcp.client.streamable_http import streamablehttp_client
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+def handler(event, context):
+    mcp_client = MCPClient(
+        lambda: streamablehttp_client("https://your-mcp-server.example.com/mcp")
+    )
+
+    # Context manager ensures connection is opened and closed safely
+    with mcp_client:
+        tools = mcp_client.list_tools_sync()
+        agent = Agent(tools=tools)
+        response = agent(event.get("prompt"))
+
+    return str(response)
+```
+
+**Advanced: Reusing connections across invocations**
+
+For optimization, you can establish the connection at module level using `start()` to reuse it across Lambda warm invocations:
+
+```python
+from mcp.client.streamable_http import streamablehttp_client
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+# Create and start connection at module level (reused across warm invocations)
+mcp_client = MCPClient(
+    lambda: streamablehttp_client("https://your-mcp-server.example.com/mcp")
+)
+mcp_client.start()
+
+def handler(event, context):
+    tools = mcp_client.list_tools_sync()
+    agent = Agent(tools=tools)
+    response = agent(event.get("prompt"))
+    return str(response)
+```
+
+!!! warning "Multi-tenancy Considerations"
+    MCP connections are typically stateful to a particular conversation. Reusing a connection across invocations can lead to state leakage between different users or conversations. **Start with the context manager approach** and only optimize to connection reuse if needed, with careful consideration of your tenancy model.
+
 ## Summary
 
 The above steps covered:
 
  - Creating a Python handler that Lambda invokes to trigger an agent
- - Creating the CDK infrastructure to deploy to Lambda
- - Packaging up the Lambda handler and dependencies 
+ - Infrastructure options: official Lambda layer or custom dependencies layer
+ - Packaging up the Lambda handler and dependencies
  - Deploying the agent and infrastructure to an AWS account
+ - Using MCP tools with HTTP-based transports on Lambda
  - Manually testing the Lambda function  
 
 Possible follow-up tasks would be to:

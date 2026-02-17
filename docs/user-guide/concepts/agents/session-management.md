@@ -1,5 +1,7 @@
 # Session Management
 
+{{ ts_not_supported("Session Management is not currently supported in the TypeScript SDK, but will be coming soon!") }}
+
 Session management in Strands Agents provides a robust mechanism for persisting agent state and conversation history across multiple interactions. This enables agents to maintain context and continuity even when the application restarts or when deployed in distributed environments.
 
 ## Overview
@@ -7,11 +9,13 @@ Session management in Strands Agents provides a robust mechanism for persisting 
 A session represents all of stateful information that is needed by agents and multi-agent systems to function, including:
 
 **Single Agent Sessions**:
+
 - Conversation history (messages)
 - Agent state (key-value storage)
 - Other stateful information (like [Conversation Manager](./state.md#conversation-manager))
 
 **Multi-Agent Sessions**:
+
 - Orchestrator state and configuration
 - Individual agent states and result within the orchestrator
 - Cross-agent shared state and context
@@ -30,19 +34,25 @@ Beyond the built-in options, [third-party session managers](#third-party-session
 
 Simply create an agent with a session manager and use it:
 
-```python
-from strands import Agent
-from strands.session.file_session_manager import FileSessionManager
+=== "Python"
+    
+    ```python
+    from strands import Agent
+    from strands.session.file_session_manager import FileSessionManager
+    
+    # Create a session manager with a unique session ID
+    session_manager = FileSessionManager(session_id="test-session")
+    
+    # Create an agent with the session manager
+    agent = Agent(session_manager=session_manager)
+    
+    # Use the agent - all messages and state are automatically persisted
+    agent("Hello!")  # This conversation is persisted
+    ```
 
-# Create a session manager with a unique session ID
-session_manager = FileSessionManager(session_id="test-session")
+{{ ts_not_supported_code() }}
 
-# Create an agent with the session manager
-agent = Agent(session_manager=session_manager)
-
-# Use the agent - all messages and state are automatically persisted
-agent("Hello!")  # This conversation is persisted
-```
+    
 
 The conversation, and associated state, is persisted to the underlying filesystem.
 
@@ -75,12 +85,12 @@ result = graph("Research and write about AI")
 
 Strands offers two built-in session managers for persisting agent sessions:
 
-1. [**FileSessionManager**](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager): Stores sessions in the local filesystem
-2. [**S3SessionManager**](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager): Stores sessions in Amazon S3 buckets
+1. [**FileSessionManager**](../../../api-reference/python/session/file_session_manager.md#strands.session.file_session_manager.FileSessionManager): Stores sessions in the local filesystem
+2. [**S3SessionManager**](../../../api-reference/python/session/s3_session_manager.md#strands.session.s3_session_manager.S3SessionManager): Stores sessions in Amazon S3 buckets
 
 ### FileSessionManager
 
-The [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager) provides a simple way to persist both single agent and multi-agent sessions to the local filesystem:
+The [`FileSessionManager`](../../../api-reference/python/session/file_session_manager.md#strands.session.file_session_manager.FileSessionManager) provides a simple way to persist both single agent and multi-agent sessions to the local filesystem:
 
 ```python
 from strands import Agent
@@ -112,7 +122,7 @@ graph = Graph(
 
 #### File Storage Structure
 
-When using [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager), sessions are stored in the following directory structure:
+When using [`FileSessionManager`](../../../api-reference/python/session/file_session_manager.md#strands.session.file_session_manager.FileSessionManager), sessions are stored in the following directory structure:
 
 ```
 /<sessions_dir>/
@@ -131,7 +141,7 @@ When using [`FileSessionManager`](../../../api-reference/session.md#strands.sess
 
 ### S3SessionManager
 
-For cloud-based persistence, especially in distributed environments, use the [`S3SessionManager`](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager):
+For cloud-based persistence, especially in distributed environments, use the [`S3SessionManager`](../../../api-reference/python/session/s3_session_manager.md#strands.session.s3_session_manager.S3SessionManager):
 
 ```python
 from strands import Agent
@@ -166,7 +176,7 @@ result = swarm("Coordinate the task across agents")
 ```
 #### S3 Storage Structure
 
-Just like in the [`FileSessionManager`](../../../api-reference/session.md#strands.session.file_session_manager.FileSessionManager), sessions are stored with the following structure in the s3 bucket:
+Just like in the [`FileSessionManager`](../../../api-reference/python/session/file_session_manager.md#strands.session.file_session_manager.FileSessionManager), sessions are stored with the following structure in the s3 bucket:
 
 ```
 <s3_key_prefix>/
@@ -185,7 +195,7 @@ Just like in the [`FileSessionManager`](../../../api-reference/session.md#strand
 
 #### Required S3 Permissions
 
-To use the [`S3SessionManager`](../../../api-reference/session.md#strands.session.s3_session_manager.S3SessionManager), your AWS credentials must have the following S3 permissions:
+To use the [`S3SessionManager`](../../../api-reference/python/session/s3_session_manager.md#strands.session.s3_session_manager.S3SessionManager), your AWS credentials must have the following S3 permissions:
 
 - `s3:PutObject` - To create and update session data
 - `s3:GetObject` - To retrieve session data
@@ -225,12 +235,14 @@ The session management system in Strands Agents works through a combination of e
 Session persistence is automatically triggered by several key events in the agent and multi-agent lifecycle:
 
 **Single Agent Events**
+
 - **Agent Initialization**: When an agent is created with a session manager, it automatically restores any existing state and messages from the session.
 - **Message Addition**: When a new message is added to the conversation, it's automatically persisted to the session.
 - **Agent Invocation**: After each agent invocation, the agent state is synchronized with the session to capture any updates.
 - **Message Redaction**: When sensitive information needs to be redacted, the session manager can replace the original message with a redacted version while maintaining conversation flow.
 
 **Multi-Agent Events:**
+
 - **Multi-Agent Initialization**:  When an orchestrator is created with a session manager, it automatically restores state from the session.
 - **Node Execution**: After each node invocation, synchronizes orchestrator state after node transitions
 - **Multi-Agent Invocation**: After multiagent finished, captures final orchestrator state after execution
@@ -244,7 +256,7 @@ Session data is stored using these key data models:
 
 **Session**
 
-The [`Session`](../../../api-reference/types.md#strands.types.session.Session) model is the top-level container for session data:
+The [`Session`](../../../api-reference/python/types/session.md#strands.types.session.Session) model is the top-level container for session data:
 
 - **Purpose**: Provides a namespace for organizing multiple agents and their interactions
 - **Key Fields**:
@@ -255,7 +267,7 @@ The [`Session`](../../../api-reference/types.md#strands.types.session.Session) m
 
 **SessionAgent**
 
-The [`SessionAgent`](../../../api-reference/types.md#strands.types.session.SessionAgent) model stores agent-specific data:
+The [`SessionAgent`](../../../api-reference/python/types/session.md#strands.types.session.SessionAgent) model stores agent-specific data:
 
 - **Purpose**: Maintains the state and configuration of a specific agent within a session
 - **Key Fields**:
@@ -267,7 +279,7 @@ The [`SessionAgent`](../../../api-reference/types.md#strands.types.session.Sessi
 
 **SessionMessage**
 
-The [`SessionMessage`](../../../api-reference/types.md#strands.types.session.SessionMessage) model stores individual messages in the conversation:
+The [`SessionMessage`](../../../api-reference/python/types/session.md#strands.types.session.SessionMessage) model stores individual messages in the conversation:
 
 - **Purpose**: Preserves the conversation history with support for message redaction
 - **Key Fields**:

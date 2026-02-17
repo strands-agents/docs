@@ -5,7 +5,7 @@
 This example demonstrates Strands Agents' advanced meta-tooling capabilities - the ability of an agent
 to create, load, and use custom tools dynamically at runtime.
 
-It creates custom tools using the Agent's built-in tools for file operations and implicit tool calling.
+It creates custom tools using the agent's built-in tools for file operations and implicit tool calling.
 """
 
 import os
