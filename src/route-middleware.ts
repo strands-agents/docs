@@ -90,7 +90,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   // Check if we're on a Python API page
   if (currentSlug.startsWith('api/python')) {
     const docs = await getCollection('docs')
-    const docInfos: DocInfo[] = docs.map((doc) => ({
+    const docInfos: DocInfo[] = docs.map((doc: { id: string; data: { title: unknown } }) => ({
       id: doc.id,
       title: doc.data.title as string,
     }))
@@ -115,7 +115,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   // Check if we're on a TypeScript API page
   if (currentSlug.startsWith('api/typescript')) {
     const docs = await getCollection('docs')
-    const docInfos: DocInfo[] = docs.map((doc) => ({
+    const docInfos: DocInfo[] = docs.map((doc: { id: string; data: { title: unknown; category?: unknown } }) => ({
       id: doc.id,
       title: doc.data.title as string,
       category: doc.data.category as string | undefined,
