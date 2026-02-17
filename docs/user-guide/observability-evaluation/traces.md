@@ -1,7 +1,5 @@
 # Traces
 
-{{ ts_not_supported("The 0.1.0 release of the TypeScript SDK does not include OpenTelemetry observability features. Support is planned for a future version. See issue [#69](https://github.com/strands-agents/sdk-typescript/issues/69) to track progress or contribute to the implementation.") }}
-
 Tracing is a fundamental component of the Strands SDK's observability framework, providing detailed insights into your agent's execution. Using the OpenTelemetry standard, Strands traces capture the complete journey of a request through your agent, including LLM interactions, retrievers, tool usage, and event loop processing.
 
 ## Understanding Traces in Strands
@@ -89,7 +87,13 @@ Strands natively integrates with OpenTelemetry, an industry standard for distrib
 
 ## Enabling Tracing
 
-!!! warning "To enable OTEL exporting, install Strands Agents with `otel` extra dependencies: `pip install 'strands-agents[otel]'`"
+=== "Python"
+
+    !!! warning "To enable OTEL exporting, install Strands Agents with `otel` extra dependencies: `pip install 'strands-agents[otel]'`"
+
+=== "TypeScript"
+
+    !!! warning "To enable OTEL exporting, install the OpenTelemetry peer dependencies: `npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/resources @opentelemetry/exporter-trace-otlp-http`"
 
 
 ### Environment Variables
@@ -106,44 +110,81 @@ export OTEL_EXPORTER_OTLP_HEADERS="key1=value1,key2=value2"
 
 ### Code Configuration
 
-```python
-from strands import Agent
+=== "Python"
 
-# Option 1: Skip StrandsTelemetry if global tracer provider and/or meter provider are already configured
-# (your existing OpenTelemetry setup will be used automatically)
-agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
-    system_prompt="You are a helpful AI assistant"
-)
+    ```python
+    from strands import Agent
 
-# Option 2: Use StrandsTelemetry to handle complete OpenTelemetry setup
-# (Creates new tracer provider and sets it as global)
-from strands.telemetry import StrandsTelemetry
+    # Option 1: Skip StrandsTelemetry if global tracer provider and/or meter provider are already configured
+    # (your existing OpenTelemetry setup will be used automatically)
+    agent = Agent(
+        model="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        system_prompt="You are a helpful AI assistant"
+    )
 
-strands_telemetry = StrandsTelemetry()
-strands_telemetry.setup_otlp_exporter()     # Send traces to OTLP endpoint
-strands_telemetry.setup_console_exporter()  # Print traces to console
-strands_telemetry.setup_meter(
-    enable_console_exporter=True,
-    enable_otlp_exporter=True)       # Setup new meter provider and sets it as global
+    # Option 2: Use StrandsTelemetry to handle complete OpenTelemetry setup
+    # (Creates new tracer provider and sets it as global)
+    from strands.telemetry import StrandsTelemetry
 
-# Option 3: Use StrandsTelemetry with your own tracer provider
-# (Keeps your tracer provider, adds Strands exporters without setting global)
-from strands.telemetry import StrandsTelemetry
+    strands_telemetry = StrandsTelemetry()
+    strands_telemetry.setup_otlp_exporter()     # Send traces to OTLP endpoint
+    strands_telemetry.setup_console_exporter()  # Print traces to console
+    strands_telemetry.setup_meter(
+        enable_console_exporter=True,
+        enable_otlp_exporter=True)       # Setup new meter provider and sets it as global
 
-strands_telemetry = StrandsTelemetry(tracer_provider=user_tracer_provider)
-strands_telemetry.setup_meter(enable_otlp_exporter=True)
-strands_telemetry.setup_otlp_exporter().setup_console_exporter()  # Chaining supported
+    # Option 3: Use StrandsTelemetry with your own tracer provider
+    # (Keeps your tracer provider, adds Strands exporters without setting global)
+    from strands.telemetry import StrandsTelemetry
 
-# Create agent (tracing will be enabled automatically)
-agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
-    system_prompt="You are a helpful AI assistant"
-)
+    strands_telemetry = StrandsTelemetry(tracer_provider=user_tracer_provider)
+    strands_telemetry.setup_meter(enable_otlp_exporter=True)
+    strands_telemetry.setup_otlp_exporter().setup_console_exporter()  # Chaining supported
 
-# Use agent normally
-response = agent("What can you help me with?")
-```
+    # Create agent (tracing will be enabled automatically)
+    agent = Agent(
+        model="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        system_prompt="You are a helpful AI assistant"
+    )
+
+    # Use agent normally
+    response = agent("What can you help me with?")
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { telemetry, Agent } from '@strands-agents/sdk'
+
+    // Option 1: Skip setupTracer() if a global tracer provider is already configured
+    // (your existing OpenTelemetry setup will be used automatically)
+    const agent1 = new Agent({
+      systemPrompt: 'You are a helpful AI assistant',
+    })
+
+    // Option 2: Use telemetry.setupTracer() to handle complete OpenTelemetry setup
+    // (creates a new tracer provider and registers it as global)
+    telemetry.setupTracer({
+      exporters: { otlp: true, console: true }, // Send traces to OTLP endpoint and console debug
+    })
+
+    // Option 3: Use setupTracer() with your own tracer provider
+    import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
+
+    const provider = new NodeTracerProvider()
+    telemetry.setupTracer({
+      provider,
+      exporters: { otlp: true, console: true },
+    })
+
+    // Create agent (tracing will be enabled automatically)
+    const agent = new Agent({
+      systemPrompt: 'You are a helpful AI assistant',
+    })
+
+    // Use agent normally
+    const result = await agent.invoke('What can you help me with?')
+    ```
 
 ## Trace Structure
 
@@ -273,13 +314,23 @@ Then access the Jaeger UI at http://localhost:16686 to view your traces.
 
 You can also setup console export to inspect the spans:
 
-```python
+=== "Python"
 
-from strands.telemetry import StrandsTelemetry
+    ```python
+    from strands.telemetry import StrandsTelemetry
 
-StrandsTelemetry().setup_console_exporter()
+    StrandsTelemetry().setup_console_exporter()
+    ```
 
-```
+=== "TypeScript"
+
+    ```typescript
+    import { telemetry } from '@strands-agents/sdk'
+
+    telemetry.setupTracer({
+      exporters: { console: true },
+    })
+    ```
 
 
 ## Advanced Configuration
@@ -288,59 +339,112 @@ StrandsTelemetry().setup_console_exporter()
 
 For high-volume applications, you may want to implement sampling to reduce the volume of data to do this you can utilize the default [Open Telemetry Environment](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/) variables:
 
-```python
-# Example: Sample 10% of traces
-os.environ["OTEL_TRACES_SAMPLER"] = "traceidratio"
-os.environ["OTEL_TRACES_SAMPLER_ARG"] = "0.5"
+```bash
+# Example: Sample 50% of traces
+export OTEL_TRACES_SAMPLER="traceidratio"
+export OTEL_TRACES_SAMPLER_ARG="0.5"
 ```
 
 ### Custom Attribute Tracking
 
 You can add custom attributes to any span:
 
-```python
-agent = Agent(
-    system_prompt="You are a helpful assistant that provides concise responses.",
-    tools=[http_request, calculator],
-    trace_attributes={
-        "session.id": "abc-1234",
-        "user.id": "user-email-example@domain.com",
-        "tags": [
-            "Agent-SDK",
-            "Okatank-Project",
-            "Observability-Tags",
-        ]
-    },
-)
-```
+=== "Python"
+
+    ```python
+    agent = Agent(
+        system_prompt="You are a helpful assistant that provides concise responses.",
+        tools=[http_request, calculator],
+        trace_attributes={
+            "session.id": "abc-1234",
+            "user.id": "user-email-example@domain.com",
+            "tags": [
+                "Agent-SDK",
+                "Okatank-Project",
+                "Observability-Tags",
+            ]
+        },
+    )
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    const agent = new Agent({
+      systemPrompt: 'You are a helpful assistant that provides concise responses.',
+      tools: [httpRequest, calculator],
+      traceAttributes: {
+        'session.id': 'abc-1234',
+        'user.id': 'user-email-example@domain.com',
+        'tags': [
+            'Agent-SDK',
+            'Okatank-Project',
+            'Observability-Tags',
+        ],
+      },
+    })
+    ```
 
 ### Configuring the exporters from source code
 
-The `StrandsTelemetry().setup_console_exporter()` and `StrandsTelemetry().setup_otlp_exporter()` methods accept keyword arguments that are passed to OpenTelemetry's [`ConsoleSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.export.html#opentelemetry.sdk.trace.export.ConsoleSpanExporter) and [`OTLPSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/exporter/otlp/otlp.html#opentelemetry.exporter.otlp.proto.http.trace_exporter.OTLPSpanExporter) initializers, respectively. This allows you to save the log lines to a file or set up the OTLP endpoints from Python code:
+=== "Python"
 
-```python
-from os import linesep
-from strands.telemetry import StrandsTelemetry
+    The `StrandsTelemetry().setup_console_exporter()` and `StrandsTelemetry().setup_otlp_exporter()` methods accept keyword arguments that are passed to OpenTelemetry's [`ConsoleSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/sdk/trace.export.html#opentelemetry.sdk.trace.export.ConsoleSpanExporter) and [`OTLPSpanExporter`](https://opentelemetry-python.readthedocs.io/en/latest/exporter/otlp/otlp.html#opentelemetry.exporter.otlp.proto.http.trace_exporter.OTLPSpanExporter) initializers, respectively. This allows you to save the log lines to a file or set up the OTLP endpoints from Python code:
 
-strands_telemetry = StrandsTelemetry()
+    ```python
+    from os import linesep
+    from strands.telemetry import StrandsTelemetry
 
-# Save telemetry to a local file and configure the serialization format
-logfile = open("my_log.jsonl", "wt")
-strands_telemetry.setup_console_exporter(
-    out=logfile,
-    formatter=lambda span: span.to_json() + linesep,
-)
-# ... your agent-running code goes here ...
-logfile.close()
+    strands_telemetry = StrandsTelemetry()
 
-# Configure OTLP endpoints programmatically
-strands_telemetry.setup_otlp_exporter(
-    endpoint="http://collector.example.com:4318",
-    headers={"key1": "value1", "key2": "value2"},
-)
-```
+    # Save telemetry to a local file and configure the serialization format
+    logfile = open("my_log.jsonl", "wt")
+    strands_telemetry.setup_console_exporter(
+        out=logfile,
+        formatter=lambda span: span.to_json() + linesep,
+    )
+    # ... your agent-running code goes here ...
+    logfile.close()
 
-For more information about the accepted arguments, refer to `ConsoleSpanExporter` and `OTLPSpanExporter` in the [OpenTelemetry API documentation](https://opentelemetry-python.readthedocs.io).
+    # Configure OTLP endpoints programmatically
+    strands_telemetry.setup_otlp_exporter(
+        endpoint="http://collector.example.com:4318",
+        headers={"key1": "value1", "key2": "value2"},
+    )
+    ```
+
+    For more information about the accepted arguments, refer to `ConsoleSpanExporter` and `OTLPSpanExporter` in the [OpenTelemetry API documentation](https://opentelemetry-python.readthedocs.io).
+
+=== "TypeScript"
+
+    The `telemetry.setupTracer()` function reads OTLP configuration from standard OpenTelemetry environment variables (`OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_HEADERS`). For full control over exporter configuration, provide your own `NodeTracerProvider`:
+
+    ```typescript
+    import { telemetry } from '@strands-agents/sdk'
+    import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
+    import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base'
+    import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
+
+    const provider = new NodeTracerProvider()
+
+    // Configure OTLP endpoint programmatically
+    provider.addSpanProcessor(
+      new BatchSpanProcessor(
+        new OTLPTraceExporter({
+          url: 'http://collector.example.com:4318/v1/traces',
+          headers: { key1: 'value1', key2: 'value2' },
+        })
+      )
+    )
+
+    // Add console exporter for debugging
+    provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()))
+
+    // Register the provider with Strands
+    telemetry.setupTracer({ provider })
+    ```
+
+    For more information about the accepted arguments, refer to the [OpenTelemetry JS documentation](https://opentelemetry.io/docs/languages/js/).
 
 ## Best Practices
 
@@ -365,32 +469,59 @@ For more information about the accepted arguments, refer to `ConsoleSpanExporter
 
 This example demonstrates capturing a complete trace of an agent interaction:
 
-```python
-from strands import Agent
-from strands.telemetry import StrandsTelemetry
-import os
+=== "Python"
 
-os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:4318"
-strands_telemetry = StrandsTelemetry()
-strands_telemetry.setup_otlp_exporter()      # Send traces to OTLP endpoint
-strands_telemetry.setup_console_exporter()   # Print traces to console
+    ```python
+    from strands import Agent
+    from strands.telemetry import StrandsTelemetry
+    import os
 
-# Create agent
-agent = Agent(
-    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
-    system_prompt="You are a helpful AI assistant"
-)
+    os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:4318"
+    strands_telemetry = StrandsTelemetry()
+    strands_telemetry.setup_otlp_exporter()      # Send traces to OTLP endpoint
+    strands_telemetry.setup_console_exporter()   # Print traces to console
 
-# Execute a series of interactions that will be traced
-response = agent("Find me information about Mars. What is its atmosphere like?")
-print(response)
+    # Create agent
+    agent = Agent(
+        model="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        system_prompt="You are a helpful AI assistant"
+    )
 
-# Ask a follow-up that uses tools
-response = agent("Calculate how long it would take to travel from Earth to Mars at 100,000 km/h")
-print(response)
+    # Execute a series of interactions that will be traced
+    response = agent("Find me information about Mars. What is its atmosphere like?")
+    print(response)
 
-# Each interaction creates a complete trace that can be visualized in your tracing tool
-```
+    # Ask a follow-up that uses tools
+    response = agent("Calculate how long it would take to travel from Earth to Mars at 100,000 km/h")
+    print(response)
+
+    # Each interaction creates a complete trace that can be visualized in your tracing tool
+    ```
+
+=== "TypeScript"
+
+    ```typescript
+    import { telemetry, Agent } from '@strands-agents/sdk'
+
+    // Set environment variables for OTLP endpoint
+    process.env.OTEL_EXPORTER_OTLP_ENDPOINT = 'http://localhost:4318'
+
+    // Configure telemetry
+    telemetry.setupTracer({
+      exporters: { otlp: true, console: true },
+    })
+
+    // Create agent
+    const agent = new Agent({
+      systemPrompt: 'You are a helpful AI assistant',
+    })
+
+    // Execute interactions that will be traced
+    const response = await agent.invoke('Find me information about Mars. What is its atmosphere like?')
+    console.log(response.result)
+
+    // Each interaction creates a complete trace that can be visualized in your tracing tool
+    ```
 
 ## Sending traces to CloudWatch X-ray
 There are several ways to send traces, metrics, and logs to CloudWatch. Please visit the following pages for more details and configurations:
