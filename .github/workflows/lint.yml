@@ -21,3 +21,17 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Clone SDK
+        run: npm run sdk:clone
+
+      - name: Build SDK
+        run: npm install
+        working-directory: .build/sdk-typescript
+
+      - name: Install snippet dependencies
+        run: npm install
+        working-directory: test-snippets
+
+      - name: Typecheck snippets
+        run: npm run typecheck:snippets

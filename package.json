@@ -6,6 +6,7 @@
     "build": "astro build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
+    "typecheck:snippets": "npm run typecheck --prefix test-snippets",
     "format": "prettier --write docs",
     "format:check": "prettier --check docs",
     "docs:clone": "rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git",
