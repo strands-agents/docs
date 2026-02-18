@@ -256,7 +256,8 @@ export function resolveHref(
     const pathOnly = hashIndex !== -1 ? resolved.slice(0, hashIndex) : resolved
     const slugPart = pathOnly.replace(/^\//, '').replace(/\/$/, '')
     const found = docSlugs.has(slugPart)
-    return { resolvedHref: resolved, found }
+    // Apply base path for @api links since they resolve to absolute paths
+    return { resolvedHref: pathWithBase(resolved), found }
   }
 
   if (!isRelativeLink(href)) {
