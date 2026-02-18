@@ -1,0 +1,42 @@
+# Combined CI workflow for typecheck and tests.
+# Both require cms:build which is slow (~50s), so we run it once and do all checks sequentially.
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review, review_requested, review_request_removed ]
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run cms:build
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Typecheck snippets
+        run: npm run typecheck:snippets
+
+      # Astro 5's content layer only generates data-store.json when the dev server runs.
+      # Without it, vitest tests using getCollection() fail with "collection does not exist".
+      # See: https://github.com/withastro/astro/issues/12836
+      - name: Prepare tests
+        run: npm run test:prep
+
+      - name: Test
+        run: npm test
