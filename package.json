@@ -5,6 +5,7 @@
   "scripts": {
     "build": "astro build",
     "test": "vitest run",
+    "test:prep": "timeout 10s npm run cms:dev || true",
     "typecheck": "tsc --noEmit",
     "typecheck:snippets": "npm run typecheck --prefix test-snippets",
     "format": "prettier --write docs",

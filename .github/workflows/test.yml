@@ -22,8 +22,5 @@ jobs:
       - name: Build CMS and run tests
         run: |
           npm run cms:build
-          echo "=== Content in src/content/docs ==="
-          ls -la src/content/docs/ | head -20
-          echo "=== .astro directory ==="
-          ls -la .astro/
+          npm run test:prep
           npm test
