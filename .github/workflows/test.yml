@@ -20,4 +20,10 @@ jobs:
         run: npm install
 
       - name: Build CMS and run tests
-        run: npm run cms:build && npm run test
+        run: |
+          npm run cms:build
+          echo "=== Content in src/content/docs ==="
+          ls -la src/content/docs/ | head -20
+          echo "=== .astro directory ==="
+          ls -la .astro/
+          npm test
