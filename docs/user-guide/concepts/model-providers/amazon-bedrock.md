@@ -106,6 +106,22 @@ For production environments, it's recommended to scope down the `Resource` to sp
 
     For complete details on credential configuration and resolution, see the [boto3 credentials documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#configuring-credentials).
 
+    **Option 4: aws login**
+
+    `aws login` provides browser-based authentication for temporary credentials. Requires AWS CLI version 2.32.0 or later.
+
+    ```bash
+    aws login
+    ```
+
+    To use `aws login` with enhanced performance, install botocore with CRT support:
+
+    ```bash
+    pip install botocore[crt]
+    ```
+
+    See the [Login for AWS local development using console credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html) documentation for more details.
+
 === "TypeScript"
 
     The TypeScript SDK uses the [AWS SDK for JavaScript v3](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html) to make calls to Amazon Bedrock. The SDK has its own credential resolution system that determines which credentials to use when making requests to AWS.
