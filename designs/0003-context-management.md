@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the strategic direction for context management improvements in Strands Agents. It is a high-level roadmap, not a detailed implementation spec. Individual features will require their own design documents before implementation. This document is intended for SDK contributors and advanced users familiar with Strands Agents internals
+This document outlines the strategic direction for context management improvements in Strands Agents. It is a high-level roadmap, not a detailed implementation spec. Individual features will require their own design documents before implementation. This document is intended for SDK contributors and advanced users familiar with Strands Agents internals.
 
 ---
 
@@ -30,7 +30,7 @@ Tool definitions and results both consume context. On the definition side, all r
 
 #### Design Principles
 
-1. Paved paths over escape hatches: Guide users through well-designed interfaces that make the right thing easy. Hooks already provide escape hatches for advanced customization, but the primary path should be a first-class interface. If users consistently reach for hooks to achieve common outcomes, that's a signal to pave that path with a proper abstraction.
+1. Paved paths over escape hatches: Guide users through well-designed interfaces that make the right thing easy. Plugins already provide escape hatches for advanced customization, but the primary path should be a first-class interface. If users consistently reach for plugins to achieve common outcomes, that's a signal to pave that path with a proper abstraction.
 2. Autonomy over configuration: Agents should be dynamic throughout execution, not just at startup. Static configuration that becomes fixed once the run starts limits agent capability. Prefer designs where the agent can adapt its own behavior mid-run based on task needs.
 3. Research-backed: Features grounded in data, not speculation
 4. Provider Agnostic: Core strategies work across all model providers
@@ -92,7 +92,7 @@ Notably, temporal order is not always the best ordering for retrieved context. L
 
 Tool definitions consume context alongside messages. When agents have large tool sets, irrelevant tools dilute the model's attention and degrade selection accuracy. This track explores two approaches: filtering tools by relevance, and replacing large tool sets with code generation.
 
-Dynamic Tool Loading
+#### Dynamic Tool Loading
 
 Every registered tool is sent with every request. An agent with 100 tools sends all 100 definitions regardless of whether the user's current task needs them. This wastes context and confuses tool selection. The same pattern applies beyond tools: agent SOPs, skills, and other capability definitions all consume context and could benefit from relevance-based filtering. AgentCore Gateway solves this for managed service users by embedding tool descriptions and filtering by semantic similarity to the current query. MCP has a draft proposal for tool search ([SEP-1821](https://github.com/modelcontextprotocol/specification/issues/1821)), but it only addresses filtering within a single server. When an agent connects to multiple tool sources, there's no cross-source search.
 Proposed solution. We propose two approaches for dynamically switching tools based on relevance:
@@ -108,7 +108,9 @@ Agent(
 ```
 This addresses gaps that managed services and protocol extensions cannot fill. AgentCore Gateway only works with remote MCPs; local MCP servers are invisible to it. MCP's SEP-1821 only addresses filtering within a single server. When an agent connects to multiple MCP sources, there's no cross-source search. A client-side dynamic registry solves both: it works with any tool source (local or remote) and searches across all of them.
 
-#### Autonomous approach: Providing a meta-tool `load_relevant_tools` that lets the LLM decide when to discover and load additional capabilities. This approach gives the agent full control over its toolkit expansion, allowing it to request specific tools as the task evolves. Rather than rigid upfront filtering, this leans into agent autonomy: start with a relevant subset, but let the agent expand its toolkit when needed.
+#### Autonomous Approach
+
+Providing a meta-tool `load_relevant_tools` that lets the LLM decide when to discover and load additional capabilities. This approach gives the agent full control over its toolkit expansion, allowing it to request specific tools as the task evolves. Rather than rigid upfront filtering, this leans into agent autonomy: start with a relevant subset, but let the agent expand its toolkit when needed.
 ```
 def load_relevant_tools(query: str, limit: int = 10) -> list[ToolDescription]:
     """Search for additional tools by description."""
@@ -148,18 +150,20 @@ These are a new class of tools: meta-tools that operate on the agent's own state
 
 This work plan outlines the prioritized issues we plan to tackle as part of this epic context epic. Importantly, we already have several issues filed in GitHub. So those will be prioritized along with the new suggestions in this document.
 
-1. Track agent.messages token size S High — Expose current context token count as a metric (#1197)
-2. Token estimation API M Medium — Needs design around model switching (token definitions change per model/provider) (#1294)
-3. Context limit property on Model S Medium — Add a property + lookup table per provider (#1295). Depends on: 2
-4. Code sandbox XL Medium — Replace large tool sets with a single execute_code tool backed by an isolated sandbox (#1676)
-5. Large tool result externalization hook S High — Uses existing hooks system; immediate value for the "my result is too large" pain point (#1296)
-6. Proactive context compression M Medium — Most requested context feature (#555). Depends on: 2, 3
-7. In-event-loop context management M Medium — Manage context within a cycle for tool-heavy agents (#298)
-8. Semantic dynamic tool registry XL Medium — Needs design doc + vector store integration (#1677)
-9. Large content aliasing M Low — Externalize oversized results so agents navigate on demand instead of inlining (#1678). Depends on: 5
-10. Bridge ConversationManager and SessionManager L Low — Foundational plumbing that unlocks #13 and #14 (#1679)
-11. Autonomous tool discovery meta-tool M Low — load_relevant_tools as a standalone capability without full registry (#1680)
-12. Autonomous delegation meta-tool M Low — Migration from existing multi-agent patterns; high standalone value (#1681)
-13. Context navigation meta-tools L Low — First "agent manages its own memory" capability (#1682). Depends on: 10
-14. Tiered memory (MemGPT-inspired) XL Low — Capstone of conversation context track (#1683). Depends on: 10, 13
+| # | Name | Size | Priority | Description | Dependencies |
+|---|------|------|----------|-------------|--------------|
+| 1 | Track agent.messages token size | S | High | Expose current context token count as a metric (#1197) | — |
+| 2 | Token estimation API | M | Medium | Needs design around model switching (token definitions change per model/provider) (#1294) | — |
+| 3 | Context limit property on Model | S | Medium | Add a property + lookup table per provider (#1295) | 2 |
+| 4 | Code sandbox | XL | Medium | Replace large tool sets with a single execute_code tool backed by an isolated sandbox (#1676) | — |
+| 5 | Large tool result externalization hook | S | High | Uses existing hooks system; immediate value for the "my result is too large" pain point (#1296) | — |
+| 6 | Proactive context compression | M | Medium | Most requested context feature (#555) | 2, 3 |
+| 7 | In-event-loop context management | M | Medium | Manage context within a cycle for tool-heavy agents (#298) | — |
+| 8 | Autonomous delegation meta-tool | M | Medium | Migration from existing multi-agent patterns; high standalone value (#1681) | — |
+| 9 | Semantic dynamic tool registry | XL | Medium | Needs design doc + vector store integration (#1677) | — |
+| 10 | Large content aliasing | M | Low | Externalize oversized results so agents navigate on demand instead of inlining (#1678) | 5 |
+| 11 | Bridge ConversationManager and SessionManager | L | Low | Foundational plumbing that unlocks 13 and 14 (#1679) | — |
+| 12 | Autonomous tool discovery meta-tool | M | Low | load_relevant_tools as a standalone capability without full registry (#1680) | — |
+| 13 | Context navigation meta-tools | S | Low | First "agent manages its own memory" capability (#1682) | 11 |
+| 14 | Tiered memory (MemGPT-inspired) | XL | Low | Capstone of conversation context track (#1683) | 11, 13 |
 
