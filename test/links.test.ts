@@ -1,8 +1,77 @@
 import { describe, it, expect } from 'vitest'
 import { getCollection } from 'astro:content'
-import { isRelativeLink, normalizePath, resolveRelativeLink, findDocSlug, resolveHref } from '../src/util/links'
+import {
+  isRelativeLink,
+  normalizePath,
+  resolveRelativeLink,
+  findDocSlug,
+  resolveHref,
+  isApiShorthand,
+  resolveApiShorthand,
+} from '../src/util/links'
 
 describe('Link Utilities', () => {
+  describe('isApiShorthand', () => {
+    it('should return true for @api/python links', () => {
+      expect(isApiShorthand('@api/python/strands.agent.agent')).toBe(true)
+      expect(isApiShorthand('@api/python/strands.agent.agent_result')).toBe(true)
+      expect(isApiShorthand('@api/python/strands.models.bedrock')).toBe(true)
+    })
+
+    it('should return true for @api/typescript links', () => {
+      expect(isApiShorthand('@api/typescript/Agent')).toBe(true)
+      expect(isApiShorthand('@api/typescript/BedrockModel')).toBe(true)
+    })
+
+    it('should return true for @api links with anchors', () => {
+      expect(isApiShorthand('@api/python/strands.agent.agent#Agent')).toBe(true)
+      expect(isApiShorthand('@api/typescript/BedrockModel#constructor')).toBe(true)
+    })
+
+    it('should return false for non-@api links', () => {
+      expect(isApiShorthand('../api-reference/python/agent.md')).toBe(false)
+      expect(isApiShorthand('/api/python/strands.agent.agent/')).toBe(false)
+      expect(isApiShorthand('https://example.com')).toBe(false)
+      expect(isApiShorthand('relative/path.md')).toBe(false)
+    })
+  })
+
+  describe('resolveApiShorthand', () => {
+    it('should resolve Python API links', () => {
+      expect(resolveApiShorthand('@api/python/strands.agent.agent')).toBe('/api/python/strands.agent.agent/')
+      expect(resolveApiShorthand('@api/python/strands.agent.agent_result')).toBe(
+        '/api/python/strands.agent.agent_result/'
+      )
+      expect(resolveApiShorthand('@api/python/strands.models.bedrock')).toBe('/api/python/strands.models.bedrock/')
+    })
+
+    it('should resolve TypeScript API links', () => {
+      expect(resolveApiShorthand('@api/typescript/Agent')).toBe('/api/typescript/Agent/')
+      expect(resolveApiShorthand('@api/typescript/BedrockModel')).toBe('/api/typescript/BedrockModel/')
+    })
+
+    it('should preserve anchors', () => {
+      expect(resolveApiShorthand('@api/python/strands.agent.agent#Agent')).toBe('/api/python/strands.agent.agent/#Agent')
+      expect(resolveApiShorthand('@api/python/strands.agent.agent_result#AgentResult')).toBe(
+        '/api/python/strands.agent.agent_result/#AgentResult'
+      )
+      expect(resolveApiShorthand('@api/typescript/BedrockModel#constructor')).toBe(
+        '/api/typescript/BedrockModel/#constructor'
+      )
+    })
+
+    it('should handle nested module paths', () => {
+      expect(resolveApiShorthand('@api/python/strands.agent.conversation_manager.sliding_window_conversation_manager')).toBe(
+        '/api/python/strands.agent.conversation_manager.sliding_window_conversation_manager/'
+      )
+      expect(
+        resolveApiShorthand(
+          '@api/python/strands.experimental.bidi.models.gemini_live#BidiGeminiLiveModel'
+        )
+      ).toBe('/api/python/strands.experimental.bidi.models.gemini_live/#BidiGeminiLiveModel')
+    })
+  })
+
   describe('isRelativeLink', () => {
     it('should return false for absolute URLs', () => {
       expect(isRelativeLink('http://example.com')).toBe(false)
@@ -203,10 +272,92 @@ describe('Link Utilities', () => {
       expect(result.resolvedHref).toBe('/docs/sibling/')
       expect(result.found).toBe(true)
     })
+
+    it('should resolve @api/python shorthand links', () => {
+      const slugs = new Set(['api/python/strands.agent.agent', 'api/python/strands.agent.agent_result'])
+      const result = resolveHref('@api/python/strands.agent.agent', '/user-guide/quickstart/', slugs)
+      expect(result.resolvedHref).toBe('/api/python/strands.agent.agent/')
+      expect(result.found).toBe(true)
+    })
+
+    it('should resolve @api/typescript shorthand links', () => {
+      const slugs = new Set(['api/typescript/Agent', 'api/typescript/BedrockModel'])
+      const result = resolveHref('@api/typescript/BedrockModel', '/user-guide/quickstart/', slugs)
+      expect(result.resolvedHref).toBe('/api/typescript/BedrockModel/')
+      expect(result.found).toBe(true)
+    })
+
+    it('should resolve @api shorthand links with anchors', () => {
+      const slugs = new Set(['api/python/strands.agent.agent_result'])
+      const result = resolveHref('@api/python/strands.agent.agent_result#AgentResult', '/user-guide/quickstart/', slugs)
+      expect(result.resolvedHref).toBe('/api/python/strands.agent.agent_result/#AgentResult')
+      expect(result.found).toBe(true)
+    })
+
+    it('should mark @api shorthand links as not found when slug does not exist', () => {
+      const slugs = new Set(['api/python/strands.agent.agent'])
+      const result = resolveHref('@api/python/strands.nonexistent.module', '/user-guide/quickstart/', slugs)
+      expect(result.resolvedHref).toBe('/api/python/strands.nonexistent.module/')
+      expect(result.found).toBe(false)
+    })
   })
 })
 
 describe('Link Resolution with Content Collection', () => {
+  it('should resolve @api shorthand links against real collection', async () => {
+    const docs = await getCollection('docs')
+    const docSlugs = new Set(docs.map((doc) => doc.id)) as Set<string>
+
+    // Test Python API links
+    const pythonTests = [
+      { href: '@api/python/strands.agent.agent', expectedSlug: 'api/python/strands.agent.agent' },
+      { href: '@api/python/strands.agent.agent_result', expectedSlug: 'api/python/strands.agent.agent_result' },
+      { href: '@api/python/strands.models.bedrock', expectedSlug: 'api/python/strands.models.bedrock' },
+      {
+        href: '@api/python/strands.agent.conversation_manager.sliding_window_conversation_manager',
+        expectedSlug: 'api/python/strands.agent.conversation_manager.sliding_window_conversation_manager',
+      },
+    ]
+
+    for (const { href, expectedSlug } of pythonTests) {
+      const result = resolveHref(href, '/user-guide/quickstart/', docSlugs)
+      if (docSlugs.has(expectedSlug)) {
+        expect(result.found).toBe(true)
+        expect(result.resolvedHref).toBe(`/${expectedSlug}/`)
+      }
+    }
+
+    // Test TypeScript API links
+    const tsTests = [
+      { href: '@api/typescript/Agent', expectedSlug: 'api/typescript/Agent' },
+      { href: '@api/typescript/BedrockModel', expectedSlug: 'api/typescript/BedrockModel' },
+    ]
+
+    for (const { href, expectedSlug } of tsTests) {
+      const result = resolveHref(href, '/user-guide/quickstart/', docSlugs)
+      if (docSlugs.has(expectedSlug)) {
+        expect(result.found).toBe(true)
+        expect(result.resolvedHref).toBe(`/${expectedSlug}/`)
+      }
+    }
+  })
+
+  it('should resolve @api shorthand links with anchors against real collection', async () => {
+    const docs = await getCollection('docs')
+    const docSlugs = new Set(docs.map((doc) => doc.id)) as Set<string>
+
+    const result = resolveHref(
+      '@api/python/strands.agent.agent_result#AgentResult',
+      '/user-guide/quickstart/',
+      docSlugs
+    )
+
+    if (docSlugs.has('api/python/strands.agent.agent_result')) {
+      expect(result.found).toBe(true)
+      expect(result.resolvedHref).toBe('/api/python/strands.agent.agent_result/#AgentResult')
+    }
+  })
+
   it('should resolve common documentation links', async () => {
     const docs = await getCollection('docs')
     const docSlugs = new Set(docs.map((doc) => doc.id)) as Set<string>

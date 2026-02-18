@@ -19,17 +19,13 @@ const { resolvedHref, found } = resolveHref(href, currentPath, docSlugs)
 
 // Log warning in development if link wasn't found
 if (!found) {
-  if (!href.includes("/api-reference/")) {
-    const route = Astro.locals.starlightRoute
-    console.warn([
-      `[PageLink] On page "${route?.entry?.filePath}"`,
-      `could not resolve "${href}"`,
-      `currentPath: "${currentPath}"`,
-    ].join(', '))
-  }
+  const route = Astro.locals.starlightRoute
+  console.warn([
+    `[PageLink] On page "${route?.entry?.filePath}"`,
+    `could not resolve "${href}"`,
+    `currentPath: "${currentPath}"`,
+  ].join(', '))
 }
 ---
 
-<a href={resolvedHref} {...rest}>
-  <slot />
-</a>
+<a href={resolvedHref} {...rest}><slot /></a>

@@ -52,7 +52,7 @@ function convertQuickstartToCards(content: string): string {
 <LinkCard
   title="Python Quickstart"
   description="$1"
-  href="$2"
+  href="../python/"
 />
 `
   );
@@ -64,7 +64,7 @@ function convertQuickstartToCards(content: string): string {
     `<LinkCard
   title="TypeScript Quickstart (Experimental)"
   description="$3"
-  href="$4"
+  href="../typescript/"
 />
 </CardGrid>
 `
