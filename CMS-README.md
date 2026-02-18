@@ -69,6 +69,42 @@ From page `user-guide/concepts/agents/state.mdx`:
 
 **Slug generation:** The content collection uses a custom `generateId` function in `src/content.config.ts` that shares the same normalization logic (`normalizePathToSlug`) as link resolution. This ensures consistency between how pages are identified and how links resolve to them.
 
+### 5. API Reference Links (`@api` shorthand)
+
+**What it does:** Provides a shorthand format for linking to API reference pages that's cleaner than relative paths.
+
+**Syntax:**
+```markdown
+<!-- Python API -->
+[@api/python/strands.agent.agent](link text)
+[@api/python/strands.agent.agent#AgentResult](link text with anchor)
+
+<!-- TypeScript API -->
+[@api/typescript/Agent](link text)
+[@api/typescript/Agent#constructor](link text with anchor)
+```
+
+**How it works:**
+
+1. Links starting with `@api/` are detected by `isApiShorthand()` in `src/util/links.ts`
+2. `resolveApiShorthand()` converts them to absolute paths (e.g., `/api/python/strands.agent.agent/`)
+3. `PageLink.astro` applies the site's base path for correct URL generation
+
+**Why use this format:**
+- Cleaner than relative paths with `../api-reference/python/...`
+- Doesn't break when the linking page moves to a different directory
+- Matches the actual URL structure of the generated API docs
+- Validated against the content collection at build time
+
+**Examples:**
+```markdown
+<!-- Instead of this (fragile, verbose): -->
+[AgentResult](../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult)
+
+<!-- Use this (clean, stable): -->
+[AgentResult](@api/python/strands.agent.agent_result#AgentResult)
+```
+
 ## Configuration (`astro.config.mjs`)
 
 The main config ties everything together:
@@ -538,3 +574,32 @@ Each testimonial is a JSON file:
   "order": 1
 }
 ```
+
+## Temporary Migration Files
+
+The following files were created to support the MkDocs → Astro migration and should be deleted once migration is complete:
+
+### Link Conversion Utilities
+
+These files handle converting old MkDocs-style API reference links to the new `@api` shorthand format:
+
+- `src/util/api-link-converter.ts` - Utility functions to detect and convert old API links
+- `test/api-link-converter.test.ts` - Tests for the link converter
+
+### Migration Scripts
+
+These scripts transform MkDocs markdown to Astro-compatible format at build time:
+
+- `scripts/update-docs.ts` - Main transformation script (converts admonitions, tabs, API links, etc.)
+- `scripts/update-quickstart.ts` - Quickstart-specific transformations
+- `test/update-docs.test.ts` - Tests for the update-docs transformations
+
+### When to Delete
+
+Once the migration is complete and all documentation is committed in Astro format:
+
+1. Run `npm run docs:update` one final time to apply all transformations
+2. Commit the transformed files directly (no longer keeping MkDocs format in source control)
+3. Delete the files listed above
+4. Remove the `docs:update` and `docs:revert` scripts from `package.json`
+5. Update this README to remove references to the migration process

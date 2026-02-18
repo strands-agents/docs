@@ -6,7 +6,8 @@
 - [X] Add API documentation generation/integration for Python and TypeScript SDKs
 - [ ] Fix type-checking
 - [ ] Look into markdown 
-- [ ] Add header links to Python/TypeScript method sections (api/python/strands.agent.agent/)
+- [X] Add header links to Python/TypeScript method sections (api/python/strands.agent.agent/)
+- [ ] Migrate all files and remove conversion scripts
 
 ## After Launch
 - [ ] Move asset files to proper location (currently in `docs/assets/`, should be in `src/content/docs/assets/`)

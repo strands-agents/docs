@@ -4,6 +4,40 @@
  */
 
 /**
+ * Check if a link uses the @api shorthand format.
+ * Supported formats:
+ * - @api/python/strands.module.path
+ * - @api/python/strands.module.path#SubPath
+ * - @api/typescript/ClassName
+ * - @api/typescript/ClassName#method
+ *
+ * @param link - The href to check
+ * @returns true if the link uses @api shorthand
+ */
+export function isApiShorthand(link: string): boolean {
+  return link.startsWith('@api/')
+}
+
+/**
+ * Resolve an @api shorthand link to an absolute path.
+ *
+ * @param link - The @api shorthand link (e.g., `@api/python/strands.agent.agent`)
+ * @returns The resolved absolute path (e.g., `/api/python/strands.agent.agent/`)
+ */
+export function resolveApiShorthand(link: string): string {
+  // Remove the @api/ prefix
+  const withoutPrefix = link.slice(5) // '@api/'.length === 5
+
+  // Split path and anchor
+  const hashIndex = withoutPrefix.indexOf('#')
+  const pathPart = hashIndex !== -1 ? withoutPrefix.slice(0, hashIndex) : withoutPrefix
+  const anchor = hashIndex !== -1 ? withoutPrefix.slice(hashIndex) : ''
+
+  // The path is already in the correct format (python/strands.module or typescript/ClassName)
+  return `/api/${pathPart}/${anchor}`
+}
+
+/**
  * Get the site's base URL path, stripped of trailing slash for consistent concatenation.
  * This is used to build URLs that work correctly when the site is deployed at a subpath.
  */
@@ -193,6 +227,7 @@ export function findDocSlug(resolvedPath: string, docSlugs: Set<string>): string
  * Resolve a potentially relative href to an absolute Astro URL.
  *
  * This is the main entry point for link resolution. It handles:
+ * - @api shorthand links (e.g., `@api/python/strands.agent.agent`)
  * - Absolute URLs (returned as-is)
  * - Anchor-only links (returned as-is)
  * - Relative MkDocs-style links (resolved against current path and doc collection)
@@ -213,6 +248,18 @@ export function resolveHref(
   currentPath: string,
   docSlugs: Set<string>
 ): { resolvedHref: string; found: boolean } {
+  // Handle @api shorthand links
+  if (isApiShorthand(href)) {
+    const resolved = resolveApiShorthand(href)
+    // Extract the slug part (without leading/trailing slashes and anchor)
+    const hashIndex = resolved.indexOf('#')
+    const pathOnly = hashIndex !== -1 ? resolved.slice(0, hashIndex) : resolved
+    const slugPart = pathOnly.replace(/^\//, '').replace(/\/$/, '')
+    const found = docSlugs.has(slugPart)
+    // Apply base path for @api links since they resolve to absolute paths
+    return { resolvedHref: pathWithBase(resolved), found }
+  }
+
   if (!isRelativeLink(href)) {
     return { resolvedHref: href, found: true }
   }

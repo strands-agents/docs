@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile, mkdir, unlink } from "fs/promises";
 import { join, dirname } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
 import { getCommunityLabeledFiles } from "../src/sidebar.js";
+import { convertApiLink, isOldApiLink } from "../src/util/api-link-converter.js";
 
 const DOCS_DIR = "docs";
 const OUTPUT_DIR = "src/content/docs";
@@ -452,6 +453,33 @@ function convertBrToSelfClosing(content: string): string {
 }
 
 /**
+ * Convert old MkDocs-style API reference links to the new @api shorthand format.
+ * 
+ * Old formats:
+ * - Python: `../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult`
+ * - TypeScript: `../api-reference/typescript/classes/BedrockModel.html`
+ * 
+ * New formats:
+ * - Python: `@api/python/strands.agent.agent_result#AgentResult`
+ * - TypeScript: `@api/typescript/BedrockModel`
+ */
+function convertApiLinks(content: string): string {
+  // Match markdown links with potentially nested brackets in the text
+  // This handles cases like [`list[ToolSpec]`](url)
+  const markdownLinkPattern = /\[([^\]]*(?:\[[^\]]*\][^\]]*)*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+  
+  return content.replace(markdownLinkPattern, (match, text, url) => {
+    if (isOldApiLink(url)) {
+      const newUrl = convertApiLink(url);
+      if (newUrl) {
+        return `[${text}](${newUrl})`;
+      }
+    }
+    return match;
+  });
+}
+
+/**
  * Remove community_contribution_banner macro from content
  * The banner is rendered via a component based on `community: true` frontmatter
  */
@@ -601,6 +629,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   newContent = convertMkdocsTabs(newContent);
   newContent = convertHtmlCommentsToJsx(newContent);
   newContent = convertBrToSelfClosing(newContent);
+  newContent = convertApiLinks(newContent);
 
   // Handle H1 heading and title frontmatter
   const h1Title = extractH1Title(newContent);
