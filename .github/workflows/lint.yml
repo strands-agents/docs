@@ -27,4 +27,3 @@ jobs:
 
       - name: Typecheck snippets
         run: npm run typecheck:snippets
-        working-directory: test-snippets
