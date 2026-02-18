@@ -131,10 +131,10 @@ For more details, see the [Amazon Bedrock documentation on modifying model acces
     aws login
     ```
 
-    To use `aws login` with enhanced performance, install Strands with CRT support:
+    To use `aws login` with enhanced performance, install botocore with CRT support:
 
     ```bash
-    pip install strands-agent[crt]
+    pip install botocore[crt]
     ```
 
     See the [Login for AWS local development using console credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html) documentation for more details.
