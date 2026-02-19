@@ -106,7 +106,7 @@ describe('HTML to Markdown Conversion', () => {
       const markdown = htmlToMarkdown(html)
 
       expect(markdown).toContain('# Article Title')
-      expect(markdown).toContain('[a link](/link)')
+      expect(markdown).toContain('[a link](/link/index.md)')
       expect(markdown).toContain('## Section')
       expect(markdown).toMatch(/-\s+First item/)
       expect(markdown).toContain('`code`')
