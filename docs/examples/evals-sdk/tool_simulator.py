@@ -35,7 +35,6 @@ class HVACControllerResponse(BaseModel):
     initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off",
     output_schema=HVACControllerResponse
 )
-@tool
 def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
     """Control home heating/cooling system that affects room temperature and humidity."""
     pass
