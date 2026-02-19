@@ -20,7 +20,6 @@ const sidebar = loadSidebarFromMkdocs(
 export default defineConfig({
   site: 'https://strandsagents.com',
   base: process.env.ASTRO_BASE_PATH || '/',
-  trailingSlash: 'always',
   vite: {
     // TODO once we separate out CMS build from TS verification, fix this
     // https://github.com/withastro/astro/issues/14117
@@ -43,36 +42,36 @@ export default defineConfig({
     }),
     mdx(),
     starlight({
-    title: 'Strands Agents SDK',
-    description: 'A model-driven approach to building AI agents in just a few lines of code.',
-    sidebar: sidebar,
-    routeMiddleware: './src/route-middleware.ts',
-    customCss: [
-      './src/styles/custom.css',
-    ],
-    logo: {
-      light: './src/assets/logo-light.svg',
-      dark: './src/assets/logo-dark.svg',
-      replacesTitle: false,
-    },
-    social: [
-      {
-        icon: 'github',
-        label: 'GitHub',
-        href: 'https://github.com/strands-agents/sdk-python',
+      title: 'Strands Agents SDK',
+      description: 'A model-driven approach to building AI agents in just a few lines of code.',
+      sidebar: sidebar,
+      routeMiddleware: './src/route-middleware.ts',
+      customCss: [
+        './src/styles/custom.css',
+      ],
+      logo: {
+        light: './src/assets/logo-light.svg',
+        dark: './src/assets/logo-dark.svg',
+        replacesTitle: false,
       },
-    ],
-    editLink: {
-      baseUrl: 'https://github.com/strands-agents/docs/edit/main/docs',
-    },
-    components: {
-      Head: './src/components/overrides/Head.astro',
-      Header: './src/components/overrides/Header.astro',
-      MarkdownContent: './src/components/overrides/MarkdownContent.astro',
-      Sidebar: './src/components/overrides/Sidebar.astro',
-    },
+      social: [
+        {
+          icon: 'github',
+          label: 'GitHub',
+          href: 'https://github.com/strands-agents/sdk-python',
+        },
+      ],
+      editLink: {
+        baseUrl: 'https://github.com/strands-agents/docs/edit/main/docs',
+      },
+      components: {
+        Head: './src/components/overrides/Head.astro',
+        Header: './src/components/overrides/Header.astro',
+        MarkdownContent: './src/components/overrides/MarkdownContent.astro',
+        Sidebar: './src/components/overrides/Sidebar.astro',
+      },
   }),
-  AutoImport({
+   AutoImport({
       imports: [
         {
           '@astrojs/starlight/components': [
@@ -87,6 +86,6 @@ export default defineConfig({
         // override 'a' links so that we can use relative urls
         a: './src/components/PageLink.astro'
       }
-    })
+    }),
   ],
 })

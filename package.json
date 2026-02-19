@@ -29,8 +29,11 @@
   "dependencies": {
     "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
     "@types/express": "^5.0.5",
+    "@types/turndown": "^5.0.6",
     "express": "^5.1.0",
     "prettier": "^3.6.2",
+    "turndown": "^7.2.2",
+    "turndown-plugin-gfm": "^1.0.2",
     "typedoc": "^0.28.14",
     "typescript": "^5.9.3"
   },
