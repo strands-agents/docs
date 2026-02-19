@@ -32,6 +32,6 @@
     "sourceMap": true,
     "removeComments": false,
   },
-  "include": ["docs/**/*.ts", ".astro/types.d.ts", "src/**/*", ".astro/**/*", "test/**/*"],
-  "exclude": ["node_modules", "dist", "docs/examples/cdk", "docs/examples/typescript"],
+  "include": [".astro/types.d.ts", "src/**/*", ".astro/**/*"],
+  "exclude": ["docs/**/*.ts", "src/content/docs/**/*.ts", "node_modules", "dist"],
 }
