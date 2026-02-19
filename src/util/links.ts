@@ -229,11 +229,11 @@ export function findDocSlug(resolvedPath: string, docSlugs: Set<string>): string
  * Skips paths that point to concrete files (with extensions like .txt, .json, etc.)
  *
  * @param path - The path or slug (e.g., `/user-guide/foo/`, `user-guide/foo`, `/user-guide/foo/#section`)
- * @returns The raw markdown URL (e.g., `/user-guide/foo/raw.md`, `/user-guide/foo/raw.md#section`)
+ * @returns The raw markdown URL (e.g., `/user-guide/foo/index.md`, `/user-guide/foo/index.md#section`)
  */
 export function toRawMarkdownUrl(path: string): string {
-  // Skip if already pointing to raw.md
-  if (path.endsWith('/raw.md') || path.includes('/raw.md#')) {
+  // Skip if already pointing to index.md
+  if (path.endsWith('/index.md') || path.includes('/index.md#')) {
     return path
   }
 
@@ -255,7 +255,7 @@ export function toRawMarkdownUrl(path: string): string {
     return `${cleanPath}${anchor}`
   }
 
-  return `${cleanPath}/raw.md${anchor}`
+  return `${cleanPath}/index.md${anchor}`
 }
 
 /**

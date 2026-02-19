@@ -622,7 +622,7 @@ Our implementation renders documentation through Astro's container API, applies 
 
 - `/llms.txt` - Index with links to all docs organized by sidebar structure
 - `/llms-full.txt` - Complete documentation content (excludes API reference)
-- `/{slug}/raw.md` - Any doc page in raw markdown format
+- `/{slug}/index.md` - Any doc page in raw markdown format
 
 ### Implementation Files
 
@@ -630,7 +630,7 @@ Our implementation renders documentation through Astro's container API, applies 
 |------|---------|
 | `src/pages/llms.txt.ts` | Generates index from sidebar structure |
 | `src/pages/llms-full.txt.ts` | Renders all docs inline |
-| `src/pages/[...slug]/raw.md.ts` | Dynamic endpoint for individual pages |
+| `src/pages/[...slug]/index.md.ts` | Dynamic endpoint for individual pages |
 | `src/util/render-to-markdown.ts` | Renders MDX entries via AstroContainer |
 | `src/util/html-to-markdown.ts` | HTML→Markdown conversion with custom rules |
 | `src/content/docs/llms.mdx` | User-facing page explaining the feature |
@@ -642,13 +642,13 @@ Uses [Turndown](https://github.com/mixmark-io/turndown) with custom rules:
 - **Tables**: GFM plugin for proper markdown table syntax
 - **Code blocks**: Handles both standard and Expressive Code syntax highlighting
 - **Tab panels**: Wraps content with `(( tab "Label" ))` markers
-- **Local links**: Rewrites to `/raw.md` format for LLM consumption
+- **Local links**: Rewrites to `/index.md` format for LLM consumption
 - **Cleanup**: Removes screen-reader elements, empty anchors, tab navigation lists, scripts
 
 ### Link Handling
 
 The `src/util/links.ts` module was extended:
-- `toRawMarkdownUrl()` - Converts paths to raw.md URLs, skips files with extensions
+- `toRawMarkdownUrl()` - Converts paths to index.md URLs, skips files with extensions
 - `isLocalLink()` - Identifies links that should be converted (excludes .txt, external, anchors)
 - `resolveHref()` - Special-cases `llms.txt` and `llms-full.txt` for proper resolution
 

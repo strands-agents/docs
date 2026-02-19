@@ -1,12 +1,12 @@
 /**
  * Dynamic endpoint that serves any documentation page as raw markdown.
  *
- * For every page in the docs collection, this generates a `/raw.md` endpoint:
- *   /docs/user-guide/quickstart/ → /docs/user-guide/quickstart/raw.md
+ * For every page in the docs collection, this generates an `/index.md` endpoint:
+ *   /docs/user-guide/quickstart/ → /docs/user-guide/quickstart/index.md
  *
  * The markdown is rendered from MDX through Astro's container API, converted
  * from HTML to clean markdown, with all internal links rewritten to point to
- * their corresponding /raw.md endpoints.
+ * their corresponding /index.md endpoints.
  *
  * Used by LLMs and tooling that need documentation in a machine-readable format.
  * See the /llms/ page for more information.

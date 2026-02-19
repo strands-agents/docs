@@ -23,7 +23,7 @@ function extractLinks(
   for (const item of items) {
     if ('slug' in item && item.slug) {
       // Internal link
-      const url = `${base}/${item.slug}/raw.md`
+      const url = `${base}/${item.slug}/index.md`
       const label = item.label || item.slug.split('/').pop() || item.slug
       lines.push(`${indent}- [${label}](${url})`)
     } else if ('link' in item && item.link) {
@@ -74,7 +74,7 @@ function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebar
     lines.push(`## Api Python`)
     lines.push('')
     for (const doc of pythonApi) {
-      const url = `${base}/${doc.id}/raw.md`
+      const url = `${base}/${doc.id}/index.md`
       const title = doc.data.title || doc.id
       lines.push(`- [${title}](${url})`)
     }
@@ -85,7 +85,7 @@ function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebar
     lines.push(`## Api TypeScript`)
     lines.push('')
     for (const doc of typescriptApi) {
-      const url = `${base}/${doc.id}/raw.md`
+      const url = `${base}/${doc.id}/index.md`
       const title = doc.data.title || doc.id
       lines.push(`- [${title}](${url})`)
     }

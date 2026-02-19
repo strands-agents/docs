@@ -30,7 +30,7 @@ export const GET: APIRoute = async () => {
     lines.push(markdown.trim())
 
     lines.push('')
-    lines.push(`Source: ${base}/${doc.id}/raw.md`)
+    lines.push(`Source: ${base}/${doc.id}/index.md`)
     lines.push('')
     lines.push('---')
     lines.push('')
