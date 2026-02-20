@@ -84,6 +84,12 @@ The `run()` method handles the startup, execution, and shutdown of both the agen
 
 Out of the box, Strands provides `BidiAudioIO` to help connect your microphone and speakers to the bidi-agent using [PyAudio](https://pypi.org/project/PyAudio/).
 
+!!! note "Installation Required"
+    `BidiAudioIO` requires the `bidi-io` extra:
+    ```bash
+    pip install "strands-agents[bidi,bidi-io]"
+    ```
+
 ```python
 import asyncio
 
@@ -130,6 +136,12 @@ This creates a voice-enabled agent that captures audio from your microphone, str
 ## Text I/O
 
 Strands also provides `BidiTextIO` for terminal-based text input and output using [prompt-toolkit](https://pypi.org/project/prompt-toolkit/).
+
+!!! note "Installation Required"
+    `BidiTextIO` requires the `bidi-io` extra:
+    ```bash
+    pip install "strands-agents[bidi,bidi-io]"
+    ```
 
 ```python
 import asyncio

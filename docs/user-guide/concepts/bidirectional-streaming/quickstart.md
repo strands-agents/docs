@@ -20,35 +20,50 @@ Bidirectional streaming is included in the Strands Agents SDK as an experimental
 
 ### For All Providers
 
-To install with support for all bidirectional streaming providers:
+To install with support for all bidirectional streaming providers and local audio I/O:
 
 ```bash
 pip install "strands-agents[bidi-all]"
 ```
 
-This will install PyAudio for audio I/O and all 3 supported providers (Nova Sonic, OpenAI, and Gemini Live).
+This includes all 3 supported providers (Nova Sonic, OpenAI, and Gemini Live) plus `BidiAudioIO` and `BidiTextIO` for local development.
 
 ### For Specific Providers
 
-You can also install support for specific providers only:
+You can also install support for specific providers:
 
 === "Amazon Bedrock Nova Sonic"
 
     ```bash
+    # With local audio I/O (BidiAudioIO, BidiTextIO)
+    pip install "strands-agents[bidi,bidi-io]"
+    
+    # Server-side only (no PyAudio dependency)
     pip install "strands-agents[bidi]"
     ```
 
 === "OpenAI Realtime API"
 
     ```bash
+    # With local audio I/O
+    pip install "strands-agents[bidi,bidi-io,bidi-openai]"
+    
+    # Server-side only
     pip install "strands-agents[bidi,bidi-openai]"
     ```
 
 === "Google Gemini Live"
 
     ```bash
+    # With local audio I/O
+    pip install "strands-agents[bidi,bidi-io,bidi-gemini]"
+    
+    # Server-side only
     pip install "strands-agents[bidi,bidi-gemini]"
     ```
+
+!!! note "Server-Side Deployments"
+    The `bidi-io` extra includes PyAudio for direct microphone/speaker access. For server deployments where audio I/O is handled by clients (browsers, mobile apps), omit `bidi-io` and implement custom I/O handlers using the `BidiInput` and `BidiOutput` protocols. See [I/O Channels](io.md) for details.
 
 ### Platform-Specific Audio Setup
 
