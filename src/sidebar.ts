@@ -228,7 +228,7 @@ export function getSidebarLabels(mkdocsPath: string): Map<string, SidebarInfo> {
           if (typeof value === 'string' && value.endsWith('.md')) {
             // Extract badge from <sup> tag if present
             const supMatch = label.match(/<sup>\s*(\w+)\s*<\/sup>/i)
-            const badge = supMatch ? supMatch[1].toLowerCase() : undefined
+            const badge = supMatch?.[1]?.toLowerCase()
             
             // Clean the label by removing <sup>...</sup> tags entirely (including content)
             // then remove any other HTML tags
@@ -236,7 +236,12 @@ export function getSidebarLabels(mkdocsPath: string): Map<string, SidebarInfo> {
               .replace(/<sup>[^<]*<\/sup>/gi, '')  // Remove <sup> tags and their content
               .replace(/<[^>]+>/g, '')              // Remove any other HTML tags
               .trim()
-            sidebarLabels.set(value, { label: cleanedLabel, badge })
+            
+            const info: SidebarInfo = { label: cleanedLabel }
+            if (badge) {
+              info.badge = badge
+            }
+            sidebarLabels.set(value, info)
           }
           if (Array.isArray(value)) {
             search(value)
