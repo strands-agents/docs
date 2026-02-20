@@ -55,6 +55,9 @@ print(f"Conversation: {json.dumps(agent.messages, indent=4)}")
 
 Alternatively, if you want to implement your own soft-launching guardrails, you can utilize Hooks along with Bedrock's ApplyGuardrail API in shadow mode. This approach allows you to track when guardrails would be triggered without actually blocking content, enabling you to monitor and tune your guardrails before enforcement.
 
+!!! tip "Consider Creating a Plugin"
+    If you plan to reuse this guardrails pattern across multiple agents or share it with your team, consider packaging it as a [Plugin](../concepts/plugins/index.md) for easier distribution and configuration.
+
 Steps:
 
 1. Create a NotifyOnlyGuardrailsHook class that contains hooks

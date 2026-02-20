@@ -96,4 +96,7 @@ Built in retry constructs like `ModelRetryStrategy` are useful for customizing m
 
 Unlike `ModelRetryStrategy`, hooks don't automatically introduce delays between retries. The example above uses `asyncio.sleep` to add a 2-second delay before each retry.
 
+!!! tip "Package as a Plugin"
+    If you want to share custom retry logic with others or reuse it across projects, consider packaging it as a [Plugin](../plugins/index.md). Plugins provide a clean interface for configuration and make your extensions easier to distribute.
+
 See [Hooks](hooks.md#model-call-retry) for more examples.

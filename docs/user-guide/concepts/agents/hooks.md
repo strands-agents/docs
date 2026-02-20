@@ -2,9 +2,12 @@
 
 Hooks are a composable extensibility mechanism for extending agent functionality by subscribing to events throughout the agent lifecycle. The hook system enables both built-in components and user code to react to or modify agent behavior through strongly-typed event callbacks.
 
+!!! tip "Consider Plugins for High-Level Behavior Changes"
+    For packaging reusable agent extensions or implementing complex behavior changes, consider using [Plugins](../plugins/index.md) instead of raw hooks. Plugins provide a higher-level abstraction that encapsulates related hooks, configuration, and initialization logic into shareable packages.
+
 ## Overview
 
-The hooks system is a composable, type-safe system that supports multiple subscribers per event type. 
+The hooks system is a composable, type-safe system that supports multiple subscribers per event type.
 
 A **Hook Event** is a specific event in the lifecycle that callbacks can be associated with. A **Hook Callback** is a callback function that is invoked when the hook event is emitted.
 
@@ -23,18 +26,27 @@ Hook callbacks are registered against specific event types and receive strongly-
 
 ### Registering Individual Hook Callbacks
 
-You can register callbacks for specific events using `agent.hooks` after the fact:
+The simplest way to register a hook callback is using the `agent.add_hook()` method:
 
 === "Python"
 
     ```python
+    from strands import Agent
+    from strands.hooks import BeforeInvocationEvent, BeforeToolCallEvent
+
     agent = Agent()
 
-    # Register individual callbacks
+    # Register individual callbacks using the simplified API
     def my_callback(event: BeforeInvocationEvent) -> None:
         print("Custom callback triggered")
 
-    agent.hooks.add_callback(BeforeInvocationEvent, my_callback)
+    agent.add_hook(my_callback, BeforeInvocationEvent)
+
+    # Type inference: If your callback has a type hint, the event type is inferred
+    def typed_callback(event: BeforeToolCallEvent) -> None:
+        print(f"Tool called: {event.tool_use['name']}")
+
+    agent.add_hook(typed_callback)  # Event type inferred from type hint
     ```
 
 === "TypeScript"
@@ -42,6 +54,21 @@ You can register callbacks for specific events using `agent.hooks` after the fac
     ```typescript
     --8<-- "user-guide/concepts/agents/hooks.ts:individual_callback"
     ```
+
+You can also use the `agent.hooks.add_callback()` method for explicit event type specification:
+
+=== "Python"
+
+    ```python
+    agent = Agent()
+
+    def my_callback(event: BeforeInvocationEvent) -> None:
+        print("Custom callback triggered")
+
+    agent.hooks.add_callback(BeforeInvocationEvent, my_callback)
+    ```
+
+{{ ts_not_supported_code("This syntax is not yet available in TypeScript SDK") }}
 
 For multi-agent orchestrators, you can register callbacks for orchestration events:
 
@@ -90,6 +117,9 @@ The `HookProvider` protocol allows a single object to register callbacks for mul
     ```typescript
     --8<-- "user-guide/concepts/agents/hooks.ts:hook_provider_class"
     ```
+
+!!! note "HookProvider vs Plugin"
+    For simple hook registration, `HookProvider` works well. However, if you need initialization logic, configuration, or plan to share your extension with others, consider creating a [Plugin](../plugins/index.md) instead. Plugins extend the `HookProvider` pattern with additional capabilities like named identification and agent-aware initialization.
 
 ## Hook Event Lifecycle
 
