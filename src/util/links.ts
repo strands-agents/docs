@@ -224,6 +224,54 @@ export function findDocSlug(resolvedPath: string, docSlugs: Set<string>): string
 }
 
 /**
+ * Convert a local path/slug to its raw markdown URL.
+ * Handles paths with or without leading/trailing slashes and anchors.
+ * Skips paths that point to concrete files (with extensions like .txt, .json, etc.)
+ *
+ * @param path - The path or slug (e.g., `/user-guide/foo/`, `user-guide/foo`, `/user-guide/foo/#section`)
+ * @returns The raw markdown URL (e.g., `/user-guide/foo/index.md`, `/user-guide/foo/index.md#section`)
+ */
+export function toRawMarkdownUrl(path: string): string {
+  // Skip if already pointing to index.md
+  if (path.endsWith('/index.md') || path.includes('/index.md#')) {
+    return path
+  }
+
+  // Extract anchor if present
+  let anchor = ''
+  const anchorIndex = path.indexOf('#')
+  if (anchorIndex !== -1) {
+    anchor = path.slice(anchorIndex)
+    path = path.slice(0, anchorIndex)
+  }
+
+  // Clean trailing slash
+  const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path
+
+  // Skip paths that point to concrete files (have a file extension)
+  // This handles .txt, .json, .html, .pdf, etc.
+  const lastSegment = cleanPath.split('/').pop() || ''
+  if (lastSegment.includes('.')) {
+    return `${cleanPath}${anchor}`
+  }
+
+  return `${cleanPath}/index.md${anchor}`
+}
+
+/**
+ * Check if a link is a local link (not external, not anchor-only).
+ *
+ * @param href - The href to check
+ * @returns true if the link is local and could be converted to raw.md
+ */
+export function isLocalLink(href: string): boolean {
+  if (!href) return false
+  if (href.startsWith('http://') || href.startsWith('https://')) return false
+  if (href.startsWith('#')) return false
+  return true
+}
+
+/**
  * Resolve a potentially relative href to an absolute Astro URL.
  *
  * This is the main entry point for link resolution. It handles:
@@ -248,6 +296,14 @@ export function resolveHref(
   currentPath: string,
   docSlugs: Set<string>
 ): { resolvedHref: string; found: boolean } {
+  // Special case: known static files that should resolve with base path
+  const knownStaticFiles = ['llms.txt', 'llms-full.txt']
+  for (const file of knownStaticFiles) {
+    if (href === file || href === `/${file}` || href.endsWith(`/${file}`)) {
+      return { resolvedHref: pathWithBase(`/${file}`), found: true }
+    }
+  }
+
   // Handle @api shorthand links
   if (isApiShorthand(href)) {
     const resolved = resolveApiShorthand(href)

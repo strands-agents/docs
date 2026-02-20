@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/components/*"],
+      "@util/*": ["src/util/*"]
     },
     "target": "ES2022",
     "module": "preserve",
