@@ -201,3 +201,53 @@ export function getCommunityLabeledFiles(mkdocsPath: string): Set<string> {
   search(mkdocs.nav)
   return communityFiles
 }
+export interface SidebarInfo {
+  label: string
+  badge?: string
+}
+
+/**
+ * Extract sidebar labels and badges for files in the nav
+ * Returns a map of file path -> { label, badge? }
+ * Badges are extracted from <sup> tags (e.g., <sup> new</sup> -> "new")
+ */
+export function getSidebarLabels(mkdocsPath: string): Map<string, SidebarInfo> {
+  const sidebarLabels = new Map<string, SidebarInfo>()
+
+  let content = fs.readFileSync(mkdocsPath, 'utf-8')
+  content = content.replace(/!!python\/[^\s]+/g, '')
+
+  const mkdocs = yaml.load(content) as { nav?: unknown[] }
+  if (!mkdocs.nav) return sidebarLabels
+
+  function search(items: unknown[]) {
+    for (const item of items) {
+      if (typeof item === 'object' && item !== null) {
+        for (const [label, value] of Object.entries(item)) {
+          // Only capture labels for files (not groups/directories)
+          if (typeof value === 'string' && value.endsWith('.md')) {
+            // Extract badge from <sup> tag if present
+            const supMatch = label.match(/<sup>\s*(\w+)\s*<\/sup>/i)
+            const badge = supMatch ? supMatch[1].toLowerCase() : undefined
+            
+            // Clean the label by removing <sup>...</sup> tags entirely (including content)
+            // then remove any other HTML tags
+            const cleanedLabel = label
+              .replace(/<sup>[^<]*<\/sup>/gi, '')  // Remove <sup> tags and their content
+              .replace(/<[^>]+>/g, '')              // Remove any other HTML tags
+              .trim()
+            sidebarLabels.set(value, { label: cleanedLabel, badge })
+          }
+          if (Array.isArray(value)) {
+            search(value)
+          }
+        }
+      }
+    }
+  }
+
+  search(mkdocs.nav)
+  return sidebarLabels
+}
+
+
