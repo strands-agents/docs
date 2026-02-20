@@ -10,9 +10,15 @@ We're using [Astro](https://astro.build/) with the [Starlight](https://starlight
 
 ### 1. Sidebar Generation (`src/sidebar.ts`)
 
-**What it does:** Reads the navigation structure from `mkdocs.yml` and converts it to Starlight's sidebar format.
+**What it does:** Reads the navigation structure from `mkdocs.yml` and converts it to Starlight's sidebar format. Also extracts sidebar labels and badges from nav entries.
 
 **Why:** Starlight can auto-generate sidebars from the file structure, but we have a specific navigation layout defined in `mkdocs.yml` that we want to preserve. This ensures consistency during the migration from MkDocs to Astro.
+
+**Label and badge extraction:** The `getSidebarLabels()` function parses nav entries with `<sup>` tags (e.g., `AWS Lambda<sup> new</sup>`) and extracts:
+- `label`: The clean text without HTML tags (e.g., "AWS Lambda")
+- `badge`: The badge text from `<sup>` tags (e.g., "new", "community")
+
+This data is used by `scripts/update-docs.ts` to generate sidebar frontmatter during the migration process.
 
 ### 2. Route Middleware (`src/route-middleware.ts`)
 
@@ -205,13 +211,23 @@ Pages can display badges in sidebar navigation:
 ---
 title: My Page
 sidebar:
+  label: "AWS Lambda"
   badge:
-    text: Community
+    text: New
     variant: note
 ---
 ```
 
 Available variants: `note`, `tip`, `caution`, `danger`, `success`, `default`
+
+**Automatic extraction:** During migration, `scripts/update-docs.ts` automatically generates sidebar frontmatter from `mkdocs.yml` nav entries. Entries like `AWS Lambda<sup> new</sup>` become:
+```yaml
+sidebar:
+  label: "AWS Lambda"
+  badge:
+    text: New
+    variant: note
+```
 
 ## MDX Components
 
