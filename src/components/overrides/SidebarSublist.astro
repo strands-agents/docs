@@ -1,5 +1,5 @@
 ---
-import { Icon } from '@astrojs/starlight/components';
+import { Icon, Badge } from '@astrojs/starlight/components';
 
 interface Props {
   sublist: any[];
@@ -37,11 +37,29 @@ function getFirstLink(entries: any[]): string | null {
         {entry.type === "link" ? (
           <a href={entry.href} aria-current={entry.isCurrent ? "page" : undefined} class:list={[{ large: !nested }, entry.attrs?.class]}>
             <span>{entry.label}</span>
+            {entry.badge && (
+              <Badge
+                variant={entry.badge.variant}
+                class={entry.badge.class}
+                text={entry.badge.text}
+                size='small'
+              />
+            )}
           </a>
         ) : isTopLevel ? (
           /* Top-level groups: non-collapsible section headers */
           <div class="section-group">
-            <span class="section-label">{entry.label}</span>
+            <span class="section-label">
+              {entry.label}
+              {entry.badge && (
+                <Badge
+                  variant={entry.badge.variant}
+                  class={entry.badge.class}
+                  text={entry.badge.text}
+                  size='small'
+                />
+              )}
+            </span>
             <Astro.self sublist={entry.entries} nested={true} depth={depth + 1} />
           </div>
         ) : (
@@ -49,9 +67,29 @@ function getFirstLink(entries: any[]): string | null {
           <details open={hasCurrentChild(entry.entries) || !entry.collapsed}>
             <summary>
               {firstLink ? (
-                <a href={firstLink} class="group-link">{entry.label}</a>
+                <a href={firstLink} class="group-link">
+                  {entry.label}
+                  {entry.badge && (
+                    <Badge
+                      variant={entry.badge.variant}
+                      class={entry.badge.class}
+                      text={entry.badge.text}
+                      size='small'
+                    />
+                  )}
+                </a>
               ) : (
-                <span class="group-label">{entry.label}</span>
+                <span class="group-label">
+                  {entry.label}
+                  {entry.badge && (
+                    <Badge
+                      variant={entry.badge.variant}
+                      class={entry.badge.class}
+                      text={entry.badge.text}
+                      size='small'
+                    />
+                  )}
+                </span>
               )}
               <Icon name="right-caret" class="caret" size="1.25rem" />
             </summary>
@@ -142,6 +180,10 @@ function getFirstLink(entries: any[]): string | null {
       .top-level > li + li { margin-top: 0.5rem; } 
       .large { font-size: var(--sl-text-base); } 
       a:not(.group-link) { font-size: var(--sl-text-sm); }
+    }
+
+    .sl-badge {
+      font-size: .75em !important;
     }
   }
 </style>
