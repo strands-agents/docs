@@ -201,6 +201,8 @@ These documents define the standards and processes that ensure consistency and q
 │       │   │   ├── multi-agent-patterns.md
 │       │   │   ├── swarm.md
 │       │   │   └── workflow.md
+│       │   ├── plugins
+│       │   │   └── index.md
 │       │   ├── streaming
 │       │   │   ├── async-iterators.md
 │       │   │   ├── callback-handlers.md

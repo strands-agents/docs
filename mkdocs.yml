@@ -106,6 +106,8 @@ nav:
         - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
         - Executors: user-guide/concepts/tools/executors.md
         - Community Tools Package: user-guide/concepts/tools/community-tools-package.md
+      - Plugins:
+        - Overview: user-guide/concepts/plugins/index.md
       - Model Providers:
         - Overview: user-guide/concepts/model-providers/index.md
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md

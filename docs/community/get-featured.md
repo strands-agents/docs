@@ -28,6 +28,7 @@ Place your documentation in the right spot:
 | Model Providers | `community/model-providers/` | `cohere.md` |
 | Tools | `community/tools/` | `strands-deepgram.md` |
 | Session Managers | `community/session-managers/` | `agentcore-memory.md` |
+| Plugins | `community/plugins/` | `my-plugin.md` |
 | Integrations | `community/integrations/` | `ag-ui.md` |
 
 ## Document Layout
