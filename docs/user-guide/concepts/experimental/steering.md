@@ -105,7 +105,7 @@ handler = LLMSteeringHandler(
 
 agent = Agent(
     tools=[send_email],
-    hooks=[handler]  # Steering handler integrates as a hook
+    plugins=[handler]  # Steering handler integrates as a plugin
 )
 
 # Agent receives guidance about email tone
