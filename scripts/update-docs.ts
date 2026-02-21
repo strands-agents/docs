@@ -1,6 +1,7 @@
 import { readdir, readFile, writeFile, mkdir, unlink } from "fs/promises";
 import { join, dirname } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
+import { updateLanguageIndexFiles } from "./update-language-index.js";
 import { getCommunityLabeledFiles, getSidebarLabels, type SidebarInfo } from "../src/sidebar.js";
 import { convertApiLink, isOldApiLink } from "../src/util/api-link-converter.js";
 
@@ -933,6 +934,7 @@ async function main() {
 
   // Run special-case page updates
   await updateQuickstart();
+  await updateLanguageIndexFiles();
 }
 
 main().catch(console.error);
