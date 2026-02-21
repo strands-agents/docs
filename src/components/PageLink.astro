@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
-import { resolveHref } from '../util/links'
+import { resolveHref, getBase, pathWithBase } from '../util/links'
 
 interface Props {
   href: string
@@ -13,9 +13,15 @@ const { href, ...rest } = Astro.props
 const allDocs = await getCollection('docs')
 const docSlugs = new Set(allDocs.map((doc) => doc.id))
 
-// Resolve the href
-const currentPath = Astro.url.pathname
-const { resolvedHref, found } = resolveHref(href, currentPath, docSlugs)
+// Strip base from current path so resolveHref works with bare slugs,
+// then re-apply base to the resolved result
+const base = getBase()
+const rawPath = Astro.url.pathname
+const currentPath = base && rawPath.startsWith(base) ? rawPath.slice(base.length) : rawPath
+const { resolvedHref: resolved, found } = resolveHref(href, currentPath, docSlugs)
+
+// Re-apply base only to relative resolved paths (absolute URLs are returned as-is)
+const resolvedHref = resolved.startsWith('/') ? pathWithBase(resolved) : resolved
 
 // Log warning in development if link wasn't found
 if (!found) {
