@@ -170,7 +170,13 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   const expandedSidebar = expandFirstLevelGroups(filteredSidebar)
   starlightRoute.sidebar = expandedSidebar
 
-  // Override prev/next labels with actual page titles instead of sidebar nav labels
+  // Starlight pre-computes pagination from the full sidebar before our middleware runs.
+  // Prune any prev/next links that fall outside the current nav section, then override
+  // labels with actual page titles instead of sidebar nav labels.
   const titlesByHref = await buildTitlesByHref()
-  starlightRoute.pagination = getPrevNextLinks(expandedSidebar, titlesByHref)
+  const { prev, next } = starlightRoute.pagination
+  starlightRoute.pagination = {
+    prev: prev?.href.startsWith(basePath) ? { ...prev, label: titlesByHref.get(prev.href) ?? prev.label } : undefined,
+    next: next?.href.startsWith(basePath) ? { ...next, label: titlesByHref.get(next.href) ?? next.label } : undefined,
+  }
 })
