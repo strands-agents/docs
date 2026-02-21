@@ -30,7 +30,11 @@ This data is used by `scripts/update-docs.ts` to generate sidebar frontmatter du
 
 **TypeScript API sidebar:** When viewing pages under `api/typescript/`, the middleware uses `buildTypeScriptApiSidebar()` to generate a category-grouped sidebar (Classes, Interfaces, Type Aliases, Functions).
 
-**Pagination:** For API pages, the middleware also updates `starlightRoute.pagination` using `getPrevNextLinks()` from `src/dynamic-sidebar.ts`. This ensures the previous/next navigation links at the bottom of pages work correctly with the dynamically generated sidebar.
+**Pagination:** For API pages, the middleware also updates `starlightRoute.pagination` using `getPrevNextLinks()` from `src/dynamic-sidebar.ts`. This ensures the previous/next navigation links at the bottom of pages work correctly with the dynamically generated sidebar. Pagination labels use actual page titles (from the docs collection) rather than sidebar nav labels.
+
+**Non-matching pages:** Pages that don't belong to any nav section (e.g., the landing page) now show an empty sidebar instead of the full sidebar.
+
+**Pagination pruning for regular pages:** Starlight pre-computes prev/next links from the full sidebar before middleware runs. The middleware now prunes any links that fall outside the current nav section and overrides labels with actual page titles.
 
 ### 3. MkDocs Snippets Plugin (`src/plugins/remark-mkdocs-snippets.ts`)
 
@@ -62,7 +66,7 @@ const example = "This code will be included"
 
 1. `PageLink.astro` replaces the default anchor element via `astro-auto-import`
 2. When rendering a link, it checks if the href is relative (not absolute, not anchor-only)
-3. For relative links, it resolves the path against the current page's location using `src/util/links.ts`
+3. For relative links, it strips the site's base path from the current URL before resolving, then re-applies it to the result — this ensures correct behavior when the site is deployed under a sub-path
 4. The resolved path is matched against the content collection to find the correct slug
 5. If no match is found, a warning is logged during development
 
@@ -130,7 +134,16 @@ export default defineConfig({
     remarkPlugins: [remarkMkdocsSnippets],
   },
   integrations: [
+    astroExpressiveCode({
+      themes: ['github-light', 'github-dark'],
+      // Follow Starlight's data-theme attribute instead of prefers-color-scheme
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
+    }),
     starlight({
+      markdown: {
+        // Ensures Starlight's rehype plugins run on API docs symlinked from .build/api-docs
+        processedDirs: [path.resolve('.build/api-docs')],
+      },
       sidebar: sidebar,
       routeMiddleware: './src/route-middleware.ts',
       // ...
@@ -146,6 +159,10 @@ export default defineConfig({
 })
 ```
 
+Notable config details:
+- `themeCssSelector` on Expressive Code makes code block themes follow Starlight's `[data-theme]` attribute rather than the browser's `prefers-color-scheme`, keeping syntax highlighting in sync with the site's theme toggle.
+- `processedDirs` tells Starlight to run its rehype plugins (e.g. heading anchor links) on the real resolved paths of the API docs symlinks.
+
 ## Temporary Migration Script (`scripts/update-docs.ts`)
 
 **What it does:** Converts documentation files from MkDocs markdown format to Astro/Starlight markdown format.
@@ -155,6 +172,10 @@ export default defineConfig({
 **Current approach:** Source control keeps files in MkDocs format. The script runs at build time to transform them. Once migration is complete, we'll do a final conversion, remove the script, and commit the transformed files directly.
 
 For detailed information about what transformations the script performs (and what's planned), see [`scripts/update-docs.md`](scripts/update-docs.md).
+
+Notable behaviors:
+- Collapsible MkDocs admonitions (`???` and `???+`) are converted alongside standard `!!!` admonitions.
+- Bidirectional-streaming pages are excluded from receiving the experimental sidebar badge (the badge is already present via other means for those pages).
 
 ## Custom Frontmatter Fields
 
@@ -359,7 +380,7 @@ uv run scripts/api-generation-python.py
 - Skips private modules (any module path containing `_` prefix)
 - Skips explicitly excluded modules (e.g., `strands.agent` which just re-exports)
 
-**Output format:** Each module becomes a flat MDX file named `strands.module.name.mdx` with frontmatter containing the title and slug.
+**Output format:** Each module becomes a flat MDX file named `strands.module.name.mdx` with frontmatter containing the title, slug, and `editUrl: false` (suppresses the "Edit this page" link on generated pages).
 
 ### Symlink Setup
 
@@ -384,7 +405,7 @@ The index page (`src/content/docs/api/python/index.mdx`) is a permanent file (no
 
 **Pagination utilities:**
 - `flattenSidebar()` - Converts nested sidebar structure to a flat list of links
-- `getPrevNextLinks()` - Finds the current page in the flattened sidebar and returns prev/next links
+- `getPrevNextLinks(sidebar, titlesByHref?)` - Finds the current page in the flattened sidebar and returns prev/next links. The optional `titlesByHref` map (href → title) overrides sidebar nav labels with actual page titles.
 
 **Sorting:**
 - Alphabetical A-Z within each level
@@ -438,17 +459,19 @@ Key settings:
 - `fileExtension: ".md"` - Outputs standard markdown format
 - `basePath: ".build/sdk-typescript"` - Strips build path prefix from source links
 - `hideBreadcrumbs: true`, `hidePageHeader: true` - Cleaner output for Starlight integration
+- `excludeExternals: true` - Excludes re-exported symbols from external packages
 
 ### Post-Processing
 
 The generation script performs these transformations after typedoc runs:
 
-1. **Adds frontmatter** with title, slug, and category:
+1. **Adds frontmatter** with title, slug, category, and `editUrl: false` (suppresses the "Edit this page" link since these files are generated):
    ```yaml
    ---
    title: "Agent"
    slug: api/typescript/Agent
    category: classes
+   editUrl: false
    ---
    ```
 

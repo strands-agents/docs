@@ -80,6 +80,21 @@ export function expandFirstLevelGroups(items: SidebarEntry[]): SidebarEntry[] {
  * the current page belongs to, then filters sidebar to only show
  * items whose href starts with that basePath.
  */
+/**
+ * Build a map of href -> page title from the docs collection.
+ * Used to override sidebar labels with actual page titles in prev/next navigation.
+ */
+async function buildTitlesByHref(): Promise<Map<string, string>> {
+  const docs = await getCollection('docs')
+  const map = new Map<string, string>()
+  for (const doc of docs) {
+    if (doc.data.title) {
+      map.set(pathWithBase(`/${doc.id}/`), doc.data.title as string)
+    }
+  }
+  return map
+}
+
 export const onRequest = defineRouteMiddleware(async (context) => {
   const { starlightRoute } = context.locals
   const { sidebar } = starlightRoute
@@ -102,13 +117,14 @@ export const onRequest = defineRouteMiddleware(async (context) => {
       type: 'link',
       label: 'Overview',
       href: pathWithBase('/api/python/'),
-      isCurrent: currentSlug === 'api/python/index',
+      isCurrent: currentSlug === 'api/python',
       badge: undefined,
       attrs: {},
     })
 
+    const titlesByHref = await buildTitlesByHref()
     starlightRoute.sidebar = pythonSidebar
-    starlightRoute.pagination = getPrevNextLinks(pythonSidebar)
+    starlightRoute.pagination = getPrevNextLinks(pythonSidebar, titlesByHref)
     return
   }
 
@@ -128,27 +144,39 @@ export const onRequest = defineRouteMiddleware(async (context) => {
       type: 'link',
       label: 'Overview',
       href: pathWithBase('/api/typescript/'),
-      isCurrent: currentSlug === 'api/typescript/index',
+      isCurrent: currentSlug === 'api/typescript',
       badge: undefined,
       attrs: {},
     })
 
+    const titlesByHref = await buildTitlesByHref()
     starlightRoute.sidebar = tsSidebar
-    starlightRoute.pagination = getPrevNextLinks(tsSidebar)
+    starlightRoute.pagination = getPrevNextLinks(tsSidebar, titlesByHref)
     return
   }
 
   // Find which nav section the current page belongs to
   const currentNav = findCurrentNavSection(currentPath, navLinks)
 
-  // If no matching nav section, show full sidebar
-  if (!currentNav) {
-    starlightRoute.sidebar = expandFirstLevelGroups(sidebar)
+  // If no matching nav section, show empty sidebar
+  if (!currentNav || currentNav.label == "Home") {
+    starlightRoute.sidebar = []
     return
   }
 
   // Otherwise filter it down to the major section that we're in
   const basePath = currentNav.basePath || currentNav.href
   const filteredSidebar = filterSidebarByBasePath(sidebar, basePath)
-  starlightRoute.sidebar = expandFirstLevelGroups(filteredSidebar)
+  const expandedSidebar = expandFirstLevelGroups(filteredSidebar)
+  starlightRoute.sidebar = expandedSidebar
+
+  // Starlight pre-computes pagination from the full sidebar before our middleware runs.
+  // Prune any prev/next links that fall outside the current nav section, then override
+  // labels with actual page titles instead of sidebar nav labels.
+  const titlesByHref = await buildTitlesByHref()
+  const { prev, next } = starlightRoute.pagination
+  starlightRoute.pagination = {
+    prev: prev?.href.startsWith(basePath) ? { ...prev, label: titlesByHref.get(prev.href) ?? prev.label } : undefined,
+    next: next?.href.startsWith(basePath) ? { ...next, label: titlesByHref.get(next.href) ?? next.label } : undefined,
+  }
 })

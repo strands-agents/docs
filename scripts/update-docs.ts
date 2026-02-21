@@ -1,6 +1,7 @@
 import { readdir, readFile, writeFile, mkdir, unlink } from "fs/promises";
 import { join, dirname } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
+import { updateLanguageIndexFiles } from "./update-language-index.js";
 import { getCommunityLabeledFiles, getSidebarLabels, type SidebarInfo } from "../src/sidebar.js";
 import { convertApiLink, isOldApiLink } from "../src/util/api-link-converter.js";
 
@@ -364,7 +365,8 @@ function convertAdmonitions(content: string): string {
     const line = lines[i];
 
     // Match admonition start: !!! type "Title" or !!! type 'Title' or !!! type
-    const admonitionMatch = line.match(/^(\s*)!!!\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
+    // Also matches collapsible variants: ??? type and ???+ type
+    const admonitionMatch = line.match(/^(\s*)(?:!!!|\?\?\?[+]?)\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
 
     if (admonitionMatch) {
       const [, leadingWhitespace, type, title] = admonitionMatch;
@@ -602,7 +604,7 @@ function removeH1Heading(content: string): string {
   return result.join("\n");
 }
 
-function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, sidebarInfo?: SidebarInfo): { modified: boolean; newContent: string } {
+function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, sidebarInfo?: SidebarInfo, isBidiPage?: boolean): { modified: boolean; newContent: string } {
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
@@ -641,7 +643,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   if (hasExperimentalInTitle && titleToUse) {
     titleToUse = titleToUse.replace(/\s*\[Experimental\]\s*/g, "").trim();
   }
-  
+
   // Determine if file needs experimental frontmatter (from title or macro)
   const hasExperimentalContent = hasExperimentalInTitle || hasExperimentalWarningMacro;
   const needsExperimental = hasExperimentalContent && !alreadyHasExperimental;
@@ -650,7 +652,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   // Determine sidebar badge type (experimental takes precedence, then nav badge, then community)
   // Nav badges from <sup> tags: "new", "community", etc.
   const navBadge = sidebarInfo?.badge;
-  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebar;
+  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebar && !isBidiPage;
   const needsNavBadge = navBadge && !alreadyHasSidebar && !needsExperimentalBadge;
   const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebar && !needsExperimentalBadge && !needsNavBadge;
   
@@ -834,7 +836,10 @@ async function main() {
     // Get sidebar info from nav (label and badge)
     const sidebarInfo = sidebarLabels.get(relativePath);
     
-    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, sidebarInfo);
+    // Check if this is a bidi (bidirectional-streaming) page — skip experimental badge for these
+    const isBidiPage = relativePath.startsWith("user-guide/concepts/bidirectional-streaming/");
+
+    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, sidebarInfo, isBidiPage);
 
     // Determine output path (convert .md to .mdx and write to OUTPUT_DIR)
     const outputRelativePath = relativePath.replace(/\.md$/, ".mdx");
@@ -929,6 +934,7 @@ async function main() {
 
   // Run special-case page updates
   await updateQuickstart();
+  await updateLanguageIndexFiles();
 }
 
 main().catch(console.error);

@@ -33,6 +33,8 @@ export default defineConfig({
   integrations: [
     astroExpressiveCode({
       themes: ['github-light', 'github-dark'],
+      // Follow Starlight's data-theme attribute instead of the browser's prefers-color-scheme
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
       styleOverrides: {
         // Match the accent color from the site theme
         frames: {
@@ -42,6 +44,11 @@ export default defineConfig({
     }),
     mdx(),
     starlight({
+      markdown: {
+        // API docs are symlinked from .build/api-docs; processedDirs ensures Starlight's
+        // rehype plugins (e.g. heading anchor links) run on the real resolved paths.
+        processedDirs: [path.resolve('.build/api-docs')],
+      },
       title: 'Strands Agents SDK',
       description: 'A model-driven approach to building AI agents in just a few lines of code.',
       sidebar: sidebar,
@@ -62,7 +69,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/strands-agents/docs/edit/main/docs',
+        baseUrl: 'https://github.com/strands-agents/docs/edit/main/',
       },
       components: {
         Head: './src/components/overrides/Head.astro',

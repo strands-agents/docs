@@ -131,6 +131,7 @@ def generate_docs():
 ---
 title: {module_name}
 slug:  {slug}
+editUrl: false
 ---
 {content}
 """.strip()
