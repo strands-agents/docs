@@ -44,6 +44,11 @@ export default defineConfig({
     }),
     mdx(),
     starlight({
+      markdown: {
+        // API docs are symlinked from .build/api-docs; processedDirs ensures Starlight's
+        // rehype plugins (e.g. heading anchor links) run on the real resolved paths.
+        processedDirs: [path.resolve('.build/api-docs')],
+      },
       title: 'Strands Agents SDK',
       description: 'A model-driven approach to building AI agents in just a few lines of code.',
       sidebar: sidebar,
