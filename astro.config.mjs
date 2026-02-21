@@ -69,7 +69,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/strands-agents/docs/edit/main/docs',
+        baseUrl: 'https://github.com/strands-agents/docs/edit/main/',
       },
       components: {
         Head: './src/components/overrides/Head.astro',

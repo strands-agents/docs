@@ -113,6 +113,7 @@ function processFile(file: FileInfo): void {
 title: "${title}"
 slug: ${slug}
 category: ${file.category}
+editUrl: false
 ---
 
 `

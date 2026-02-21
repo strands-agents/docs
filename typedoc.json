@@ -12,6 +12,7 @@
   "sort": ["source-order"],
   "excludePrivate": true,
   "excludeInternal": true,
+  "excludeExternals": true,
   "includeVersion": false,
   "outputFileStrategy": "members",
   "fileExtension": ".md",
