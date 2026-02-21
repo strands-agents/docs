@@ -102,7 +102,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
       type: 'link',
       label: 'Overview',
       href: pathWithBase('/api/python/'),
-      isCurrent: currentSlug === 'api/python/index',
+      isCurrent: currentSlug === 'api/python',
       badge: undefined,
       attrs: {},
     })
@@ -128,7 +128,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
       type: 'link',
       label: 'Overview',
       href: pathWithBase('/api/typescript/'),
-      isCurrent: currentSlug === 'api/typescript/index',
+      isCurrent: currentSlug === 'api/typescript',
       badge: undefined,
       attrs: {},
     })
