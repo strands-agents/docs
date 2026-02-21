@@ -141,9 +141,9 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   // Find which nav section the current page belongs to
   const currentNav = findCurrentNavSection(currentPath, navLinks)
 
-  // If no matching nav section, show full sidebar
-  if (!currentNav) {
-    starlightRoute.sidebar = expandFirstLevelGroups(sidebar)
+  // If no matching nav section, show empty sidebar
+  if (!currentNav || currentNav.label == "Home") {
+    starlightRoute.sidebar = []
     return
   }
 
