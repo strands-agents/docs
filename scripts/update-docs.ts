@@ -603,7 +603,7 @@ function removeH1Heading(content: string): string {
   return result.join("\n");
 }
 
-function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, sidebarInfo?: SidebarInfo): { modified: boolean; newContent: string } {
+function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, sidebarInfo?: SidebarInfo, isBidiPage?: boolean): { modified: boolean; newContent: string } {
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
@@ -642,7 +642,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   if (hasExperimentalInTitle && titleToUse) {
     titleToUse = titleToUse.replace(/\s*\[Experimental\]\s*/g, "").trim();
   }
-  
+
   // Determine if file needs experimental frontmatter (from title or macro)
   const hasExperimentalContent = hasExperimentalInTitle || hasExperimentalWarningMacro;
   const needsExperimental = hasExperimentalContent && !alreadyHasExperimental;
@@ -651,7 +651,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   // Determine sidebar badge type (experimental takes precedence, then nav badge, then community)
   // Nav badges from <sup> tags: "new", "community", etc.
   const navBadge = sidebarInfo?.badge;
-  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebar;
+  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebar && !isBidiPage;
   const needsNavBadge = navBadge && !alreadyHasSidebar && !needsExperimentalBadge;
   const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebar && !needsExperimentalBadge && !needsNavBadge;
   
@@ -835,7 +835,10 @@ async function main() {
     // Get sidebar info from nav (label and badge)
     const sidebarInfo = sidebarLabels.get(relativePath);
     
-    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, sidebarInfo);
+    // Check if this is a bidi (bidirectional-streaming) page — skip experimental badge for these
+    const isBidiPage = relativePath.startsWith("user-guide/concepts/bidirectional-streaming/");
+
+    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, sidebarInfo, isBidiPage);
 
     // Determine output path (convert .md to .mdx and write to OUTPUT_DIR)
     const outputRelativePath = relativePath.replace(/\.md$/, ".mdx");
