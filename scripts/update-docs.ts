@@ -364,7 +364,8 @@ function convertAdmonitions(content: string): string {
     const line = lines[i];
 
     // Match admonition start: !!! type "Title" or !!! type 'Title' or !!! type
-    const admonitionMatch = line.match(/^(\s*)!!!\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
+    // Also matches collapsible variants: ??? type and ???+ type
+    const admonitionMatch = line.match(/^(\s*)(?:!!!|\?\?\?[+]?)\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
 
     if (admonitionMatch) {
       const [, leadingWhitespace, type, title] = admonitionMatch;
