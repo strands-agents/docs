@@ -237,11 +237,24 @@ export function flattenSidebar(sidebar: SidebarEntry[]): SidebarLink[] {
 
 /**
  * Get previous/next pages in the sidebar based on the current page.
+ * Optionally accepts a map of href -> page title to override sidebar labels with actual page titles.
  */
-export function getPrevNextLinks(sidebar: SidebarEntry[]): PaginationLinks {
+export function getPrevNextLinks(sidebar: SidebarEntry[], titlesByHref?: Map<string, string>): PaginationLinks {
   const entries = flattenSidebar(sidebar)
   const currentIndex = entries.findIndex((entry) => entry.isCurrent)
-  const prev = currentIndex > 0 ? entries[currentIndex - 1] : undefined
-  const next = currentIndex > -1 && currentIndex < entries.length - 1 ? entries[currentIndex + 1] : undefined
+  let prev = currentIndex > 0 ? entries[currentIndex - 1] : undefined
+  let next = currentIndex > -1 && currentIndex < entries.length - 1 ? entries[currentIndex + 1] : undefined
+
+  if (titlesByHref) {
+    if (prev) {
+      const title = titlesByHref.get(prev.href)
+      if (title) prev = { ...prev, label: title }
+    }
+    if (next) {
+      const title = titlesByHref.get(next.href)
+      if (title) next = { ...next, label: title }
+    }
+  }
+
   return { prev, next }
 }
