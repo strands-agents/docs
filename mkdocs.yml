@@ -245,6 +245,13 @@ nav:
         - telegram: community/tools/strands-telegram.md
         - telegram-listener: community/tools/strands-telegram-listener.md
 
+  - Labs:
+      - Overview: labs/index.md
+      - Projects:
+        - Robots: labs/robots.md
+        - Robots Sim: labs/robots-sim.md
+        - AI Functions: labs/ai-functions.md
+
   - Contribute ❤️:
       - Overview: contribute/index.md
       - Contribution Types:
