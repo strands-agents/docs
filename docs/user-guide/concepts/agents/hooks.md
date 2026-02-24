@@ -97,78 +97,117 @@ The `HookProvider` protocol allows a single object to register callbacks for mul
 
 The following diagram shows when hook events are emitted during a typical agent invocation where tools are invoked:
 
-```mermaid
-flowchart LR
- subgraph Start["Request Start Events"]
-    direction TB
-        BeforeInvocationEvent["BeforeInvocationEvent"]
-        StartMessage["MessageAddedEvent"]
-        BeforeInvocationEvent --> StartMessage
-  end
- subgraph Model["Model Events"]
-    direction TB
-        BeforeModelCallEvent["BeforeModelCallEvent"]
-        ModelStreamUpdateEvent["ModelStreamUpdateEvent *"]
-        ContentBlockEvent["ContentBlockEvent *"]
-        ModelMessageEvent["ModelMessageEvent *"]
-        AfterModelCallEvent["AfterModelCallEvent"]
-        ModelMessage["MessageAddedEvent"]
-        BeforeModelCallEvent --> ModelStreamUpdateEvent
-        ModelStreamUpdateEvent --> ContentBlockEvent
-        ContentBlockEvent --> ModelMessageEvent
-        ModelMessageEvent --> AfterModelCallEvent
-        AfterModelCallEvent --> ModelMessage
-  end
-  subgraph Tool["Tool Events"]
-    direction TB
-        BeforeToolCallEvent["BeforeToolCallEvent"]
-        ToolStreamUpdateEvent["ToolStreamUpdateEvent *"]
-        ToolResultEvent["ToolResultEvent *"]
-        AfterToolCallEvent["AfterToolCallEvent"]
-        ToolMessage["MessageAddedEvent"]
-        BeforeToolCallEvent --> ToolStreamUpdateEvent
-        ToolStreamUpdateEvent --> ToolResultEvent
-        ToolResultEvent --> AfterToolCallEvent
-        AfterToolCallEvent --> ToolMessage
-  end
-  subgraph End["Request End Events"]
-    direction TB
-        AgentResultEvent["AgentResultEvent *"]
-        AfterInvocationEvent["AfterInvocationEvent"]
-        AgentResultEvent --> AfterInvocationEvent
-  end
-Start --> Model
-Model <--> Tool
-Tool --> End
-```
+=== "Python"
 
-*\* Data events are TypeScript only. In Python, equivalent data is available through the streaming event dictionary.*
+    ```mermaid
+    flowchart LR
+     subgraph Start["Request Start Events"]
+        direction TB
+            BeforeInvocationEvent["BeforeInvocationEvent"]
+            StartMessage["MessageAddedEvent"]
+            BeforeInvocationEvent --> StartMessage
+      end
+     subgraph Model["Model Events"]
+        direction TB
+            BeforeModelCallEvent["BeforeModelCallEvent"]
+            AfterModelCallEvent["AfterModelCallEvent"]
+            ModelMessage["MessageAddedEvent"]
+            BeforeModelCallEvent --> AfterModelCallEvent
+            AfterModelCallEvent --> ModelMessage
+      end
+      subgraph Tool["Tool Events"]
+        direction TB
+            BeforeToolCallEvent["BeforeToolCallEvent"]
+            AfterToolCallEvent["AfterToolCallEvent"]
+            ToolMessage["MessageAddedEvent"]
+            BeforeToolCallEvent --> AfterToolCallEvent
+            AfterToolCallEvent --> ToolMessage
+      end
+      subgraph End["Request End Events"]
+        direction TB
+            AfterInvocationEvent["AfterInvocationEvent"]
+      end
+    Start --> Model
+    Model <--> Tool
+    Tool --> End
+    ```
+
+=== "TypeScript"
+
+    ```mermaid
+    flowchart LR
+     subgraph Start["Request Start Events"]
+        direction TB
+            BeforeInvocationEvent["BeforeInvocationEvent"]
+            StartMessage["MessageAddedEvent"]
+            BeforeInvocationEvent --> StartMessage
+      end
+     subgraph Model["Model Events"]
+        direction TB
+            BeforeModelCallEvent["BeforeModelCallEvent"]
+            ModelStreamUpdateEvent["ModelStreamUpdateEvent"]
+            ContentBlockEvent["ContentBlockEvent"]
+            ModelMessageEvent["ModelMessageEvent"]
+            AfterModelCallEvent["AfterModelCallEvent"]
+            ModelMessage["MessageAddedEvent"]
+            BeforeModelCallEvent --> ModelStreamUpdateEvent
+            ModelStreamUpdateEvent --> ContentBlockEvent
+            ContentBlockEvent --> ModelMessageEvent
+            ModelMessageEvent --> AfterModelCallEvent
+            AfterModelCallEvent --> ModelMessage
+      end
+      subgraph Tool["Tool Events"]
+        direction TB
+            BeforeToolCallEvent["BeforeToolCallEvent"]
+            ToolStreamUpdateEvent["ToolStreamUpdateEvent"]
+            ToolResultEvent["ToolResultEvent"]
+            AfterToolCallEvent["AfterToolCallEvent"]
+            ToolMessage["MessageAddedEvent"]
+            BeforeToolCallEvent --> ToolStreamUpdateEvent
+            ToolStreamUpdateEvent --> ToolResultEvent
+            ToolResultEvent --> AfterToolCallEvent
+            AfterToolCallEvent --> ToolMessage
+      end
+      subgraph End["Request End Events"]
+        direction TB
+            AgentResultEvent["AgentResultEvent"]
+            AfterInvocationEvent["AfterInvocationEvent"]
+            AgentResultEvent --> AfterInvocationEvent
+      end
+    Start --> Model
+    Model <--> Tool
+    Tool --> End
+    ```
 
 ### Multi-Agent Lifecycle
 
 The following diagram shows when multi-agent hook events are emitted during orchestrator execution:
 
-```mermaid
-flowchart LR
-subgraph Init["Initialization"]
-    direction TB
-    MultiAgentInitializedEvent["MultiAgentInitializedEvent"]
-end
-subgraph Invocation["Invocation Lifecycle"]
-    direction TB
-    BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
-    AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
-    BeforeMultiAgentInvocationEvent --> NodeExecution
-    NodeExecution --> AfterMultiAgentInvocationEvent
-end
-subgraph NodeExecution["Node Execution (Repeated)"]
-    direction TB
-    BeforeNodeCallEvent["BeforeNodeCallEvent"]
-    AfterNodeCallEvent["AfterNodeCallEvent"]
-    BeforeNodeCallEvent --> AfterNodeCallEvent
-end
-Init --> Invocation
-```
+=== "Python"
+
+    ```mermaid
+    flowchart LR
+    subgraph Init["Initialization"]
+        direction TB
+        MultiAgentInitializedEvent["MultiAgentInitializedEvent"]
+    end
+    subgraph Invocation["Invocation Lifecycle"]
+        direction TB
+        BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
+        AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
+        BeforeMultiAgentInvocationEvent --> NodeExecution
+        NodeExecution --> AfterMultiAgentInvocationEvent
+    end
+    subgraph NodeExecution["Node Execution (Repeated)"]
+        direction TB
+        BeforeNodeCallEvent["BeforeNodeCallEvent"]
+        AfterNodeCallEvent["AfterNodeCallEvent"]
+        BeforeNodeCallEvent --> AfterNodeCallEvent
+    end
+    Init --> Invocation
+    ```
+
+{{ ts_not_supported_code("Multi-agent orchestration is not yet available in TypeScript SDK") }}
 
 ### Available Events
 
