@@ -277,6 +277,9 @@ Most event properties are read-only to prevent unintended modifications. However
     - `AfterModelCallEvent`
         - `retry` - Request a retry of the model invocation.
 
+    - `AfterToolCallEvent`
+        - `retry` - Request a retry of the tool invocation.
+
 ### Callback Ordering
 
 Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
