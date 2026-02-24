@@ -107,28 +107,42 @@ flowchart LR
   end
  subgraph Model["Model Events"]
     direction TB
-        AfterModelCallEvent["AfterModelCallEvent"]
         BeforeModelCallEvent["BeforeModelCallEvent"]
+        ModelStreamUpdateEvent["ModelStreamUpdateEvent *"]
+        ContentBlockEvent["ContentBlockEvent *"]
+        ModelMessageEvent["ModelMessageEvent *"]
+        AfterModelCallEvent["AfterModelCallEvent"]
         ModelMessage["MessageAddedEvent"]
-        BeforeModelCallEvent --> AfterModelCallEvent
+        BeforeModelCallEvent --> ModelStreamUpdateEvent
+        ModelStreamUpdateEvent --> ContentBlockEvent
+        ContentBlockEvent --> ModelMessageEvent
+        ModelMessageEvent --> AfterModelCallEvent
         AfterModelCallEvent --> ModelMessage
   end
   subgraph Tool["Tool Events"]
     direction TB
-        AfterToolCallEvent["AfterToolCallEvent"]
         BeforeToolCallEvent["BeforeToolCallEvent"]
+        ToolStreamUpdateEvent["ToolStreamUpdateEvent *"]
+        ToolResultEvent["ToolResultEvent *"]
+        AfterToolCallEvent["AfterToolCallEvent"]
         ToolMessage["MessageAddedEvent"]
-        BeforeToolCallEvent --> AfterToolCallEvent
+        BeforeToolCallEvent --> ToolStreamUpdateEvent
+        ToolStreamUpdateEvent --> ToolResultEvent
+        ToolResultEvent --> AfterToolCallEvent
         AfterToolCallEvent --> ToolMessage
   end
   subgraph End["Request End Events"]
     direction TB
+        AgentResultEvent["AgentResultEvent *"]
         AfterInvocationEvent["AfterInvocationEvent"]
+        AgentResultEvent --> AfterInvocationEvent
   end
 Start --> Model
 Model <--> Tool
 Tool --> End
 ```
+
+*\* Data events are TypeScript only. In Python, equivalent data is available through the streaming event dictionary.*
 
 ### Multi-Agent Lifecycle
 
@@ -158,7 +172,9 @@ Init --> Invocation
 
 ### Available Events
 
-The hooks system provides events for different stages of execution. Events marked **(Python only)** are specific to multi-agent orchestrators and are not available in TypeScript.
+The hooks system provides events for different stages of execution. Events marked **(Python only)** or **(TypeScript only)** are specific to that SDK.
+
+#### Lifecycle Events
 
 | Event                                                       | Description                                                                                                   |
 |-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -172,11 +188,29 @@ The hooks system provides events for different stages of execution. Events marke
 | `AfterToolCallEvent`                                        | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
 | `BeforeToolsEvent` <br /> **(TypeScript only)**             | Triggered before tools are executed in a batch.                                                               |
 | `AfterToolsEvent` <br /> **(TypeScript only)**              | Triggered after tools are executed in a batch. Uses reverse callback ordering                                 |
-| `MultiAgentInitializedEvent` <br /> **(Python only)**       | Triggered when multi-agent orchestrator is initialized                                                        |
-| `BeforeMultiAgentInvocationEvent`  <br /> **(Python only)** | Triggered before orchestrator execution starts                                                                |
-| `AfterMultiAgentInvocationEvent`  <br /> **(Python only)**  | Triggered after orchestrator execution completes. Uses reverse callback ordering                              |
-| `BeforeNodeCallEvent`  <br /> **(Python only)**             | Triggered before individual node execution starts                                                             |
-| `AfterNodeCallEvent`  <br /> **(Python only)**              | Triggered after individual node execution completes. Uses reverse callback ordering                           |
+
+#### Data Events (TypeScript only)
+
+In TypeScript, all events yielded by `agent.stream()` are hookable — including data events that wrap model output, tool results, and streaming progress. This means you can subscribe to these events via the hook system for observability, logging, or custom processing.
+
+| Event                    | Description                                                                                                    |
+|--------------------------|----------------------------------------------------------------------------------------------------------------|
+| `ModelStreamUpdateEvent` | Wraps each transient streaming delta (`ModelStreamEvent`) from the model during inference. Access via `.event` |
+| `ContentBlockEvent`      | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock) as it completes. Access via `.contentBlock` |
+| `ModelMessageEvent`      | Wraps the complete model message after all content blocks are assembled. Access via `.message`                  |
+| `ToolStreamUpdateEvent`  | Wraps streaming progress events from tool execution (`ToolStreamEvent`). Access via `.event`                   |
+| `ToolResultEvent`        | Wraps a completed tool result. Access via `.result`                                                            |
+| `AgentResultEvent`       | Wraps the final agent result at the end of the invocation. Access via `.result`                                |
+
+#### Multi-Agent Events (Python only)
+
+| Event                              | Description                                                                                    |
+|------------------------------------|------------------------------------------------------------------------------------------------|
+| `MultiAgentInitializedEvent`       | Triggered when multi-agent orchestrator is initialized                                         |
+| `BeforeMultiAgentInvocationEvent`  | Triggered before orchestrator execution starts                                                 |
+| `AfterMultiAgentInvocationEvent`   | Triggered after orchestrator execution completes. Uses reverse callback ordering               |
+| `BeforeNodeCallEvent`              | Triggered before individual node execution starts                                              |
+| `AfterNodeCallEvent`               | Triggered after individual node execution completes. Uses reverse callback ordering            |
 
 ## Hook Behaviors
 
@@ -354,7 +388,11 @@ Design hooks to be composable and reusable:
         ...
     ```
 
-{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/hooks.ts:composability"
+    ```
 
 ### Event Property Modifications
 
@@ -465,10 +503,10 @@ Useful for enforcing security policies, maintaining consistency, or overriding a
         def __init__(self, fixed_tool_arguments: dict[str, dict[str, Any]]):
             """
             Initialize fixed parameter values for tools.
-        
+
             Args:
-                fixed_tool_arguments: A dictionary mapping tool names to dictionaries of 
-                    parameter names and their fixed values. These values will override any 
+                fixed_tool_arguments: A dictionary mapping tool names to dictionaries of
+                    parameter names and their fixed values. These values will override any
                     values provided by the agent when the tool is invoked.
             """
             self._tools_to_fix = fixed_tool_arguments
@@ -483,7 +521,11 @@ Useful for enforcing security policies, maintaining consistency, or overriding a
                 tool_input.update(parameters_to_fix)
     ```
 
-{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/hooks.ts:fixed_tool_arguments_class"
+    ```
 
 For example, to always force the `calculator` tool to use precision of 1 digit:
 
@@ -500,7 +542,11 @@ For example, to always force the `calculator` tool to use precision of 1 digit:
     result = agent("What is 2 / 3?")
     ```
 
-{{ ts_not_supported_code("Changing of tools is not yet available in TypeScript SDK") }}
+=== "TypeScript"
+
+    ```typescript
+    --8<-- "user-guide/concepts/agents/hooks.ts:fixed_tool_arguments_usage"
+    ```
 
 ### Limit Tool Counts
 
