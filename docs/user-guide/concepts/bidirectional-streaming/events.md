@@ -6,7 +6,7 @@ Bidirectional streaming events enable real-time monitoring and processing of aud
 
 ## Event Model
 
-Bidirectional streaming uses a different event model than [standard streaming](../../streaming/index.md):
+Bidirectional streaming uses a different event model than [standard streaming](../streaming/index.md):
 
 **Standard Streaming:**
 
