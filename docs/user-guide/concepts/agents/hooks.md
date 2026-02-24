@@ -172,7 +172,7 @@ Init --> Invocation
 
 ### Available Events
 
-The hooks system provides events for different stages of execution. Events marked **(Python only)** are specific to multi-agent orchestrators and are not available in TypeScript.
+The hooks system provides events for different stages of execution. Events marked **(Python only)** or **(TypeScript only)** are specific to that SDK.
 
 | Event                                                       | Description                                                                                                   |
 |-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -182,16 +182,16 @@ The hooks system provides events for different stages of execution. Events marke
 | `MessageAddedEvent`                                         | Triggered when a message is added to the agent's conversation history                                         |
 | `BeforeModelCallEvent`                                      | Triggered before the model is invoked for inference                                                           |
 | `AfterModelCallEvent`                                       | Triggered after model invocation completes. Uses reverse callback ordering                                    |
-| `ModelStreamUpdateEvent`                                    | Wraps each transient streaming delta from the model during inference. Access via `.event`                     |
-| `ContentBlockEvent`                                         | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock). Access via `.contentBlock`   |
-| `ModelMessageEvent`                                         | Wraps the complete model message after all blocks are assembled. Access via `.message`                        |
+| `ModelStreamUpdateEvent` <br /> **(TypeScript only)**       | Wraps each transient streaming delta from the model during inference. Access via `.event`                     |
+| `ContentBlockEvent` <br /> **(TypeScript only)**            | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock). Access via `.contentBlock`   |
+| `ModelMessageEvent` <br /> **(TypeScript only)**            | Wraps the complete model message after all blocks are assembled. Access via `.message`                        |
 | `BeforeToolCallEvent`                                       | Triggered before a tool is invoked.                                                                           |
 | `AfterToolCallEvent`                                        | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
 | `BeforeToolsEvent` <br /> **(TypeScript only)**             | Triggered before tools are executed in a batch.                                                               |
 | `AfterToolsEvent` <br /> **(TypeScript only)**              | Triggered after tools are executed in a batch. Uses reverse callback ordering                                 |
-| `ToolStreamUpdateEvent`                                     | Wraps streaming progress events from tool execution. Access via `.event`                                     |
-| `ToolResultEvent`                                           | Wraps a completed tool result. Access via `.result`                                                          |
-| `AgentResultEvent`                                          | Wraps the final agent result at the end of the invocation. Access via `.result`                               |
+| `ToolStreamUpdateEvent` <br /> **(TypeScript only)**        | Wraps streaming progress events from tool execution. Access via `.event`                                     |
+| `ToolResultEvent` <br /> **(TypeScript only)**              | Wraps a completed tool result. Access via `.result`                                                          |
+| `AgentResultEvent` <br /> **(TypeScript only)**             | Wraps the final agent result at the end of the invocation. Access via `.result`                               |
 | `MultiAgentInitializedEvent` <br /> **(Python only)**       | Triggered when multi-agent orchestrator is initialized                                                        |
 | `BeforeMultiAgentInvocationEvent`  <br /> **(Python only)** | Triggered before orchestrator execution starts                                                                |
 | `AfterMultiAgentInvocationEvent`  <br /> **(Python only)**  | Triggered after orchestrator execution completes. Uses reverse callback ordering                              |
