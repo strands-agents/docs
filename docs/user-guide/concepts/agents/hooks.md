@@ -174,8 +174,6 @@ Init --> Invocation
 
 The hooks system provides events for different stages of execution. Events marked **(Python only)** or **(TypeScript only)** are specific to that SDK.
 
-#### Lifecycle Events
-
 | Event                                                       | Description                                                                                                   |
 |-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | `AgentInitializedEvent`                                     | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor. |
@@ -188,29 +186,17 @@ The hooks system provides events for different stages of execution. Events marke
 | `AfterToolCallEvent`                                        | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
 | `BeforeToolsEvent` <br /> **(TypeScript only)**             | Triggered before tools are executed in a batch.                                                               |
 | `AfterToolsEvent` <br /> **(TypeScript only)**              | Triggered after tools are executed in a batch. Uses reverse callback ordering                                 |
-
-#### Data Events (TypeScript only)
-
-In TypeScript, all events yielded by `agent.stream()` are hookable — including data events that wrap model output, tool results, and streaming progress. This means you can subscribe to these events via the hook system for observability, logging, or custom processing.
-
-| Event                    | Description                                                                                                    |
-|--------------------------|----------------------------------------------------------------------------------------------------------------|
-| `ModelStreamUpdateEvent` | Wraps each transient streaming delta (`ModelStreamEvent`) from the model during inference. Access via `.event` |
-| `ContentBlockEvent`      | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock) as it completes. Access via `.contentBlock` |
-| `ModelMessageEvent`      | Wraps the complete model message after all content blocks are assembled. Access via `.message`                  |
-| `ToolStreamUpdateEvent`  | Wraps streaming progress events from tool execution (`ToolStreamEvent`). Access via `.event`                   |
-| `ToolResultEvent`        | Wraps a completed tool result. Access via `.result`                                                            |
-| `AgentResultEvent`       | Wraps the final agent result at the end of the invocation. Access via `.result`                                |
-
-#### Multi-Agent Events (Python only)
-
-| Event                              | Description                                                                                    |
-|------------------------------------|------------------------------------------------------------------------------------------------|
-| `MultiAgentInitializedEvent`       | Triggered when multi-agent orchestrator is initialized                                         |
-| `BeforeMultiAgentInvocationEvent`  | Triggered before orchestrator execution starts                                                 |
-| `AfterMultiAgentInvocationEvent`   | Triggered after orchestrator execution completes. Uses reverse callback ordering               |
-| `BeforeNodeCallEvent`              | Triggered before individual node execution starts                                              |
-| `AfterNodeCallEvent`               | Triggered after individual node execution completes. Uses reverse callback ordering            |
+| `ModelStreamUpdateEvent` <br /> **(TypeScript only)**       | Wraps each transient streaming delta from the model during inference. Access via `.event`                     |
+| `ContentBlockEvent` <br /> **(TypeScript only)**            | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock). Access via `.contentBlock`   |
+| `ModelMessageEvent` <br /> **(TypeScript only)**            | Wraps the complete model message after all blocks are assembled. Access via `.message`                        |
+| `ToolStreamUpdateEvent` <br /> **(TypeScript only)**        | Wraps streaming progress events from tool execution. Access via `.event`                                     |
+| `ToolResultEvent` <br /> **(TypeScript only)**              | Wraps a completed tool result. Access via `.result`                                                          |
+| `AgentResultEvent` <br /> **(TypeScript only)**             | Wraps the final agent result at the end of the invocation. Access via `.result`                               |
+| `MultiAgentInitializedEvent` <br /> **(Python only)**       | Triggered when multi-agent orchestrator is initialized                                                        |
+| `BeforeMultiAgentInvocationEvent`  <br /> **(Python only)** | Triggered before orchestrator execution starts                                                                |
+| `AfterMultiAgentInvocationEvent`  <br /> **(Python only)**  | Triggered after orchestrator execution completes. Uses reverse callback ordering                              |
+| `BeforeNodeCallEvent`  <br /> **(Python only)**             | Triggered before individual node execution starts                                                             |
+| `AfterNodeCallEvent`  <br /> **(Python only)**              | Triggered after individual node execution completes. Uses reverse callback ordering                           |
 
 ## Hook Behaviors
 
@@ -235,7 +221,7 @@ Most event properties are read-only to prevent unintended modifications. However
 === "TypeScript"
 
     - `AfterModelCallEvent`
-        - `retryModelCall` - Request a retry of the model invocation (typically after reducing context size).
+        - `retry` - Request a retry of the model invocation.
 
 ### Callback Ordering
 
