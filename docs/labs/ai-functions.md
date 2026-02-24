@@ -392,7 +392,7 @@ def report_writer(topic: str) -> str:
 #     tools=[websearch]
 # )
 #
-# response = agent.run("Research quantum computing and write a report")
+# response = agent("Research quantum computing and write a report")
 ```
 
 

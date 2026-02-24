@@ -1,4 +1,4 @@
-Strands Labs is the experimental arm of [Strands Agents](https://strandsagents.com) - a space for projects that push the boundaries of what AI agents can do. Labs projects explore new domains, validate novel approaches, and move fast. All projects are open source.
+[Strands Labs](https://github.com/strands-labs) is the experimental arm of Strands Agents - a space for projects that push the boundaries of what AI agents can do. Labs projects explore new domains, validate novel approaches, and move fast. All projects are open source.
 
 While the core Strands Agents SDK provides the foundation for building agents - the agent loop, tool use, model providers, and multi-agent patterns - Labs is where that foundation gets applied to new problem spaces. These are projects that extend agents into areas like physical robotics, simulation-based evaluation, and new programming abstractions. Some Labs projects may eventually graduate into the core SDK or become standalone products; others may remain experimental. The common thread is that they all build on agentic AI in open source and are designed to be used alongside it.
 
