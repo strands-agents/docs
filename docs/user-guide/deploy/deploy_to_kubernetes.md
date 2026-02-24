@@ -5,8 +5,8 @@ This guide covers deploying containerized Strands agents to Kubernetes using Kin
 ## Prerequisites
 
 - **Docker deployment guide completed** - You must have a working containerized agent before proceeding:
-    - [Python Docker guide](../deploy_to_docker/python) 
-    - [TypeScript Docker guide](../deploy_to_docker/typescript)
+    - [Python Docker guide](deploy_to_docker/python.md) 
+    - [TypeScript Docker guide](deploy_to_docker/typescript.md)
 - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) installed
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) installed
 
@@ -24,7 +24,7 @@ kubectl get nodes
 
 ## Step 2: Create Kubernetes Manifests
 
-The following assume you have completed the [Docker deployment guide](../deploy_to_docker) with the following file structure:
+The following assume you have completed the [Docker deployment guide](deploy_to_docker/index.md) with the following file structure:
 
 
 Project Structure (Python):
@@ -206,7 +206,7 @@ kubectl apply -f k8s-deployment.yaml
 ## Additional Resources
 
 - [Docker Documentation](https://docs.docker.com/)
-- [Strands Docker Deploy Documentation](../deploy_to_docker)
+- [Strands Docker Deploy Documentation](deploy_to_docker/index.md)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [Kubectl Reference](https://kubernetes.io/docs/reference/kubectl/)
 - [Kubernetes Deployment Guide](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)

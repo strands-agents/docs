@@ -4,16 +4,16 @@ This guide covers deploying Strands agents using Terraform infrastructure as cod
 
 Terraform supports multiple deployment targets. This deploy example illustates four deploy options from different Cloud Service Providers:
 
-- **[AWS App Runner](#option-a-aws-app-runner-containerized)** - Simple containerized deployment with automatic scaling
-- **[AWS Lambda](#option-b-aws-lambda-serverless)** - Serverless functions for event-driven workloads
-- **[Google Cloud Run](#option-c-google-cloud-run)** - Fully managed serverless containers
-- **[Azure Container Instances](#option-d-azure-container-instances)** - Simple container deployment
+- **[AWS App Runner](#step-2-cloud-deployment-setup)** - Simple containerized deployment with automatic scaling
+- **[AWS Lambda](#step-2-cloud-deployment-setup)** - Serverless functions for event-driven workloads
+- **[Google Cloud Run](#step-2-cloud-deployment-setup)** - Fully managed serverless containers
+- **[Azure Container Instances](#step-2-cloud-deployment-setup)** - Simple container deployment
 
 ## Prerequisites
 
 - **Docker deployment guide completed** - You must have a working containerized agent before proceeding:
-    - [Python Docker guide](../deploy_to_docker/python) 
-    - [TypeScript Docker guide](../deploy_to_docker/typescript)
+    - [Python Docker guide](deploy_to_docker/python.md) 
+    - [TypeScript Docker guide](deploy_to_docker/typescript.md)
 - [Terraform](https://www.terraform.io/downloads.html) installed
 - Cloud provider CLI configured:
     - AWS: [AWS CLI credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
@@ -23,7 +23,7 @@ Terraform supports multiple deployment targets. This deploy example illustates f
 
 ## Step 1: Container Registry Deployment
 
-Cloud deployment requires your containerized agent to be available in a container registry. The following assumes you have completed the [Docker deployment guide](../deploy_to_docker) and pushed your image to the appropriate registry:
+Cloud deployment requires your containerized agent to be available in a container registry. The following assumes you have completed the [Docker deployment guide](deploy_to_docker/index.md) and pushed your image to the appropriate registry:
 
 **Docker Tutorial Project Structure:**
 
@@ -1117,7 +1117,7 @@ terraform destroy
 
 ## Additional Resources
 
-- [Strands Docker Deploy Documentation](../deploy_to_docker)
+- [Strands Docker Deploy Documentation](deploy_to_docker/index.md)
 - [Terraform Documentation](https://www.terraform.io/docs/)
 - [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 - [Terraform Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs)

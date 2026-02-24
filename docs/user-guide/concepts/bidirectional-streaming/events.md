@@ -320,7 +320,7 @@ Events for tool execution during conversations. Bidirectional streaming reuses t
 
 #### ToolUseStreamEvent
 
-Emitted when the model requests tool execution. See [Tools Overview](../../tools/index.md) for details.
+Emitted when the model requests tool execution. See [Tools Overview](../tools/index.md) for details.
 
 ```python
 {
