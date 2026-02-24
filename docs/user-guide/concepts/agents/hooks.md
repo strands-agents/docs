@@ -172,31 +172,46 @@ Init --> Invocation
 
 ### Available Events
 
-The hooks system provides events for different stages of execution. Events marked **(Python only)** or **(TypeScript only)** are specific to that SDK.
+=== "Python"
 
-| Event                                                       | Description                                                                                                   |
-|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| `AgentInitializedEvent`                                     | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor. |
-| `BeforeInvocationEvent`                                     | Triggered at the beginning of a new agent invocation request                                                  |
-| `AfterInvocationEvent`                                      | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering    |
-| `MessageAddedEvent`                                         | Triggered when a message is added to the agent's conversation history                                         |
-| `BeforeModelCallEvent`                                      | Triggered before the model is invoked for inference                                                           |
-| `AfterModelCallEvent`                                       | Triggered after model invocation completes. Uses reverse callback ordering                                    |
-| `ModelStreamUpdateEvent` <br /> **(TypeScript only)**       | Wraps each transient streaming delta from the model during inference. Access via `.event`                     |
-| `ContentBlockEvent` <br /> **(TypeScript only)**            | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock). Access via `.contentBlock`   |
-| `ModelMessageEvent` <br /> **(TypeScript only)**            | Wraps the complete model message after all blocks are assembled. Access via `.message`                        |
-| `BeforeToolCallEvent`                                       | Triggered before a tool is invoked.                                                                           |
-| `AfterToolCallEvent`                                        | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
-| `BeforeToolsEvent` <br /> **(TypeScript only)**             | Triggered before tools are executed in a batch.                                                               |
-| `AfterToolsEvent` <br /> **(TypeScript only)**              | Triggered after tools are executed in a batch. Uses reverse callback ordering                                 |
-| `ToolStreamUpdateEvent` <br /> **(TypeScript only)**        | Wraps streaming progress events from tool execution. Access via `.event`                                     |
-| `ToolResultEvent` <br /> **(TypeScript only)**              | Wraps a completed tool result. Access via `.result`                                                          |
-| `AgentResultEvent` <br /> **(TypeScript only)**             | Wraps the final agent result at the end of the invocation. Access via `.result`                               |
-| `MultiAgentInitializedEvent` <br /> **(Python only)**       | Triggered when multi-agent orchestrator is initialized                                                        |
-| `BeforeMultiAgentInvocationEvent`  <br /> **(Python only)** | Triggered before orchestrator execution starts                                                                |
-| `AfterMultiAgentInvocationEvent`  <br /> **(Python only)**  | Triggered after orchestrator execution completes. Uses reverse callback ordering                              |
-| `BeforeNodeCallEvent`  <br /> **(Python only)**             | Triggered before individual node execution starts                                                             |
-| `AfterNodeCallEvent`  <br /> **(Python only)**              | Triggered after individual node execution completes. Uses reverse callback ordering                           |
+    | Event                              | Description                                                                                                   |
+    |------------------------------------|---------------------------------------------------------------------------------------------------------------|
+    | `AgentInitializedEvent`            | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor. |
+    | `BeforeInvocationEvent`            | Triggered at the beginning of a new agent invocation request                                                  |
+    | `AfterInvocationEvent`             | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering    |
+    | `MessageAddedEvent`                | Triggered when a message is added to the agent's conversation history                                         |
+    | `BeforeModelCallEvent`             | Triggered before the model is invoked for inference                                                           |
+    | `AfterModelCallEvent`              | Triggered after model invocation completes. Uses reverse callback ordering                                    |
+    | `BeforeToolCallEvent`              | Triggered before a tool is invoked                                                                            |
+    | `AfterToolCallEvent`               | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
+    | `MultiAgentInitializedEvent`       | Triggered when multi-agent orchestrator is initialized                                                        |
+    | `BeforeMultiAgentInvocationEvent`  | Triggered before orchestrator execution starts                                                                |
+    | `AfterMultiAgentInvocationEvent`   | Triggered after orchestrator execution completes. Uses reverse callback ordering                              |
+    | `BeforeNodeCallEvent`              | Triggered before individual node execution starts                                                             |
+    | `AfterNodeCallEvent`               | Triggered after individual node execution completes. Uses reverse callback ordering                           |
+
+=== "TypeScript"
+
+    All events extend `HookableEvent`, making them both streamable via `agent.stream()` and subscribable via hook callbacks.
+
+    | Event                    | Description                                                                                                   |
+    |--------------------------|---------------------------------------------------------------------------------------------------------------|
+    | `AgentInitializedEvent`  | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor. |
+    | `BeforeInvocationEvent`  | Triggered at the beginning of a new agent invocation request                                                  |
+    | `AfterInvocationEvent`   | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering    |
+    | `MessageAddedEvent`      | Triggered when a message is added to the agent's conversation history                                         |
+    | `BeforeModelCallEvent`   | Triggered before the model is invoked for inference                                                           |
+    | `AfterModelCallEvent`    | Triggered after model invocation completes. Uses reverse callback ordering                                    |
+    | `ModelStreamUpdateEvent` | Wraps each transient streaming delta from the model during inference. Access via `.event`                     |
+    | `ContentBlockEvent`      | Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock). Access via `.contentBlock`   |
+    | `ModelMessageEvent`      | Wraps the complete model message after all blocks are assembled. Access via `.message`                        |
+    | `BeforeToolCallEvent`    | Triggered before a tool is invoked                                                                            |
+    | `AfterToolCallEvent`     | Triggered after tool invocation completes. Uses reverse callback ordering                                     |
+    | `BeforeToolsEvent`       | Triggered before tools are executed in a batch                                                                |
+    | `AfterToolsEvent`        | Triggered after tools are executed in a batch. Uses reverse callback ordering                                 |
+    | `ToolStreamUpdateEvent`  | Wraps streaming progress events from tool execution. Access via `.event`                                      |
+    | `ToolResultEvent`        | Wraps a completed tool result. Access via `.result`                                                           |
+    | `AgentResultEvent`       | Wraps the final agent result at the end of the invocation. Access via `.result`                               |
 
 ## Hook Behaviors
 
