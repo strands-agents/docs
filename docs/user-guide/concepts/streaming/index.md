@@ -27,21 +27,22 @@ All streaming methods yield the same set of events:
 
 === "TypeScript"
 
-    Each event emitted from the typescript agent is a class with a `type` attribute that has a unique value. When determining an event, you can use `instanceof` on the class, or an equality check on the `event.type` value.
+    Each event emitted from the TypeScript agent is a class with a `type` attribute that has a unique value. When determining an event, you can use `instanceof` on the class, or an equality check on the `event.type` value. All events extend `HookableEvent`, making them both streamable and subscribable via hook callbacks.
 
     - **`BeforeInvocationEvent`**: Start of agent loop (before any iterations)
     - **`AfterInvocationEvent`**: End of agent loop (after all iterations complete)
         - **`error?`**: Optional error if loop terminated due to exception
-    - **`BeforeModelEvent`**: Before model invocation
+    - **`BeforeModelCallEvent`**: Before model invocation
         - **`messages`**: Array of messages being sent to model
-    - **`AfterModelEvent`**: After model invocation
+    - **`AfterModelCallEvent`**: After model invocation
         - **`message`**: Assistant message returned by model
         - **`stopReason`**: Why generation stopped
     - **`BeforeToolsEvent`**: Before tools execution
         - **`message`**: Assistant message containing tool use blocks
     - **`AfterToolsEvent`**: After tools execution
         - **`message`**: User message containing tool results
-    
+    - **`AgentResultEvent`**: Final agent result
+        - **`result`**: The `AgentResult` with `stopReason`, `lastMessage`, and optional `structuredOutput`
 
 ### Model Stream Events
 
@@ -56,12 +57,15 @@ All streaming methods yield the same set of events:
 
 === "TypeScript"
 
-    - **`ModelMessageStartEvent`**: Start of a message from the model
-    - **`ModelContentBlockStartEvent`**: Start of a content block from a model for text, toolUse, reasoning, etc.
-    - **`ModelContentBlockDeltaEvent`**: Content deltas for text, tool input, or reasoning
-    - **`ModelContentBlockStopEvent`**: End of a content block
-    - **`ModelMessageStopEvent`**: End of a message
-    - **`ModelMetadataEvent`**: Usage and metrics metadata
+    - **`ModelStreamUpdateEvent`**: Wraps transient model streaming deltas. Access the inner event via `.event`:
+        - **`ModelMessageStartEvent`**: Start of a message from the model
+        - **`ModelContentBlockStartEvent`**: Start of a content block (text, toolUse, reasoning, etc.)
+        - **`ModelContentBlockDeltaEvent`**: Content deltas for text, tool input, or reasoning
+        - **`ModelContentBlockStopEvent`**: End of a content block
+        - **`ModelMessageStopEvent`**: End of a message
+        - **`ModelMetadataEvent`**: Usage and metrics metadata
+    - **`ContentBlockEvent`**: Wraps a fully assembled content block (TextBlock, ToolUseBlock, ReasoningBlock). Access via `.contentBlock`
+    - **`ModelMessageEvent`**: Wraps the complete model message after all blocks are assembled. Access via `.message`
 
 ### Tool Events
 
@@ -74,10 +78,14 @@ All streaming methods yield the same set of events:
         - **`tool_use`**: The [`ToolUse`](../../../api-reference/python/types/tools.md#strands.types.tools.ToolUse) for the tool that streamed the event
         - **`data`**: The data streamed from the tool
 === "TypeScript"
-    - **`BeforeToolsEvent`**: Information about the current tool being used, including:
-        - **`message`**: The assistant message containing tool use blocks
-    - **`ToolStreamEvent`**: Information about an event streamed from a tool, including:
+    - **`BeforeToolCallEvent`**: Before a tool is executed
+        - **`toolUse`**: The tool use block with `name` and `input`
+    - **`AfterToolCallEvent`**: After a tool finishes execution
+        - **`toolUse`**: The tool use block
+        - **`result`**: The tool result block
+    - **`ToolStreamUpdateEvent`**: Wraps streaming progress events from a tool. Access via `.event`:
         - **`data`**: The data streamed from the tool
+    - **`ToolResultEvent`**: Wraps a completed tool result. Access via `.result`
 
 ### Multi-Agent Events
 

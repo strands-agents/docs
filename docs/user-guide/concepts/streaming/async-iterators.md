@@ -153,8 +153,8 @@ This async stream processor illustrates the event loop lifecycle events and how 
     The output will show the sequence of events:
 
     1. First the invocation starts (`beforeInvocationEvent`)
-    2. Then the model is called (`beforeModelEvent`)
-    3. The model generates content with delta events (`modelContentBlockDeltaEvent`)
+    2. Then the model is called (`beforeModelCallEvent`)
+    3. The model generates content with delta events (wrapped in `modelStreamUpdateEvent`)
     4. Tools may be executed (`beforeToolsEvent`, `afterToolsEvent`)
     5. The model may be called again in subsequent cycles
     6. Finally, the invocation completes (`afterInvocationEvent`)

@@ -10,9 +10,9 @@ async function basicMetricsExample() {
 
   // Metrics are only available via streaming
   for await (const event of agent.stream('Calculate 2+2')) {
-    if (event.type === 'modelMetadataEvent') {
-      console.log('Token usage:', event.usage)
-      console.log('Latency:', event.metrics?.latencyMs)
+    if (event.type === 'modelStreamUpdateEvent' && event.event.type === 'modelMetadataEvent') {
+      console.log('Token usage:', event.event.usage)
+      console.log('Latency:', event.event.metrics?.latencyMs)
     }
   }
   // --8<-- [end:basic_metrics]
@@ -30,26 +30,27 @@ async function detailedMetricsTracking() {
   let totalLatency = 0
 
   for await (const event of agent.stream('What is the square root of 144?')) {
-    if (event.type === 'modelMetadataEvent') {
-      if (event.usage) {
-        totalInputTokens += event.usage.inputTokens
-        totalOutputTokens += event.usage.outputTokens
-        console.log(`Input tokens: ${event.usage.inputTokens}`)
-        console.log(`Output tokens: ${event.usage.outputTokens}`)
-        console.log(`Total tokens: ${event.usage.totalTokens}`)
+    if (event.type === 'modelStreamUpdateEvent' && event.event.type === 'modelMetadataEvent') {
+      const metadata = event.event
+      if (metadata.usage) {
+        totalInputTokens += metadata.usage.inputTokens
+        totalOutputTokens += metadata.usage.outputTokens
+        console.log(`Input tokens: ${metadata.usage.inputTokens}`)
+        console.log(`Output tokens: ${metadata.usage.outputTokens}`)
+        console.log(`Total tokens: ${metadata.usage.totalTokens}`)
 
         // Cache metrics (when available)
-        if (event.usage.cacheReadInputTokens) {
-          console.log(`Cache read tokens: ${event.usage.cacheReadInputTokens}`)
+        if (metadata.usage.cacheReadInputTokens) {
+          console.log(`Cache read tokens: ${metadata.usage.cacheReadInputTokens}`)
         }
-        if (event.usage.cacheWriteInputTokens) {
-          console.log(`Cache write tokens: ${event.usage.cacheWriteInputTokens}`)
+        if (metadata.usage.cacheWriteInputTokens) {
+          console.log(`Cache write tokens: ${metadata.usage.cacheWriteInputTokens}`)
         }
       }
 
-      if (event.metrics) {
-        totalLatency += event.metrics.latencyMs
-        console.log(`Latency: ${event.metrics.latencyMs}ms`)
+      if (metadata.metrics) {
+        totalLatency += metadata.metrics.latencyMs
+        console.log(`Latency: ${metadata.metrics.latencyMs}ms`)
       }
     }
   }

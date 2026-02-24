@@ -73,7 +73,10 @@ async function asyncGeneratorCallbackExample() {
       table: z.string().describe('The table name'),
       data: z.record(z.string(), z.any()).describe('The data to insert'),
     }),
-    callback: async function* (input: { table: string; data: Record<string, any> }): AsyncGenerator<string, string, unknown> {
+    callback: async function* (input: {
+      table: string
+      data: Record<string, any>
+    }): AsyncGenerator<string, string, unknown> {
       yield 'Starting data insertion...'
       await new Promise((resolve) => setTimeout(resolve, 1000))
       yield 'Validating data...'
@@ -314,7 +317,7 @@ async function toolResponseSuccessExample() {
       return {
         city: input.city,
         days: input.days,
-        forecast: `Weather forecast for ${input.city} for the next ${input.days} days...`
+        forecast: `Weather forecast for ${input.city} for the next ${input.days} days...`,
       }
     },
   })
@@ -330,7 +333,7 @@ async function toolStreamingExample() {
     inputSchema: z.object({
       records: z.number().describe('Number of records to process'),
     }),
-    callback: async function* (input: { records: number }) : AsyncGenerator<string, string, unknown> {
+    callback: async function* (input: { records: number }): AsyncGenerator<string, string, unknown> {
       const start = Date.now()
 
       for (let i = 0; i < input.records; i++) {
@@ -349,8 +352,8 @@ async function toolStreamingExample() {
   const agent = new Agent({ tools: [processDatasetTool] })
 
   for await (const event of agent.stream('Process 50 records')) {
-    if (event.type === 'toolStreamEvent') {
-      console.log(`Progress: ${event.data}`)
+    if (event.type === 'toolStreamUpdateEvent') {
+      console.log(`Progress: ${event.event.data}`)
     }
   }
   // --8<-- [end:tool_streaming]
@@ -371,9 +374,9 @@ async function naturalLanguageInvocationExample() {
 // Search database tool with comprehensive description
 async function searchDatabaseExample() {
   // --8<-- [start:search_database]
-const searchDatabaseTool = tool({
-  name: 'search_database',
-  description: `Search the product database for items matching the query string.
+  const searchDatabaseTool = tool({
+    name: 'search_database',
+    description: `Search the product database for items matching the query string.
 
 Use this tool when you need to find detailed product information based on keywords,
 product names, or categories. The search is case-insensitive and supports fuzzy
@@ -399,16 +402,16 @@ Notes:
 - Results are cached for 15 minutes to improve performance
 - The search index updates every 6 hours, so very recent products may not appear
 - For real-time inventory status, use a separate inventory check tool`,
-  inputSchema: z.object({
-    query: z
-      .string()
-      .describe('The search string (product name, category, or keywords). Example: "red running shoes"'),
-    maxResults: z.number().default(10).describe('Maximum number of results to return (default: 10, range: 1-100)'),
-  }),
-  callback: () => {
-    // Implementation would go here
-    return []
-  },
-})
+    inputSchema: z.object({
+      query: z
+        .string()
+        .describe('The search string (product name, category, or keywords). Example: "red running shoes"'),
+      maxResults: z.number().default(10).describe('Maximum number of results to return (default: 10, range: 1-100)'),
+    }),
+    callback: () => {
+      // Implementation would go here
+      return []
+    },
+  })
   // --8<-- [end:search_database]
 }
