@@ -141,22 +141,6 @@ In the event there is an issue with parsing the structured output, Strands will 
 
 ### Related Documentation
 
-#### After (Recommended)
-
-```python
-# New approach - recommended
-result = agent("John is 30 years old", structured_output_model=PersonInfo)
-print(result.structured_output.name)  # Access via structured_output field
-```
-
-### Best Practices
-
-- **Keep models focused**: Define specific models for clear purposes
-- **Use descriptive field names**: Include helpful descriptions with `Field`
-- **Handle errors gracefully**: Implement proper error handling strategies with fallbacks
-
-### Related Documentation
-
 Refer to Pydantic documentation for details on:
 
 - [Models and schema definition](https://docs.pydantic.dev/latest/concepts/models/)
