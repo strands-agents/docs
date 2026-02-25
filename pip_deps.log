@@ -1,0 +1,111 @@
+Collecting click<8.3.0
+  Using cached click-8.2.1-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: mike~=2.1.3 in ./.venv/lib/python3.13/site-packages (2.1.3)
+Requirement already satisfied: mkdocs~=1.6.1 in ./.venv/lib/python3.13/site-packages (1.6.1)
+Collecting mkdocs-macros-plugin~=1.3.7
+  Using cached mkdocs_macros_plugin-1.3.9-py3-none-any.whl.metadata (8.1 kB)
+Collecting mkdocs-material~=9.6.12
+  Using cached mkdocs_material-9.6.23-py3-none-any.whl.metadata (19 kB)
+Collecting mkdocstrings-python~=1.16.10
+  Using cached mkdocstrings_python-1.16.12-py3-none-any.whl.metadata (5.6 kB)
+Collecting mkdocs-llmstxt~=0.2.0
+  Using cached mkdocs_llmstxt-0.2.0-py3-none-any.whl.metadata (5.4 kB)
+Requirement already satisfied: pymdown-extensions>=10.16.1 in ./.venv/lib/python3.13/site-packages (10.21)
+Requirement already satisfied: importlib-metadata in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (8.7.1)
+Requirement already satisfied: importlib-resources in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (6.5.2)
+Requirement already satisfied: jinja2>=2.7 in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (3.1.6)
+Requirement already satisfied: pyparsing>=3.0 in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (3.3.2)
+Requirement already satisfied: pyyaml>=5.1 in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (6.0.3)
+Requirement already satisfied: pyyaml-env-tag in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (1.1)
+Requirement already satisfied: verspec in ./.venv/lib/python3.13/site-packages (from mike~=2.1.3) (0.1.0)
+Requirement already satisfied: ghp-import>=1.0 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (2.1.0)
+Requirement already satisfied: markdown>=3.3.6 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (3.10.2)
+Requirement already satisfied: markupsafe>=2.0.1 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (3.0.3)
+Requirement already satisfied: mergedeep>=1.3.4 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (1.3.4)
+Requirement already satisfied: mkdocs-get-deps>=0.2.0 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (0.2.0)
+Requirement already satisfied: packaging>=20.5 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (26.0)
+Requirement already satisfied: pathspec>=0.11.1 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (1.0.4)
+Requirement already satisfied: watchdog>=2.0 in ./.venv/lib/python3.13/site-packages (from mkdocs~=1.6.1) (6.0.0)
+Requirement already satisfied: hjson in ./.venv/lib/python3.13/site-packages (from mkdocs-macros-plugin~=1.3.7) (3.1.0)
+Requirement already satisfied: python-dateutil in ./.venv/lib/python3.13/site-packages (from mkdocs-macros-plugin~=1.3.7) (2.9.0.post0)
+Requirement already satisfied: super-collections in ./.venv/lib/python3.13/site-packages (from mkdocs-macros-plugin~=1.3.7) (0.6.2)
+Requirement already satisfied: termcolor in ./.venv/lib/python3.13/site-packages (from mkdocs-macros-plugin~=1.3.7) (3.3.0)
+Requirement already satisfied: babel~=2.10 in ./.venv/lib/python3.13/site-packages (from mkdocs-material~=9.6.12) (2.18.0)
+Collecting backrefs~=5.7.post1 (from mkdocs-material~=9.6.12)
+  Using cached backrefs-5.9-py313-none-any.whl.metadata (3.2 kB)
+Requirement already satisfied: colorama~=0.4 in ./.venv/lib/python3.13/site-packages (from mkdocs-material~=9.6.12) (0.4.6)
+Requirement already satisfied: mkdocs-material-extensions~=1.3 in ./.venv/lib/python3.13/site-packages (from mkdocs-material~=9.6.12) (1.3.1)
+Requirement already satisfied: paginate~=0.5 in ./.venv/lib/python3.13/site-packages (from mkdocs-material~=9.6.12) (0.5.7)
+Requirement already satisfied: pygments~=2.16 in ./.venv/lib/python3.13/site-packages (from mkdocs-material~=9.6.12) (2.19.2)
+Requirement already satisfied: requests~=2.26 in ./.venv/lib/python3.13/site-packages (from mkdocs-material~=9.6.12) (2.32.5)
+Collecting mkdocstrings>=0.28.3 (from mkdocstrings-python~=1.16.10)
+  Using cached mkdocstrings-1.0.3-py3-none-any.whl.metadata (15 kB)
+Collecting mkdocs-autorefs>=1.4 (from mkdocstrings-python~=1.16.10)
+  Using cached mkdocs_autorefs-1.4.4-py3-none-any.whl.metadata (14 kB)
+Collecting griffe>=1.6.2 (from mkdocstrings-python~=1.16.10)
+  Using cached griffe-2.0.0-py3-none-any.whl.metadata (12 kB)
+Collecting beautifulsoup4>=4.12 (from mkdocs-llmstxt~=0.2.0)
+  Using cached beautifulsoup4-4.14.3-py3-none-any.whl.metadata (3.8 kB)
+Collecting markdownify>=0.14 (from mkdocs-llmstxt~=0.2.0)
+  Using cached markdownify-1.2.2-py3-none-any.whl.metadata (9.9 kB)
+Collecting mdformat>=0.7.21 (from mkdocs-llmstxt~=0.2.0)
+  Using cached mdformat-1.0.0-py3-none-any.whl.metadata (9.6 kB)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./.venv/lib/python3.13/site-packages (from requests~=2.26->mkdocs-material~=9.6.12) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in ./.venv/lib/python3.13/site-packages (from requests~=2.26->mkdocs-material~=9.6.12) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.13/site-packages (from requests~=2.26->mkdocs-material~=9.6.12) (2.6.3)
+Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.13/site-packages (from requests~=2.26->mkdocs-material~=9.6.12) (2026.1.4)
+Collecting soupsieve>=1.6.1 (from beautifulsoup4>=4.12->mkdocs-llmstxt~=0.2.0)
+  Using cached soupsieve-2.8.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting typing-extensions>=4.0.0 (from beautifulsoup4>=4.12->mkdocs-llmstxt~=0.2.0)
+  Using cached typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting griffecli==2.0.0 (from griffe>=1.6.2->mkdocstrings-python~=1.16.10)
+  Using cached griffecli-2.0.0-py3-none-any.whl.metadata (1.2 kB)
+Collecting griffelib==2.0.0 (from griffe>=1.6.2->mkdocstrings-python~=1.16.10)
+  Using cached griffelib-2.0.0-py3-none-any.whl.metadata (1.3 kB)
+Requirement already satisfied: six<2,>=1.15 in ./.venv/lib/python3.13/site-packages (from markdownify>=0.14->mkdocs-llmstxt~=0.2.0) (1.17.0)
+Collecting markdown-it-py<5,>=1 (from mdformat>=0.7.21->mkdocs-llmstxt~=0.2.0)
+  Using cached markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting mdurl~=0.1 (from markdown-it-py<5,>=1->mdformat>=0.7.21->mkdocs-llmstxt~=0.2.0)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Requirement already satisfied: platformdirs>=2.2.0 in ./.venv/lib/python3.13/site-packages (from mkdocs-get-deps>=0.2.0->mkdocs~=1.6.1) (4.9.2)
+Requirement already satisfied: zipp>=3.20 in ./.venv/lib/python3.13/site-packages (from importlib-metadata->mike~=2.1.3) (3.23.0)
+Using cached click-8.2.1-py3-none-any.whl (102 kB)
+Using cached mkdocs_macros_plugin-1.3.9-py3-none-any.whl (38 kB)
+Using cached mkdocs_material-9.6.23-py3-none-any.whl (9.2 MB)
+Using cached mkdocstrings_python-1.16.12-py3-none-any.whl (124 kB)
+Using cached mkdocs_llmstxt-0.2.0-py3-none-any.whl (23 kB)
+Using cached backrefs-5.9-py313-none-any.whl (399 kB)
+Using cached beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+Using cached griffe-2.0.0-py3-none-any.whl (5.2 kB)
+Using cached griffecli-2.0.0-py3-none-any.whl (9.3 kB)
+Using cached griffelib-2.0.0-py3-none-any.whl (142 kB)
+Using cached markdownify-1.2.2-py3-none-any.whl (15 kB)
+Using cached mdformat-1.0.0-py3-none-any.whl (53 kB)
+Using cached markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Using cached mkdocs_autorefs-1.4.4-py3-none-any.whl (25 kB)
+Using cached mkdocstrings-1.0.3-py3-none-any.whl (35 kB)
+Using cached soupsieve-2.8.3-py3-none-any.whl (37 kB)
+Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Installing collected packages: typing-extensions, soupsieve, mdurl, griffelib, click, backrefs, markdown-it-py, griffecli, beautifulsoup4, mdformat, markdownify, griffe, mkdocs-material, mkdocs-macros-plugin, mkdocs-llmstxt, mkdocs-autorefs, mkdocstrings, mkdocstrings-python
+  Attempting uninstall: click
+    Found existing installation: click 8.3.1
+    Uninstalling click-8.3.1:
+      Successfully uninstalled click-8.3.1
+  Attempting uninstall: backrefs
+    Found existing installation: backrefs 6.2
+    Uninstalling backrefs-6.2:
+      Successfully uninstalled backrefs-6.2
+  Attempting uninstall: mkdocs-material
+    Found existing installation: mkdocs-material 9.7.2
+    Uninstalling mkdocs-material-9.7.2:
+      Successfully uninstalled mkdocs-material-9.7.2
+  Attempting uninstall: mkdocs-macros-plugin
+    Found existing installation: mkdocs-macros-plugin 1.5.0
+    Uninstalling mkdocs-macros-plugin-1.5.0:
+      Successfully uninstalled mkdocs-macros-plugin-1.5.0
+
+Successfully installed backrefs-5.9 beautifulsoup4-4.14.3 click-8.2.1 griffe-2.0.0 griffecli-2.0.0 griffelib-2.0.0 markdown-it-py-4.0.0 markdownify-1.2.2 mdformat-1.0.0 mdurl-0.1.2 mkdocs-autorefs-1.4.4 mkdocs-llmstxt-0.2.0 mkdocs-macros-plugin-1.3.9 mkdocs-material-9.6.23 mkdocstrings-1.0.3 mkdocstrings-python-1.16.12 soupsieve-2.8.3 typing-extensions-4.15.0
+
+[notice] A new release of pip is available: 25.3 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip

@@ -1,0 +1,80 @@
+
+> docs@1.0.0 test
+> tsc --noEmit
+
+docs/readme.ts(3,23): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/conversation-management.ts(1,82): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/hooks.ts(1,37): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/hooks.ts(10,8): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/hooks.ts(11,49): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/hooks.ts(74,52): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(75,51): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(106,50): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(124,49): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(130,56): error TS7006: Parameter 'block' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(149,52): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(150,51): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(151,50): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(173,49): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(178,56): error TS7006: Parameter 'block' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/hooks.ts(212,50): error TS7006: Parameter 'ev' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/prompts.ts(1,55): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/prompts.ts(2,30): error TS2307: Cannot find module 'fs' or its corresponding type declarations.
+docs/user-guide/concepts/agents/state.ts(1,29): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/state.ts(2,34): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/state.ts(3,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+docs/user-guide/concepts/agents/state.ts(7,50): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/agents/state.ts(112,16): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/agents/state.ts(132,16): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/model-providers/custom_model_provider.ts(6,62): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/model-providers/custom_model_provider.ts(17,8): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/async-iterators.ts(1,23): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/async-iterators.ts(2,26): error TS2307: Cannot find module '@strands-agents/sdk/vended_tools/notebook' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/async-iterators.ts(3,21): error TS2307: Cannot find module 'express' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/overview.ts(1,29): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/overview.ts(2,26): error TS2307: Cannot find module '@strands-agents/sdk/vended_tools/notebook' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/overview.ts(3,39): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/overview.ts(4,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+docs/user-guide/concepts/streaming/overview.ts(14,7): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+docs/user-guide/concepts/streaming/overview.ts(56,7): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+docs/user-guide/concepts/streaming/overview.ts(82,32): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/mcp-tools.ts(1,34): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(2,38): error TS2307: Cannot find module '@modelcontextprotocol/sdk/client/stdio.js' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(3,47): error TS2307: Cannot find module '@modelcontextprotocol/sdk/client/streamableHttp.js' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(4,32): error TS2307: Cannot find module '@modelcontextprotocol/sdk/shared/transport.js' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(78,36): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+docs/user-guide/concepts/tools/mcp-tools.ts(87,36): error TS2307: Cannot find module '@modelcontextprotocol/sdk/client/sse.js' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(121,27): error TS2307: Cannot find module '@modelcontextprotocol/sdk/server/mcp.js' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(122,38): error TS2307: Cannot find module '@modelcontextprotocol/sdk/server/stdio.js' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(123,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+docs/user-guide/concepts/tools/mcp-tools.ts(137,12): error TS7031: Binding element 'x' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/mcp-tools.ts(137,15): error TS7031: Binding element 'y' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(1,43): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/tools/tools.ts(2,49): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/concepts/tools/tools.ts(3,26): error TS2307: Cannot find module '@strands-agents/sdk/vended_tools/notebook' or its corresponding type declarations.
+docs/user-guide/concepts/tools/tools.ts(4,28): error TS2307: Cannot find module '@strands-agents/sdk/vended_tools/file_editor' or its corresponding type declarations.
+docs/user-guide/concepts/tools/tools.ts(5,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+docs/user-guide/concepts/tools/tools.ts(17,16): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(36,16): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(142,18): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(155,18): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(178,16): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(188,16): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(209,22): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/concepts/tools/tools.ts(209,29): error TS7006: Parameter 'context' implicitly has an 'any' type.
+docs/user-guide/deploy/deploy_to_docker/imports.ts(2,23): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/deploy/deploy_to_docker/imports.ts(3,54): error TS2307: Cannot find module 'express' or its corresponding type declarations.
+docs/user-guide/deploy/deploy_to_docker/imports.ts(4,29): error TS2307: Cannot find module '@strands-agents/sdk/openai' or its corresponding type declarations.
+docs/user-guide/deploy/deploy_to_docker/index.ts(1,23): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/deploy/deploy_to_docker/index.ts(2,54): error TS2307: Cannot find module 'express' or its corresponding type declarations.
+docs/user-guide/deploy/deploy_to_docker/index.ts(3,29): error TS2307: Cannot find module '@strands-agents/sdk/openai' or its corresponding type declarations.
+docs/user-guide/deploy/deploy_to_docker/index.ts(6,21): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+docs/user-guide/observability-evaluation/logs.ts(7,47): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/observability-evaluation/logs.ts(16,18): error TS2307: Cannot find module 'pino' or its corresponding type declarations.
+docs/user-guide/observability-evaluation/metrics.ts(1,23): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/observability-evaluation/metrics.ts(2,26): error TS2307: Cannot find module '@strands-agents/sdk/vended_tools/notebook' or its corresponding type declarations.
+docs/user-guide/quickstart/typescript.ts(3,29): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
+docs/user-guide/quickstart/typescript.ts(4,15): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+docs/user-guide/quickstart/typescript.ts(15,14): error TS7006: Parameter 'data' implicitly has an 'any' type.
+docs/user-guide/quickstart/typescript.ts(18,14): error TS7006: Parameter 'input' implicitly has an 'any' type.
+docs/user-guide/quickstart/typescript.ts(77,30): error TS2307: Cannot find module '@strands-agents/sdk' or its corresponding type declarations.
