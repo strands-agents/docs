@@ -40,13 +40,13 @@ def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
     pass
 
 # Define a task function
-def user_task_function(case: Case) -> dict:   
+def user_task_function(case: Case) -> dict:
     # Inspect initial shared state "room_environment"
     initial_state = tool_simulator.get_state("room_environment")
     print(f"[Room state (before agent invocation)]:")
     print(f"  Initial state: {initial_state.get('initial_state')}")
     print(f"  Previous calls: {initial_state.get('previous_calls', [])}")
-    
+
     # Create agent with simulated tool
     hvac_tool = tool_simulator.get_tool("hvac_controller")
     agent = Agent(
@@ -76,7 +76,7 @@ def user_task_function(case: Case) -> dict:
 # Create test cases
 test_cases = [
     Case(
-        name="temperature_control", 
+        name="temperature_control",
         input="Turn on the heat to 72 degree",
         metadata={"category": "hvac"},
     ),
