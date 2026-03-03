@@ -296,6 +296,6 @@ Both `strands-temporal` and `strands-aws` share the same goal: checkpoint after 
 
 ## Willingness to Implement
 
-Yes. The core SDK gaps are the prerequisite and are owned by the core team. The `strands-temporal` and `strands-aws` provider packages are parallel efforts, each depending on the stateless agent proposal landing first.
+TBD. Maybe start AWS durable first. 
 
 ---
