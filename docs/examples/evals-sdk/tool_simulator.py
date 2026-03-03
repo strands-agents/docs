@@ -1,8 +1,8 @@
-from typing import Dict, Any
+from typing import Any
 from enum import Enum
 from pydantic import BaseModel, Field
 
-from strands import Agent, tool
+from strands import Agent
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import GoalSuccessRateEvaluator
 from strands_evals.simulation.tool_simulator import ToolSimulator
@@ -35,7 +35,7 @@ class HVACControllerResponse(BaseModel):
     initial_state_description="Room environment: temperature 68°F, humidity 45%, HVAC off",
     output_schema=HVACControllerResponse
 )
-def hvac_controller(temperature: float, mode: str) -> Dict[str, Any]:
+def hvac_controller(temperature: float, mode: str) -> dict[str, Any]:
     """Control home heating/cooling system that affects room temperature and humidity."""
     pass
 
