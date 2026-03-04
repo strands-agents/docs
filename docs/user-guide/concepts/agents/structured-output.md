@@ -349,31 +349,34 @@ You can also set a default structured output model that applies to all agent inv
 
 Even when you set a default `structured_output_model` at the agent initialization level, you can override it for specific invocations by passing a different `structured_output_model` during the agent invocation:
 
-<<<<<<< add-token-management-examples
-```python
-class PersonInfo(BaseModel):
-    name: str
-    age: int
-    occupation: str
+=== "Python"
 
-class CompanyInfo(BaseModel):
-    name: str
-    industry: str
-    employees: int
+    ```python
+    class PersonInfo(BaseModel):
+        name: str
+        age: int
+        occupation: str
 
-# Agent with default PersonInfo model
-agent = Agent(structured_output_model=PersonInfo)
+    class CompanyInfo(BaseModel):
+        name: str
+        industry: str
+        employees: int
 
-# Override with CompanyInfo for this specific call
-result = agent(
-    "TechCorp is a software company with 500 employees",
-    structured_output_model=CompanyInfo
-)
+    # Agent with default PersonInfo model
+    agent = Agent(structured_output_model=PersonInfo)
 
-print(f"Company: {result.structured_output.name}")      # "TechCorp"
-print(f"Industry: {result.structured_output.industry}") # "software"
-print(f"Size: {result.structured_output.employees}")    # 500
-```
+    # Override with CompanyInfo for this specific call
+    result = agent(
+        "TechCorp is a software company with 500 employees",
+        structured_output_model=CompanyInfo
+    )
+
+    print(f"Company: {result.structured_output.name}")      # "TechCorp"
+    print(f"Industry: {result.structured_output.industry}") # "software"
+    print(f"Size: {result.structured_output.employees}")    # 500
+    ```
+
+{{ ts_not_supported_code() }}
 
 ## Token Management
 
@@ -398,6 +401,9 @@ The following strategies can be used individually or combined to handle differen
 | Production monitoring | Callback Handlers | [Strategy 2](#strategy-2-monitoring-with-callback-handlers) |
 | Error recovery | Error Handling | [Strategy 4](#strategy-4-error-handling-and-recovery) |
 | Previous conversation context | Conversation History Management | [Strategy 6](#strategy-6-managing-long-conversation-history) |
+| Tool results too large | Tools Writing to Files | [Strategy 7](#strategy-7-tools-writing-to-files) |
+| Large values in prompts | Passing References | [Strategy 8](#strategy-8-passing-references-instead-of-large-values) |
+| Complex multi-step workflows | Sub-Agent Delegation | [Strategy 9](#strategy-9-delegating-to-sub-agents) |
 
 !!! warning "Common Pitfalls"
     - **Don't ignore token limits**: Unhandled token exceptions will crash your application
@@ -505,10 +511,9 @@ class MeetingInsights(BaseModel):
 
 # Create agent with summarizing conversation manager
 agent = Agent(
-    conversation_manager=SummarizingConversationManager(
-        summary_ratio=0.3,  # Summarize 30% of messages when reducing context
-        preserve_recent_messages=10  # Always keep the 10 most recent messages
-    )
+    conversation_manager=SummarizingConversationManager()
+    # Automatically summarizes older messages when context grows too large
+    # Uses a built-in summarization agent to preserve key information
 )
 
 # Simulate a long meeting with multiple discussion topics
@@ -540,7 +545,7 @@ print(f"Open Questions: {result.structured_output.open_questions}")
 **How it works:**
 
 - When context reduction is needed, older messages are summarized rather than deleted
-- Recent messages (last 10 in this example) are always preserved in full
+- Recent messages are preserved while older messages are automatically summarized
 - Summaries maintain key information while using fewer tokens
 - The agent can still reference historical context when extracting structured output
 
@@ -580,6 +585,9 @@ class ProductReview(BaseModel):
     pros: List[str] = Field(description="Positive aspects")
     cons: List[str] = Field(description="Negative aspects")
 
+# Note: The recommended way to access token metrics is from the AgentResult
+# return value (see "Accessing Token Metrics Directly" below).
+# The callback pattern here is illustrative for tracking usage across requests.
 def token_monitor(**kwargs):
     """Simple callback to track token usage"""
     if "result" in kwargs:
@@ -1229,11 +1237,12 @@ def chunk_text(
             chunks.append(chunk)
         
         # Move start position with overlap
-        start = end - overlap_chars
+        new_start = end - overlap_chars
         
-        # Ensure we make progress
-        if start <= chunks[-1] if chunks else 0:
-            start = end
+        # Ensure we always make progress
+        if new_start <= start:
+            new_start = end
+        start = new_start
     
     return chunks
 
@@ -1524,10 +1533,8 @@ class ConversationInsights(BaseModel):
 # Create agent with summarizing conversation manager
 # This preserves context from long conversations
 agent = Agent(
-    conversation_manager=SummarizingConversationManager(
-        preserve_recent_messages=10,  # Keep last 10 messages in full
-        summary_ratio=0.3  # Summarize 30% of older messages when needed
-    )
+    conversation_manager=SummarizingConversationManager()
+    # Automatically summarizes older messages when context grows too large
 )
 
 # Simulate a long customer support conversation
@@ -1563,7 +1570,7 @@ print(f"Action Items: {result.structured_output.action_items}")
 **How it works:**
 
 - The conversation manager automatically summarizes older messages
-- Recent messages (last 10) are kept in full for context
+- Recent messages are preserved while older messages are automatically summarized
 - When extracting insights, the agent has access to both summaries and recent messages
 - No manual context management required
 
@@ -1780,6 +1787,187 @@ print(f"Outcomes: {insights.outcomes}")
 - ⚠️ Requires two-step process
 
 
+### Strategy 7: Tools Writing to Files
+
+One of the most effective ways to reduce token usage is to design tools that write large results to files and return only a summary or file path to the model. This prevents large data blobs from entering the context window.
+
+#### Before: Tool Returning Large Data
+
+```python
+from strands import Agent, tool
+
+@tool
+def analyze_sales_data(region: str) -> str:
+    """Analyze sales data for a region and return results."""
+    data = fetch_sales_records(region)  # Returns 10,000+ rows
+    return str(data)  # ❌ Entire dataset enters the context window
+```
+
+#### After: Tool Writing to File, Returning Summary
+
+```python
+from strands import Agent, tool
+import json
+
+@tool
+def analyze_sales_data(region: str) -> str:
+    """Analyze sales data for a region. Writes full results to a file and returns a summary."""
+    data = fetch_sales_records(region)
+
+    # Write full results to a file
+    output_path = f"/tmp/sales_analysis_{region}.json"
+    with open(output_path, "w") as f:
+        json.dump(data, f, indent=2)
+
+    # Return only a compact summary to the model
+    total_revenue = sum(row["revenue"] for row in data)
+    return (
+        f"Analysis complete. Full results saved to: {output_path}\n"
+        f"Total records: {len(data)}, Total revenue: ${total_revenue:,.2f}"
+    )
+    # ✅ Only ~50 tokens enter the context window
+
+@tool
+def read_analysis_file(file_path: str) -> str:
+    """Read a specific section of a previously saved analysis file."""
+    with open(file_path, "r") as f:
+        data = json.load(f)
+    sample = data[:10]
+    return f"Showing first 10 of {len(data)} records:\n{json.dumps(sample, indent=2)}"
+
+agent = Agent(tools=[analyze_sales_data, read_analysis_file])
+result = agent("Analyze Q4 sales for the US region")
+```
+
+**When to use this pattern:**
+
+- Tools that query databases or APIs returning large result sets
+- Log analysis tools processing thousands of entries
+- Any tool where the full result exceeds ~1,000 tokens
+
+### Strategy 8: Passing References Instead of Large Values
+
+Instead of passing large data blobs between tools or in prompts, pass lightweight references (file paths, IDs, keys) and let tools resolve them on demand.
+
+#### Anti-Pattern: Passing Full Content
+
+```python
+from strands import Agent, tool
+
+# ❌ The full document is embedded in the prompt
+with open("large_report.txt") as f:
+    document_text = f.read()  # 50,000 characters
+
+agent = Agent()
+result = agent(f"Please summarize this document: {document_text}")
+# ❌ 50,000 characters (~12,500 tokens) in the prompt alone
+```
+
+#### Better Pattern: Passing File Paths as References
+
+```python
+from strands import Agent, tool
+import os
+
+@tool
+def load_document(file_path: str) -> str:
+    """Load a document from disk. Returns content in manageable chunks if large."""
+    if not os.path.exists(file_path):
+        return f"Error: File not found at {file_path}"
+    with open(file_path, "r") as f:
+        content = f.read()
+    if len(content) > 20000:
+        return (
+            f"Document loaded ({len(content)} chars). "
+            f"First section:\n{content[:20000]}\n"
+            f"[Use load_document_section to access more]"
+        )
+    return content
+
+@tool
+def load_document_section(file_path: str, start_char: int, length: int = 20000) -> str:
+    """Load a specific section of a document by character position."""
+    with open(file_path, "r") as f:
+        f.seek(start_char)
+        return f.read(length)
+
+agent = Agent(tools=[load_document, load_document_section])
+
+# ✅ Only the file path enters the prompt — the tool loads content on demand
+result = agent("Summarize the document at /data/large_report.txt")
+```
+
+**Key principles:**
+
+- **File paths over content**: Pass `/data/report.txt` instead of the file's text
+- **IDs over objects**: Pass a record ID instead of the full record
+- **Lazy loading**: Only load full content when the model explicitly requests it
+
+### Strategy 9: Delegating to Sub-Agents
+
+Instead of building one monolithic agent that accumulates a large context, delegate specialized tasks to sub-agents using the [Agents as Tools](../../multi-agent/agents-as-tools/) pattern. Each sub-agent maintains its own isolated context window, and the orchestrator only receives compact summaries.
+
+```python
+from strands import Agent, tool
+from pydantic import BaseModel, Field
+from typing import List
+
+class DocumentInsights(BaseModel):
+    """Structured insights from document analysis"""
+    key_findings: List[str] = Field(description="Main findings")
+    recommendations: List[str] = Field(description="Action items")
+
+@tool
+def extract_insights(document_section: str) -> str:
+    """Extract insights from a document section using a dedicated agent."""
+    insights_agent = Agent(
+        system_prompt="Extract structured insights from documents. Be precise and concise.",
+        callback_handler=None  # Suppress intermediate output
+    )
+    result = insights_agent(
+        f"Extract insights from this section:\n\n{document_section}",
+        structured_output_model=DocumentInsights
+    )
+    # Return compact JSON, not the full document
+    return result.structured_output.model_dump_json()
+
+@tool
+def analyze_data(data_description: str) -> str:
+    """Analyze data using a specialized analysis agent."""
+    analysis_agent = Agent(
+        system_prompt="You are a data analyst. Return concise bullet-point insights.",
+        callback_handler=None
+    )
+    result = analysis_agent(data_description)
+    return str(result)
+
+# Orchestrator only sees compact tool return values
+orchestrator = Agent(
+    system_prompt=(
+        "You coordinate document analysis. Use extract_insights for document sections "
+        "and analyze_data for data analysis. Synthesize results into a final summary."
+    ),
+    callback_handler=None,
+    tools=[extract_insights, analyze_data]
+)
+
+result = orchestrator("Analyze the Q4 report and provide recommendations")
+```
+
+**How context isolation works:**
+
+- The orchestrator only sees compact tool return values (summaries)
+- Each sub-agent starts with a fresh, empty context window
+- Large documents are processed inside sub-agents, never in the orchestrator's history
+
+**When to use sub-agent delegation:**
+
+- Complex multi-step workflows where each step requires significant context
+- Specialized expertise — each sub-agent can have a focused system prompt
+- Long-running tasks — prevents any single agent from accumulating too much history
+
+For more on multi-agent patterns, see [Multi-agent Patterns](../../multi-agent/multi-agent-patterns/) and [Agents as Tools](../../multi-agent/agents-as-tools/).
+
 ### Best Practices Summary
 
 Choose the right token management strategy based on your use case:
@@ -1813,6 +2001,16 @@ Choose the right token management strategy based on your use case:
 - Log token consumption for cost tracking and optimization
 - Monitor patterns to identify optimization opportunities
 
+**For large tool results:**
+- Have tools write results to files and return only summaries or file paths
+- Use companion "read" tools to fetch specific details on demand
+- Pass file paths, IDs, or keys instead of full data blobs
+
+**For complex workflows:**
+- Delegate specialized tasks to sub-agents with focused system prompts
+- Each sub-agent maintains its own isolated context window
+- Have sub-agents return compact summaries to the orchestrator
+
 ### Choosing the Right Strategy
 
 Use this decision tree to select the appropriate approach:
@@ -1820,13 +2018,17 @@ Use this decision tree to select the appropriate approach:
 ```
 Is your input a single large document?
 ├─ Yes → Use Strategy 5 (Chunking)
-└─ No → Is it a long conversation?
-    ├─ Yes → Do you need full history?
-    │   ├─ Yes → Use Strategy 1 (Conversation Managers)
-    │   └─ No → Use Strategy 6 (Selective Context)
-    └─ No → Is token usage a concern?
-        ├─ Yes → Use Strategy 3 (Schema Optimization)
-        └─ No → Use Strategy 2 (Monitoring) for visibility
+└─ No → Do tool results return large data?
+    ├─ Yes → Use Strategy 7 (Tools Writing to Files)
+    └─ No → Is it a long conversation?
+        ├─ Yes → Do you need full history?
+        │   ├─ Yes → Use Strategy 1 (Conversation Managers)
+        │   └─ No → Use Strategy 6 (Selective Context)
+        └─ No → Is it a complex multi-step workflow?
+            ├─ Yes → Use Strategy 9 (Sub-Agent Delegation)
+            └─ No → Is token usage a concern?
+                ├─ Yes → Use Strategy 3 (Schema Optimization)
+                └─ No → Use Strategy 2 (Monitoring) for visibility
 ```
 
 **Combining strategies:**
@@ -1845,33 +2047,3 @@ For more information on token management concepts:
 - [Conversation Management](./conversation-management.md) - Detailed guide on conversation managers
 - [Agent Loop](./agent-loop.md) - Understanding token limits in the event loop
 - [Callback Handlers](../../../api-reference/handlers.md) - API reference for handlers
-=======
-=== "Python"
-
-    ```python
-    class PersonInfo(BaseModel):
-        name: str
-        age: int
-        occupation: str
-
-    class CompanyInfo(BaseModel):
-        name: str
-        industry: str
-        employees: int
-
-    # Agent with default PersonInfo model
-    agent = Agent(structured_output_model=PersonInfo)
-
-    # Override with CompanyInfo for this specific call
-    result = agent(
-        "TechCorp is a software company with 500 employees",
-        structured_output_model=CompanyInfo
-    )
-
-    print(f"Company: {result.structured_output.name}")      # "TechCorp"
-    print(f"Industry: {result.structured_output.industry}") # "software"
-    print(f"Size: {result.structured_output.employees}")    # 500
-    ```
-
-{{ ts_not_supported_code() }}
->>>>>>> main
