@@ -41,39 +41,20 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
 === "TypeScript"
 
-    The TypeScript SDK provides basic metrics tracking through streaming events. Metrics are available via the `ModelMetadataEvent` that is emitted during agent execution:
+    The Strands Agents SDK automatically tracks key metrics during agent execution:
 
-    - **Token usage**: Input tokens, output tokens, and total tokens consumed
-    - **Performance metrics**: Latency measurements
+    - **Token usage**: Input tokens, output tokens, total tokens consumed, and cache metrics
+    - **Performance metrics**: Latency and execution time measurements
+    - **Tool usage**: Call counts, success rates, and execution times for each tool
+    - **Event loop cycles**: Number of reasoning cycles and their durations
+
+    All these metrics are accessible through the `AgentResult` <!-- TODO: link to TypeScript AgentResult API reference --> object that's returned whenever you invoke an agent:
 
     ```typescript
     --8<-- "user-guide/observability-evaluation/metrics.ts:basic_metrics"
     ```
 
-    The `ModelMetadataEvent` contains two optional properties:
-
-    - `usage`: Token usage statistics including input, output, and cache metrics
-    - `metrics`: Performance metrics including latency
-
-    ### Available Metrics
-
-    **Usage**:
-
-    - `inputTokens: number` - Tokens in the input
-    - `outputTokens: number` - Tokens in the output  
-    - `totalTokens: number` - Total tokens used
-    - `cacheReadInputTokens?: number` - Tokens read from cache
-    - `cacheWriteInputTokens?: number` - Tokens written to cache
-
-    **Metrics**:
-
-    - `latencyMs: number` - Request latency in milliseconds
-
-    ### Detailed Tracking Example
-
-    ```typescript
-    --8<-- "user-guide/observability-evaluation/metrics.ts:detailed_tracking"
-    ```
+    The `metrics` property of `AgentResult` (an instance of `AgentLoopMetrics` <!-- TODO: link to TypeScript AgentLoopMetrics API reference -->) provides comprehensive performance metric data about the agent's execution, while other properties like `stopReason`, `lastMessage`, and `structuredOutput` provide context about the agent's response. This document explains the metrics available in the agent's response and how to interpret them.
 
 ## Agent Loop Metrics
 
@@ -128,7 +109,33 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
     For a complete list of attributes and their types, see the [`EventLoopMetrics` API reference](../../api-reference/python/telemetry/metrics.md#strands.telemetry.metrics.EventLoopMetrics).
 
-{{ ts_not_supported_code() }}
+=== "TypeScript"
+
+    The `AgentLoopMetrics` <!-- TODO: link to TypeScript AgentLoopMetrics API reference --> class aggregates metrics across the entire agent loop execution cycle, providing a complete picture of your agent's performance. It tracks cycle counts, tool usage, execution durations, and token consumption across all model invocations.
+
+    Key metrics include:
+
+    - **Cycle tracking**: Number of agent loop cycles and their individual durations
+    - **Tool metrics**: Detailed performance data for each tool used during execution
+    - **Agent invocations**: List of agent invocations, each containing cycles and usage data for that specific invocation
+    - **Accumulated usage**: Aggregated token counts (input, output, total, and cache metrics) across all agent invocations
+    - **Accumulated metrics**: Latency measurements in milliseconds for all model requests
+    - **Execution traces**: Detailed trace information for performance analysis
+
+    ### Agent Invocations
+
+    The `agentInvocations` property is a list of `AgentInvocation` <!-- TODO: link to TypeScript AgentInvocation API reference --> objects that track metrics for each agent invocation (request). Each `AgentInvocation` contains:
+
+    - **cycles**: A list of `AgentLoopCycleMetric` objects, each representing a single agent loop cycle with its ID and token usage
+    - **usage**: Accumulated token usage for this specific invocation across all its cycles
+
+    This allows you to track metrics at both the individual invocation level and across all invocations:
+
+    ```typescript
+    --8<-- "user-guide/observability-evaluation/metrics.ts:agent_invocations"
+    ```
+
+    For a complete list of attributes and their types, see the `AgentLoopMetrics` API reference <!-- TODO: link to TypeScript AgentLoopMetrics API reference -->.
 
 ## Tool Metrics
 
@@ -145,7 +152,21 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
     These metrics help you identify performance bottlenecks, tools with high error rates, and opportunities for optimization. For complete details on all available properties, see the [`ToolMetrics` API reference](../../api-reference/python/telemetry/metrics.md#strands.telemetry.metrics.ToolMetrics).
 
-{{ ts_not_supported_code() }}
+=== "TypeScript"
+
+    For each tool used by the agent, detailed metrics are collected in the `toolMetrics` dictionary. Each entry is an instance of `ToolMetricsData` <!-- TODO: link to TypeScript ToolMetricsData API reference --> that tracks the tool's performance throughout the agent's execution.
+
+    Tool metrics provide insights into:
+
+    - **Call statistics**: Total number of calls, successful executions, and errors
+    - **Execution time**: Total and average time spent executing the tool
+    - **Success rate**: Percentage of successful tool invocations
+
+    These metrics help you identify performance bottlenecks, tools with high error rates, and opportunities for optimization. For complete details on all available properties, see the `ToolMetricsData` API reference <!-- TODO: link to TypeScript ToolMetricsData API reference -->.
+
+    ```typescript
+    --8<-- "user-guide/observability-evaluation/metrics.ts:tool_metrics"
+    ```
 
 ## Example Metrics Summary Output
 
@@ -221,7 +242,66 @@ Metrics are essential for understanding agent performance, optimizing behavior, 
 
     This summary provides a complete picture of the agent's execution, including cycle information, token usage, tool performance, and detailed execution traces.
 
-{{ ts_not_supported_code() }}
+=== "TypeScript"
+
+    The Strands Agents SDK provides a convenient `getSummary()` method on the `AgentLoopMetrics` class that gives you a comprehensive overview of your agent's performance in a single call. This method aggregates all the metrics data into a structured object that's easy to analyze or export.
+
+    Let's look at the output from calling `getSummary()` on the metrics from our calculator example from the beginning of this document:
+
+    ```typescript
+    --8<-- "user-guide/observability-evaluation/metrics.ts:metrics_summary"
+    ```
+    ```typescript
+    {
+      totalCycles: 2,
+      totalDuration: 3.92,
+      averageCycleTime: 1.96,
+      toolUsage: {
+        calculator: {
+          callCount: 1,
+          successCount: 1,
+          errorCount: 0,
+          totalTime: 0.01,
+          averageTime: 0.01,
+          successRate: 1
+        }
+      },
+      traces: [
+        {
+          name: "Cycle 1",
+          duration: 2.00,
+          children: [
+            { name: "stream_messages", duration: 1.99 },
+            { name: "Tool: calculator", duration: 0.01 }
+          ]
+        },
+        {
+          name: "Cycle 2",
+          duration: 1.92,
+          children: [
+            { name: "stream_messages", duration: 1.92 }
+          ]
+        }
+      ],
+      accumulatedUsage: {
+        inputTokens: 1341,
+        outputTokens: 64,
+        totalTokens: 1405
+      },
+      accumulatedMetrics: { latencyMs: 3800 },
+      agentInvocations: [
+        {
+          usage: { inputTokens: 1341, outputTokens: 64, totalTokens: 1405 },
+          cycles: [
+            { agentLoopCycleId: "cycle-1", usage: { inputTokens: 632, outputTokens: 55, totalTokens: 687 } },
+            { agentLoopCycleId: "cycle-2", usage: { inputTokens: 709, outputTokens: 9, totalTokens: 718 } }
+          ]
+        }
+      ]
+    }
+    ```
+
+    This summary provides a complete picture of the agent's execution, including cycle information, token usage, tool performance, and detailed execution traces.
 
 ## Best Practices
 
