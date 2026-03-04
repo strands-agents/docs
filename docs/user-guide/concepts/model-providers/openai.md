@@ -1,6 +1,9 @@
-# OpenAI
+# OpenAI (Chat Completions)
 
-[OpenAI](https://platform.openai.com/docs/overview) is an AI research and deployment company that provides a suite of powerful language models. The Strands Agents SDK implements an OpenAI provider, allowing you to run agents against any OpenAI or OpenAI-compatible model.
+[OpenAI](https://platform.openai.com/docs/overview) is an AI research and deployment company that provides a suite of powerful language models. The Strands Agents SDK implements an OpenAI provider using the [Chat Completions API](https://platform.openai.com/docs/api-reference/chat/create), allowing you to run agents against any OpenAI or OpenAI-compatible model.
+
+!!! note "Looking for the Responses API?"
+    OpenAI also offers a newer [Responses API](https://platform.openai.com/docs/api-reference/responses/create). The Strands SDK provides a dedicated provider for it — see the [OpenAI Responses API](openai-responses.md) provider.
 
 ## Installation
 
@@ -203,3 +206,4 @@ Users can pass their own custom OpenAI client to the OpenAIModel for Strands Age
 
 - [API](../../../api-reference/python/models/model.md)
 - [OpenAI](https://platform.openai.com/docs/overview)
+- [OpenAI Responses API Provider](openai-responses.md)
