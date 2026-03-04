@@ -190,7 +190,7 @@ Let us skip Dapr general agent for now since it has the same pattern.
 
 ### AWS Lambda Durable: Agent as Durable Step [Diagram and docs](https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html)
 
-AWS Lambda Durable Functions (launched December 2025) supports wrapping any callable as a `@durable_step`. You can wrap `agent("prompt")` as a single step today with no SDK changes required.
+AWS Lambda Durable Function supports wrapping any callable as a `@durable_step`. We can wrap `agent("prompt")` as a single step today with no SDK changes required.
 
 ```python
 from aws_durable_execution_sdk_python import durable_execution, durable_step, DurableContext
@@ -227,9 +227,8 @@ Lambda Durable sees:
   [LLM]─[Tool 1]─[Tool 2]─[CRASH]  <-- Step retries → Tool 1 and Tool 2 re-execute
 ```
 
-### Integrating with an Existing Lambda Layer
 
-[Lambda Durable](https://github.com/aws/aws-durable-execution-sdk-python) can only be enabled on new functions. The migration path is to add the SDK to the existing Layer build and deploy a new function that references that Layer.
+[Lambda Durable](https://github.com/aws/aws-durable-execution-sdk-python) is sync only [issue](https://github.com/aws/aws-durable-execution-sdk-python/issues/316), and it can only be enabled on new functions. The migration path is to add the SDK to the existing Layer build and deploy a new function that references that Layer.
 
 Existing functions are untouched. The new durable function shares the same Layer. The only additions needed are `aws_durable_execution_sdk_python` in `requirements.txt` and the `@durable_execution` / `@durable_step` decorators in the new handler.
 
@@ -247,19 +246,13 @@ Existing functions are untouched. The new durable function shares the same Layer
 | Per-LLM / per-tool checkpointing | ❌ | ❌ | ❌ |
 | Step-level visibility | ❌ | ❌ | ❌ |
 
-Both current patterns solve the execution ceiling problem. Neither solves mid-loop durability.
+None solve mid-loop durability.
 
 ---
 
-## 2. Gap If We Want Native Integration
+## 2. Gaps If We Want Native Integration
 
-The key takeaway is both providers need the handler to own the loop. They cannot checkpoint what they cannot see. If the agent loop is hidden inside our SDK, these platforms have no way to hook into individual steps.
-
-**Temporal needs:** Each LLM call and each tool call as a separate Activity. Temporal records each Activity result permanently. On crash, completed Activities are replayed from history and the loop resumes at the step that was interrupted.
-
-**Lambda Durable needs:** Each LLM call and each tool call wrapped in its own `context.step()`. AWS records each step result. On Lambda interruption, completed steps are skipped and the loop resumes at the step that was interrupted.
-
-Both require the handler to control the loop:
+The provider owns the loop and checkpoints each LLM call and tool call individually. This is how Temporal AI Agent and Dapr DurableAgent work natively. It's what we need to build into Strands. The core requirement is the same across all three providers: the handler must control the loop so it can insert a checkpoint between every step.
 
 ```
 What both need:                       What the current SDK gives:
@@ -272,7 +265,7 @@ What both need:                       What the current SDK gives:
 
 The current SDK owns the loop inside `invoke_async`. There is no mechanism for external code to inject a checkpoint between iterations. The event loop cannot call back into the durable platform between steps.
 
-This is the single root cause of all current integration limitations, and it surfaces as three gaps:
+This is the single root cause of all current integration limitations, and it surfaces as **three gaps**:
 
 **Gap 1. Event loop does not use `invoke_callbacks_async` at step fire points**
 
@@ -292,17 +285,150 @@ There is no way to tell `Agent` to dispatch its loop to an external platform. A 
 
 The solution opens the event loop so that durable platforms can observe and checkpoint each step, without changing the existing `agent("prompt")` call signature.
 
+### Why `dispatch_async`?
+agent("prompt") blocks the caller until the full agent loop finishes. That works fine in-process. But when the loop runs on a remote platform (Temporal worker, Dapr sidecar, Lambda), the execution could take longer than expectation.
+
+```python
+# ── With durable_backend: still blocking (backward compatible) ───
+agent = Agent(tools=[...], durable_backend=TemporalBackend(...))
+result = agent("prompt")  # dispatches to Temporal, blocks until done
+
+# ── With dispatch_async: non-blocking ────────────────────────────
+handle = await agent.dispatch_async("prompt")
+
+# handle is an ExecutionHandle — a reference to a running execution
+print(handle.execution_id)   # "temporal-wf-abc123" or "lambda-exec-xyz"
+
+# Do other work...
+
+# When we need the result:
+result = await handle.result()   # blocks until execution finishes
+           
+
+```
+
+### Why Telemetry pattern doesn't work
+
+```
+OTel (works from anywhere):
+
+  ┌─ Your Python process ──────────────────────────────┐
+  │                                                     │
+  │  with trace_api.use_span(span):     ← inline wrap  │
+  │      result = call_llm(...)                         │
+  │                                                     │
+  │  Span data → Exporter → Collector (Jaeger, etc.)   │
+  │             (just data, fire-and-forget)             │
+  └─────────────────────────────────────────────────────┘
+
+  OTel only OBSERVES. It ships telemetry data.
+  If the process crashes, the spans are lost too.
+  That's fine — tracing is best-effort.
+
+
+Temporal (must run inside Workflow sandbox):
+
+  ┌─ Temporal Worker process ───────────────────────────┐
+  │                                                      │
+  │  ┌─ Workflow (deterministic sandbox) ──────────┐     │
+  │  │                                              │     │
+  │  │  result = await workflow.execute_activity(   │     │
+  │  │      call_llm, ...                           │     │
+  │  │  )               ↑                           │     │
+  │  │                  │                           │     │
+  │  └──────────────────┼───────────────────────────┘     │
+  │                     │                                  │
+  │   Temporal Server ◄─┘  records Activity result         │
+  │   (gRPC service)       in Event History                │
+  │                        before returning to Workflow     │
+  └────────────────────────────────────────────────────────┘
+
+  Temporal CONTROLS EXECUTION. It persists + replays.
+  If the process crashes, the server still has the history.
+  On restart, it replays completed Activities from history.
+```
+
+The key difference: OTel's exporter is fire-and-forget (just data going out), so it works from any Python process. Temporal's workflow.execute_activity() is a two-way contract,the Temporal Server must acknowledge the Activity result before the Workflow proceeds.
+
+What it looks like ?
+
+```
+
+  ┌─ Temporal Worker ──────────────────────────────────────────┐
+  │                                                             │
+  │  ┌─ Workflow sandbox ────────────────────────────────┐      │
+  │  │                                                    │      │
+  │  │  Strands event_loop.py (unchanged):               │      │
+  │  │                                                    │      │
+  │  │    while True:                                     │      │
+  │  │      ┌─────────────────────────────────────────┐   │      │
+  │  │      │ hook: on_before_model_call              │   │      │
+  │  │      │   → workflow.execute_activity(call_llm) │ ──┼──►Temporal Server
+  │  │      │   ← result (checkpointed ✅)            │   │   (persists)
+  │  │      └─────────────────────────────────────────┘   │      │
+  │  │                                                    │      │
+  │  │      ┌─────────────────────────────────────────┐   │      │
+  │  │      │ hook: on_before_tool_call               │   │      │
+  │  │      │   → workflow.execute_activity(call_tool) │ ──┼──►Temporal Server
+  │  │      │   ← result (checkpointed ✅)            │   │   (persists)
+  │  │      └─────────────────────────────────────────┘   │      │
+  │  │                                                    │      │
+  │  │      if done: break                                │      │
+  │  │                                                    │      │
+  │  └────────────────────────────────────────────────────┘      │
+  │                                                             │
+  │  On crash: Temporal replays Workflow, hooks fire again,      │
+  │  but execute_activity returns cached results for completed   │
+  │  Activities → loop resumes from where it stopped.            │
+  └─────────────────────────────────────────────────────────────┘
+  
+```
+
+what about Lambda ?
+
+Lambda Durable's Python SDK is sync-only — context.step() is a blocking call, no async def, no await. So we can't call context.step() from inside an async Strands hook. Instead, the Lambda handler replaces the Strands event loop entirely and runs its own sync loop with context.step() calls:
+
+What we need is :
+```python
+@durable_execution
+def handler(event: dict, context: DurableContext):
+    """Lambda Durable owns the loop. Each LLM/tool call is a step."""
+    spec = AgentSpec.from_dict(event["spec"])
+    prompt = event["prompt"]
+    messages = [{"role": "user", "content": prompt}]
+
+    while True:
+        # ✅ Checkpoint: LLM call is a durable step
+        response = context.step(
+            lambda _: call_llm(spec.model_id, messages, spec.tool_schemas),
+            name=f"llm-call-{len(messages)}",
+        )
+
+        if not response["tool_calls"]:
+            return response["text"]
+
+        # ✅ Checkpoint: each tool call is a durable step
+        for tool_call in response["tool_calls"]:
+            tool_result = context.step(
+                lambda _, tc=tool_call: call_tool(tc["name"], tc["input"]),
+                name=f"tool-{tc['name']}-{len(messages)}",
+            )
+            messages.append({"role": "tool", "content": tool_result})
+```
+
+If Lambda Durable adds async def handler / await context.step() support in the future, it could switch to the hook approach too. Until then, loop replacement is the correct pattern
+
 ### Architecture
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    Agent (2.0)                      │
-│                                                     │
-│  agent("prompt")         → AgentResult  (unchanged) │
-│  agent.dispatch_async()  → ExecutionHandle  (new)   │
-│                                                     │
-│  durable_backend: DurableBackend | None             │
-└─────────────────┬───────────────────────────────────┘
+│                    Agent (2.0)                       │
+│                                                      │
+│  agent("prompt")         → AgentResult  (unchanged)  │
+│  agent.dispatch_async()  → ExecutionHandle  (new)    │
+│                                                      │
+│  durable_backend: DurableBackend | None              │
+└─────────────────┬────────────────────────────────────┘
                   │
        ┌──────────┴───────────┐
        │                      │
@@ -313,9 +439,10 @@ The solution opens the event loop so that durable platforms can observe and chec
                          or
                          → ExecutionHandle (non-blocking)
                               │
-              ┌───────────────┴──────────────┐
-              │                              │
-        TemporalBackend            LambdaDurableBackend
+              ┌───────────────┼──────────────┐
+              │               │              │
+        TemporalBackend  DaprBackend  LambdaDurableBackend
+        (hook-based)     (hook-based) (handler-owns-loop)
 ```
 
 ### Core SDK Changes
