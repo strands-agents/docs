@@ -475,9 +475,11 @@ The generation script performs these transformations after typedoc runs:
    ---
    ```
 
-2. **Fixes relative links** to match the flat slug structure (e.g., `../interfaces/AgentData.md` → `../AgentData.md`)
+2. **Fixes relative links** to match the flat slug structure (e.g., `../interfaces/AgentData.md` → `../AgentData.md`) and updates `.md` extensions to `.mdx`.
 
-3. **Deletes the generated index.md** - We use our own custom index page instead
+3. **Converts to MDX** — runs content through a `unified`/`remark-gfm` pipeline with `mdxToMarkdown()` serialization, which escapes characters that are valid in markdown but invalid in MDX (e.g. `{`, `}` outside code blocks). Content inside code fences is left untouched. Files are written as `.mdx` instead of `.md`. A targeted replacement also handles the literal string `<name>Data` that typedoc emits in prose to describe the naming pattern for data interfaces.
+
+4. **Deletes the generated index.md** - We use our own custom index page instead
 
 ### Flat Slugs with Category Grouping
 
@@ -701,3 +703,9 @@ The `src/util/links.ts` module was extended:
 ```
 
 Type declarations in `src/types/turndown-plugin-gfm.d.ts` (no @types package available).
+
+## Dependency Version Pinning
+
+### `astro-broken-links-checker`
+
+This package is pinned to an exact version (`1.0.6`) rather than using a semver range. It's a low-popularity package, so we avoid automatic updates to prevent potentially pulling in malicious or breaking changes without an explicit review. Before upgrading, manually inspect the changelog and diff on the package's repository.

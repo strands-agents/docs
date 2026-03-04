@@ -32,6 +32,7 @@
     "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
     "@types/express": "^5.0.5",
     "@types/turndown": "^5.0.6",
+    "astro-broken-links-checker": "1.0.6",
     "express": "^5.1.0",
     "prettier": "^3.6.2",
     "turndown": "^7.2.2",

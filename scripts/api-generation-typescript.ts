@@ -11,6 +11,11 @@
 import { execSync } from 'child_process'
 import { existsSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync } from 'fs'
 import { join, basename, relative } from 'path'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkStringify from 'remark-stringify'
+import { mdxToMarkdown } from 'mdast-util-mdx'
 
 const OUTPUT_DIR = '.build/api-docs/typescript'
 
@@ -81,9 +86,22 @@ function generateTitle(category: string, name: string): string {
 }
 
 /**
- * Process a single file to add frontmatter
+ * Escape MDX-unsafe characters in markdown content using the unified pipeline.
+ * Parses as GFM markdown, then serializes with mdxToMarkdown() which escapes
+ * characters like { } that are valid in markdown but invalid in MDX outside code blocks.
+ * Content inside code fences is left untouched.
  */
-function processFile(file: FileInfo): void {
+async function escapeMdxChars(content: string): Promise<string> {
+  const processor = unified().use(remarkParse).use(remarkGfm).use(remarkStringify)
+  processor.data('toMarkdownExtensions', [mdxToMarkdown()])
+  const result = await processor.process(content)
+  return String(result)
+}
+
+/**
+ * Process a single file: add frontmatter, escape MDX-unsafe chars, write as .mdx
+ */
+async function processFile(file: FileInfo): Promise<void> {
   const content = readFileSync(file.path, 'utf-8')
 
   // Check if frontmatter already exists
@@ -102,11 +120,17 @@ function processFile(file: FileInfo): void {
   }
 
   // Fix relative links to remove category folders (e.g., ../interfaces/AgentData.md -> ../AgentData.md)
-  // This matches the flat slug structure we use
-  const processedContent = content.replace(
-    /\]\(\.\.\/(classes|interfaces|type-aliases|functions)\/([^)]+)\)/g,
-    '](../$2)'
-  )
+  // Also update .md extensions to .mdx in relative links since we output .mdx files
+  const linkedFixed = content
+    .replace(/\]\(\.\.\/(classes|interfaces|type-aliases|functions)\/([^)]+)\)/g, '](../$2)')
+    .replace(/\]\((\.\.[^)]+)\.md((?:#[^)]+)?)\)/g, ']($1.mdx$2)')
+
+  // Special-case: escape the literal string "<name>Data" which typedoc emits in prose
+  // to describe the naming pattern for data interfaces (e.g. "the <name>Data pattern")
+  const specialCased = linkedFixed.replace(/<name>Data/g, '\\<name>Data')
+
+  // Escape MDX-unsafe characters (e.g. { } outside code blocks)
+  const mdxSafe = await escapeMdxChars(specialCased)
 
   // Add frontmatter with category for sidebar grouping
   const frontmatter = `---
@@ -118,16 +142,20 @@ editUrl: false
 
 `
 
-  const finalContent = frontmatter + processedContent
+  const finalContent = frontmatter + mdxSafe
 
-  writeFileSync(file.path, finalContent, 'utf-8')
-  console.log(`Processed: ${file.path}`)
+  // Write as .mdx instead of .md
+  const mdxPath = file.path.replace(/\.md$/, '.mdx')
+  writeFileSync(mdxPath, finalContent, 'utf-8')
+  // Remove the original .md file
+  rmSync(file.path)
+  console.log(`Processed: ${file.path} → ${basename(mdxPath)}`)
 }
 
 /**
  * Main function
  */
-function main(): void {
+async function main(): Promise<void> {
   console.log('🔧 TypeScript API Documentation Generator\n')
 
   // Step 1: Clean output directory
@@ -159,10 +187,10 @@ function main(): void {
       console.log(`Deleted: ${file.path} (using custom index)`)
       continue
     }
-    processFile(file)
+    await processFile(file)
   }
 
   console.log(`\n✅ Done! Generated ${files.length - 1} API doc files.`)
 }
 
-main()
+main().catch(console.error)

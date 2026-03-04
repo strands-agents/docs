@@ -8,6 +8,7 @@
 - [ ] Look into markdown 
 - [X] Add header links to Python/TypeScript method sections (api/python/strands.agent.agent/)
 - [ ] Migrate all files and remove conversion scripts
+- [ ] Remove `<name>Data` special-case in `scripts/api-generation-typescript.ts` once typedoc fixes the prose or we find a better general solution
 
 ## After Launch
 - [ ] Move asset files to proper location (currently in `docs/assets/`, should be in `src/content/docs/assets/`)
