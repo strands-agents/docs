@@ -7,7 +7,7 @@
 
 ---
 
-## Context
+## 1. Context
 
 Durable agents are designed for production workloads that need resilience across failures, long waits, and restarts. Unlike ephemeral agents that lose all progress when a process dies, durable agents persist their state and resume from where they left off.
 
@@ -32,11 +32,111 @@ Today: Single invoke_async call
          → Everything lost
 ```
 
-This doc covers two providers: [Temporal](https://temporal.io/) and [AWS Lambda Durable Execution](https://docs.aws.amazon.com/lambda/latest/dg/durable-execution-sdk.html).
+This doc covers two providers: [Temporal](https://temporal.io/), [Dapr](https://dapr.io/) and [AWS Lambda Durable Execution](https://docs.aws.amazon.com/lambda/latest/dg/durable-execution-sdk.html).
 
----
+### 1. How Durable Providers Orchestrate AI Agents
 
-## 1. How We Can Integrate Them into Our SDK Today
+Before diving into integration, Let's go through the shared architecture these providers use and how existing agent frameworks build on them.
+
+
+Temporal, Dapr, and Lambda Durable all share the same recovery mechanism: record the result of each completed unit, skip it on replay, resume from where execution stopped. Then the granularity is the key.
+Each provider names the pieces differently but the model is the same:
+
+| Concept | Temporal | Dapr | Lambda Durable |
+|---|---|---|---|
+| Orchestrator | Workflow | Workflow | `@durable_execution` handler |
+| Checkpointable unit | Activity | Activity | `context.step()` |
+| Replay mechanism | Event History | State Store | Cached step results |
+| Human-in-the-loop | Signal | Signal / PubSub event | (not yet supported) |
+
+Here is what a 3-step agent loop looks like when the provider can see each step vs. when it cannot:
+
+```
+
+Provider sees each step (native):       Provider sees one black box (wrapper):
+
+  ┌─ LLM call ──── ✅ saved ─┐            ┌─ agent("prompt") ── ? ─┐
+  │                          │            │                        │
+  ├─ Tool 1  ──── ✅ saved  ─┤            │  LLM call              │
+  │                          │            │  Tool 1                │
+  ├─ Tool 2  ──── 💥 CRASH   │            │  Tool 2   💥 CRASH     │
+  │                          │            │                        │
+  │  Resume here ─▶ Tool 2   │            │  Resume ─▶ LLM call    │
+  │                          │           │  (start over)          │
+  ├─ LLM call ──── ✅ saved ─┤            └────────────────────────┘
+  │                          │
+  └─ Done                     
+  
+```
+The left side is what Temporal AI Agent and Dapr's Durable Agent achieve. The right side is what happens if we wrap the Strands agent loop as a single unit.
+
+### 2. How Those Providers Build Their First-class AI agent
+
+
+**Temporal AI Agent** [temporal-community/temporal-ai-agent](https://github.com/temporal-community/temporal-ai-agent) puts the agent loop *inside the Workflow*. Each LLM call and each tool call is dispatched as a separate Activity. The Workflow is deterministic — it just decides "call LLM next" or "call tool next." The Activities do the actual I/O. On crash, Temporal replays completed Activities from event history and the loop resumes mid-conversation.
+
+See example code, more to read (docs)[https://docs.temporal.io/ai-cookbook/agentic-loop-tool-call-claude-python]
+
+```python
+# Temporal: orchestrator owns the loop, each step is an Activity
+@workflow.defn
+class AgentWorkflow:
+    @workflow.run
+    async def run(self, prompt: str):
+        messages = [{"role": "user", "content": prompt}]
+        while True:
+            # Each LLM call = checkpointed Activity
+            response = await workflow.execute_activity(
+                call_llm, args=[messages], ...
+            )
+            if not response.tool_calls:
+                return response.text
+
+            # Each tool call = checkpointed Activity (uses dynamic activities)
+            for tool_call in response.tool_calls:
+                result = await workflow.execute_activity(
+                    tool_call.name, args=[tool_call.input], ...
+                )
+                messages.append(tool_result(result))
+```
+**Dapr Agents** They offer both general agent and `DurableAgent` is workflow-backed, LLM call and tool execution uses a durable activity automatically, and the `AgentRunner` handles the workflow lifecycle.
+
+```python
+from dapr_agents.workflow.runners import AgentRunner
+
+async def main():
+    travel_planner = DurableAgent(
+        name="TravelBuddy",
+        role="Travel Planner",
+        goal="Help users find flights and remember preferences",
+        instructions=["Help users find flights and remember preferences"],
+        tools=[search_flights],
+        memory = AgentMemoryConfig(
+            store=ConversationDaprStateMemory(
+                store_name="conversationstore",
+                session_id="travel-session",
+            )
+        )
+    )
+
+    runner = AgentRunner()
+
+    try:
+        itinerary = await runner.run(
+            travel_planner,
+            payload={"task": "Plan a 3-day trip to Paris"},
+        )
+        print(itinerary)
+    finally:
+        runner.shutdown(travel_planner)
+
+```
+
+Highlight the `memory` here, Dapr externalizes conversation state to a pluggable state store keyed by session_id. This is functionally equivalent to our SessionManager, after we introduce checkpoint-based snapshot, we will close this gap. 
+
+We will discuss AWS Durable in next section since they all face the same granularity issue.
+
+## 2. How We Can Integrate Them into Our SDK Today: Wrapper Pattern
 
 ### Temporal: Agent as Activity
 
@@ -77,18 +177,18 @@ class AgentWorkflow:
         )
 ```
 
-Temporal retries the activity if the worker crashes. `S3SessionManager` restores conversation history on each retry.
-
-The entire agent loop is one atomic Activity. If the process crashes after tool call 2 but before tool call 3, the whole activity retries.
+Temporal retries the activity if the worker crashes. `S3SessionManager` restores conversation history on each retry. The entire agent loop is one atomic Activity. If the process crashes after tool call 2 but before tool call 3, the whole activity retries.
 
 ```
   Activity: run_agent_activity   <-- one black box
   [LLM]─[Tool 1]─[Tool 2]─[CRASH] <-- retry from here leads to re-execution from beginning.
 ```
 
+Let us skip Dapr general agent for now since it has the same pattern.
+
 ---
 
-### AWS Lambda Durable: Agent as Durable Step
+### AWS Lambda Durable: Agent as Durable Step [Diagram and docs](https://docs.aws.amazon.com/lambda/latest/dg/durable-functions.html)
 
 AWS Lambda Durable Functions (launched December 2025) supports wrapping any callable as a `@durable_step`. You can wrap `agent("prompt")` as a single step today with no SDK changes required.
 
@@ -127,9 +227,9 @@ Lambda Durable sees:
   [LLM]─[Tool 1]─[Tool 2]─[CRASH]  <-- Step retries → Tool 1 and Tool 2 re-execute
 ```
 
-#### Integrating with an Existing Lambda Layer
+### Integrating with an Existing Lambda Layer
 
-Lambda Durable can only be enabled on new functions. The migration path is to add the SDK to the existing Layer build and deploy a new function that references that Layer.
+[Lambda Durable](https://github.com/aws/aws-durable-execution-sdk-python) can only be enabled on new functions. The migration path is to add the SDK to the existing Layer build and deploy a new function that references that Layer.
 
 Existing functions are untouched. The new durable function shares the same Layer. The only additions needed are `aws_durable_execution_sdk_python` in `requirements.txt` and the `@durable_execution` / `@durable_step` decorators in the new handler.
 
@@ -137,15 +237,15 @@ Existing functions are untouched. The new durable function shares the same Layer
 
 ### Pattern Comparison
 
-| | Temporal | AWS Lambda Durable |
-|---|---|---|
-| No SDK changes needed | ✅ | ✅ |
-| Survives Lambda 15-min ceiling | ✅ (via Activity timeout) | ✅ (native) |
-| Crash recovery at invocation level | ✅ | ✅ |
-| Mid-loop crash recovery | ❌ | ❌ |
-| Non-idempotent tools safe | ❌ | ❌ |
-| Per-LLM / per-tool checkpointing | ❌ | ❌ |
-| Step-level visibility | ❌ | ❌ |
+| | Temporal | Dapr | AWS Lambda Durable |
+|---|---|---|---|
+| No SDK changes needed | ✅ | ✅ | ✅ |
+| Survives Lambda 15-min ceiling | ✅ (via Activity timeout) | ✅ (via Activity timeout) | ✅ (native) |
+| Crash recovery at invocation level | ✅ | ✅ | ✅ |
+| Mid-loop crash recovery | ❌ | ❌ | ❌ |
+| Non-idempotent tools safe | ❌ | ❌ | ❌ |
+| Per-LLM / per-tool checkpointing | ❌ | ❌ | ❌ |
+| Step-level visibility | ❌ | ❌ | ❌ |
 
 Both current patterns solve the execution ceiling problem. Neither solves mid-loop durability.
 
