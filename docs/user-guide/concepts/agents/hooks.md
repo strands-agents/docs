@@ -2,9 +2,6 @@
 
 Hooks are a composable extensibility mechanism for extending agent functionality by subscribing to events throughout the agent lifecycle. The hook system enables both built-in components and user code to react to or modify agent behavior through strongly-typed event callbacks.
 
-!!! tip "Consider Plugins for High-Level Behavior Changes"
-    For packaging reusable agent extensions or implementing complex behavior changes, consider using [Plugins](../plugins/index.md) instead of raw hooks. Plugins provide a higher-level abstraction that encapsulates related hooks, configuration, and initialization logic into shareable packages.
-
 ## Overview
 
 The hooks system is a composable, type-safe system that supports multiple subscribers per event type.
@@ -36,7 +33,7 @@ The simplest way to register a hook callback is using the `agent.add_hook()` met
 
     agent = Agent()
 
-    # Register individual callbacks using the simplified API
+    # Register individual callbacks
     def my_callback(event: BeforeInvocationEvent) -> None:
         print("Custom callback triggered")
 
@@ -55,21 +52,6 @@ The simplest way to register a hook callback is using the `agent.add_hook()` met
     --8<-- "user-guide/concepts/agents/hooks.ts:individual_callback"
     ```
 
-You can also use the `agent.hooks.add_callback()` method for explicit event type specification:
-
-=== "Python"
-
-    ```python
-    agent = Agent()
-
-    def my_callback(event: BeforeInvocationEvent) -> None:
-        print("Custom callback triggered")
-
-    agent.hooks.add_callback(BeforeInvocationEvent, my_callback)
-    ```
-
-{{ ts_not_supported_code("This syntax is not yet available in TypeScript SDK") }}
-
 For multi-agent orchestrators, you can register callbacks for orchestration events:
 
 === "Python"
@@ -87,39 +69,34 @@ For multi-agent orchestrators, you can register callbacks for orchestration even
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
 
-### Creating a Hook Provider
+### Using Plugins for Multiple Hooks
 
-The `HookProvider` protocol allows a single object to register callbacks for multiple events. This pattern works for both single-agent and multi-agent orchestrators:
+For packaging multiple related hooks together, [Plugins](../plugins/index.md) provide a convenient way to bundle hooks with configuration and tools:
 
 === "Python"
 
     ```python
-    class LoggingHook(HookProvider):
-        def register_hooks(self, registry: HookRegistry) -> None:
-            registry.add_callback(BeforeInvocationEvent, self.log_start)
-            registry.add_callback(AfterInvocationEvent, self.log_end)
+    from strands import Agent
+    from strands.plugins import Plugin, hook
+    from strands.hooks import BeforeToolCallEvent, AfterToolCallEvent
 
-        def log_start(self, event: BeforeInvocationEvent) -> None:
-            print(f"Request started for agent: {event.agent.name}")
+    class LoggingPlugin(Plugin):
+        name = "logging-plugin"
 
-        def log_end(self, event: AfterInvocationEvent) -> None:
-            print(f"Request completed for agent: {event.agent.name}")
+        @hook
+        def log_before(self, event: BeforeToolCallEvent) -> None:
+            print(f"Calling: {event.tool_use['name']}")
 
-    # Passed in via the hooks parameter
-    agent = Agent(hooks=[LoggingHook()])
+        @hook
+        def log_after(self, event: AfterToolCallEvent) -> None:
+            print(f"Completed: {event.tool_use['name']}")
 
-    # Or added after the fact
-    agent.hooks.add_hook(LoggingHook())
+    agent = Agent(plugins=[LoggingPlugin()])
     ```
 
-=== "TypeScript"
+{{ ts_not_supported_code("Plugins are not yet available in TypeScript SDK") }}
 
-    ```typescript
-    --8<-- "user-guide/concepts/agents/hooks.ts:hook_provider_class"
-    ```
-
-!!! note "HookProvider vs Plugin"
-    For simple hook registration, `HookProvider` works well. However, if you need initialization logic, configuration, or plan to share your extension with others, consider creating a [Plugin](../plugins/index.md) instead. Plugins extend the `HookProvider` pattern with additional capabilities like named identification and agent-aware initialization.
+See [Plugins](../plugins/index.md) for more information on creating and using plugins.
 
 ## Hook Event Lifecycle
 
@@ -727,3 +704,35 @@ For example, to retry failed tool calls once:
     ```
 
 {{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
+
+## HookProvider Protocol
+
+For advanced use cases, you can implement the `HookProvider` protocol to create objects that register multiple callbacks at once. This is useful when building reusable hook collections without the full plugin infrastructure:
+
+=== "Python"
+
+    ```python
+    from strands.hooks import HookProvider, HookRegistry, BeforeInvocationEvent, AfterInvocationEvent
+
+    class RequestLogger(HookProvider):
+        def register_hooks(self, registry: HookRegistry) -> None:
+            registry.add_callback(BeforeInvocationEvent, self.log_start)
+            registry.add_callback(AfterInvocationEvent, self.log_end)
+
+        def log_start(self, event: BeforeInvocationEvent) -> None:
+            print(f"Request started for agent: {event.agent.name}")
+
+        def log_end(self, event: AfterInvocationEvent) -> None:
+            print(f"Request completed for agent: {event.agent.name}")
+
+    # Pass via hooks parameter
+    agent = Agent(hooks=[RequestLogger()])
+
+    # Or add after creation
+    agent.hooks.add_hook(RequestLogger())
+    ```
+
+{{ ts_not_supported_code("This feature is not yet available in TypeScript SDK") }}
+
+For most use cases, [Plugins](../plugins/index.md) provide a more convenient way to bundle multiple hooks with additional features like auto-discovery and tool registration.
