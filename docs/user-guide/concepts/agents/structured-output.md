@@ -56,30 +56,7 @@ Define an output structure using a schema. In Python, use a Pydantic model and p
 === "TypeScript"
 
     ```typescript
-    import { Agent } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    // 1) Define the Zod schema
-    const PersonSchema = z.object({
-      name: z.string().describe('Name of the person'),
-      age: z.number().describe('Age of the person'),
-      occupation: z.string().describe('Occupation of the person')
-    })
-
-    // 2) Pass the schema to the agent
-    const agent = new Agent({ 
-      structuredOutputSchema: PersonSchema 
-    })
-
-    const result = await agent.invoke(
-      'John Smith is a 30 year-old software engineer'
-    )
-
-    // 3) Access the `structuredOutput` from the result
-    // TypeScript infers the type from the schema
-    console.log(`Name: ${result.structuredOutput.name}`)           // "John Smith"
-    console.log(`Age: ${result.structuredOutput.age}`)             // 30
-    console.log(`Job: ${result.structuredOutput.occupation}`)      // "software engineer"
+    --8<-- "user-guide/concepts/agents/structured-output.ts:basic_usage"
     ```
 
 ???+ tip "Async Support"
@@ -100,9 +77,7 @@ Define an output structure using a schema. In Python, use a Pydantic model and p
 
     === "TypeScript"
         ```typescript
-        // Agent.invoke() is already async in TypeScript
-        const agent = new Agent({ structuredOutputSchema: PersonSchema })
-        const result = await agent.invoke('John Smith is a 30 year-old software engineer')
+        --8<-- "user-guide/concepts/agents/structured-output.ts:async_support"
         ```
 
 ## More Information
@@ -133,15 +108,7 @@ When structured output validation fails, Strands throws a custom `StructuredOutp
 === "TypeScript"
 
     ```typescript
-    import { Agent, StructuredOutputException } from '@strands-agents/sdk'
-
-    try {
-      const result = await agent.invoke(prompt)
-    } catch (error) {
-      if (error instanceof StructuredOutputException) {
-        console.log(`Structured output failed: ${error.message}`)
-      }
-    }
+    --8<-- "user-guide/concepts/agents/structured-output.ts:error_handling"
     ```
 
 ### Migration from Legacy API
@@ -235,18 +202,7 @@ Automatically retry validation when initial extraction fails due to schema valid
 === "TypeScript"
 
     ```typescript
-    import { Agent } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    const NameSchema = z.object({
-      firstName: z.string().refine(
-        (val) => val.endsWith('abc'),
-        { message: "You must append 'abc' to the end of my name" }
-      )
-    })
-
-    const agent = new Agent({ structuredOutputSchema: NameSchema })
-    const result = await agent.invoke("What is Aaron's name?")
+    --8<-- "user-guide/concepts/agents/structured-output.ts:auto_retries"
     ```
 
 ### Streaming Structured Output
@@ -283,27 +239,7 @@ Stream agent execution while using structured output. The structured output is a
 === "TypeScript"
 
     ```typescript
-    import { Agent } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    const WeatherForecastSchema = z.object({
-      location: z.string(),
-      temperature: z.number(),
-      condition: z.string(),
-      humidity: z.number(),
-      windSpeed: z.number(),
-      forecastDate: z.string()
-    })
-
-    const agent = new Agent({ structuredOutputSchema: WeatherForecastSchema })
-
-    for await (const event of agent.stream(
-      'Generate a weather forecast for Seattle: 68°F, partly cloudy, 55% humidity, 8 mph winds, for tomorrow'
-    )) {
-      if (event.type === 'agentResultEvent') {
-        console.log(`The forecast is: ${JSON.stringify(event.result.structuredOutput)}`)
-      }
-    }
+    --8<-- "user-guide/concepts/agents/structured-output.ts:streaming"
     ```
 
 ### Combining with Tools
@@ -330,38 +266,7 @@ Combine structured output with tool usage to format tool execution results:
 === "TypeScript"
 
     ```typescript
-    import { Agent, tool } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    const calculatorTool = tool({
-      name: 'calculator',
-      description: 'Perform basic arithmetic operations',
-      inputSchema: z.object({
-        operation: z.enum(['add', 'subtract', 'multiply', 'divide']),
-        a: z.number(),
-        b: z.number()
-      }),
-      callback: (input) => {
-        const ops = {
-          add: input.a + input.b,
-          subtract: input.a - input.b,
-          multiply: input.a * input.b,
-          divide: input.a / input.b
-        }
-        return ops[input.operation]
-      }
-    })
-
-    const MathResultSchema = z.object({
-      operation: z.string().describe('the performed operation'),
-      result: z.number().describe('the result of the operation')
-    })
-
-    const agent = new Agent({
-      tools: [calculatorTool],
-      structuredOutputSchema: MathResultSchema
-    })
-    const result = await agent.invoke('What is 42 + 8')
+    --8<-- "user-guide/concepts/agents/structured-output.ts:combining_tools"
     ```
 
 ### Multiple Output Types
@@ -398,33 +303,7 @@ Reuse a single agent instance with different structured output schemas for varie
 === "TypeScript"
 
     ```typescript
-    import { Agent } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    const PersonSchema = z.object({
-      name: z.string().describe('Full name'),
-      age: z.number().min(0).max(150).describe('Age in years'),
-      email: z.string().email().describe('Email address'),
-      phone: z.string().optional().describe('Phone number')
-    })
-
-    const TaskSchema = z.object({
-      title: z.string().describe('Task title'),
-      description: z.string().describe('Detailed description'),
-      priority: z.enum(['low', 'medium', 'high']).describe('Priority level'),
-      completed: z.boolean().default(false).describe('Whether task is completed')
-    })
-
-    const agent = new Agent()
-    
-    const personResult = await agent.invoke(
-      'Extract person: John Doe, 35, john@test.com',
-      { structuredOutputSchema: PersonSchema }
-    )
-    const taskResult = await agent.invoke(
-      'Create task: Review code, high priority, completed',
-      { structuredOutputSchema: TaskSchema }
-    )
+    --8<-- "user-guide/concepts/agents/structured-output.ts:multiple_types"
     ```
 
 ### Using Conversation History
@@ -463,30 +342,7 @@ Extract structured information from prior conversation context without repeating
 === "TypeScript"
 
     ```typescript
-    import { Agent } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    const agent = new Agent()
-
-    // Build up conversation context
-    await agent.invoke('What do you know about Paris, France?')
-    await agent.invoke('Tell me about the weather there in spring.')
-
-    const CityInfoSchema = z.object({
-      city: z.string(),
-      country: z.string(),
-      population: z.number().optional(),
-      climate: z.string()
-    })
-
-    // Extract structured information from the conversation
-    const result = await agent.invoke(
-      'Extract structured information about Paris from our conversation',
-      { structuredOutputSchema: CityInfoSchema }
-    )
-
-    console.log(`City: ${result.structuredOutput.city}`)         // "Paris"
-    console.log(`Country: ${result.structuredOutput.country}`)   // "France"
+    --8<-- "user-guide/concepts/agents/structured-output.ts:conversation_history"
     ```
 
 
@@ -514,19 +370,7 @@ You can also set a default structured output schema that applies to all agent in
 === "TypeScript"
 
     ```typescript
-    const PersonSchema = z.object({
-      name: z.string(),
-      age: z.number(),
-      occupation: z.string()
-    })
-
-    // Set default structured output schema for all invocations
-    const agent = new Agent({ structuredOutputSchema: PersonSchema })
-    const result = await agent.invoke('John Smith is a 30 year-old software engineer')
-
-    console.log(`Name: ${result.structuredOutput.name}`)           // "John Smith"
-    console.log(`Age: ${result.structuredOutput.age}`)             // 30
-    console.log(`Job: ${result.structuredOutput.occupation}`)      // "software engineer"
+    --8<-- "user-guide/concepts/agents/structured-output.ts:agent_defaults"
     ```
 
 !!! note "Note"
@@ -567,28 +411,5 @@ Even when you set a default schema at the agent initialization level, you can ov
 === "TypeScript"
 
     ```typescript
-    const PersonSchema = z.object({
-      name: z.string(),
-      age: z.number(),
-      occupation: z.string()
-    })
-
-    const CompanySchema = z.object({
-      name: z.string(),
-      industry: z.string(),
-      employees: z.number()
-    })
-
-    // Agent with default PersonInfo schema
-    const agent = new Agent({ structuredOutputSchema: PersonSchema })
-
-    // Override with CompanyInfo for this specific call
-    const result = await agent.invoke(
-      'TechCorp is a software company with 500 employees',
-      { structuredOutputSchema: CompanySchema }
-    )
-
-    console.log(`Company: ${result.structuredOutput.name}`)         // "TechCorp"
-    console.log(`Industry: ${result.structuredOutput.industry}`)    // "software"
-    console.log(`Size: ${result.structuredOutput.employees}`)       // 500
+    --8<-- "user-guide/concepts/agents/structured-output.ts:overriding_defaults"
     ```
