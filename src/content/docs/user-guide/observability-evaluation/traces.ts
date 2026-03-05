@@ -86,6 +86,13 @@ function configuringExporters() {
 
   // Register the provider with Strands
   telemetry.setupTracer({ provider })
+
+  // Get your configured tracer to optionally create your own custom spans
+  const tracer = telemetry.getTracer()
+  const span = tracer.startSpan('my-custom-operation')
+  span.setAttribute('custom.key', 'value')
+  // ... do work ...
+  span.end()
   // --8<-- [end:configuring_exporters]
 }
 
