@@ -110,68 +110,66 @@ agent-evaluation-project/
 
 ### Option 1: MCP Integration (Recommended)
 
-Set up MCP server for AI assistant integration:
+This guide demonstrates setup using Claude Code. For other AI coding assistants, refer to the [Agent SOP](https://github.com/strands-agents/agent-sop) documentation for platform-specific instructions.
+
+#### Setup with Claude Code
+
+**Global-level MCP server configuration:**
 
 ```bash
-# Download Eval SOP
-mkdir ~/my-sops
-# Copy eval.sop.md to ~/my-sops/
+# Add Strands Agent SOP MCP server
+claude mcp add -s user strands-agents-sops strands-agents-sops mcp
 
-# Configure MCP server
-strands-agents-sops mcp --sop-paths ~/my-sops
+# Add context7 for up-to-date Strands Evals SDK documentation and code examples (recommended)
+claude mcp add -s user context7 npx -- -y @upstash/context7-mcp
 ```
 
-Add to your AI assistant's MCP configuration:
-```json
-{
-  "mcpServers": {
-    "Eval": {
-      "command": "strands-agents-sops",
-      "args": ["mcp", "--sop-paths", "~/my-sops"]
-    }
-  }
-}
-```
-
-#### Usage with Claude Code
+**Start evaluation session:**
 
 ```bash
-cd agent-evaluation-project
+cd path/to/agent-evaluation-project
 claude
+```
 
-# In Claude session:
- /my-sops:eval (MCP) generate an evaluation plan for this agent at ./your-agent using strands evals sdk at ./evals-main
+**In Claude session:**
+
+```bash
+# Verify MCP servers are connected
+/mcp
+
+# Start evaluation workflow
+/strands-agents-sops:eval (MCP) evaluate this agent at ./your-agent using strands evals sdk
 ```
 
 The workflow proceeds through four phases:
 
-1. **Planning**: `/Eval generate an evaluation plan`
-2. **Data Generation**: `yes` (when prompted) or `/Eval generate the test data`
-3. **Evaluation**: `yes` (when prompted) or `/Eval evaluate the agent using strands evals`
-4. **Reporting**: `/Eval generate an evaluation report based on /path/to/results.json`
+1. **Planning**: `yes` (when prompted) or `/strands-agents-sops:eval (MCP) generate an evaluation plan`
+2. **Data Generation**: `yes` (when prompted) or `/strands-agents-sops:eval (MCP) generate the test data`
+3. **Evaluation**: `yes` (when prompted) or `/strands-agents-sops:eval (MCP) implement and execute the evaluation code using strands evals`
+4. **Reporting**: `/strands-agents-sops:eval (MCP) generate an evaluation report based on /path/to/results.json`
 
 ### Option 2: Direct Strands Agent Integration
 
 ```python
 from strands import Agent
-from strands_tools import editor, shell
-from strands_agents_sops import eval 
-
+from strands_tools import editor, shell, mcp_client
+from strands_agents_sops import eval
 agent = Agent(
     system_prompt=eval,
-    tools=[editor, shell],
+    tools=[editor, shell, mcp_client],
 )
-
+# Connect to Context7 MCP server for documentation lookup (recommended)
+agent.tool.mcp_client(
+    action="connect", connection_id="context7", transport="stdio", command="npx", args=["-y", "@upstash/context7-mcp"]
+)
 # Initial message to start the evaluation
-agent("Start Eval sop for evaluating my QA agent")
-
+agent("Use Eval SOP to evaluate this agent at ./your_agent using strands evals sdk")
 # Multi-turn conversation loop
 while True:
     user_input = input("\nYou: ")
     if user_input.lower() in ("exit", "quit", "done"):
         print("Evaluation session ended.")
         break
-
     agent(user_input)
 ```
 
@@ -188,7 +186,7 @@ os.environ["BYPASS_TOOL_CONSENT"] = "true"
 Convert to Claude Skills format:
 
 ```bash
-strands-agents-sops skills --sop-paths ~/my-sops --output-dir ./skills
+strands-agents-sops skills --output-dir ./skills
 ```
 
 Upload the generated `skills/eval/SKILL.md` to Claude.ai or use via Claude API.
