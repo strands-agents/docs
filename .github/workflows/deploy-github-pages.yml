@@ -14,8 +14,10 @@ jobs:
 
     steps:
       - name: Checkout
+        # TODO: remove ref once workstream/cms-migration is merged to main
         uses: actions/checkout@v4
         with:
+          ref: 'workstream/cms-migration'
           fetch-depth: 0
 
       - name: Set up Node.js
