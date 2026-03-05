@@ -35,7 +35,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git fetch origin gh-pages || true
           git worktree add gh-pages-deploy origin/gh-pages 2>/dev/null || git worktree add --orphan -b gh-pages gh-pages-deploy
-          rsync -a --delete --exclude='.git' dist/ gh-pages-deploy/
+          rsync -a --delete --exclude='.git' --exclude='CNAME' dist/ gh-pages-deploy/
           cd gh-pages-deploy
           git add -A
           git diff --cached --quiet || git commit -m "Deploy to GitHub Pages from ${{ github.sha }}"
