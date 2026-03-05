@@ -1936,7 +1936,7 @@ def analyze_data(data_description: str) -> str:
     """Analyze data using a specialized analysis agent."""
     analysis_agent = Agent(
         system_prompt="You are a data analyst. Return concise bullet-point insights.",
-        callback_handler=None
+        callback_handler=None  # Suppress intermediate output from sub-agent
     )
     result = analysis_agent(data_description)
     return str(result)
