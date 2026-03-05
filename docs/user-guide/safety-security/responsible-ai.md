@@ -4,25 +4,6 @@ Strands Agents SDK provides powerful capabilities for building AI agents with ac
 
 You can learn more about the core dimensions of responsible AI on the [AWS Responsible AI](https://aws.amazon.com/ai/responsible-ai/) site. 
 
-## Shared Responsibility Model
-
-Strands Agents SDK provides building blocks for constructing AI agent systems. Security of the overall system is a shared responsibility between the SDK and you, the developer.
-
-**What the SDK provides:**
-
-- Input validation against common injection patterns (e.g., path traversal)
-- Secure defaults where possible
-- Extensible interfaces for adding custom validation
-
-**What you are responsible for:**
-
-- Securing the runtime environment your agents operate in, including filesystem permissions, network access, and container/host isolation
-- Auditing all tools used by your agents, including tools provided by Strands and the community, for their specific behavior and assumptions, and ensuring they are appropriate for your workload, threat model, and deployment environment
-- Protecting any directories the SDK reads from or writes to (e.g., session storage, tool loading directories) from unauthorized access, as the SDK trusts the contents of these locations
-- Implementing additional validation or hardening layers (e.g., symlink checks, integrity verification) when operating in shared, multi-tenant, or adversarial environments
-
-No SDK can anticipate every deployment topology or threat model. You should review how each component interacts with your infrastructure and apply appropriate security controls at the environment level.
-
 ### Tool Design
 
 When designing tools with Strands, follow these principles:
