@@ -2,8 +2,6 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
-    branches:
-      - 'workstream/cms-migration'
 
 permissions:
   contents: write
