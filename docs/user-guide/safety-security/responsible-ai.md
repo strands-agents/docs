@@ -17,7 +17,7 @@ Strands Agents SDK provides building blocks for constructing AI agent systems. S
 **What you are responsible for:**
 
 - Securing the runtime environment your agents operate in, including filesystem permissions, network access, and container/host isolation
-- Auditing all tools used by your agents — including tools provided by Strands and the community — for their specific behavior and assumptions, and ensuring they are appropriate for your workload, threat model, and deployment environment
+- Auditing all tools used by your agents, including tools provided by Strands and the community, for their specific behavior and assumptions, and ensuring they are appropriate for your workload, threat model, and deployment environment
 - Protecting any directories the SDK reads from or writes to (e.g., session storage, tool loading directories) from unauthorized access, as the SDK trusts the contents of these locations
 - Implementing additional validation or hardening layers (e.g., symlink checks, integrity verification) when operating in shared, multi-tenant, or adversarial environments
 
