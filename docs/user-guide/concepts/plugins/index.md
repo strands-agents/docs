@@ -8,7 +8,7 @@ The Strands SDK provides built-in plugins that you can use out of the box:
 
 - **[Steering](../experimental/steering.md)** - Modular prompting for complex agent tasks through context-aware guidance
 
-You can also create your own plugins to extend agent functionality with custom behavior.
+You can also build and distribute your own plugins to extend agent functionality. See [Get Featured](../../../community/get-featured.md) to share your plugins with the community.
 
 ## Using Plugins
 
@@ -84,7 +84,7 @@ When you attach a plugin to an agent, the following happens:
 1. **Discovery**: The `Plugin` base class scans for methods decorated with `@hook` and `@tool`
 2. **Hook Registration**: Each `@hook` method is registered with the agent's hook registry based on its event type hint
 3. **Tool Registration**: Each `@tool` method is added to the agent's tools list
-4. **Initialization**: The `init_plugin(agent)` method is called for any custom setup
+4. **Initialization**: The `init_agent(agent)` method is called for any custom setup
 
 ```mermaid
 flowchart TD
@@ -92,7 +92,7 @@ flowchart TD
     A --> C[Scan for @tool methods]
     B --> D[Register hooks with agent]
     C --> E[Add tools to agent]
-    D --> F[init_plugin called]
+    D --> F[init_agent called]
     E --> F
     F --> G[Plugin Ready]
 ```
@@ -125,7 +125,7 @@ The `@hook` decorator marks methods as hook callbacks. The event type is automat
 
 ### Manual Hook and Tool Registration
 
-For more control, you can manually register hooks and tools in the `init_plugin` method:
+For more control, you can manually register hooks and tools in the `init_agent` method:
 
 === "Python"
 
@@ -140,10 +140,7 @@ For more control, you can manually register hooks and tools in the `init_plugin`
             super().__init__()
             self.verbose = verbose
 
-        def init_plugin(self, agent: "Agent") -> None:
-            # Call super to auto-register any @hook/@tool decorated methods
-            super().init_plugin(agent)
-
+        def init_agent(self, agent: "Agent") -> None:
             # Conditionally register additional hooks
             if self.verbose:
                 agent.add_hook(self.verbose_log, BeforeToolCallEvent)
@@ -159,54 +156,39 @@ For more control, you can manually register hooks and tools in the `init_plugin`
 
 ### Managing Plugin State
 
-Plugins can maintain state across hook invocations:
+Plugins can maintain state that persists across agent invocations. For state that needs to be serialized or shared, use the [Agent State](../agents/state.md) mechanism:
 
 === "Python"
 
     ```python
+    from strands import Agent
     from strands.plugins import Plugin, hook
     from strands.hooks import BeforeToolCallEvent, AfterToolCallEvent
-    import time
 
     class MetricsPlugin(Plugin):
-        """Track tool execution metrics."""
+        """Track tool execution metrics using agent state."""
 
         name = "metrics-plugin"
 
-        def __init__(self):
-            super().__init__()
-            self.call_count = 0
-            self.total_duration = 0.0
-            self._start_times = {}
+        def init_agent(self, agent: "Agent") -> None:
+            # Initialize state values if not present
+            if "metrics_call_count" not in agent.state:
+                agent.state.set("metrics_call_count", 0)
 
         @hook
-        def start_timer(self, event: BeforeToolCallEvent) -> None:
-            tool_use_id = event.tool_use.get("toolUseId")
-            self._start_times[tool_use_id] = time.time()
-            self.call_count += 1
-
-        @hook
-        def stop_timer(self, event: AfterToolCallEvent) -> None:
-            tool_use_id = event.tool_use.get("toolUseId")
-            if tool_use_id in self._start_times:
-                duration = time.time() - self._start_times.pop(tool_use_id)
-                self.total_duration += duration
-
-        def get_stats(self) -> dict:
-            return {
-                "call_count": self.call_count,
-                "total_duration": self.total_duration,
-                "avg_duration": self.total_duration / self.call_count if self.call_count > 0 else 0
-            }
+        def count_calls(self, event: BeforeToolCallEvent) -> None:
+            current = event.agent.state.get("metrics_call_count", 0)
+            event.agent.state.set("metrics_call_count", current + 1)
 
     # Usage
-    metrics = MetricsPlugin()
-    agent = Agent(plugins=[metrics])
+    agent = Agent(plugins=[MetricsPlugin()])
     agent("Do some work")
-    print(metrics.get_stats())
+    print(f"Tool calls: {agent.state.get('metrics_call_count')}")
     ```
 
 {{ ts_not_supported_code("Plugins are not yet available in TypeScript SDK") }}
+
+See [Agent State](../agents/state.md) for more information on state management.
 
 ### Async Plugin Initialization
 
@@ -222,10 +204,7 @@ Plugins can perform asynchronous initialization:
     class AsyncConfigPlugin(Plugin):
         name = "async-config"
 
-        async def init_plugin(self, agent: "Agent") -> None:
-            # Call super for auto-discovery
-            await super().init_plugin(agent)
-
+        async def init_agent(self, agent: "Agent") -> None:
             # Async initialization
             self.config = await self.load_config()
 
@@ -239,64 +218,6 @@ Plugins can perform asynchronous initialization:
     ```
 
 {{ ts_not_supported_code("Plugins are not yet available in TypeScript SDK") }}
-
-## Distributing Plugins
-
-### Package Structure
-
-To distribute your plugin via PyPI:
-
-```
-my-strands-plugin/
-├── pyproject.toml
-├── README.md
-└── src/
-    └── my_plugin/
-        ├── __init__.py
-        └── plugin.py
-```
-
-### Example `pyproject.toml`
-
-```toml
-[project]
-name = "my-strands-plugin"
-version = "0.1.0"
-dependencies = ["strands-agents>=0.1.0"]
-
-[project.optional-dependencies]
-dev = ["pytest"]
-```
-
-### Publishing
-
-```bash
-pip install build twine
-python -m build
-twine upload dist/*
-```
-
-Want to share your plugin with the community? See [Get Featured](../../../community/get-featured.md) for guidelines on contributing to the Strands ecosystem.
-
-## Best Practices
-
-### Naming
-
-- Use descriptive, unique names: `"myorg-feature-plugin"`
-- Keep names stable across versions
-
-### Design
-
-- **Single responsibility**: Each plugin should have one clear purpose
-- **Use `@hook` decorator**: Prefer declarative registration when possible
-- **Call `super().init_plugin(agent)`**: Preserve auto-discovery when overriding
-- **Handle errors gracefully**: Don't let plugin failures crash the agent
-
-### Performance
-
-- Keep hook callbacks fast to avoid slowing down the agent loop
-- Use async hooks for I/O-bound operations
-- Avoid storing large amounts of data in plugin state
 
 ## Next Steps
 
