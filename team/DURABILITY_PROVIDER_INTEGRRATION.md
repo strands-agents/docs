@@ -600,6 +600,7 @@ Level 2 (native Temporal/Dapr) is significantly more work:
 
 
 ## Action Items
+POC code: https://github.com/JackYPCOnline/sdk-python/tree/POC/real_sdk_durable
 
 1. Fix async hooks in `event_loop.py` (two one-line changes)
 
