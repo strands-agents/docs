@@ -273,11 +273,11 @@ Two things are needed in our SDK to make this work:
 
 **Gap 2. No `Durability` abstraction on `Agent`**
 
-There is no way to tell `Agent` to wrap its I/O calls with a durable provider's checkpoint primitive. A `durability` parameter that wraps `callModel` and `callTools` is needed.
+`Agent` has no way to wrap its I/O calls with a durable provider's checkpoint primitive today. We need a `durability` parameter that intercepts `callModel` and `callTools` before they execute.
 
-Hooks alone cannot fill this gap. `BeforeModelCallEvent` and `AfterModelCallEvent` are notification-only — the only writable field on `AfterModelCallEvent` is `retry`. There is no way to inject a cached result or skip the actual model call from a hook. The event loop calls `stream_messages` unconditionally after `BeforeModelCallEvent` fires regardless of what any hook does. Compare this to `AfterToolCallEvent`, which has a writable `result` field — tools could theoretically be intercepted via hooks today, but model calls cannot.
+Hooks won't work here. `BeforeModelCallEvent` and `AfterModelCallEvent` are notification-only — the only writable field on `AfterModelCallEvent` is `retry`. The event loop calls `stream_messages` unconditionally after `BeforeModelCallEvent` fires, so there's no way to inject a cached result or skip the actual model call from a hook. `AfterToolCallEvent` does have a writable `result` field, so tools could theoretically be intercepted today, but model calls cannot.
 
-This means the `Durability` abstraction must be wired directly into the event loop's call sites for `stream_messages` and tool execution, not layered on top via hooks.
+The `Durability` abstraction needs to be wired directly into the event loop's call sites for `stream_messages` and tool execution. Hooks can't get there.
 
 Once both gaps are closed, the proposed solution below becomes possible.
 
