@@ -38,6 +38,8 @@ This doc covers three providers: [Temporal](https://temporal.io/), [Dapr](https:
 
 ---
 
+**Note** All APIs and sudo code in this doc I purposed are for demo purposes, they are subjected to change.
+
 ## 1. How Durable Providers Orchestrate AI Agents
 
 Before diving into integration, let's go through the shared architecture these providers use and how existing agent frameworks build on them.
@@ -350,12 +352,10 @@ class MyAgentWorkflow:
 
     @workflow.run
     async def run(self, prompt: str) -> str:
-        # User creates Agent with our durability wrapper.
-        # TemporalDurability receives the workflow context so it can
-        # call workflow.execute_activity() to wrap I/O calls.
         agent = Agent(
+            model=MyTemporalModelProvider(),  # ← serializable config, reconstructed inside activity
             tools=[search_flights, book_hotel],
-            durability=TemporalDurability(model_id="us.anthropic.claude-sonnet-4-5"),  # ← wraps callModel/callTools
+            durability=TemporalDurability(),
         )
         result = await agent.invoke_async(prompt)
         return str(result.message)
@@ -401,7 +401,7 @@ class TemporalDurability(Durability):
         return wrapped
 ```
 
-### The Durability Class (Core SDK)
+### The Durability Base Class (Core SDK)
 
 ```python
 # ─── strands/agent/durability.py ─────────────────────────────────
@@ -444,7 +444,7 @@ class Agent:
                 return AgentResult(message=response.text)
 
             for tool_call in response.tool_calls:
-                tool_result = await wrapped_call_tools(tool_call.name, tool_call.input)
+                tool_result = await wrapped_call_tools(tool_call.name, tool_call.input, tool_call.toolUseId)
                 messages.append({"role": "tool", "content": tool_result})
 ```
 
@@ -601,15 +601,23 @@ Level 2 (native Temporal/Dapr) is significantly more work:
 
 ## Action Items
 
-1. Fix async hooks in `event_loop.py` (easy, two one-line changes)
+1. Fix async hooks in `event_loop.py` (two one-line changes)
+
+After this, two open questions must be resolved before implementation starts:
+
+- Finalize `TemporalModelProvider` interface (Gap 1)
+- Decide `AgentState` replay strategy (Gap 2)
+
+Once resolved:
+
 2. Add `Durability` base class in `strands/agent/durability.py`
 3. Add `durability` param to `Agent`, apply wrapping in `invoke_async`
-4. Implement `strands-aws` package with `LambdaDurability` (start here)
-5. Implement `strands-temporal` package with `TemporalDurability`
+4. Implement `strands-temporal` package with `TemporalDurability` and `TemporalModelProvider`
+5. Implement `strands-aws` package with `LambdaDurability`
 6. Implement `strands-dapr` package with `DaprDurability`
 
 ## Willingness to Implement
 
-TBD. Start with `strands-aws` (Lambda Durable) since the sync wrapper pattern is simplest to validate.
+TBD. 
 
 ---
