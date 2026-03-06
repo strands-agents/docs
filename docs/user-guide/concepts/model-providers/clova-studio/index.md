@@ -1,0 +1,1 @@
+This guide has moved to [community/model-providers/clova-studio](/docs/community/model-providers/clova-studio/index.md).

@@ -1,0 +1,181 @@
+Citation type definitions for the SDK.
+
+These types are modeled after the Bedrock API.
+
+## CitationsConfig
+
+```python
+class CitationsConfig(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:11](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L11)
+
+Configuration for enabling citations on documents.
+
+**Attributes**:
+
+-   `enabled` - Whether citations are enabled for this document.
+
+## DocumentCharLocation
+
+```python
+class DocumentCharLocation(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L21)
+
+Specifies a character-level location within a document.
+
+Provides precise positioning information for cited content using start and end character indices.
+
+**Attributes**:
+
+-   `documentIndex` - The index of the document within the array of documents provided in the request. Minimum value of 0.
+-   `start` - The starting character position of the cited content within the document. Minimum value of 0.
+-   `end` - The ending character position of the cited content within the document. Minimum value of 0.
+
+## DocumentChunkLocation
+
+```python
+class DocumentChunkLocation(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:41](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L41)
+
+Specifies a chunk-level location within a document.
+
+Provides positioning information for cited content using logical document segments or chunks.
+
+**Attributes**:
+
+-   `documentIndex` - The index of the document within the array of documents provided in the request. Minimum value of 0.
+-   `start` - The starting chunk identifier or index of the cited content within the document. Minimum value of 0.
+-   `end` - The ending chunk identifier or index of the cited content within the document. Minimum value of 0.
+
+## DocumentPageLocation
+
+```python
+class DocumentPageLocation(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:61](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L61)
+
+Specifies a page-level location within a document.
+
+Provides positioning information for cited content using page numbers.
+
+**Attributes**:
+
+-   `documentIndex` - The index of the document within the array of documents provided in the request. Minimum value of 0.
+-   `start` - The starting page number of the cited content within the document. Minimum value of 0.
+-   `end` - The ending page number of the cited content within the document. Minimum value of 0.
+
+## SearchResultLocation
+
+```python
+class SearchResultLocation(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:80](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L80)
+
+Specifies a search result location within the content array.
+
+Provides positioning information for cited content using search result index and block positions.
+
+**Attributes**:
+
+-   `searchResultIndex` - The index of the search result content block where the cited content is found. Minimum value of 0.
+-   `start` - The starting position in the content array where the cited content begins. Minimum value of 0.
+-   `end` - The ending position in the content array where the cited content ends. Minimum value of 0.
+
+## WebLocation
+
+```python
+class WebLocation(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:100](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L100)
+
+Provides the URL and domain information for a cited website.
+
+Contains information about the website that was cited when performing a web search.
+
+**Attributes**:
+
+-   `url` - The URL that was cited when performing a web search.
+-   `domain` - The domain that was cited when performing a web search.
+
+## CitationSourceContent
+
+```python
+class CitationSourceContent(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:132](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L132)
+
+Contains the actual text content from a source document.
+
+Contains the actual text content from a source document that is being cited or referenced in the model’s response.
+
+**Notes**:
+
+This is a UNION type, so only one of the members can be specified.
+
+**Attributes**:
+
+-   `text` - The text content from the source document that is being cited.
+
+## CitationGeneratedContent
+
+```python
+class CitationGeneratedContent(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:148](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L148)
+
+Contains the generated text content that corresponds to a citation.
+
+Contains the generated text content that corresponds to or is supported by a citation from a source document.
+
+**Notes**:
+
+This is a UNION type, so only one of the members can be specified.
+
+**Attributes**:
+
+-   `text` - The text content that was generated by the model and is supported by the associated citation.
+
+## Citation
+
+```python
+class Citation(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:165](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L165)
+
+Contains information about a citation that references a source document.
+
+Citations provide traceability between the model’s generated response and the source documents that informed that response.
+
+**Attributes**:
+
+-   `location` - The precise location within the source document where the cited content can be found, including character positions, page numbers, or chunk identifiers.
+-   `sourceContent` - The specific content from the source document that was referenced or cited in the generated response.
+-   `title` - The title or identifier of the source document being cited.
+
+## CitationsContentBlock
+
+```python
+class CitationsContentBlock(TypedDict)
+```
+
+Defined in: [src/strands/types/citations.py:185](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/citations.py#L185)
+
+A content block containing generated text and associated citations.
+
+This block type is returned when document citations are enabled, providing traceability between the generated content and the source documents that informed the response.
+
+**Attributes**:
+
+-   `citations` - An array of citations that reference the source documents used to generate the associated content.
+-   `content` - The generated content that is supported by the associated citations.

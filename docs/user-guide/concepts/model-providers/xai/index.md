@@ -1,0 +1,1 @@
+This guide has moved to [community/model-providers/xai](/docs/community/model-providers/xai/index.md).

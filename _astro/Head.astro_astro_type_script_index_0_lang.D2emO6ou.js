@@ -1,0 +1,2 @@
+import a from"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";document.querySelectorAll('pre[data-language="mermaid"]').forEach(t=>{const n=[...t.querySelectorAll("code > .ec-line")].map(r=>r.textContent).join(`
+`),e=document.createElement("pre");e.className="mermaid",e.textContent=n,t.replaceWith(e)});const m=document.documentElement.dataset.theme==="dark";a.initialize({startOnLoad:!1,theme:m?"dark":"neutral"});a.run();

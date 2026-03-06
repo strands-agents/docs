@@ -1,0 +1,147 @@
+Google Gemini model provider.
+
+-   Docs: [https://ai.google.dev/api](https://ai.google.dev/api)
+
+## GeminiModel
+
+```python
+class GeminiModel(Model)
+```
+
+Defined in: [src/strands/models/gemini.py:30](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L30)
+
+Google Gemini model provider implementation.
+
+-   Docs: [https://ai.google.dev/api](https://ai.google.dev/api)
+
+## GeminiConfig
+
+```python
+class GeminiConfig(TypedDict)
+```
+
+Defined in: [src/strands/models/gemini.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L36)
+
+Configuration options for Gemini models.
+
+**Attributes**:
+
+-   `model_id` - Gemini model ID (e.g., “gemini-2.5-flash”). For a complete list of supported models, see [https://ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models)
+-   `params` - Additional model parameters (e.g., temperature). For a complete list of supported parameters, see [https://ai.google.dev/api/generate-content#generationconfig](https://ai.google.dev/api/generate-content#generationconfig).
+-   `gemini_tools` - Gemini-specific tools that are not FunctionDeclarations (e.g., GoogleSearch, CodeExecution, ComputerUse, UrlContext, FileSearch). Use the standard tools interface for function calling tools. For a complete list of supported tools, see [https://ai.google.dev/api/caching#Tool](https://ai.google.dev/api/caching#Tool)
+
+#### \_\_init\_\_
+
+```python
+def __init__(*,
+             client: genai.Client | None = None,
+             client_args: dict[str, Any] | None = None,
+             **model_config: Unpack[GeminiConfig]) -> None
+```
+
+Defined in: [src/strands/models/gemini.py:57](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L57)
+
+Initialize provider instance.
+
+**Arguments**:
+
+-   `client` - Pre-configured Gemini client to reuse across requests. When provided, this client will be reused for all requests and will NOT be closed by the model. The caller is responsible for managing the client lifecycle. This is useful for:
+    -   Injecting custom client wrappers
+    -   Reusing connection pools within a single event loop/worker
+    -   Centralizing observability, retries, and networking policy
+-   `Note` - The client should not be shared across different asyncio event loops.
+-   `client_args` - Arguments for the underlying Gemini client (e.g., api\_key). For a complete list of supported arguments, see [https://googleapis.github.io/python-genai/](https://googleapis.github.io/python-genai/).
+-   `**model_config` - Configuration options for the Gemini model.
+
+**Raises**:
+
+-   `ValueError` - If both `client` and `client_args` are provided.
+
+#### update\_config
+
+```python
+@override
+def update_config(**model_config: Unpack[GeminiConfig]) -> None
+```
+
+Defined in: [src/strands/models/gemini.py:99](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L99)
+
+Update the Gemini model configuration with the provided arguments.
+
+**Arguments**:
+
+-   `**model_config` - Configuration overrides.
+
+#### get\_config
+
+```python
+@override
+def get_config() -> GeminiConfig
+```
+
+Defined in: [src/strands/models/gemini.py:112](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L112)
+
+Get the Gemini model configuration.
+
+**Returns**:
+
+The Gemini model configuration.
+
+#### stream
+
+```python
+async def stream(messages: Messages,
+                 tool_specs: list[ToolSpec] | None = None,
+                 system_prompt: str | None = None,
+                 tool_choice: ToolChoice | None = None,
+                 **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
+```
+
+Defined in: [src/strands/models/gemini.py:437](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L437)
+
+Stream conversation with the Gemini model.
+
+**Arguments**:
+
+-   `messages` - List of message objects to be processed by the model.
+-   `tool_specs` - List of tool specifications to make available to the model.
+-   `system_prompt` - System prompt to provide context to the model.
+-   `tool_choice` - Selection strategy for tool invocation.
+-   `Note` - Currently unused.
+-   `**kwargs` - Additional keyword arguments for future extensibility.
+
+**Yields**:
+
+Formatted message chunks from the model.
+
+**Raises**:
+
+-   `ModelThrottledException` - If the request is throttled by Gemini.
+
+#### structured\_output
+
+```python
+@override
+async def structured_output(
+        output_model: type[T],
+        prompt: Messages,
+        system_prompt: str | None = None,
+        **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
+```
+
+Defined in: [src/strands/models/gemini.py:535](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L535)
+
+Get structured output from the model using Gemini’s native structured output.
+
+-   Docs: [https://ai.google.dev/gemini-api/docs/structured-output](https://ai.google.dev/gemini-api/docs/structured-output)
+
+**Arguments**:
+
+-   `output_model` - The output model to use for the agent.
+-   `prompt` - The prompt messages to use for the agent.
+-   `system_prompt` - System prompt to provide context to the model.
+-   `**kwargs` - Additional keyword arguments for future extensibility.
+
+**Yields**:
+
+Model events with the last being the structured output.

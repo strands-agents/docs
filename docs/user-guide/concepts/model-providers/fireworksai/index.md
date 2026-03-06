@@ -1,0 +1,1 @@
+This guide has moved to [community/model-providers/fireworksai](/docs/community/model-providers/fireworksai/index.md).
