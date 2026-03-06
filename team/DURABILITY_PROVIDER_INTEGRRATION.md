@@ -34,8 +34,6 @@ Today: Single invoke_async call
 
 This doc covers three providers: [Temporal](https://temporal.io/), [Dapr](https://dapr.io/) and [AWS Lambda Durable Execution](https://docs.aws.amazon.com/lambda/latest/dg/durable-execution-sdk.html).
 
-This doc covers three providers: [Temporal](https://temporal.io/), [Dapr](https://dapr.io/) and [AWS Lambda Durable Execution](https://docs.aws.amazon.com/lambda/latest/dg/durable-execution-sdk.html).
-
 ---
 
 **Note** All APIs and sudo code in this doc I purposed are for demo purposes, they are subjected to change.
@@ -536,7 +534,7 @@ Lambda Durable can only be enabled on new functions. We cannot add durable confi
 
 In the PoC, `call_model_activity` constructs a new `BedrockModel(model_id=model_id)` on every invocation. This is intentional — model objects hold boto3 clients and cannot be serialized across the activity boundary.
 
-The cleaner design your senior proposed is a `TemporalModelProvider` that the user subclasses. The provider knows how to reconstruct the model from serializable config inside the activity, and also knows when it is running inside a workflow (dispatch to activity) vs. outside (call model directly):
+`TemporalModelProvider` that the user subclasses. The provider knows how to reconstruct the model from serializable config inside the activity, and also knows when it is running inside a workflow (dispatch to activity) vs. outside (call model directly):
 
 ```python
 class TemporalModelProvider:
