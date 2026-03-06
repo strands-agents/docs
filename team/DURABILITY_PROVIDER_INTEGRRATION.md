@@ -530,7 +530,74 @@ Lambda Durable can only be enabled on new functions. We cannot add durable confi
 └─────────────────────────────────┘  └──────────────────────────────────┘
 ```
 
+## **Known Gaps & Open Questions**
+
+**1. Model instantiation per activity call**
+
+In the PoC, `call_model_activity` constructs a new `BedrockModel(model_id=model_id)` on every invocation. This is intentional — model objects hold boto3 clients and cannot be serialized across the activity boundary.
+
+The cleaner design your senior proposed is a `TemporalModelProvider` that the user subclasses. The provider knows how to reconstruct the model from serializable config inside the activity, and also knows when it is running inside a workflow (dispatch to activity) vs. outside (call model directly):
+
+```python
+class TemporalModelProvider:
+    def stream_data(self, ...):
+        if in_workflow_process:
+            start_activity(...)  # dispatch to Temporal activity
+        else:
+            model = self.create_model(...)
+            model.stream(...)
+
+    def create_model(self, params):
+        ...  # subclass implements this
+
+
+class MyTemporalModelProvider(TemporalModelProvider):
+    temperature: float = 0.7
+
+    def create_model(self, serialized):
+        from strands.models.bedrock import BedrockModel
+        return BedrockModel(temperature=serialized.temperature)
+
+# This DevX is subject to change
+agent = Agent(
+    model=MyTemporalModelProvider(),
+    durability=TemporalDurability(),
+)
+```
+
+This keeps model config serializable (plain fields on the provider subclass) and lets users bring any model provider, not just Bedrock. The exact interface for `TemporalModelProvider` is a design decision we need to finalize.
+
+**2. `AgentState` is not deterministic across replay**
+
+Tools can write to `agent.state` during execution. On Temporal replay, tool calls return cached results (the tool function does not re-execute), but `agent.state` mutations inside the tool *do* re-execute because they happen in the workflow, not the activity. If a tool's state update depends on something non-deterministic (timestamp, random value, external read), the state after replay may differ from the original run.
+
+This is a correctness risk. Three options are on the table: document it as a constraint (tools that write to `agent.state` must be deterministic), checkpoint `agent.state` as part of the activity result and restore it on replay, or treat `agent.state` as out-of-scope for durable execution in v1. Needs a decision before we ship.
+
+**3. `Human in the loop` is different**
+Strands has its own Interrupt / InterruptException mechanism for pausing the agent and waiting for human input. In Temporal, the correct pattern for human-in-the-loop is a Signal.A user who wants human-in-the-loop with Temporal durability can't use Strands' Interrupt, they need to use Temporal Signals directly.
+
+**4. Streaming callbacks are meaningless during replay**
+During Temporal replay, the model activity returns a cached result instantly, no stream, no tokens. Any UI or logging built on streaming callbacks will see nothing on replay. This isn't a correctness issue but it's a confusing UX gap worth calling out.
+
+**5. MCP Limitation** 
+Temporal agent has a MCP example, after took a closer look, I found that MCP works, but Strands' MCPClient integration pattern doesn't map directly. Strands' MCPClient is designed to be constructed once and passed as a tool to Agent. In a durable context, the MCP connection must live inside the activity worker and be managed there (not constructed in the workflow and passed in).The user can't just do Agent(tools=[my_mcp_client], durability=...) and have it work, because MCPClient holds a live background thread that can't cross the activity boundary.
+
+**6. Effort estimate and comparison with Lambda Durable**
+
+Lambda Durable (Level 1, no SDK changes) can be validated in ~1 week: wrap `agent(prompt)` as a `@durable_step`, confirm crash recovery at the invocation level. The limitation is mid-loop granularity, but it's a real working integration.
+
+Level 2 (native Temporal/Dapr) is significantly more work:
+
+| | Lambda Durable Level 1 | Temporal Level 2                                     |
+|---|---|------------------------------------------------------|
+| SDK changes needed | None | ~4 (hooks, Durability class, Agent wiring, event loop) |
+| New packages | None | `strands-temporal`, `strands-aws`, `strands-dapr`    |
+| Mid-loop crash recovery | ❌ | ✅                                                    |
+| Estimated effort | ~1 week | ~4 weeks                                             |
+
+
 ---
+
 
 ## Action Items
 
