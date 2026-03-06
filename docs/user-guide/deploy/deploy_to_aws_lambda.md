@@ -85,7 +85,13 @@ arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
 | **Architectures** | `x86_64`, `aarch64` |
 | **Regions** | `us-east-1`, `us-east-2`, `us-west-1`, `us-west-2`, `eu-west-1`, `eu-west-2`, `eu-west-3`, `eu-central-1`, `eu-north-1`, `ap-southeast-1`, `ap-southeast-2`, `ap-northeast-1`, `ap-northeast-2`, `ap-northeast-3`, `ap-south-1`, `sa-east-1`, `ca-central-1` |
 
-To check the size and details of a layer version:
+#### Layer Version to SDK Version Mapping
+
+| Layer Version | SDK Version |
+|---------------|-------------|
+| 1 | strands-agents v1.23.0 |
+
+To check the details of a layer version yourself:
 
 ```bash
 aws lambda get-layer-version \
