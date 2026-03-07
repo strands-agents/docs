@@ -111,7 +111,7 @@ export function convertNavItem(item: unknown, ctx: ConvertContext = { contentDir
     if (typeof value === 'string') {
       const slug = mdPathToSlug(value)
       if (!contentExists(slug, ctx.contentDir)) return null
-      return { slug }
+      return { slug, label }
     }
 
     // Nested group: { "Label": [...] }

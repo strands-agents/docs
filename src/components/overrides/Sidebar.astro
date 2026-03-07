@@ -5,14 +5,65 @@
 import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
 import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
 import SidebarSublist from './SidebarSublist.astro';
+import { pathWithBase } from '../../util/links';
 
 const { sidebar } = Astro.locals.starlightRoute;
+const currentSlug = Astro.locals.starlightRoute.id;
+const isApiPage = currentSlug.startsWith('docs/api/');
+const isOnPython = currentSlug.startsWith('docs/api/python');
 ---
 
 <SidebarPersister>
+  {isApiPage && (
+    <nav class="api-lang-switcher" aria-label="API language">
+      <a
+        href={pathWithBase('/docs/api/python/')}
+        class:list={['api-lang-tab', { active: isOnPython }]}
+        aria-current={isOnPython ? 'true' : undefined}
+      >Python</a>
+      <a
+        href={pathWithBase('/docs/api/typescript/')}
+        class:list={['api-lang-tab', { active: !isOnPython }]}
+        aria-current={!isOnPython ? 'true' : undefined}
+      >TypeScript</a>
+    </nav>
+  )}
   <SidebarSublist sublist={sidebar} />
 </SidebarPersister>
 
 <div class="md:sl-hidden">
   <MobileMenuFooter />
 </div>
+
+<style>
+  .api-lang-switcher {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .api-lang-tab {
+    flex: 1;
+    padding: 0.4rem 0.75rem;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    color: var(--sl-color-gray-2);
+    background: transparent;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .api-lang-tab:hover {
+    background-color: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+  }
+
+  .api-lang-tab.active {
+    background-color: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+  }
+</style>

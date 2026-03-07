@@ -39,19 +39,18 @@ describe('Sidebar Generation', () => {
     const item = convertNavItem({
       Quickstart: [{ 'Getting Started': 'overview.md' }, { Python: 'python.md' }],
     })
-    // Internal links omit labels - Starlight uses page title from frontmatter
     expect(item).toEqual({
       label: 'Quickstart',
-      items: [{ slug: 'docs/overview' }, { slug: 'docs/python' }],
+      items: [{ slug: 'docs/overview', label: 'Getting Started' }, { slug: 'docs/python', label: 'Python' }],
     })
   })
 
-  it('should omit labels for internal links in final output (uses page title from frontmatter)', () => {
-    // The final Starlight output should not include labels for internal links
-    // Starlight will automatically use the page's title frontmatter
+  it('should include mkdocs nav labels for internal links', () => {
+    // Labels from mkdocs.yml nav are preserved so the sidebar shows
+    // task-oriented labels (e.g., "Voice & Realtime") instead of page titles
     const sidebar = loadSidebarFromMkdocs(pathToMkdocsYaml)
 
-    // Find a leaf item (internal link) and verify it has slug but no label
+    // Find a leaf item (internal link) and verify it has both slug and label
     function findLeafItem(items: StarlightSidebarItem[]): StarlightSidebarItem | null {
       for (const item of items) {
         if ('slug' in item && !('items' in item)) {
@@ -68,7 +67,7 @@ describe('Sidebar Generation', () => {
     const leafItem = findLeafItem(sidebar)
     expect(leafItem).toBeDefined()
     expect(leafItem).toHaveProperty('slug')
-    expect(leafItem).not.toHaveProperty('label')
+    expect(leafItem).toHaveProperty('label')
   })
 })
 

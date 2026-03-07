@@ -28,23 +28,35 @@ export function findCurrentNavSection(currentPath: string, links: NavLink[]): Na
       bestMatch = link
       bestMatchLength = basePath.length
     }
+    // Also check additionalBasePaths (e.g., Community tab owns /docs/labs/ and /docs/contribute/)
+    if (link.additionalBasePaths) {
+      for (const additionalPath of link.additionalBasePaths) {
+        if (currentPath.startsWith(additionalPath) && additionalPath.length > bestMatchLength) {
+          bestMatch = link
+          bestMatchLength = additionalPath.length
+        }
+      }
+    }
   }
 
   return bestMatch
 }
 
 /**
- * Filter sidebar entries to only include items matching a base path.
+ * Filter sidebar entries to only include items matching one or more base paths.
  * If the result is a single top-level group, unwrap it to return just its entries.
  */
-export function filterSidebarByBasePath(entries: SidebarEntry[], basePath: string): SidebarEntry[] {
+export function filterSidebarByBasePath(entries: SidebarEntry[], basePath: string | string[]): SidebarEntry[] {
+  const basePaths = Array.isArray(basePath) ? basePath : [basePath]
+  const matchesAnyBase = (href: string) => basePaths.some((bp) => href.startsWith(bp))
+
   const filtered = entries
     .map((entry) => {
       if (entry.type === 'link') {
-        return entry.href.startsWith(basePath) ? entry : null
+        return matchesAnyBase(entry.href) ? entry : null
       }
       if (entry.type === 'group') {
-        const filteredEntries = filterSidebarByBasePath(entry.entries, basePath)
+        const filteredEntries = filterSidebarByBasePath(entry.entries, basePaths)
         return filteredEntries.length > 0 ? { ...entry, entries: filteredEntries } : null
       }
       return null
@@ -102,34 +114,8 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   const currentPath = context.url.pathname
   const currentSlug = starlightRoute.id
 
-  // Check if we're on a Python API page
-  if (currentSlug.startsWith('docs/api/python')) {
-    const docs = await getCollection('docs')
-    const docInfos: DocInfo[] = docs.map((doc: { id: string; data: { title: unknown } }) => ({
-      id: doc.id,
-      title: doc.data.title as string,
-    }))
-
-    const pythonSidebar = buildPythonApiSidebar(docInfos, currentSlug)
-
-    // Add index link at the top
-    pythonSidebar.unshift({
-      type: 'link',
-      label: 'Overview',
-      href: pathWithBase('/docs/api/python/'),
-      isCurrent: currentSlug === 'docs/api/python',
-      badge: undefined,
-      attrs: {},
-    })
-
-    const titlesByHref = await buildTitlesByHref()
-    starlightRoute.sidebar = pythonSidebar
-    starlightRoute.pagination = getPrevNextLinks(pythonSidebar, titlesByHref)
-    return
-  }
-
-  // Check if we're on a TypeScript API page
-  if (currentSlug.startsWith('docs/api/typescript')) {
+  // Check if we're on an API page (Python or TypeScript)
+  if (currentSlug.startsWith('docs/api/')) {
     const docs = await getCollection('docs')
     const docInfos: DocInfo[] = docs.map((doc: { id: string; data: { title: unknown; category?: unknown } }) => ({
       id: doc.id,
@@ -137,21 +123,35 @@ export const onRequest = defineRouteMiddleware(async (context) => {
       category: doc.data.category as string | undefined,
     }))
 
-    const tsSidebar = buildTypeScriptApiSidebar(docInfos, currentSlug)
+    // Build sidebar for the current language only
+    const isOnPython = currentSlug.startsWith('docs/api/python')
+    let apiSidebar: SidebarEntry[]
 
-    // Add index link at the top
-    tsSidebar.unshift({
-      type: 'link',
-      label: 'Overview',
-      href: pathWithBase('/docs/api/typescript/'),
-      isCurrent: currentSlug === 'docs/api/typescript',
-      badge: undefined,
-      attrs: {},
-    })
+    if (isOnPython) {
+      apiSidebar = buildPythonApiSidebar(docInfos, currentSlug)
+      apiSidebar.unshift({
+        type: 'link',
+        label: 'Overview',
+        href: pathWithBase('/docs/api/python/'),
+        isCurrent: currentSlug === 'docs/api/python',
+        badge: undefined,
+        attrs: {},
+      })
+    } else {
+      apiSidebar = buildTypeScriptApiSidebar(docInfos, currentSlug)
+      apiSidebar.unshift({
+        type: 'link',
+        label: 'Overview',
+        href: pathWithBase('/docs/api/typescript/'),
+        isCurrent: currentSlug === 'docs/api/typescript',
+        badge: undefined,
+        attrs: {},
+      })
+    }
 
     const titlesByHref = await buildTitlesByHref()
-    starlightRoute.sidebar = tsSidebar
-    starlightRoute.pagination = getPrevNextLinks(tsSidebar, titlesByHref)
+    starlightRoute.sidebar = apiSidebar
+    starlightRoute.pagination = getPrevNextLinks(apiSidebar, titlesByHref)
     return
   }
 
@@ -166,7 +166,8 @@ export const onRequest = defineRouteMiddleware(async (context) => {
 
   // Otherwise filter it down to the major section that we're in
   const basePath = currentNav.basePath || currentNav.href
-  const filteredSidebar = filterSidebarByBasePath(sidebar, basePath)
+  const allBasePaths = [basePath, ...(currentNav.additionalBasePaths || [])]
+  const filteredSidebar = filterSidebarByBasePath(sidebar, allBasePaths)
   const expandedSidebar = expandFirstLevelGroups(filteredSidebar)
   starlightRoute.sidebar = expandedSidebar
 
@@ -175,8 +176,9 @@ export const onRequest = defineRouteMiddleware(async (context) => {
   // labels with actual page titles instead of sidebar nav labels.
   const titlesByHref = await buildTitlesByHref()
   const { prev, next } = starlightRoute.pagination
+  const inSection = (href: string) => allBasePaths.some((bp) => href.startsWith(bp))
   starlightRoute.pagination = {
-    prev: prev?.href.startsWith(basePath) ? { ...prev, label: titlesByHref.get(prev.href) ?? prev.label } : undefined,
-    next: next?.href.startsWith(basePath) ? { ...next, label: titlesByHref.get(next.href) ?? next.label } : undefined,
+    prev: prev && inSection(prev.href) ? { ...prev, label: titlesByHref.get(prev.href) ?? prev.label } : undefined,
+    next: next && inSection(next.href) ? { ...next, label: titlesByHref.get(next.href) ?? next.label } : undefined,
   }
 })

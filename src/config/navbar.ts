@@ -17,6 +17,12 @@ export interface NavLink {
    * Example: href="/user-guide/quickstart/" but basePath="/user-guide/"
    */
   basePath?: string
+  /**
+   * Additional base paths that should also resolve to this nav section.
+   * Useful when a tab absorbs content from other URL prefixes
+   * (e.g., Community tab also owns /docs/labs/ and /docs/contribute/ pages).
+   */
+  additionalBasePaths?: string[]
   /** Set to true for external links (opens in new tab) */
   external?: boolean
 }
@@ -51,6 +57,9 @@ function transformNavLinks(links: NavLink[]): NavLink[] {
       ...link,
       href: withBase(link.href),
       ...(link.basePath ? { basePath: withBase(link.basePath) } : {}),
+      ...(link.additionalBasePaths
+        ? { additionalBasePaths: link.additionalBasePaths.map(withBase) }
+        : {}),
     }
   })
 }
@@ -65,8 +74,8 @@ const rawNavLinks: NavLink[] = [
     href: '/',
   },
   {
-    label: 'User Guide',
-    href: '/docs/user-guide/quickstart/overview/',
+    label: 'Docs',
+    href: '/docs/user-guide/quickstart/python/',
     basePath: '/docs/user-guide/',
   },
   {
@@ -78,26 +87,12 @@ const rawNavLinks: NavLink[] = [
     label: 'Community',
     href: '/docs/community/community-packages/',
     basePath: '/docs/community/',
+    additionalBasePaths: ['/docs/labs/', '/docs/contribute/'],
   },
   {
-    label: 'Labs',
-    href: '/docs/labs/',
-    basePath: '/docs/labs/',
-  },
-  {
-    label: 'Contribute ❤️',
-    href: '/docs/contribute/',
-    basePath: '/docs/contribute/',
-  },
-  {
-    label: 'Python API',
+    label: 'API Reference',
     href: '/docs/api/python/',
-    basePath: '/docs/api/python/',
-  },
-  {
-    label: 'TypeScript API',
-    href: '/docs/api/typescript/',
-    basePath: '/docs/api/typescript/',
+    basePath: '/docs/api/',
   },
 ]
 
