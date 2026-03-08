@@ -1,4 +1,4 @@
-Defined in: [src/mcp.ts:24](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L24)
+Defined in: [src/mcp.ts:55](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L55)
 
 MCP Client for interacting with Model Context Protocol servers.
 
@@ -10,7 +10,7 @@ MCP Client for interacting with Model Context Protocol servers.
 new McpClient(args): McpClient;
 ```
 
-Defined in: [src/mcp.ts:32](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L32)
+Defined in: [src/mcp.ts:70](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L70)
 
 #### Parameters
 
@@ -22,6 +22,30 @@ Defined in: [src/mcp.ts:32](https://github.com/strands-agents/sdk-typescript/blo
 
 `McpClient`
 
+## Properties
+
+### DEFAULT\_TTL
+
+```ts
+readonly static DEFAULT_TTL: 60000 = 60000;
+```
+
+Defined in: [src/mcp.ts:57](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L57)
+
+Default TTL for task polling in milliseconds (60 seconds).
+
+---
+
+### DEFAULT\_POLL\_TIMEOUT
+
+```ts
+readonly static DEFAULT_POLL_TIMEOUT: 300000 = 300000;
+```
+
+Defined in: [src/mcp.ts:60](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L60)
+
+Default poll timeout for task completion in milliseconds (5 minutes).
+
 ## Accessors
 
 ### client
@@ -32,7 +56,7 @@ Defined in: [src/mcp.ts:32](https://github.com/strands-agents/sdk-typescript/blo
 get client(): Client;
 ```
 
-Defined in: [src/mcp.ts:45](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L45)
+Defined in: [src/mcp.ts:84](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L84)
 
 ##### Returns
 
@@ -46,7 +70,7 @@ Defined in: [src/mcp.ts:45](https://github.com/strands-agents/sdk-typescript/blo
 connect(reconnect?): Promise<void>;
 ```
 
-Defined in: [src/mcp.ts:56](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L56)
+Defined in: [src/mcp.ts:95](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L95)
 
 Connects the MCP client to the server.
 
@@ -72,7 +96,7 @@ A promise that resolves when the connection is established.
 disconnect(): Promise<void>;
 ```
 
-Defined in: [src/mcp.ts:76](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L76)
+Defined in: [src/mcp.ts:115](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L115)
 
 Disconnects the MCP client from the server and cleans up resources.
 
@@ -90,7 +114,7 @@ A promise that resolves when the disconnection is complete.
 listTools(): Promise<McpTool[]>;
 ```
 
-Defined in: [src/mcp.ts:88](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L88)
+Defined in: [src/mcp.ts:127](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L127)
 
 Lists the tools available on the server and returns them as executable McpTool instances.
 
@@ -108,9 +132,11 @@ A promise that resolves with an array of McpTool instances.
 callTool(tool, args): Promise<JSONValue>;
 ```
 
-Defined in: [src/mcp.ts:110](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/mcp.ts#L110)
+Defined in: [src/mcp.ts:154](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/mcp.ts#L154)
 
 Invoke a tool on the connected MCP server using an McpTool instance.
+
+When `tasksConfig` was provided to the client constructor, uses experimental task-based invocation which supports long-running tools with progress tracking. Otherwise, calls tools directly without task management.
 
 #### Parameters
 

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:410](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L410)
+Defined in: [src/hooks/events.ts:410](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L410)
 
 Event triggered after all tools complete execution. Fired after tool results are collected and ready to be added to conversation. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -14,7 +14,7 @@ Event triggered after all tools complete execution. Fired after tool results are
 new AfterToolsEvent(data): AfterToolsEvent;
 ```
 
-Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L415)
+Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L415)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-type
 readonly type: "afterToolsEvent";
 ```
 
-Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L411)
+Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L411)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L412)
+Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L412)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:413](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L413)
+Defined in: [src/hooks/events.ts:413](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L413)

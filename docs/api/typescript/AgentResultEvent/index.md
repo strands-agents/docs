@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:377](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L377)
+Defined in: [src/hooks/events.ts:377](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L377)
 
 Event triggered as the final event in the agent stream. Wraps the agent result containing the stop reason and last message.
 
@@ -14,7 +14,7 @@ Event triggered as the final event in the agent stream. Wraps the agent result c
 new AgentResultEvent(data): AgentResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:382](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L382)
+Defined in: [src/hooks/events.ts:382](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L382)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:382](https://github.com/strands-agents/sdk-type
 readonly type: "agentResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L378)
+Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L378)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L379)
+Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L379)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-type
 readonly result: AgentResult;
 ```
 
-Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L380)
+Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L380)

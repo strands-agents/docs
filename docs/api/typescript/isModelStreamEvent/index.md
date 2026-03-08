@@ -2,7 +2,7 @@
 function isModelStreamEvent(event): event is ModelStreamEvent;
 ```
 
-Defined in: [src/models/streaming.ts:42](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/models/streaming.ts#L42)
+Defined in: [src/models/streaming.ts:42](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L42)
 
 Type guard to check if an event with a type discriminator is a ModelStreamEvent.
 

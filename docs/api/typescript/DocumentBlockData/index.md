@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:441](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/types/media.ts#L441)
+Defined in: [src/types/media.ts:441](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L441)
 
 Data for a document block.
 
@@ -10,7 +10,7 @@ Data for a document block.
 name: string;
 ```
 
-Defined in: [src/types/media.ts:445](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/types/media.ts#L445)
+Defined in: [src/types/media.ts:445](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L445)
 
 Document name.
 
@@ -22,7 +22,7 @@ Document name.
 format: DocumentFormat;
 ```
 
-Defined in: [src/types/media.ts:450](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/types/media.ts#L450)
+Defined in: [src/types/media.ts:450](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L450)
 
 Document format.
 
@@ -34,7 +34,7 @@ Document format.
 source: DocumentSourceData;
 ```
 
-Defined in: [src/types/media.ts:455](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/types/media.ts#L455)
+Defined in: [src/types/media.ts:455](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L455)
 
 Document source.
 
@@ -48,7 +48,7 @@ optional citations: {
 };
 ```
 
-Defined in: [src/types/media.ts:460](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/types/media.ts#L460)
+Defined in: [src/types/media.ts:460](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L460)
 
 Citation configuration.
 
@@ -66,6 +66,6 @@ enabled: boolean;
 optional context: string;
 ```
 
-Defined in: [src/types/media.ts:465](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/types/media.ts#L465)
+Defined in: [src/types/media.ts:465](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L465)
 
 Context information for the document.

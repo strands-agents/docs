@@ -2,6 +2,10 @@ Tools are the primary mechanism for extending agent capabilities, enabling them 
 
 Strands Agents Tools is a community-driven project that provides a powerful set of tools for your agents to use. For more information, see [Strands Agents Tools](/docs/user-guide/concepts/tools/community-tools-package/index.md).
 
+Tool Security
+
+All tools, whether custom, community-provided, or included in the Strands tools package, execute code on behalf of your agent with the permissions of the host process. Under the shared responsibility model, you should audit each tool’s behavior (file access patterns, network calls, shell execution) and ensure it is appropriate for your deployment environment and threat model. See [Responsible AI](/docs/user-guide/safety-security/responsible-ai/index.md) for more details.
+
 ## Adding Tools to Agents
 
 Tools are passed to agents during initialization or at runtime, making them available for use throughout the agent’s lifecycle. Once loaded, the agent can use these tools in response to user requests:

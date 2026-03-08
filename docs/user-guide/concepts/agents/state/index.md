@@ -156,7 +156,7 @@ See [Conversation Management](/docs/user-guide/concepts/agents/conversation-mana
 
 ## Agent State
 
-Agent state provides key-value storage for stateful information that exists outside of the conversation context. Unlike conversation history, agent state is not passed to the model during inference but can be accessed and modified by tools and application logic.
+Agent state (also called app state) provides key-value storage for stateful information that exists outside of the conversation context. Unlike conversation history, agent state is not passed to the model during inference but can be accessed and modified by tools and application logic.
 
 ### Basic Usage
 

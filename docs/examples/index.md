@@ -57,10 +57,10 @@ Each CDK example includes its own documentation with instructions for setup and 
 
 Available CDK examples:
 
--   [Deploy to EC2](/docs/examples/cdk/deploy_to_ec2/index.md) - Guide for deploying agents to Amazon EC2 instances
--   [Deploy to Fargate](/docs/examples/cdk/deploy_to_fargate/index.md) - Guide for deploying agents to AWS Fargate
--   [Deploy to App Runner](/docs/examples/cdk/deploy_to_apprunner/index.md) - Guide for deploying agents to AWS App Runner
--   [Deploy to Lambda](/docs/examples/cdk/deploy_to_lambda/index.md) - Guide for deploying agents to AWS Lambda
+-   [Deploy to EC2](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_ec2/README.md) - Guide for deploying agents to Amazon EC2 instances
+-   [Deploy to Fargate](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_fargate/README.md) - Guide for deploying agents to AWS Fargate
+-   [Deploy to App Runner](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_apprunner/README.md) - Guide for deploying agents to AWS App Runner
+-   [Deploy to Lambda](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_lambda/README.md) - Guide for deploying agents to AWS Lambda
 
 ### TypeScript Examples
 
@@ -68,12 +68,12 @@ The `/examples/typescript` directory contains TypeScript-based examples demonstr
 
 Available TypeScript examples:
 
--   [Deploy to Bedrock AgentCore](/docs/examples/typescript/deploy_to_bedrock_agentcore/index.md) - Complete example for deploying TypeScript agents to Amazon Bedrock AgentCore Runtime.
+-   [Deploy to Bedrock AgentCore](https://github.com/strands-agents/docs/blob/main/docs/examples/typescript/deploy_to_bedrock_agentcore/README.md) - Complete example for deploying TypeScript agents to Amazon Bedrock AgentCore Runtime.
 
 ### Amazon EKS Example
 
 The `/examples/deploy_to_eks` directory contains examples for using Amazon EKS with agents.  
-The [Deploy to Amazon EKS](/docs/examples/deploy_to_eks/index.md) includes its own documentation with instruction for setup and deployment.
+The [Deploy to Amazon EKS](https://github.com/strands-agents/docs/blob/main/docs/examples/deploy_to_eks/README.md) includes its own documentation with instruction for setup and deployment.
 
 ## Example Structure
 

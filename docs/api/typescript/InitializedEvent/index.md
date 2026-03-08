@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:84](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L84)
+Defined in: [src/hooks/events.ts:84](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L84)
 
 Event triggered when an agent has finished initialization. Fired after the agent has been fully constructed and all built-in components have been initialized.
 
@@ -14,7 +14,7 @@ Event triggered when an agent has finished initialization. Fired after the agent
 new InitializedEvent(data): InitializedEvent;
 ```
 
-Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L88)
+Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L88)
 
 #### Parameters
 
@@ -39,7 +39,7 @@ Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-types
 readonly type: "initializedEvent";
 ```
 
-Defined in: [src/hooks/events.ts:85](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L85)
+Defined in: [src/hooks/events.ts:85](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L85)
 
 ---
 
@@ -49,4 +49,4 @@ Defined in: [src/hooks/events.ts:85](https://github.com/strands-agents/sdk-types
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L86)
+Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L86)

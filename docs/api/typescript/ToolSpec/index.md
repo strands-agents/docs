@@ -1,4 +1,4 @@
-Defined in: [src/tools/types.ts:13](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/tools/types.ts#L13)
+Defined in: [src/tools/types.ts:13](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/tools/types.ts#L13)
 
 Specification for a tool that can be used by the model. Defines the tool’s name, description, and input schema.
 
@@ -10,7 +10,7 @@ Specification for a tool that can be used by the model. Defines the tool’s nam
 name: string;
 ```
 
-Defined in: [src/tools/types.ts:17](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/tools/types.ts#L17)
+Defined in: [src/tools/types.ts:17](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/tools/types.ts#L17)
 
 The unique name of the tool.
 
@@ -22,7 +22,7 @@ The unique name of the tool.
 description: string;
 ```
 
-Defined in: [src/tools/types.ts:23](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/tools/types.ts#L23)
+Defined in: [src/tools/types.ts:23](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/tools/types.ts#L23)
 
 A description of what the tool does. This helps the model understand when to use the tool.
 
@@ -34,6 +34,6 @@ A description of what the tool does. This helps the model understand when to use
 optional inputSchema: JSONSchema7;
 ```
 
-Defined in: [src/tools/types.ts:29](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/tools/types.ts#L29)
+Defined in: [src/tools/types.ts:29](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/tools/types.ts#L29)
 
 JSON Schema defining the expected input structure for the tool. If omitted, defaults to an empty object schema allowing no input parameters.

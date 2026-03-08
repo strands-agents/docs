@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:219](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L219)
+Defined in: [src/hooks/events.ts:219](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L219)
 
 Event triggered just before the model is invoked. Fired before sending messages to the model for inference.
 
@@ -14,7 +14,7 @@ Event triggered just before the model is invoked. Fired before sending messages 
 new BeforeModelCallEvent(data): BeforeModelCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L223)
+Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L223)
 
 #### Parameters
 
@@ -39,7 +39,7 @@ Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-type
 readonly type: "beforeModelCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L220)
+Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L220)
 
 ---
 
@@ -49,4 +49,4 @@ Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:221](https://github.com/strands-agents/sdk-typescript/blob/a4458cd64080cab5899aecb70ff742e591c09ab1/src/hooks/events.ts#L221)
+Defined in: [src/hooks/events.ts:221](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/hooks/events.ts#L221)
