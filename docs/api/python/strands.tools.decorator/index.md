@@ -268,6 +268,27 @@ Get the tool specification.
 
 The tool specification dictionary containing metadata for Agent integration.
 
+#### tool\_spec
+
+```python
+@tool_spec.setter
+def tool_spec(value: ToolSpec) -> None
+```
+
+Defined in: [src/strands/tools/decorator.py:547](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L547)
+
+Set the tool specification.
+
+This allows runtime modification of the tool’s schema, enabling dynamic tool configurations based on feature flags or other runtime conditions.
+
+**Arguments**:
+
+-   `value` - The new tool specification.
+
+**Raises**:
+
+-   `ValueError` - If the spec fails structural validation (wrong name or missing required field).
+
 #### tool\_type
 
 ```python
@@ -275,7 +296,7 @@ The tool specification dictionary containing metadata for Agent integration.
 def tool_type() -> str
 ```
 
-Defined in: [src/strands/tools/decorator.py:547](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L547)
+Defined in: [src/strands/tools/decorator.py:572](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L572)
 
 Get the type of the tool.
 
@@ -291,7 +312,7 @@ async def stream(tool_use: ToolUse, invocation_state: dict[str, Any],
                  **kwargs: Any) -> ToolGenerator
 ```
 
-Defined in: [src/strands/tools/decorator.py:556](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L556)
+Defined in: [src/strands/tools/decorator.py:581](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L581)
 
 Stream the tool with a tool use specification.
 
@@ -322,7 +343,7 @@ Tool events with the last being the tool result.
 def supports_hot_reload() -> bool
 ```
 
-Defined in: [src/strands/tools/decorator.py:673](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L673)
+Defined in: [src/strands/tools/decorator.py:698](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L698)
 
 Check if this tool supports automatic reloading when modified.
 
@@ -337,7 +358,7 @@ Always true for function-based tools.
 def get_display_properties() -> dict[str, str]
 ```
 
-Defined in: [src/strands/tools/decorator.py:682](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L682)
+Defined in: [src/strands/tools/decorator.py:707](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L707)
 
 Get properties to display in UI representations.
 
@@ -358,7 +379,7 @@ def tool(
                                             DecoratedFunctionTool[P, R]]
 ```
 
-Defined in: [src/strands/tools/decorator.py:706](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L706)
+Defined in: [src/strands/tools/decorator.py:731](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/decorator.py#L731)
 
 Decorator that transforms a Python function into a Strands tool.
 

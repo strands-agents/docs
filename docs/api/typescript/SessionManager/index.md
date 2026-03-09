@@ -1,4 +1,4 @@
-Defined in: [src/session/session-manager.ts:56](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/session-manager.ts#L56)
+Defined in: [src/session/session-manager.ts:56](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/session-manager.ts#L56)
 
 Manages session persistence for agents, enabling conversation state to be saved and restored across invocations using pluggable storage backends.
 
@@ -26,7 +26,7 @@ const agent = new Agent({ sessionManager: session })
 new SessionManager(config): SessionManager;
 ```
 
-Defined in: [src/session/session-manager.ts:62](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/session-manager.ts#L62)
+Defined in: [src/session/session-manager.ts:62](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/session-manager.ts#L62)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [src/session/session-manager.ts:62](https://github.com/strands-agent
 registerCallbacks(registry): void;
 ```
 
-Defined in: [src/session/session-manager.ts:70](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/session-manager.ts#L70)
+Defined in: [src/session/session-manager.ts:70](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/session-manager.ts#L70)
 
 Registers lifecycle hook callbacks on the provided registry.
 
@@ -72,7 +72,7 @@ Registers lifecycle hook callbacks on the provided registry.
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/session-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/session-manager.ts#L88)
+Defined in: [src/session/session-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/session-manager.ts#L88)
 
 #### Parameters
 
@@ -94,7 +94,7 @@ Defined in: [src/session/session-manager.ts:88](https://github.com/strands-agent
 restoreSnapshot(params): Promise<boolean>;
 ```
 
-Defined in: [src/session/session-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/session-manager.ts#L100)
+Defined in: [src/session/session-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/session-manager.ts#L100)
 
 Loads a snapshot from storage and restores it into the target agent. Returns false if no snapshot exists.
 

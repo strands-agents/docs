@@ -1,4 +1,4 @@
-Defined in: [src/session/file-storage.ts:16](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L16)
+Defined in: [src/session/file-storage.ts:16](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L16)
 
 File-based implementation of SnapshotStorage for persisting session snapshots
 
@@ -14,7 +14,7 @@ File-based implementation of SnapshotStorage for persisting session snapshots
 new FileStorage(baseDir): FileStorage;
 ```
 
-Defined in: [src/session/file-storage.ts:24](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L24)
+Defined in: [src/session/file-storage.ts:24](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L24)
 
 Creates new FileStorage instance
 
@@ -36,7 +36,7 @@ Creates new FileStorage instance
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/file-storage.ts:41](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L41)
+Defined in: [src/session/file-storage.ts:41](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L41)
 
 Saves snapshot to file, optionally marking as latest
 
@@ -66,7 +66,7 @@ Saves snapshot to file, optionally marking as latest
 loadSnapshot(params): Promise<Snapshot>;
 ```
 
-Defined in: [src/session/file-storage.ts:57](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L57)
+Defined in: [src/session/file-storage.ts:57](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L57)
 
 Loads snapshot by ID or latest if null
 
@@ -94,7 +94,7 @@ Loads snapshot by ID or latest if null
 listSnapshotIds(params): Promise<string[]>;
 ```
 
-Defined in: [src/session/file-storage.ts:86](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L86)
+Defined in: [src/session/file-storage.ts:86](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L86)
 
 Lists all snapshot IDs for a session scope.
 
@@ -132,7 +132,7 @@ listSnapshots(params: {
 loadManifest(params): Promise<SnapshotManifest>;
 ```
 
-Defined in: [src/session/file-storage.ts:106](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L106)
+Defined in: [src/session/file-storage.ts:106](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L106)
 
 Loads manifest or returns default if not found
 
@@ -159,7 +159,7 @@ Loads manifest or returns default if not found
 saveManifest(params): Promise<void>;
 ```
 
-Defined in: [src/session/file-storage.ts:121](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/session/file-storage.ts#L121)
+Defined in: [src/session/file-storage.ts:121](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/session/file-storage.ts#L121)
 
 Saves manifest to file
 

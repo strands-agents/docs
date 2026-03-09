@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:132](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L132)
+Defined in: [src/types/media.ts:132](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L132)
 
 S3 location for Bedrock media and document sources.
 
@@ -15,7 +15,7 @@ S3 location for Bedrock media and document sources.
 new S3Location(data): S3Location;
 ```
 
-Defined in: [src/types/media.ts:136](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L136)
+Defined in: [src/types/media.ts:136](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L136)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:136](https://github.com/strands-agents/sdk-types
 readonly uri: string;
 ```
 
-Defined in: [src/types/media.ts:133](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L133)
+Defined in: [src/types/media.ts:133](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L133)
 
 S3 URI in format: s3://bucket-name/key-name
 
@@ -51,7 +51,7 @@ S3 URI in format: s3://bucket-name/key-name
 readonly optional bucketOwner: string;
 ```
 
-Defined in: [src/types/media.ts:134](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L134)
+Defined in: [src/types/media.ts:134](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L134)
 
 AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs to another AWS account.
 
@@ -67,7 +67,7 @@ AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs
 toJSON(): S3LocationData;
 ```
 
-Defined in: [src/types/media.ts:147](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L147)
+Defined in: [src/types/media.ts:147](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L147)
 
 Serializes the S3Location to a JSON-compatible S3LocationData object. Called automatically by JSON.stringify().
 
@@ -89,7 +89,7 @@ JSONSerializable.toJSON
 static fromJSON(data): S3Location;
 ```
 
-Defined in: [src/types/media.ts:160](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/types/media.ts#L160)
+Defined in: [src/types/media.ts:160](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L160)
 
 Creates an S3Location instance from S3LocationData.
 

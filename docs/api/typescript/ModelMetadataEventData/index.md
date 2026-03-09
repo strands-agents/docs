@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:229](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L229)
+Defined in: [src/models/streaming.ts:229](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L229)
 
 Data for a metadata event.
 
@@ -10,7 +10,7 @@ Data for a metadata event.
 type: "modelMetadataEvent";
 ```
 
-Defined in: [src/models/streaming.ts:233](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L233)
+Defined in: [src/models/streaming.ts:233](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L233)
 
 Discriminator for metadata events.
 
@@ -22,7 +22,7 @@ Discriminator for metadata events.
 optional usage: Usage;
 ```
 
-Defined in: [src/models/streaming.ts:238](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L238)
+Defined in: [src/models/streaming.ts:238](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L238)
 
 Token usage information.
 
@@ -34,7 +34,7 @@ Token usage information.
 optional metrics: Metrics;
 ```
 
-Defined in: [src/models/streaming.ts:243](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L243)
+Defined in: [src/models/streaming.ts:243](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L243)
 
 Performance metrics.
 
@@ -46,6 +46,6 @@ Performance metrics.
 optional trace: unknown;
 ```
 
-Defined in: [src/models/streaming.ts:248](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L248)
+Defined in: [src/models/streaming.ts:248](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L248)
 
 Trace information for observability.

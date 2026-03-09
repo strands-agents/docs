@@ -140,6 +140,27 @@ Get the tool specification for this Python-based tool.
 
 The tool specification.
 
+#### tool\_spec
+
+```python
+@tool_spec.setter
+def tool_spec(value: ToolSpec) -> None
+```
+
+Defined in: [src/strands/tools/tools.py:201](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L201)
+
+Set the tool specification.
+
+This allows runtime modification of the tool’s schema, enabling dynamic tool configurations based on feature flags or other runtime conditions.
+
+**Arguments**:
+
+-   `value` - The new tool specification.
+
+**Raises**:
+
+-   `ValueError` - If the spec fails structural validation (wrong name or missing required field).
+
 #### supports\_hot\_reload
 
 ```python
@@ -147,7 +168,7 @@ The tool specification.
 def supports_hot_reload() -> bool
 ```
 
-Defined in: [src/strands/tools/tools.py:201](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L201)
+Defined in: [src/strands/tools/tools.py:226](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L226)
 
 Check if this tool supports automatic reloading when modified.
 
@@ -162,7 +183,7 @@ Always true for function-based tools.
 def tool_type() -> str
 ```
 
-Defined in: [src/strands/tools/tools.py:210](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L210)
+Defined in: [src/strands/tools/tools.py:235](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L235)
 
 Identifies this as a Python-based tool implementation.
 
@@ -178,7 +199,7 @@ async def stream(tool_use: ToolUse, invocation_state: dict[str, Any],
                  **kwargs: Any) -> ToolGenerator
 ```
 
-Defined in: [src/strands/tools/tools.py:219](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L219)
+Defined in: [src/strands/tools/tools.py:244](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/tools.py#L244)
 
 Stream the Python function with the given tool use request.
 

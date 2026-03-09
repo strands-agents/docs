@@ -46,6 +46,7 @@
     -   [SlidingWindowConversationManager](/docs/api/typescript/SlidingWindowConversationManager/index.md)
     -   [StreamEvent](/docs/api/typescript/StreamEvent/index.md)
     -   [StructuredOutputException](/docs/api/typescript/StructuredOutputException/index.md)
+    -   [Swarm](/docs/api/typescript/Swarm/index.md)
     -   [TextBlock](/docs/api/typescript/TextBlock/index.md)
     -   [Tool](/docs/api/typescript/Tool/index.md)
     -   [ToolResultBlock](/docs/api/typescript/ToolResultBlock/index.md)

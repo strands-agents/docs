@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:49](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L49)
+Defined in: [src/models/streaming.ts:49](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L49)
 
 Data for a message start event.
 
@@ -10,7 +10,7 @@ Data for a message start event.
 type: "modelMessageStartEvent";
 ```
 
-Defined in: [src/models/streaming.ts:53](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L53)
+Defined in: [src/models/streaming.ts:53](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L53)
 
 Discriminator for message start events.
 
@@ -22,6 +22,6 @@ Discriminator for message start events.
 role: Role;
 ```
 
-Defined in: [src/models/streaming.ts:58](https://github.com/strands-agents/sdk-typescript/blob/53bf6e624a0ca259936e3d9700717a8795995845/src/models/streaming.ts#L58)
+Defined in: [src/models/streaming.ts:58](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L58)
 
 The role of the message being started.
