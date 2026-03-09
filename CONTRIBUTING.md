@@ -39,8 +39,8 @@ For full details on the Astro setup, custom components, frontmatter fields, and 
 Before committing, run:
 
 ```bash
-npm test           # TypeScript type checking
-npm run lint       # linting
+npm test              # run tests
+npm run typecheck     # TypeScript type checking
 npm run format:check  # formatting
 ```
 
