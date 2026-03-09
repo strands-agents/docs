@@ -20,7 +20,7 @@ Before configuring the evaluation dashboard, ensure you have:
 1. **AWS Account** with appropriate permissions for CloudWatch and Bedrock AgentCore
 2. **CloudWatch Transaction Search enabled** (one-time setup)
 3. **ADOT SDK** installed in your environment ([guidance](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html))
-4. **Strands Evals SDK** installed (`pip install strands-evals`)
+4. **Strands Evals SDK** installed (`pip install strands-agents-evals`)
 
 ## Step 1: Enable CloudWatch Transaction Search
 
@@ -125,7 +125,7 @@ Or add to your `requirements.txt`:
 ```text
 aws-opentelemetry-distro>=0.10.0
 boto3
-strands-evals
+strands-agents-evals
 ```
 
 ## Step 4: Run Evaluations with ADOT
