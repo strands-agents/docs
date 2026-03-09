@@ -62,6 +62,9 @@ sidebar:
               - docs/user-guide/concepts/tools/mcp-tools
               - docs/user-guide/concepts/tools/executors
               - docs/user-guide/concepts/tools/community-tools-package
+          - label: Plugins
+            items:
+              - docs/user-guide/concepts/plugins
           - label: Model Providers
             items:
               - docs/user-guide/concepts/model-providers
