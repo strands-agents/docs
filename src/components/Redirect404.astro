@@ -48,6 +48,7 @@
     if (destPath === currentPath) return false
 
     window.location.replace(dest)
+    console.log(`[Redirect404] Redirecting ${window.location.href} → ${dest}`)
     return true
   }
 
