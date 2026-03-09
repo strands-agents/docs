@@ -23,8 +23,8 @@
 <script>
   import { resolveRedirectFromUrl } from '../util/redirect'
 
-  // Safety net: reveal the page after 1s no matter what, in case the redirect doesn't fire
-  const showTimeout = setTimeout(showPage, 1000)
+  // Safety net: reveal the page after 3s no matter what, in case the redirect doesn't fire
+  const showTimeout = setTimeout(showPage, 3000)
 
   if (!tryRedirect()) {
     showPage()
