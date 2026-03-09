@@ -86,6 +86,10 @@ And finally our `src/agent.ts` file where the goodies are:
 
 This basic quickstart agent can now count letters in words. The agent automatically determines when to use tools based on the input query and context.
 
+:::note
+The `tool()` function also accepts plain JSON Schema objects instead of Zod. See [Creating Custom Tools](../concepts/tools/custom-tools) for details.
+:::
+
 ```mermaid
 flowchart LR
     A[Input & Context] --> Loop

@@ -19,7 +19,7 @@ Python supports three approaches to defining tools:
 
 TypeScript supports two main approaches:
 
-* **tool() function with [Zod](https://zod.dev/) schemas**: Create tools using the `tool()` function with Zod schema validation for type-safe input handling.
+* **tool() function with [Zod](https://zod.dev/) or JSON schemas**: Create tools using the `tool()` function with either Zod schemas for type-safe validated input, or plain JSON Schema objects for schema-only definitions without runtime validation.
 
 * **Class-based tools extending FunctionTool**: Create tools within classes to maintain shared state and resources.
 </Tab>
@@ -62,7 +62,13 @@ Here's a simple example of a function based tool with Zod:
 --8<-- "user-guide/concepts/tools/tools.ts:basic_tool"
 ```
 
-TypeScript uses Zod schemas for input validation and type generation. The schema's descriptions are used by the model to understand when and how to use the tool.
+The `tool()` function accepts either a [Zod](https://zod.dev/) schema or a plain JSON Schema object as `inputSchema`. With Zod, input is validated at runtime and the callback receives typed input. With JSON Schema, the schema is passed through as-is and the callback receives `unknown`.
+
+Here's the same tool using a JSON Schema object instead:
+
+```typescript
+--8<-- "user-guide/concepts/tools/tools.ts:json_schema_tool"
+```
 </Tab>
 </Tabs>
 
@@ -92,8 +98,10 @@ def weather_forecast(city: str, days: int = 3) -> str:
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+In TypeScript, the tool name and description are always provided explicitly in the `tool()` configuration:
+
+```typescript
+--8<-- "user-guide/concepts/tools/tools.ts:tool_override"
 ```
 </Tab>
 </Tabs>
@@ -137,9 +145,7 @@ def calculate_area(shape: str, radius: float = None, width: float = None, height
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
-```
+In TypeScript, `inputSchema` is always provided explicitly in the `tool()` configuration - as either a Zod schema or a JSON Schema object. See the [basic example](#basic-example) above for both approaches.
 </Tab>
 </Tabs>
 
