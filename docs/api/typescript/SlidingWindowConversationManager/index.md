@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:43](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/conversation-manager/sliding-window-conversation-manager.ts#L43)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:43](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/conversation-manager/sliding-window-conversation-manager.ts#L43)
 
 Implements a sliding window strategy for managing conversation history.
 
@@ -21,7 +21,7 @@ As a HookProvider, it registers callbacks for:
 new SlidingWindowConversationManager(config?): SlidingWindowConversationManager;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:52](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/conversation-manager/sliding-window-conversation-manager.ts#L52)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:52](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/conversation-manager/sliding-window-conversation-manager.ts#L52)
 
 Initialize the sliding window conversation manager.
 
@@ -43,7 +43,7 @@ Initialize the sliding window conversation manager.
 registerCallbacks(registry): void;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:66](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/conversation-manager/sliding-window-conversation-manager.ts#L66)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:66](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/conversation-manager/sliding-window-conversation-manager.ts#L66)
 
 Registers callbacks with the hook registry.
 

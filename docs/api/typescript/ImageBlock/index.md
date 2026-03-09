@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:205](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L205)
+Defined in: [src/types/media.ts:205](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L205)
 
 Image content block.
 
@@ -15,7 +15,7 @@ Image content block.
 new ImageBlock(data): ImageBlock;
 ```
 
-Defined in: [src/types/media.ts:221](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L221)
+Defined in: [src/types/media.ts:221](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L221)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:221](https://github.com/strands-agents/sdk-types
 readonly type: "imageBlock";
 ```
 
-Defined in: [src/types/media.ts:209](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L209)
+Defined in: [src/types/media.ts:209](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L209)
 
 Discriminator for image content.
 
@@ -47,7 +47,7 @@ Discriminator for image content.
 readonly format: ImageFormat;
 ```
 
-Defined in: [src/types/media.ts:214](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L214)
+Defined in: [src/types/media.ts:214](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L214)
 
 Image format.
 
@@ -63,7 +63,7 @@ Image format.
 readonly source: ImageSource;
 ```
 
-Defined in: [src/types/media.ts:219](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L219)
+Defined in: [src/types/media.ts:219](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L219)
 
 Image source.
 
@@ -95,7 +95,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/media.ts:253](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L253)
+Defined in: [src/types/media.ts:253](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L253)
 
 Serializes the ImageBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array bytes are encoded as base64 string.
 
@@ -123,9 +123,9 @@ Serializes the ImageBlock to a JSON-compatible ContentBlockData object. Called a
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `image` | { `format`: [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md); `source`: | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; } | \- | [src/types/media.ts:253](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L253) |
-| `image.format` | [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md) | Image format. | [src/types/media.ts:194](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L194) |
-| `image.source` | | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; } | Image source. | [src/types/media.ts:199](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L199) |
+| `image` | { `format`: [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md); `source`: | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; } | \- | [src/types/media.ts:253](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L253) |
+| `image.format` | [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md) | Image format. | [src/types/media.ts:194](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L194) |
+| `image.source` | | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; } | Image source. | [src/types/media.ts:199](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L199) |
 
 #### Implementation of
 
@@ -141,7 +141,7 @@ JSONSerializable.toJSON
 static fromJSON(data): ImageBlock;
 ```
 
-Defined in: [src/types/media.ts:277](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/types/media.ts#L277)
+Defined in: [src/types/media.ts:277](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L277)
 
 Creates an ImageBlock instance from its wrapped data format. Base64-encoded bytes are decoded back to Uint8Array.
 

@@ -1,4 +1,4 @@
-Defined in: [src/mcp.ts:25](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/mcp.ts#L25)
+Defined in: [src/mcp.ts:25](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L25)
 
 Configuration for MCP task-augmented tool execution.
 
@@ -14,7 +14,7 @@ When provided to McpClient, enables task-based tool invocation which supports lo
 optional ttl: number;
 ```
 
-Defined in: [src/mcp.ts:30](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/mcp.ts#L30)
+Defined in: [src/mcp.ts:30](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L30)
 
 Time-to-live in milliseconds for task polling. Defaults to 60000 (60 seconds).
 
@@ -26,6 +26,6 @@ Time-to-live in milliseconds for task polling. Defaults to 60000 (60 seconds).
 optional pollTimeout: number;
 ```
 
-Defined in: [src/mcp.ts:36](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/mcp.ts#L36)
+Defined in: [src/mcp.ts:36](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L36)
 
 Maximum time in milliseconds to wait for task completion during polling. Defaults to 300000 (5 minutes).

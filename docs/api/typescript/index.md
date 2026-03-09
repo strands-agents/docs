@@ -159,6 +159,7 @@
 -   **Functions**
     -   [configureLogging](/docs/api/typescript/configureLogging/index.md)
     -   [contentBlockFromData](/docs/api/typescript/contentBlockFromData/index.md)
+    -   [getTracer](/docs/api/typescript/telemetry:getTracer/index.md)
     -   [isModelStreamEvent](/docs/api/typescript/isModelStreamEvent/index.md)
     -   [setupTracer](/docs/api/typescript/telemetry:setupTracer/index.md)
     -   [tool](/docs/api/typescript/tool/index.md)

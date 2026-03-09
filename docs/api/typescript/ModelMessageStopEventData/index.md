@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:182](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L182)
+Defined in: [src/models/streaming.ts:182](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/models/streaming.ts#L182)
 
 Data for a message stop event.
 
@@ -10,7 +10,7 @@ Data for a message stop event.
 type: "modelMessageStopEvent";
 ```
 
-Defined in: [src/models/streaming.ts:186](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L186)
+Defined in: [src/models/streaming.ts:186](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/models/streaming.ts#L186)
 
 Discriminator for message stop events.
 
@@ -22,7 +22,7 @@ Discriminator for message stop events.
 stopReason: StopReason;
 ```
 
-Defined in: [src/models/streaming.ts:191](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L191)
+Defined in: [src/models/streaming.ts:191](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/models/streaming.ts#L191)
 
 Reason why generation stopped.
 
@@ -34,6 +34,6 @@ Reason why generation stopped.
 optional additionalModelResponseFields: JSONValue;
 ```
 
-Defined in: [src/models/streaming.ts:196](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/models/streaming.ts#L196)
+Defined in: [src/models/streaming.ts:196](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/models/streaming.ts#L196)
 
 Additional provider-specific response fields.

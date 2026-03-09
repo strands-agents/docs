@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:393](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L393)
+Defined in: [src/hooks/events.ts:393](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L393)
 
 Event triggered before executing tools. Fired when the model returns tool use blocks that need to be executed.
 
@@ -14,7 +14,7 @@ Event triggered before executing tools. Fired when the model returns tool use bl
 new BeforeToolsEvent(data): BeforeToolsEvent;
 ```
 
-Defined in: [src/hooks/events.ts:398](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L398)
+Defined in: [src/hooks/events.ts:398](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L398)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:398](https://github.com/strands-agents/sdk-type
 readonly type: "beforeToolsEvent";
 ```
 
-Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L394)
+Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L394)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L395)
+Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L395)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L396)
+Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L396)

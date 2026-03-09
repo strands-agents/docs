@@ -6,7 +6,7 @@ Utilities for handling streaming responses from language models.
 def remove_blank_messages_content_text(messages: Messages) -> Messages
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:106](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L106)
+Defined in: [src/strands/event\_loop/streaming.py:107](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L107)
 
 Remove or replace blank text in message content.
 
@@ -27,7 +27,7 @@ def handle_message_start(event: MessageStartEvent,
                          message: Message) -> Message
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:158](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L158)
+Defined in: [src/strands/event\_loop/streaming.py:159](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L159)
 
 Handles the start of a message by setting the role in the message dictionary.
 
@@ -47,7 +47,7 @@ def handle_content_block_start(
         event: ContentBlockStartEvent) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:172](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L172)
+Defined in: [src/strands/event\_loop/streaming.py:173](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L173)
 
 Handles the start of a content block by extracting tool usage information if any.
 
@@ -67,7 +67,7 @@ def handle_content_block_delta(
         state: dict[str, Any]) -> tuple[dict[str, Any], ModelStreamEvent]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:195](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L195)
+Defined in: [src/strands/event\_loop/streaming.py:196](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L196)
 
 Handles content block delta updates by appending text, tool input, or reasoning content to the state.
 
@@ -86,7 +86,7 @@ Updated state with appended text or tool input.
 def handle_content_block_stop(state: dict[str, Any]) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:257](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L257)
+Defined in: [src/strands/event\_loop/streaming.py:258](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L258)
 
 Handles the end of a content block by finalizing tool usage, text content, or reasoning content.
 
@@ -104,7 +104,7 @@ Updated state with finalized content block.
 def handle_message_stop(event: MessageStopEvent) -> StopReason
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:326](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L326)
+Defined in: [src/strands/event\_loop/streaming.py:327](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L327)
 
 Handles the end of a message by returning the stop reason.
 
@@ -123,7 +123,7 @@ def handle_redact_content(event: RedactContentEvent, state: dict[str,
                                                                  Any]) -> None
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:338](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L338)
+Defined in: [src/strands/event\_loop/streaming.py:339](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L339)
 
 Handles redacting content from the input or output.
 
@@ -140,7 +140,7 @@ def extract_usage_metrics(
         time_to_first_byte_ms: int | None = None) -> tuple[Usage, Metrics]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:349](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L349)
+Defined in: [src/strands/event\_loop/streaming.py:350](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L350)
 
 Extracts usage metrics from the metadata chunk.
 
@@ -157,11 +157,13 @@ The extracted usage metrics and latency.
 
 ```python
 async def process_stream(
-        chunks: AsyncIterable[StreamEvent],
-        start_time: float | None = None) -> AsyncGenerator[TypedEvent, None]
+    chunks: AsyncIterable[StreamEvent],
+    start_time: float | None = None,
+    cancel_signal: threading.Event | None = None
+) -> AsyncGenerator[TypedEvent, None]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:370](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L370)
+Defined in: [src/strands/event\_loop/streaming.py:371](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L371)
 
 Processes the response stream from the API, constructing the final message and extracting usage metrics.
 
@@ -169,6 +171,7 @@ Processes the response stream from the API, constructing the final message and e
 
 -   `chunks` - The chunks of the response stream from the model.
 -   `start_time` - Time when the model request is initiated
+-   `cancel_signal` - Optional threading.Event to check for cancellation during streaming.
 
 **Yields**:
 
@@ -186,10 +189,11 @@ async def stream_messages(model: Model,
                           system_prompt_content: list[SystemContentBlock]
                           | None = None,
                           invocation_state: dict[str, Any] | None = None,
+                          cancel_signal: threading.Event | None = None,
                           **kwargs: Any) -> AsyncGenerator[TypedEvent, None]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:425](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L425)
+Defined in: [src/strands/event\_loop/streaming.py:442](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L442)
 
 Streams messages to the model and processes the response.
 
@@ -202,6 +206,7 @@ Streams messages to the model and processes the response.
 -   `tool_choice` - Optional tool choice constraint for forcing specific tool usage.
 -   `system_prompt_content` - The authoritative system prompt content blocks that always contains the system prompt data.
 -   `invocation_state` - Caller-provided state/context that was passed to the agent when it was invoked.
+-   `cancel_signal` - Optional threading.Event to check for cancellation during streaming.
 -   `**kwargs` - Additional keyword arguments for future extensibility.
 
 **Yields**:

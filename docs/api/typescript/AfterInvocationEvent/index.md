@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:113](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L113)
+Defined in: [src/hooks/events.ts:113](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L113)
 
 Event triggered at the end of an agent request. Fired after all processing completes, regardless of success or error. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -14,7 +14,7 @@ Event triggered at the end of an agent request. Fired after all processing compl
 new AfterInvocationEvent(data): AfterInvocationEvent;
 ```
 
-Defined in: [src/hooks/events.ts:117](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L117)
+Defined in: [src/hooks/events.ts:117](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L117)
 
 #### Parameters
 
@@ -39,7 +39,7 @@ Defined in: [src/hooks/events.ts:117](https://github.com/strands-agents/sdk-type
 readonly type: "afterInvocationEvent";
 ```
 
-Defined in: [src/hooks/events.ts:114](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L114)
+Defined in: [src/hooks/events.ts:114](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L114)
 
 ---
 
@@ -49,4 +49,4 @@ Defined in: [src/hooks/events.ts:114](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:115](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/hooks/events.ts#L115)
+Defined in: [src/hooks/events.ts:115](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/hooks/events.ts#L115)

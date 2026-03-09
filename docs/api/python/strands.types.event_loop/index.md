@@ -37,6 +37,7 @@ Performance metrics for model interactions.
 
 Reason for the model ending its response generation.
 
+-   “cancelled”: Agent execution was cancelled via agent.cancel()
 -   “content\_filtered”: Content was filtered due to policy violation
 -   “end\_turn”: Normal completion of the response
 -   “guardrail\_intervened”: Guardrail system intervened

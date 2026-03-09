@@ -1,8 +1,8 @@
 ```ts
-function setupTracer(config?): NodeTracerProvider;
+function setupTracer(config?): BasicTracerProvider;
 ```
 
-Defined in: [src/telemetry/config.ts:77](https://github.com/strands-agents/sdk-typescript/blob/b5da87357191fa3e191973c773a8a5bb63396d61/src/telemetry/config.ts#L77)
+Defined in: [src/telemetry/config.ts:119](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/telemetry/config.ts#L119)
 
 Set up the tracer provider with the given configuration.
 
@@ -14,23 +14,14 @@ Set up the tracer provider with the given configuration.
 
 ## Returns
 
-`NodeTracerProvider`
+`BasicTracerProvider`
 
-The configured NodeTracerProvider
+The configured tracer provider
 
 ## Example
 
 ```typescript
-import { telemetry } from '@strands-agents/sdk'
+import { telemetry } from '\@strands-agents/sdk'
 
-// Simple setup with defaults
-const provider = telemetry.setupTracer({
-  exporters: { otlp: true }
-})
-
-// Custom provider
-telemetry.setupTracer({
-  provider: new NodeTracerProvider({ resource: myResource }),
-  exporters: { otlp: true, console: true }
-})
+telemetry.setupTracer({ exporters: { otlp: true } })
 ```
