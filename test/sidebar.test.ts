@@ -69,81 +69,81 @@ describe('Sidebar Generation from navigation.yml', () => {
       .filter((item): item is StarlightSidebarItem & { label: string } => 'label' in item)
       .map((item) => item.label)
 
-    expect(topLevelLabels).toContain('User Guide')
+    expect(topLevelLabels).toContain('Docs')
     expect(topLevelLabels).toContain('Examples')
     expect(topLevelLabels).toContain('Community')
-    expect(topLevelLabels).toContain('Labs')
-    expect(topLevelLabels).toContain('Contribute ❤️')
   })
 
   it('should have collapsed groups at depth >= 1', () => {
     const sidebar = loadSidebarFromConfig(pathToNavigationYml)
 
-    // Find the User Guide section
-    const userGuide = sidebar.find(
+    // Find the Docs section
+    const docs = sidebar.find(
       (item): item is StarlightSidebarItem & { label: string; items: StarlightSidebarItem[] } =>
-        'label' in item && item.label === 'User Guide'
+        'label' in item && item.label === 'Docs'
     )
 
-    expect(userGuide).toBeDefined()
-    if (userGuide) {
+    expect(docs).toBeDefined()
+    if (docs) {
       // Top level should not be collapsed
-      expect(userGuide).not.toHaveProperty('collapsed')
+      expect(docs).not.toHaveProperty('collapsed')
 
-      // Find a nested group (like "Quickstart")
-      const quickstart = userGuide.items.find(
-        (item): item is StarlightSidebarItem & { label: string } => 'label' in item && item.label === 'Quickstart'
+      // Find a nested group (like "Get Started")
+      const getStarted = docs.items.find(
+        (item): item is StarlightSidebarItem & { label: string } => 'label' in item && item.label === 'Get Started'
       )
 
       // Nested groups should be collapsed
-      expect(quickstart).toHaveProperty('collapsed', true)
+      expect(getStarted).toHaveProperty('collapsed', true)
     }
   })
 
-  it('should have slugs without labels for file items', () => {
+  it('should support both labeled and unlabeled leaf items', () => {
     const sidebar = loadSidebarFromConfig(pathToNavigationYml)
 
-    // Find a leaf item (internal link) and verify it has slug but no label
-    function findLeafItem(items: StarlightSidebarItem[]): StarlightSidebarItem | null {
+    // Collect all leaf items
+    function findLeafItems(items: StarlightSidebarItem[]): StarlightSidebarItem[] {
+      const leaves: StarlightSidebarItem[] = []
       for (const item of items) {
         if ('slug' in item && !('items' in item)) {
-          return item
+          leaves.push(item)
         }
         if ('items' in item) {
-          const found = findLeafItem(item.items as StarlightSidebarItem[])
-          if (found) return found
+          leaves.push(...findLeafItems(item.items as StarlightSidebarItem[]))
         }
       }
-      return null
+      return leaves
     }
 
-    const leafItem = findLeafItem(sidebar)
-    expect(leafItem).toBeDefined()
-    expect(leafItem).toHaveProperty('slug')
-    expect(leafItem).not.toHaveProperty('label')
+    const leaves = findLeafItems(sidebar)
+    expect(leaves.length).toBeGreaterThan(0)
+
+    // Some leaves should have labels (Build section items)
+    const labeled = leaves.filter((item) => 'label' in item)
+    expect(labeled.length).toBeGreaterThan(0)
+
+    // Some leaves should not have labels (plain slug items)
+    const unlabeled = leaves.filter((item) => !('label' in item))
+    expect(unlabeled.length).toBeGreaterThan(0)
   })
 
-  it('should handle external links in sidebar', () => {
+  it('should include Labs and Contribute under Community', () => {
     const sidebar = loadSidebarFromConfig(pathToNavigationYml)
 
-    // Find the Contribute section which has an external link
-    const contribute = sidebar.find(
-      (item): item is StarlightSidebarItem & { label: string } =>
-        'label' in item && item.label === 'Contribute ❤️'
+    // Find the Community section
+    const community = sidebar.find(
+      (item): item is StarlightSidebarItem & { label: string; items: StarlightSidebarItem[] } =>
+        'label' in item && item.label === 'Community'
     )
 
-    expect(contribute).toBeDefined()
-    if (contribute && 'items' in contribute) {
-      // Look for external links in the items
-      const externalLink = (contribute.items as StarlightSidebarItem[]).find(
-        (item): item is StarlightSidebarItem & { link: string } => 'link' in item && item.link?.startsWith('http')
-      )
+    expect(community).toBeDefined()
+    if (community) {
+      const subLabels = community.items
+        .filter((item): item is StarlightSidebarItem & { label: string } => 'label' in item)
+        .map((item) => item.label)
 
-      // If there's an external link, it should have the right attributes
-      if (externalLink) {
-        expect(externalLink).toHaveProperty('attrs')
-        expect(externalLink.attrs).toHaveProperty('target', '_blank')
-      }
+      expect(subLabels).toContain('Labs')
+      expect(subLabels).toContain('Contribute')
     }
   })
 })

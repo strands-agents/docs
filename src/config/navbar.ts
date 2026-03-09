@@ -20,6 +20,12 @@ export interface NavLink {
    * Example: href="/user-guide/quickstart/" but basePath="/user-guide/"
    */
   basePath?: string
+  /**
+   * Additional base paths that should also be considered part of this nav section.
+   * Useful when a nav item encompasses multiple top-level sidebar sections.
+   * Example: Community nav item also covers /docs/labs/ and /docs/contribute/
+   */
+  additionalBasePaths?: string[]
   /** Set to true for external links (opens in new tab) */
   external?: boolean
 }
@@ -54,6 +60,7 @@ function transformNavLinks(links: NavLink[]): NavLink[] {
       ...link,
       href: withBase(link.href),
       ...(link.basePath ? { basePath: withBase(link.basePath) } : {}),
+      ...(link.additionalBasePaths ? { additionalBasePaths: link.additionalBasePaths.map(withBase) } : {}),
     }
   })
 }

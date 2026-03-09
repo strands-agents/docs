@@ -7,7 +7,7 @@ import { renderEntryToMarkdown } from '@util/render-to-markdown'
 import path from 'node:path'
 
 // Sections to pull from sidebar (with their nav labels)
-const SIDEBAR_SECTIONS = ['User Guide', 'Examples', 'Community']
+const SIDEBAR_SECTIONS = ['Docs', 'Examples', 'Community']
 
 /**
  * Recursively extract links from sidebar items

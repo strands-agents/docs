@@ -12,6 +12,7 @@ export type StarlightSidebarItem =
 interface NavConfigItem {
   label?: string
   items?: NavConfigItem[]
+  slug?: string  // For labeled leaf items (e.g., { label: "Adding Tools", slug: "docs/user-guide/concepts/tools" })
 }
 type NavConfigEntry = string | NavConfigItem
 
@@ -81,6 +82,12 @@ function convertConfigItem(item: NavConfigEntry, ctx: ConvertContext): Starlight
       if (children.length === 0) return null
 
       return { label: item.label, items: children }
+    }
+
+    // Object with label and slug (labeled leaf item)
+    if (item.label && item.slug) {
+      if (!contentExists(item.slug, ctx.contentDir)) return null
+      return { slug: item.slug, label: item.label }
     }
   }
 

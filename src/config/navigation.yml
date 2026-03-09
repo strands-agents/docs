@@ -12,8 +12,8 @@
 navbar:
   - label: Home
     href: /
-  - label: User Guide
-    href: /docs/user-guide/quickstart/overview/
+  - label: Docs
+    href: /docs/user-guide/quickstart/python/
     basePath: /docs/user-guide/
   - label: Examples
     href: /docs/examples/
@@ -21,78 +21,61 @@ navbar:
   - label: Community
     href: /docs/community/community-packages/
     basePath: /docs/community/
-  - label: Labs
-    href: /docs/labs/
-    basePath: /docs/labs/
-  - label: Blog
-    href: /blog/
-    basePath: /blog/
-  - label: Contribute ❤️
-    href: /docs/contribute/
-    basePath: /docs/contribute/
-  - label: Python API
+    additionalBasePaths:
+      - /docs/labs/
+      - /docs/contribute/
+  - label: API Reference
     href: /docs/api/python/
-    basePath: /docs/api/python/
-  - label: TypeScript API
-    href: /docs/api/typescript/
-    basePath: /docs/api/typescript/
+    basePath: /docs/api/
 
 sidebar:
-  - label: User Guide
+  - label: Docs
     items:
       - docs/index
-      - label: Quickstart
+      - label: Get Started
         items:
-          - docs/user-guide/quickstart/overview
-          - docs/user-guide/quickstart/python
-          - docs/user-guide/quickstart/typescript
+          - label: "Quickstart: Python"
+            slug: docs/user-guide/quickstart/python
+          - label: "Quickstart: TypeScript"
+            slug: docs/user-guide/quickstart/typescript
+          - label: "Why Strands?"
+            slug: docs/user-guide/why-strands
+      - label: Build
+        items:
+          - label: "Adding Tools"
+            slug: docs/user-guide/concepts/tools
+          - label: "Creating Custom Tools"
+            slug: docs/user-guide/concepts/tools/custom-tools
+          - label: "Using MCP Tools"
+            slug: docs/user-guide/concepts/tools/mcp-tools
+          - label: "Multi-Agent Systems"
+            slug: docs/user-guide/concepts/multi-agent/multi-agent-patterns
+          - label: "Structured Output"
+            slug: docs/user-guide/concepts/agents/structured-output
+          - label: "Streaming Responses"
+            slug: docs/user-guide/concepts/streaming
+          - label: "Voice & Realtime"
+            slug: docs/user-guide/concepts/bidirectional-streaming/quickstart
       - label: Concepts
         items:
-          - label: Agents
-            items:
-              - docs/user-guide/concepts/agents/agent-loop
-              - docs/user-guide/concepts/agents/state
-              - docs/user-guide/concepts/agents/session-management
-              - docs/user-guide/concepts/agents/prompts
-              - docs/user-guide/concepts/agents/retry-strategies
-              - docs/user-guide/concepts/agents/hooks
-              - docs/user-guide/concepts/agents/structured-output
-              - docs/user-guide/concepts/agents/conversation-management
+          - docs/user-guide/concepts/agents/agent-loop
+          - docs/user-guide/concepts/agents/state
+          - docs/user-guide/concepts/agents/session-management
+          - docs/user-guide/concepts/agents/prompts
+          - docs/user-guide/concepts/agents/hooks
+          - docs/user-guide/concepts/agents/conversation-management
+          - docs/user-guide/concepts/agents/retry-strategies
+          - docs/user-guide/concepts/interrupts
           - label: Tools
             items:
-              - docs/user-guide/concepts/tools
-              - docs/user-guide/concepts/tools/custom-tools
-              - docs/user-guide/concepts/tools/mcp-tools
               - docs/user-guide/concepts/tools/executors
               - docs/user-guide/concepts/tools/community-tools-package
           - label: Plugins
             items:
               - docs/user-guide/concepts/plugins
               - docs/user-guide/concepts/plugins/steering
-          - label: Model Providers
-            items:
-              - docs/user-guide/concepts/model-providers
-              - docs/user-guide/concepts/model-providers/amazon-bedrock
-              - docs/user-guide/concepts/model-providers/amazon-nova
-              - docs/user-guide/concepts/model-providers/anthropic
-              - docs/user-guide/concepts/model-providers/gemini
-              - docs/user-guide/concepts/model-providers/litellm
-              - docs/user-guide/concepts/model-providers/llamacpp
-              - docs/user-guide/concepts/model-providers/llamaapi
-              - docs/user-guide/concepts/model-providers/mistral
-              - docs/user-guide/concepts/model-providers/ollama
-              - docs/user-guide/concepts/model-providers/openai
-              - docs/user-guide/concepts/model-providers/sagemaker
-              - docs/user-guide/concepts/model-providers/writer
-              - docs/user-guide/concepts/model-providers/custom_model_provider
-              - docs/user-guide/concepts/model-providers/cohere
-              - docs/user-guide/concepts/model-providers/clova-studio
-              - docs/user-guide/concepts/model-providers/fireworksai
-              - docs/user-guide/concepts/model-providers/nebius-token-factory
-              - docs/user-guide/concepts/model-providers/xai
           - label: Streaming
             items:
-              - docs/user-guide/concepts/streaming
               - docs/user-guide/concepts/streaming/async-iterators
               - docs/user-guide/concepts/streaming/callback-handlers
           - label: Multi-agent
@@ -102,11 +85,8 @@ sidebar:
               - docs/user-guide/concepts/multi-agent/swarm
               - docs/user-guide/concepts/multi-agent/graph
               - docs/user-guide/concepts/multi-agent/workflow
-              - docs/user-guide/concepts/multi-agent/multi-agent-patterns
-          - docs/user-guide/concepts/interrupts
           - label: Bidirectional Streaming
             items:
-              - docs/user-guide/concepts/bidirectional-streaming/quickstart
               - docs/user-guide/concepts/bidirectional-streaming/agent
               - label: Models
                 items:
@@ -121,6 +101,47 @@ sidebar:
           - label: Experimental
             items:
               - docs/user-guide/concepts/experimental/agent-config
+      - label: Model Providers
+        items:
+          - docs/user-guide/concepts/model-providers
+          - docs/user-guide/concepts/model-providers/amazon-bedrock
+          - docs/user-guide/concepts/model-providers/amazon-nova
+          - docs/user-guide/concepts/model-providers/anthropic
+          - docs/user-guide/concepts/model-providers/gemini
+          - docs/user-guide/concepts/model-providers/litellm
+          - docs/user-guide/concepts/model-providers/llamacpp
+          - docs/user-guide/concepts/model-providers/llamaapi
+          - docs/user-guide/concepts/model-providers/mistral
+          - docs/user-guide/concepts/model-providers/ollama
+          - docs/user-guide/concepts/model-providers/openai
+          - docs/user-guide/concepts/model-providers/sagemaker
+          - docs/user-guide/concepts/model-providers/writer
+          - docs/user-guide/concepts/model-providers/custom_model_provider
+          - docs/user-guide/concepts/model-providers/cohere
+          - docs/user-guide/concepts/model-providers/clova-studio
+          - docs/user-guide/concepts/model-providers/fireworksai
+          - docs/user-guide/concepts/model-providers/nebius-token-factory
+          - docs/user-guide/concepts/model-providers/xai
+      - label: Deploy
+        items:
+          - docs/user-guide/deploy/operating-agents-in-production
+          - label: Amazon Bedrock AgentCore
+            items:
+              - docs/user-guide/deploy/deploy_to_bedrock_agentcore
+              - docs/user-guide/deploy/deploy_to_bedrock_agentcore/python
+              - docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript
+          - docs/user-guide/deploy/deploy_to_aws_lambda
+          - docs/user-guide/deploy/deploy_to_aws_fargate
+          - docs/user-guide/deploy/deploy_to_aws_apprunner
+          - docs/user-guide/deploy/deploy_to_amazon_eks
+          - docs/user-guide/deploy/deploy_to_amazon_ec2
+          - label: Docker
+            items:
+              - docs/user-guide/deploy/deploy_to_docker
+              - docs/user-guide/deploy/deploy_to_docker/python
+              - docs/user-guide/deploy/deploy_to_docker/typescript
+          - docs/user-guide/deploy/deploy_to_kubernetes
+          - docs/user-guide/deploy/deploy_to_terraform
       - label: Safety & Security
         items:
           - docs/user-guide/safety-security/responsible-ai
@@ -158,26 +179,6 @@ sidebar:
             items:
               - docs/user-guide/evals-sdk/how-to/experiment_management
               - docs/user-guide/evals-sdk/how-to/serialization
-      - label: Deploy
-        items:
-          - docs/user-guide/deploy/operating-agents-in-production
-          - label: Amazon Bedrock AgentCore
-            items:
-              - docs/user-guide/deploy/deploy_to_bedrock_agentcore
-              - docs/user-guide/deploy/deploy_to_bedrock_agentcore/python
-              - docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript
-          - docs/user-guide/deploy/deploy_to_aws_lambda
-          - docs/user-guide/deploy/deploy_to_aws_fargate
-          - docs/user-guide/deploy/deploy_to_aws_apprunner
-          - docs/user-guide/deploy/deploy_to_amazon_eks
-          - docs/user-guide/deploy/deploy_to_amazon_ec2
-          - label: Docker
-            items:
-              - docs/user-guide/deploy/deploy_to_docker
-              - docs/user-guide/deploy/deploy_to_docker/python
-              - docs/user-guide/deploy/deploy_to_docker/typescript
-          - docs/user-guide/deploy/deploy_to_kubernetes
-          - docs/user-guide/deploy/deploy_to_terraform
       - docs/user-guide/versioning-and-support
 
   - label: Examples
@@ -231,25 +232,23 @@ sidebar:
           - docs/community/tools/strands-teams
           - docs/community/tools/strands-telegram
           - docs/community/tools/strands-telegram-listener
-
-  - label: Labs
-    items:
-      - docs/labs
-      - label: Projects
+      - label: Labs
         items:
-          - docs/labs/robots
-          - docs/labs/robots-sim
-          - docs/labs/ai-functions
-
-  - label: Contribute ❤️
-    items:
-      - docs/contribute
-      - label: Contribution Types
+          - docs/labs
+          - label: Projects
+            items:
+              - docs/labs/robots
+              - docs/labs/robots-sim
+              - docs/labs/ai-functions
+      - label: Contribute
         items:
-          - docs/contribute/contributing/core-sdk
-          - docs/contribute/contributing/documentation
-          - docs/contribute/contributing/feature-proposals
-          - docs/contribute/contributing/extensions
+          - docs/contribute
+          - label: Contribution Types
+            items:
+              - docs/contribute/contributing/core-sdk
+              - docs/contribute/contributing/documentation
+              - docs/contribute/contributing/feature-proposals
+              - docs/contribute/contributing/extensions
 
 github:
   sections:
