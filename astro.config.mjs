@@ -8,6 +8,7 @@ import remarkReadingTime from './src/plugins/remark-reading-time.ts'
 import watchNavigationPlugin from './src/plugins/vite-plugin-watch-navigation.ts'
 
 import { loadSidebarFromConfig } from "./src/sidebar.ts"
+import { sitemapWithLastmod } from "./src/plugins/sitemap-lastmod.ts"
 import AutoImport from './src/plugins/astro-auto-import.ts'
 import astroExpressiveCode from "astro-expressive-code"
 import mdx from '@astrojs/mdx';
@@ -36,6 +37,9 @@ export default defineConfig({
     remarkPlugins: [remarkMkdocsSnippets, remarkReadingTime],
   },
   integrations: [
+    // Sitemap with git-based <lastmod> dates — must be before Starlight
+    // so Starlight detects it and skips its own sitemap integration
+    sitemapWithLastmod('src/content'),
     astroExpressiveCode({
       themes: ['github-light', 'github-dark'],
       // Follow Starlight's data-theme attribute instead of the browser's prefers-color-scheme
