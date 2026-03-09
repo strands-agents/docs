@@ -6,6 +6,46 @@ documentation, we greatly value feedback and contributions from our community.
 Please read through this document before submitting any issues or pull requests to ensure we have all the necessary
 information to effectively respond to your bug report or contribution.
 
+## Development Setup
+
+The documentation site is built with [Astro](https://astro.build/) and the [Starlight](https://starlight.astro.build/) theme.
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 20+, npm
+
+### Install and Run
+
+```bash
+npm install
+npm run dev        # starts dev server at http://localhost:4321/
+npm run build      # generates static site
+```
+
+### Writing Docs
+
+- Content lives in `docs/` as standard Markdown files
+- Navigation structure is defined in `src/config/navigation.yml`
+- Use `<Tabs>` / `<Tab label="...">` for Python/TypeScript code tabs (auto-imported)
+- Use `--8<-- "path/to/file.ts:snippet_name"` to pull in code snippets from external files
+- Relative file links (e.g. `../tools/index.md`) resolve automatically — no need to use slugs
+- Link to API reference pages with the `@api` shorthand: `[@api/python/strands.agent.agent](#Class)`
+
+For full details on the Astro setup, custom components, frontmatter fields, and API doc generation, see [Site Architecture](SITE-ARCHITECTURE.md).
+
+### Quality Checks
+
+Before committing, run:
+
+```bash
+npm test           # TypeScript type checking
+npm run lint       # linting
+npm run format:check  # formatting
+```
+
+Pre-commit hooks run these automatically.
+
 
 ## Reporting Bugs/Feature Requests
 

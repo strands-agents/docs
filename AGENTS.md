@@ -30,220 +30,41 @@ These documents define the standards and processes that ensure consistency and q
 ├── AGENTS.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
-├── docs
-│   ├── api-reference
-│   │   ├── agent.md
-│   │   ├── event-loop.md
-│   │   ├── experimental.md
-│   │   ├── handlers.md
-│   │   ├── hooks.md
-│   │   ├── interrupt.md
-│   │   ├── models.md
-│   │   ├── multiagent.md
-│   │   ├── session.md
-│   │   ├── telemetry.md
-│   │   ├── tools.md
-│   │   └── types.md
-│   ├── assets
-│   │   ├── auto-redirect.js
-│   │   ├── logo-auto.svg
-│   │   ├── logo-dark.svg
-│   │   ├── logo-light.png
-│   │   ├── logo-light.svg
-│   │   ├── multimodal
-│   │   │   ├── whale_1.png
-│   │   │   ├── whale_2_large.png
-│   │   │   ├── whale_2.png
-│   │   │   └── whale_3.png
-│   │   └── trace_visualization.png
-│   ├── community
-│   │   ├── community-packages.md
-│   │   ├── model-providers
-│   │   │   ├── clova-studio.md
-│   │   │   ├── cohere.md
-│   │   │   └── fireworksai.md
-│   │   ├── session-managers
-│   │   │   └── agentcore-memory.md
-│   │   └── tools
-│   │       └── utcp.md
-│   ├── examples
-│   │   ├── cdk
-│   │   │   ├── deploy_to_ec2
-│   │   │   │   ├── app
-│   │   │   │   │   └── app.py
-│   │   │   │   ├── bin
-│   │   │   │   │   └── cdk-app.ts
-│   │   │   │   ├── cdk.json
-│   │   │   │   ├── lib
-│   │   │   │   │   └── agent-ec2-stack.ts
-│   │   │   │   ├── package-lock.json
-│   │   │   │   ├── package.json
-│   │   │   │   ├── README.md
-│   │   │   │   ├── requirements.txt
-│   │   │   │   └── tsconfig.json
-│   │   │   ├── deploy_to_fargate
-│   │   │   │   ├── bin
-│   │   │   │   │   └── cdk-app.ts
-│   │   │   │   ├── cdk.json
-│   │   │   │   ├── docker
-│   │   │   │   │   ├── app
-│   │   │   │   │   │   └── app.py
-│   │   │   │   │   ├── Dockerfile
-│   │   │   │   │   └── requirements.txt
-│   │   │   │   ├── lib
-│   │   │   │   │   └── agent-fargate-stack.ts
-│   │   │   │   ├── package-lock.json
-│   │   │   │   ├── package.json
-│   │   │   │   ├── README.md
-│   │   │   │   └── tsconfig.json
-│   │   │   └── deploy_to_lambda
-│   │   │       ├── bin
-│   │   │       │   ├── cdk-app.ts
-│   │   │       │   └── package_for_lambda.py
-│   │   │       ├── cdk.json
-│   │   │       ├── lambda
-│   │   │       │   └── agent_handler.py
-│   │   │       ├── lib
-│   │   │       │   └── agent-lambda-stack.ts
-│   │   │       ├── package-lock.json
-│   │   │       ├── package.json
-│   │   │       ├── README.md
-│   │   │       ├── requirements.txt
-│   │   │       └── tsconfig.json
-│   │   ├── deploy_to_eks
-│   │   │   ├── chart
-│   │   │   │   ├── Chart.yaml
-│   │   │   │   ├── templates
-│   │   │   │   │   ├── _helpers.tpl
-│   │   │   │   │   ├── deployment.yaml
-│   │   │   │   │   ├── ingress.yaml
-│   │   │   │   │   ├── NOTES.txt
-│   │   │   │   │   ├── poddisruptionbudget.yaml
-│   │   │   │   │   ├── service.yaml
-│   │   │   │   │   └── serviceaccount.yaml
-│   │   │   │   └── values.yaml
-│   │   │   ├── docker
-│   │   │   │   ├── app
-│   │   │   │   │   └── app.py
-│   │   │   │   ├── Dockerfile
-│   │   │   │   └── requirements.txt
-│   │   │   └── README.md
-│   │   ├── python
-│   │   │   ├── agents_workflow.py
-│   │   │   ├── agents_workflows.md
-│   │   │   ├── cli-reference-agent.md
-│   │   │   ├── file_operations.md
-│   │   │   ├── file_operations.py
-│   │   │   ├── graph_loops_example.md
-│   │   │   ├── graph_loops_example.py
-│   │   │   ├── knowledge_base_agent.md
-│   │   │   ├── knowledge_base_agent.py
-│   │   │   ├── mcp_calculator.md
-│   │   │   ├── mcp_calculator.py
-│   │   │   ├── memory_agent.md
-│   │   │   ├── memory_agent.py
-│   │   │   ├── meta_tooling.md
-│   │   │   ├── meta_tooling.py
-│   │   │   ├── multi_agent_example
-│   │   │   │   ├── computer_science_assistant.py
-│   │   │   │   ├── english_assistant.py
-│   │   │   │   ├── index.md
-│   │   │   │   ├── language_assistant.py
-│   │   │   │   ├── math_assistant.py
-│   │   │   │   ├── multi_agent_example.md
-│   │   │   │   ├── no_expertise.py
-│   │   │   │   └── teachers_assistant.py
-│   │   │   ├── multimodal.md
-│   │   │   ├── multimodal.py
-│   │   │   ├── structured_output.md
-│   │   │   ├── structured_output.py
-│   │   │   ├── weather_forecaster.md
-│   │   │   └── weather_forecaster.py
-│   │   └── README.md
-│   ├── README.md
-│   ├── stylesheets
-│   │   └── extra.css
-│   └── user-guide
-│       ├── concepts
-│       │   ├── agents
-│       │   │   ├── agent-loop.md
-│       │   │   ├── agent-loop.ts
-│       │   │   ├── conversation-management.md
-│       │   │   ├── hooks.md
-│       │   │   ├── prompts.md
-│       │   │   ├── session-management.md
-│       │   │   ├── state.md
-│       │   │   └── structured-output.md
-│       │   ├── experimental
-│       │   │   ├── agent-config.md
-│       │   │   └── multi-agent-hooks.md
-│       │   ├── interrupts.md
-│       │   ├── model-providers
-│       │   │   ├── amazon-bedrock.md
-│       │   │   ├── anthropic.md
-│       │   │   ├── clova-studio.md
-│       │   │   ├── cohere.md
-│       │   │   ├── custom_model_provider.md
-│       │   │   ├── fireworksai.md
-│       │   │   ├── gemini.md
-│       │   │   ├── litellm.md
-│       │   │   ├── llamaapi.md
-│       │   │   ├── llamacpp.md
-│       │   │   ├── mistral.md
-│       │   │   ├── ollama.md
-│       │   │   ├── openai.md
-│       │   │   ├── sagemaker.md
-│       │   │   └── writer.md
-│       │   ├── multi-agent
-│       │   │   ├── agent-to-agent.md
-│       │   │   ├── agents-as-tools.md
-│       │   │   ├── graph.md
-│       │   │   ├── multi-agent-patterns.md
-│       │   │   ├── swarm.md
-│       │   │   └── workflow.md
-│       │   ├── plugins
-│       │   │   └── index.md
-│       │   ├── streaming
-│       │   │   ├── async-iterators.md
-│       │   │   ├── callback-handlers.md
-│       │   │   └── index.md
-│       │   └── tools
-│       │       ├── community-tools-package.md
-│       │       ├── executors.md
-│       │       ├── mcp-tools.md
-│       │       ├── python-tools.md
-│       │       └── index.md
-│       ├── deploy
-│       │   ├── deploy_to_amazon_ec2.md
-│       │   ├── deploy_to_amazon_eks.md
-│       │   ├── deploy_to_aws_fargate.md
-│       │   ├── deploy_to_aws_lambda.md
-│       │   ├── deploy_to_bedrock_agentcore.md
-│       │   └── operating-agents-in-production.md
-│       ├── observability-evaluation
-│       │   ├── evaluation.md
-│       │   ├── logs.md
-│       │   ├── metrics.md
-│       │   ├── observability.md
-│       │   └── traces.md
-│       ├── quickstart.md
-│       └── safety-security
-│           ├── guardrails.md
-│           ├── pii-redaction.md
-│           ├── prompt-engineering.md
-│           └── responsible-ai.md
+├── SITE-ARCHITECTURE.md          # Detailed Astro/Starlight customizations
+├── src/                          # Astro source files
+│   ├── components/               # Custom Astro components
+│   │   ├── overrides/            # Starlight component overrides
+│   │   └── ...
+│   ├── config/                   # Site configuration
+│   ├── content/                  # Content collections
+│   │   └── docs/                 # Documentation content (Markdown/MDX)
+│   │       ├── api/
+│   │       │   ├── python/
+│   │       │   │   └── _generated/   # Symlink to .build/api-docs/python
+│   │       │   └── typescript/
+│   │       │       └── _generated/   # Symlink to .build/api-docs/typescript
+│   │       ├── assets/
+│   │       ├── community/
+│   │       ├── contribute/
+│   │       ├── examples/
+│   │       ├── labs/
+│   │       └── user-guide/
+│   ├── layouts/                  # Custom layouts
+│   ├── pages/                    # Astro pages
+│   ├── plugins/                  # Remark/Rehype plugins
+│   ├── styles/                   # Global styles
+│   └── util/                     # Utility functions
+├── mkdocs.yml                    # Navigation structure (still used by Astro)
+├── astro.config.mjs              # Astro configuration
+├── package.json                  # Node.js dependencies and scripts
+├── tsconfig.json                 # TypeScript configuration
 ├── LICENSE
-├── mkdocs.yml
 ├── NOTICE
-├── overrides
-│   ├── main.html
-│   └── partials
-│       └── logo.html
-├── package-lock.json
-├── package.json
-├── pyproject.toml
 ├── README.md
-└── tsconfig.json
+├── overrides/                    # Legacy MkDocs overrides (being migrated)
+├── scripts/                      # Build and utility scripts
+├── test/                         # Test files
+└── test-snippets/                # TypeScript snippet test files
 ```
 ### Directory Purposes
 
@@ -261,30 +82,22 @@ These documents define the standards and processes that ensure consistency and q
 #### Setup and Installation
 
 ```bash
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-
-pip install .
+npm install
 ```
 
 #### Building and Previewing
 
-To generate the static site:
+Generate the static site:
 
 ```bash
-mkdocs build
+npm run build
 ```
 
-This will create the site in the `site` directory.
-
-To run a local development server:
+Run a local development server at http://localhost:4321/:
 
 ```bash
-mkdocs serve
+npm run dev
 ```
-
-This will start a server at http://127.0.0.1:8000/ for previewing the documentation.
 
 ### 2. Making Changes
 
@@ -360,8 +173,9 @@ import type { Options, Config } from '../types'
 
 - **CONTRIBUTING.md**: Contains testing/setup commands and human contribution guidelines
 - **README.md**: Public-facing documentation, links to strandsagents.com
-- **package.json**: Defines the scripts needed to validate the TS syntax typing are correct
-- **mkdocs.yml**: Defines the structure, theme, navigation, and build settings for generating this Strands Agents SDK documentation which is served at https://strandsagents.com
+- **SITE-ARCHITECTURE.md**: Comprehensive documentation of Astro/Starlight customizations, components, and plugins
+- **package.json**: Defines scripts for building, testing, and linting
+- **mkdocs.yml**: Defines the navigation structure (loaded by `src/sidebar.ts` for Astro)
 
 ## Additional Resources
 
@@ -373,13 +187,15 @@ import type { Options, Config } from '../types'
 
 # TypeScript Code Examples Guide
 
-This guide explains how to add TypeScript code examples alongside Python examples in the Strands Agents documentation using MkDocs snippets feature.
+This guide explains how to add TypeScript code examples alongside Python examples in the Strands Agents documentation.
+
+For detailed information about the Astro/Starlight CMS architecture, components, and customizations, see [SITE-ARCHITECTURE.md](SITE-ARCHITECTURE.md).
 
 ## Overview
 
 The documentation supports showing both Python and TypeScript code examples side-by-side using:
-- **MkDocs tabbed content** for language switching
-- **PyMdown snippets extension** for external code file inclusion
+- **Astro `<Tabs>/<Tab>` components** for language switching (auto-imported, no import statement needed)
+- **Snippets** for external code file inclusion (still works via `src/plugins/remark-mkdocs-snippets.ts`)
 - **TypeScript type checking** for code validation
 
 ### 1. Create TypeScript Code File
@@ -407,28 +223,31 @@ const result = await agent.invoke('Calculate 25 * 48')
 
 ### 2. Use Tabbed Content in Markdown
 
-In your `.md` file, use tabbed content with snippet inclusion:
+In your `.md` file, use `<Tabs>` and `<Tab>` components with snippet inclusion:
 
 ```markdown
-=== "Python"
-
+<Tabs>
+  <Tab label="Python">
     ```python
     from strands import Agent
     from strands_tools import calculator
-    
+
     # Initialize the agent with tools, model, and configuration
     agent = Agent(
         tools=[calculator],
         system_prompt="You are a helpful assistant."
     )
     ```
-
-=== "TypeScript"
-
+  </Tab>
+  <Tab label="TypeScript">
     ```typescript
     --8<-- "user-guide/concepts/agents/agent-loop.ts:initialization"
     ```
+  </Tab>
+</Tabs>
 ```
+
+**Note**: `<Tabs>` and `<Tab>` are auto-imported via `astro-auto-import`, so no import statement is needed. Tabs with matching labels automatically sync across the page.
 
 ## Snippet Syntax
 
@@ -521,7 +340,7 @@ async function example() {
 }
 ```
 
-**Why:** 
+**Why:**
 - TypeScript treats the entire file as a single scope with `isolatedModules: true`
 - Multiple snippets with the same variable names cause redeclaration errors
 - Functions provide scoping without cluttering the documentation with function definitions
@@ -534,55 +353,12 @@ async function example() {
 
 ### 5. Fallback for Unsupported Features
 
-For features not available in TypeScript, use one of the predefined macros defined in `macros.py`:
+For features not available in TypeScript, you can indicate this using custom frontmatter fields. See [SITE-ARCHITECTURE.md](SITE-ARCHITECTURE.md#custom-frontmatter-fields) for details on:
+- `languages` - Indicate a feature is only available in specific SDK languages
+- `community` - Mark pages as community-contributed
+- `experimental` - Mark features as experimental
 
-#### Admonition Macro
-
-```markdown
-{{ ts_not_supported() }}
-```
-
-With a custom message:
-
-```markdown
-{{ ts_not_supported("Coming soon in TypeScript") }}
-```
-
-The default expands to an info admonition (default message shown):
-
-```markdown
-!!! info "Not supported in TypeScript"
-    This feature is not supported in TypeScript.
-```
-
-#### Code Tab Macro
-
-```markdown
-=== "Python"
-    ```python
-    # Python-specific code
-    ```
-
-{{ ts_not_supported_code() }}
-```
-
-With a custom message:
-
-```markdown
-{{ ts_not_supported_code("Coming soon in TypeScript") }}
-```
-
-This expands to a TypeScript code tab (default message shown):
-
-```markdown
-=== "TypeScript"
-    ```ts
-    // Not supported in TypeScript
-    ```
-```
-
-**Implementation:**
-Both macros are defined in `macros.py` at the project root using the MkDocs macros plugin, which automatically makes them available in all markdown files.
+These render contextual banners at the top of pages automatically.
 
 ## Agent/LLM Instructions
 
@@ -591,9 +367,9 @@ When adding TypeScript examples to documentation:
 1. **Create the TypeScript file** with the same base name as the markdown file
 2. **Add snippet markers** around code sections you want to reference
 3. **Use descriptive snippet names** that clearly indicate the code's purpose
-4. **Validate TypeScript** by running `npm run test`
-5. **Update markdown** to use tabbed content with snippet inclusion
-6. **Test locally** with `mkdocs serve` to ensure snippets render correctly
+4. **Validate TypeScript** by running `npm run typecheck:snippets` (for snippet files) and `npm run typecheck` (for other TypeScript)
+5. **Update markdown** to use `<Tabs>/<Tab>` components with snippet inclusion
+6. **Test locally** with `npm run dev` to ensure snippets render correctly at http://localhost:4321/
 
 ### Example Workflow
 
@@ -606,14 +382,17 @@ When adding TypeScript examples to documentation:
 
 2. Update `docs/path/to/example.md`:
    ```markdown
-   === "TypeScript"
+   <Tabs>
+     <Tab label="TypeScript">
        ```typescript
        --8<-- "path/to/example.ts:new_feature"
        ```
+     </Tab>
+   </Tabs>
    ```
 
-3. Validate: `npm run test`
-4. Preview: `mkdocs serve`
+3. Validate: `npm test`
+4. Preview: `npm run dev`
 
 ## Benefits
 

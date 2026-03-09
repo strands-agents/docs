@@ -30,7 +30,7 @@
   </p>
 </div>
 
-This repository contains the documentation for the Strands Agents SDK, a simple yet powerful framework for building and running AI agents. The documentation is built using [MkDocs](https://www.mkdocs.org/) and provides guides, examples, and API references.
+This repository contains the documentation for the Strands Agents SDK, a simple yet powerful framework for building and running AI agents. The documentation is built using [Astro](https://astro.build/) with the [Starlight](https://starlight.astro.build/) theme and provides guides, examples, and API references.
 
 The official documentation is available online at: https://strandsagents.com.
 
@@ -38,38 +38,40 @@ The official documentation is available online at: https://strandsagents.com.
 
 ### Prerequisites
 
-- Python 3.10+, node 20+
+- Python 3.10+
+- Node.js 20+, npm
 
 ### Setup and Installation
 
 ```bash
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-
-pip install .
-
-# Install node dependencies
 npm install
 ```
 
 ### Building and Previewing
 
-To generate the static site:
+Generate the static site:
 
 ```bash
-mkdocs build
+npm run build
 ```
 
-This will create the site in the `site` directory.
-
-To run a local development server:
+Run a local development server at http://localhost:4321/:
 
 ```bash
-mkdocs serve
+npm run dev
 ```
 
-This will start a server at http://127.0.0.1:8000/ for previewing the documentation.
+### Writing Documentation
+
+Documentation lives in `docs/` as Markdown files. The site structure is driven by `src/config/navigation.yml` (navigation) and rendered by Astro at build time.
+
+- Pages are written in standard Markdown — no Astro-specific syntax needed for content edits
+- Use `<Tabs>` / `<Tab label="...">` for language-switching code blocks (auto-imported, no import needed)
+- Use `--8<-- "path/to/file.ts:snippet_name"` to include code snippets from external files
+- Link to other pages using relative file paths (e.g. `../tools/index.md`) — they resolve automatically
+- Link to API reference pages using the `@api` shorthand: `[@api/python/strands.agent.agent](#AgentResult)`
+
+For a full reference on customizations, components, and the migration status, see [Site Architecture](SITE-ARCHITECTURE.md).
 
 ## Contributing ❤️
 

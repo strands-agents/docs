@@ -1,22 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "esnext",
-    "lib": ["ES2020"],
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "declaration": true,
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": false,
-    "moduleResolution": "node",
     "noEmit": true,
-    "allowJs": true
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
   "include": [
-    "sdk-typescript/src/**/*.ts"
+    ".build/sdk-typescript/src/**/*.ts"
   ],
   "exclude": [
-    "sdk-typescript/src/**/__**__/**",
-    "sdk-typescript/src/**/*.test.ts"
+    ".build/sdk-typescript/src/**/__**__/**",
+    ".build/sdk-typescript/src/**/*.test.ts"
   ]
 }

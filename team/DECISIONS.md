@@ -163,3 +163,20 @@ await agent.run(inputs=[audio_input], outputs=[audio_output, text_output])
 ```
 
 This pattern aligns with progressive disclosure from UX design: show users what they need for common tasks while making advanced capabilities discoverable when needed.
+
+
+## Avoid Overloading Domain Terms in API Naming
+
+**Date**: Mar 4, 2026
+
+### Decision
+
+When naming API parameters, types, and interfaces, avoid reusing terms that already carry specific meaning within the SDK. Prefer domain-appropriate terminology from the underlying library or concept, even if it diverges from naming in another SDK language.
+
+### Rationale
+
+Overloaded terms create ambiguity for users and contributors. When a single word means different things depending on context, it increases cognitive load and makes documentation harder to write clearly. Prefer the term native to the library or domain you're wrapping, especially when the alternative is already claimed by a prominent concept in the SDK or the broader language ecosystem. Cross-language consistency is valuable, but not at the cost of within-language clarity.
+
+For example, the Python SDK uses `structured_output_model` because Pydantic calls its schemas "models." The TypeScript SDK chose `structuredOutputSchema` instead. Zod (the TypeScript validation library) uses "schema" as its core term — `z.object()` returns a `ZodSchema` — and "model" in the Strands SDK already refers to the LLM provider (`BedrockModel`, `model` config parameter, etc.). Reusing it for a validation shape would force readers to disambiguate from context every time they encounter the word.
+
+Similarly, the SDK documentation uses "agent loop" rather than "event loop" to describe the core execution cycle. "Event loop" is an overloaded term in programming — in Python it refers to `asyncio`'s concurrency primitive, and in JavaScript/Node.js it's the runtime's fundamental execution model. Calling the agent's tool-use cycle an "event loop" would conflate an SDK concept with a well-established language runtime concept, making it harder to discuss both in the same context. "Agent loop" is unambiguous and describes exactly what it is.

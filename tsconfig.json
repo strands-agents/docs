@@ -1,8 +1,14 @@
 {
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@util/*": ["src/util/*"]
+    },
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "allowJs": false,
     "declaration": true,
@@ -27,6 +33,6 @@
     "sourceMap": true,
     "removeComments": false,
   },
-  "include": ["docs/**/*.ts"],
-  "exclude": ["node_modules", "dist", "docs/examples/cdk", "docs/examples/typescript"],
+  "include": [".astro/types.d.ts", "src/**/*", ".astro/**/*"],
+  "exclude": ["docs/**/*.ts", "src/content/docs/**/*.ts", "node_modules", "dist"],
 }
