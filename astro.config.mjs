@@ -22,9 +22,6 @@ const sidebar = loadSidebarFromConfig(
 export default defineConfig({
   site: 'https://strandsagents.com',
   base: process.env.ASTRO_BASE_PATH || '/',
-  redirects: {
-    '/latest': '/',
-  },
   vite: {
     plugins: [sdkSetupPlugin()],
     // TODO once we separate out CMS build from TS verification, fix this
