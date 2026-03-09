@@ -24,6 +24,9 @@ navbar:
   - label: Labs
     href: /docs/labs/
     basePath: /docs/labs/
+  - label: Blog
+    href: /blog/
+    basePath: /blog/
   - label: Contribute ❤️
     href: /docs/contribute/
     basePath: /docs/contribute/
