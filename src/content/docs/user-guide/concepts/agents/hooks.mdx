@@ -157,7 +157,6 @@ flowchart LR
 Start --> Model
 Model <--> Tool
 Tool --> End
-End -- "resume" --> Start
 ```
 </Tab>
 <Tab label="TypeScript">
@@ -255,7 +254,7 @@ Init --> Invocation
 |------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | `AgentInitializedEvent`            | Triggered when an agent has been constructed and finished initialization at the end of the agent constructor. |
 | `BeforeInvocationEvent`            | Triggered at the beginning of a new agent invocation request                                                  |
-| `AfterInvocationEvent`             | Triggered at the end of an agent request, regardless of success or failure. Supports `resume` to trigger follow-up invocations. Uses reverse callback ordering    |
+| `AfterInvocationEvent`             | Triggered at the end of an agent request, regardless of success or failure. Uses reverse callback ordering    |
 | `MessageAddedEvent`                | Triggered when a message is added to the agent's conversation history                                         |
 | `BeforeModelCallEvent`             | Triggered before the model is invoked for inference                                                           |
 | `AfterModelCallEvent`              | Triggered after model invocation completes. Uses reverse callback ordering                                    |
@@ -301,9 +300,6 @@ Most event properties are read-only to prevent unintended modifications. However
 <Tabs>
 <Tab label="Python">
 
-- [`AfterInvocationEvent`](@api/python/strands.hooks.events#AfterInvocationEvent)
-    - `resume` - Trigger a follow-up agent invocation with new input. See [Invocation resume](#invocation-resume).
-
 - [`AfterModelCallEvent`](@api/python/strands.hooks.events#AfterModelCallEvent)
     - `retry` - Request a retry of the model invocation. See [Model Call Retry](#model-call-retry).
 
@@ -315,6 +311,10 @@ Most event properties are read-only to prevent unintended modifications. However
 - [`AfterToolCallEvent`](@api/python/strands.hooks.events#AfterToolCallEvent)
     - `result` - Modify the tool result. See [Result Modification](#result-modification).
     - `retry` - Request a retry of the tool invocation. See [Tool Call Retry](#tool-call-retry).
+
+- [`AfterInvocationEvent`](@api/python/strands.hooks.events#AfterInvocationEvent)
+    - `resume` - Trigger a follow-up agent invocation with new input. See [Invocation resume](#invocation-resume).
+
 </Tab>
 <Tab label="TypeScript">
 
