@@ -148,6 +148,9 @@ sidebar:
             items:
               - docs/user-guide/evals-sdk/simulators
               - docs/user-guide/evals-sdk/simulators/user_simulation
+          - label: Remote Trace Providers
+            items:
+              - docs/user-guide/evals-sdk/how-to/trace_providers
           - label: How-To Guides
             items:
               - docs/user-guide/evals-sdk/how-to/experiment_management
