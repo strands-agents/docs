@@ -33,7 +33,7 @@ async function agentLoopMetricsExample() {
   })
 
   // First invocation
-  const result1 = await agent.invoke('What is 5 + 3?')
+  const _result1 = await agent.invoke('What is 5 + 3?')
 
   // Second invocation
   const result2 = await agent.invoke('What is the square root of 144?')
