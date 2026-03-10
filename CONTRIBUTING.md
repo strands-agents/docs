@@ -6,6 +6,46 @@ documentation, we greatly value feedback and contributions from our community.
 Please read through this document before submitting any issues or pull requests to ensure we have all the necessary
 information to effectively respond to your bug report or contribution.
 
+## Development Setup
+
+The documentation site is built with [Astro](https://astro.build/) and the [Starlight](https://starlight.astro.build/) theme.
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 20+, npm
+
+### Install and Run
+
+```bash
+npm install
+npm run dev        # starts dev server at http://localhost:4321/
+npm run build      # generates static site
+```
+
+### Writing Docs
+
+- Content lives in `docs/` as standard Markdown files
+- Navigation structure is defined in `src/config/navigation.yml`
+- Use `<Tabs>` / `<Tab label="...">` for Python/TypeScript code tabs (auto-imported)
+- Use `--8<-- "path/to/file.ts:snippet_name"` to pull in code snippets from external files
+- Relative file links (e.g. `../tools/index.md`) resolve automatically — no need to use slugs
+- Link to API reference pages with the `@api` shorthand: `[@api/python/strands.agent.agent](#Class)`
+
+For full details on the Astro setup, custom components, frontmatter fields, and API doc generation, see [Site Architecture](SITE-ARCHITECTURE.md).
+
+### Quality Checks
+
+Before committing, run:
+
+```bash
+npm test              # run tests
+npm run typecheck     # TypeScript type checking
+npm run format:check  # formatting
+```
+
+Pre-commit hooks run these automatically.
+
 
 ## Reporting Bugs/Feature Requests
 
@@ -20,7 +60,7 @@ reported the issue. Please try to include as much information as you can. Detail
 * Anything unusual about your environment or deployment
 
 ## Finding contributions to work on
-Looking at the existing issues is a great way to find something to contribute to. We label issues that are well-defined and ready for community contributions with the "ready for contribution" label.
+Looking at the existing issues is a great way to find something to contribute to. We label issues that are well-defined and ready for community contributions with the "ready for contribution" label. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
 
 Check our "Ready for Contribution" issues for items you can work on:
 - [SDK Python Issues](https://github.com/strands-agents/sdk-python/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22ready%20for%20contribution%22)
@@ -49,11 +89,6 @@ To send us a pull request, please:
 
 GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
-
-
-## Finding contributions to work on
-Looking at the existing issues is a great way to find something to contribute to. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
-
 
 ## Code of Conduct
 This project has adopted the [Amazon Open Source Code of Conduct](https://aws.github.io/code-of-conduct).

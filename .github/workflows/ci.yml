@@ -1,0 +1,39 @@
+# Combined CI workflow for typecheck and tests.
+# Both require cms:build which is slow (~50s), so we run it once and do all checks sequentially.
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run cms:build
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Typecheck snippets
+        run: npm run typecheck:snippets
+
+      - name: Test
+        run: npm test

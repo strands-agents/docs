@@ -1,0 +1,19 @@
+<script>
+  import { resolveRedirectFromUrl } from '../util/redirect'
+
+  const target = resolveRedirectFromUrl(window.location.href)
+  if (target) {
+    let dest: string
+    if (target.startsWith('https://') || target.startsWith('http://')) {
+      dest = target
+    } else {
+      const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+      dest = target === '/' ? `${base}/` : `${base}/${target}`
+    }
+    const currentPath = window.location.pathname.replace(/\/+$/, '')
+    const destPath = dest.replace(/\/+$/, '')
+    if (destPath !== currentPath) {
+      window.location.replace(dest)
+    }
+  }
+</script>

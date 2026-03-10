@@ -12,7 +12,7 @@ This example demonstrates an agentic workflow using Strands agents with web rese
 
 ## How to Run
 1. Navigate to the example directory
-2. Run: python research_assistant.py
+2. Run: python agents_workflow.py
 3. Enter queries or claims at the prompt
 
 ## Example Queries

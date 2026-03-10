@@ -1,0 +1,50 @@
+---
+/**
+ * A wrapper around Starlight's Tabs component that auto-generates
+ * the syncKey based on the labels of the TabItems passed in.
+ * 
+ * Tabs with identical sets of labels will automatically sync together.
+ * 
+ * Usage:
+ * <AutoSyncTabs>
+ *   <TabItem label="npm">npm install</TabItem>
+ *   <TabItem label="yarn">yarn add</TabItem>
+ * </AutoSyncTabs>
+ */
+import { Tabs } from '@astrojs/starlight/components';
+
+interface Props {
+  /** Optional explicit syncKey. If provided, auto-generation is skipped. */
+  syncKey?: string;
+}
+
+const { syncKey: explicitSyncKey } = Astro.props;
+
+// Render the slot to get the HTML content
+const slotContent = await Astro.slots.render('default');
+
+// Extract labels from starlight-tab-item elements
+const labelMatches = slotContent.matchAll(/data-label="([^"]+)"/g);
+const labels = [...labelMatches].map(match => match[1]);
+
+/**
+ * Generate a simple hash from a string.
+ * Used to create consistent sync keys from tab labels.
+ */
+function hashString(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash).toString(36);
+}
+
+// Generate syncKey from labels if not explicitly provided
+const syncKey = explicitSyncKey ?? (labels.length > 0 ? hashString(labels.join('|')) : undefined);
+---
+
+<Tabs syncKey={syncKey}>
+  <Fragment set:html={slotContent} />
+</Tabs>

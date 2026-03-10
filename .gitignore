@@ -9,3 +9,19 @@ __pycache__
 .idea
 .kiro
 *.egg-info
+
+dist
+node_modules
+.astro
+uv.lock
+
+temp_python_sdk
+sdk-typescript
+package-lock.json
+
+# Generated documentation
+docs/api-reference/
+__*__/
+.build
+
+CLAUDE.md
