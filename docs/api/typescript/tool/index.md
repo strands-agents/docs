@@ -1,31 +1,6 @@
-```ts
-function tool<TInput, TReturn>(config): InvokableTool<ZodInferred<TInput>, TReturn>;
-```
+Creates an InvokableTool from either a Zod schema or JSON schema configuration.
 
-Defined in: [src/tools/zod-tool.ts:231](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/zod-tool.ts#L231)
-
-Creates an InvokableTool from a Zod schema and callback function.
-
-The tool() function validates input against the schema and generates JSON schema for model providers using Zod v4’s built-in z.toJSONSchema() method.
-
-## Type Parameters
-
-| Type Parameter | Default type | Description |
-| --- | --- | --- |
-| `TInput` *extends* `ZodType`<`unknown`, `unknown`, `$ZodTypeInternals`<`unknown`, `unknown`\>> | \- | Zod schema type for input validation |
-| `TReturn` *extends* [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | Return type of the callback function |
-
-## Parameters
-
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `config` | `ToolConfig`<`TInput`, `TReturn`\> | Tool configuration |
-
-## Returns
-
-[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`ZodInferred`<`TInput`\>, `TReturn`\>
-
-An InvokableTool that implements the Tool interface with invoke() method
+When a Zod schema is provided as `inputSchema`, input is validated at runtime and the callback receives typed input. When a JSON schema (or no schema) is provided, the callback receives `unknown` input with no runtime validation.
 
 ## Example
 
@@ -33,37 +8,78 @@ An InvokableTool that implements the Tool interface with invoke() method
 import { tool } from '@strands-agents/sdk'
 import { z } from 'zod'
 
-// Tool with input parameters
+// With Zod schema (typed + validated)
 const calculator = tool({
   name: 'calculator',
-  description: 'Performs basic arithmetic',
-  inputSchema: z.object({
-    operation: z.enum(['add', 'subtract', 'multiply', 'divide']),
-    a: z.number(),
-    b: z.number()
-  }),
-  callback: (input) => {
-    switch (input.operation) {
-      case 'add': return input.a + input.b
-      case 'subtract': return input.a - input.b
-      case 'multiply': return input.a * input.b
-      case 'divide': return input.a / input.b
-    }
-  }
+  description: 'Adds two numbers',
+  inputSchema: z.object({ a: z.number(), b: z.number() }),
+  callback: (input) => input.a + input.b,
 })
 
-// Tool without input (omit inputSchema)
-const getStatus = tool({
-  name: 'getStatus',
-  description: 'Gets system status',
-  callback: () => ({ status: 'operational', uptime: 99.9 })
+// With JSON schema (untyped, no validation)
+const greeter = tool({
+  name: 'greeter',
+  description: 'Greets a person',
+  inputSchema: {
+    type: 'object',
+    properties: { name: { type: 'string' } },
+    required: ['name'],
+  },
+  callback: (input) => `Hello, ${(input as { name: string }).name}!`,
 })
-
-// Direct invocation
-const result = await calculator.invoke({ operation: 'add', a: 5, b: 3 })
-
-// Agent usage
-for await (const event of calculator.stream(context)) {
-  console.log(event)
-}
 ```
+
+## Param
+
+Tool configuration
+
+## Call Signature
+
+```ts
+function tool<TInput, TReturn>(config): InvokableTool<output<TInput>, TReturn>;
+```
+
+Defined in: [src/tools/tool-factory.ts:26](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool-factory.ts#L26)
+
+Creates an InvokableTool from a Zod schema and callback function.
+
+### Type Parameters
+
+| Type Parameter | Default type | Description |
+| --- | --- | --- |
+| `TInput` *extends* `ZodType`<`unknown`, `unknown`, `$ZodTypeInternals`<`unknown`, `unknown`\>> | \- | Zod schema type for input validation |
+| `TReturn` *extends* [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | Return type of the callback function |
+
+### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `config` | [`ZodToolConfig`](/docs/api/typescript/ZodToolConfig/index.md)<`TInput`, `TReturn`\> | Tool configuration with Zod schema |
+
+### Returns
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`output`<`TInput`\>, `TReturn`\>
+
+An InvokableTool with typed input and output
+
+## Call Signature
+
+```ts
+function tool(config): InvokableTool<unknown, JSONValue>;
+```
+
+Defined in: [src/tools/tool-factory.ts:36](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool-factory.ts#L36)
+
+Creates an InvokableTool from a JSON schema and callback function.
+
+### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `config` | [`FunctionToolConfig`](/docs/api/typescript/FunctionToolConfig/index.md) | Tool configuration with optional JSON schema |
+
+### Returns
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`unknown`, [`JSONValue`](/docs/api/typescript/JSONValue/index.md)\>
+
+An InvokableTool with unknown input

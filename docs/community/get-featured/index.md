@@ -15,7 +15,7 @@ We’re not looking for example agents or one-off projects — the focus is on p
 
 1.  **Create a PR** to [strands-agents/docs](https://github.com/strands-agents/docs)
 2.  **Add your doc file** in the appropriate `community/` subdirectory
-3.  **Update `mkdocs.yml`** to include your new page in the nav
+3.  **Update `src/config/navigation.yml`** to include your new page in the nav
 
 ## Directory Structure
 
@@ -77,17 +77,21 @@ service:
 ---
 ```
 
-## Update mkdocs.yml
+## Update navigation.yml
 
-Add your page to the `nav` section under Community:
+Add your page to `src/config/navigation.yml` under the Community section:
 
 ```yaml
-nav:
-  - Community:
-      - Model Providers:
-        - Your Provider: community/model-providers/your-provider.md
-      - Tools:
-        - your-tool: community/tools/your-tool.md
+- label: Community
+  items:
+    - label: Model Providers
+      items:
+        - label: Your Provider
+          link: community/model-providers/your-provider
+    - label: Tools
+      items:
+        - label: your-tool
+          link: community/tools/your-tool
 ```
 
 ## Examples to Follow

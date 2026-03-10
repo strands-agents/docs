@@ -1,4 +1,4 @@
-Defined in: [src/tools/tool.ts:12](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L12)
+Defined in: [src/tools/tool.ts:12](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L12)
 
 Context provided to tool implementations during execution. Contains framework-level state and information from the agent invocation.
 
@@ -10,7 +10,7 @@ Context provided to tool implementations during execution. Contains framework-le
 toolUse: ToolUse;
 ```
 
-Defined in: [src/tools/tool.ts:17](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L17)
+Defined in: [src/tools/tool.ts:17](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L17)
 
 The tool use request that triggered this tool execution. Contains the tool name, toolUseId, and input parameters.
 
@@ -22,6 +22,6 @@ The tool use request that triggered this tool execution. Contains the tool name,
 agent: AgentData;
 ```
 
-Defined in: [src/tools/tool.ts:23](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L23)
+Defined in: [src/tools/tool.ts:23](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L23)
 
 The agent instance that is executing this tool. Provides access to agent state and other agent-level information.

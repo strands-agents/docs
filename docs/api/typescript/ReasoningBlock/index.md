@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:413](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L413)
+Defined in: [src/types/messages.ts:413](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L413)
 
 Reasoning content block within a message.
 
@@ -15,7 +15,7 @@ Reasoning content block within a message.
 new ReasoningBlock(data): ReasoningBlock;
 ```
 
-Defined in: [src/types/messages.ts:436](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L436)
+Defined in: [src/types/messages.ts:436](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L436)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/messages.ts:436](https://github.com/strands-agents/sdk-ty
 readonly type: "reasoningBlock";
 ```
 
-Defined in: [src/types/messages.ts:419](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L419)
+Defined in: [src/types/messages.ts:419](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L419)
 
 Discriminator for reasoning content.
 
@@ -47,7 +47,7 @@ Discriminator for reasoning content.
 readonly optional text: string;
 ```
 
-Defined in: [src/types/messages.ts:424](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L424)
+Defined in: [src/types/messages.ts:424](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L424)
 
 The text content of the reasoning process.
 
@@ -63,7 +63,7 @@ The text content of the reasoning process.
 readonly optional signature: string;
 ```
 
-Defined in: [src/types/messages.ts:429](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L429)
+Defined in: [src/types/messages.ts:429](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L429)
 
 A cryptographic signature for verification purposes.
 
@@ -79,7 +79,7 @@ A cryptographic signature for verification purposes.
 readonly optional redactedContent: Uint8Array;
 ```
 
-Defined in: [src/types/messages.ts:434](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L434)
+Defined in: [src/types/messages.ts:434](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L434)
 
 The redacted content of the reasoning process.
 
@@ -101,7 +101,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/messages.ts:453](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L453)
+Defined in: [src/types/messages.ts:453](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L453)
 
 Serializes the ReasoningBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array redactedContent is encoded as base64 string.
 
@@ -119,10 +119,10 @@ Serializes the ReasoningBlock to a JSON-compatible ContentBlockData object. Call
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `reasoning` | { `text?`: `string`; `signature?`: `string`; `redactedContent?`: `string`; } | \- | [src/types/messages.ts:453](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L453) |
-| `reasoning.text?` | `string` | The text content of the reasoning process. | [src/types/messages.ts:397](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L397) |
-| `reasoning.signature?` | `string` | A cryptographic signature for verification purposes. | [src/types/messages.ts:402](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L402) |
-| `reasoning.redactedContent?` | `string` | The redacted content of the reasoning process. | [src/types/messages.ts:407](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L407) |
+| `reasoning` | { `text?`: `string`; `signature?`: `string`; `redactedContent?`: `string`; } | \- | [src/types/messages.ts:453](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L453) |
+| `reasoning.text?` | `string` | The text content of the reasoning process. | [src/types/messages.ts:397](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L397) |
+| `reasoning.signature?` | `string` | A cryptographic signature for verification purposes. | [src/types/messages.ts:402](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L402) |
+| `reasoning.redactedContent?` | `string` | The redacted content of the reasoning process. | [src/types/messages.ts:407](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L407) |
 
 #### Implementation of
 
@@ -138,7 +138,7 @@ JSONSerializable.toJSON
 static fromJSON(data): ReasoningBlock;
 ```
 
-Defined in: [src/types/messages.ts:470](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/messages.ts#L470)
+Defined in: [src/types/messages.ts:470](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L470)
 
 Creates a ReasoningBlock instance from its wrapped data format. Base64-encoded redactedContent is decoded back to Uint8Array.
 

@@ -53,7 +53,9 @@
     -   [ToolResultEvent](/docs/api/typescript/ToolResultEvent/index.md)
     -   [ToolStreamUpdateEvent](/docs/api/typescript/ToolStreamUpdateEvent/index.md)
     -   [ToolUseBlock](/docs/api/typescript/ToolUseBlock/index.md)
+    -   [ToolValidationError](/docs/api/typescript/ToolValidationError/index.md)
     -   [VideoBlock](/docs/api/typescript/VideoBlock/index.md)
+    -   [ZodTool](/docs/api/typescript/ZodTool/index.md)
 -   **Interfaces**
     -   [AgentData](/docs/api/typescript/AgentData/index.md)
     -   [BaseModelConfig](/docs/api/typescript/BaseModelConfig/index.md)
@@ -64,6 +66,7 @@
     -   [CitationsBlockData](/docs/api/typescript/CitationsBlockData/index.md)
     -   [CitationsDelta](/docs/api/typescript/CitationsDelta/index.md)
     -   [DocumentBlockData](/docs/api/typescript/DocumentBlockData/index.md)
+    -   [FunctionToolConfig](/docs/api/typescript/FunctionToolConfig/index.md)
     -   [GuardContentBlockData](/docs/api/typescript/GuardContentBlockData/index.md)
     -   [GuardContentImage](/docs/api/typescript/GuardContentImage/index.md)
     -   [GuardContentText](/docs/api/typescript/GuardContentText/index.md)
@@ -109,6 +112,7 @@
     -   [TracerConfig](/docs/api/typescript/telemetry:TracerConfig/index.md)
     -   [Usage](/docs/api/typescript/Usage/index.md)
     -   [VideoBlockData](/docs/api/typescript/VideoBlockData/index.md)
+    -   [ZodToolConfig](/docs/api/typescript/ZodToolConfig/index.md)
 -   **Type Aliases**
     -   [AgentConfig](/docs/api/typescript/AgentConfig/index.md)
     -   [AgentStreamEvent](/docs/api/typescript/AgentStreamEvent/index.md)
@@ -124,6 +128,7 @@
     -   [DocumentFormat](/docs/api/typescript/DocumentFormat/index.md)
     -   [DocumentSource](/docs/api/typescript/DocumentSource/index.md)
     -   [DocumentSourceData](/docs/api/typescript/DocumentSourceData/index.md)
+    -   [FunctionToolCallback](/docs/api/typescript/FunctionToolCallback/index.md)
     -   [GuardImageFormat](/docs/api/typescript/GuardImageFormat/index.md)
     -   [GuardImageSource](/docs/api/typescript/GuardImageSource/index.md)
     -   [GuardQualifier](/docs/api/typescript/GuardQualifier/index.md)

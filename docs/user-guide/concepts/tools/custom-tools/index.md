@@ -13,7 +13,7 @@ Python supports three approaches to defining tools:
 (( tab "TypeScript" ))
 TypeScript supports two main approaches:
 
--   **tool() function with [Zod](https://zod.dev/) schemas**: Create tools using the `tool()` function with Zod schema validation for type-safe input handling.
+-   **tool() function with [Zod](https://zod.dev/) or JSON schemas**: Create tools using the `tool()` function with either Zod schemas for type-safe validated input, or plain JSON Schema objects for schema-only definitions without runtime validation.
     
 -   **Class-based tools extending FunctionTool**: Create tools within classes to maintain shared state and resources.
 (( /tab "TypeScript" ))
@@ -59,7 +59,28 @@ const weatherTool = tool({
 })
 ```
 
-TypeScript uses Zod schemas for input validation and type generation. The schema’s descriptions are used by the model to understand when and how to use the tool.
+The `tool()` function accepts either a [Zod](https://zod.dev/) schema or a plain JSON Schema object as `inputSchema`. With Zod, input is validated at runtime and the callback receives typed input. With JSON Schema, the schema is passed through as-is and the callback receives `unknown`.
+
+Here’s the same tool using a JSON Schema object instead:
+
+```typescript
+const weatherTool = tool({
+  name: 'weather_forecast',
+  description: 'Get weather forecast for a city',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      city: { type: 'string', description: 'The name of the city' },
+      days: { type: 'number', description: 'Number of days for the forecast' },
+    },
+    required: ['city'],
+  },
+  callback: (input) => {
+    const { city, days = 3 } = input as { city: string; days?: number }
+    return `Weather forecast for ${city} for the next ${days} days...`
+  },
+})
+```
 (( /tab "TypeScript" ))
 
 ### Overriding Tool Name, Description, and Schema
@@ -81,8 +102,20 @@ def weather_forecast(city: str, days: int = 3) -> str:
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+In TypeScript, the tool name and description are always provided explicitly in the `tool()` configuration:
+
+```typescript
+const weatherTool = tool({
+  name: 'get_weather',
+  description: 'Retrieves weather forecast for a specified location',
+  inputSchema: z.object({
+    city: z.string().describe('The name of the city'),
+    days: z.number().default(3).describe('Number of days for the forecast'),
+  }),
+  callback: (input: { city: any; days: any }) => {
+    return `Weather forecast for ${input.city} for the next ${input.days} days...`
+  },
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -121,9 +154,7 @@ def calculate_area(shape: str, radius: float = None, width: float = None, height
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
-```
+In TypeScript, `inputSchema` is always provided explicitly in the `tool()` configuration - as either a Zod schema or a JSON Schema object. See the [basic example](#basic-example) above for both approaches.
 (( /tab "TypeScript" ))
 
 ## Using and Customizing Tools:

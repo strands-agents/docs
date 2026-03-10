@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:315](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L315)
+Defined in: [src/types/media.ts:315](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L315)
 
 Data for a video block.
 
@@ -10,7 +10,7 @@ Data for a video block.
 format: VideoFormat;
 ```
 
-Defined in: [src/types/media.ts:319](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L319)
+Defined in: [src/types/media.ts:319](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L319)
 
 Video format.
 
@@ -22,6 +22,6 @@ Video format.
 source: VideoSourceData;
 ```
 
-Defined in: [src/types/media.ts:324](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L324)
+Defined in: [src/types/media.ts:324](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L324)
 
 Video source.

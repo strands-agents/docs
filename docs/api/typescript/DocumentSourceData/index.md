@@ -14,6 +14,6 @@ type DocumentSourceData =
 };
 ```
 
-Defined in: [src/types/media.ts:423](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/types/media.ts#L423)
+Defined in: [src/types/media.ts:423](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L423)
 
 Source for a document (Data version). Supports multiple formats including structured content.

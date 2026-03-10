@@ -1,4 +1,4 @@
-Defined in: [src/tools/tool.ts:92](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L92)
+Defined in: [src/tools/tool.ts:92](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L92)
 
 Interface for tool implementations. Tools are used by agents to interact with their environment and perform specific actions.
 
@@ -10,6 +10,7 @@ Most implementations should use FunctionTool rather than implementing this inter
 
 -   [`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)
 -   [`FunctionTool`](/docs/api/typescript/FunctionTool/index.md)
+-   [`ZodTool`](/docs/api/typescript/ZodTool/index.md)
 
 ## Constructors
 
@@ -31,7 +32,7 @@ new Tool(): Tool;
 abstract name: string;
 ```
 
-Defined in: [src/tools/tool.ts:97](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L97)
+Defined in: [src/tools/tool.ts:97](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L97)
 
 The unique name of the tool. This MUST match the name in the toolSpec.
 
@@ -43,7 +44,7 @@ The unique name of the tool. This MUST match the name in the toolSpec.
 abstract description: string;
 ```
 
-Defined in: [src/tools/tool.ts:104](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L104)
+Defined in: [src/tools/tool.ts:104](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L104)
 
 Human-readable description of what the tool does. This helps the model understand when to use the tool.
 
@@ -57,7 +58,7 @@ This MUST match the description in the toolSpec.description.
 abstract toolSpec: ToolSpec;
 ```
 
-Defined in: [src/tools/tool.ts:109](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L109)
+Defined in: [src/tools/tool.ts:109](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L109)
 
 OpenAPI JSON specification for the tool. Defines the tool’s name, description, and input schema.
 
@@ -69,7 +70,7 @@ OpenAPI JSON specification for the tool. Defines the tool’s name, description,
 abstract stream(toolContext): ToolStreamGenerator;
 ```
 
-Defined in: [src/tools/tool.ts:144](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/tool.ts#L144)
+Defined in: [src/tools/tool.ts:144](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/tool.ts#L144)
 
 Executes the tool with streaming support. Yields zero or more ToolStreamEvents during execution, then returns exactly one ToolResultBlock as the final value.
 

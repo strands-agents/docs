@@ -118,6 +118,10 @@ console.log(result.lastMessage)
 
 This basic quickstart agent can now count letters in words. The agent automatically determines when to use tools based on the input query and context.
 
+Note
+
+The `tool()` function also accepts plain JSON Schema objects instead of Zod. See [Creating Custom Tools](/docs/user-guide/concepts/tools/custom-tools/index.md) for details.
+
 ```mermaid
 flowchart LR
     A[Input & Context] --> Loop

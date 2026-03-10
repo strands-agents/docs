@@ -1,0 +1,1 @@
+.main-pane { visibility: visible !important; }

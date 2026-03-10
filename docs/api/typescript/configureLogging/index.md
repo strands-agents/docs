@@ -2,7 +2,7 @@
 function configureLogging(customLogger): void;
 ```
 
-Defined in: [src/logging/logger.ts:44](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/logging/logger.ts#L44)
+Defined in: [src/logging/logger.ts:44](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/logging/logger.ts#L44)
 
 Configures the global logger.
 

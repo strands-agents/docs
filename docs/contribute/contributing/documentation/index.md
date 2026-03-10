@@ -14,28 +14,20 @@ We’re looking for contributions that improve the developer experience. Documen
 
 ## Setup
 
-Migration in progress
-
-This section will be rewritten as we migrate to a new CMS.
-
-Let’s get the docs running locally so you can preview your changes as you work. The docs are built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
+Let’s get the docs running locally so you can preview your changes as you work. The docs are built with [Astro](https://astro.build/) and the [Starlight](https://starlight.astro.build/) theme.
 
 ```bash
 # Clone the docs repository
 git clone https://github.com/strands-agents/docs.git
 cd docs
 
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-
 # Install dependencies
-pip install -e .
+npm install
 
 # Start the local development server
-mkdocs serve
+npm run dev
 
-# Preview at http://localhost:8000
+# Preview at http://localhost:4321
 ```
 
 The development server automatically reloads when you save changes, so you can see your edits immediately.
@@ -47,7 +39,7 @@ The submission process varies based on the size of your change. Small fixes can 
 1.  **Fork the docs repository** on GitHub
 2.  **Create a branch** with a descriptive name like `docs/clarify-tools-usage` or `docs/fix-typo-agent-loop`
 3.  **Make your changes** in your favorite editor
-4.  **Preview locally** with `mkdocs serve` to verify formatting and links work correctly
+4.  **Preview locally** with `npm run dev` to verify formatting and links work correctly
 5.  **Submit a pull request** with a clear description of what you changed and why
 
 **For small changes** (typos, grammar fixes, minor clarifications), you can skip local preview and go straight to PR. We’ll catch any issues in review.

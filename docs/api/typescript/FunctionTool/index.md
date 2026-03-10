@@ -1,4 +1,4 @@
-Defined in: [src/tools/function-tool.ts:91](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/function-tool.ts#L91)
+Defined in: [src/tools/function-tool.ts:91](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L91)
 
 A Tool implementation that wraps a callback function and handles all ToolResultBlock conversion.
 
@@ -32,6 +32,10 @@ const streamingTool = new FunctionTool({
 
 -   [`Tool`](/docs/api/typescript/Tool/index.md)
 
+## Implements
+
+-   [`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`unknown`, [`JSONValue`](/docs/api/typescript/JSONValue/index.md)\>
+
 ## Constructors
 
 ### Constructor
@@ -40,7 +44,7 @@ const streamingTool = new FunctionTool({
 new FunctionTool(config): FunctionTool;
 ```
 
-Defined in: [src/tools/function-tool.ts:139](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/function-tool.ts#L139)
+Defined in: [src/tools/function-tool.ts:139](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L139)
 
 Creates a new FunctionTool instance.
 
@@ -48,7 +52,7 @@ Creates a new FunctionTool instance.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `config` | `FunctionToolConfig` | Configuration object for the tool |
+| `config` | [`FunctionToolConfig`](/docs/api/typescript/FunctionToolConfig/index.md) | Configuration object for the tool |
 
 #### Returns
 
@@ -89,9 +93,13 @@ const statusTool = new FunctionTool({
 readonly name: string;
 ```
 
-Defined in: [src/tools/function-tool.ts:95](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/function-tool.ts#L95)
+Defined in: [src/tools/function-tool.ts:95](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L95)
 
 The unique name of the tool.
+
+#### Implementation of
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`name`](/docs/api/typescript/InvokableTool/index.md#name)
 
 #### Overrides
 
@@ -105,9 +113,13 @@ The unique name of the tool.
 readonly description: string;
 ```
 
-Defined in: [src/tools/function-tool.ts:100](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/function-tool.ts#L100)
+Defined in: [src/tools/function-tool.ts:100](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L100)
 
 Human-readable description of what the tool does.
+
+#### Implementation of
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`description`](/docs/api/typescript/InvokableTool/index.md#description)
 
 #### Overrides
 
@@ -121,9 +133,13 @@ Human-readable description of what the tool does.
 readonly toolSpec: ToolSpec;
 ```
 
-Defined in: [src/tools/function-tool.ts:105](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/function-tool.ts#L105)
+Defined in: [src/tools/function-tool.ts:105](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L105)
 
 OpenAPI JSON specification for the tool.
+
+#### Implementation of
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`toolSpec`](/docs/api/typescript/InvokableTool/index.md#toolspec)
 
 #### Overrides
 
@@ -137,7 +153,7 @@ OpenAPI JSON specification for the tool.
 stream(toolContext): AsyncGenerator<ToolStreamEvent, ToolResultBlock, unknown>;
 ```
 
-Defined in: [src/tools/function-tool.ts:166](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/tools/function-tool.ts#L166)
+Defined in: [src/tools/function-tool.ts:166](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L166)
 
 Executes the tool with streaming support. Handles all callback patterns (async generator, promise, sync) and converts results to ToolResultBlock.
 
@@ -153,6 +169,45 @@ Executes the tool with streaming support. Handles all callback patterns (async g
 
 Async generator that yields ToolStreamEvents and returns a ToolResultBlock
 
+#### Implementation of
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`stream`](/docs/api/typescript/InvokableTool/index.md#stream)
+
 #### Overrides
 
 [`Tool`](/docs/api/typescript/Tool/index.md).[`stream`](/docs/api/typescript/Tool/index.md#stream)
+
+---
+
+### invoke()
+
+```ts
+invoke(input, context?): Promise<JSONValue>;
+```
+
+Defined in: [src/tools/function-tool.ts:216](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L216)
+
+Invokes the tool directly with raw input and returns the unwrapped result.
+
+Unlike stream(), this method:
+
+-   Returns the raw result (not wrapped in ToolResult)
+-   Consumes async generators and returns the generator’s return value
+-   Lets errors throw naturally (not wrapped in error ToolResult)
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `input` | `unknown` | The input parameters for the tool |
+| `context?` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | Optional tool execution context |
+
+#### Returns
+
+`Promise`<[`JSONValue`](/docs/api/typescript/JSONValue/index.md)\>
+
+The unwrapped result
+
+#### Implementation of
+
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`invoke`](/docs/api/typescript/InvokableTool/index.md#invoke)

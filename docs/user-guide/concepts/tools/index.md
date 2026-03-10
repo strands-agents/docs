@@ -282,7 +282,7 @@ def main():
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-Use the `tool()` function to create tools with [Zod](https://zod.dev/) schema validation. These tools can then be passed directly to your agents.
+Use the `tool()` function to create tools with [Zod](https://zod.dev/) schema validation or plain JSON Schema objects. These tools can then be passed directly to your agents.
 
 ```typescript
 const weatherTool = tool({
