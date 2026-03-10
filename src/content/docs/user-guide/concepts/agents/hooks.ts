@@ -67,31 +67,6 @@ async function individualCallbackExample() {
   // --8<-- [end:individual_callback]
 }
 
-async function hookProviderClassExample() {
-  // --8<-- [start:hook_provider_class]
-  class LoggingHook implements HookProvider {
-    registerCallbacks(registry: HookRegistry): void {
-      registry.addCallback(BeforeInvocationEvent, (ev) => this.logStart(ev))
-      registry.addCallback(AfterInvocationEvent, (ev) => this.logEnd(ev))
-    }
-
-    private logStart(event: BeforeInvocationEvent): void {
-      console.log('Request started')
-    }
-
-    private logEnd(event: AfterInvocationEvent): void {
-      console.log('Request completed')
-    }
-  }
-
-  // Passed in via the hooks parameter
-  const agent = new Agent({ hooks: [new LoggingHook()] })
-
-  // Or added after the fact
-  agent.hooks.addHook(new LoggingHook())
-  // --8<-- [end:hook_provider_class]
-}
-
 // =====================
 // Advanced Usage Examples
 // =====================

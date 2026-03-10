@@ -4,8 +4,6 @@ title: Plugins
 
 Plugins allow you to change the typical behavior of an agent. They enable you to introduce concepts like [Skills](https://agentskills.io/specification), [steering](../experimental/steering.md), or other behavioral modifications into the agentic loop. Plugins work by taking advantage of the low-level primitives exposed by the Agent class—`model`, `system_prompt`, `messages`, `tools`, and `hooks`—and executing logic to improve an agent's behavior.
 
-## Overview
-
 The Strands SDK provides built-in plugins that you can use out of the box:
 
 - **[Steering](../experimental/steering)** - Modular prompting for complex agent tasks through context-aware guidance
@@ -44,7 +42,7 @@ This section walks through how to build a custom plugin step by step.
 
 ### Basic Plugin Structure
 
-A plugin is a class that extends the `Plugin` base class and defines a `name` property. Here's a simple logging plugin:
+A plugin is a class that extends the `Plugin` base class and defines a `name` property. For example, a simple logging plugin would look like this:
 
 <Tabs>
 <Tab label="Python">

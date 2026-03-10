@@ -117,40 +117,6 @@ agent = Agent(plugins=[LoggingPlugin()])
 
 See [Plugins](../plugins/index.md) for more information on creating and using plugins.
 
-### Creating a Hook Provider
-
-The `HookProvider` protocol allows a single object to register callbacks for multiple events. This pattern works for both single-agent and multi-agent orchestrators:
-
-<Tabs>
-<Tab label="Python">
-
-```python
-class LoggingHook(HookProvider):
-    def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(BeforeInvocationEvent, self.log_start)
-        registry.add_callback(AfterInvocationEvent, self.log_end)
-
-    def log_start(self, event: BeforeInvocationEvent) -> None:
-        print(f"Request started for agent: {event.agent.name}")
-
-    def log_end(self, event: AfterInvocationEvent) -> None:
-        print(f"Request completed for agent: {event.agent.name}")
-
-# Passed in via the hooks parameter
-agent = Agent(hooks=[LoggingHook()])
-
-# Or added after the fact
-agent.hooks.add_hook(LoggingHook())
-```
-</Tab>
-<Tab label="TypeScript">
-
-```typescript
---8<-- "user-guide/concepts/agents/hooks.ts:hook_provider_class"
-```
-</Tab>
-</Tabs>
-
 ## Hook Event Lifecycle
 
 ### Single-Agent Lifecycle
