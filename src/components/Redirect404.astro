@@ -10,7 +10,7 @@
   2. tryRedirect() checks if the current URL matches a known redirect rule. If it does,
      location.replace() fires and the user navigates away without ever seeing the 404 content.
   3. If no redirect applies (genuine 404), showPage() reveals .main-pane immediately.
-  4. The 1s timeout is a safety net: if something goes wrong (e.g. location.replace throws),
+  4. The 3s timeout is a safety net: if something goes wrong (e.g. location.replace throws),
      the page will always become visible again rather than staying blank forever.
 -->
 
@@ -19,6 +19,15 @@
     visibility: hidden;
   }
 </style>
+
+<noscript>
+  <!-- Without JS, the page would stay hidden forever since only the script reveals .main-pane -->
+  <style>
+    .main-pane {
+      visibility: visible !important;
+    }
+  </style>
+</noscript>
 
 <script>
   import { resolveRedirectFromUrl } from '../util/redirect'
