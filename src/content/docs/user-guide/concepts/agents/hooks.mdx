@@ -964,7 +964,7 @@ async def summarize_after_tools(event: AfterInvocationEvent):
         event.resume = "Now summarize what you just did in one sentence."
 
 agent = Agent()
-agent.hooks.add_callback(AfterInvocationEvent, summarize_after_tools)
+agent.add_hook(summarize_after_tools)
 
 # The agent processes the initial request, then automatically
 # performs a second invocation to generate the summary
@@ -999,7 +999,7 @@ async def iterative_refinement(event: AfterInvocationEvent):
         event.resume = f"Review your previous response and improve it. Iteration {iteration} of {MAX_ITERATIONS}."
 
 agent = Agent()
-agent.hooks.add_callback(AfterInvocationEvent, iterative_refinement)
+agent.add_hook(iterative_refinement)
 
 result = agent("Draft a haiku about programming")
 ```
@@ -1050,8 +1050,8 @@ async def auto_approve(event: AfterInvocationEvent):
         event.resume = responses
 
 agent = Agent(tools=[send_email])
-agent.hooks.add_callback(BeforeToolCallEvent, require_approval)
-agent.hooks.add_callback(AfterInvocationEvent, auto_approve)
+agent.add_hook(require_approval)
+agent.add_hook(auto_approve)
 
 # The interrupt is handled automatically by the hook—
 # the caller receives the final result directly
