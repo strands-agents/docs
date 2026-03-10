@@ -8,55 +8,70 @@ async function basicMetricsExample() {
     tools: [notebook],
   })
 
-  // Metrics are only available via streaming
-  for await (const event of agent.stream('Calculate 2+2')) {
-    if (event.type === 'modelStreamUpdateEvent' && event.event.type === 'modelMetadataEvent') {
-      console.log('Token usage:', event.event.usage)
-      console.log('Latency:', event.event.metrics?.latencyMs)
-    }
+  const result = await agent.invoke('What is the square root of 144?')
+
+  // Access metrics through the AgentResult
+  console.log(`Total tokens: ${result.metrics.accumulatedUsage.totalTokens}`)
+  console.log(`Total duration: ${result.metrics.totalDuration}ms`)
+  console.log(`Tools used: ${Object.keys(result.metrics.toolMetrics)}`)
+
+  // Cache metrics (when available)
+  if (result.metrics.accumulatedUsage.cacheReadInputTokens) {
+    console.log(`Cache read tokens: ${result.metrics.accumulatedUsage.cacheReadInputTokens}`)
+  }
+  if (result.metrics.accumulatedUsage.cacheWriteInputTokens) {
+    console.log(`Cache write tokens: ${result.metrics.accumulatedUsage.cacheWriteInputTokens}`)
   }
   // --8<-- [end:basic_metrics]
 }
 
-// Detailed metrics tracking
-async function detailedMetricsTracking() {
-  // --8<-- [start:detailed_tracking]
+// Agent loop metrics example
+async function agentLoopMetricsExample() {
+  // --8<-- [start:agent_loop_metrics]
   const agent = new Agent({
     tools: [notebook],
   })
 
-  let totalInputTokens = 0
-  let totalOutputTokens = 0
-  let totalLatency = 0
+  // First invocation
+  const result1 = await agent.invoke('What is 5 + 3?')
 
-  for await (const event of agent.stream('What is the square root of 144?')) {
-    if (event.type === 'modelStreamUpdateEvent' && event.event.type === 'modelMetadataEvent') {
-      const metadata = event.event
-      if (metadata.usage) {
-        totalInputTokens += metadata.usage.inputTokens
-        totalOutputTokens += metadata.usage.outputTokens
-        console.log(`Input tokens: ${metadata.usage.inputTokens}`)
-        console.log(`Output tokens: ${metadata.usage.outputTokens}`)
-        console.log(`Total tokens: ${metadata.usage.totalTokens}`)
+  // Second invocation
+  const result2 = await agent.invoke('What is the square root of 144?')
 
-        // Cache metrics (when available)
-        if (metadata.usage.cacheReadInputTokens) {
-          console.log(`Cache read tokens: ${metadata.usage.cacheReadInputTokens}`)
-        }
-        if (metadata.usage.cacheWriteInputTokens) {
-          console.log(`Cache write tokens: ${metadata.usage.cacheWriteInputTokens}`)
-        }
-      }
-
-      if (metadata.metrics) {
-        totalLatency += metadata.metrics.latencyMs
-        console.log(`Latency: ${metadata.metrics.latencyMs}ms`)
-      }
+  // Access metrics for the latest invocation
+  const latest = result2.metrics.latestAgentInvocation
+  if (latest) {
+    console.log(`Invocation usage: ${JSON.stringify(latest.usage)}`)
+    for (const cycle of latest.cycles) {
+      console.log(`  Cycle ${cycle.cycleId}: ${JSON.stringify(cycle.usage)}`)
     }
   }
 
-  console.log(`\nTotal input tokens: ${totalInputTokens}`)
-  console.log(`Total output tokens: ${totalOutputTokens}`)
-  console.log(`Total latency: ${totalLatency}ms`)
-  // --8<-- [end:detailed_tracking]
+  // Access all invocations
+  for (const invocation of result2.metrics.agentInvocations) {
+    console.log(`Invocation usage: ${JSON.stringify(invocation.usage)}`)
+    for (const cycle of invocation.cycles) {
+      console.log(`  Cycle ${cycle.cycleId}: ${JSON.stringify(cycle.usage)}`)
+    }
+  }
+
+  // Computed metrics
+  console.log(`Cycle count: ${result2.metrics.cycleCount}`)
+  console.log(`Total duration: ${result2.metrics.totalDuration}ms`)
+  console.log(`Average cycle time: ${result2.metrics.averageCycleTime}ms`)
+  // --8<-- [end:agent_loop_metrics]
+}
+
+// Metrics summary example
+async function metricsSummaryExample() {
+  // --8<-- [start:metrics_summary]
+  const agent = new Agent({
+    tools: [notebook],
+  })
+
+  const result = await agent.invoke('What is the square root of 144?')
+
+  // Serialize metrics to JSON
+  console.log(JSON.stringify(result.metrics, null, 2))
+  // --8<-- [end:metrics_summary]
 }
