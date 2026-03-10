@@ -6,7 +6,7 @@ type SnapshotLocation = {
 };
 ```
 
-Defined in: [src/session/storage.ts:6](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/storage.ts#L6)
+Defined in: [src/session/storage.ts:6](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/session/storage.ts#L6)
 
 Identifies the location of a snapshot within the storage hierarchy.
 
@@ -18,7 +18,7 @@ Identifies the location of a snapshot within the storage hierarchy.
 sessionId: string;
 ```
 
-Defined in: [src/session/storage.ts:8](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/storage.ts#L8)
+Defined in: [src/session/storage.ts:8](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/session/storage.ts#L8)
 
 Session identifier
 
@@ -30,7 +30,7 @@ Session identifier
 scope: Scope;
 ```
 
-Defined in: [src/session/storage.ts:10](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/storage.ts#L10)
+Defined in: [src/session/storage.ts:10](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/session/storage.ts#L10)
 
 Scope of the snapshot (agent or multi-agent)
 
@@ -42,6 +42,6 @@ Scope of the snapshot (agent or multi-agent)
 scopeId: string;
 ```
 
-Defined in: [src/session/storage.ts:12](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/storage.ts#L12)
+Defined in: [src/session/storage.ts:12](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/session/storage.ts#L12)
 
 Scope-specific identifier (agentId or multiAgentId)

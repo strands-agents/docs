@@ -21,17 +21,26 @@ Hook callbacks are registered against specific event types and receive strongly-
 
 ### Registering Individual Hook Callbacks
 
-You can register callbacks for specific events using `agent.hooks` after the fact:
+The simplest way to register a hook callback is using the `agent.add_hook()` method:
 
 (( tab "Python" ))
 ```python
+from strands import Agent
+from strands.hooks import BeforeInvocationEvent, BeforeToolCallEvent
+
 agent = Agent()
 
 # Register individual callbacks
 def my_callback(event: BeforeInvocationEvent) -> None:
     print("Custom callback triggered")
 
-agent.hooks.add_callback(BeforeInvocationEvent, my_callback)
+agent.add_hook(my_callback, BeforeInvocationEvent)
+
+# Type inference: If your callback has a type hint, the event type is inferred
+def typed_callback(event: BeforeToolCallEvent) -> None:
+    print(f"Tool called: {event.tool_use['name']}")
+
+agent.add_hook(typed_callback)  # Event type inferred from type hint
 ```
 (( /tab "Python" ))
 
@@ -69,55 +78,38 @@ orchestrator.hooks.add_callback(BeforeNodeCallEvent, my_callback)
 ```
 (( /tab "TypeScript" ))
 
-### Creating a Hook Provider
+### Using Plugins for Multiple Hooks
 
-The `HookProvider` protocol allows a single object to register callbacks for multiple events. This pattern works for both single-agent and multi-agent orchestrators:
+For packaging multiple related hooks together, [Plugins](/docs/user-guide/concepts/plugins/index.md) provide a convenient way to bundle hooks with configuration and tools:
 
 (( tab "Python" ))
 ```python
-class LoggingHook(HookProvider):
-    def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(BeforeInvocationEvent, self.log_start)
-        registry.add_callback(AfterInvocationEvent, self.log_end)
+from strands import Agent
+from strands.plugins import Plugin, hook
+from strands.hooks import BeforeToolCallEvent, AfterToolCallEvent
 
-    def log_start(self, event: BeforeInvocationEvent) -> None:
-        print(f"Request started for agent: {event.agent.name}")
+class LoggingPlugin(Plugin):
+    name = "logging-plugin"
 
-    def log_end(self, event: AfterInvocationEvent) -> None:
-        print(f"Request completed for agent: {event.agent.name}")
+    @hook
+    def log_before(self, event: BeforeToolCallEvent) -> None:
+        print(f"Calling: {event.tool_use['name']}")
 
-# Passed in via the hooks parameter
-agent = Agent(hooks=[LoggingHook()])
+    @hook
+    def log_after(self, event: AfterToolCallEvent) -> None:
+        print(f"Completed: {event.tool_use['name']}")
 
-# Or added after the fact
-agent.hooks.add_hook(LoggingHook())
+agent = Agent(plugins=[LoggingPlugin()])
 ```
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```typescript
-class LoggingHook implements HookProvider {
-  registerCallbacks(registry: HookRegistry): void {
-    registry.addCallback(BeforeInvocationEvent, (ev) => this.logStart(ev))
-    registry.addCallback(AfterInvocationEvent, (ev) => this.logEnd(ev))
-  }
-
-  private logStart(event: BeforeInvocationEvent): void {
-    console.log('Request started')
-  }
-
-  private logEnd(event: AfterInvocationEvent): void {
-    console.log('Request completed')
-  }
-}
-
-// Passed in via the hooks parameter
-const agent = new Agent({ hooks: [new LoggingHook()] })
-
-// Or added after the fact
-agent.hooks.addHook(new LoggingHook())
+```ts
+// Plugins are not yet available in TypeScript SDK
 ```
 (( /tab "TypeScript" ))
+
+See [Plugins](/docs/user-guide/concepts/plugins/index.md) for more information on creating and using plugins.
 
 ## Hook Event Lifecycle
 
@@ -925,3 +917,38 @@ result = agent("Look up the weather")
 // This feature is not yet available in TypeScript SDK
 ```
 (( /tab "TypeScript" ))
+
+## HookProvider Protocol
+
+For advanced use cases, you can implement the `HookProvider` protocol to create objects that register multiple callbacks at once. This is useful when building reusable hook collections without the full plugin infrastructure:
+
+(( tab "Python" ))
+```python
+from strands.hooks import HookProvider, HookRegistry, BeforeInvocationEvent, AfterInvocationEvent
+
+class RequestLogger(HookProvider):
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(BeforeInvocationEvent, self.log_start)
+        registry.add_callback(AfterInvocationEvent, self.log_end)
+
+    def log_start(self, event: BeforeInvocationEvent) -> None:
+        print(f"Request started for agent: {event.agent.name}")
+
+    def log_end(self, event: AfterInvocationEvent) -> None:
+        print(f"Request completed for agent: {event.agent.name}")
+
+# Pass via hooks parameter
+agent = Agent(hooks=[RequestLogger()])
+
+# Or add after creation
+agent.hooks.add_hook(RequestLogger())
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+For most use cases, [Plugins](/docs/user-guide/concepts/plugins/index.md) provide a more convenient way to bundle multiple hooks with additional features like auto-discovery and tool registration.

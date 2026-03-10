@@ -1,4 +1,4 @@
-Defined in: [src/hooks/registry.ts:45](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L45)
+Defined in: [src/hooks/registry.ts:45](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L45)
 
 Implementation of the hook registry for managing hook callbacks. Maintains mappings between event types and callback functions.
 
@@ -14,7 +14,7 @@ Implementation of the hook registry for managing hook callbacks. Maintains mappi
 new HookRegistry(): HookRegistryImplementation;
 ```
 
-Defined in: [src/hooks/registry.ts:49](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L49)
+Defined in: [src/hooks/registry.ts:49](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L49)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [src/hooks/registry.ts:49](https://github.com/strands-agents/sdk-typ
 addCallback<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/hooks/registry.ts:61](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L61)
+Defined in: [src/hooks/registry.ts:61](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L61)
 
 Register a callback function for a specific event type.
 
@@ -65,7 +65,7 @@ HookRegistry.addCallback
 addHook(provider): void;
 ```
 
-Defined in: [src/hooks/registry.ts:82](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L82)
+Defined in: [src/hooks/registry.ts:82](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L82)
 
 Register all callbacks from a hook provider.
 
@@ -93,7 +93,7 @@ HookRegistry.addHook
 addAllHooks(providers): void;
 ```
 
-Defined in: [src/hooks/registry.ts:101](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L101)
+Defined in: [src/hooks/registry.ts:101](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L101)
 
 Register all callbacks from multiple hook providers.
 
@@ -115,7 +115,7 @@ Register all callbacks from multiple hook providers.
 removeHook(provider): void;
 ```
 
-Defined in: [src/hooks/registry.ts:112](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L112)
+Defined in: [src/hooks/registry.ts:112](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L112)
 
 Remove all callbacks registered by a hook provider.
 
@@ -143,7 +143,7 @@ HookRegistry.removeHook
 invokeCallbacks<T>(event): Promise<T>;
 ```
 
-Defined in: [src/hooks/registry.ts:130](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/registry.ts#L130)
+Defined in: [src/hooks/registry.ts:130](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/hooks/registry.ts#L130)
 
 Invoke all registered callbacks for the given event. Awaits each callback, supporting both sync and async.
 
