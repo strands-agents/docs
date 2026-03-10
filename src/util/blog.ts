@@ -51,9 +51,10 @@ export async function resolveAuthors(authorIds: string[]): Promise<Author[]> {
   const authors: Author[] = []
   for (const id of authorIds) {
     const author = await getEntry('authors', id)
-    if (author) {
-      authors.push(author)
+    if (!author) {
+      throw new Error(`[blog] Unknown author ID: "${id}" — check authors.yaml and blog post frontmatter`)
     }
+    authors.push(author)
   }
   return authors
 }
