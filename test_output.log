@@ -1,0 +1,1685 @@
+
+> docs@1.0.0 test
+> vitest run
+
+[auto-import] ⚠️ @astrojs/mdx initialized BEFORE astro-auto-import.
+              Auto imports in .mdx files won’t work!
+              Move the MDX integration after auto-import in your integrations array in astro.config.
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/runner/work/docs/docs[39m
+
+[90mstdout[2m | test/api-link-converter.test.ts[2m > [22m[2mAPI Link Converter[2m > [22m[2mData-driven: All broken links from broken-links-analysis.md[2m > [22m[2mshould have converted all unique broken links
+[22m[39mTested 79 unique broken link conversions
+
+[90mstdout[2m | test/dynamic-sidebar.test.ts[2m > [22m[2mbuildPythonApiSidebar with real collection[2m > [22m[2mshould build sidebar from actual docs collection
+[22m[39m
+=== Python API Sidebar Structure ===
+
+- [group] Agent
+  - [link] A2a Agent -> /docs/api/python/strands.agent.a2a_agent/
+  - [link] Agent -> /docs/api/python/strands.agent.agent/
+  - [link] Agent Result -> /docs/api/python/strands.agent.agent_result/
+  - [link] Base -> /docs/api/python/strands.agent.base/
+  - [group] Conversation Manager
+    - [link] Conversation Manager -> /docs/api/python/strands.agent.conversation_manager.conversation_manager/
+    - [link] Null Conversation Manager -> /docs/api/python/strands.agent.conversation_manager.null_conversation_manager/
+    - [link] Sliding Window Conversation Manager -> /docs/api/python/strands.agent.conversation_manager.sliding_window_conversation_manager/
+    - [link] Summarizing Conversation Manager -> /docs/api/python/strands.agent.conversation_manager.summarizing_conversation_manager/
+- [group] Event Loop
+  - [link] Event Loop -> /docs/api/python/strands.event_loop.event_loop/
+  - [link] Streaming -> /docs/api/python/strands.event_loop.streaming/
+- [group] Handlers
+  - [link] Callback Handler -> /docs/api/python/strands.handlers.callback_handler/
+- [group] Hooks
+  - [link] Events -> /docs/api/python/strands.hooks.events/
+  - [link] Registry -> /docs/api/python/strands.hooks.registry/
+- [link] Interrupt -> /docs/api/python/strands.interrupt/
+- [group] Models
+  - [link] Overview -> /docs/api/python/strands.models/
+  - [link] Anthropic -> /docs/api/python/strands.models.anthropic/
+  - [link] Bedrock -> /docs/api/python/strands.models.bedrock/
+  - [link] Gemini -> /docs/api/python/strands.models.gemini/
+  - [link] Litellm -> /docs/api/python/strands.models.litellm/
+  - [link] Llamaapi -> /docs/api/python/strands.models.llamaapi/
+  - [link] Llamacpp -> /docs/api/python/strands.models.llamacpp/
+  - [link] Mistral -> /docs/api/python/strands.models.mistral/
+  - [link] Model -> /docs/api/python/strands.models.model/
+  - [link] Ollama -> /docs/api/python/strands.models.ollama/
+  - [link] Openai -> /docs/api/python/strands.models.openai/
+  - [link] Openai Responses -> /docs/api/python/strands.models.openai_responses/
+  - [link] Sagemaker -> /docs/api/python/strands.models.sagemaker/
+  - [link] Writer -> /docs/api/python/strands.models.writer/
+- [group] Multiagent
+  - [group] A2a
+    - [link] Executor -> /docs/api/python/strands.multiagent.a2a.executor/
+    - [link] Server -> /docs/api/python/strands.multiagent.a2a.server/
+  - [link] Base -> /docs/api/python/strands.multiagent.base/
+  - [link] Graph -> /docs/api/python/strands.multiagent.graph/
+  - [link] Swarm -> /docs/api/python/strands.multiagent.swarm/
+- [group] Plugins
+  - [link] Decorator -> /docs/api/python/strands.plugins.decorator/
+  - [link] Plugin -> /docs/api/python/strands.plugins.plugin/
+  - [link] Registry -> /docs/api/python/strands.plugins.registry/
+- [group] Session
+  - [link] File Session Manager -> /docs/api/python/strands.session.file_session_manager/
+  - [link] Repository Session Manager -> /docs/api/python/strands.session.repository_session_manager/
+  - [link] S3 Session Manager -> /docs/api/python/strands.session.s3_session_manager/
+  - [link] Session Manager -> /docs/api/python/strands.session.session_manager/
+  - [link] Session Repository -> /docs/api/python/strands.session.session_repository/
+- [group] Telemetry
+  - [link] Config -> /docs/api/python/strands.telemetry.config/
+  - [link] Metrics -> /docs/api/python/strands.telemetry.metrics/
+  - [link] Tracer -> /docs/api/python/strands.telemetry.tracer/
+- [group] Tools
+  - [link] Decorator -> /docs/api/python/strands.tools.decorator/
+  - [group] Executors
+    - [link] Concurrent -> /docs/api/python/strands.tools.executors.concurrent/
+    - [link] Sequential -> /docs/api/python/strands.tools.executors.sequential/
+  - [link] Loader -> /docs/api/python/strands.tools.loader/
+  - [group] Mcp
+    - [link] Mcp Agent Tool -> /docs/api/python/strands.tools.mcp.mcp_agent_tool/
+    - [link] Mcp Client -> /docs/api/python/strands.tools.mcp.mcp_client/
+    - [link] Mcp Instrumentation -> /docs/api/python/strands.tools.mcp.mcp_instrumentation/
+    - [link] Mcp Tasks -> /docs/api/python/strands.tools.mcp.mcp_tasks/
+    - [link] Mcp Types -> /docs/api/python/strands.tools.mcp.mcp_types/
+  - [link] Registry -> /docs/api/python/strands.tools.registry/
+  - [group] Structured Output
+    - [link] Structured Output Tool -> /docs/api/python/strands.tools.structured_output.structured_output_tool/
+    - [link] Structured Output Utils -> /docs/api/python/strands.tools.structured_output.structured_output_utils/
+  - [link] Tool Provider -> /docs/api/python/strands.tools.tool_provider/
+  - [link] Tools -> /docs/api/python/strands.tools.tools/
+  - [link] Watcher -> /docs/api/python/strands.tools.watcher/
+- [group] Types
+  - [link] A2a -> /docs/api/python/strands.types.a2a/
+  - [link] Agent -> /docs/api/python/strands.types.agent/
+  - [link] Citations -> /docs/api/python/strands.types.citations/
+  - [link] Collections -> /docs/api/python/strands.types.collections/
+  - [link] Content -> /docs/api/python/strands.types.content/
+  - [link] Event Loop -> /docs/api/python/strands.types.event_loop/
+  - [link] Exceptions -> /docs/api/python/strands.types.exceptions/
+  - [link] Guardrails -> /docs/api/python/strands.types.guardrails/
+  - [link] Interrupt -> /docs/api/python/strands.types.interrupt/
+  - [link] Json Dict -> /docs/api/python/strands.types.json_dict/
+  - [link] Media -> /docs/api/python/strands.types.media/
+  - [link] Session -> /docs/api/python/strands.types.session/
+  - [link] Streaming -> /docs/api/python/strands.types.streaming/
+  - [link] Tools -> /docs/api/python/strands.types.tools/
+- [group] Experimental
+  - [link] Agent Config -> /docs/api/python/strands.experimental.agent_config/
+  - [group] Bidi
+    - [link] Overview -> /docs/api/python/strands.experimental.bidi/
+    - [group] Agent
+      - [link] Agent -> /docs/api/python/strands.experimental.bidi.agent.agent/
+      - [link] Loop -> /docs/api/python/strands.experimental.bidi.agent.loop/
+    - [group] Io
+      - [link] Audio -> /docs/api/python/strands.experimental.bidi.io.audio/
+      - [link] Text -> /docs/api/python/strands.experimental.bidi.io.text/
+    - [group] Models
+      - [link] Overview -> /docs/api/python/strands.experimental.bidi.models/
+      - [link] Gemini Live -> /docs/api/python/strands.experimental.bidi.models.gemini_live/
+      - [link] Model -> /docs/api/python/strands.experimental.bidi.models.model/
+      - [link] Nova Sonic -> /docs/api/python/strands.experimental.bidi.models.nova_sonic/
+      - [link] Openai Realtime -> /docs/api/python/strands.experimental.bidi.models.openai_realtime/
+    - [group] Tools
+      - [link] Stop Conversation -> /docs/api/python/strands.experimental.bidi.tools.stop_conversation/
+    - [group] Types
+      - [link] Events -> /docs/api/python/strands.experimental.bidi.types.events/
+      - [link] Io -> /docs/api/python/strands.experimental.bidi.types.io/
+      - [link] Model -> /docs/api/python/strands.experimental.bidi.types.model/
+  - [group] Hooks
+    - [link] Events -> /docs/api/python/strands.experimental.hooks.events/
+  - [group] Steering
+    - [group] Context Providers
+      - [link] Ledger Provider -> /docs/api/python/strands.experimental.steering.context_providers.ledger_provider/
+    - [group] Core
+      - [link] Action -> /docs/api/python/strands.experimental.steering.core.action/
+      - [link] Context -> /docs/api/python/strands.experimental.steering.core.context/
+      - [link] Handler -> /docs/api/python/strands.experimental.steering.core.handler/
+    - [group] Handlers
+      - [group] Llm
+        - [link] Llm Handler -> /docs/api/python/strands.experimental.steering.handlers.llm.llm_handler/
+        - [link] Mappers -> /docs/api/python/strands.experimental.steering.handlers.llm.mappers/
+
+ [32m✓[39m test/dynamic-sidebar.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 422[2mms[22m[39m
+     [33m[2m✓[22m[39m should build sidebar from actual docs collection [33m 397[2mms[22m[39m
+ [32m✓[39m test/api-link-converter.test.ts [2m([22m[2m116 tests[22m[2m)[22m[33m 428[2mms[22m[39m
+       [33m[2m✓[22m[39m should resolve all converted @api links to actual pages in the content collection [33m 341[2mms[22m[39m
+[90mstdout[2m | test/links.test.ts[2m > [22m[2mLink Resolution with Content Collection[2m > [22m[2mshould resolve common documentation links
+[22m[39mNote: Expected slug "user-guide/concepts/agents/conversation-management" not found in collection (may not exist yet)
+Note: Expected slug "user-guide/concepts/tools/custom-tools" not found in collection (may not exist yet)
+Note: Expected slug "user-guide/concepts/agents/session-management" not found in collection (may not exist yet)
+
+[90mstdout[2m | test/links.test.ts[2m > [22m[2mLink Resolution with Content Collection[2m > [22m[2mshould log all unresolvable links from a sample page context
+[22m[39m
+=== Unresolved Links ===
+  conversation-management.md -> /user-guide/concepts/agents/conversation-management/
+  session-management.md -> /user-guide/concepts/agents/session-management/
+  ../tools/index.md -> /user-guide/concepts/tools/
+  ../tools/custom-tools.md -> /user-guide/concepts/tools/custom-tools/
+  ../model-providers/amazon-bedrock.md -> /user-guide/concepts/model-providers/amazon-bedrock/
+  ../../deploy/operating-agents-in-production.md -> /user-guide/deploy/operating-agents-in-production/
+
+ [32m✓[39m test/links.test.ts [2m([22m[2m49 tests[22m[2m)[22m[33m 495[2mms[22m[39m
+     [33m[2m✓[22m[39m should resolve @api shorthand links against real collection [33m 390[2mms[22m[39m
+ [32m✓[39m test/html-to-markdown.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m test/sitemap-coverage.test.ts [2m([22m[2m3 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m[32m 106[2mms[22m[39m
+[90mstdout[2m | test/content-collection.test.ts[2m > [22m[2mContent Collections[2m > [22m[2mshould list all doc contents
+[22m[39m
+=== All Docs ===
+
+Total: 407 documents
+
+- 404
+  Title: 404
+- docs
+  Title: Strands Agents SDK
+- docs/contribute
+  Title: Contribute
+- docs/llms
+  Title: Strands Agents
+- docs/community/community-packages
+  Title: Community catalog
+- docs/community/get-featured
+  Title: Get Featured in the Docs
+  Community: true
+- docs/examples
+  Title: Examples Overview
+- docs/labs/ai-functions
+  Title: AI Functions
+- docs/labs
+  Title: Strands Labs
+- docs/labs/robots-sim
+  Title: Robots Sim
+- docs/labs/robots
+  Title: Robots
+- docs/user-guide/quickstart
+  Title: Quickstart
+- docs/user-guide/versioning-and-support
+  Title: Versioning and Support Policy
+- docs/api/typescript
+  Title: TypeScript API Reference
+- docs/api/python
+  Title: Strands Agents SDK API Reference
+- docs/contribute/contributing/core-sdk
+  Title: Contributing to the SDK
+- docs/contribute/contributing/documentation
+  Title: Contributing to Documentation
+- docs/contribute/contributing/extensions
+  Title: Publishing Extensions
+- docs/community/integrations/ag-ui
+  Title: Build chat experiences with AG-UI and CopilotKit
+  Community: true
+- docs/contribute/contributing/feature-proposals
+  Title: Feature Proposals
+- docs/community/model-providers/clova-studio
+  Title: CLOVA Studio
+  Languages: Python
+  Community: true
+- docs/community/model-providers/fireworksai
+  Title: FireworksAI
+  Languages: Python
+  Community: true
+- docs/community/model-providers/cohere
+  Title: Cohere
+  Languages: Python
+  Community: true
+- docs/community/model-providers/mlx
+  Title: MLX
+  Languages: Python
+  Community: true
+- docs/community/model-providers/nebius-token-factory
+  Title: Nebius Token Factory
+  Languages: Python
+  Community: true
+- docs/community/model-providers/nvidia-nim
+  Title: NVIDIA NIM
+  Languages: Python
+  Community: true
+- docs/community/model-providers/sglang
+  Title: SGLang
+  Languages: Python
+  Community: true
+- docs/community/model-providers/vllm
+  Title: vLLM
+  Languages: Python
+  Community: true
+- docs/community/model-providers/xai
+  Title: xAI
+- docs/community/session-managers/agentcore-memory
+  Title: AgentCore Memory Session Manager
+  Community: true
+- docs/community/session-managers/strands-valkey-session-manager
+  Title: Strands Valkey Session Manager
+  Community: true
+- docs/community/tools/strands-deepgram
+  Title: strands-deepgram
+  Community: true
+- docs/community/tools/strands-hubspot
+  Title: strands-hubspot
+  Community: true
+- docs/community/tools/strands-teams
+  Title: strands-teams
+  Community: true
+- docs/community/tools/strands-telegram-listener
+  Title: strands-telegram-listener
+  Community: true
+- docs/community/tools/strands-telegram
+  Title: strands-telegram
+  Community: true
+- docs/community/tools/utcp
+  Title: Universal Tool Calling Protocol (UTCP)
+  Community: true
+- docs/examples/python/cli-reference-agent
+  Title: A CLI reference implementation of a Strands agent
+- docs/examples/python/agents_workflows
+  Title: Agentic Workflow: Research Assistant - Multi-Agent Collaboration Example
+- docs/examples/python/file_operations
+  Title: File Operations - Strands Agent for File Management
+- docs/examples/python/graph_loops_example
+  Title: 🔄 Graph with Loops - Multi-Agent Feedback Cycles
+- docs/examples/python/knowledge_base_agent
+  Title: Knowledge Base Agent - Intelligent Information Storage and Retrieval
+- docs/examples/python/mcp_calculator
+  Title: MCP Calculator - Model Context Protocol Integration Example
+- docs/examples/python/memory_agent
+  Title: 🧠 Mem0 Memory Agent - Personalized Context Through Persistent Memory
+- docs/examples/python/meta_tooling
+  Title: Meta-Tooling Example - Strands Agent's Dynamic Tool Creation
+- docs/examples/python/multimodal
+  Title: Multi-modal - Strands Agents for Image Generation and Evaluation
+- docs/examples/python/structured_output
+  Title: Structured Output Example
+- docs/examples/python/weather_forecaster
+  Title: Weather Forecaster - Strands Agents HTTP Integration Example
+- docs/user-guide/concepts/interrupts
+  Title: Interrupts
+- docs/user-guide/evals-sdk/eval-sop
+  Title: Eval SOP - AI-Powered Evaluation Workflow
+- docs/user-guide/evals-sdk/experiment_generator
+  Title: Experiment Generator
+- docs/user-guide/deploy/deploy_to_amazon_ec2
+  Title: Deploying Strands Agents SDK Agents to Amazon EC2
+- docs/user-guide/evals-sdk/quickstart
+  Title: Strands Evaluation Quickstart
+- docs/user-guide/deploy/deploy_to_amazon_eks
+  Title: Deploying Strands Agents SDK Agents to Amazon EKS
+- docs/user-guide/deploy/deploy_to_aws_apprunner
+  Title: Deploying Strands Agents SDK Agents to AWS App Runner
+- docs/user-guide/deploy/deploy_to_aws_fargate
+  Title: Deploying Strands Agents SDK Agents to AWS Fargate
+- docs/user-guide/deploy/deploy_to_aws_lambda
+  Title: Deploying Strands Agents SDK Agents to AWS Lambda
+- docs/user-guide/deploy/deploy_to_kubernetes
+  Title: Deploy to Kubernetes
+- docs/user-guide/deploy/deploy_to_terraform
+  Title: Deploy to Terraform
+- docs/user-guide/deploy/operating-agents-in-production
+  Title: Operating Agents in Production
+- docs/user-guide/observability-evaluation/evaluation
+  Title: Evaluation
+- docs/user-guide/observability-evaluation/logs
+  Title: Logging
+- docs/user-guide/observability-evaluation/observability
+  Title: Observability
+- docs/user-guide/observability-evaluation/metrics
+  Title: Metrics
+- docs/user-guide/observability-evaluation/traces
+  Title: Traces
+- docs/user-guide/quickstart/overview
+  Title: Get started
+- docs/user-guide/quickstart/python
+  Title: Python Quickstart
+- docs/user-guide/quickstart/typescript
+  Title: TypeScript Quickstart
+- docs/user-guide/safety-security/guardrails
+  Title: Guardrails
+- docs/user-guide/safety-security/pii-redaction
+  Title: PII Redaction
+- docs/user-guide/safety-security/prompt-engineering
+  Title: Prompt Engineering
+- docs/user-guide/safety-security/responsible-ai
+  Title: Responsible AI
+- docs/examples/python/multi_agent_example/multi_agent_example
+  Title: Teacher's Assistant - Strands Multi-Agent Architecture Example
+- docs/user-guide/concepts/agents/agent-loop
+  Title: Agent Loop
+- docs/user-guide/concepts/agents/conversation-management
+  Title: Conversation Management
+- docs/user-guide/concepts/agents/hooks
+  Title: Hooks
+- docs/user-guide/concepts/agents/prompts
+  Title: Prompts
+- docs/user-guide/concepts/agents/retry-strategies
+  Title: Retry Strategies
+- docs/user-guide/concepts/agents/session-management
+  Title: Session Management
+- docs/user-guide/concepts/agents/state
+  Title: State Management
+- docs/user-guide/concepts/agents/structured-output
+  Title: Structured Output
+- docs/user-guide/concepts/experimental/agent-config
+  Title: Agent Configuration
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/agent
+  Title: BidiAgent
+  Experimental: true
+- docs/user-guide/concepts/experimental/steering
+  Title: Steering
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/events
+  Title: Events
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/hooks
+  Title: Hooks
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/interruption
+  Title: Interruptions
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/io
+  Title: I/O Channels
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/quickstart
+  Title: Quickstart
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/session-management
+  Title: Session Management
+  Experimental: true
+- docs/user-guide/concepts/model-providers/amazon-bedrock
+  Title: Amazon Bedrock
+- docs/user-guide/concepts/model-providers/amazon-nova
+  Title: Amazon Nova
+  Languages: Python
+- docs/user-guide/concepts/model-providers/anthropic
+  Title: Anthropic
+  Languages: Python
+- docs/user-guide/concepts/model-providers/clova-studio
+  Title: Clova Studio
+- docs/user-guide/concepts/model-providers/cohere
+  Title: Cohere
+- docs/user-guide/concepts/model-providers/custom_model_provider
+  Title: Creating a Custom Model Provider
+- docs/user-guide/concepts/model-providers/fireworksai
+  Title: Fireworks AI
+- docs/user-guide/concepts/model-providers/gemini
+  Title: Gemini
+- docs/user-guide/concepts/model-providers/litellm
+  Title: LiteLLM
+  Languages: Python
+- docs/user-guide/concepts/model-providers
+  Title: Model Providers
+- docs/user-guide/concepts/model-providers/llamaapi
+  Title: Llama API
+  Languages: Python
+- docs/user-guide/concepts/model-providers/mistral
+  Title: Mistral AI
+  Languages: Python
+- docs/user-guide/concepts/model-providers/ollama
+  Title: Ollama
+  Languages: Python
+- docs/user-guide/concepts/model-providers/llamacpp
+  Title: llama.cpp
+  Languages: Python
+- docs/user-guide/concepts/model-providers/nebius-token-factory
+  Title: Nebius Token Factory
+- docs/user-guide/concepts/model-providers/openai
+  Title: OpenAI
+- docs/user-guide/concepts/model-providers/sagemaker
+  Title: Amazon SageMaker
+  Languages: Python
+- docs/user-guide/concepts/model-providers/writer
+  Title: Writer
+  Languages: Python
+- docs/user-guide/concepts/model-providers/xai
+  Title: xAI
+- docs/user-guide/concepts/multi-agent/agent-to-agent
+  Title: Agent-to-Agent (A2A) Protocol
+- docs/user-guide/concepts/multi-agent/agents-as-tools
+  Title: Agents as Tools with Strands Agents SDK
+- docs/user-guide/concepts/multi-agent/graph
+  Title: Graph Multi-Agent Pattern
+- docs/user-guide/concepts/multi-agent/multi-agent-patterns
+  Title: Multi-agent Patterns
+- docs/user-guide/concepts/multi-agent/swarm
+  Title: Swarm Multi-Agent Pattern
+- docs/user-guide/concepts/multi-agent/workflow
+  Title: Agent Workflows: Building Multi-Agent Systems with Strands Agents SDK
+- docs/user-guide/concepts/streaming/async-iterators
+  Title: Async Iterators for Streaming
+- docs/user-guide/concepts/streaming/callback-handlers
+  Title: Callback Handlers
+- docs/user-guide/concepts/streaming
+  Title: Streaming Events
+- docs/user-guide/concepts/tools/community-tools-package
+  Title: Community Built Tools
+- docs/user-guide/concepts/tools/custom-tools
+  Title: Creating Custom Tools
+- docs/user-guide/concepts/tools/executors
+  Title: Tool Executors
+- docs/user-guide/concepts/tools
+  Title: Tools Overview
+- docs/user-guide/concepts/tools/mcp-tools
+  Title: Model Context Protocol (MCP) Tools
+- docs/user-guide/evals-sdk/evaluators/custom_evaluator
+  Title: Custom Evaluator
+- docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator
+  Title: Faithfulness Evaluator
+- docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator
+  Title: Helpfulness Evaluator
+- docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator
+  Title: Goal Success Rate Evaluator
+- docs/user-guide/evals-sdk/evaluators
+  Title: Evaluators
+- docs/user-guide/evals-sdk/evaluators/interactions_evaluator
+  Title: Interactions Evaluator
+- docs/user-guide/evals-sdk/evaluators/output_evaluator
+  Title: Output Evaluator
+- docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator
+  Title: Tool Parameter Accuracy Evaluator
+- docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator
+  Title: Tool Selection Accuracy Evaluator
+- docs/user-guide/evals-sdk/evaluators/trajectory_evaluator
+  Title: Trajectory Evaluator
+- docs/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard
+  Title: AgentCore Evaluation Dashboard Configuration
+- docs/user-guide/evals-sdk/how-to/experiment_management
+  Title: Experiment Management
+- docs/user-guide/evals-sdk/how-to/serialization
+  Title: Serialization
+- docs/user-guide/evals-sdk/simulators
+  Title: Simulators
+- docs/user-guide/evals-sdk/simulators/user_simulation
+  Title: User Simulation
+- docs/user-guide/deploy/deploy_to_bedrock_agentcore
+  Title: Deploying Strands Agents to Amazon Bedrock AgentCore Runtime
+- docs/user-guide/deploy/deploy_to_bedrock_agentcore/python
+  Title: Python Deployment to Amazon Bedrock AgentCore Runtime
+- docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript
+  Title: TypeScript Deployment to Amazon Bedrock AgentCore Runtime
+- docs/user-guide/deploy/deploy_to_docker
+  Title: Deploying Strands Agents to Docker
+- docs/user-guide/deploy/deploy_to_docker/python
+  Title: Python Deployment to Docker
+- docs/user-guide/deploy/deploy_to_docker/typescript
+  Title: TypeScript Deployment to Docker
+- docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic
+  Title: Nova Sonic
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/models/gemini_live
+  Title: Gemini Live
+  Experimental: true
+- docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime
+  Title: OpenAI Realtime
+  Experimental: true
+- docs/api/python/strands.agent.a2a_agent
+  Title: strands.agent.a2a_agent
+- docs/api/python/strands.agent.agent_result
+  Title: strands.agent.agent_result
+- docs/api/python/strands.agent.agent
+  Title: strands.agent.agent
+- docs/api/python/strands.agent.base
+  Title: strands.agent.base
+- docs/api/python/strands.agent.conversation_manager.conversation_manager
+  Title: strands.agent.conversation_manager.conversation_manager
+- docs/api/python/strands.agent.conversation_manager.null_conversation_manager
+  Title: strands.agent.conversation_manager.null_conversation_manager
+- docs/api/python/strands.agent.conversation_manager.sliding_window_conversation_manager
+  Title: strands.agent.conversation_manager.sliding_window_conversation_manager
+- docs/api/python/strands.agent.conversation_manager.summarizing_conversation_manager
+  Title: strands.agent.conversation_manager.summarizing_conversation_manager
+- docs/api/python/strands.event_loop.event_loop
+  Title: strands.event_loop.event_loop
+- docs/api/python/strands.event_loop.streaming
+  Title: strands.event_loop.streaming
+- docs/api/python/strands.experimental.agent_config
+  Title: strands.experimental.agent_config
+- docs/api/python/strands.experimental.bidi.agent.agent
+  Title: strands.experimental.bidi.agent.agent
+- docs/api/python/strands.experimental.bidi.agent.loop
+  Title: strands.experimental.bidi.agent.loop
+- docs/api/python/strands.experimental.bidi.io.audio
+  Title: strands.experimental.bidi.io.audio
+- docs/api/python/strands.experimental.bidi.io.text
+  Title: strands.experimental.bidi.io.text
+- docs/api/python/strands.experimental.bidi
+  Title: strands.experimental.bidi
+- docs/api/python/strands.experimental.bidi.models.gemini_live
+  Title: strands.experimental.bidi.models.gemini_live
+- docs/api/python/strands.experimental.bidi.models
+  Title: strands.experimental.bidi.models
+- docs/api/python/strands.experimental.bidi.models.model
+  Title: strands.experimental.bidi.models.model
+- docs/api/python/strands.experimental.bidi.models.nova_sonic
+  Title: strands.experimental.bidi.models.nova_sonic
+- docs/api/python/strands.experimental.bidi.models.openai_realtime
+  Title: strands.experimental.bidi.models.openai_realtime
+- docs/api/python/strands.experimental.bidi.tools.stop_conversation
+  Title: strands.experimental.bidi.tools.stop_conversation
+- docs/api/python/strands.experimental.bidi.types.events
+  Title: strands.experimental.bidi.types.events
+- docs/api/python/strands.experimental.bidi.types.io
+  Title: strands.experimental.bidi.types.io
+- docs/api/python/strands.experimental.bidi.types.model
+  Title: strands.experimental.bidi.types.model
+- docs/api/python/strands.experimental.hooks.events
+  Title: strands.experimental.hooks.events
+- docs/api/python/strands.experimental.steering.context_providers.ledger_provider
+  Title: strands.experimental.steering.context_providers.ledger_provider
+- docs/api/python/strands.experimental.steering.core.action
+  Title: strands.experimental.steering.core.action
+- docs/api/python/strands.experimental.steering.core.context
+  Title: strands.experimental.steering.core.context
+- docs/api/python/strands.experimental.steering.core.handler
+  Title: strands.experimental.steering.core.handler
+- docs/api/python/strands.experimental.steering.handlers.llm.llm_handler
+  Title: strands.experimental.steering.handlers.llm.llm_handler
+- docs/api/python/strands.experimental.steering.handlers.llm.mappers
+  Title: strands.experimental.steering.handlers.llm.mappers
+- docs/api/python/strands.handlers.callback_handler
+  Title: strands.handlers.callback_handler
+- docs/api/python/strands.hooks.events
+  Title: strands.hooks.events
+- docs/api/python/strands.hooks.registry
+  Title: strands.hooks.registry
+- docs/api/python/strands.models.anthropic
+  Title: strands.models.anthropic
+- docs/api/python/strands.interrupt
+  Title: strands.interrupt
+- docs/api/python/strands.models.bedrock
+  Title: strands.models.bedrock
+- docs/api/python/strands.models.gemini
+  Title: strands.models.gemini
+- docs/api/python/strands.models.litellm
+  Title: strands.models.litellm
+- docs/api/python/strands.models.llamaapi
+  Title: strands.models.llamaapi
+- docs/api/python/strands.models.llamacpp
+  Title: strands.models.llamacpp
+- docs/api/python/strands.models
+  Title: strands.models
+- docs/api/python/strands.models.mistral
+  Title: strands.models.mistral
+- docs/api/python/strands.models.model
+  Title: strands.models.model
+- docs/api/python/strands.models.ollama
+  Title: strands.models.ollama
+- docs/api/python/strands.models.openai
+  Title: strands.models.openai
+- docs/api/python/strands.models.openai_responses
+  Title: strands.models.openai_responses
+- docs/api/python/strands.models.sagemaker
+  Title: strands.models.sagemaker
+- docs/api/python/strands.models.writer
+  Title: strands.models.writer
+- docs/api/python/strands.multiagent.a2a.executor
+  Title: strands.multiagent.a2a.executor
+- docs/api/python/strands.multiagent.a2a.server
+  Title: strands.multiagent.a2a.server
+- docs/api/python/strands.multiagent.base
+  Title: strands.multiagent.base
+- docs/api/python/strands.multiagent.graph
+  Title: strands.multiagent.graph
+- docs/api/python/strands.multiagent.swarm
+  Title: strands.multiagent.swarm
+- docs/api/python/strands.plugins.decorator
+  Title: strands.plugins.decorator
+- docs/api/python/strands.plugins.plugin
+  Title: strands.plugins.plugin
+- docs/api/python/strands.plugins.registry
+  Title: strands.plugins.registry
+- docs/api/python/strands.session.file_session_manager
+  Title: strands.session.file_session_manager
+- docs/api/python/strands.session.repository_session_manager
+  Title: strands.session.repository_session_manager
+- docs/api/python/strands.session.s3_session_manager
+  Title: strands.session.s3_session_manager
+- docs/api/python/strands.session.session_repository
+  Title: strands.session.session_repository
+- docs/api/python/strands.session.session_manager
+  Title: strands.session.session_manager
+- docs/api/python/strands.telemetry.config
+  Title: strands.telemetry.config
+- docs/api/python/strands.telemetry.metrics
+  Title: strands.telemetry.metrics
+- docs/api/python/strands.telemetry.tracer
+  Title: strands.telemetry.tracer
+- docs/api/python/strands.tools.decorator
+  Title: strands.tools.decorator
+- docs/api/python/strands.tools.executors.concurrent
+  Title: strands.tools.executors.concurrent
+- docs/api/python/strands.tools.executors.sequential
+  Title: strands.tools.executors.sequential
+- docs/api/python/strands.tools.loader
+  Title: strands.tools.loader
+- docs/api/python/strands.tools.mcp.mcp_agent_tool
+  Title: strands.tools.mcp.mcp_agent_tool
+- docs/api/python/strands.tools.mcp.mcp_client
+  Title: strands.tools.mcp.mcp_client
+- docs/api/python/strands.tools.mcp.mcp_instrumentation
+  Title: strands.tools.mcp.mcp_instrumentation
+- docs/api/python/strands.tools.mcp.mcp_tasks
+  Title: strands.tools.mcp.mcp_tasks
+- docs/api/python/strands.tools.mcp.mcp_types
+  Title: strands.tools.mcp.mcp_types
+- docs/api/python/strands.tools.registry
+  Title: strands.tools.registry
+- docs/api/python/strands.tools.structured_output.structured_output_tool
+  Title: strands.tools.structured_output.structured_output_tool
+- docs/api/python/strands.tools.structured_output.structured_output_utils
+  Title: strands.tools.structured_output.structured_output_utils
+- docs/api/python/strands.tools.tool_provider
+  Title: strands.tools.tool_provider
+- docs/api/python/strands.tools.watcher
+  Title: strands.tools.watcher
+- docs/api/python/strands.tools.tools
+  Title: strands.tools.tools
+- docs/api/python/strands.types.a2a
+  Title: strands.types.a2a
+- docs/api/python/strands.types.agent
+  Title: strands.types.agent
+- docs/api/python/strands.types.citations
+  Title: strands.types.citations
+- docs/api/python/strands.types.collections
+  Title: strands.types.collections
+- docs/api/python/strands.types.content
+  Title: strands.types.content
+- docs/api/python/strands.types.exceptions
+  Title: strands.types.exceptions
+- docs/api/python/strands.types.event_loop
+  Title: strands.types.event_loop
+- docs/api/python/strands.types.guardrails
+  Title: strands.types.guardrails
+- docs/api/python/strands.types.interrupt
+  Title: strands.types.interrupt
+- docs/api/python/strands.types.media
+  Title: strands.types.media
+- docs/api/python/strands.types.json_dict
+  Title: strands.types.json_dict
+- docs/api/python/strands.types.session
+  Title: strands.types.session
+- docs/api/python/strands.types.streaming
+  Title: strands.types.streaming
+- docs/api/python/strands.types.tools
+  Title: strands.types.tools
+- docs/api/typescript/configureLogging
+  Title: configureLogging
+- docs/api/typescript/contentBlockFromData
+  Title: contentBlockFromData
+- docs/api/typescript/telemetry:getTracer
+  Title: getTracer
+- docs/api/typescript/isModelStreamEvent
+  Title: isModelStreamEvent
+- docs/api/typescript/telemetry:setupTracer
+  Title: setupTracer
+- docs/api/typescript/tool
+  Title: tool
+- docs/api/typescript/AfterInvocationEvent
+  Title: AfterInvocationEvent
+- docs/api/typescript/AfterModelCallEvent
+  Title: AfterModelCallEvent
+- docs/api/typescript/AfterToolCallEvent
+  Title: AfterToolCallEvent
+- docs/api/typescript/AfterToolsEvent
+  Title: AfterToolsEvent
+- docs/api/typescript/Agent
+  Title: Agent
+- docs/api/typescript/AgentResult
+  Title: AgentResult
+- docs/api/typescript/AgentResultEvent
+  Title: AgentResultEvent
+- docs/api/typescript/AppState
+  Title: AppState
+- docs/api/typescript/BedrockModel
+  Title: BedrockModel
+- docs/api/typescript/BeforeInvocationEvent
+  Title: BeforeInvocationEvent
+- docs/api/typescript/BeforeModelCallEvent
+  Title: BeforeModelCallEvent
+- docs/api/typescript/BeforeToolCallEvent
+  Title: BeforeToolCallEvent
+- docs/api/typescript/BeforeToolsEvent
+  Title: BeforeToolsEvent
+- docs/api/typescript/CachePointBlock
+  Title: CachePointBlock
+- docs/api/typescript/CitationsBlock
+  Title: CitationsBlock
+- docs/api/typescript/ConcurrentInvocationError
+  Title: ConcurrentInvocationError
+- docs/api/typescript/ContentBlockEvent
+  Title: ContentBlockEvent
+- docs/api/typescript/ContextWindowOverflowError
+  Title: ContextWindowOverflowError
+- docs/api/typescript/DocumentBlock
+  Title: DocumentBlock
+- docs/api/typescript/FunctionTool
+  Title: FunctionTool
+- docs/api/typescript/GuardContentBlock
+  Title: GuardContentBlock
+- docs/api/typescript/FileStorage
+  Title: FileStorage
+- docs/api/typescript/HookRegistry
+  Title: HookRegistry
+- docs/api/typescript/HookableEvent
+  Title: HookableEvent
+- docs/api/typescript/ImageBlock
+  Title: ImageBlock
+- docs/api/typescript/JsonBlock
+  Title: JsonBlock
+- docs/api/typescript/JsonValidationError
+  Title: JsonValidationError
+- docs/api/typescript/InitializedEvent
+  Title: InitializedEvent
+- docs/api/typescript/MaxTokensError
+  Title: MaxTokensError
+- docs/api/typescript/McpClient
+  Title: McpClient
+- docs/api/typescript/Message
+  Title: Message
+- docs/api/typescript/MessageAddedEvent
+  Title: MessageAddedEvent
+- docs/api/typescript/Model
+  Title: Model
+- docs/api/typescript/ModelError
+  Title: ModelError
+- docs/api/typescript/ModelMessageEvent
+  Title: ModelMessageEvent
+- docs/api/typescript/ModelStreamUpdateEvent
+  Title: ModelStreamUpdateEvent
+- docs/api/typescript/ModelThrottledError
+  Title: ModelThrottledError
+- docs/api/typescript/NullConversationManager
+  Title: NullConversationManager
+- docs/api/typescript/S3Location
+  Title: S3Location
+- docs/api/typescript/ReasoningBlock
+  Title: ReasoningBlock
+- docs/api/typescript/S3Storage
+  Title: S3Storage
+- docs/api/typescript/SessionManager
+  Title: SessionManager
+- docs/api/typescript/SlidingWindowConversationManager
+  Title: SlidingWindowConversationManager
+- docs/api/typescript/StreamEvent
+  Title: StreamEvent
+- docs/api/typescript/StructuredOutputException
+  Title: StructuredOutputException
+- docs/api/typescript/Swarm
+  Title: Swarm
+- docs/api/typescript/TextBlock
+  Title: TextBlock
+- docs/api/typescript/Tool
+  Title: Tool
+- docs/api/typescript/ToolResultBlock
+  Title: ToolResultBlock
+- docs/api/typescript/ToolStreamUpdateEvent
+  Title: ToolStreamUpdateEvent
+- docs/api/typescript/ToolUseBlock
+  Title: ToolUseBlock
+- docs/api/typescript/ToolResultEvent
+  Title: ToolResultEvent
+- docs/api/typescript/ToolValidationError
+  Title: ToolValidationError
+- docs/api/typescript/VideoBlock
+  Title: VideoBlock
+- docs/api/typescript/telemetry
+  Title: telemetry
+- docs/api/typescript/ZodTool
+  Title: ZodTool
+- docs/api/typescript/AgentData
+  Title: AgentData
+- docs/api/typescript/BaseModelConfig
+  Title: BaseModelConfig
+- docs/api/typescript/BedrockModelConfig
+  Title: BedrockModelConfig
+- docs/api/typescript/BedrockModelOptions
+  Title: BedrockModelOptions
+- docs/api/typescript/CachePointBlockData
+  Title: CachePointBlockData
+- docs/api/typescript/Citation
+  Title: Citation
+- docs/api/typescript/CitationsBlockData
+  Title: CitationsBlockData
+- docs/api/typescript/CitationsDelta
+  Title: CitationsDelta
+- docs/api/typescript/DocumentBlockData
+  Title: DocumentBlockData
+- docs/api/typescript/FunctionToolConfig
+  Title: FunctionToolConfig
+- docs/api/typescript/GuardContentImage
+  Title: GuardContentImage
+- docs/api/typescript/GuardContentBlockData
+  Title: GuardContentBlockData
+- docs/api/typescript/GuardContentText
+  Title: GuardContentText
+- docs/api/typescript/HookProvider
+  Title: HookProvider
+- docs/api/typescript/ImageBlockData
+  Title: ImageBlockData
+- docs/api/typescript/InvokableTool
+  Title: InvokableTool
+- docs/api/typescript/MessageData
+  Title: MessageData
+- docs/api/typescript/Logger
+  Title: Logger
+- docs/api/typescript/Metrics
+  Title: Metrics
+- docs/api/typescript/ModelContentBlockDeltaEvent
+  Title: ModelContentBlockDeltaEvent
+- docs/api/typescript/ModelContentBlockDeltaEventData
+  Title: ModelContentBlockDeltaEventData
+- docs/api/typescript/ModelContentBlockStartEvent
+  Title: ModelContentBlockStartEvent
+- docs/api/typescript/ModelContentBlockStartEventData
+  Title: ModelContentBlockStartEventData
+- docs/api/typescript/ModelContentBlockStopEvent
+  Title: ModelContentBlockStopEvent
+- docs/api/typescript/ModelMessageStartEvent
+  Title: ModelMessageStartEvent
+- docs/api/typescript/ModelMessageStartEventData
+  Title: ModelMessageStartEventData
+- docs/api/typescript/ModelMessageStopEventData
+  Title: ModelMessageStopEventData
+- docs/api/typescript/ModelMessageStopEvent
+  Title: ModelMessageStopEvent
+- docs/api/typescript/ModelMetadataEvent
+  Title: ModelMetadataEvent
+- docs/api/typescript/ModelMetadataEventData
+  Title: ModelMetadataEventData
+- docs/api/typescript/ModelStopResponse
+  Title: ModelStopResponse
+- docs/api/typescript/ReasoningBlockData
+  Title: ReasoningBlockData
+- docs/api/typescript/ReasoningContentDelta
+  Title: ReasoningContentDelta
+- docs/api/typescript/S3LocationData
+  Title: S3LocationData
+- docs/api/typescript/SessionManagerConfig
+  Title: SessionManagerConfig
+- docs/api/typescript/Snapshot
+  Title: Snapshot
+- docs/api/typescript/SnapshotManifest
+  Title: SnapshotManifest
+- docs/api/typescript/SnapshotStorage
+  Title: SnapshotStorage
+- docs/api/typescript/SnapshotTriggerParams
+  Title: SnapshotTriggerParams
+- docs/api/typescript/StreamOptions
+  Title: StreamOptions
+- docs/api/typescript/TasksConfig
+  Title: TasksConfig
+- docs/api/typescript/TextBlockData
+  Title: TextBlockData
+- docs/api/typescript/TextDelta
+  Title: TextDelta
+- docs/api/typescript/ToolContext
+  Title: ToolContext
+- docs/api/typescript/ToolResultBlockData
+  Title: ToolResultBlockData
+- docs/api/typescript/ToolSpec
+  Title: ToolSpec
+- docs/api/typescript/ToolStreamEvent
+  Title: ToolStreamEvent
+- docs/api/typescript/ToolStreamEventData
+  Title: ToolStreamEventData
+- docs/api/typescript/ToolUse
+  Title: ToolUse
+- docs/api/typescript/ToolUseBlockData
+  Title: ToolUseBlockData
+- docs/api/typescript/ToolUseInputDelta
+  Title: ToolUseInputDelta
+- docs/api/typescript/ToolUseStart
+  Title: ToolUseStart
+- docs/api/typescript/telemetry:TracerConfig
+  Title: TracerConfig
+- docs/api/typescript/Usage
+  Title: Usage
+- docs/api/typescript/VideoBlockData
+  Title: VideoBlockData
+- docs/api/typescript/ZodToolConfig
+  Title: ZodToolConfig
+- docs/api/typescript/AgentConfig
+  Title: AgentConfig
+- docs/api/typescript/AgentStreamEvent
+  Title: AgentStreamEvent
+- docs/api/typescript/CitationGeneratedContent
+  Title: CitationGeneratedContent
+- docs/api/typescript/CitationLocation
+  Title: CitationLocation
+- docs/api/typescript/CitationSourceContent
+  Title: CitationSourceContent
+- docs/api/typescript/ContentBlock
+  Title: ContentBlock
+- docs/api/typescript/ContentBlockData
+  Title: ContentBlockData
+- docs/api/typescript/ContentBlockDelta
+  Title: ContentBlockDelta
+- docs/api/typescript/ContentBlockStart
+  Title: ContentBlockStart
+- docs/api/typescript/DocumentContentBlock
+  Title: DocumentContentBlock
+- docs/api/typescript/DocumentContentBlockData
+  Title: DocumentContentBlockData
+- docs/api/typescript/DocumentSource
+  Title: DocumentSource
+- docs/api/typescript/DocumentSourceData
+  Title: DocumentSourceData
+- docs/api/typescript/DocumentFormat
+  Title: DocumentFormat
+- docs/api/typescript/FunctionToolCallback
+  Title: FunctionToolCallback
+- docs/api/typescript/GuardImageFormat
+  Title: GuardImageFormat
+- docs/api/typescript/GuardImageSource
+  Title: GuardImageSource
+- docs/api/typescript/GuardQualifier
+  Title: GuardQualifier
+- docs/api/typescript/HookableEventConstructor
+  Title: HookableEventConstructor
+- docs/api/typescript/HookCallback
+  Title: HookCallback
+- docs/api/typescript/ImageFormat
+  Title: ImageFormat
+- docs/api/typescript/ImageSource
+  Title: ImageSource
+- docs/api/typescript/ImageSourceData
+  Title: ImageSourceData
+- docs/api/typescript/JSONSchema
+  Title: JSONSchema
+- docs/api/typescript/JSONValue
+  Title: JSONValue
+- docs/api/typescript/McpClientConfig
+  Title: McpClientConfig
+- docs/api/typescript/ModelStreamEvent
+  Title: ModelStreamEvent
+- docs/api/typescript/Role
+  Title: Role
+- docs/api/typescript/S3StorageConfig
+  Title: S3StorageConfig
+- docs/api/typescript/SaveLatestStrategy
+  Title: SaveLatestStrategy
+- docs/api/typescript/Scope
+  Title: Scope
+- docs/api/typescript/SessionStorage
+  Title: SessionStorage
+- docs/api/typescript/SlidingWindowConversationManagerConfig
+  Title: SlidingWindowConversationManagerConfig
+- docs/api/typescript/SnapshotLocation
+  Title: SnapshotLocation
+- docs/api/typescript/SnapshotTriggerCallback
+  Title: SnapshotTriggerCallback
+- docs/api/typescript/StopReason
+  Title: StopReason
+- docs/api/typescript/SystemContentBlock
+  Title: SystemContentBlock
+- docs/api/typescript/SystemPrompt
+  Title: SystemPrompt
+- docs/api/typescript/SystemPromptData
+  Title: SystemPromptData
+- docs/api/typescript/ToolChoice
+  Title: ToolChoice
+- docs/api/typescript/ToolList
+  Title: ToolList
+- docs/api/typescript/ToolResultContent
+  Title: ToolResultContent
+- docs/api/typescript/ToolResultStatus
+  Title: ToolResultStatus
+- docs/api/typescript/VideoFormat
+  Title: VideoFormat
+- docs/api/typescript/VideoSourceData
+  Title: VideoSourceData
+- docs/api/typescript/VideoSource
+  Title: VideoSource
+- docs/api/typescript/ToolStreamGenerator
+  Title: ToolStreamGenerator
+
+ [32m✓[39m test/content-collection.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 138[2mms[22m[39m
+[90mstdout[2m | test/sidebar.test.ts[2m > [22m[2mSidebar Generation from navigation.yml[2m > [22m[2mshould generate sidebar structure from navigation.yml
+[22m[39m
+=== Generated Sidebar Structure ===
+
+[
+  {
+    "label": "User Guide",
+    "items": [
+      {
+        "slug": "docs/index"
+      },
+      {
+        "label": "Quickstart",
+        "items": [
+          {
+            "slug": "docs/user-guide/quickstart/overview"
+          },
+          {
+            "slug": "docs/user-guide/quickstart/python"
+          },
+          {
+            "slug": "docs/user-guide/quickstart/typescript"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Concepts",
+        "items": [
+          {
+            "label": "Agents",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/agents/agent-loop"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/state"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/session-management"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/prompts"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/retry-strategies"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/hooks"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/structured-output"
+              },
+              {
+                "slug": "docs/user-guide/concepts/agents/conversation-management"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "label": "Tools",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/tools"
+              },
+              {
+                "slug": "docs/user-guide/concepts/tools/custom-tools"
+              },
+              {
+                "slug": "docs/user-guide/concepts/tools/mcp-tools"
+              },
+              {
+                "slug": "docs/user-guide/concepts/tools/executors"
+              },
+              {
+                "slug": "docs/user-guide/concepts/tools/community-tools-package"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "label": "Model Providers",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/model-providers"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/amazon-bedrock"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/amazon-nova"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/anthropic"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/gemini"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/litellm"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/llamacpp"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/llamaapi"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/mistral"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/ollama"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/openai"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/sagemaker"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/writer"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/custom_model_provider"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/cohere"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/clova-studio"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/fireworksai"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/nebius-token-factory"
+              },
+              {
+                "slug": "docs/user-guide/concepts/model-providers/xai"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "label": "Streaming",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/streaming"
+              },
+              {
+                "slug": "docs/user-guide/concepts/streaming/async-iterators"
+              },
+              {
+                "slug": "docs/user-guide/concepts/streaming/callback-handlers"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "label": "Multi-agent",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/multi-agent/agent-to-agent"
+              },
+              {
+                "slug": "docs/user-guide/concepts/multi-agent/agents-as-tools"
+              },
+              {
+                "slug": "docs/user-guide/concepts/multi-agent/swarm"
+              },
+              {
+                "slug": "docs/user-guide/concepts/multi-agent/graph"
+              },
+              {
+                "slug": "docs/user-guide/concepts/multi-agent/workflow"
+              },
+              {
+                "slug": "docs/user-guide/concepts/multi-agent/multi-agent-patterns"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "slug": "docs/user-guide/concepts/interrupts"
+          },
+          {
+            "label": "Bidirectional Streaming",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/quickstart"
+              },
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/agent"
+              },
+              {
+                "label": "Models",
+                "items": [
+                  {
+                    "slug": "docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic"
+                  },
+                  {
+                    "slug": "docs/user-guide/concepts/bidirectional-streaming/models/gemini_live"
+                  },
+                  {
+                    "slug": "docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime"
+                  }
+                ],
+                "collapsed": true
+              },
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/io"
+              },
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/events"
+              },
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/interruption"
+              },
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/hooks"
+              },
+              {
+                "slug": "docs/user-guide/concepts/bidirectional-streaming/session-management"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "label": "Experimental",
+            "items": [
+              {
+                "slug": "docs/user-guide/concepts/experimental/agent-config"
+              },
+              {
+                "slug": "docs/user-guide/concepts/experimental/steering"
+              }
+            ],
+            "collapsed": true
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Safety & Security",
+        "items": [
+          {
+            "slug": "docs/user-guide/safety-security/responsible-ai"
+          },
+          {
+            "slug": "docs/user-guide/safety-security/guardrails"
+          },
+          {
+            "slug": "docs/user-guide/safety-security/prompt-engineering"
+          },
+          {
+            "slug": "docs/user-guide/safety-security/pii-redaction"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Observability & Debugging",
+        "items": [
+          {
+            "slug": "docs/user-guide/observability-evaluation/observability"
+          },
+          {
+            "slug": "docs/user-guide/observability-evaluation/metrics"
+          },
+          {
+            "slug": "docs/user-guide/observability-evaluation/traces"
+          },
+          {
+            "slug": "docs/user-guide/observability-evaluation/logs"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Strands Evals SDK",
+        "items": [
+          {
+            "slug": "docs/user-guide/evals-sdk/quickstart"
+          },
+          {
+            "slug": "docs/user-guide/evals-sdk/eval-sop"
+          },
+          {
+            "label": "Evaluators",
+            "items": [
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/output_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/trajectory_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/interactions_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/evaluators/custom_evaluator"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "slug": "docs/user-guide/evals-sdk/experiment_generator"
+          },
+          {
+            "label": "Simulators",
+            "items": [
+              {
+                "slug": "docs/user-guide/evals-sdk/simulators"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/simulators/user_simulation"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "label": "How-To Guides",
+            "items": [
+              {
+                "slug": "docs/user-guide/evals-sdk/how-to/experiment_management"
+              },
+              {
+                "slug": "docs/user-guide/evals-sdk/how-to/serialization"
+              }
+            ],
+            "collapsed": true
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Deploy",
+        "items": [
+          {
+            "slug": "docs/user-guide/deploy/operating-agents-in-production"
+          },
+          {
+            "label": "Amazon Bedrock AgentCore",
+            "items": [
+              {
+                "slug": "docs/user-guide/deploy/deploy_to_bedrock_agentcore"
+              },
+              {
+                "slug": "docs/user-guide/deploy/deploy_to_bedrock_agentcore/python"
+              },
+              {
+                "slug": "docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_aws_lambda"
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_aws_fargate"
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_aws_apprunner"
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_amazon_eks"
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_amazon_ec2"
+          },
+          {
+            "label": "Docker",
+            "items": [
+              {
+                "slug": "docs/user-guide/deploy/deploy_to_docker"
+              },
+              {
+                "slug": "docs/user-guide/deploy/deploy_to_docker/python"
+              },
+              {
+                "slug": "docs/user-guide/deploy/deploy_to_docker/typescript"
+              }
+            ],
+            "collapsed": true
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_kubernetes"
+          },
+          {
+            "slug": "docs/user-guide/deploy/deploy_to_terraform"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "slug": "docs/user-guide/versioning-and-support"
+      }
+    ]
+  },
+  {
+    "label": "Examples",
+    "items": [
+      {
+        "slug": "docs/examples"
+      },
+      {
+        "slug": "docs/examples/python/cli-reference-agent"
+      },
+      {
+        "slug": "docs/examples/python/weather_forecaster"
+      },
+      {
+        "slug": "docs/examples/python/memory_agent"
+      },
+      {
+        "slug": "docs/examples/python/file_operations"
+      },
+      {
+        "slug": "docs/examples/python/agents_workflows"
+      },
+      {
+        "slug": "docs/examples/python/knowledge_base_agent"
+      },
+      {
+        "slug": "docs/examples/python/structured_output"
+      },
+      {
+        "slug": "docs/examples/python/multi_agent_example/multi_agent_example"
+      },
+      {
+        "slug": "docs/examples/python/graph_loops_example"
+      },
+      {
+        "slug": "docs/examples/python/meta_tooling"
+      },
+      {
+        "slug": "docs/examples/python/mcp_calculator"
+      },
+      {
+        "slug": "docs/examples/python/multimodal"
+      }
+    ]
+  },
+  {
+    "label": "Community",
+    "items": [
+      {
+        "slug": "docs/community/community-packages"
+      },
+      {
+        "slug": "docs/community/get-featured"
+      },
+      {
+        "label": "Integrations",
+        "items": [
+          {
+            "slug": "docs/community/integrations/ag-ui"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Model Providers",
+        "items": [
+          {
+            "slug": "docs/community/model-providers/cohere"
+          },
+          {
+            "slug": "docs/community/model-providers/clova-studio"
+          },
+          {
+            "slug": "docs/community/model-providers/fireworksai"
+          },
+          {
+            "slug": "docs/community/model-providers/nebius-token-factory"
+          },
+          {
+            "slug": "docs/community/model-providers/nvidia-nim"
+          },
+          {
+            "slug": "docs/community/model-providers/sglang"
+          },
+          {
+            "slug": "docs/community/model-providers/vllm"
+          },
+          {
+            "slug": "docs/community/model-providers/mlx"
+          },
+          {
+            "slug": "docs/community/model-providers/xai"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Session Managers",
+        "items": [
+          {
+            "slug": "docs/community/session-managers/agentcore-memory"
+          },
+          {
+            "slug": "docs/community/session-managers/strands-valkey-session-manager"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Tool Protocols",
+        "items": [
+          {
+            "slug": "docs/community/tools/utcp"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Tools",
+        "items": [
+          {
+            "slug": "docs/community/tools/strands-deepgram"
+          },
+          {
+            "slug": "docs/community/tools/strands-hubspot"
+          },
+          {
+            "slug": "docs/community/tools/strands-teams"
+          },
+          {
+            "slug": "docs/community/tools/strands-telegram"
+          },
+          {
+            "slug": "docs/community/tools/strands-telegram-listener"
+          }
+        ],
+        "collapsed": true
+      }
+    ]
+  },
+  {
+    "label": "Labs",
+    "items": [
+      {
+        "slug": "docs/labs"
+      },
+      {
+        "label": "Projects",
+        "items": [
+          {
+            "slug": "docs/labs/robots"
+          },
+          {
+            "slug": "docs/labs/robots-sim"
+          },
+          {
+            "slug": "docs/labs/ai-functions"
+          }
+        ],
+        "collapsed": true
+      }
+    ]
+  },
+  {
+    "label": "Contribute ❤️",
+    "items": [
+      {
+        "slug": "docs/contribute"
+      },
+      {
+        "label": "Contribution Types",
+        "items": [
+          {
+            "slug": "docs/contribute/contributing/core-sdk"
+          },
+          {
+            "slug": "docs/contribute/contributing/documentation"
+          },
+          {
+            "slug": "docs/contribute/contributing/feature-proposals"
+          },
+          {
+            "slug": "docs/contribute/contributing/extensions"
+          }
+        ],
+        "collapsed": true
+      }
+    ]
+  }
+]
+
+ [32m✓[39m test/sidebar.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+[90mstdout[2m | test/route-middleware.test.ts[2m > [22m[2mSidebar filtering with live navigation.yml data[2m > [22m[2mshould have loaded sidebar from navigation.yml
+[22m[39m
+Loaded 5 top-level sidebar items
+
+[90mstdout[2m | test/route-middleware.test.ts[2m > [22m[2mSidebar filtering with live navigation.yml data[2m > [22m[2mshould filter sidebar to only Examples items for /examples/ basePath
+[22m[39m
+Examples section has 12 links:
+  - /docs/examples/python/cli-reference-agent/
+  - /docs/examples/python/weather_forecaster/
+  - /docs/examples/python/memory_agent/
+  - /docs/examples/python/file_operations/
+  - /docs/examples/python/agents_workflows/
+  ... and 7 more
+
+[90mstdout[2m | test/route-middleware.test.ts[2m > [22m[2mSidebar filtering with live navigation.yml data[2m > [22m[2mshould filter sidebar to only User Guide items for /user-guide/ basePath
+[22m[39m
+User Guide section has 97 links
+
+[90mstdout[2m | test/route-middleware.test.ts[2m > [22m[2mSidebar filtering with live navigation.yml data[2m > [22m[2mshould filter sidebar to only Community items for /community/ basePath
+[22m[39m
+Community section has 20 links
+
+[90mstdout[2m | test/route-middleware.test.ts[2m > [22m[2mIntegration: Full filtering flow[2m > [22m[2mshould correctly filter sidebar for /examples/ page
+[22m[39m
+/docs/examples/ page should show 12 sidebar links
+
+ [32m✓[39m test/route-middleware.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+[90mstderr[2m | test/remark-mkdocs-snippets.test.ts[2m > [22m[2mremark-mkdocs-snippets[2m > [22m[2mshould handle missing section gracefully
+[22m[39m[remark-mkdocs-snippets] Section "nonexistent_section" not found in /tmp/snippets-test-YHJrkY/example.ts
+
+[90mstderr[2m | test/remark-mkdocs-snippets.test.ts[2m > [22m[2mremark-mkdocs-snippets[2m > [22m[2mshould handle missing file gracefully
+[22m[39m[remark-mkdocs-snippets] Failed to read file: /tmp/snippets-test-YHJrkY/nonexistent.ts
+
+ [32m✓[39m test/remark-mkdocs-snippets.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m test/redirect.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m test/update-docs.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m      Tests [22m [1m[32m276 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (278)[39m
+[2m   Start at [22m 03:04:14
+[2m   Duration [22m 2.40s[2m (transform 2.13s, setup 0ms, import 3.25s, tests 1.73s, environment 2ms)[22m
+
