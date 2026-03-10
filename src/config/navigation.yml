@@ -203,6 +203,7 @@ sidebar:
       - label: Integrations
         items:
           - docs/community/integrations/ag-ui
+          - docs/community/integrations/datadog-ai-guard
       - label: Model Providers
         items:
           - docs/community/model-providers/cohere
