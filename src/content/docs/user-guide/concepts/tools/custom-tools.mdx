@@ -151,6 +151,121 @@ In TypeScript, `inputSchema` is always provided explicitly in the `tool()` confi
 
 
 
+### Modifying tool specifications at runtime
+
+The `@tool` decorator and `PythonAgentTool` both support modifying tool specifications after creation through the `tool_spec` setter. This is useful when you need to adjust a tool's description or input schema based on runtime conditions—for example, feature flags, user permissions, or per-agent customization—without recreating the tool instance.
+
+<Tabs>
+<Tab label="Python">
+
+**Updating a decorated tool's spec**
+
+You can read the current `tool_spec`, modify it, and assign it back:
+
+```python
+from strands import tool
+
+@tool
+def search(query: str) -> str:
+    """Search for documents.
+
+    Args:
+        query: The search query
+    """
+    return f"Results for: {query}"
+
+# Read the current spec and build a new one with an extra parameter
+spec = search.tool_spec.copy()
+spec["inputSchema"] = search.tool_spec["inputSchema"].copy()
+spec["inputSchema"]["json"] = search.tool_spec["inputSchema"]["json"].copy()
+spec["inputSchema"]["json"]["properties"] = search.tool_spec["inputSchema"]["json"]["properties"].copy()
+
+spec["description"] = "Search for documents with a result limit."
+spec["inputSchema"]["json"]["properties"]["max_results"] = {
+    "type": "integer",
+    "description": "Maximum number of results to return",
+}
+
+search.tool_spec = spec
+```
+
+**Updating a module-based tool's spec**
+
+The `tool_spec` setter also works on `PythonAgentTool`, which is how module-based tools are represented internally:
+
+```python
+from strands.tools.tools import PythonAgentTool
+
+def my_func(tool_use, **kwargs):
+    return {
+        "toolUseId": tool_use["toolUseId"],
+        "status": "success",
+        "content": [{"text": "ok"}],
+    }
+
+spec = {
+    "name": "my_func",
+    "description": "Original description",
+    "inputSchema": {
+        "json": {
+            "type": "object",
+            "properties": {"input": {"type": "string"}},
+            "required": ["input"],
+        }
+    },
+}
+
+my_tool = PythonAgentTool("my_func", spec, my_func)
+
+# Update the description at runtime
+new_spec = my_tool.tool_spec.copy()
+new_spec["description"] = "Updated description for this context"
+my_tool.tool_spec = new_spec
+```
+
+**Validation rules**
+
+The setter validates the new spec before applying it. The following rules apply.
+
+| Rule | Details |
+|------|---------|
+| Name must match | The `name` field must match the tool's original name. You can't rename a tool through the setter. |
+| Description required | The spec must contain a `description` field. |
+| Input schema required | The spec must contain an `inputSchema` field. |
+
+Assigning a spec that violates these rules raises a `ValueError`:
+
+```python
+from strands import tool
+
+@tool
+def my_tool(query: str) -> str:
+    """A tool."""
+    return query
+
+# Raises ValueError: cannot change tool name via tool_spec
+my_tool.tool_spec = {
+    "name": "different_name",
+    "description": "Updated",
+    "inputSchema": {"json": {"type": "object", "properties": {}, "required": []}},
+}
+
+# Raises ValueError: tool_spec must contain 'description'
+my_tool.tool_spec = {
+    "name": "my_tool",
+    "inputSchema": {"json": {"type": "object", "properties": {}, "required": []}},
+}
+```
+</Tab>
+<Tab label="TypeScript">
+
+```ts
+// Not supported in TypeScript
+```
+</Tab>
+</Tabs>
+
+
 ## Using and Customizing Tools:
 
 ### Loading Function-Based Tools
