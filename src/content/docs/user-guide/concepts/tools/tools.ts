@@ -21,6 +21,28 @@ async function basicToolExample() {
   // --8<-- [end:basic_tool]
 }
 
+// JSON schema tool example
+async function jsonSchemaExample() {
+  // --8<-- [start:json_schema_tool]
+  const weatherTool = tool({
+    name: 'weather_forecast',
+    description: 'Get weather forecast for a city',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        city: { type: 'string', description: 'The name of the city' },
+        days: { type: 'number', description: 'Number of days for the forecast' },
+      },
+      required: ['city'],
+    },
+    callback: (input) => {
+      const { city, days = 3 } = input as { city: string; days?: number }
+      return `Weather forecast for ${city} for the next ${days} days...`
+    },
+  })
+  // --8<-- [end:json_schema_tool]
+}
+
 // Zod schema validation example
 async function zodSchemaExample() {
   // --8<-- [start:zod_schema]

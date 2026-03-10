@@ -1,8 +1,49 @@
+<!--
+  Redirect404: handles client-side redirects for old/moved URLs that land on the 404 page.
+
+  The problem: when a user hits a URL that no longer exists, the browser renders the 404 page
+  before any JavaScript runs. Without intervention, users see a flash of the 404 content before
+  being redirected to the correct page.
+
+  The solution:
+  1. The global style hides .main-pane immediately via CSS, before any paint.
+  2. tryRedirect() checks if the current URL matches a known redirect rule. If it does,
+     location.replace() fires and the user navigates away without ever seeing the 404 content.
+  3. If no redirect applies (genuine 404), showPage() reveals .main-pane immediately.
+  4. The 3s timeout is a safety net: if something goes wrong (e.g. location.replace throws),
+     the page will always become visible again rather than staying blank forever.
+-->
+
+<style is:global>
+  .main-pane {
+    visibility: hidden;
+  }
+</style>
+
+<noscript>
+  <!-- Without JS, the page would stay hidden forever since only the script reveals .main-pane -->
+  <style>
+    .main-pane {
+      visibility: visible !important;
+    }
+  </style>
+</noscript>
+
 <script>
   import { resolveRedirectFromUrl } from '../util/redirect'
 
-  const target = resolveRedirectFromUrl(window.location.href)
-  if (target) {
+  // Safety net: reveal the page after 3s no matter what, in case the redirect doesn't fire
+  const showTimeout = setTimeout(showPage, 3000)
+
+  if (!tryRedirect()) {
+    showPage()
+    clearTimeout(showTimeout)
+  }
+
+  function tryRedirect(): boolean {
+    const target = resolveRedirectFromUrl(window.location.href)
+    if (!target) return false
+
     let dest: string
     if (target.startsWith('https://') || target.startsWith('http://')) {
       dest = target
@@ -10,10 +51,18 @@
       const base = import.meta.env.BASE_URL.replace(/\/$/, '')
       dest = target === '/' ? `${base}/` : `${base}/${target}`
     }
+
     const currentPath = window.location.pathname.replace(/\/+$/, '')
     const destPath = dest.replace(/\/+$/, '')
-    if (destPath !== currentPath) {
-      window.location.replace(dest)
-    }
+    if (destPath === currentPath) return false
+
+    console.log(`[Redirect404] Redirecting ${window.location.href} → ${dest}`)
+    window.location.replace(dest)
+    return true
+  }
+
+  function showPage() {
+    const el = document.querySelector<HTMLElement>('.main-pane')
+    if (el) el.style.visibility = 'visible'
   }
 </script>

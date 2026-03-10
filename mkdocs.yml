@@ -1,0 +1,335 @@
+site_name: Strands Agents SDK
+site_description: Documentation for Strands Agents, a simple-to-use, code-first, lightweight library for building AI agents
+site_dir: site
+site_url: https://strandsagents.com
+
+repo_url: https://github.com/strands-agents/sdk-python
+edit_uri: https://github.com/strands-agents/docs/edit/main/docs
+
+theme:
+  name: material
+  custom_dir: overrides
+  logo: assets/logo-light.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+  logo_dark: assets/logo-dark.svg  # Safari doesn't support <style> tags inside SVGs so we need to a light and a dark SVG
+  favicon: assets/logo-auto.svg
+  favicon_png: assets/logo-light.png  # Safari doesn't support SVG favicons
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      primary: custom
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: custom
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    admonition:
+      code: material/code-json
+  features:
+    - content.action.edit
+    - content.code.copy
+    - content.tabs.link
+    - content.code.select
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.highlight
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.snippets:
+      base_path: ["docs"]
+      check_paths: true
+      dedent_subsections: true
+  - pymdownx.superfences:
+      custom_fences:
+          - name: mermaid
+            class: mermaid
+            format: !!python/name:pymdownx.superfences.fence_code_format
+  - tables
+  - toc:
+      title: On this page
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  # Workaround for site_url breaking mermaid rendering; see the following for more info:
+  # https://github.com/squidfunk/mkdocs-material/issues/3742#issuecomment-1076068038
+  - https://unpkg.com/mermaid@11/dist/mermaid.min.js
+  - assets/auto-redirect.js
+
+nav:
+  - User Guide:
+    - Welcome: README.md
+    - Quickstart:
+      - Getting Started: user-guide/quickstart/overview.md
+      - Python: user-guide/quickstart/python.md
+      - TypeScript: user-guide/quickstart/typescript.md
+    - Concepts:
+      - Agents:
+        - Agent Loop: user-guide/concepts/agents/agent-loop.md
+        - State: user-guide/concepts/agents/state.md
+        - Session Management: user-guide/concepts/agents/session-management.md
+        - Prompts: user-guide/concepts/agents/prompts.md
+        - Retry Strategies: user-guide/concepts/agents/retry-strategies.md
+        - Hooks: user-guide/concepts/agents/hooks.md
+        - Structured Output: user-guide/concepts/agents/structured-output.md
+        - Conversation Management: user-guide/concepts/agents/conversation-management.md
+      - Tools:
+        - Overview: user-guide/concepts/tools/index.md
+        - Creating Custom Tools: user-guide/concepts/tools/custom-tools.md
+        - Model Context Protocol (MCP): user-guide/concepts/tools/mcp-tools.md
+        - Executors: user-guide/concepts/tools/executors.md
+        - Community Tools Package: user-guide/concepts/tools/community-tools-package.md
+      - Plugins:
+        - Overview: user-guide/concepts/plugins/index.md
+      - Model Providers:
+        - Overview: user-guide/concepts/model-providers/index.md
+        - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
+        - Amazon Nova: user-guide/concepts/model-providers/amazon-nova.md
+        - Anthropic: user-guide/concepts/model-providers/anthropic.md
+        - Gemini: user-guide/concepts/model-providers/gemini.md
+        - LiteLLM: user-guide/concepts/model-providers/litellm.md
+        - llama.cpp: user-guide/concepts/model-providers/llamacpp.md
+        - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+        - MistralAI: user-guide/concepts/model-providers/mistral.md
+        - Ollama: user-guide/concepts/model-providers/ollama.md
+        - OpenAI: user-guide/concepts/model-providers/openai.md
+        - SageMaker: user-guide/concepts/model-providers/sagemaker.md
+        - Writer: user-guide/concepts/model-providers/writer.md
+        - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
+        - Cohere<sup> community</sup>: user-guide/concepts/model-providers/cohere.md
+        - CLOVA Studio<sup> community</sup>: user-guide/concepts/model-providers/clova-studio.md
+        - FireworksAI<sup> community</sup>: user-guide/concepts/model-providers/fireworksai.md
+        - Nebius Token Factory<sup> community</sup>: user-guide/concepts/model-providers/nebius-token-factory.md
+        - xAI<sup> community</sup>: user-guide/concepts/model-providers/xai.md
+      - Streaming:
+        - Overview: user-guide/concepts/streaming/index.md
+        - Async Iterators: user-guide/concepts/streaming/async-iterators.md
+        - Callback Handlers: user-guide/concepts/streaming/callback-handlers.md
+      - Multi-agent:
+        - Agent2Agent (A2A): user-guide/concepts/multi-agent/agent-to-agent.md
+        - Agents as Tools: user-guide/concepts/multi-agent/agents-as-tools.md
+        - Swarm: user-guide/concepts/multi-agent/swarm.md
+        - Graph: user-guide/concepts/multi-agent/graph.md
+        - Workflow: user-guide/concepts/multi-agent/workflow.md
+        - Multi-agent Patterns: user-guide/concepts/multi-agent/multi-agent-patterns.md
+      - Interrupts: user-guide/concepts/interrupts.md
+      - Bidirectional Streaming:
+        - Quickstart: user-guide/concepts/bidirectional-streaming/quickstart.md
+        - BidiAgent: user-guide/concepts/bidirectional-streaming/agent.md
+        - Models:
+          - Nova Sonic: user-guide/concepts/bidirectional-streaming/models/nova_sonic.md
+          - Gemini Live: user-guide/concepts/bidirectional-streaming/models/gemini_live.md
+          - OpenAI Realtime: user-guide/concepts/bidirectional-streaming/models/openai_realtime.md
+        - IO: user-guide/concepts/bidirectional-streaming/io.md
+        - Events: user-guide/concepts/bidirectional-streaming/events.md
+        - Interruptions: user-guide/concepts/bidirectional-streaming/interruption.md
+        - Hooks: user-guide/concepts/bidirectional-streaming/hooks.md
+        - Session Management: user-guide/concepts/bidirectional-streaming/session-management.md
+      - Experimental:
+        - AgentConfig: user-guide/concepts/experimental/agent-config.md
+        - Steering: user-guide/concepts/experimental/steering.md
+    - Safety & Security:
+      - Responsible AI: user-guide/safety-security/responsible-ai.md
+      - Guardrails: user-guide/safety-security/guardrails.md
+      - Prompt Engineering: user-guide/safety-security/prompt-engineering.md
+      - PII Redaction: user-guide/safety-security/pii-redaction.md
+    - Observability & Debugging:
+      - Observability: user-guide/observability-evaluation/observability.md
+      - Metrics: user-guide/observability-evaluation/metrics.md
+      - Traces: user-guide/observability-evaluation/traces.md
+      - Logs: user-guide/observability-evaluation/logs.md
+    - Strands Evals SDK:
+      - Getting Started: user-guide/evals-sdk/quickstart.md
+      - Eval SOP: user-guide/evals-sdk/eval-sop.md
+      - Evaluators:
+        - Overview: user-guide/evals-sdk/evaluators/index.md
+        - Output: user-guide/evals-sdk/evaluators/output_evaluator.md
+        - Trajectory: user-guide/evals-sdk/evaluators/trajectory_evaluator.md
+        - Interactions: user-guide/evals-sdk/evaluators/interactions_evaluator.md
+        - Helpfulness: user-guide/evals-sdk/evaluators/helpfulness_evaluator.md
+        - Faithfulness: user-guide/evals-sdk/evaluators/faithfulness_evaluator.md
+        - Goal Success Rate: user-guide/evals-sdk/evaluators/goal_success_rate_evaluator.md
+        - Tool Selection Accuracy: user-guide/evals-sdk/evaluators/tool_selection_evaluator.md
+        - Tool Parameter Accuracy: user-guide/evals-sdk/evaluators/tool_parameter_evaluator.md
+        - Custom: user-guide/evals-sdk/evaluators/custom_evaluator.md
+      - Experiment Generator: user-guide/evals-sdk/experiment_generator.md
+      - Simulators:
+        - Overview: user-guide/evals-sdk/simulators/index.md
+        - User Simulation: user-guide/evals-sdk/simulators/user_simulation.md
+      - How-To Guides:
+        - Experiment Management: user-guide/evals-sdk/how-to/experiment_management.md
+        - Serialization: user-guide/evals-sdk/how-to/serialization.md
+    - Deploy:
+      - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
+      - Amazon Bedrock AgentCore:
+          - Overview: user-guide/deploy/deploy_to_bedrock_agentcore/index.md
+          - Python: user-guide/deploy/deploy_to_bedrock_agentcore/python.md
+          - TypeScript: user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md
+      - AWS Lambda<sup> new</sup>: user-guide/deploy/deploy_to_aws_lambda.md
+      - AWS Fargate: user-guide/deploy/deploy_to_aws_fargate.md
+      - AWS App Runner: user-guide/deploy/deploy_to_aws_apprunner.md
+      - Amazon EKS: user-guide/deploy/deploy_to_amazon_eks.md
+      - Amazon EC2: user-guide/deploy/deploy_to_amazon_ec2.md
+      - Docker:
+        - Overview: user-guide/deploy/deploy_to_docker/index.md
+        - Python: user-guide/deploy/deploy_to_docker/python.md
+        - TypeScript: user-guide/deploy/deploy_to_docker/typescript.md
+      - Kubernetes: user-guide/deploy/deploy_to_kubernetes.md
+      - Terraform: user-guide/deploy/deploy_to_terraform.md
+    - Versioning & Support: user-guide/versioning-and-support.md
+
+  - Examples:
+    - Overview: examples/README.md
+    - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
+    - Weather Forecaster: examples/python/weather_forecaster.md
+    - Memory Agent: examples/python/memory_agent.md
+    - File Operations: examples/python/file_operations.md
+    - Agents Workflows: examples/python/agents_workflows.md
+    - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
+    - Structured Output: examples/python/structured_output.md
+    - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
+    - Cyclic Graph: examples/python/graph_loops_example.md
+    - Meta Tooling: examples/python/meta_tooling.md
+    - MCP: examples/python/mcp_calculator.md
+    - Multi-modal: examples/python/multimodal.md
+
+  - Community:
+      - Community Catalog: community/community-packages.md
+      - Get Featured: community/get-featured.md
+      - Integrations:
+        - AG-UI: community/integrations/ag-ui.md
+      - Model Providers:
+        - Cohere: community/model-providers/cohere.md
+        - CLOVA Studio: community/model-providers/clova-studio.md
+        - Fireworks AI: community/model-providers/fireworksai.md
+        - Nebius Token Factory: community/model-providers/nebius-token-factory.md
+        - NVIDIA NIM: community/model-providers/nvidia-nim.md
+        - SGLang: community/model-providers/sglang.md
+        - vLLM: community/model-providers/vllm.md
+        - MLX: community/model-providers/mlx.md
+        - xAI: community/model-providers/xai.md
+      - Session Managers:
+        - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+        - Valkey/Redis: community/session-managers/strands-valkey-session-manager.md
+      - Tool Protocols:
+        - UTCP: community/tools/utcp.md
+      - Tools:
+        - deepgram: community/tools/strands-deepgram.md
+        - hubspot: community/tools/strands-hubspot.md
+        - teams: community/tools/strands-teams.md
+        - telegram: community/tools/strands-telegram.md
+        - telegram-listener: community/tools/strands-telegram-listener.md
+
+  - Contribute ❤️:
+      - Overview: contribute/index.md
+      - Contribution Types:
+        - SDK: contribute/contributing/core-sdk.md
+        - Documentation: contribute/contributing/documentation.md
+        - Feature Proposals: contribute/contributing/feature-proposals.md
+        - Extensions: contribute/contributing/extensions.md
+  - Python API: []
+  - TypeScript API: api-reference/typescript/index.html
+
+exclude_docs: |
+  node_modules
+  .venv
+  _dependencies
+  !.lycheeignore
+
+plugins:
+  - search
+  - privacy
+  - macros:
+      module_name: macros
+  - mike:
+      alias_type: symlink
+      canonical_version: latest
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_root_heading: true
+            show_source: true
+  - llmstxt:
+      full_output: llms-full.txt
+      sections:
+        User Guide:
+          - README.md
+          - user-guide/**/*.md
+        Community:
+          - community/**/*.md
+        Examples:
+          - examples/**/*.md
+        Python API:
+          - docs/api-reference/python/**/*.md
+        TypeScript API:
+          - docs/api-reference/typescript/*.html
+
+
+hooks:
+  - build-ts-docs.py
+  - build-py-docs.py
+extra:
+  social:
+    - icon: fontawesome/brands/github
+  version:
+    provider: mike
+  # Variables
+  docs_repo: https://github.com/strands-agents/docs/tree/main
+  sdk_pypi: https://pypi.org/project/strands-agents/
+  sdk_repo: https://github.com/strands-agents/sdk-python/blob/main
+  py_sdk_repo_home: https://github.com/strands-agents/sdk-python/blob/main
+  ts_sdk_repo_home: https://github.com/strands-agents/sdk-typescript/blob/main
+  tools_pypi: https://pypi.org/project/strands-agents-tools/
+  tools_repo: https://github.com/strands-agents/tools/blob/main
+  tools_repo_home: https://github.com/strands-agents/tools
+  agent_builder_pypi: https://pypi.org/project/strands-agents-builder/
+  agent_builder_repo_home: https://github.com/strands-agents/agent-builder
+
+  link_strands_tools: "[`strands-agents-tools`](https://github.com/strands-agents/tools)"
+  link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)"
+  community_contribution_banner: |
+    !!! info "Community Contribution"
+        This is a community-maintained package that is not owned or supported by the Strands team. Validate and review
+        the package before using it in your project.
+
+        Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
+
+validation:
+  nav:
+    omitted_files: info
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: warn
+    unrecognized_links: warn

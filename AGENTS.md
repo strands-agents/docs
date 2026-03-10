@@ -111,9 +111,8 @@ npm run dev
 
 Pre-commit hooks automatically run:
 - Unit tests (via npm test)
-- Linting (via npm run lint)
 - Format checking (via npm run format:check)
-- Type checking (via npm run type-check)
+- Type checking (via npm run typecheck)
 
 All checks must pass before commit is allowed.
 
@@ -175,7 +174,7 @@ import type { Options, Config } from '../types'
 - **README.md**: Public-facing documentation, links to strandsagents.com
 - **SITE-ARCHITECTURE.md**: Comprehensive documentation of Astro/Starlight customizations, components, and plugins
 - **package.json**: Defines scripts for building, testing, and linting
-- **mkdocs.yml**: Defines the navigation structure (loaded by `src/sidebar.ts` for Astro)
+- **src/config/navigation.yml**: Defines the navigation structure (loaded by `src/sidebar.ts` for Astro)
 
 ## Additional Resources
 
