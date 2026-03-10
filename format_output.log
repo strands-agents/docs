@@ -1,6 +1,0 @@
-
-> docs@1.0.0 format:check
-> prettier --check docs
-
-Checking formatting...
-All matched files use Prettier code style!
