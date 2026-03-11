@@ -203,6 +203,9 @@ sidebar:
       - label: Integrations
         items:
           - docs/community/integrations/ag-ui
+      - label: Plugins
+        items:
+          - docs/community/plugins/agent-control
       - label: Model Providers
         items:
           - docs/community/model-providers/cohere
