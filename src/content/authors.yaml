@@ -1,0 +1,39 @@
+- id: alessandro-achille
+  name: Alessandro Achille
+  role: "Principal Applied Scientist, AWS"
+  bio: Alessandro Achille is a Principal Applied Scientist for AWS Agentic AI, working on autonomous coding agents, machine learning foundations, privacy, and hardware-software co-design.
+
+- id: andrew-shamiya
+  name: Andrew Shamiya
+  role: "Product Marketing Manager, AWS"
+  bio: Andrew Shamiya is a Product Marketing Manager for AWS Agentic AI. He focuses on helping developers choose and deploy agentic systems.
+
+- id: arron-bailiss
+  name: Arron Bailiss
+  role: "Principal Engineer, AWS"
+  bio: Arron Bailiss is a Principal Engineer focused on agentic AI at AWS, working at the intersection of artificial intelligence, machine learning, and robotics.
+
+- id: belle-guttman
+  name: Belle Guttman
+  role: "Engineering Leader, AWS"
+  bio: Belle Guttman leads the Agentic AI Engineering teams at AWS responsible for the Strands SDK and agentic chat in Q Developer products.
+
+- id: clare-liguori
+  name: Clare Liguori
+  role: "Senior Principal Engineer, AWS"
+  bio: Clare Liguori is a Senior Principal Engineer at AWS. She works on Amazon Q Developer and has been building AI agents since early 2023.
+
+- id: joy-chakraborty
+  name: Joy Chakraborty
+  role: "Senior Technical Program Manager, AWS"
+  bio: Joy Chakraborty is a Senior Technical Program Manager for AWS Agentic AI Foundation. He currently manages the Strands Agents and AgentCore Integration programs.
+
+- id: ryan-coleman
+  name: Ryan Coleman
+  role: "Product Manager, AWS"
+  bio: Ryan Coleman is a product manager at Amazon Web Services focused on AI developer tools and agentic frameworks.
+
+- id: strands-team
+  name: Strands Agents Team
+  role: Core Team
+  bio: The team behind the Strands Agents SDK.

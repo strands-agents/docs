@@ -496,9 +496,18 @@ When `guardrail_latest_message=True`, only the most recent user message is sent 
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Guardrails are not yet supported in the TypeScript SDK
+Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](@api/typescript/BedrockModel):
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:guardrails"
 ```
+
+When a guardrail is triggered:
+
+- Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
+- Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
+- Custom redaction messages can be specified for both input and output redactions
+
 </Tab>
 </Tabs>
 

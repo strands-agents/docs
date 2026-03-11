@@ -41,7 +41,7 @@ function extractLinks(
   return lines
 }
 
-function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebarItem[], header: string): string {
+function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebarItem[], header: string, blogPosts: CollectionEntry<'blog'>[]): string {
   const base = getSiteOrigin() + getBase()
   const lines: string[] = []
 
@@ -92,6 +92,18 @@ function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebar
     lines.push('')
   }
 
+  // Blog posts - sorted by date descending
+  if (blogPosts.length > 0) {
+    const sorted = [...blogPosts].sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    lines.push(`## Blog`)
+    lines.push('')
+    for (const post of sorted) {
+      const url = `${base}/blog/${post.id}/index.md`
+      lines.push(`- [${post.data.title}](${url})`)
+    }
+    lines.push('')
+  }
+
   return lines.join('\n')
 }
 
@@ -109,7 +121,8 @@ export const GET: APIRoute = async () => {
   }
   const { markdown: header }  = await renderEntryToMarkdown(llmsEntry)
 
-  const content = buildLlmsTxt(docs, sidebar, header)
+  const blogPosts = await getCollection('blog', ({ data }) => !data.draft)
+  const content = buildLlmsTxt(docs, sidebar, header, blogPosts)
 
   return new Response(content, {
     headers: {

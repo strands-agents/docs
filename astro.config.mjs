@@ -4,6 +4,7 @@ import starlight from '@astrojs/starlight'
 import path from 'node:path'
 import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
 import sdkSetupPlugin from './src/plugins/vite-plugin-sdk-setup.ts'
+import remarkReadingTime from './src/plugins/remark-reading-time.ts'
 import watchNavigationPlugin from './src/plugins/vite-plugin-watch-navigation.ts'
 
 import { loadSidebarFromConfig } from "./src/sidebar.ts"
@@ -32,7 +33,7 @@ export default defineConfig({
 		},
 	},
   markdown: {
-    remarkPlugins: [remarkMkdocsSnippets],
+    remarkPlugins: [remarkMkdocsSnippets, remarkReadingTime],
   },
   integrations: [
     astroExpressiveCode({
@@ -71,6 +72,7 @@ export default defineConfig({
       components: {
         Head: './src/components/overrides/Head.astro',
         Header: './src/components/overrides/Header.astro',
+        Hero: './src/components/overrides/Hero.astro',
         MarkdownContent: './src/components/overrides/MarkdownContent.astro',
         Sidebar: './src/components/overrides/Sidebar.astro',
         PageFrame: './src/components/overrides/PageFrame.astro',

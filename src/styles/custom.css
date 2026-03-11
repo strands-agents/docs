@@ -7,6 +7,8 @@
  * - Dark bg: #0E0E0E
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap');
+
 /* Dark mode colors. */
 :root {
 	--sl-color-accent-low: #0a2e12;

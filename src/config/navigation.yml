@@ -24,6 +24,9 @@ navbar:
   - label: Labs
     href: /docs/labs/
     basePath: /docs/labs/
+  - label: Blog
+    href: /blog/
+    basePath: /blog/
   - label: Contribute ❤️
     href: /docs/contribute/
     basePath: /docs/contribute/
@@ -66,6 +69,7 @@ sidebar:
             items:
               - docs/user-guide/concepts/plugins
               - docs/user-guide/concepts/plugins/skills
+              - docs/user-guide/concepts/plugins/steering
           - label: Model Providers
             items:
               - docs/user-guide/concepts/model-providers
@@ -118,7 +122,6 @@ sidebar:
           - label: Experimental
             items:
               - docs/user-guide/concepts/experimental/agent-config
-              - docs/user-guide/concepts/experimental/steering
       - label: Safety & Security
         items:
           - docs/user-guide/safety-security/responsible-ai

@@ -325,3 +325,29 @@ async function cacheMetrics() {
   }
   // --8<-- [end:cache_metrics]
 }
+
+// Guardrails configuration
+async function guardrailsExample() {
+  // --8<-- [start:guardrails]
+  // Using guardrails with BedrockModel
+  const bedrockModel = new BedrockModel({
+    modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+    guardrailConfig: {
+      guardrailIdentifier: 'your-guardrail-id',
+      guardrailVersion: 'DRAFT',
+      trace: 'enabled', // Options: 'enabled', 'disabled', 'enabled_full'
+      streamProcessingMode: 'sync', // Options: 'sync', 'async'
+      redaction: {
+        input: true, // Default: true
+        inputMessage: '[User input redacted.]', // Custom redaction message
+        output: false, // Default: false
+        outputMessage: '[Assistant output redacted.]', // Custom redaction message
+      },
+    },
+  })
+
+  const guardrailAgent = new Agent({ model: bedrockModel })
+
+  const response = await guardrailAgent.invoke('Can you tell me about the Strands SDK?')
+  // --8<-- [end:guardrails]
+}
