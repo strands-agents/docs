@@ -1,14 +1,9 @@
 ---
 title: Steering
-experimental: true
-sidebar:
-  badge:
-    text: Experimental
-    variant: note
 ---
 
 
-Strands Steering explores new approaches to modular prompting for complex agent tasks through context-aware guidance that appears when relevant, rather than front-loading all instructions in monolithic prompts. This experimental feature enables developers to assign agents complex, multi-step tasks while maintaining effectiveness through just-in-time feedback loops.
+Strands Steering provides modular prompting for complex agent tasks through context-aware guidance that appears when relevant, rather than front-loading all instructions in monolithic prompts. This enables developers to assign agents complex, multi-step tasks while maintaining effectiveness through just-in-time feedback loops.
 
 ## What Is Steering?
 
@@ -87,7 +82,7 @@ For best practices for defining the prompts, use the [Agent Standard Operating P
 
 ```python
 from strands import Agent, tool
-from strands.experimental.steering import LLMSteeringHandler
+from strands.vended_plugins.steering import LLMSteeringHandler
 
 @tool
 def send_email(recipient: str, subject: str, message: str) -> str:

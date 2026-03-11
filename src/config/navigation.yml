@@ -68,6 +68,7 @@ sidebar:
           - label: Plugins
             items:
               - docs/user-guide/concepts/plugins
+              - docs/user-guide/concepts/plugins/steering
           - label: Model Providers
             items:
               - docs/user-guide/concepts/model-providers
@@ -120,7 +121,6 @@ sidebar:
           - label: Experimental
             items:
               - docs/user-guide/concepts/experimental/agent-config
-              - docs/user-guide/concepts/experimental/steering
       - label: Safety & Security
         items:
           - docs/user-guide/safety-security/responsible-ai
