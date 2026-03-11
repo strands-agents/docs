@@ -11,13 +11,7 @@ AI coding assistants work best when they have access to current documentation. S
 
 ## Strands Agents MCP Server
 
-The [Strands Agents MCP server](https://github.com/strands-agents/mcp-server) gives AI coding assistants direct access to the Strands Agents documentation through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). It provides intelligent search and section-based browsing so your AI tools can find and retrieve exactly the documentation they need.
-
-**Features:**
-
-- Smart document search with TF-IDF based ranking
-- Section-based browsing for token-efficient retrieval
-- On-demand content fetching
+The [Strands Agents MCP server](https://github.com/strands-agents/mcp-server) gives AI coding assistants direct access to the Strands Agents documentation through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). It provides intelligent search with TF-IDF based ranking, section-based browsing for token-efficient retrieval, and on-demand content fetching so your AI tools can find and retrieve exactly the documentation they need.
 
 ### Prerequisites
 
@@ -27,7 +21,31 @@ The MCP server requires [uv](https://github.com/astral-sh/uv) to be installed on
 
 Choose your AI coding tool below and follow the setup instructions.
 
-#### Kiro
+<Tabs>
+<Tab label="Strands Agents">
+
+You can use the Strands Agents MCP server as a tool within your own Strands agents:
+
+```python
+from mcp import stdio_client, StdioServerParameters
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+mcp_client = MCPClient(lambda: stdio_client(
+    StdioServerParameters(
+        command="uvx",
+        args=["strands-agents-mcp-server"]
+    )
+))
+
+agent = Agent(tools=[mcp_client])
+agent("How do I create a custom tool in Strands Agents?")
+```
+
+See the [MCP tools documentation](/docs/user-guide/concepts/tools/mcp-tools/) for more details on using MCP tools with Strands agents.
+
+</Tab>
+<Tab label="Kiro">
 
 Add the following to `~/.kiro/settings/mcp.json`:
 
@@ -46,7 +64,8 @@ Add the following to `~/.kiro/settings/mcp.json`:
 
 See the [Kiro MCP documentation](https://kiro.dev/docs/mcp/configuration/) for more details.
 
-#### Claude Code
+</Tab>
+<Tab label="Claude Code">
 
 Run the following command:
 
@@ -56,7 +75,8 @@ claude mcp add strands uvx strands-agents-mcp-server
 
 See the [Claude Code MCP documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#configure-mcp-servers) for more details.
 
-#### Amazon Q Developer CLI
+</Tab>
+<Tab label="Amazon Q Developer CLI">
 
 Add the following to `~/.aws/amazonq/mcp.json`:
 
@@ -75,7 +95,8 @@ Add the following to `~/.aws/amazonq/mcp.json`:
 
 See the [Q Developer CLI MCP documentation](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-mcp-configuration.html) for more details.
 
-#### Cursor
+</Tab>
+<Tab label="Cursor">
 
 Add the following to `~/.cursor/mcp.json`:
 
@@ -92,7 +113,8 @@ Add the following to `~/.cursor/mcp.json`:
 
 See the [Cursor MCP documentation](https://docs.cursor.com/context/model-context-protocol#configuring-mcp-servers) for more details.
 
-#### VS Code
+</Tab>
+<Tab label="VS Code">
 
 Add the following to your `mcp.json` file:
 
@@ -109,12 +131,16 @@ Add the following to your `mcp.json` file:
 
 See the [VS Code MCP documentation](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) for more details.
 
-#### Other MCP clients
+</Tab>
+<Tab label="Other MCP clients">
 
 The Strands Agents MCP server works with [40+ applications that support MCP](https://modelcontextprotocol.io/clients). The general configuration is:
 
 - **Command:** `uvx`
 - **Args:** `["strands-agents-mcp-server"]`
+
+</Tab>
+</Tabs>
 
 ### Verify the connection
 
@@ -139,8 +165,8 @@ The Strands Agents documentation site provides [llms.txt](https://llmstxt.org/) 
 
 Every documentation page is available in raw markdown format by appending `/index.md` to its URL path:
 
-- `/user-guide/quickstart/` → `/user-guide/quickstart/index.md`
-- `/user-guide/concepts/tools/` → `/user-guide/concepts/tools/index.md`
+- [`/docs/user-guide/quickstart/`](https://strandsagents.com/docs/user-guide/quickstart/) → [`/docs/user-guide/quickstart/index.md`](https://strandsagents.com/docs/user-guide/quickstart/index.md)
+- [`/docs/user-guide/concepts/tools/`](https://strandsagents.com/docs/user-guide/concepts/tools/) → [`/docs/user-guide/concepts/tools/index.md`](https://strandsagents.com/docs/user-guide/concepts/tools/index.md)
 
 This gives you clean markdown content without HTML markup, navigation, or styling.
 
