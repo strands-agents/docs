@@ -1,4 +1,4 @@
-Defined in: [src/tools/types.ts:36](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/types.ts#L36)
+Defined in: [src/tools/types.ts:36](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/types.ts#L36)
 
 Represents a tool usage request from the model. The model generates this when it wants to use a tool.
 
@@ -10,7 +10,7 @@ Represents a tool usage request from the model. The model generates this when it
 name: string;
 ```
 
-Defined in: [src/tools/types.ts:40](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/types.ts#L40)
+Defined in: [src/tools/types.ts:40](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/types.ts#L40)
 
 The name of the tool to execute.
 
@@ -22,7 +22,7 @@ The name of the tool to execute.
 toolUseId: string;
 ```
 
-Defined in: [src/tools/types.ts:46](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/types.ts#L46)
+Defined in: [src/tools/types.ts:46](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/types.ts#L46)
 
 Unique identifier for this tool use instance. Used to match tool results back to their requests.
 
@@ -34,6 +34,6 @@ Unique identifier for this tool use instance. Used to match tool results back to
 input: JSONValue;
 ```
 
-Defined in: [src/tools/types.ts:52](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/types.ts#L52)
+Defined in: [src/tools/types.ts:52](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/types.ts#L52)
 
 The input parameters for the tool. Must be JSON-serializable.

@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:127](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/bedrock.ts#L127)
+Defined in: [src/models/bedrock.ts:127](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/bedrock.ts#L127)
 
 Configuration for Bedrock guardrails.
 
@@ -16,7 +16,7 @@ For production use with sensitive content, consider `SessionManager` with `saveL
 guardrailIdentifier: string;
 ```
 
-Defined in: [src/models/bedrock.ts:129](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/bedrock.ts#L129)
+Defined in: [src/models/bedrock.ts:129](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/bedrock.ts#L129)
 
 Guardrail identifier
 
@@ -28,7 +28,7 @@ Guardrail identifier
 guardrailVersion: string;
 ```
 
-Defined in: [src/models/bedrock.ts:132](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/bedrock.ts#L132)
+Defined in: [src/models/bedrock.ts:132](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/bedrock.ts#L132)
 
 Guardrail version (e.g., “1”, “DRAFT”)
 
@@ -40,7 +40,7 @@ Guardrail version (e.g., “1”, “DRAFT”)
 optional trace: "enabled" | "disabled" | "enabled_full";
 ```
 
-Defined in: [src/models/bedrock.ts:135](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/bedrock.ts#L135)
+Defined in: [src/models/bedrock.ts:135](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/bedrock.ts#L135)
 
 Trace mode for evaluation.
 
@@ -58,7 +58,7 @@ Trace mode for evaluation.
 optional streamProcessingMode: "sync" | "async";
 ```
 
-Defined in: [src/models/bedrock.ts:138](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/bedrock.ts#L138)
+Defined in: [src/models/bedrock.ts:138](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/bedrock.ts#L138)
 
 Stream processing mode
 
@@ -70,6 +70,6 @@ Stream processing mode
 optional redaction: BedrockGuardrailRedactionConfig;
 ```
 
-Defined in: [src/models/bedrock.ts:141](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/bedrock.ts#L141)
+Defined in: [src/models/bedrock.ts:141](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/bedrock.ts#L141)
 
 Redaction behavior when content is blocked

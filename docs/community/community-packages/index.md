@@ -46,6 +46,7 @@ Platform integrations help you connect Strands agents with external services and
 | Package | Description |
 | --- | --- |
 | [AG-UI](/docs/community/integrations/ag-ui/index.md) | AG-UI integration |
+| [Datadog AI Guard](/docs/community/plugins/datadog-ai-guard/index.md) | Real-time AI security with Datadog AI Guard |
 
 ---
 

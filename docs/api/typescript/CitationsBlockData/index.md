@@ -1,4 +1,4 @@
-Defined in: [src/types/citations.ts:156](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L156)
+Defined in: [src/types/citations.ts:156](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/citations.ts#L156)
 
 Data for a citations content block.
 
@@ -10,7 +10,7 @@ Data for a citations content block.
 citations: Citation[];
 ```
 
-Defined in: [src/types/citations.ts:160](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L160)
+Defined in: [src/types/citations.ts:160](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/citations.ts#L160)
 
 Array of citations linking generated content to source locations.
 
@@ -22,6 +22,6 @@ Array of citations linking generated content to source locations.
 content: CitationGeneratedContent[];
 ```
 
-Defined in: [src/types/citations.ts:165](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L165)
+Defined in: [src/types/citations.ts:165](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/citations.ts#L165)
 
 The generated content associated with these citations.

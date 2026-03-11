@@ -7,7 +7,7 @@ type S3StorageConfig = {
 };
 ```
 
-Defined in: [src/session/s3-storage.ts:23](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L23)
+Defined in: [src/session/s3-storage.ts:23](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/session/s3-storage.ts#L23)
 
 Configuration options for S3Storage
 
@@ -19,7 +19,7 @@ Configuration options for S3Storage
 bucket: string;
 ```
 
-Defined in: [src/session/s3-storage.ts:25](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L25)
+Defined in: [src/session/s3-storage.ts:25](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/session/s3-storage.ts#L25)
 
 S3 bucket name
 
@@ -31,7 +31,7 @@ S3 bucket name
 optional prefix: string;
 ```
 
-Defined in: [src/session/s3-storage.ts:27](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L27)
+Defined in: [src/session/s3-storage.ts:27](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/session/s3-storage.ts#L27)
 
 Optional key prefix for all objects
 
@@ -43,7 +43,7 @@ Optional key prefix for all objects
 optional region: string;
 ```
 
-Defined in: [src/session/s3-storage.ts:29](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L29)
+Defined in: [src/session/s3-storage.ts:29](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/session/s3-storage.ts#L29)
 
 AWS region (default: us-east-1). Cannot be used with s3Client
 
@@ -55,6 +55,6 @@ AWS region (default: us-east-1). Cannot be used with s3Client
 optional s3Client: S3Client;
 ```
 
-Defined in: [src/session/s3-storage.ts:31](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L31)
+Defined in: [src/session/s3-storage.ts:31](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/session/s3-storage.ts#L31)
 
 Pre-configured S3 client. Cannot be used with region

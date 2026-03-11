@@ -8,7 +8,7 @@ This module provides the \_PluginRegistry class for tracking and managing plugin
 class _PluginRegistry()
 ```
 
-Defined in: [src/strands/plugins/registry.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/registry.py#L21)
+Defined in: [src/strands/plugins/registry.py:22](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/registry.py#L22)
 
 Registry for managing plugins attached to an agent.
 
@@ -46,7 +46,7 @@ registry.add_and_init(plugin)
 def __init__(agent: "Agent") -> None
 ```
 
-Defined in: [src/strands/plugins/registry.py:52](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/registry.py#L52)
+Defined in: [src/strands/plugins/registry.py:53](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/registry.py#L53)
 
 Initialize a plugin registry with an agent reference.
 
@@ -60,7 +60,7 @@ Initialize a plugin registry with an agent reference.
 def add_and_init(plugin: Plugin) -> None
 ```
 
-Defined in: [src/strands/plugins/registry.py:61](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/registry.py#L61)
+Defined in: [src/strands/plugins/registry.py:70](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/registry.py#L70)
 
 Add and initialize a plugin with the agent.
 

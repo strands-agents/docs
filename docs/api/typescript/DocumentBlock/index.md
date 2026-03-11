@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:471](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L471)
+Defined in: [src/types/media.ts:471](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L471)
 
 Document content block.
 
@@ -15,7 +15,7 @@ Document content block.
 new DocumentBlock(data): DocumentBlock;
 ```
 
-Defined in: [src/types/media.ts:502](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L502)
+Defined in: [src/types/media.ts:502](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L502)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:502](https://github.com/strands-agents/sdk-types
 readonly type: "documentBlock";
 ```
 
-Defined in: [src/types/media.ts:475](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L475)
+Defined in: [src/types/media.ts:475](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L475)
 
 Discriminator for document content.
 
@@ -47,7 +47,7 @@ Discriminator for document content.
 readonly name: string;
 ```
 
-Defined in: [src/types/media.ts:480](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L480)
+Defined in: [src/types/media.ts:480](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L480)
 
 Document name.
 
@@ -63,7 +63,7 @@ Document name.
 readonly format: DocumentFormat;
 ```
 
-Defined in: [src/types/media.ts:485](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L485)
+Defined in: [src/types/media.ts:485](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L485)
 
 Document format.
 
@@ -79,7 +79,7 @@ Document format.
 readonly source: DocumentSource;
 ```
 
-Defined in: [src/types/media.ts:490](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L490)
+Defined in: [src/types/media.ts:490](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L490)
 
 Document source.
 
@@ -97,7 +97,7 @@ readonly optional citations: {
 };
 ```
 
-Defined in: [src/types/media.ts:495](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L495)
+Defined in: [src/types/media.ts:495](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L495)
 
 Citation configuration.
 
@@ -119,7 +119,7 @@ enabled: boolean;
 readonly optional context: string;
 ```
 
-Defined in: [src/types/media.ts:500](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L500)
+Defined in: [src/types/media.ts:500](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L500)
 
 Context information for the document.
 
@@ -161,7 +161,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/media.ts:547](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L547)
+Defined in: [src/types/media.ts:547](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L547)
 
 Serializes the DocumentBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array bytes are encoded as base64 string.
 
@@ -199,13 +199,13 @@ Serializes the DocumentBlock to a JSON-compatible ContentBlockData object. Calle
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `document` | { `name`: `string`; `format`: [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; } | \- | [src/types/media.ts:547](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L547) |
-| `document.name` | `string` | Document name. | [src/types/media.ts:445](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L445) |
-| `document.format` | [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md) | Document format. | [src/types/media.ts:450](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L450) |
-| `document.source` | | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | Document source. | [src/types/media.ts:455](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L455) |
-| `document.citations?` | { `enabled`: `boolean`; } | Citation configuration. | [src/types/media.ts:460](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L460) |
-| `document.citations.enabled` | `boolean` | \- | [src/types/media.ts:460](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L460) |
-| `document.context?` | `string` | Context information for the document. | [src/types/media.ts:465](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L465) |
+| `document` | { `name`: `string`; `format`: [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; } | \- | [src/types/media.ts:547](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L547) |
+| `document.name` | `string` | Document name. | [src/types/media.ts:445](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L445) |
+| `document.format` | [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md) | Document format. | [src/types/media.ts:450](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L450) |
+| `document.source` | | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | Document source. | [src/types/media.ts:455](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L455) |
+| `document.citations?` | { `enabled`: `boolean`; } | Citation configuration. | [src/types/media.ts:460](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L460) |
+| `document.citations.enabled` | `boolean` | \- | [src/types/media.ts:460](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L460) |
+| `document.context?` | `string` | Context information for the document. | [src/types/media.ts:465](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L465) |
 
 #### Implementation of
 
@@ -221,7 +221,7 @@ JSONSerializable.toJSON
 static fromJSON(data): DocumentBlock;
 ```
 
-Defined in: [src/types/media.ts:576](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/media.ts#L576)
+Defined in: [src/types/media.ts:576](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L576)
 
 Creates a DocumentBlock instance from its wrapped data format. Base64-encoded bytes are decoded back to Uint8Array.
 

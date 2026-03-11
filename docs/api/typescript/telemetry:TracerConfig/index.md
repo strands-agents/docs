@@ -1,4 +1,4 @@
-Defined in: [src/telemetry/config.ts:81](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/telemetry/config.ts#L81)
+Defined in: [src/telemetry/config.ts:81](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/config.ts#L81)
 
 Configuration options for setting up the tracer.
 
@@ -10,7 +10,7 @@ Configuration options for setting up the tracer.
 optional provider: BasicTracerProvider;
 ```
 
-Defined in: [src/telemetry/config.ts:86](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/telemetry/config.ts#L86)
+Defined in: [src/telemetry/config.ts:86](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/config.ts#L86)
 
 Custom TracerProvider instance. If not provided, NodeTracerProvider is used when available, otherwise BasicTracerProvider.
 
@@ -25,7 +25,7 @@ optional exporters: {
 };
 ```
 
-Defined in: [src/telemetry/config.ts:91](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/telemetry/config.ts#L91)
+Defined in: [src/telemetry/config.ts:91](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/config.ts#L91)
 
 Exporter configuration.
 

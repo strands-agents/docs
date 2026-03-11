@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:323](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L323)
+Defined in: [src/hooks/events.ts:323](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L323)
 
 Event triggered when a content block completes during model inference. Wraps completed content blocks (TextBlock, ToolUseBlock, ReasoningBlock) from model streaming. This is intentionally separate from [ModelStreamUpdateEvent](/docs/api/typescript/ModelStreamUpdateEvent/index.md). The model’s `streamAggregated()` yields two kinds of output: [ModelStreamEvent](/docs/api/typescript/ModelStreamEvent/index.md) (transient streaming deltas — partial data arriving while the model generates) and [ContentBlock](/docs/api/typescript/ContentBlock/index.md) (fully assembled results after all deltas accumulate). These represent different granularities with different semantics, so they are wrapped in distinct event classes rather than combined into a single event.
 
@@ -14,7 +14,7 @@ Event triggered when a content block completes during model inference. Wraps com
 new ContentBlockEvent(data): ContentBlockEvent;
 ```
 
-Defined in: [src/hooks/events.ts:328](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L328)
+Defined in: [src/hooks/events.ts:328](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L328)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:328](https://github.com/strands-agents/sdk-type
 readonly type: "contentBlockEvent";
 ```
 
-Defined in: [src/hooks/events.ts:324](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L324)
+Defined in: [src/hooks/events.ts:324](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L324)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:324](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L325)
+Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L325)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-type
 readonly contentBlock: ContentBlock;
 ```
 
-Defined in: [src/hooks/events.ts:326](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L326)
+Defined in: [src/hooks/events.ts:326](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L326)

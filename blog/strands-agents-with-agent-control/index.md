@@ -1,6 +1,6 @@
 ---
 title: "Runtime Guardrails for Strands Agents with Agent Control"
-date: 2026-03-10T00:00:00.000Z
+date: 2026-03-11T00:00:00.000Z
 description: "Define what your Strands agents can and can't do at runtime, without changing a line of agent code."
 tags: ["Open Source"]
 ---
@@ -40,7 +40,7 @@ Controls live on the server. Agents fetch their assigned controls at runtime and
 }
 ```
 
-The Strands integration ships as part of the AgentControl SDK as a [Strands Plugin](/docs/user-guide/concepts/plugins/index.md). `AgentControlPlugin` and `AgentControlSteeringHandler` are available once you install the `strands-agents` extra.
+The Strands integration ships as part of the AgentControl SDK as a [Strands Plugin](/docs/community/plugins/agent-control/index.md). `AgentControlPlugin` and `AgentControlSteeringHandler` are available once you install the `strands-agents` extra.
 
 ## AgentControlPlugin
 
