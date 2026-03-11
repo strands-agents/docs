@@ -475,6 +475,7 @@ bedrock_model = BedrockModel(
     guardrail_redact_output=False,  # Default: False
     guardrail_redact_output_message="Blocked Output!", # Default: [Assistant output redacted.]
     guardrail_latest_message=True,  # Only evaluate the latest user message (default: False)
+    guardrail_only_user_input=True,  # Evaluate only user text/image content, excluding tool results (default: False)
 )
 
 guardrail_agent = Agent(model=bedrock_model)
@@ -492,6 +493,12 @@ When a guardrail is triggered:
 
 :::note[Latest Message Evaluation]
 When `guardrail_latest_message=True`, only the most recent user message is sent to guardrails for evaluation instead of the entire conversation. This can improve performance and reduce costs in multi-turn conversations where earlier messages have already been validated.
+:::
+
+:::note[User Input Only Evaluation]
+When `guardrail_only_user_input=True`, all user text and image content across the entire conversation is wrapped in `guardContent` blocks so that only actual user input is evaluated by guardrails. Tool results are excluded from guardrail evaluation. This is useful when tool results may contain content that could trigger guardrails but should be trusted as system-generated output.
+
+If both `guardrail_latest_message` and `guardrail_only_user_input` are enabled, `guardrail_only_user_input` takes precedence as it already wraps all user messages, making `guardrail_latest_message` redundant.
 :::
 </Tab>
 <Tab label="TypeScript">
