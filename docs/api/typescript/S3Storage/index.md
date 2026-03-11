@@ -1,6 +1,15 @@
-Defined in: [src/session/s3-storage.ts:31](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L31)
+Defined in: [src/session/s3-storage.ts:46](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L46)
 
-S3-based implementation of SnapshotStorage for persisting session snapshots
+S3-based implementation of SnapshotStorage. Persists session snapshots as JSON objects in an S3 bucket.
+
+Object key layout:
+
+```plaintext
+[<prefix>/]<sessionId>/scopes/<scope>/<scopeId>/snapshots/
+  snapshot_latest.json
+  immutable_history/
+    snapshot_<uuid7>.json
+```
 
 ## Implements
 
@@ -14,7 +23,7 @@ S3-based implementation of SnapshotStorage for persisting session snapshots
 new S3Storage(config): S3Storage;
 ```
 
-Defined in: [src/session/s3-storage.ts:42](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L42)
+Defined in: [src/session/s3-storage.ts:57](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L57)
 
 Creates new S3Storage instance
 
@@ -36,9 +45,9 @@ Creates new S3Storage instance
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/s3-storage.ts:65](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L65)
+Defined in: [src/session/s3-storage.ts:93](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L93)
 
-Saves snapshot to S3, optionally marking as latest
+Persists a snapshot to S3. If `isLatest` is true, writes to `snapshot_latest.json` (overwriting any previous). Otherwise, writes to `immutable_history/snapshot_<snapshotId>.json`.
 
 #### Parameters
 
@@ -66,9 +75,9 @@ Saves snapshot to S3, optionally marking as latest
 loadSnapshot(params): Promise<Snapshot>;
 ```
 
-Defined in: [src/session/s3-storage.ts:81](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L81)
+Defined in: [src/session/s3-storage.ts:111](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L111)
 
-Loads snapshot by ID or latest if undefined
+Loads a snapshot from S3. If `snapshotId` is omitted, loads `snapshot_latest.json`. Returns null if the object does not exist.
 
 #### Parameters
 
@@ -94,27 +103,18 @@ Loads snapshot by ID or latest if undefined
 listSnapshotIds(params): Promise<string[]>;
 ```
 
-Defined in: [src/session/s3-storage.ts:103](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L103)
+Defined in: [src/session/s3-storage.ts:126](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L126)
 
-Lists all snapshot IDs for a session scope.
-
-TODO: Add pagination support for long-running agents with many snapshots. Future signature could be:
-
-```typescript
-listSnapshots(params: {
-  sessionId: string
-  scope: Scope
-  limit?: number        // Max results to return (e.g., 100)
-  startAfter?: string   // Snapshot ID to start after (for cursor-based pagination)
-}): Promise<{ snapshotIds: string[]; nextToken?: string }>
-```
+Lists immutable snapshot IDs for a scope, sorted chronologically. Since IDs are UUID v7, lexicographic sort equals chronological order. Pushes `startAfter` and `limit` down to S3 via `StartAfter` and `MaxKeys` to avoid fetching unnecessary objects. Returns an empty array if no snapshots exist yet.
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); } |
+| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); `limit?`: `number`; `startAfter?`: `string`; } |
 | `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params.limit?` | `number` |
+| `params.startAfter?` | `string` |
 
 #### Returns
 
@@ -126,15 +126,42 @@ listSnapshots(params: {
 
 ---
 
+### deleteSession()
+
+```ts
+deleteSession(params): Promise<void>;
+```
+
+Defined in: [src/session/s3-storage.ts:180](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L180)
+
+Deletes all S3 objects belonging to a session by listing and batch-deleting everything under `[<prefix>/]<sessionId>/`. Handles buckets with more than 1000 objects via continuation token pagination. No-ops if the session has no objects.
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `params` | { `sessionId`: `string`; } |
+| `params.sessionId` | `string` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Implementation of
+
+[`SnapshotStorage`](/docs/api/typescript/SnapshotStorage/index.md).[`deleteSession`](/docs/api/typescript/SnapshotStorage/index.md#deletesession)
+
+---
+
 ### loadManifest()
 
 ```ts
 loadManifest(params): Promise<SnapshotManifest>;
 ```
 
-Defined in: [src/session/s3-storage.ts:124](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L124)
+Defined in: [src/session/s3-storage.ts:203](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L203)
 
-Loads manifest or returns default if not found
+Loads the snapshot manifest for a scope from S3. Returns a default manifest with the current timestamp if none exists yet.
 
 #### Parameters
 
@@ -159,9 +186,9 @@ Loads manifest or returns default if not found
 saveManifest(params): Promise<void>;
 ```
 
-Defined in: [src/session/s3-storage.ts:139](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/s3-storage.ts#L139)
+Defined in: [src/session/s3-storage.ts:218](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/s3-storage.ts#L218)
 
-Saves manifest to S3
+Persists the snapshot manifest for a scope to S3.
 
 #### Parameters
 

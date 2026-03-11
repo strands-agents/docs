@@ -1,6 +1,15 @@
-Defined in: [src/session/file-storage.ts:16](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L16)
+Defined in: [src/session/file-storage.ts:25](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L25)
 
-File-based implementation of SnapshotStorage for persisting session snapshots
+File-based implementation of SnapshotStorage. Persists session snapshots to the local filesystem under a configurable base directory.
+
+Directory layout:
+
+```plaintext
+<baseDir>/<sessionId>/scopes/<scope>/<scopeId>/snapshots/
+  snapshot_latest.json
+  immutable_history/
+    snapshot_<uuid7>.json
+```
 
 ## Implements
 
@@ -14,15 +23,13 @@ File-based implementation of SnapshotStorage for persisting session snapshots
 new FileStorage(baseDir): FileStorage;
 ```
 
-Defined in: [src/session/file-storage.ts:24](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L24)
-
-Creates new FileStorage instance
+Defined in: [src/session/file-storage.ts:32](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L32)
 
 #### Parameters
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `baseDir` | `string` | Base directory path for storing snapshots |
+| `baseDir` | `string` | Absolute path to the root directory for storing session snapshots. |
 
 #### Returns
 
@@ -36,9 +43,9 @@ Creates new FileStorage instance
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/file-storage.ts:41](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L41)
+Defined in: [src/session/file-storage.ts:62](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L62)
 
-Saves snapshot to file, optionally marking as latest
+Persists a snapshot to disk. If `isLatest` is true, writes to `snapshot_latest.json` (overwriting any previous). Otherwise, writes to `immutable_history/snapshot_<snapshotId>.json`.
 
 #### Parameters
 
@@ -66,9 +73,9 @@ Saves snapshot to file, optionally marking as latest
 loadSnapshot(params): Promise<Snapshot>;
 ```
 
-Defined in: [src/session/file-storage.ts:57](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L57)
+Defined in: [src/session/file-storage.ts:79](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L79)
 
-Loads snapshot by ID or latest if null
+Loads a snapshot from disk. If `snapshotId` is omitted, loads `snapshot_latest.json`. Returns null if the file does not exist.
 
 #### Parameters
 
@@ -94,27 +101,18 @@ Loads snapshot by ID or latest if null
 listSnapshotIds(params): Promise<string[]>;
 ```
 
-Defined in: [src/session/file-storage.ts:86](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L86)
+Defined in: [src/session/file-storage.ts:94](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L94)
 
-Lists all snapshot IDs for a session scope.
-
-TODO: Add pagination support for long-running agents with many snapshots. Future signature could be:
-
-```typescript
-listSnapshots(params: {
-  sessionId: string
-  scope: Scope
-  limit?: number        // Max results to return (e.g., 100)
-  startAfter?: string   // Snapshot ID to start after (for cursor-based pagination)
-}): Promise<{ snapshotIds: string[]; nextToken?: string }>
-```
+Lists immutable snapshot IDs for a scope, sorted chronologically. Since IDs are UUID v7, lexicographic sort equals chronological order. `startAfter` filters to IDs after the given UUID v7 (exclusive cursor). `limit` caps the number of returned IDs. Returns an empty array if no snapshots exist yet.
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); } |
+| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); `limit?`: `number`; `startAfter?`: `string`; } |
 | `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params.limit?` | `number` |
+| `params.startAfter?` | `string` |
 
 #### Returns
 
@@ -126,15 +124,42 @@ listSnapshots(params: {
 
 ---
 
+### deleteSession()
+
+```ts
+deleteSession(params): Promise<void>;
+```
+
+Defined in: [src/session/file-storage.ts:126](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L126)
+
+Deletes all data for a session by removing its root directory (`<baseDir>/<sessionId>/`) recursively. No-ops if the session directory does not exist.
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `params` | { `sessionId`: `string`; } |
+| `params.sessionId` | `string` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Implementation of
+
+[`SnapshotStorage`](/docs/api/typescript/SnapshotStorage/index.md).[`deleteSession`](/docs/api/typescript/SnapshotStorage/index.md#deletesession)
+
+---
+
 ### loadManifest()
 
 ```ts
 loadManifest(params): Promise<SnapshotManifest>;
 ```
 
-Defined in: [src/session/file-storage.ts:106](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L106)
+Defined in: [src/session/file-storage.ts:140](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L140)
 
-Loads manifest or returns default if not found
+Loads the snapshot manifest for a scope. Returns a default manifest with the current timestamp if none exists yet.
 
 #### Parameters
 
@@ -159,9 +184,9 @@ Loads manifest or returns default if not found
 saveManifest(params): Promise<void>;
 ```
 
-Defined in: [src/session/file-storage.ts:121](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/session/file-storage.ts#L121)
+Defined in: [src/session/file-storage.ts:155](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/session/file-storage.ts#L155)
 
-Saves manifest to file
+Persists the snapshot manifest for a scope to disk.
 
 #### Parameters
 

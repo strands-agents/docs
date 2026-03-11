@@ -1,4 +1,4 @@
-Defined in: [src/tools/tool.ts:29](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/tools/tool.ts#L29)
+Defined in: [src/tools/tool.ts:29](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/tool.ts#L29)
 
 Data for a tool stream event.
 
@@ -10,7 +10,7 @@ Data for a tool stream event.
 type: "toolStreamEvent";
 ```
 
-Defined in: [src/tools/tool.ts:33](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/tools/tool.ts#L33)
+Defined in: [src/tools/tool.ts:33](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/tool.ts#L33)
 
 Discriminator for tool stream events.
 
@@ -22,6 +22,6 @@ Discriminator for tool stream events.
 optional data: unknown;
 ```
 
-Defined in: [src/tools/tool.ts:39](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/tools/tool.ts#L39)
+Defined in: [src/tools/tool.ts:39](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/tools/tool.ts#L39)
 
 Caller-provided data for the progress update. Can be any type of data the tool wants to report.

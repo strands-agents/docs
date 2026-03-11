@@ -2,6 +2,6 @@
 type GuardImageFormat = "png" | "jpeg";
 ```
 
-Defined in: [src/types/messages.ts:706](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/messages.ts#L706)
+Defined in: [src/types/messages.ts:706](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/messages.ts#L706)
 
 Image format for guard content. Only formats supported by Bedrock guardrails.

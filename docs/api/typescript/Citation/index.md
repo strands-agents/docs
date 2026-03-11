@@ -1,4 +1,4 @@
-Defined in: [src/types/citations.ts:131](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/citations.ts#L131)
+Defined in: [src/types/citations.ts:131](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L131)
 
 A single citation linking generated content to a source location.
 
@@ -10,7 +10,7 @@ A single citation linking generated content to a source location.
 location: CitationLocation;
 ```
 
-Defined in: [src/types/citations.ts:135](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/citations.ts#L135)
+Defined in: [src/types/citations.ts:135](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L135)
 
 The location of the cited source.
 
@@ -22,7 +22,7 @@ The location of the cited source.
 source: string;
 ```
 
-Defined in: [src/types/citations.ts:140](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/citations.ts#L140)
+Defined in: [src/types/citations.ts:140](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L140)
 
 The source identifier string.
 
@@ -34,7 +34,7 @@ The source identifier string.
 sourceContent: CitationSourceContent[];
 ```
 
-Defined in: [src/types/citations.ts:145](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/citations.ts#L145)
+Defined in: [src/types/citations.ts:145](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L145)
 
 The source content referenced by this citation.
 
@@ -46,6 +46,6 @@ The source content referenced by this citation.
 title: string;
 ```
 
-Defined in: [src/types/citations.ts:150](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/citations.ts#L150)
+Defined in: [src/types/citations.ts:150](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/types/citations.ts#L150)
 
 Title of the cited source.

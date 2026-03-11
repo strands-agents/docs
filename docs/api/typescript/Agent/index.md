@@ -1,4 +1,4 @@
-Defined in: [src/agent/agent.ts:181](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L181)
+Defined in: [src/agent/agent.ts:181](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L181)
 
 Orchestrates the interaction between a model, a set of tools, and MCP clients. The Agent is responsible for managing the lifecycle of tools and clients and invoking the core decision-making loop.
 
@@ -14,7 +14,7 @@ Orchestrates the interaction between a model, a set of tools, and MCP clients. T
 new Agent(config?): Agent;
 ```
 
-Defined in: [src/agent/agent.ts:241](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L241)
+Defined in: [src/agent/agent.ts:241](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L241)
 
 Creates an instance of the Agent.
 
@@ -36,7 +36,7 @@ Creates an instance of the Agent.
 readonly messages: Message[];
 ```
 
-Defined in: [src/agent/agent.ts:185](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L185)
+Defined in: [src/agent/agent.ts:185](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L185)
 
 The conversation history of messages between user and assistant.
 
@@ -52,7 +52,7 @@ The conversation history of messages between user and assistant.
 readonly state: AppState;
 ```
 
-Defined in: [src/agent/agent.ts:190](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L190)
+Defined in: [src/agent/agent.ts:190](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L190)
 
 App state storage accessible to tools and application logic. State is not passed to the model during inference.
 
@@ -68,7 +68,7 @@ App state storage accessible to tools and application logic. State is not passed
 readonly conversationManager: HookProvider;
 ```
 
-Defined in: [src/agent/agent.ts:194](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L194)
+Defined in: [src/agent/agent.ts:194](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L194)
 
 Conversation manager for handling message history and context overflow.
 
@@ -80,7 +80,7 @@ Conversation manager for handling message history and context overflow.
 readonly hooks: HookRegistry;
 ```
 
-Defined in: [src/agent/agent.ts:199](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L199)
+Defined in: [src/agent/agent.ts:199](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L199)
 
 Hook registry for managing event callbacks. Hooks enable observing and extending agent behavior.
 
@@ -92,7 +92,7 @@ Hook registry for managing event callbacks. Hooks enable observing and extending
 model: Model;
 ```
 
-Defined in: [src/agent/agent.ts:204](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L204)
+Defined in: [src/agent/agent.ts:204](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L204)
 
 The model provider used by the agent for inference.
 
@@ -104,7 +104,7 @@ The model provider used by the agent for inference.
 optional systemPrompt: SystemPrompt;
 ```
 
-Defined in: [src/agent/agent.ts:209](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L209)
+Defined in: [src/agent/agent.ts:209](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L209)
 
 The system prompt to pass to the model provider.
 
@@ -116,7 +116,7 @@ The system prompt to pass to the model provider.
 readonly name: string;
 ```
 
-Defined in: [src/agent/agent.ts:214](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L214)
+Defined in: [src/agent/agent.ts:214](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L214)
 
 The name of the agent.
 
@@ -128,7 +128,7 @@ The name of the agent.
 readonly agentId: string;
 ```
 
-Defined in: [src/agent/agent.ts:219](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L219)
+Defined in: [src/agent/agent.ts:219](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L219)
 
 The unique identifier of the agent instance.
 
@@ -140,7 +140,7 @@ The unique identifier of the agent instance.
 readonly optional description: string;
 ```
 
-Defined in: [src/agent/agent.ts:224](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L224)
+Defined in: [src/agent/agent.ts:224](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L224)
 
 Optional description of what the agent does.
 
@@ -154,7 +154,7 @@ Optional description of what the agent does.
 get tools(): Tool[];
 ```
 
-Defined in: [src/agent/agent.ts:327](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L327)
+Defined in: [src/agent/agent.ts:330](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L330)
 
 The tools this agent can use.
 
@@ -172,7 +172,7 @@ The tools this agent can use.
 get toolRegistry(): ToolRegistry;
 ```
 
-Defined in: [src/agent/agent.ts:334](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L334)
+Defined in: [src/agent/agent.ts:337](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L337)
 
 The tool registry for managing the agent’s tools.
 
@@ -188,7 +188,7 @@ The tool registry for managing the agent’s tools.
 initialize(): Promise<void>;
 ```
 
-Defined in: [src/agent/agent.ts:288](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L288)
+Defined in: [src/agent/agent.ts:291](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L291)
 
 #### Returns
 
@@ -202,7 +202,7 @@ Defined in: [src/agent/agent.ts:288](https://github.com/strands-agents/sdk-types
 invoke(args, options?): Promise<AgentResult>;
 ```
 
-Defined in: [src/agent/agent.ts:356](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L356)
+Defined in: [src/agent/agent.ts:359](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L359)
 
 Invokes the agent and returns the final result.
 
@@ -237,7 +237,7 @@ console.log(result.lastMessage) // Agent's response
 stream(args, options?): AsyncGenerator<AgentStreamEvent, AgentResult, undefined>;
 ```
 
-Defined in: [src/agent/agent.ts:395](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/agent/agent.ts#L395)
+Defined in: [src/agent/agent.ts:398](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/agent/agent.ts#L398)
 
 Streams the agent execution, yielding events and returning the final result.
 

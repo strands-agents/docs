@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:257](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/streaming.ts#L257)
+Defined in: [src/models/streaming.ts:257](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/streaming.ts#L257)
 
 Event containing metadata about the stream. Includes usage statistics, performance metrics, and trace information.
 
@@ -14,7 +14,7 @@ Event containing metadata about the stream. Includes usage statistics, performan
 readonly type: "modelMetadataEvent";
 ```
 
-Defined in: [src/models/streaming.ts:261](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/streaming.ts#L261)
+Defined in: [src/models/streaming.ts:261](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/streaming.ts#L261)
 
 Discriminator for metadata events.
 
@@ -32,7 +32,7 @@ ModelMetadataEventData.type
 readonly optional usage: Usage;
 ```
 
-Defined in: [src/models/streaming.ts:266](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/streaming.ts#L266)
+Defined in: [src/models/streaming.ts:266](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/streaming.ts#L266)
 
 Token usage information.
 
@@ -50,7 +50,7 @@ ModelMetadataEventData.usage
 readonly optional metrics: Metrics;
 ```
 
-Defined in: [src/models/streaming.ts:271](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/streaming.ts#L271)
+Defined in: [src/models/streaming.ts:271](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/streaming.ts#L271)
 
 Performance metrics.
 
@@ -68,7 +68,7 @@ ModelMetadataEventData.metrics
 readonly optional trace: unknown;
 ```
 
-Defined in: [src/models/streaming.ts:276](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/streaming.ts#L276)
+Defined in: [src/models/streaming.ts:276](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/models/streaming.ts#L276)
 
 Trace information for observability.
 

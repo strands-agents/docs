@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:267](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L267)
+Defined in: [src/hooks/events.ts:267](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L267)
 
 Event triggered after the model invocation completes. Fired after the model finishes generating a response, whether successful or failed. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -16,7 +16,7 @@ Note: stopData may be undefined if an error occurs before the model completes.
 new AfterModelCallEvent(data): AfterModelCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:279](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L279)
+Defined in: [src/hooks/events.ts:279](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L279)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [src/hooks/events.ts:279](https://github.com/strands-agents/sdk-type
 readonly type: "afterModelCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:268](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L268)
+Defined in: [src/hooks/events.ts:268](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L268)
 
 ---
 
@@ -53,7 +53,7 @@ Defined in: [src/hooks/events.ts:268](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:269](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L269)
+Defined in: [src/hooks/events.ts:269](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L269)
 
 ---
 
@@ -63,7 +63,7 @@ Defined in: [src/hooks/events.ts:269](https://github.com/strands-agents/sdk-type
 readonly optional stopData: ModelStopResponse;
 ```
 
-Defined in: [src/hooks/events.ts:270](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L270)
+Defined in: [src/hooks/events.ts:270](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L270)
 
 ---
 
@@ -73,7 +73,7 @@ Defined in: [src/hooks/events.ts:270](https://github.com/strands-agents/sdk-type
 readonly optional error: Error;
 ```
 
-Defined in: [src/hooks/events.ts:271](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L271)
+Defined in: [src/hooks/events.ts:271](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L271)
 
 ---
 
@@ -83,6 +83,6 @@ Defined in: [src/hooks/events.ts:271](https://github.com/strands-agents/sdk-type
 optional retry: boolean;
 ```
 
-Defined in: [src/hooks/events.ts:277](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/hooks/events.ts#L277)
+Defined in: [src/hooks/events.ts:277](https://github.com/strands-agents/sdk-typescript/blob/5acfb01188ff9ffa1d996ca788f15ededa23cd49/src/hooks/events.ts#L277)
 
 Optional flag that can be set by hook callbacks to request a retry of the model call. When set to true, the agent will retry the model invocation.
