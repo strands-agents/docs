@@ -44,39 +44,20 @@ The `metrics` attribute of `AgentResult` (an instance of [`EventLoopMetrics`](@a
 </Tab>
 <Tab label="TypeScript">
 
-The TypeScript SDK provides basic metrics tracking through streaming events. Metrics are available via the `ModelMetadataEvent` that is emitted during agent execution:
+The TypeScript SDK automatically tracks key metrics during agent execution through the `AgentMetrics` class:
 
-- **Token usage**: Input tokens, output tokens, and total tokens consumed
-- **Performance metrics**: Latency measurements
+- **Token usage**: Input tokens, output tokens, total tokens consumed, and cache metrics
+- **Performance metrics**: Latency and execution time measurements
+- **Tool usage**: Call counts, success rates, and execution times for each tool
+- **Event loop cycles**: Number of reasoning cycles and their durations
+
+All these metrics are accessible through the `AgentResult` object returned when you invoke an agent:
 
 ```typescript
 --8<-- "user-guide/observability-evaluation/metrics.ts:basic_metrics"
 ```
 
-The `ModelMetadataEvent` contains two optional properties:
-
-- `usage`: Token usage statistics including input, output, and cache metrics
-- `metrics`: Performance metrics including latency
-
-### Available Metrics
-
-**Usage**:
-
-- `inputTokens: number` - Tokens in the input
-- `outputTokens: number` - Tokens in the output  
-- `totalTokens: number` - Total tokens used
-- `cacheReadInputTokens?: number` - Tokens read from cache
-- `cacheWriteInputTokens?: number` - Tokens written to cache
-
-**Metrics**:
-
-- `latencyMs: number` - Request latency in milliseconds
-
-### Detailed Tracking Example
-
-```typescript
---8<-- "user-guide/observability-evaluation/metrics.ts:detailed_tracking"
-```
+The `metrics` property on `AgentResult` is an instance of `AgentMetrics` that provides comprehensive performance data about the agent's execution.
 </Tab>
 </Tabs>
 
@@ -136,8 +117,27 @@ For a complete list of attributes and their types, see the [`EventLoopMetrics` A
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+The `AgentMetrics` class aggregates metrics across the entire agent loop execution, providing a complete picture of your agent's performance. It tracks cycle counts, tool usage, execution durations, and token consumption across all model invocations.
+
+Key metrics include:
+
+- **Cycle tracking**: Number of event loop cycles and their individual durations via `cycleCount`, `totalDuration`, and `averageCycleTime`
+- **Tool metrics**: Detailed performance data for each tool used during execution
+- **Agent invocations**: List of agent invocations, each containing cycles and usage data for that specific invocation
+- **Accumulated usage**: Aggregated token counts (input, output, total, and cache metrics) across all agent invocations
+- **Accumulated metrics**: Latency measurements in milliseconds for all model requests
+
+### Agent Invocations
+
+The `agentInvocations` property is a list of `InvocationMetricsData` objects that track metrics for each agent invocation (request). Each invocation contains:
+
+- **cycles**: A list of `AgentLoopMetricsData` objects, each representing a single event loop cycle with its ID, duration, and token usage
+- **usage**: Accumulated token usage for this specific invocation across all its cycles
+
+This allows you to track metrics at both the individual invocation level and across all invocations:
+
+```typescript
+--8<-- "user-guide/observability-evaluation/metrics.ts:agent_loop_metrics"
 ```
 </Tab>
 </Tabs>
@@ -160,9 +160,15 @@ These metrics help you identify performance bottlenecks, tools with high error r
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
-```
+For each tool used by the agent, detailed metrics are collected in the `toolMetrics` dictionary. Each entry is a `ToolMetricsData` object that tracks the tool's performance throughout the agent's execution.
+
+Tool metrics provide insights into:
+
+- **Call statistics**: Total number of calls, successful executions, and errors
+- **Execution time**: Total time spent executing the tool
+- **Computed statistics**: The `toolUsage` getter adds computed `averageTime` and `successRate` fields
+
+These metrics help you identify performance bottlenecks, tools with high error rates, and opportunities for optimization.
 </Tab>
 </Tabs>
 
@@ -243,9 +249,47 @@ This summary provides a complete picture of the agent's execution, including cyc
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+The `AgentMetrics` class implements `toJSON()`, so you can serialize the complete metrics snapshot with `JSON.stringify()`. This gives you a comprehensive overview of your agent's performance in a single call:
+
+```typescript
+--8<-- "user-guide/observability-evaluation/metrics.ts:metrics_summary"
 ```
+```json
+{
+  "cycleCount": 1,
+  "accumulatedUsage": {
+    "inputTokens": 16,
+    "outputTokens": 29,
+    "totalTokens": 45
+  },
+  "accumulatedMetrics": {
+    "latencyMs": 1799
+  },
+  "agentInvocations": [
+    {
+      "usage": {
+        "inputTokens": 16,
+        "outputTokens": 29,
+        "totalTokens": 45
+      },
+      "cycles": [
+        {
+          "cycleId": "cycle-1",
+          "duration": 2694,
+          "usage": {
+            "inputTokens": 16,
+            "outputTokens": 29,
+            "totalTokens": 45
+          }
+        }
+      ]
+    }
+  ],
+  "toolMetrics": {}
+}
+```
+
+This summary provides a complete picture of the agent's execution, including cycle information, token usage, and tool performance.
 </Tab>
 </Tabs>
 

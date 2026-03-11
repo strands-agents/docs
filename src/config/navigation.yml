@@ -205,6 +205,7 @@ sidebar:
           - docs/community/integrations/ag-ui
       - label: Plugins
         items:
+          - docs/community/plugins/agent-control
           - docs/community/plugins/datadog-ai-guard
       - label: Model Providers
         items:
