@@ -5,36 +5,9 @@ sidebar:
   label: "Datadog AI Guard"
 ---
 
-[Datadog AI Guard](https://docs.datadoghq.com/security/ai_guard/) is a defense-in-depth security solution that inspects, blocks, and governs AI behavior in real time. This integration connects AI Guard with Strands agents through the [Hooks](../../../user-guide/concepts/agents/hooks.md) system, providing inline security protection for your agent workflows.
+[Datadog AI Guard](https://docs.datadoghq.com/security/ai_guard/) is a defense-in-depth security solution that inspects, blocks, and governs AI behavior in real time. This integration connects AI Guard with Strands agents through the [Plugins](/docs/user-guide/concepts/plugins/) system, providing inline security protection for your agent workflows.
 
 With this integration, AI Guard automatically evaluates user prompts, model responses, tool calls, and tool results against configurable security policies — detecting and blocking threats like prompt injection, jailbreaking, data exfiltration, and destructive tool calls.
-
-## How it works
-
-The integration is provided by [`ddtrace`](https://github.com/DataDog/dd-trace-py) through the `AIGuardStrandsHookProvider` class, which implements the Strands `HookProvider` interface. It registers callbacks for four agent lifecycle events:
-
-| Hook event | What it scans | On block |
-|---|---|---|
-| `BeforeModelCallEvent` | User prompts (excludes tool results) | Raises `AIGuardAbortError` |
-| `AfterModelCallEvent` | Assistant text content | Raises `AIGuardAbortError` |
-| `BeforeToolCallEvent` | Pending tool call and conversation context | Cancels the tool with a descriptive message |
-| `AfterToolCallEvent` | Tool result and conversation context | Replaces the tool result content |
-
-Each callback converts Strands messages into AI Guard's format and calls the AI Guard API to evaluate them against your configured security policies. If a threat is detected, the hook blocks or sanitizes the content before it reaches the model or the user.
-
-Tool results processed by `AfterToolCallEvent` are excluded from the next `BeforeModelCallEvent` scan to prevent double-evaluation.
-
-## Requirements
-
-- Python 3.x
-- `strands-agents` >= 1.28.0
-- `ddtrace` >= 4.7.0rc1
-- A [Datadog](https://www.datadoghq.com/) account with AI Guard enabled
-- Datadog API key and Application key (with `ai_guard_evaluate` scope)
-
-:::note
-AI Guard is currently in **Preview**. Contact Datadog support to enable the feature flag for your organization.
-:::
 
 ## Installation
 
@@ -54,16 +27,28 @@ export DD_APP_KEY=<your-datadog-application-key>
 
 Ensure the Datadog Agent is running and reachable by the SDK. See the [AI Guard onboarding guide](https://docs.datadoghq.com/security/ai_guard/onboarding/?tab=python) for detailed setup instructions, including creating a retention filter and configuring security policies.
 
+## Requirements
+
+- Python >= 3.9
+- `strands-agents` >= 1.28.0
+- `ddtrace` >= 4.7.0rc1
+- A [Datadog](https://www.datadoghq.com/) account with AI Guard enabled
+- Datadog API key and Application key (with `ai_guard_evaluate` scope)
+
+:::note
+AI Guard is currently in **Preview**. Contact Datadog support to enable the feature flag for your organization.
+:::
+
 ## Usage
 
-Import the `AIGuardStrandsHookProvider` and pass it to your Strands agent:
+Import the `AIGuardStrandsPlugin` and pass it to your Strands agent:
 
 ```python title="agent.py"
 from strands import Agent
-from ddtrace.appsec.ai_guard import AIGuardStrandsHookProvider
+from ddtrace.appsec.ai_guard import AIGuardStrandsPlugin
 
 agent = Agent(
-    hooks=[AIGuardStrandsHookProvider()],
+    plugins=[AIGuardStrandsPlugin()],
 )
 
 response = agent("What is the weather today?")
@@ -71,9 +56,24 @@ response = agent("What is the weather today?")
 
 AI Guard automatically evaluates all prompts, responses, and tool interactions against your configured security policies. No additional instrumentation code is needed.
 
+## How it works
+
+The integration is provided by [`ddtrace`](https://github.com/DataDog/dd-trace-py) through the `AIGuardStrandsPlugin` class. It registers callbacks for four agent lifecycle events:
+
+| Hook event | What it scans | On block |
+|---|---|---|
+| `BeforeModelCallEvent` | User prompts (excludes tool results) | Raises `AIGuardAbortError` |
+| `AfterModelCallEvent` | Assistant text content | Raises `AIGuardAbortError` |
+| `BeforeToolCallEvent` | Pending tool call and conversation context | Cancels the tool with a descriptive message |
+| `AfterToolCallEvent` | Tool result and conversation context | Replaces the tool result content |
+
+Each callback calls the AI Guard API to evaluate the agent's messages against your configured security policies. If a threat is detected, the hook blocks or sanitizes the content before it reaches the model or the user.
+
+Tool results processed by `AfterToolCallEvent` are excluded from the next `BeforeModelCallEvent` scan to prevent double-evaluation.
+
 ## Configuration options
 
-The `AIGuardStrandsHookProvider` constructor accepts the following parameters:
+The `AIGuardStrandsPlugin` constructor accepts the following parameters:
 
 | Parameter | Default | Description |
 |---|---|---|
@@ -81,12 +81,12 @@ The `AIGuardStrandsHookProvider` constructor accepts the following parameters:
 | `raise_error_on_tool_calls` | `False` | When `True`, raises `AIGuardAbortError` on tool call violations instead of replacing the tool result content |
 
 ```python
-provider = AIGuardStrandsHookProvider(
+plugin = AIGuardStrandsPlugin(
     detailed_error=True,
     raise_error_on_tool_calls=True,
 )
 
-agent = Agent(hooks=[provider])
+agent = Agent(plugins=[plugin])
 ```
 
 ### Environment variables
@@ -118,4 +118,4 @@ If the AI Guard service is unreachable or returns a non-abort error, the agent c
 - [Datadog AI Guard documentation](https://docs.datadoghq.com/security/ai_guard/)
 - [AI Guard onboarding guide](https://docs.datadoghq.com/security/ai_guard/onboarding/?tab=python)
 - [ddtrace-py repository](https://github.com/DataDog/dd-trace-py)
-- [Strands Hooks documentation](../../../user-guide/concepts/agents/hooks.md)
+- [Strands Plugins documentation](/docs/user-guide/concepts/plugins/)
