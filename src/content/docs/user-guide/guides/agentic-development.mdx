@@ -1,0 +1,543 @@
+---
+title: Agentic Development Guide
+sidebar:
+  label: "Agentic Development"
+---
+
+This guide helps you integrate popular AI coding assistants with the Strands Agents SDK. By configuring rules files, MCP servers, and IDE settings, you can leverage AI tools to build Strands agents more efficiently.
+
+## What is Agentic Development?
+
+Agentic development uses AI coding assistants to accelerate your development workflow. These tools can:
+
+- **Understand your project context** through rules and steering files
+- **Access Strands documentation** via the MCP server and llms.txt
+- **Generate code** following your project's patterns and conventions
+- **Assist with debugging** by understanding your agent's architecture
+
+## Strands Agents MCP Server
+
+The [strands-agents/mcp-server](https://github.com/strands-agents/mcp-server) provides curated documentation access to your AI coding tools via the [llms.txt standard](https://llmstxt.org). This enables AI assistants to search and retrieve relevant Strands documentation with intelligent ranking.
+
+### What is llms.txt?
+
+The `/llms.txt` file is a standardized way for websites to provide LLM-friendly content. It offers:
+
+- **Curated documentation links** organized by section
+- **Clean markdown content** without HTML noise
+- **Structured navigation** for efficient context retrieval
+
+Strands Agents documentation provides several llms.txt endpoints:
+
+| Endpoint | Description |
+|----------|-------------|
+| [`/llms.txt`](https://strandsagents.com/llms.txt) | Index file with links to all documentation pages |
+| [`/llms-full.txt`](https://strandsagents.com/llms-full.txt) | Complete documentation in a single file |
+| `{page}/index.md` | Raw markdown for any page (append `/index.md` to URL) |
+
+### MCP Server Features
+
+The Strands MCP server leverages llms.txt to provide:
+
+- **Smart Document Search**: TF-IDF based search with Markdown-aware scoring that prioritizes titles, headers, and code blocks
+- **Section-Based Browsing**: Browse document structure via table of contents, then fetch only the sections you need—more token-efficient than retrieving full pages
+- **On-Demand Fetching**: Lazy-loads full document content only when needed
+- **Snippet Generation**: Provides contextual snippets with relevance scoring
+
+### Available Tools
+
+The MCP server provides two tools to AI assistants:
+
+| Tool | Description |
+|------|-------------|
+| `search_docs` | Search Strands documentation with intelligent ranking |
+| `fetch_doc` | Browse a page's structure and preamble, then read individual sections |
+
+### Quick Installation
+
+Get started quickly with one-click installation for popular MCP clients:
+
+- **[Install in Kiro](https://kiro.dev/launch/mcp/add?name=strands-agents&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22strands-agents-mcp-server%22%5D%2C%22disabled%22%3Afalse%2C%22autoApprove%22%3A%5B%22search_docs%22%2C%22fetch_doc%22%5D%7D)**
+- **[Install in Cursor](https://cursor.com/en-US/install-mcp?name=strands-agents&config=eyJjb21tYW5kIjoidXZ4IHN0cmFuZHMtYWdlbnRzLW1jcC1zZXJ2ZXIifQ%3D%3D)**
+- **[Install in VS Code](https://vscode.dev/redirect?url=vscode:mcp/install?%7B%22name%22%3A%22strands-agents%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22strands-agents-mcp-server%22%5D%7D)**
+
+### Prerequisites
+
+Install [uv](https://github.com/astral-sh/uv) for running the MCP server:
+
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+### Testing the Server
+
+Use the MCP Inspector to verify your setup:
+
+```bash
+npx @modelcontextprotocol/inspector uvx strands-agents-mcp-server
+```
+
+## Kiro
+
+[Kiro](https://kiro.dev) is an AI-powered IDE that uses steering files to maintain persistent knowledge about your workspace.
+
+### MCP Server Configuration
+
+Configure the Strands Agents MCP server in `~/.kiro/settings/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "strands-agents": {
+      "command": "uvx",
+      "args": ["strands-agents-mcp-server"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "INFO"
+      },
+      "disabled": false,
+      "autoApprove": ["search_docs", "fetch_doc"]
+    }
+  }
+}
+```
+
+This gives Kiro access to Strands documentation for context-aware code generation via llms.txt.
+
+### Setting Up Steering Files
+
+Create steering files in `.kiro/steering/` to give Kiro context about your Strands project:
+
+```bash
+mkdir -p .kiro/steering
+```
+
+Create a `strands-project.md` file:
+
+```markdown
+---
+inclusion: always
+---
+
+# Strands Agents Project
+
+This project uses the Strands Agents SDK to build AI-powered agents.
+
+## Technology Stack
+- Strands Agents SDK (Python/TypeScript)
+- Amazon Bedrock / OpenAI / Anthropic for model providers
+
+## Key Patterns
+- Agent tools are defined using the `@tool` decorator (Python) or `tool()` function (TypeScript)
+- Use MCP clients for external tool integration
+- Follow structured output patterns for type-safe responses
+
+## Project Structure
+- `agents/` - Agent definitions
+- `tools/` - Custom tool implementations
+- `tests/` - Test files following pytest/vitest conventions
+
+## Documentation
+Refer to https://strandsagents.com for SDK documentation.
+```
+
+### Conditional Steering
+
+For file-specific guidance, use conditional inclusion:
+
+```markdown
+---
+inclusion: fileMatch
+fileMatchPattern: ["**/*.py", "**/agents/**/*"]
+---
+
+# Python Agent Development
+
+When working with Python agents:
+
+- Import agents with: `from strands import Agent`
+- Define tools using the `@tool` decorator
+- Use type hints for all tool parameters
+- Follow async patterns for I/O-bound operations
+```
+
+## Claude Code
+
+[Claude Code](https://docs.anthropic.com/en/docs/claude-code) uses CLAUDE.md files for project instructions and auto memory for learned preferences.
+
+### MCP Server Setup
+
+Add the Strands MCP server using the Claude Code CLI:
+
+```bash
+claude mcp add strands uvx strands-agents-mcp-server
+```
+
+### Creating CLAUDE.md
+
+Create a `CLAUDE.md` file in your project root:
+
+```markdown
+# Strands Agents Project
+
+## Overview
+This project builds AI agents using the Strands Agents SDK.
+
+## Build Commands
+- Install: `pip install strands-agents` or `npm install @strands-agents/sdk`
+- Test: `pytest` or `npm test`
+- Run: `python main.py` or `npx ts-node main.ts`
+
+## Code Conventions
+
+### Python
+- Use the `@tool` decorator for custom tools
+- Type all function parameters and return values
+- Use `Agent` class for agent creation
+- Follow PEP 8 style guidelines
+
+### TypeScript
+- Use the `tool()` function for custom tools
+- Define tool schemas with Zod
+- Use async/await patterns consistently
+
+## Architecture
+- Agents use a model-driven loop: receive input → call model → execute tools → return response
+- Tools extend agent capabilities through function calling
+- MCP servers provide external tool integration
+
+## Testing
+- Write unit tests for all custom tools
+- Mock model responses in tests
+- Test agent behavior with different inputs
+
+## Documentation
+- Strands Docs: https://strandsagents.com
+- MCP Tools: https://strandsagents.com/latest/user-guide/concepts/tools/mcp-tools/
+```
+
+### Using .claude/rules/
+
+For modular instructions, create files in `.claude/rules/`:
+
+```bash
+mkdir -p .claude/rules
+```
+
+Create `.claude/rules/strands-tools.md`:
+
+```markdown
+---
+paths:
+  - "**/tools/**/*.py"
+  - "**/tools/**/*.ts"
+---
+
+# Strands Tool Development
+
+When creating tools for Strands agents:
+
+## Python Tools
+- Use the `@tool` decorator from `strands.tools`
+- Include comprehensive docstrings with parameter descriptions
+- Return structured data for complex responses
+
+Example:
+```python
+from strands.tools import tool
+
+@tool
+def search_database(query: str, limit: int = 10) -> list[dict]:
+    """Search the database for matching records.
+    
+    Args:
+        query: The search query string
+        limit: Maximum number of results to return
+        
+    Returns:
+        List of matching records
+    """
+    # Implementation
+    pass
+```
+
+## TypeScript Tools
+- Use the `tool()` function with a Zod schema
+- Provide clear descriptions for all parameters
+
+Example:
+```typescript
+import { tool } from '@strands-agents/sdk'
+import { z } from 'zod'
+
+const searchDatabase = tool({
+  name: 'search_database',
+  description: 'Search the database for matching records',
+  schema: z.object({
+    query: z.string().describe('The search query string'),
+    limit: z.number().default(10).describe('Maximum results'),
+  }),
+  handler: async ({ query, limit }) => {
+    // Implementation
+  },
+})
+```
+```
+
+## Cursor
+
+[Cursor](https://cursor.com) is an AI-powered code editor that uses rules files for project context.
+
+### MCP Server Configuration
+
+Configure in `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "strands-agents": {
+      "command": "uvx",
+      "args": ["strands-agents-mcp-server"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "INFO"
+      },
+      "disabled": false,
+      "autoApprove": ["search_docs", "fetch_doc"]
+    }
+  }
+}
+```
+
+### Setting Up Rules
+
+Create rules in `.cursor/rules/`:
+
+```markdown
+# Strands Agents Development
+
+## Project Context
+This project uses Strands Agents SDK for building AI agents.
+
+## Key Imports
+
+Python:
+- `from strands import Agent`
+- `from strands.tools import tool`
+- `from strands.tools.mcp import MCPClient`
+
+TypeScript:
+- `import { Agent } from '@strands-agents/sdk'`
+- `import { tool } from '@strands-agents/sdk'`
+- `import { McpClient } from '@strands-agents/sdk'`
+
+## Patterns
+
+### Agent Creation
+Always specify a system prompt and tools:
+
+Python:
+```python
+agent = Agent(
+    system_prompt="You are a helpful assistant.",
+    tools=[my_tool, mcp_client]
+)
+```
+
+TypeScript:
+```typescript
+const agent = new Agent({
+    systemPrompt: 'You are a helpful assistant.',
+    tools: [myTool, mcpClient],
+})
+```
+
+### Tool Definition
+Use type hints and clear descriptions for all tools.
+
+### Error Handling
+Wrap tool implementations in try/catch blocks and return informative error messages.
+
+## Documentation
+Reference: https://strandsagents.com
+```
+
+## Other MCP-Compatible Tools
+
+The Strands MCP server works with [40+ applications that support MCP](https://modelcontextprotocol.io/clients). Here are configurations for additional tools:
+
+### Amazon Q Developer CLI
+
+Configure in `~/.aws/amazonq/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "strands-agents": {
+      "command": "uvx",
+      "args": ["strands-agents-mcp-server"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "INFO"
+      },
+      "disabled": false,
+      "autoApprove": ["search_docs", "fetch_doc"]
+    }
+  }
+}
+```
+
+### VS Code
+
+Configure in your `mcp.json` file:
+
+```json
+{
+  "servers": {
+    "strands-agents": {
+      "command": "uvx",
+      "args": ["strands-agents-mcp-server"]
+    }
+  }
+}
+```
+
+### Cline
+
+Provide Cline with this information:
+
+```
+I want to add the MCP server for Strands Agents.
+Here's the GitHub link: @https://github.com/strands-agents/mcp-server
+Can you add it?
+```
+
+### Generic Configuration
+
+For any MCP-compatible client, use this standard configuration:
+
+```json
+{
+  "mcpServers": {
+    "strands-agents": {
+      "command": "uvx",
+      "args": ["strands-agents-mcp-server"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "INFO"
+      }
+    }
+  }
+}
+```
+
+### Using MCP in Your Agents
+
+You can also use the Strands MCP server within your own agents to provide documentation access. See the [MCP Tools documentation](../concepts/tools/mcp-tools/) for details on integrating MCP servers.
+
+## Example Project Configuration
+
+Here's a complete example setup for a Strands project with multiple AI coding tools:
+
+### Directory Structure
+
+```
+my-strands-project/
+├── .kiro/
+│   └── steering/
+│       └── strands-project.md
+├── .claude/
+│   ├── CLAUDE.md
+│   └── rules/
+│       └── strands-tools.md
+├── .cursor/
+│   └── rules/
+│       └── strands.md
+├── AGENTS.md
+├── agents/
+│   └── my_agent.py
+├── tools/
+│   └── custom_tools.py
+└── tests/
+    └── test_agent.py
+```
+
+### Universal AGENTS.md
+
+Create an `AGENTS.md` file that works with multiple tools:
+
+```markdown
+# Strands Agents Project
+
+## Quick Reference
+
+### Installation
+```bash
+pip install strands-agents strands-agents-tools
+```
+
+### Basic Agent
+```python
+from strands import Agent
+from strands_tools import calculator
+
+agent = Agent(
+    system_prompt="You are a helpful assistant.",
+    tools=[calculator]
+)
+response = agent("What is 25 * 48?")
+```
+
+### Custom Tool
+```python
+from strands.tools import tool
+
+@tool
+def my_tool(param: str) -> str:
+    """Tool description."""
+    return f"Processed: {param}"
+```
+
+## Project Conventions
+- All agents in `agents/` directory
+- All tools in `tools/` directory
+- Tests mirror source structure in `tests/`
+- Use type hints everywhere
+- Document all public functions
+
+## Resources
+- Documentation: https://strandsagents.com
+- Examples: https://github.com/strands-agents/samples
+- MCP Server: https://github.com/strands-agents/mcp-server
+```
+
+## Best Practices
+
+### Keep Instructions Focused
+- One topic per rules file
+- Under 200 lines per file for better adherence
+- Use clear, specific instructions
+
+### Provide Examples
+- Include code snippets showing correct patterns
+- Show before/after for refactoring suggestions
+
+### Reference Documentation
+- Link to official Strands documentation
+- Include the MCP server for real-time doc access
+
+### Update Regularly
+- Review rules when adding new features
+- Remove outdated patterns
+- Keep examples current with SDK versions
+
+## Related Resources
+
+- [MCP Tools Documentation](../concepts/tools/mcp-tools/) - Integrating MCP servers with Strands agents
+- [Custom Tools](../concepts/tools/custom-tools/) - Creating custom tools for your agents
+- [Strands MCP Server](https://github.com/strands-agents/mcp-server) - GitHub repository
+- [llms.txt Specification](https://llmstxt.org) - The llms.txt standard
+- [Strands llms.txt](https://strandsagents.com/llms.txt) - Strands documentation index
+- [Kiro Steering Docs](https://kiro.dev/docs/steering/) - Official Kiro documentation
+- [Claude Code Memory](https://docs.anthropic.com/en/docs/claude-code/memory) - Official Claude Code documentation
+- [Cursor Rules](https://docs.cursor.com/context/rules) - Official Cursor documentation

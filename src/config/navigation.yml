@@ -179,6 +179,9 @@ sidebar:
           - docs/user-guide/deploy/deploy_to_kubernetes
           - docs/user-guide/deploy/deploy_to_terraform
       - docs/user-guide/versioning-and-support
+      - label: Guides
+        items:
+          - docs/user-guide/guides/agentic-development
 
   - label: Examples
     items:
