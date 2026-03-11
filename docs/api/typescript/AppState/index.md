@@ -1,4 +1,4 @@
-Defined in: [src/app-state.ts:19](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L19)
+Defined in: [src/app-state.ts:19](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L19)
 
 App state provides key-value storage outside conversation context. State is not passed to the model during inference but is accessible by tools (via ToolContext) and application logic.
 
@@ -24,7 +24,7 @@ const userId = state.get('userId') // 'user-123'
 new AppState(initialState?): AppState;
 ```
 
-Defined in: [src/app-state.ts:28](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L28)
+Defined in: [src/app-state.ts:28](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L28)
 
 Creates a new AppState instance.
 
@@ -52,7 +52,7 @@ Error if initialState is not JSON serializable
 get<TState, K>(key): TState[K];
 ```
 
-Defined in: [src/app-state.ts:54](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L54)
+Defined in: [src/app-state.ts:54](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L54)
 
 Get a state value by key with optional type-safe property lookup. Returns a deep copy to prevent mutations.
 
@@ -91,7 +91,7 @@ const value = state.get('someKey')            // JSONValue | undefined
 get(key): JSONValue;
 ```
 
-Defined in: [src/app-state.ts:55](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L55)
+Defined in: [src/app-state.ts:55](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L55)
 
 Get a state value by key with optional type-safe property lookup. Returns a deep copy to prevent mutations.
 
@@ -127,7 +127,7 @@ const value = state.get('someKey')            // JSONValue | undefined
 set<TState, K>(key, value): void;
 ```
 
-Defined in: [src/app-state.ts:89](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L89)
+Defined in: [src/app-state.ts:89](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L89)
 
 Set a state value with optional type-safe property validation. Validates JSON serializability and stores a deep copy.
 
@@ -169,7 +169,7 @@ state.set('someKey', { any: 'value' })
 set(key, value): void;
 ```
 
-Defined in: [src/app-state.ts:90](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L90)
+Defined in: [src/app-state.ts:90](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L90)
 
 Set a state value with optional type-safe property validation. Validates JSON serializability and stores a deep copy.
 
@@ -208,7 +208,7 @@ state.set('someKey', { any: 'value' })
 delete<TState, K>(key): void;
 ```
 
-Defined in: [src/app-state.ts:111](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L111)
+Defined in: [src/app-state.ts:111](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L111)
 
 Delete a state value by key with optional type-safe property validation.
 
@@ -245,7 +245,7 @@ state.delete('someKey')
 delete(key): void;
 ```
 
-Defined in: [src/app-state.ts:112](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L112)
+Defined in: [src/app-state.ts:112](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L112)
 
 Delete a state value by key with optional type-safe property validation.
 
@@ -277,7 +277,7 @@ state.delete('someKey')
 clear(): void;
 ```
 
-Defined in: [src/app-state.ts:120](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L120)
+Defined in: [src/app-state.ts:120](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L120)
 
 Clear all state values.
 
@@ -293,7 +293,7 @@ Clear all state values.
 getAll(): Record<string, JSONValue>;
 ```
 
-Defined in: [src/app-state.ts:129](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L129)
+Defined in: [src/app-state.ts:129](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L129)
 
 Get a copy of all state as an object.
 
@@ -311,7 +311,7 @@ Deep copy of all state
 keys(): string[];
 ```
 
-Defined in: [src/app-state.ts:138](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L138)
+Defined in: [src/app-state.ts:138](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L138)
 
 Get all state keys.
 
@@ -329,7 +329,7 @@ Array of state keys
 toJSON(): JSONValue;
 ```
 
-Defined in: [src/app-state.ts:147](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L147)
+Defined in: [src/app-state.ts:147](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L147)
 
 Returns the serialized state as JSON value.
 
@@ -353,7 +353,7 @@ StateSerializable.toJSON
 loadStateFromJson(json): void;
 ```
 
-Defined in: [src/app-state.ts:156](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/app-state.ts#L156)
+Defined in: [src/app-state.ts:156](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/app-state.ts#L156)
 
 Loads state from a previously serialized JSON value.
 

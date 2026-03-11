@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:393](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/types/messages.ts#L393)
+Defined in: [src/types/messages.ts:393](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/messages.ts#L393)
 
 Data for a reasoning block.
 
@@ -10,7 +10,7 @@ Data for a reasoning block.
 optional text: string;
 ```
 
-Defined in: [src/types/messages.ts:397](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/types/messages.ts#L397)
+Defined in: [src/types/messages.ts:397](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/messages.ts#L397)
 
 The text content of the reasoning process.
 
@@ -22,7 +22,7 @@ The text content of the reasoning process.
 optional signature: string;
 ```
 
-Defined in: [src/types/messages.ts:402](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/types/messages.ts#L402)
+Defined in: [src/types/messages.ts:402](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/messages.ts#L402)
 
 A cryptographic signature for verification purposes.
 
@@ -34,6 +34,6 @@ A cryptographic signature for verification purposes.
 optional redactedContent: Uint8Array;
 ```
 
-Defined in: [src/types/messages.ts:407](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/types/messages.ts#L407)
+Defined in: [src/types/messages.ts:407](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/messages.ts#L407)
 
 The redacted content of the reasoning process.

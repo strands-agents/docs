@@ -295,6 +295,9 @@ Most event properties are read-only to prevent unintended modifications. However
     
     -   `result` - Modify the tool result. See [Result Modification](#result-modification).
     -   `retry` - Request a retry of the tool invocation. See [Tool Call Retry](#tool-call-retry).
+-   [`AfterInvocationEvent`](/docs/api/python/strands.hooks.events#AfterInvocationEvent)
+    
+    -   `resume` - Trigger a follow-up agent invocation with new input. See [Invocation resume](#invocation-resume).
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
@@ -909,6 +912,128 @@ retry_hook = RetryOnToolError(max_retries=1)
 agent = Agent(tools=[flaky_api_call], hooks=[retry_hook])
 
 result = agent("Look up the weather")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+### Invocation resume
+
+The `AfterInvocationEvent.resume` property enables a hook to trigger a follow-up agent invocation after the current one completes. When you set `resume` to any valid agent input (a string, content blocks, or messages), the agent automatically re-invokes itself with that input instead of returning to the caller. This starts a full new invocation cycle, including firing `BeforeInvocationEvent`.
+
+This is useful for building autonomous looping patterns where the agent continues processing based on its previous result—for example, re-evaluating after tool execution, injecting additional context, or implementing multi-step workflows within a single call.
+
+Resume input types
+
+The `resume` value accepts any valid `AgentInput`: a string, a list of content blocks, a list of messages, or interrupt responses. When the agent is in an interrupt state, you must provide interrupt responses (not a plain string) to resume correctly.
+
+The following example checks the agent result and triggers one follow-up invocation to ask the model to summarize its work:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+from strands.hooks import AfterInvocationEvent
+
+resume_count = 0
+
+async def summarize_after_tools(event: AfterInvocationEvent):
+    """Resume once to ask the model to summarize its work."""
+    global resume_count
+    if resume_count == 0 and event.result and event.result.stop_reason == "end_turn":
+        resume_count += 1
+        event.resume = "Now summarize what you just did in one sentence."
+
+agent = Agent()
+agent.add_hook(summarize_after_tools)
+
+# The agent processes the initial request, then automatically
+# performs a second invocation to generate the summary
+result = agent("Look up the weather in Seattle")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+You can also use `resume` to chain multiple re-invocations. Make sure to include a termination condition to avoid infinite loops:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+from strands.hooks import AfterInvocationEvent
+
+MAX_ITERATIONS = 3
+iteration = 0
+
+async def iterative_refinement(event: AfterInvocationEvent):
+    """Re-invoke the agent up to MAX_ITERATIONS times for iterative refinement."""
+    global iteration
+    if iteration < MAX_ITERATIONS and event.result:
+        iteration += 1
+        event.resume = f"Review your previous response and improve it. Iteration {iteration} of {MAX_ITERATIONS}."
+
+agent = Agent()
+agent.add_hook(iterative_refinement)
+
+result = agent("Draft a haiku about programming")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+#### Handling interrupts with resume
+
+The `resume` property integrates with the [interrupt](/docs/user-guide/concepts/tools/index.md) system. When an agent invocation ends because of an interrupt, a hook can automatically handle the interrupt by resuming with interrupt responses. This avoids returning the interrupt to the caller.
+
+When the agent is in an interrupt state, you must resume with a list of `interruptResponse` objects. Passing a plain string raises a `TypeError`.
+
+(( tab "Python" ))
+```python
+from strands import Agent, tool
+from strands.hooks import AfterInvocationEvent, BeforeToolCallEvent
+
+@tool
+def send_email(to: str, body: str) -> str:
+    """Send an email.
+
+    Args:
+        to: Recipient address.
+        body: Email body.
+    """
+    return f"Email sent to {to}"
+
+def require_approval(event: BeforeToolCallEvent):
+    """Interrupt before sending emails to require approval."""
+    if event.tool_use["name"] == "send_email":
+        event.interrupt("email_approval", reason="Approve this email?")
+
+async def auto_approve(event: AfterInvocationEvent):
+    """Automatically approve all interrupted tool calls."""
+    if event.result and event.result.stop_reason == "interrupt":
+        responses = [
+            {"interruptResponse": {"interruptId": intr.id, "response": "approved"}}
+            for intr in event.result.interrupts
+        ]
+        event.resume = responses
+
+agent = Agent(tools=[send_email])
+agent.add_hook(require_approval)
+agent.add_hook(auto_approve)
+
+# The interrupt is handled automatically by the hook—
+# the caller receives the final result directly
+result = agent("Send an email to alice@example.com saying hello")
 ```
 (( /tab "Python" ))
 

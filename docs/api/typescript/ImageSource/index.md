@@ -14,6 +14,6 @@ type ImageSource =
 };
 ```
 
-Defined in: [src/types/media.ts:182](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/types/media.ts#L182)
+Defined in: [src/types/media.ts:182](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/types/media.ts#L182)
 
 Source for an image (Class version).

@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:83](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/models/model.ts#L83)
+Defined in: [src/models/model.ts:85](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/model.ts#L85)
 
 Options interface for configuring streaming model invocation.
 
@@ -10,7 +10,7 @@ Options interface for configuring streaming model invocation.
 optional systemPrompt: SystemPrompt;
 ```
 
-Defined in: [src/models/model.ts:88](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/models/model.ts#L88)
+Defined in: [src/models/model.ts:90](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/model.ts#L90)
 
 System prompt to guide the model’s behavior. Can be a simple string or an array of content blocks for advanced caching.
 
@@ -22,7 +22,7 @@ System prompt to guide the model’s behavior. Can be a simple string or an arra
 optional toolSpecs: ToolSpec[];
 ```
 
-Defined in: [src/models/model.ts:93](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/models/model.ts#L93)
+Defined in: [src/models/model.ts:95](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/model.ts#L95)
 
 Array of tool specifications that the model can use.
 
@@ -34,6 +34,6 @@ Array of tool specifications that the model can use.
 optional toolChoice: ToolChoice;
 ```
 
-Defined in: [src/models/model.ts:98](https://github.com/strands-agents/sdk-typescript/blob/f988e8537a106650bc307420920f6006522ced17/src/models/model.ts#L98)
+Defined in: [src/models/model.ts:100](https://github.com/strands-agents/sdk-typescript/blob/ebf2f50116a427879e504e71bce440eaf44ad282/src/models/model.ts#L100)
 
 Controls how the model selects tools to use.

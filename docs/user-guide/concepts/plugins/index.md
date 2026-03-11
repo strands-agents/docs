@@ -1,8 +1,8 @@
-Plugins allow you to change the typical behavior of an agent. They enable you to introduce concepts like [Skills](https://agentskills.io/specification), [steering](/docs/user-guide/concepts/experimental/steering/index.md), or other behavioral modifications into the agentic loop. Plugins work by taking advantage of the low-level primitives exposed by the Agent class—`model`, `system_prompt`, `messages`, `tools`, and `hooks`—and executing logic to improve an agent’s behavior.
+Plugins allow you to change the typical behavior of an agent. They enable you to introduce concepts like [Skills](https://agentskills.io/specification), [steering](/docs/user-guide/concepts/plugins/steering/index.md), or other behavioral modifications into the agentic loop. Plugins work by taking advantage of the low-level primitives exposed by the Agent class—`model`, `system_prompt`, `messages`, `tools`, and `hooks`—and executing logic to improve an agent’s behavior.
 
 The Strands SDK provides built-in plugins that you can use out of the box:
 
--   **[Steering](/docs/user-guide/concepts/experimental/steering/index.md)** - Modular prompting for complex agent tasks through context-aware guidance
+-   **[Steering](/docs/user-guide/concepts/plugins/steering/index.md)** - Modular prompting for complex agent tasks through context-aware guidance
 
 You can also build and distribute your own plugins to extend agent functionality. See [Get Featured](/docs/community/get-featured/index.md) to share your plugins with the community.
 
@@ -13,7 +13,7 @@ Plugins are passed to agents during initialization via the `plugins` parameter:
 (( tab "Python" ))
 ```python
 from strands import Agent
-from strands.experimental.steering import LLMSteeringHandler
+from strands.vended_plugins.steering import LLMSteeringHandler
 
 # Create an agent with plugins
 agent = Agent(
@@ -242,5 +242,5 @@ class AsyncConfigPlugin(Plugin):
 ## Next Steps
 
 -   [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) - Learn about the underlying hook system
--   [Steering](/docs/user-guide/concepts/experimental/steering/index.md) - Explore the built-in steering plugin
+-   [Steering](/docs/user-guide/concepts/plugins/steering/index.md) - Explore the built-in steering plugin
 -   [Get Featured](/docs/community/get-featured/index.md) - Share your plugins with the community

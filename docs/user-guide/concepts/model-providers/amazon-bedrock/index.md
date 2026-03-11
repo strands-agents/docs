@@ -549,9 +549,36 @@ When `guardrail_latest_message=True`, only the most recent user message is sent 
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Guardrails are not yet supported in the TypeScript SDK
+Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md):
+
+```typescript
+// Using guardrails with BedrockModel
+const bedrockModel = new BedrockModel({
+  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  guardrailConfig: {
+    guardrailIdentifier: 'your-guardrail-id',
+    guardrailVersion: 'DRAFT',
+    trace: 'enabled', // Options: 'enabled', 'disabled', 'enabled_full'
+    streamProcessingMode: 'sync', // Options: 'sync', 'async'
+    redaction: {
+      input: true, // Default: true
+      inputMessage: '[User input redacted.]', // Custom redaction message
+      output: false, // Default: false
+      outputMessage: '[Assistant output redacted.]', // Custom redaction message
+    },
+  },
+})
+
+const guardrailAgent = new Agent({ model: bedrockModel })
+
+const response = await guardrailAgent.invoke('Can you tell me about the Strands SDK?')
 ```
+
+When a guardrail is triggered:
+
+-   Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
+-   Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
+-   Custom redaction messages can be specified for both input and output redactions
 (( /tab "TypeScript" ))
 
 ### Caching

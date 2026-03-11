@@ -87,6 +87,21 @@
     -   [Session](/docs/api/python/strands.types.session)
     -   [Streaming](/docs/api/python/strands.types.streaming)
     -   [Tools](/docs/api/python/strands.types.tools)
+-   **Vended Plugins**
+    -   **Skills**
+        -   [Agent Skills](/docs/api/python/strands.vended_plugins.skills.agent_skills)
+        -   [Skill](/docs/api/python/strands.vended_plugins.skills.skill)
+    -   **Steering**
+        -   **Context Providers**
+            -   [Ledger Provider](/docs/api/python/strands.vended_plugins.steering.context_providers.ledger_provider)
+        -   **Core**
+            -   [Action](/docs/api/python/strands.vended_plugins.steering.core.action)
+            -   [Context](/docs/api/python/strands.vended_plugins.steering.core.context)
+            -   [Handler](/docs/api/python/strands.vended_plugins.steering.core.handler)
+        -   **Handlers**
+            -   **Llm**
+                -   [Llm Handler](/docs/api/python/strands.vended_plugins.steering.handlers.llm.llm_handler)
+                -   [Mappers](/docs/api/python/strands.vended_plugins.steering.handlers.llm.mappers)
 -   **Experimental**
     -   [Agent Config](/docs/api/python/strands.experimental.agent_config)
     -   **Bidi**
@@ -111,14 +126,3 @@
             -   [Model](/docs/api/python/strands.experimental.bidi.types.model)
     -   **Hooks**
         -   [Events](/docs/api/python/strands.experimental.hooks.events)
-    -   **Steering**
-        -   **Context Providers**
-            -   [Ledger Provider](/docs/api/python/strands.experimental.steering.context_providers.ledger_provider)
-        -   **Core**
-            -   [Action](/docs/api/python/strands.experimental.steering.core.action)
-            -   [Context](/docs/api/python/strands.experimental.steering.core.context)
-            -   [Handler](/docs/api/python/strands.experimental.steering.core.handler)
-        -   **Handlers**
-            -   **Llm**
-                -   [Llm Handler](/docs/api/python/strands.experimental.steering.handlers.llm.llm_handler)
-                -   [Mappers](/docs/api/python/strands.experimental.steering.handlers.llm.mappers)
