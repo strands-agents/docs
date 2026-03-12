@@ -59,21 +59,38 @@ const SLUG_RULES: SlugRule[] = [
 
 /**
  * Apply slug-level rename rules to an already-normalised slug.
+ * Checks SLUG_RULES first (highest priority), then falls back to redirectFromMap.
  * Returns the renamed slug, or null if no rule matched (slug is already current).
+ *
+ * @param slug - The slug to resolve
+ * @param redirectFromMap - Optional map of source slugs to target slugs (from frontmatter redirectFrom)
  */
-export function resolveRedirect(slug: string): string | null {
+export function resolveRedirect(slug: string, redirectFromMap?: Record<string, string>): string | null {
+  // Check SLUG_RULES first (highest priority)
   for (const rule of SLUG_RULES) {
     const m = slug.match(rule.match)
     if (m) return typeof rule.to === 'function' ? rule.to(m) : rule.to
   }
+
+  // Then check redirectFromMap (frontmatter-based redirects)
+  if (redirectFromMap && slug in redirectFromMap) {
+    return redirectFromMap[slug] ?? null
+  }
+
   return null
 }
 
 /**
  * Given a full URL from the old site, normalise it to a slug and apply redirect rules.
  * Returns '/' for versioned root URLs, or null if the URL isn't recognisable.
+ *
+ * @param url - The URL to resolve
+ * @param redirectFromMap - Optional map of source slugs to target slugs (from frontmatter redirectFrom)
  */
-export function resolveRedirectFromUrl(url: string): string | null {
+export function resolveRedirectFromUrl(
+  url: string,
+  redirectFromMap?: Record<string, string>
+): string | null {
   const pathMatch = url.match(/^https?:\/\/[^/]+(\/.*)?$/)
   if (!pathMatch) return null
   let path = pathMatch[1] ?? '/'
@@ -92,6 +109,6 @@ export function resolveRedirectFromUrl(url: string): string | null {
 
   if (path === '') return '/'
 
-  const resolved = resolveRedirect(path) ?? path
+  const resolved = resolveRedirect(path, redirectFromMap) ?? path
   return hadTrailingSlash ? `${resolved}/` : resolved
 }

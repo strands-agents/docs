@@ -82,6 +82,8 @@ export const collections = {
         experimental: z.boolean().default(false),
         // Category for TypeScript API docs (classes, interfaces, type-aliases, functions)
         category: z.string().optional(),
+        // Array of slugs that should redirect to this page (e.g., old URLs)
+        redirectFrom: z.array(z.string()).optional(),
       }),
     }),
   }),

@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import Sitemapper from 'sitemapper'
 import { resolveRedirectFromUrl } from '../src/util/redirect'
+import { buildRedirectFromMap } from '../src/util/redirect.build'
 import { tagToSlug, getAllTags, getPublishedPosts } from '../src/util/blog'
 
 const KNOWN_ROUTES_PATH = path.resolve('test/known-routes.json')
@@ -142,14 +143,35 @@ describe('Sitemap Coverage', { skip: !VERIFY_LIVE_SITEMAP }, () => {
 describe('Known Routes', () => {
   // test/known-routes.json is an append-only registry of paths that must always resolve.
   // Add new entries from the live sitemap with: npm run routes:update
+  it('every redirectFrom source slug has a corresponding entry in known-routes.json', async () => {
+    const knownRoutes = new Set<string>(JSON.parse(fs.readFileSync(KNOWN_ROUTES_PATH, 'utf-8')))
+    const knownRedirects = Object.entries(await buildRedirectFromMap()).map(([redirect, page]) => ({
+      page,
+      redirect,
+    }))
+
+    const missing = knownRedirects.filter((it) => !knownRoutes.has(`/${it.redirect}/`))
+
+    const entries = missing.map((it) => `  "/${it.redirect}/"`)
+    expect(
+      missing,
+      `${missing.length} redirectFrom slug(s) are missing from known-routes.json.\n` +
+        `Add these entries to test/known-routes.json:\n` +
+        entries.join(',\n')
+    ).toEqual([])
+  })
+
   it('every known route resolves to a valid CMS entry', async () => {
     const knownRoutes: string[] = JSON.parse(fs.readFileSync(KNOWN_ROUTES_PATH, 'utf-8'))
     const docs = await getCollection('docs')
     const validIds = new Set(docs.map((doc) => doc.id))
 
+    // Build redirectFromMap from frontmatter so page-level redirects are honoured
+    const redirectFromMap = await buildRedirectFromMap()
+
     const broken: Array<{ url: string; resolved: string }> = []
     for (const routePath of knownRoutes) {
-      const resolved = resolveRedirectFromUrl(`https://strandsagents.com${routePath}`)
+      const resolved = resolveRedirectFromUrl(`https://strandsagents.com${routePath}`, redirectFromMap)
       if (!resolved || resolved === '/') continue
       // External redirects (e.g. GitHub) are always valid
       if (resolved.startsWith('https://') || resolved.startsWith('http://')) continue

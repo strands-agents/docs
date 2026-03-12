@@ -87,11 +87,6 @@ sidebar:
               - docs/user-guide/concepts/model-providers/sagemaker
               - docs/user-guide/concepts/model-providers/writer
               - docs/user-guide/concepts/model-providers/custom_model_provider
-              - docs/user-guide/concepts/model-providers/cohere
-              - docs/user-guide/concepts/model-providers/clova-studio
-              - docs/user-guide/concepts/model-providers/fireworksai
-              - docs/user-guide/concepts/model-providers/nebius-token-factory
-              - docs/user-guide/concepts/model-providers/xai
           - label: Streaming
             items:
               - docs/user-guide/concepts/streaming

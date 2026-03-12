@@ -21,6 +21,45 @@ describe('resolveRedirect', () => {
   )
 })
 
+describe('resolveRedirect with redirectFromMap', () => {
+  const redirectFromMap: Record<string, string> = {
+    'docs/user-guide/concepts/model-providers/cohere': 'docs/community/model-providers/cohere',
+    'docs/user-guide/concepts/model-providers/fireworksai': 'docs/community/model-providers/fireworksai',
+    'docs/old/path': 'docs/new/path',
+  }
+
+  it('should resolve redirectFrom mappings correctly', () => {
+    expect(resolveRedirect('docs/user-guide/concepts/model-providers/cohere', redirectFromMap)).toBe(
+      'docs/community/model-providers/cohere'
+    )
+    expect(resolveRedirect('docs/user-guide/concepts/model-providers/fireworksai', redirectFromMap)).toBe(
+      'docs/community/model-providers/fireworksai'
+    )
+    expect(resolveRedirect('docs/old/path', redirectFromMap)).toBe('docs/new/path')
+  })
+
+  it('should give SLUG_RULES priority over redirectFrom mappings', () => {
+    // python-tools is in SLUG_RULES, so it should redirect to custom-tools even if in redirectFromMap
+    const mapWithConflict: Record<string, string> = {
+      'docs/user-guide/concepts/tools/python-tools': 'docs/some/other/place',
+    }
+    expect(resolveRedirect('docs/user-guide/concepts/tools/python-tools', mapWithConflict)).toBe(
+      'docs/user-guide/concepts/tools/custom-tools'
+    )
+  })
+
+  it('should return null for unknown slugs not in either SLUG_RULES or redirectFromMap', () => {
+    expect(resolveRedirect('docs/completely/unknown/path', redirectFromMap)).toBe(null)
+  })
+
+  it('should work without redirectFromMap (backward compatible)', () => {
+    expect(resolveRedirect('docs/user-guide/concepts/tools/python-tools')).toBe(
+      'docs/user-guide/concepts/tools/custom-tools'
+    )
+    expect(resolveRedirect('docs/some/unknown/path')).toBe(null)
+  })
+})
+
 const urlCases: Array<{ description: string; url: string; expected: string | null }> = [
   { description: 'latest root redirects to /',                         url: 'https://strandsagents.com/latest/',                                                                expected: '/' },
   { description: '1.x root redirects to /',                            url: 'https://strandsagents.com/1.x/',                                                                  expected: '/' },
