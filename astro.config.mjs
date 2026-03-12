@@ -53,6 +53,10 @@ export default defineConfig({
     }),
     mdx(),
     starlight({
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://strandsagents.com/og-image.png' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://strandsagents.com/og-image.png' } },
+      ],
       markdown: {
         // API docs are symlinked from .build/api-docs; processedDirs ensures Starlight's
         // rehype plugins (e.g. heading anchor links) run on the real resolved paths.

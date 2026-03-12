@@ -115,6 +115,51 @@ Astro.locals.t = mockT
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:site_name" content="Strands Agents SDK" />
+    <meta property="og:image" content={new URL('/og-image.png', Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL('/og-image.png', Astro.site).href} />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Strands Agents",
+          "url": "https://strandsagents.com",
+          "logo": "https://strandsagents.com/favicon.svg",
+          "sameAs": ["https://github.com/strands-agents"],
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "Amazon Web Services",
+            "url": "https://aws.amazon.com"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Strands Agents SDK",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Cross-platform",
+          "programmingLanguage": ["Python", "TypeScript"],
+          "license": "https://github.com/strands-agents/sdk-python/blob/main/LICENSE",
+          "url": "https://strandsagents.com",
+          "author": { "@type": "Organization", "name": "Strands Agents" },
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
+        {
+          "@type": "WebSite",
+          "name": "Strands Agents SDK",
+          "url": "https://strandsagents.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://strandsagents.com/docs/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    })} />
 
     <!-- AWS Shortbread cookie consent -->
     <SiteScripts />
