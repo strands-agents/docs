@@ -732,7 +732,7 @@ Our implementation renders documentation through Astro's container API, applies 
 | `src/pages/[...slug]/index.md.ts` | Dynamic endpoint for individual pages |
 | `src/util/render-to-markdown.ts` | Renders MDX entries via AstroContainer |
 | `src/util/html-to-markdown.ts` | HTML→Markdown conversion with custom rules |
-| `src/content/docs/llms.mdx` | User-facing page explaining the feature |
+| `src/content/docs/user-guide/build-with-ai.mdx` | User-facing Build with AI guide (MCP server setup, llms.txt) |
 
 ### HTML-to-Markdown Transformations
 
