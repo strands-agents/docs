@@ -19,6 +19,19 @@ async function basicFileStorageExample() {
   // --8<-- [end:basic_file_storage]
 }
 
+async function sessionAsPluginExample() {
+  // --8<-- [start:session_as_plugin]
+  const session = new SessionManager({
+    sessionId: 'test-session',
+    storage: { snapshot: new FileStorage('./sessions') },
+  })
+
+  // Equivalent to passing via sessionManager field
+  const agent = new Agent({ plugins: [session] })
+  await agent.invoke('Hello!')
+  // --8<-- [end:session_as_plugin]
+}
+
 // =====================
 // FileStorage
 // =====================

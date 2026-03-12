@@ -25,7 +25,7 @@ Strands provides built-in session persistence capabilities that automatically ca
 
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
 
-:::caution
+:::caution[Python only]
 You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 :::
 
@@ -57,12 +57,18 @@ agent("Hello!")  # This conversation is persisted
 ```typescript
 --8<-- "user-guide/concepts/agents/session-manager.ts:basic_file_storage"
 ```
+
+`SessionManager` is a [Plugin](../plugins/index.mdx). The `sessionManager` field on `AgentConfig` is a convenience shorthand — it is equivalent to passing it in the `plugins` array:
+
+```typescript
+--8<-- "user-guide/concepts/agents/session-manager.ts:session_as_plugin"
+```
 </Tab>
 </Tabs>
 
 The conversation, and associated state, is persisted to the underlying storage backend.
 
-### Multi-Agent Sessions *(Python only)*
+### Multi-Agent Sessions *(Python only)* {#multi-agent-sessions}
 
 Multi-agent systems (Graph/Swarm) can also use session management to persist their state:
 
@@ -337,17 +343,12 @@ Session persistence is automatically triggered by lifecycle events in the agent:
 </Tab>
 <Tab label="TypeScript">
 
-The TypeScript `SessionManager` uses a `saveLatestOn` strategy to control when `snapshot_latest` is updated:
+- **Agent Initialization**: Restores state from `snapshot_latest` if it exists.
+- **Message Addition** (`saveLatestOn: 'message'`): Saves after every message and after model calls with guardrail redactions.
+- **Agent Invocation** (`saveLatestOn: 'invocation'`, default): Saves after each invocation completes.
+- **Snapshot Trigger**: Creates an immutable checkpoint when the `snapshotTrigger` callback returns `true`.
 
-- **`'invocation'`** *(default)*: Saves after every agent invocation completes. Balances durability and I/O.
-- **`'message'`**: Saves after every message added to the conversation. Most durable, highest I/O.
-- **`'trigger'`**: Only saves when a `snapshotTrigger` callback fires or when `saveSnapshot` is called manually.
-
-On initialization, the agent automatically restores state from `snapshot_latest` if it exists.
-
-```typescript
---8<-- "user-guide/concepts/agents/session-manager.ts:save_latest_strategy"
-```
+See [Basic Usage](#basic-usage) for configuration examples.
 
 </Tab>
 </Tabs>
