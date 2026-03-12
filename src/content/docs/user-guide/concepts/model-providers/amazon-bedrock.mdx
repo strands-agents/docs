@@ -508,6 +508,10 @@ When a guardrail is triggered:
 - Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
 - Custom redaction messages can be specified for both input and output redactions
 
+:::note[Latest Message Evaluation]
+When `guardLatestUserMessage: true`, only the most recent user message is sent to guardrails for evaluation instead of the entire conversation. This can improve performance and reduce costs in multi-turn conversations where earlier messages have already been validated.
+:::
+
 </Tab>
 </Tabs>
 
