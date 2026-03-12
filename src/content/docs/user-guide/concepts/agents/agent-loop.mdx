@@ -98,14 +98,14 @@ The agent emits lifecycle events at key points: before and after each invocation
 
 ### Cancellation
 
-Sometimes the loop needs to be stopped from outside — a web server handling a client disconnect, a background task manager responding to changed conditions, or a UI "Stop" button. The `agent.cancel()` method provides a thread-safe way to do this.
+Sometimes the loop needs to be stopped from outside. A web server handling a client disconnect, a background task manager responding to changed conditions, or a UI "Stop" button are all cases where external cancellation is needed. The `agent.cancel()` method provides a thread-safe way to do this.
 
 Calling `cancel()` sets an internal signal that the agent checks at two checkpoints:
 
-1. During model response streaming — partial output is discarded
-2. Before tool execution — tool calls are skipped, with error results added to maintain valid conversation state
+1. During model response streaming, where partial output is discarded
+2. Before tool execution, where tool calls are skipped with error results added to maintain valid conversation state
 
-The agent returns a result with `stop_reason="cancelled"`. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable. `cancel()` is thread-safe and idempotent — calling it multiple times or from different threads is safe.
+The agent returns a result with `stop_reason="cancelled"`. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable. `cancel()` is thread-safe and idempotent. Calling it multiple times or from different threads is safe.
 
 <Tabs>
   <Tab label="Python">
