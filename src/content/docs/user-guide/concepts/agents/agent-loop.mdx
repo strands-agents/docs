@@ -112,7 +112,6 @@ The agent returns a result with `stop_reason="cancelled"`. The cancel signal cle
 <Tabs>
   <Tab label="Python">
     ```python
-    import asyncio
     import threading
     import time
 
@@ -125,21 +124,17 @@ The agent returns a result with `stop_reason="cancelled"`. The cancel signal cle
         agent.cancel()
 
 
-    async def main():
-        agent = Agent()
+    agent = Agent()
 
-        # Cancel from a background thread after 30 seconds
-        watchdog = threading.Thread(target=timeout_watchdog, args=(agent, 30.0))
-        watchdog.start()
+    # Cancel from a background thread after 30 seconds
+    watchdog = threading.Thread(target=timeout_watchdog, args=(agent, 30.0))
+    watchdog.start()
 
-        result = await agent.invoke_async("Analyze this large dataset")
-        watchdog.join()
+    result = agent("Analyze this large dataset")
+    watchdog.join()
 
-        if result.stop_reason == "cancelled":
-            print("Agent was cancelled due to timeout")
-
-
-    asyncio.run(main())
+    if result.stop_reason == "cancelled":
+        print("Agent was cancelled due to timeout")
     ```
   </Tab>
   <Tab label="TypeScript">
