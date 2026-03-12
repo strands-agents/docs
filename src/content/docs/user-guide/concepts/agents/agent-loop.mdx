@@ -98,9 +98,7 @@ The agent emits lifecycle events at key points: before and after each invocation
 
 ### Cancellation
 
-Sometimes the loop needs to be stopped from outside. A web server handling a client disconnect, a background task manager responding to changed conditions, or a UI "Stop" button are all cases where external cancellation is needed. The `agent.cancel()` method provides a thread-safe way to do this.
-
-Calling `cancel()` sets an internal signal that the agent checks at two checkpoints:
+The `agent.cancel()` method provides a thread-safe way to stop the loop from outside, such as on a client disconnect, a timeout, or a UI "Stop" button. Calling `cancel()` sets an internal signal that the agent checks at two checkpoints:
 
 | Checkpoint | Behavior | Note |
 |---|---|---|
