@@ -3,17 +3,18 @@
 
 import { Agent, tool } from '@strands-agents/sdk'
 import { A2AAgent, A2AExpressServer } from '@strands-agents/sdk/a2a'
+import { z } from 'zod'
 
-// --8<-- [start:basic_usage]
-import { A2AAgent } from '@strands-agents/sdk/a2a'
+async function basicUsageExample() {
+  // --8<-- [start:basic_usage]
+  // Create an A2AAgent pointing to a remote A2A server
+  const a2aAgent = new A2AAgent({ url: 'http://localhost:9000' })
 
-// Create an A2AAgent pointing to a remote A2A server
-const a2aAgent = new A2AAgent({ url: 'http://localhost:9000' })
-
-// Invoke it just like a regular Agent
-const result = await a2aAgent.invoke('Show me 10 ^ 6')
-console.log(result.lastMessage.content)
-// --8<-- [end:basic_usage]
+  // Invoke it just like a regular Agent
+  const result = await a2aAgent.invoke('Show me 10 ^ 6')
+  console.log(result.lastMessage.content)
+  // --8<-- [end:basic_usage]
+}
 
 async function streamingExample() {
   // --8<-- [start:streaming]
@@ -41,7 +42,10 @@ async function asToolExample() {
   const calculate = tool({
     name: 'calculate',
     description: 'Perform a mathematical calculation.',
-    handler: async (input: { expression: string }) => {
+    inputSchema: z.object({
+      expression: z.string().describe('The math expression to evaluate'),
+    }),
+    callback: async (input) => {
       const calcResult = await calculatorAgent.invoke(input.expression)
       return String(calcResult.lastMessage.content[0])
     },
@@ -56,8 +60,6 @@ async function asToolExample() {
 
 async function basicServerExample() {
   // --8<-- [start:basic_server]
-  import { A2AExpressServer } from '@strands-agents/sdk/a2a'
-
   const agent = new Agent({
     systemPrompt: 'You are a calculator agent that can perform basic arithmetic.',
   })
@@ -140,6 +142,7 @@ async function abortExample() {
   // --8<-- [end:abort_signal]
 }
 
+void basicUsageExample()
 void streamingExample()
 void asToolExample()
 void basicServerExample()

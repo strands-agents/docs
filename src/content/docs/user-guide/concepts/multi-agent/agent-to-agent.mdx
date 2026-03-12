@@ -2,7 +2,6 @@
 title: Agent-to-Agent (A2A) Protocol
 sidebar:
   label: "Agent2Agent (A2A)"
-experimental: true
 ---
 
 Strands Agents supports the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/latest/), enabling seamless communication between AI agents across different platforms and implementations.
@@ -82,6 +81,8 @@ print(result.message)
 <Tab label="TypeScript">
 
 ```typescript
+import { A2AAgent } from '@strands-agents/sdk/a2a'
+
 --8<-- "user-guide/concepts/multi-agent/agent-to-agent.ts:basic_usage"
 ```
 
@@ -263,10 +264,6 @@ orchestrator = Agent(
 
 The `A2AAgent` works as a node in [Graph](graph.md) workflows. See [Remote Agents with A2AAgent](graph.md#remote-agents-with-a2aagent) for detailed examples of mixing local and remote agents in graph-based pipelines.
 
-:::note[TypeScript Graph support]
-`A2AAgent` in Graph workflows is not yet supported in TypeScript. The `GraphNode` currently requires a concrete `Agent` instance. Support for `AgentBase` (which `A2AAgent` implements) is planned for a future release.
-:::
-
 ### In Swarm Patterns
 
 :::note[Not yet supported]
@@ -309,6 +306,8 @@ a2a_server.serve()
 <Tab label="TypeScript">
 
 ```typescript
+import { A2AExpressServer } from '@strands-agents/sdk/a2a'
+
 --8<-- "user-guide/concepts/multi-agent/agent-to-agent.ts:basic_server"
 ```
 
