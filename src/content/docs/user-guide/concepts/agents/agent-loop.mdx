@@ -103,7 +103,7 @@ Sometimes the loop needs to be stopped from outside — a web server handling a 
 Calling `cancel()` sets an internal signal that the agent checks at two checkpoints:
 
 1. During model response streaming — partial output is discarded
-2. Before tool execution — pending tool calls are skipped, with error results added to maintain valid conversation state
+2. Before tool execution — tool calls are skipped, with error results added to maintain valid conversation state
 
 The agent returns a result with `stop_reason="cancelled"`. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable. `cancel()` is thread-safe and idempotent — calling it multiple times or from different threads is safe.
 
