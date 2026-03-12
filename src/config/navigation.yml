@@ -39,8 +39,6 @@ sidebar:
             slug: docs/user-guide/quickstart/python
           - label: "Quickstart: TypeScript"
             slug: docs/user-guide/quickstart/typescript
-          - label: "Why Strands?"
-            slug: docs/user-guide/why-strands
       - docs/user-guide/build-with-ai
       - label: Build
         items:
