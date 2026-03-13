@@ -1,10 +1,6 @@
 ---
 title: Build with AI
 description: Use AI coding assistants to build Strands Agents projects with up-to-date documentation context.
-sidebar:
-  badge:
-    text: new
-    variant: tip
 ---
 
 AI coding assistants work best when they have access to current documentation. Strands Agents provides two ways to give your AI tools the context they need: an **MCP server** for interactive documentation search, and **llms.txt files** for bulk documentation access.
@@ -22,7 +18,7 @@ The MCP server requires [uv](https://github.com/astral-sh/uv) to be installed on
 Choose your AI coding tool below and follow the setup instructions.
 
 <Tabs>
-<Tab label="Strands Agents">
+<Tab label="Strands">
 
 You can use the Strands Agents MCP server as a tool within your own Strands agents:
 
@@ -76,7 +72,7 @@ claude mcp add strands uvx strands-agents-mcp-server
 See the [Claude Code MCP documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#configure-mcp-servers) for more details.
 
 </Tab>
-<Tab label="Amazon Q Developer CLI">
+<Tab label="Amazon Q Developer">
 
 Add the following to `~/.aws/amazonq/mcp.json`:
 
@@ -132,7 +128,7 @@ Add the following to your `mcp.json` file:
 See the [VS Code MCP documentation](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) for more details.
 
 </Tab>
-<Tab label="Other MCP clients">
+<Tab label="Other">
 
 The Strands Agents MCP server works with [40+ applications that support MCP](https://modelcontextprotocol.io/clients). The general configuration is:
 
