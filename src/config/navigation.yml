@@ -71,6 +71,7 @@ sidebar:
           - label: Plugins
             items:
               - docs/user-guide/concepts/plugins
+              - docs/user-guide/concepts/plugins/skills
               - docs/user-guide/concepts/plugins/steering
           - label: Streaming
             items:
@@ -205,6 +206,7 @@ sidebar:
       - label: Plugins
         items:
           - docs/community/plugins/agent-control
+          - docs/community/plugins/datadog-ai-guard
       - label: Model Providers
         items:
           - docs/community/model-providers/cohere

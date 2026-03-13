@@ -7,6 +7,7 @@ Plugins allow you to change the typical behavior of an agent. They enable you to
 
 The Strands SDK provides built-in plugins that you can use out of the box:
 
+- **[Skills](./skills.mdx)** - On-demand, modular instructions that agents discover and activate at runtime following the [Agent Skills specification](https://agentskills.io/specification)
 - **[Steering](./steering)** - Modular prompting for complex agent tasks through context-aware guidance
 
 You can also build and distribute your own plugins to extend agent functionality. See [Get Featured](/docs/community/get-featured) to share your plugins with the community.
@@ -31,8 +32,10 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/index_imports.ts:using_plugins_imports"
+
+--8<-- "user-guide/concepts/plugins/index.ts:using_plugins"
 ```
 </Tab>
 </Tabs>
@@ -86,8 +89,10 @@ agent("Calculate 2 + 2 and print the result")
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/index_imports.ts:basic_plugin_imports"
+
+--8<-- "user-guide/concepts/plugins/index.ts:basic_plugin"
 ```
 </Tab>
 </Tabs>
@@ -96,28 +101,44 @@ agent("Calculate 2 + 2 and print the result")
 
 When you attach a plugin to an agent, the following happens:
 
+<Tabs>
+<Tab label="Python">
+
 1. **Discovery**: The `Plugin` base class scans for methods decorated with `@hook` and `@tool`
 2. **Hook Registration**: Each `@hook` method is registered with the agent's hook registry based on its event type hint
 3. **Tool Registration**: Each `@tool` method is added to the agent's tools list
 4. **Initialization**: The `init_agent(agent)` method is called for any custom setup
 
+</Tab>
+<Tab label="TypeScript">
+
+1. **Tool Registration**: The `getTools()` method is called to get tools provided by the plugin
+2. **Initialization**: The `initAgent(agent)` method is called for hook registration and setup
+3. **Hook Registration**: In `initAgent`, use `agent.addHook()` to register event callbacks manually
+
+**Note**: TypeScript does not use `@hook` or `@tool` decorators. Instead, tools are returned from `getTools()` and hooks are registered manually in `initAgent()`.
+
+</Tab>
+</Tabs>
+
 ```mermaid
 flowchart TD
-    A[Plugin Attached] --> B[Scan for @hook methods]
-    A --> C[Scan for @tool methods]
-    B --> D[Register hooks with agent]
-    C --> E[Add tools to agent]
-    D --> F[init_agent called]
+    A[Plugin Attached] --> B["Discover Tools\n(@tool / getTools)"]
+    A --> C["Initialize\n(init_agent / initAgent)"]
+    B --> D[Add Tools]
+    C --> E["Register Hooks\n(@hook / addHook)"]
+    D --> F[Plugin Ready]
     E --> F
-    F --> G[Plugin Ready]
 ```
 
-### The `@hook` Decorator
-
-The `@hook` decorator marks methods as hook callbacks. The event type is automatically inferred from the type hint:
+### Registering Hooks in Plugins
 
 <Tabs>
 <Tab label="Python">
+
+#### The `@hook` Decorator
+
+The `@hook` decorator marks methods as hook callbacks. The event type is automatically inferred from the type hint:
 
 ```python
 from strands.plugins import Plugin, hook
@@ -139,8 +160,14 @@ class ModelMonitorPlugin(Plugin):
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+#### Manual Hook Registration
+
+TypeScript plugins register hooks manually in the `initAgent` method using `agent.addHook()`:
+
+```typescript
+--8<-- "user-guide/concepts/plugins/index_imports.ts:hook_decorator_alternative_imports"
+
+--8<-- "user-guide/concepts/plugins/index.ts:hook_decorator_alternative"
 ```
 </Tab>
 </Tabs>
@@ -177,8 +204,10 @@ class ManualPlugin(Plugin):
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/index_imports.ts:manual_registration_imports"
+
+--8<-- "user-guide/concepts/plugins/index.ts:manual_registration"
 ```
 </Tab>
 </Tabs>
@@ -218,8 +247,10 @@ print(f"Tool calls: {agent.state.get('metrics_call_count')}")
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/index_imports.ts:state_management_imports"
+
+--8<-- "user-guide/concepts/plugins/index.ts:state_management"
 ```
 </Tab>
 </Tabs>
@@ -256,8 +287,10 @@ class AsyncConfigPlugin(Plugin):
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/index_imports.ts:async_initialization_imports"
+
+--8<-- "user-guide/concepts/plugins/index.ts:async_initialization"
 ```
 </Tab>
 </Tabs>

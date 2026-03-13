@@ -1,4 +1,5 @@
 import { Agent, FunctionTool } from '@strands-agents/sdk'
+import type { AgentData, Plugin } from '@strands-agents/sdk'
 import {
   BeforeInvocationEvent,
   AfterInvocationEvent,
@@ -8,7 +9,6 @@ import {
   AfterModelCallEvent,
   MessageAddedEvent,
 } from '@strands-agents/sdk'
-import type { HookProvider, HookRegistry } from '@strands-agents/sdk'
 
 // Mock tools for examples
 const myTool = new FunctionTool({
@@ -63,7 +63,7 @@ async function individualCallbackExample() {
     console.log('Custom callback triggered')
   }
 
-  agent.hooks.addCallback(BeforeInvocationEvent, myCallback)
+  agent.addHook(BeforeInvocationEvent, myCallback)
   // --8<-- [end:individual_callback]
 }
 
@@ -76,9 +76,11 @@ async function individualCallbackExample() {
 
 async function toolInterceptionExample() {
   // --8<-- [start:tool_interception]
-  class ToolInterceptor implements HookProvider {
-    registerCallbacks(registry: HookRegistry): void {
-      registry.addCallback(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
+  class ToolInterceptor implements Plugin {
+    name = 'tool-interceptor'
+
+    initAgent(agent: AgentData): void {
+      agent.addHook(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
     }
 
     private interceptTool(event: BeforeToolCallEvent): void {
@@ -94,9 +96,11 @@ async function toolInterceptionExample() {
 
 async function resultModificationExample() {
   // --8<-- [start:result_modification]
-  class ResultProcessor implements HookProvider {
-    registerCallbacks(registry: HookRegistry): void {
-      registry.addCallback(AfterToolCallEvent, (ev) => this.processResult(ev))
+  class ResultProcessor implements Plugin {
+    name = 'result-processor'
+
+    initAgent(agent: AgentData): void {
+      agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
     }
 
     private processResult(event: AfterToolCallEvent): void {
@@ -119,12 +123,17 @@ async function resultModificationExample() {
 
 async function composabilityExample() {
   // --8<-- [start:composability]
-  class RequestLoggingHook implements HookProvider {
-    registerCallbacks(registry: HookRegistry): void {
-      registry.addCallback(BeforeInvocationEvent, (ev) => this.logRequest(ev))
-      registry.addCallback(AfterInvocationEvent, (ev) => this.logResponse(ev))
-      registry.addCallback(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
+  class RequestLoggingHook implements Plugin {
+    name = 'request-logging'
+
+    initAgent(agent: AgentData): void {
+      agent.addHook(BeforeInvocationEvent, (ev) => this.logRequest(ev))
+      agent.addHook(AfterInvocationEvent, (ev) => this.logResponse(ev))
+      agent.addHook(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
     }
+
+    // ...
+    // --8<-- [end:composability]
 
     private logRequest(event: BeforeInvocationEvent): void {
       // ...
@@ -138,14 +147,15 @@ async function composabilityExample() {
       // ...
     }
   }
-  // --8<-- [end:composability]
 }
 
 async function loggingModificationsExample() {
   // --8<-- [start:logging_modifications]
-  class ResultProcessor implements HookProvider {
-    registerCallbacks(registry: HookRegistry): void {
-      registry.addCallback(AfterToolCallEvent, (ev) => this.processResult(ev))
+  class ResultProcessor implements Plugin {
+    name = 'result-processor'
+
+    initAgent(agent: AgentData): void {
+      agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
     }
 
     private processResult(event: AfterToolCallEvent): void {
@@ -169,7 +179,7 @@ async function loggingModificationsExample() {
 
 async function fixedToolArgumentsExample() {
   // --8<-- [start:fixed_tool_arguments_class]
-  class ConstantToolArguments implements HookProvider {
+  class ConstantToolArguments implements Plugin {
     private fixedToolArguments: Record<string, Record<string, unknown>>
 
     /**
@@ -183,8 +193,10 @@ async function fixedToolArgumentsExample() {
       this.fixedToolArguments = fixedToolArguments
     }
 
-    registerCallbacks(registry: HookRegistry): void {
-      registry.addCallback(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
+    name = 'constant-tool-arguments'
+
+    initAgent(agent: AgentData): void {
+      agent.addHook(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
     }
 
     private fixToolArguments(event: BeforeToolCallEvent): void {
@@ -205,7 +217,7 @@ async function fixedToolArgumentsExample() {
     },
   })
 
-  const agent = new Agent({ tools: [calculator], hooks: [fixParameters] })
+  const agent = new Agent({ tools: [calculator], plugins: [fixParameters] })
   const result = await agent.invoke('What is 2 / 3?')
   // --8<-- [end:fixed_tool_arguments_usage]
 }

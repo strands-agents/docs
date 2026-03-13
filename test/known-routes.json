@@ -149,5 +149,10 @@
   "/latest/documentation/docs/user-guide/safety-security/pii-redaction/",
   "/latest/documentation/docs/user-guide/safety-security/prompt-engineering/",
   "/latest/documentation/docs/user-guide/safety-security/responsible-ai/",
-  "/latest/documentation/docs/user-guide/versioning-and-support/"
+  "/latest/documentation/docs/user-guide/versioning-and-support/",
+  "/docs/user-guide/concepts/model-providers/clova-studio/",
+  "/docs/user-guide/concepts/model-providers/cohere/",
+  "/docs/user-guide/concepts/model-providers/nebius-token-factory/",
+  "/docs/user-guide/concepts/model-providers/fireworksai/",
+  "/docs/user-guide/concepts/model-providers/xai/"
 ]

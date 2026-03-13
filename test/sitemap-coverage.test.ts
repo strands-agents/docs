@@ -2,59 +2,69 @@ import { describe, it, expect } from 'vitest'
 import { getCollection } from 'astro:content'
 import fs from 'node:fs'
 import path from 'node:path'
+import Sitemapper from 'sitemapper'
 import { resolveRedirectFromUrl } from '../src/util/redirect'
+import { buildRedirectFromMap } from '../src/util/redirect.build'
+import { tagToSlug, getAllTags, getPublishedPosts } from '../src/util/blog'
 
 const KNOWN_ROUTES_PATH = path.resolve('test/known-routes.json')
-const SITEMAP_URL = 'https://strandsagents.com/sitemap.xml'// Sitemap URLs look like: https://strandsagents.com/latest/documentation/docs/<path>/
-// We extract the full URL for each entry and pass it through resolveRedirectFromUrl,
-// which strips the domain, version prefix, and /documentation/ segment.
-const SITEMAP_ENTRY = /^https:\/\/strandsagents\.com\/.+$/
-const CACHE_PATH = path.resolve('.build/sitemap-cache.xml')
+const SITEMAP_URL = 'https://strandsagents.com/sitemap-index.xml'
+const CACHE_PATH = path.resolve('.build/sitemap-cache.json')
 const CACHE_TTL_MS = 4 * 60 * 60 * 1000 // 4 hours
 
-// Sitemap URLs under /documentation/docs/api-reference/ are excluded — API docs are
-// regenerated from source and old module paths are not redirected.
-const API_REFERENCE_URL = /\/documentation\/docs\/api-reference\//
+// Sitemap URLs under API reference paths are excluded — regenerated from source.
+const API_REFERENCE_URL = /\/docs\/api\/(python|typescript)\//
 
 /**
- * Fetch and parse all non-API doc URLs from the live sitemap, with a 4-hour file cache in .build/.
+ * Fetch all non-API doc URLs from the live sitemap index using sitemapper, with a 4-hour file cache.
  * Returns full URLs (e.g. "https://strandsagents.com/1.x/documentation/docs/user-guide/quickstart/").
  */
 async function fetchSitemapUrls(): Promise<string[]> {
-  let xml: string
-
   const cacheValid =
     fs.existsSync(CACHE_PATH) && Date.now() - fs.statSync(CACHE_PATH).mtimeMs < CACHE_TTL_MS
 
+  let allUrls: string[]
+
   if (cacheValid) {
-    xml = fs.readFileSync(CACHE_PATH, 'utf-8')
+    allUrls = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf-8'))
   } else {
-    const res = await fetch(SITEMAP_URL)
-    if (!res.ok) throw new Error(`Failed to fetch sitemap: ${res.status} ${res.statusText}`)
-    xml = await res.text()
+    const sitemap = new Sitemapper({ url: SITEMAP_URL, timeout: 15000 })
+    const { sites } = await sitemap.fetch()
+    allUrls = sites
     fs.mkdirSync(path.dirname(CACHE_PATH), { recursive: true })
-    fs.writeFileSync(CACHE_PATH, xml, 'utf-8')
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(allUrls), 'utf-8')
   }
 
-  const urls: string[] = []
-  for (const match of xml.matchAll(/<loc>(.*?)<\/loc>/g)) {
-    const url = match[1].trim()
-    if (SITEMAP_ENTRY.test(url) && !API_REFERENCE_URL.test(url)) {
-      urls.push(url)
-    }
-  }
-
-  return urls
+  return allUrls.filter((url) => !API_REFERENCE_URL.test(url))
 }
 
-// Need to skip these as the sitemap was being pulled from the old site not the new one
-describe('Sitemap Coverage', { skip: true }, () => {
+/**
+ * Build the set of all valid URL slugs across docs, blog, authors, and tag pages.
+ */
+async function buildValidSlugs(): Promise<Set<string>> {
+  const [docs, posts, authors, tags] = await Promise.all([
+    getCollection('docs'),
+    getPublishedPosts(),
+    getCollection('authors'),
+    getAllTags(),
+  ])
+
+  return new Set([
+    ...docs.map((doc) => doc.id),
+    'blog',
+    ...posts.map((post) => `blog/${post.id}`),
+    ...authors.map((author) => `blog/authors/${author.id}`),
+    ...tags.map((tag) => `blog/tags/${tagToSlug(tag)}`),
+  ])
+}
+
+const VERIFY_LIVE_SITEMAP = process.env.VERIFY_LIVE_SITEMAP === 'true'
+
+describe('Sitemap Coverage', { skip: !VERIFY_LIVE_SITEMAP }, () => {
   it('every page in the live sitemap has a corresponding CMS entry (or a known redirect)', async () => {
-    const [sitemapUrls, docs] = await Promise.all([fetchSitemapUrls(), getCollection('docs')])
+    const [sitemapUrls, validIds] = await Promise.all([fetchSitemapUrls(), buildValidSlugs()])
 
     expect(sitemapUrls.length).toBeGreaterThan(0)
-
-    const validIds = new Set(docs.map((doc) => doc.id))
 
     const missing: string[] = []
     const redirected: Array<{ from: string; to: string }> = []
@@ -103,8 +113,7 @@ describe('Sitemap Coverage', { skip: true }, () => {
   // Redirect rule unit tests live in test/redirect.test.ts.
   // This test verifies that redirect targets actually exist in the CMS collection.
   it('redirect targets all resolve to valid CMS entries', async () => {
-    const [sitemapUrls, docs] = await Promise.all([fetchSitemapUrls(), getCollection('docs')])
-    const validIds = new Set(docs.map((doc) => doc.id))
+    const [sitemapUrls, validIds] = await Promise.all([fetchSitemapUrls(), buildValidSlugs()])
 
     const brokenRedirects: Array<{ from: string; to: string }> = []
     for (const url of sitemapUrls) {
@@ -134,14 +143,35 @@ describe('Sitemap Coverage', { skip: true }, () => {
 describe('Known Routes', () => {
   // test/known-routes.json is an append-only registry of paths that must always resolve.
   // Add new entries from the live sitemap with: npm run routes:update
+  it('every redirectFrom source slug has a corresponding entry in known-routes.json', async () => {
+    const knownRoutes = new Set<string>(JSON.parse(fs.readFileSync(KNOWN_ROUTES_PATH, 'utf-8')))
+    const knownRedirects = Object.entries(await buildRedirectFromMap()).map(([redirect, page]) => ({
+      page,
+      redirect,
+    }))
+
+    const missing = knownRedirects.filter((it) => !knownRoutes.has(`/${it.redirect}/`))
+
+    const entries = missing.map((it) => `  "/${it.redirect}/"`)
+    expect(
+      missing,
+      `${missing.length} redirectFrom slug(s) are missing from known-routes.json.\n` +
+        `Add these entries to test/known-routes.json:\n` +
+        entries.join(',\n')
+    ).toEqual([])
+  })
+
   it('every known route resolves to a valid CMS entry', async () => {
     const knownRoutes: string[] = JSON.parse(fs.readFileSync(KNOWN_ROUTES_PATH, 'utf-8'))
     const docs = await getCollection('docs')
     const validIds = new Set(docs.map((doc) => doc.id))
 
+    // Build redirectFromMap from frontmatter so page-level redirects are honoured
+    const redirectFromMap = await buildRedirectFromMap()
+
     const broken: Array<{ url: string; resolved: string }> = []
     for (const routePath of knownRoutes) {
-      const resolved = resolveRedirectFromUrl(`https://strandsagents.com${routePath}`)
+      const resolved = resolveRedirectFromUrl(`https://strandsagents.com${routePath}`, redirectFromMap)
       if (!resolved || resolved === '/') continue
       // External redirects (e.g. GitHub) are always valid
       if (resolved.startsWith('https://') || resolved.startsWith('http://')) continue
