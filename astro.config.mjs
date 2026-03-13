@@ -8,6 +8,7 @@ import remarkReadingTime from './src/plugins/remark-reading-time.ts'
 import watchNavigationPlugin from './src/plugins/vite-plugin-watch-navigation.ts'
 
 import { loadSidebarFromConfig } from "./src/sidebar.ts"
+import { sitemapWithLastmod } from "./src/plugins/sitemap-lastmod.ts"
 import AutoImport from './src/plugins/astro-auto-import.ts'
 import astroExpressiveCode from "astro-expressive-code"
 import mdx from '@astrojs/mdx';
@@ -36,6 +37,9 @@ export default defineConfig({
     remarkPlugins: [remarkMkdocsSnippets, remarkReadingTime],
   },
   integrations: [
+    // Sitemap with git-based <lastmod> dates — must be before Starlight
+    // so Starlight detects it and skips its own sitemap integration
+    sitemapWithLastmod('src/content'),
     astroExpressiveCode({
       themes: ['github-light', 'github-dark'],
       // Follow Starlight's data-theme attribute instead of the browser's prefers-color-scheme
@@ -49,6 +53,10 @@ export default defineConfig({
     }),
     mdx(),
     starlight({
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://strandsagents.com/og-image.png' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://strandsagents.com/og-image.png' } },
+      ],
       markdown: {
         // API docs are symlinked from .build/api-docs; processedDirs ensures Starlight's
         // rehype plugins (e.g. heading anchor links) run on the real resolved paths.

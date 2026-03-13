@@ -26,6 +26,7 @@ import ThemeProvider from 'virtual:starlight/components/ThemeProvider'
 import Header from '../components/overrides/Header.astro'
 import SiteScripts from '../components/SiteScripts.astro'
 import { pathWithBase } from '../util/links'
+import { baseSchemas } from '../util/structured-data'
 
 interface Props {
   title: string
@@ -115,6 +116,29 @@ Astro.locals.t = mockT
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:site_name" content="Strands Agents SDK" />
+    <meta property="og:image" content={new URL('/og-image.png', Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL('/og-image.png', Astro.site).href} />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        ...baseSchemas(Astro.site?.origin || 'https://strandsagents.com'),
+        {
+          "@type": "WebSite",
+          "name": "Strands Agents SDK",
+          "url": Astro.site?.origin || "https://strandsagents.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": (Astro.site?.origin || "https://strandsagents.com") + "/docs/?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    })} />
 
     <!-- AWS Shortbread cookie consent -->
     <SiteScripts />
