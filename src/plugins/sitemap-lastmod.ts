@@ -48,10 +48,10 @@ function buildLastModMap(contentDir: string): Map<string, string> {
         map.set(trimmed, currentDate)
       }
     }
-  } catch {
+  } catch (error) {
     // If git isn't available (e.g., Docker build without .git),
     // fall back gracefully — sitemap just won't have lastmod
-    console.warn('[sitemap-lastmod] git not available, skipping lastmod dates')
+    console.warn('[sitemap-lastmod] Failed to build lastmod map:', error instanceof Error ? error.message : error)
   }
 
   return map
