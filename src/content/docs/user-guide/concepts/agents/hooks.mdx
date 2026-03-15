@@ -76,8 +76,8 @@ orchestrator.hooks.add_callback(BeforeNodeCallEvent, my_callback)
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/agents/hooks.ts:orchestrator_callback"
 ```
 </Tab>
 </Tabs>
@@ -240,8 +240,26 @@ Init --> Invocation
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Multi-agent orchestration is not yet available in TypeScript SDK
+```mermaid
+flowchart LR
+subgraph Init["Initialization"]
+    direction TB
+    MultiAgentInitializedEvent["MultiAgentInitializedEvent"]
+end
+subgraph Invocation["Invocation Lifecycle"]
+    direction TB
+    BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
+    AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
+    BeforeMultiAgentInvocationEvent --> NodeExecution
+    NodeExecution --> AfterMultiAgentInvocationEvent
+end
+subgraph NodeExecution["Node Execution (Repeated)"]
+    direction TB
+    BeforeNodeCallEvent["BeforeNodeCallEvent"]
+    AfterNodeCallEvent["AfterNodeCallEvent"]
+    BeforeNodeCallEvent --> AfterNodeCallEvent
+end
+Init --> Invocation
 ```
 </Tab>
 </Tabs>
@@ -289,6 +307,16 @@ All events extend `HookableEvent`, making them both streamable via `agent.stream
 | `ToolStreamUpdateEvent`  | Wraps streaming progress events from tool execution. Access via `.event`                                      |
 | `ToolResultEvent`        | Wraps a completed tool result. Access via `.result`                                                           |
 | `AgentResultEvent`       | Wraps the final agent result at the end of the invocation. Access via `.result`                               |
+| `MultiAgentInitializedEvent`       | Triggered when a multi-agent orchestrator has finished initialization                                |
+| `BeforeMultiAgentInvocationEvent`  | Triggered before orchestrator execution starts                                                       |
+| `AfterMultiAgentInvocationEvent`   | Triggered after orchestrator execution completes. Uses reverse callback ordering                     |
+| `BeforeNodeCallEvent`              | Triggered before individual node execution starts                                                    |
+| `NodeStreamUpdateEvent`            | Wraps an inner streaming event from a node with the node's identity. Access via `.event`             |
+| `NodeCancelEvent`                  | Triggered when a node is cancelled via `BeforeNodeCallEvent.cancel`                                  |
+| `AfterNodeCallEvent`               | Triggered after individual node execution completes. Uses reverse callback ordering                  |
+| `NodeResultEvent`                  | Wraps a completed node result. Access via `.result`                                                  |
+| `MultiAgentHandoffEvent`           | Triggered when execution transitions between nodes                                                   |
+| `MultiAgentResultEvent`            | Wraps the final multi-agent result at the end of orchestration. Access via `.result`                 |
 </Tab>
 </Tabs>
 
@@ -396,11 +424,20 @@ result = agent(
 
 Multi-agent hook events provide access to:
 
+<Tabs>
+<Tab label="Python">
+
 - **source**: The multi-agent orchestrator instance (for example: Graph/Swarm)
 - **node_id**: Identifier of the node being executed (for node-level events)
 - **invocation_state**: Configuration and context data passed through the orchestrator invocation
+</Tab>
+<Tab label="TypeScript">
 
-Multi-agent hooks provide configuration and context data passed through the orchestrator's lifecycle.
+- **orchestrator**: The multi-agent orchestrator instance (for example: Graph/Swarm)
+- **nodeId**: Identifier of the node being executed (for node-level events)
+- **state**: The `MultiAgentState` for the current invocation, including an `app` field for custom consumer state
+</Tab>
+</Tabs>
 
 ### Tool Interception
 
@@ -482,8 +519,8 @@ class ConditionalExecutionHook(HookProvider):
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/agents/hooks.ts:conditional_node_execution"
 ```
 </Tab>
 </Tabs>
@@ -575,8 +612,8 @@ class UniversalMultiAgentHook(HookProvider):
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/agents/hooks.ts:orchestrator_agnostic_design"
 ```
 </Tab>
 </Tabs>
@@ -618,8 +655,8 @@ orchestrator = Graph(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/agents/hooks.ts:layered_hooks"
 ```
 </Tab>
 </Tabs>
