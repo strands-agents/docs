@@ -115,6 +115,9 @@ The `A2AAgent` constructor accepts a config object with these properties.
 |----------|------|---------|-------------|
 | `url` | `string` | Required | Base URL of the remote A2A agent |
 | `agentCardPath` | `string` | `/.well-known/agent-card.json` | Path to the agent card endpoint |
+| `id` | `string` | The `url` value | Unique identifier for the agent instance |
+| `name` | `string` | From agent card | Agent name (auto-populated from agent card if not provided) |
+| `description` | `string` | From agent card | Agent description (auto-populated from agent card if not provided) |
 
 The agent card is fetched lazily on the first `invoke()` or `stream()` call.
 

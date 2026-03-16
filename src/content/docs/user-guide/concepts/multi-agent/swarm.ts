@@ -4,13 +4,13 @@ async function multimodalSwarm() {
   // --8<-- [start:multimodal]
   // Create agents for image processing workflow
   const imageAnalyzer = new Agent({
-    agentId: 'image_analyzer',
+    id: 'image_analyzer',
     description: 'Analyzes images and extracts key details.',
     systemPrompt: 'You are an image analysis expert...',
   })
 
   const reportWriter = new Agent({
-    agentId: 'report_writer',
+    id: 'report_writer',
     description: 'Writes reports based on analysis.',
     systemPrompt: 'You are a report writing expert...',
   })
@@ -35,25 +35,25 @@ async function multimodalSwarm() {
 async function swarmTeam() {
   // --8<-- [start:swarm_team]
   const researcher = new Agent({
-    agentId: 'researcher',
+    id: 'researcher',
     description: 'Researches topics and gathers information.',
     systemPrompt: 'You are a research specialist...',
   })
 
   const architect = new Agent({
-    agentId: 'architect',
+    id: 'architect',
     description: 'Designs system architecture based on research.',
     systemPrompt: 'You are a system architecture specialist...',
   })
 
   const coder = new Agent({
-    agentId: 'coder',
+    id: 'coder',
     description: 'Implements code based on architecture designs.',
     systemPrompt: 'You are a coding specialist...',
   })
 
   const reviewer = new Agent({
-    agentId: 'reviewer',
+    id: 'reviewer',
     description: 'Reviews code and provides the final result.',
     systemPrompt: 'You are a code review specialist...',
   })
@@ -75,13 +75,13 @@ async function swarmTeam() {
 
 async function streamingSwarm() {
   const coordinator = new Agent({
-    agentId: 'coordinator',
+    id: 'coordinator',
     description: 'Coordinates tasks.',
     systemPrompt: 'You coordinate tasks...',
   })
 
   const specialist = new Agent({
-    agentId: 'specialist',
+    id: 'specialist',
     description: 'Handles specialized work.',
     systemPrompt: 'You handle specialized work...',
   })
@@ -115,13 +115,13 @@ async function streamingSwarm() {
 
 async function swarmResults() {
   const researcher = new Agent({
-    agentId: 'researcher',
+    id: 'researcher',
     description: 'Researches a topic.',
     systemPrompt: 'You are a research specialist...',
   })
 
   const writer = new Agent({
-    agentId: 'writer',
+    id: 'writer',
     description: 'Writes a polished answer.',
     systemPrompt: 'You are a writing specialist...',
   })

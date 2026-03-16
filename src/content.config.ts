@@ -62,7 +62,7 @@ export const collections = {
       pattern: [
         "404.mdx",
         "docs/README.mdx",
-        "docs/llms.mdx",
+
         "docs/user-guide/**/*.mdx",
         "docs/community/**/*.mdx",
         "docs/contribute/**/*.mdx",

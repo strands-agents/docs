@@ -1,9 +1,8 @@
 import type { APIRoute } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { getCollection, getEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
 import { getBase, getSiteOrigin } from '@util/links'
 import { loadSidebarFromConfig, type StarlightSidebarItem } from '../sidebar'
-import { renderEntryToMarkdown } from '@util/render-to-markdown'
 import path from 'node:path'
 
 // Sections to pull from sidebar (with their nav labels)
@@ -41,14 +40,13 @@ function extractLinks(
   return lines
 }
 
-function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebarItem[], header: string, blogPosts: CollectionEntry<'blog'>[]): string {
+function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebarItem[], blogPosts: CollectionEntry<'blog'>[]): string {
   const base = getSiteOrigin() + getBase()
   const lines: string[] = []
 
-  // Header from rendered llms.mdx
   lines.push('# Strands Agents')
   lines.push('')
-  lines.push(header.trim())
+  lines.push('> Strands Agents is a simple yet powerful SDK that takes a model-driven approach to building and running AI agents. From simple conversational assistants to complex autonomous workflows, from local development to production deployment, Strands Agents scales with your needs.')
   lines.push('')
 
   // Process sidebar sections (User Guide, Examples, Community)
@@ -114,15 +112,8 @@ export const GET: APIRoute = async () => {
     path.resolve('./src/content')
   )
 
-  // Render the llms.mdx page as the header
-  const llmsEntry = await getEntry('docs', 'docs/llms')
-  if (!llmsEntry) {
-    throw new Error(`llms.mdx not found`)
-  }
-  const { markdown: header }  = await renderEntryToMarkdown(llmsEntry)
-
   const blogPosts = await getCollection('blog', ({ data }) => !data.draft)
-  const content = buildLlmsTxt(docs, sidebar, header, blogPosts)
+  const content = buildLlmsTxt(docs, sidebar, blogPosts)
 
   return new Response(content, {
     headers: {
