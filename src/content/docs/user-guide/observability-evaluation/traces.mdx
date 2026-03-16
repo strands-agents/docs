@@ -112,6 +112,9 @@ export OTEL_EXPORTER_OTLP_ENDPOINT="http://collector.example.com:4318"
 # Set Default OTLP Headers
 export OTEL_EXPORTER_OTLP_HEADERS="key1=value1,key2=value2"
 
+# To use OTEL latest semantic conventions, and send tool defenitions as spans
+export OTEL_SEMCONV_STABILITY_OPT_IN="gen_ai_latest_experimental,gen_ai_tool_definitions"
+
 ```
 
 ### Code Configuration

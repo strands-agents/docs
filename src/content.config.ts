@@ -62,7 +62,7 @@ export const collections = {
       pattern: [
         "404.mdx",
         "docs/README.mdx",
-        "docs/llms.mdx",
+
         "docs/user-guide/**/*.mdx",
         "docs/community/**/*.mdx",
         "docs/contribute/**/*.mdx",
@@ -82,6 +82,10 @@ export const collections = {
         experimental: z.boolean().default(false),
         // Category for TypeScript API docs (classes, interfaces, type-aliases, functions)
         category: z.string().optional(),
+        // Integration type for filtering (e.g., 'model-provider' for model providers)
+        integrationType: z.enum(['model-provider', 'tool', 'session-manager', 'integration', 'plugin']).optional(),
+        // Short description for catalog listings
+        description: z.string().optional(),
         // Array of slugs that should redirect to this page (e.g., old URLs)
         redirectFrom: z.array(z.string()).optional(),
       }),

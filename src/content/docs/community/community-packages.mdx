@@ -4,55 +4,79 @@ sidebar:
   label: "Community Catalog"
 ---
 
+import { getCollection } from 'astro:content'
+import { getIntegrationEntries } from '@util/integration-content'
+import SimpleTable from '@components/SimpleTable.astro'
+import PageLink from '@components/PageLink.astro'
+
+export const allDocs = await getCollection('docs')
+export const communityIntegrations = getIntegrationEntries(allDocs, 'integration', true)
+export const communityPlugins = getIntegrationEntries(allDocs, 'plugin', true)
+export const communityModelProviders = getIntegrationEntries(allDocs, 'model-provider', true)
+export const communitySessionManagers = getIntegrationEntries(allDocs, 'session-manager', true)
+export const communityTools = getIntegrationEntries(allDocs, 'tool', true)
+
+export const packageColumns = [
+  { header: "Package" },
+  { header: "Description" },
+  { header: "Python", style: { textAlign: 'center' } },
+  { header: "TypeScript", style: { textAlign: 'center' } },
+]
+
+export const renderCell = (item, colIndex) => [
+    <PageLink href={item.href}>{item.displayTitle}</PageLink>,
+    item.description ?? '',
+    item.pythonSupport ? '✅' : '❌',
+    item.typescriptSupport ? '✅' : '❌',
+  ][colIndex]
+
 The Strands community has built tools and integrations for a variety of use cases. This catalog helps you discover what's available and find packages that solve your specific needs.
 
-Browse by category below to find tools, model providers, session managers, and platform integrations built by the community. 
+Browse by category below to find tools, model providers, session managers, and platform integrations built by the community.
 
 :::note[Community maintained]
 These packages are maintained by their authors, not the Strands team. Review packages before using them in production. Quality and support may vary.
 :::
 
-## Tools
+## Integrations
 
-Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
+Platform integrations help you connect Strands agents with external services and user interfaces.
 
-| Package | Description |
-|---------|-------------|
-| [strands-deepgram](./tools/strands-deepgram.md) | Deepgram speech-to-text |
-| [strands-hubspot](./tools/strands-hubspot.md) | HubSpot CRM integration |
-| [strands-teams](./tools/strands-teams.md) | Microsoft Teams |
-| [strands-telegram](./tools/strands-telegram.md) | Telegram bot |
-| [strands-telegram-listener](./tools/strands-telegram-listener.md) | Telegram listener |
-| [UTCP](./tools/utcp.md) | Universal Tool Calling Protocol |
+<SimpleTable data={communityIntegrations} columns={packageColumns}>
+  {renderCell}
+</SimpleTable>
+
+## Plugins
+
+Plugins extend agent behavior by hooking into lifecycle events. Use these to add cross-cutting capabilities like policy enforcement, logging, or output control without modifying your agent code.
+
+<SimpleTable data={communityPlugins} columns={packageColumns}>
+  {renderCell}
+</SimpleTable>
 
 ## Model providers
 
 Model providers add support for additional LLM services beyond the built-in providers. Use these to integrate with specialized or regional LLM platforms.
 
-| Package | Description |
-|---------|-------------|
-| [Cohere](./model-providers/cohere.md) | Cohere LLM |
-| [CLOVA Studio](./model-providers/clova-studio.md) | Naver CLOVA Studio |
-| [Fireworks AI](./model-providers/fireworksai.md) | Fireworks AI |
-| [Nebius](./model-providers/nebius-token-factory.md) | Nebius Token Factory |
+<SimpleTable data={communityModelProviders} columns={packageColumns}>
+ {renderCell}
+</SimpleTable>
 
 ## Session managers
 
 Session managers provide alternative storage backends for conversation history. Use these when you need persistent, scalable, or distributed session storage.
 
-| Package | Description |
-|---------|-------------|
-| [AgentCore Memory](./session-managers/agentcore-memory.md) | Amazon AgentCore |
-| [Valkey](./session-managers/strands-valkey-session-manager.md) | Valkey session manager |
+<SimpleTable data={communitySessionManagers} columns={packageColumns}>
+  {renderCell}
+</SimpleTable>
 
-## Integrations
+## Tools
 
-Platform integrations help you connect Strands agents with external services and user interfaces.
+Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
 
-| Package | Description |
-|---------|-------------|
-| [AG-UI](./integrations/ag-ui.md) | AG-UI integration |
-| [Datadog AI Guard](./plugins/datadog-ai-guard.md) | Real-time AI security with Datadog AI Guard |
+<SimpleTable data={communityTools} columns={packageColumns}>
+  {renderCell}
+</SimpleTable>
 
 ---
 

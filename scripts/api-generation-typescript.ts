@@ -160,7 +160,7 @@ async function processFile(file: FileInfo): Promise<void> {
     )
     // Also rewrite bare Name.md links (after ../category/ was already stripped) to relative paths
     linkedFixed = linkedFixed.replace(
-      /\]\(([A-Z][^)/]+?)\.md((?:#[^)]*)?)\)/g,
+      /\]\(([A-Za-z][^)/]+?)\.md((?:#[^)]*)?)\)/g,
       (_match, name, hash) => `](../${file.namespace}:${name}/${hash})`,
     )
   }
