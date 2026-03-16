@@ -135,6 +135,8 @@ See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm strea
 
 Multi-agent systems ([Graph](../multi-agent/graph.md) and [Swarm](../multi-agent/swarm.md)) emit additional coordination events. Each event is a class with a `type` attribute, extending `HookableEvent` for both streaming and hook subscription.
 
+- **`MultiAgentInitializedEvent`**: When a multi-agent orchestrator has finished initialization
+    - **`orchestrator`**: The `MultiAgentBase` instance
 - **`BeforeMultiAgentInvocationEvent`**: Before orchestrator execution starts
     - **`orchestrator`**: The `MultiAgentBase` instance
     - **`state`**: The current `MultiAgentState`
@@ -146,9 +148,11 @@ Multi-agent systems ([Graph](../multi-agent/graph.md) and [Swarm](../multi-agent
 - **`NodeStreamUpdateEvent`**: Forwarded events from agents or nested orchestrators with node context
     - **`nodeId`**: Identifier of the node generating the event
     - **`nodeType`**: Type of node (`"agentNode"`, `"multiAgentNode"`)
+    - **`state`**: The current `MultiAgentState`
     - **`event`**: The inner `AgentStreamEvent` or `MultiAgentStreamEvent`
 - **`NodeCancelEvent`**: When a node is cancelled via `BeforeNodeCallEvent.cancel`
     - **`nodeId`**: Unique identifier for the node
+    - **`state`**: The current `MultiAgentState`
     - **`message`**: Cancel reason
 - **`AfterNodeCallEvent`**: After a node completes execution
     - **`nodeId`**: Unique identifier for the node
@@ -158,10 +162,12 @@ Multi-agent systems ([Graph](../multi-agent/graph.md) and [Swarm](../multi-agent
 - **`NodeResultEvent`**: When a node finishes execution
     - **`nodeId`**: Unique identifier for the node
     - **`nodeType`**: Type of node (`"agentNode"`, `"multiAgentNode"`)
+    - **`state`**: The current `MultiAgentState`
     - **`result`**: The `NodeResult` with `status`, `duration`, `content`, and optional `error`
 - **`MultiAgentHandoffEvent`**: When execution transitions between nodes
     - **`source`**: Node ID completing execution
     - **`targets`**: Array of node IDs beginning execution
+    - **`state`**: The current `MultiAgentState`
 - **`AfterMultiAgentInvocationEvent`**: After orchestrator execution completes
     - **`orchestrator`**: The `MultiAgentBase` instance
     - **`state`**: The current `MultiAgentState`
