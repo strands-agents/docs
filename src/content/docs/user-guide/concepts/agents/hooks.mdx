@@ -250,14 +250,22 @@ subgraph Invocation["Invocation Lifecycle"]
     direction TB
     BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
     AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
+    MultiAgentResultEvent["MultiAgentResultEvent"]
     BeforeMultiAgentInvocationEvent --> NodeExecution
     NodeExecution --> AfterMultiAgentInvocationEvent
+    AfterMultiAgentInvocationEvent --> MultiAgentResultEvent
 end
 subgraph NodeExecution["Node Execution (Repeated)"]
     direction TB
     BeforeNodeCallEvent["BeforeNodeCallEvent"]
+    NodeStreamUpdateEvent["NodeStreamUpdateEvent"]
+    NodeResultEvent["NodeResultEvent"]
     AfterNodeCallEvent["AfterNodeCallEvent"]
-    BeforeNodeCallEvent --> AfterNodeCallEvent
+    MultiAgentHandoffEvent["MultiAgentHandoffEvent"]
+    BeforeNodeCallEvent --> NodeStreamUpdateEvent
+    NodeStreamUpdateEvent --> NodeResultEvent
+    NodeResultEvent --> AfterNodeCallEvent
+    AfterNodeCallEvent --> MultiAgentHandoffEvent
 end
 Init --> Invocation
 ```
