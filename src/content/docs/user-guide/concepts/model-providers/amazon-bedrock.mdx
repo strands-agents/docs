@@ -257,7 +257,9 @@ Common configuration parameters include:
 - `max_tokens` - Maximum number of tokens to generate
 - `streaming` - Enable/disable streaming mode
 - `guardrail_id` - ID of the guardrail to apply
-- `cache_prompt` / `cache_tools` - Enable prompt/tool caching
+- `cache_prompt` - Cache point type for the system prompt (deprecated, use `cache_config`)
+- `cache_config` - Configuration for prompt caching (e.g., `CacheConfig(strategy="auto")`)
+- `cache_tools` - Enable tool caching
 - `boto_session` - Custom boto3 session for AWS credentials
 - `additional_request_fields` - Additional model-specific parameters
 </Tab>
@@ -270,10 +272,10 @@ Common configuration parameters include:
 - `modelId` - The Bedrock model identifier
 - `temperature` - Controls randomness (higher = more random)
 - `maxTokens` - Maximum number of tokens to generate
-- `streaming` - Enable/disable streaming mode
-- `cacheTools` - Enable tool caching
+- `stream` - Enable/disable streaming mode
+- `cacheConfig` - Enable prompt caching with `{ strategy: 'auto' }` or `{ strategy: 'anthropic' }`
 - `region` - AWS region to use
-- `credentials` - AWS credentials configuration
+- `clientConfig` - AWS SDK client configuration
 - `additionalArgs` - Additional model-specific parameters
 </Tab>
 </Tabs>
@@ -570,6 +572,8 @@ Tool caching allows you to reuse a cached tool definition across multiple reques
 <Tabs>
 <Tab label="Python">
 
+In Python, use the `cache_tools` parameter to enable tool caching independently:
+
 ```python
 from strands import Agent, tool
 from strands.models import BedrockModel
@@ -599,6 +603,8 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 </Tab>
 <Tab label="TypeScript">
 
+In TypeScript, tool caching is enabled through `cacheConfig`. When `cacheConfig` is set, the SDK automatically appends a cache point after the tool definitions in each request. There is no separate `cacheTools` option — `cacheConfig` handles both tool and message caching together.
+
 ```typescript
 --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:tool_caching_full"
 ```
@@ -611,7 +617,7 @@ Messages caching allows you to reuse cached conversation context across multiple
 
 **Option A: Automatic Cache Strategy (Claude models only)**
 
-Enable automatic cache point management for agent workflows with repeated tool calls and multi-turn conversations. The SDK automatically places a cache point at the end of each assistant message to maximize cache hits without requiring manual management.
+Enable automatic cache point management for agent workflows with multi-turn conversations. The SDK automatically places a cache point at the end of the last user message to maximize cache hits without requiring manual management.
 
 <Tabs>
 <Tab label="Python">
@@ -649,8 +655,8 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Automatic cache strategy is not yet supported in the TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:automatic_cache_strategy"
 ```
 </Tab>
 </Tabs>
