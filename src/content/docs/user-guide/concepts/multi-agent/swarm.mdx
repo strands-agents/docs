@@ -363,3 +363,19 @@ The specific parameters and their defaults vary by SDK. See the [Swarm Configura
 5. **Include diverse expertise**: Ensure your Swarm has agents with complementary skills
 6. **Provide agent descriptions**: Add descriptions to your agents to help other agents understand their capabilities
 7. **Leverage multi-modal inputs**: Use ContentBlocks for rich inputs including images
+
+## SDK Differences
+
+The Swarm pattern is available in multiple SDKs. While the core concept is the same, there are behavioral differences.
+
+**Handoff mechanism**: Python injects a `handoff_to_agent` tool that agents call to trigger handoffs. TypeScript uses a structured output schema (`{ agentId, message, context }`), meaning every agent's response is shaped by this schema. When `agentId` is present, the orchestrator hands off to that agent with `message` as input. When omitted, `message` becomes the final swarm response. The final agent's output is always shaped by the schema, though agents can still produce side effects (tool calls, API calls) during their turn.
+
+**Shared context**: Python maintains a mutable `SharedContext` that accumulates key-value pairs across agents, where each agent can read and write to it. TypeScript passes context as a serialized JSON text block in the handoff input to the next agent, avoiding cross-agent mutable state.
+
+**Step limits**: Python uses separate `max_handoffs` and `max_iterations` limits. TypeScript uses a single `maxSteps` that counts total agent executions including the start agent.
+
+**Node input**: Python builds a rich context string for each receiving agent that includes the original task, full node history chain, accumulated shared context, and available agent descriptions. TypeScript passes only the handoff message and serialized context from the handing-off agent. Agent descriptions are already embedded in the structured output schema for routing decisions.
+
+**Error handling**: In both SDKs, node failures produce a FAILED result. Orchestrator-level limit violations (e.g., exceeding `maxSteps`) throw an exception in TypeScript to promote fail-fast behavior for global failures. Python returns a FAILED result instead.
+
+**Node cancellation**: Both SDKs support cancelling a node before execution via hook callbacks. In TypeScript, a cancelled node produces a CANCELLED result status, allowing the orchestrator to distinguish cancellation from failure. In Python, a cancelled node results in a FAILED status.
