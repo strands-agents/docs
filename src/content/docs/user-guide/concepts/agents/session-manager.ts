@@ -141,63 +141,48 @@ async function listAndRestoreExample() {
 
 async function customStorageExample() {
   // --8<-- [start:custom_storage]
-  // Implement the SnapshotStorage interface to use any backend (e.g. DynamoDB)
-  class DynamoDBStorage implements SnapshotStorage {
-    private tableName = 'agent-sessions'
-
-    private key(location: SnapshotLocation, snapshotId: string) {
-      return `${location.sessionId}/${location.scope}/${location.scopeId}/${snapshotId}`
-    }
-
+  // Implement SnapshotStorage to plug in any backend (database, Redis, etc.)
+  class MyStorage implements SnapshotStorage {
     async saveSnapshot({ location, snapshotId, snapshot }: {
       location: SnapshotLocation; snapshotId: string; isLatest: boolean; snapshot: Snapshot
     }) {
-      await dynamoDB.put({ TableName: this.tableName, Item: { pk: this.key(location, snapshotId), data: snapshot } })
+      // Store the snapshot JSON keyed by location + snapshotId
     }
 
     async loadSnapshot({ location, snapshotId }: {
       location: SnapshotLocation; snapshotId?: string
     }) {
-      const result = await dynamoDB.get({
-        TableName: this.tableName,
-        Key: { pk: this.key(location, snapshotId ?? 'latest') },
-      })
-      return (result.Item?.data as Snapshot) ?? null
+      // Return the snapshot for the given location, or null if not found
+      return null
     }
 
-    async listSnapshotIds({ location, limit, startAfter }: {
+    async listSnapshotIds({ location }: {
       location: SnapshotLocation; limit?: number; startAfter?: string
     }) {
-      // Query items by session prefix, sorted by UUID v7 snapshot IDs
-      const prefix = `${location.sessionId}/${location.scope}/${location.scopeId}/`
-      const results = await dynamoDB.query(/* query by prefix, paginate with startAfter */)
-      return results.map((r: { snapshotId: string }) => r.snapshotId)
+      // Return immutable snapshot IDs sorted chronologically
+      return []
     }
 
     async deleteSession({ sessionId }: { sessionId: string }) {
-      // Delete all items with the session prefix
-      await dynamoDB.batchDelete(/* items matching sessionId prefix */)
+      // Remove all stored data for this session
     }
 
-    async loadManifest({ location }: { location: SnapshotLocation }) {
-      const result = await dynamoDB.get({
-        TableName: this.tableName,
-        Key: { pk: `${location.sessionId}/manifest` },
-      })
-      return result.Item?.data as SnapshotManifest
+    async loadManifest({ location }: { location: SnapshotLocation }): Promise<SnapshotManifest> {
+      // Return the manifest for the given location
+      return { schemaVersion: '1', updatedAt: new Date().toISOString() }
     }
 
     async saveManifest({ location, manifest }: {
       location: SnapshotLocation; manifest: SnapshotManifest
     }) {
-      await dynamoDB.put({ TableName: this.tableName, Item: { pk: `${location.sessionId}/manifest`, data: manifest } })
+      // Persist the manifest
     }
   }
 
   const agent = new Agent({
     sessionManager: new SessionManager({
       sessionId: 'user-789',
-      storage: { snapshot: new DynamoDBStorage() },
+      storage: { snapshot: new MyStorage() },
     }),
   })
   // --8<-- [end:custom_storage]
