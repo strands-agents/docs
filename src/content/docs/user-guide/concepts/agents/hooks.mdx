@@ -259,13 +259,13 @@ subgraph NodeExecution["Node Execution (Repeated)"]
     direction TB
     BeforeNodeCallEvent["BeforeNodeCallEvent"]
     NodeStreamUpdateEvent["NodeStreamUpdateEvent"]
-    NodeResultEvent["NodeResultEvent"]
     AfterNodeCallEvent["AfterNodeCallEvent"]
+    NodeResultEvent["NodeResultEvent"]
     MultiAgentHandoffEvent["MultiAgentHandoffEvent"]
     BeforeNodeCallEvent --> NodeStreamUpdateEvent
-    NodeStreamUpdateEvent --> NodeResultEvent
-    NodeResultEvent --> AfterNodeCallEvent
-    AfterNodeCallEvent --> MultiAgentHandoffEvent
+    NodeStreamUpdateEvent --> AfterNodeCallEvent
+    AfterNodeCallEvent --> NodeResultEvent
+    NodeResultEvent --> MultiAgentHandoffEvent
 end
 Init --> Invocation
 ```
