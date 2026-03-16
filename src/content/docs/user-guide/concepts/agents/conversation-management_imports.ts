@@ -7,3 +7,7 @@ import { Agent, NullConversationManager } from '@strands-agents/sdk'
 // --8<-- [start:sliding_window_conversation_manager_imports]
 import { Agent, SlidingWindowConversationManager } from '@strands-agents/sdk'
 // --8<-- [end:sliding_window_conversation_manager_imports]
+
+// --8<-- [start:custom_conversation_manager_imports]
+import { Agent, ConversationManager, type ReduceOptions } from '@strands-agents/sdk'
+// --8<-- [end:custom_conversation_manager_imports]
