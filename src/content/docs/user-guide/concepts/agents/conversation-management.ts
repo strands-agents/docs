@@ -1,4 +1,4 @@
-import { Agent, ConversationManager, NullConversationManager, SlidingWindowConversationManager, type ReduceOptions } from '@strands-agents/sdk'
+import { Agent, ConversationManager, NullConversationManager, SlidingWindowConversationManager, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
 
 async function nullConversationManagerAgent() {
   // --8<-- [start:null_conversation_manager]
@@ -26,7 +26,7 @@ async function slidingWindowConversationManagerAgent() {
 class Last10MessagesManager extends ConversationManager {
   readonly name = 'my:last-10-messages'
 
-  reduce({ agent }: ReduceOptions): boolean {
+  reduce({ agent }: ConversationManagerReduceOptions): boolean {
     if (agent.messages.length <= 10) return false
     agent.messages.splice(0, agent.messages.length - 10)
     return true

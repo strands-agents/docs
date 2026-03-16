@@ -325,21 +325,27 @@ To create a custom conversation manager, extend the abstract [`ConversationManag
 For proactive management alongside overflow recovery, override `initAgent`:
 
 ```typescript
+import { Agent, ConversationManager, AfterInvocationEvent, type AgentData, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
+
 class MyManager extends ConversationManager {
   readonly name = 'my:manager'
+  private readonly _maxMessages = 5
 
-  reduce({ agent }: ReduceOptions): boolean {
-    if (agent.messages.length <= 5) return false
-    agent.messages.splice(0, agent.messages.length - 5)
-    return true
+  reduce({ agent }: ConversationManagerReduceOptions): boolean {
+    return this._trim(agent.messages)
   }
 
   override initAgent(agent: AgentData): void {
     super.initAgent(agent) // preserves overflow recovery
     agent.addHook(AfterInvocationEvent, (event) => {
-      // proactive trimming after each invocation
-      this.reduce({ agent: event.agent, error: undefined as any })
+      this._trim(event.agent.messages)
     })
+  }
+
+  private _trim(messages: AgentData['messages']): boolean {
+    if (messages.length <= this._maxMessages) return false
+    messages.splice(0, messages.length - this._maxMessages)
+    return true
   }
 }
 ```
