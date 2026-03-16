@@ -1,24 +1,19 @@
 import type { APIRoute } from 'astro'
-import { getCollection, getEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
 import { renderEntryToMarkdown } from '@util/render-to-markdown'
 import { getBase, getSiteOrigin } from '@util/links'
 
 export const GET: APIRoute = async () => {
   const allDocs = await getCollection('docs')
-  // Exclude API documentation and the llms page itself from full content
-  const docs = allDocs.filter((doc) => !doc.id.startsWith('docs/api/') && doc.id !== 'docs/llms')
+  // Exclude API documentation from full content
+  const docs = allDocs.filter((doc) => !doc.id.startsWith('docs/api/'))
   const base = getSiteOrigin() + getBase()
   const lines: string[] = []
 
-  // Render the llms.mdx page as the header
-  const llmsEntry = await getEntry('docs', 'docs/llms')
-  if (llmsEntry) {
-    const { markdown: header } = await renderEntryToMarkdown(llmsEntry)
-    lines.push('# Strands Agents')
-    lines.push('')
-    lines.push(header.trim())
-    lines.push('')
-  }
+  lines.push('# Strands Agents')
+  lines.push('')
+  lines.push('> Strands Agents is a simple yet powerful SDK that takes a model-driven approach to building and running AI agents. From simple conversational assistants to complex autonomous workflows, from local development to production deployment, Strands Agents scales with your needs.')
+  lines.push('')
 
   // Render each doc's full content
   for (const doc of docs) {

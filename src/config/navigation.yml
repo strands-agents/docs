@@ -46,6 +46,7 @@ sidebar:
           - docs/user-guide/quickstart/overview
           - docs/user-guide/quickstart/python
           - docs/user-guide/quickstart/typescript
+      - docs/user-guide/build-with-ai
       - label: Concepts
         items:
           - label: Agents
