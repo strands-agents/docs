@@ -58,17 +58,15 @@ agent("Hello!")  # This conversation is persisted
 --8<-- "user-guide/concepts/agents/session-manager.ts:basic_file_storage"
 ```
 
-`SessionManager` is a [Plugin](../plugins/index.mdx). The `sessionManager` field on `AgentConfig` is a convenience shorthand — it is equivalent to passing it in the `plugins` array:
-
-```typescript
---8<-- "user-guide/concepts/agents/session-manager.ts:session_as_plugin"
-```
+:::note
+`SessionManager` is a [Plugin](../plugins/index.mdx). The `sessionManager` field on `AgentConfig` is a convenience shorthand for passing it in the `plugins` array.
+:::
 </Tab>
 </Tabs>
 
 The conversation, and associated state, is persisted to the underlying storage backend.
 
-### Multi-Agent Sessions <em>(Python only)</em>
+### Multi-Agent Sessions *(Python only)*
 
 Multi-agent systems (Graph/Swarm) can also use session management to persist their state:
 
@@ -362,7 +360,7 @@ See [Basic Usage](#basic-usage) for configuration examples.
 :::caution[After initializing the agent, direct modifications to `agent.messages` will not be persisted. Utilize the [Conversation Manager](./conversation-management.md) to help manage context of the agent in a way that can be persisted.]
 :::
 
-## Immutable Snapshots <em>(TypeScript only)</em>
+## Immutable Snapshots *(TypeScript only)*
 
 In addition to `snapshot_latest`, the TypeScript SDK supports **immutable snapshots** — append-only checkpoints identified by UUID v7. These enable time-travel restore: you can restore the agent to any prior checkpoint, not just the latest state.
 
@@ -382,7 +380,7 @@ Snapshot IDs are UUID v7, so they sort lexicographically in chronological order.
 --8<-- "user-guide/concepts/agents/session-manager.ts:list_and_restore"
 ```
 
-## Deleting Sessions <em>(TypeScript only)</em>
+## Deleting Sessions *(TypeScript only)*
 
 To remove all snapshots and manifests for a session, call `deleteSession()` on the `SessionManager`. This removes the entire session root directory (filesystem) or all objects under the session prefix (S3):
 
@@ -470,9 +468,14 @@ The following third-party session managers extend Strands with additional storag
 | AgentCoreMemorySessionManager | Amazon | Advanced memory with intelligent retrieval using Amazon Bedrock AgentCore Memory. Supports both short-term memory (STM) and long-term memory (LTM) with strategies for user preferences, facts, and session summaries. | [View Documentation](../../../community/session-managers/agentcore-memory.md) |
 | **Contribute Your Own** | Community | Have you built a session manager? Share it with the community! | [Learn How](../../../community/community-packages.md) |
 
-## Custom Session Repositories *(Python only)*
+## Custom Session Repositories
 
-For advanced use cases, you can implement your own session storage backend by creating a custom session repository:
+For advanced use cases, you can implement your own session storage backend.
+
+<Tabs>
+<Tab label="Python">
+
+Create a custom session repository by implementing the `SessionRepository` interface:
 
 ```python
 from typing import Optional
@@ -514,6 +517,18 @@ session_manager = RepositorySessionManager(
 
 agent = Agent(session_manager=session_manager)
 ```
+
+</Tab>
+<Tab label="TypeScript">
+
+Create a custom storage backend by implementing the `SnapshotStorage` interface:
+
+```typescript
+--8<-- "user-guide/concepts/agents/session-manager.ts:custom_storage"
+```
+
+</Tab>
+</Tabs>
 
 This approach allows you to store session data in any backend system while leveraging the built-in session management logic.
 

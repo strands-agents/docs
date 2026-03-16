@@ -1,4 +1,5 @@
 import { Agent, SessionManager, FileStorage, S3Storage } from '@strands-agents/sdk'
+import type { SnapshotStorage, SnapshotLocation, Snapshot, SnapshotManifest } from '@strands-agents/sdk'
 import { S3Client } from '@aws-sdk/client-s3'
 
 // =====================
@@ -132,6 +133,74 @@ async function listAndRestoreExample() {
   await agent.initialize()
   await session.restoreSnapshot({ target: agent, snapshotId: snapshotIds[0]! })
   // --8<-- [end:list_and_restore]
+}
+
+// =====================
+// Custom Storage
+// =====================
+
+async function customStorageExample() {
+  // --8<-- [start:custom_storage]
+  // Implement the SnapshotStorage interface to use any backend (e.g. DynamoDB)
+  class DynamoDBStorage implements SnapshotStorage {
+    private tableName = 'agent-sessions'
+
+    private key(location: SnapshotLocation, snapshotId: string) {
+      return `${location.sessionId}/${location.scope}/${location.scopeId}/${snapshotId}`
+    }
+
+    async saveSnapshot({ location, snapshotId, snapshot }: {
+      location: SnapshotLocation; snapshotId: string; isLatest: boolean; snapshot: Snapshot
+    }) {
+      await dynamoDB.put({ TableName: this.tableName, Item: { pk: this.key(location, snapshotId), data: snapshot } })
+    }
+
+    async loadSnapshot({ location, snapshotId }: {
+      location: SnapshotLocation; snapshotId?: string
+    }) {
+      const result = await dynamoDB.get({
+        TableName: this.tableName,
+        Key: { pk: this.key(location, snapshotId ?? 'latest') },
+      })
+      return (result.Item?.data as Snapshot) ?? null
+    }
+
+    async listSnapshotIds({ location, limit, startAfter }: {
+      location: SnapshotLocation; limit?: number; startAfter?: string
+    }) {
+      // Query items by session prefix, sorted by UUID v7 snapshot IDs
+      const prefix = `${location.sessionId}/${location.scope}/${location.scopeId}/`
+      const results = await dynamoDB.query(/* query by prefix, paginate with startAfter */)
+      return results.map((r: { snapshotId: string }) => r.snapshotId)
+    }
+
+    async deleteSession({ sessionId }: { sessionId: string }) {
+      // Delete all items with the session prefix
+      await dynamoDB.batchDelete(/* items matching sessionId prefix */)
+    }
+
+    async loadManifest({ location }: { location: SnapshotLocation }) {
+      const result = await dynamoDB.get({
+        TableName: this.tableName,
+        Key: { pk: `${location.sessionId}/manifest` },
+      })
+      return result.Item?.data as SnapshotManifest
+    }
+
+    async saveManifest({ location, manifest }: {
+      location: SnapshotLocation; manifest: SnapshotManifest
+    }) {
+      await dynamoDB.put({ TableName: this.tableName, Item: { pk: `${location.sessionId}/manifest`, data: manifest } })
+    }
+  }
+
+  const agent = new Agent({
+    sessionManager: new SessionManager({
+      sessionId: 'user-789',
+      storage: { snapshot: new DynamoDBStorage() },
+    }),
+  })
+  // --8<-- [end:custom_storage]
 }
 
 // =====================
