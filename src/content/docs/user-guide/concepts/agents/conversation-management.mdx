@@ -325,29 +325,9 @@ To create a custom conversation manager, extend the abstract [`ConversationManag
 For proactive management alongside overflow recovery, override `initAgent`:
 
 ```typescript
-import { Agent, ConversationManager, AfterInvocationEvent, type AgentData, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:custom_conversation_manager_proactive_imports"
 
-class MyManager extends ConversationManager {
-  readonly name = 'my:manager'
-  private readonly _maxMessages = 5
-
-  reduce({ agent }: ConversationManagerReduceOptions): boolean {
-    return this._trim(agent.messages)
-  }
-
-  override initAgent(agent: AgentData): void {
-    super.initAgent(agent) // preserves overflow recovery
-    agent.addHook(AfterInvocationEvent, (event) => {
-      this._trim(event.agent.messages)
-    })
-  }
-
-  private _trim(messages: AgentData['messages']): boolean {
-    if (messages.length <= this._maxMessages) return false
-    messages.splice(0, messages.length - this._maxMessages)
-    return true
-  }
-}
+--8<-- "user-guide/concepts/agents/conversation-management.ts:custom_conversation_manager_proactive"
 ```
 
 See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
