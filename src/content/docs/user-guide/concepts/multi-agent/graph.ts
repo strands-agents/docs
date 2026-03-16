@@ -148,6 +148,7 @@ async function nestedPatterns() {
 
   // Create a swarm of research agents
   const researchSwarm = new Swarm({
+    id: 'research_swarm',
     nodes: [medicalResearcher, technologyResearcher, economicResearcher],
   })
 
@@ -160,7 +161,7 @@ async function nestedPatterns() {
   // Create a graph with the swarm as a node
   const graph = new Graph({
     nodes: [researchSwarm, analyst],
-    edges: [['swarm', 'analysis']],
+    edges: [['research_swarm', 'analysis']],
   })
 
   const result = await graph.invoke('Research the impact of AI on healthcare and create a comprehensive report')
