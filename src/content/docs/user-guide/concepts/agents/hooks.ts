@@ -1,5 +1,5 @@
 import { Agent, FunctionTool } from '@strands-agents/sdk'
-import type { Plugin } from '@strands-agents/sdk'
+import type { LocalAgent, Plugin } from '@strands-agents/sdk'
 import {
   BeforeInvocationEvent,
   AfterInvocationEvent,
@@ -10,10 +10,7 @@ import {
   MessageAddedEvent,
 } from '@strands-agents/sdk'
 import { Graph, Swarm, BeforeNodeCallEvent, AfterNodeCallEvent } from '@strands-agents/sdk/multiagent'
-import type { MultiAgentPlugin } from '@strands-agents/sdk/multiagent'
-
-type AgentData = Parameters<Plugin['initAgent']>[0]
-type MultiAgentBase = Parameters<MultiAgentPlugin['initMultiAgent']>[0]
+import type { MultiAgent, MultiAgentPlugin } from '@strands-agents/sdk/multiagent'
 
 // Mock tools for examples
 const myTool = new FunctionTool({
@@ -84,8 +81,8 @@ async function toolInterceptionExample() {
   class ToolInterceptor implements Plugin {
     name = 'tool-interceptor'
 
-    initAgent(agent: AgentData): void {
-      agent.addHook(BeforeToolCallEvent, (ev: BeforeToolCallEvent) => this.interceptTool(ev))
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
     }
 
     private interceptTool(event: BeforeToolCallEvent): void {
@@ -104,8 +101,8 @@ async function resultModificationExample() {
   class ResultProcessor implements Plugin {
     name = 'result-processor'
 
-    initAgent(agent: AgentData): void {
-      agent.addHook(AfterToolCallEvent, (ev: AfterToolCallEvent) => this.processResult(ev))
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
     }
 
     private processResult(event: AfterToolCallEvent): void {
@@ -131,10 +128,10 @@ async function composabilityExample() {
   class RequestLoggingHook implements Plugin {
     name = 'request-logging'
 
-    initAgent(agent: AgentData): void {
-      agent.addHook(BeforeInvocationEvent, (ev: BeforeInvocationEvent) => this.logRequest(ev))
-      agent.addHook(AfterInvocationEvent, (ev: AfterInvocationEvent) => this.logResponse(ev))
-      agent.addHook(BeforeToolCallEvent, (ev: BeforeToolCallEvent) => this.logToolUse(ev))
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(BeforeInvocationEvent, (ev) => this.logRequest(ev))
+      agent.addHook(AfterInvocationEvent, (ev) => this.logResponse(ev))
+      agent.addHook(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
     }
 
     // ...
@@ -159,8 +156,8 @@ async function loggingModificationsExample() {
   class ResultProcessor implements Plugin {
     name = 'result-processor'
 
-    initAgent(agent: AgentData): void {
-      agent.addHook(AfterToolCallEvent, (ev: AfterToolCallEvent) => this.processResult(ev))
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
     }
 
     private processResult(event: AfterToolCallEvent): void {
@@ -200,8 +197,8 @@ async function fixedToolArgumentsExample() {
 
     name = 'constant-tool-arguments'
 
-    initAgent(agent: AgentData): void {
-      agent.addHook(BeforeToolCallEvent, (ev: BeforeToolCallEvent) => this.fixToolArguments(ev))
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
     }
 
     private fixToolArguments(event: BeforeToolCallEvent): void {
@@ -281,8 +278,8 @@ async function orchestratorAgnosticDesignExample() {
   class UniversalMultiAgentPlugin implements MultiAgentPlugin {
     readonly name = 'universal-multi-agent'
 
-    initMultiAgent(orchestrator: MultiAgentBase): void {
-      orchestrator.addHook(BeforeNodeCallEvent, (event: BeforeNodeCallEvent) => {
+    initMultiAgent(orchestrator: MultiAgent): void {
+      orchestrator.addHook(BeforeNodeCallEvent, (event) => {
         console.log(`Executing node ${event.nodeId} in ${orchestrator.id} orchestrator`)
 
         // Handle orchestrator-specific logic if needed
@@ -312,8 +309,8 @@ async function layeredHooksExample() {
   class AgentLoggingPlugin implements Plugin {
     name = 'agent-logging'
 
-    initAgent(agent: AgentData): void {
-      agent.addHook(BeforeToolCallEvent, (event: BeforeToolCallEvent) => {
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(BeforeToolCallEvent, (event) => {
         console.log(`Agent tool call: ${event.toolUse.name}`)
       })
     }
@@ -327,8 +324,8 @@ async function layeredHooksExample() {
   class OrchestratorLoggingPlugin implements MultiAgentPlugin {
     readonly name = 'orchestrator-logging'
 
-    initMultiAgent(orchestrator: MultiAgentBase): void {
-      orchestrator.addHook(BeforeNodeCallEvent, (event: BeforeNodeCallEvent) => {
+    initMultiAgent(orchestrator: MultiAgent): void {
+      orchestrator.addHook(BeforeNodeCallEvent, (event) => {
         console.log(`Orchestrator node execution: ${event.nodeId}`)
       })
     }
