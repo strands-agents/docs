@@ -9,6 +9,8 @@ import {
   AfterModelCallEvent,
   MessageAddedEvent,
 } from '@strands-agents/sdk'
+import { Graph, Swarm, BeforeNodeCallEvent, AfterNodeCallEvent } from '@strands-agents/sdk/multiagent'
+import type { MultiAgentPlugin, MultiAgentBase } from '@strands-agents/sdk/multiagent'
 
 // Mock tools for examples
 const myTool = new FunctionTool({
@@ -221,3 +223,126 @@ async function fixedToolArgumentsExample() {
   const result = await agent.invoke('What is 2 / 3?')
   // --8<-- [end:fixed_tool_arguments_usage]
 }
+
+// =====================
+// Multi-Agent Hook Examples
+// =====================
+
+async function orchestratorCallbackExample() {
+  // --8<-- [start:orchestrator_callback]
+  const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
+  const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+
+  const graph = new Graph({
+    nodes: [researcher, writer],
+    edges: [['researcher', 'writer']],
+  })
+
+  // Register individual callbacks on the orchestrator
+  graph.addHook(BeforeNodeCallEvent, (event) => {
+    console.log(`Node ${event.nodeId} starting`)
+  })
+
+  graph.addHook(AfterNodeCallEvent, (event) => {
+    console.log(`Node ${event.nodeId} completed`)
+  })
+  // --8<-- [end:orchestrator_callback]
+}
+
+async function conditionalNodeExecutionExample() {
+  // --8<-- [start:conditional_node_execution]
+  const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
+  const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+  const reviewer = new Agent({ id: 'reviewer', systemPrompt: 'You are a review specialist.' })
+
+  const graph = new Graph({
+    nodes: [researcher, writer, reviewer],
+    edges: [
+      ['researcher', 'writer'],
+      ['writer', 'reviewer'],
+    ],
+  })
+
+  // Cancel specific nodes based on custom conditions
+  graph.addHook(BeforeNodeCallEvent, (event) => {
+    if (event.nodeId === 'reviewer') {
+      // Cancel with a custom message
+      event.cancel = 'Skipping review for this run'
+    }
+  })
+  // --8<-- [end:conditional_node_execution]
+}
+
+async function orchestratorAgnosticDesignExample() {
+  // --8<-- [start:orchestrator_agnostic_design]
+  class UniversalMultiAgentPlugin implements MultiAgentPlugin {
+    readonly name = 'universal-multi-agent'
+
+    initMultiAgent(orchestrator: MultiAgentBase): void {
+      orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+        console.log(`Executing node ${event.nodeId} in ${orchestrator.id} orchestrator`)
+
+        // Handle orchestrator-specific logic if needed
+        if (orchestrator instanceof Graph) {
+          this.handleGraphNode(event)
+        } else if (orchestrator instanceof Swarm) {
+          this.handleSwarmNode(event)
+        }
+      })
+    }
+
+    private handleGraphNode(event: BeforeNodeCallEvent): void {
+      // Graph-specific handling
+    }
+
+    private handleSwarmNode(event: BeforeNodeCallEvent): void {
+      // Swarm-specific handling
+    }
+  }
+  // --8<-- [end:orchestrator_agnostic_design]
+  void UniversalMultiAgentPlugin
+}
+
+async function layeredHooksExample() {
+  // --8<-- [start:layered_hooks]
+  // Agent-level hooks via plugins
+  class AgentLoggingPlugin implements Plugin {
+    name = 'agent-logging'
+
+    initAgent(agent: AgentData): void {
+      agent.addHook(BeforeToolCallEvent, (event) => {
+        console.log(`Agent tool call: ${event.toolUse.name}`)
+      })
+    }
+  }
+
+  // Create agents with individual hooks
+  const agent1 = new Agent({ id: 'agent1', plugins: [new AgentLoggingPlugin()] })
+  const agent2 = new Agent({ id: 'agent2', plugins: [new AgentLoggingPlugin()] })
+
+  // Orchestrator-level hooks via MultiAgentPlugin
+  class OrchestratorLoggingPlugin implements MultiAgentPlugin {
+    readonly name = 'orchestrator-logging'
+
+    initMultiAgent(orchestrator: MultiAgentBase): void {
+      orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+        console.log(`Orchestrator node execution: ${event.nodeId}`)
+      })
+    }
+  }
+
+  // Create orchestrator with multi-agent hooks
+  const graph = new Graph({
+    nodes: [agent1, agent2],
+    edges: [['agent1', 'agent2']],
+    plugins: [new OrchestratorLoggingPlugin()],
+  })
+  // --8<-- [end:layered_hooks]
+  void graph
+}
+
+// Suppress unused function warnings
+void orchestratorCallbackExample
+void conditionalNodeExecutionExample
+void orchestratorAgnosticDesignExample
+void layeredHooksExample

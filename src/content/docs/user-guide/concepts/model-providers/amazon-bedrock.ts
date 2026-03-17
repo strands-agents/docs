@@ -257,22 +257,72 @@ async function toolCachingFull() {
   // --8<-- [start:tool_caching_full]
   const bedrockModel = new BedrockModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
-    cacheTools: 'default',
+    cacheConfig: { strategy: 'auto' },
   })
 
   const agent = new Agent({
     model: bedrockModel,
-    // Add your tools here when they become available
+    // Add your tools here
   })
 
   // First request will cache the tools
-  await agent.invoke('What time is it?')
+  let cacheWriteTokens = 0
+  let cacheReadTokens = 0
+
+  for await (const event of agent.stream('What time is it?')) {
+    if (event.type === 'modelMetadataEvent' && event.usage) {
+      cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+      cacheReadTokens = event.usage.cacheReadInputTokens || 0
+    }
+  }
+  console.log(`Cache write tokens: ${cacheWriteTokens}`)
+  console.log(`Cache read tokens: ${cacheReadTokens}`)
 
   // Second request will reuse the cached tools
-  await agent.invoke('What is the square root of 1764?')
-
-  // Note: Cache metrics are not yet available in the TypeScript SDK
+  for await (const event of agent.stream('What is the square root of 1764?')) {
+    if (event.type === 'modelMetadataEvent' && event.usage) {
+      cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+      cacheReadTokens = event.usage.cacheReadInputTokens || 0
+    }
+  }
+  console.log(`Cache write tokens: ${cacheWriteTokens}`)
+  console.log(`Cache read tokens: ${cacheReadTokens}`)
   // --8<-- [end:tool_caching_full]
+}
+
+// Automatic cache strategy for messages
+async function automaticCacheStrategy() {
+  // --8<-- [start:automatic_cache_strategy]
+  const bedrockModel = new BedrockModel({
+    modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    cacheConfig: { strategy: 'auto' },
+  })
+
+  const agent = new Agent({ model: bedrockModel })
+
+  // Agent call - cache write and read occur as context accumulates
+  let cacheWriteTokens = 0
+  let cacheReadTokens = 0
+
+  for await (const event of agent.stream('Search for Python async patterns, then compare with error handling')) {
+    if (event.type === 'modelMetadataEvent' && event.usage) {
+      cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+      cacheReadTokens = event.usage.cacheReadInputTokens || 0
+    }
+  }
+  console.log(`Cache write tokens: ${cacheWriteTokens}`)
+  console.log(`Cache read tokens: ${cacheReadTokens}`)
+
+  // Follow-up reuses cached context from previous conversation
+  for await (const event of agent.stream('Summarize the key differences')) {
+    if (event.type === 'modelMetadataEvent' && event.usage) {
+      cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+      cacheReadTokens = event.usage.cacheReadInputTokens || 0
+    }
+  }
+  console.log(`Cache write tokens: ${cacheWriteTokens}`)
+  console.log(`Cache read tokens: ${cacheReadTokens}`)
+  // --8<-- [end:automatic_cache_strategy]
 }
 
 // Messages caching
@@ -303,12 +353,27 @@ async function messagesCachingFull() {
   })
 
   // First request will cache the message
-  await agent.invoke('What is in that document?')
+  let cacheWriteTokens = 0
+  let cacheReadTokens = 0
+
+  for await (const event of agent.stream('What is in that document?')) {
+    if (event.type === 'modelMetadataEvent' && event.usage) {
+      cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+      cacheReadTokens = event.usage.cacheReadInputTokens || 0
+    }
+  }
+  console.log(`Cache write tokens: ${cacheWriteTokens}`)
+  console.log(`Cache read tokens: ${cacheReadTokens}`)
 
   // Second request will reuse the cached message
-  await agent.invoke('How long is the document?')
-
-  // Note: Cache metrics are not yet available in the TypeScript SDK
+  for await (const event of agent.stream('How long is the document?')) {
+    if (event.type === 'modelMetadataEvent' && event.usage) {
+      cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+      cacheReadTokens = event.usage.cacheReadInputTokens || 0
+    }
+  }
+  console.log(`Cache write tokens: ${cacheWriteTokens}`)
+  console.log(`Cache read tokens: ${cacheReadTokens}`)
   // --8<-- [end:messages_caching_full]
 }
 

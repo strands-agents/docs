@@ -310,12 +310,25 @@ See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk
 </Tab>
 <Tab label="TypeScript">
 
-In TypeScript, conversation managers don't have a base interface. Instead, they are simply [HookProviders](./hooks.md) that can subscribe to any event in the agent lifecycle.
+To create a custom conversation manager, extend the abstract [`ConversationManager`](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/conversation-manager.ts) base class and implement the `reduce` method:
 
-For implementing custom conversation management, it's recommended to:
+1. **`reduce(options: ReduceOptions): boolean`**: Called automatically when a `ContextWindowOverflowError` occurs. Mutate `agent.messages` in place to reduce history, then return `true` if any reduction was made. Return `false` to let the error propagate out of the agent loop uncaught.
 
-- Register for the `AfterInvocationEvent` (or other After events) to perform proactive context trimming after each agent invocation completes
-- Register for the `AfterModelCallEvent` to handle reactive context trimming when the model's context window is exceeded
+2. **`initAgent(agent)` (optional)**: Override to add proactive management (e.g. trimming after each invocation). Always call `super.initAgent(agent)` to preserve the built-in overflow recovery hook.
+
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:custom_conversation_manager_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:custom_conversation_manager"
+```
+
+For proactive management alongside overflow recovery, override `initAgent`:
+
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:custom_conversation_manager_proactive_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:custom_conversation_manager_proactive"
+```
 
 See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
 </Tab>
