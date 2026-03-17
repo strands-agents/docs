@@ -1,4 +1,5 @@
-import { telemetry, Agent } from '@strands-agents/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { setupTracer } from '@strands-agents/sdk/telemetry'
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
@@ -15,9 +16,9 @@ async function codeConfigurationOption1() {
 
 function codeConfigurationOption2() {
   // --8<-- [start:code_configuration_option2]
-  // Option 2: Use telemetry.setupTracer() to handle complete OpenTelemetry setup
+  // Option 2: Use setupTracer() to handle complete OpenTelemetry setup
   // (creates a new tracer provider and registers it as global)
-  telemetry.setupTracer({
+  setupTracer({
     exporters: { otlp: true, console: true }, // Send traces to OTLP endpoint and console debug
   })
   // --8<-- [end:code_configuration_option2]
@@ -27,7 +28,7 @@ function codeConfigurationOption3() {
   // --8<-- [start:code_configuration_option3]
   // Option 3: Use setupTracer() with your own tracer provider
   const provider = new NodeTracerProvider()
-  telemetry.setupTracer({
+  setupTracer({
     provider,
     exporters: { otlp: true, console: true },
   })
@@ -48,7 +49,7 @@ async function codeConfigurationAgent() {
 
 function consoleExporter() {
   // --8<-- [start:console_exporter]
-  telemetry.setupTracer({
+  setupTracer({
     exporters: { console: true },
   })
   // --8<-- [end:console_exporter]
@@ -85,7 +86,7 @@ function configuringExporters() {
   provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()))
 
   // Register the provider with Strands
-  telemetry.setupTracer({ provider })
+  setupTracer({ provider })
   // --8<-- [end:configuring_exporters]
 }
 
@@ -95,7 +96,7 @@ async function endToEnd() {
   process.env.OTEL_EXPORTER_OTLP_ENDPOINT = 'http://localhost:4318'
 
   // Configure telemetry
-  telemetry.setupTracer({
+  setupTracer({
     exporters: { otlp: true, console: true },
   })
 
