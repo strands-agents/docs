@@ -1,5 +1,5 @@
 import { Agent, FunctionTool } from '@strands-agents/sdk'
-import type { LocalAgent, Plugin } from '@strands-agents/sdk'
+import type { Plugin } from '@strands-agents/sdk'
 import {
   BeforeInvocationEvent,
   AfterInvocationEvent,
@@ -10,7 +10,10 @@ import {
   MessageAddedEvent,
 } from '@strands-agents/sdk'
 import { Graph, Swarm, BeforeNodeCallEvent, AfterNodeCallEvent } from '@strands-agents/sdk/multiagent'
-import type { MultiAgentPlugin, MultiAgent } from '@strands-agents/sdk/multiagent'
+import type { MultiAgentPlugin } from '@strands-agents/sdk/multiagent'
+
+type AgentData = Parameters<Plugin['initAgent']>[0]
+type MultiAgentBase = Parameters<MultiAgentPlugin['initMultiAgent']>[0]
 
 // Mock tools for examples
 const myTool = new FunctionTool({
@@ -81,7 +84,7 @@ async function toolInterceptionExample() {
   class ToolInterceptor implements Plugin {
     name = 'tool-interceptor'
 
-    initAgent(agent: LocalAgent): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeToolCallEvent, (ev: BeforeToolCallEvent) => this.interceptTool(ev))
     }
 
@@ -101,7 +104,7 @@ async function resultModificationExample() {
   class ResultProcessor implements Plugin {
     name = 'result-processor'
 
-    initAgent(agent: LocalAgent): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(AfterToolCallEvent, (ev: AfterToolCallEvent) => this.processResult(ev))
     }
 
@@ -128,7 +131,7 @@ async function composabilityExample() {
   class RequestLoggingHook implements Plugin {
     name = 'request-logging'
 
-    initAgent(agent: LocalAgent): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeInvocationEvent, (ev: BeforeInvocationEvent) => this.logRequest(ev))
       agent.addHook(AfterInvocationEvent, (ev: AfterInvocationEvent) => this.logResponse(ev))
       agent.addHook(BeforeToolCallEvent, (ev: BeforeToolCallEvent) => this.logToolUse(ev))
@@ -156,7 +159,7 @@ async function loggingModificationsExample() {
   class ResultProcessor implements Plugin {
     name = 'result-processor'
 
-    initAgent(agent: LocalAgent): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(AfterToolCallEvent, (ev: AfterToolCallEvent) => this.processResult(ev))
     }
 
@@ -197,7 +200,7 @@ async function fixedToolArgumentsExample() {
 
     name = 'constant-tool-arguments'
 
-    initAgent(agent: LocalAgent): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeToolCallEvent, (ev: BeforeToolCallEvent) => this.fixToolArguments(ev))
     }
 
@@ -278,7 +281,7 @@ async function orchestratorAgnosticDesignExample() {
   class UniversalMultiAgentPlugin implements MultiAgentPlugin {
     readonly name = 'universal-multi-agent'
 
-    initMultiAgent(orchestrator: MultiAgent): void {
+    initMultiAgent(orchestrator: MultiAgentBase): void {
       orchestrator.addHook(BeforeNodeCallEvent, (event: BeforeNodeCallEvent) => {
         console.log(`Executing node ${event.nodeId} in ${orchestrator.id} orchestrator`)
 
@@ -309,7 +312,7 @@ async function layeredHooksExample() {
   class AgentLoggingPlugin implements Plugin {
     name = 'agent-logging'
 
-    initAgent(agent: LocalAgent): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeToolCallEvent, (event: BeforeToolCallEvent) => {
         console.log(`Agent tool call: ${event.toolUse.name}`)
       })
@@ -324,7 +327,7 @@ async function layeredHooksExample() {
   class OrchestratorLoggingPlugin implements MultiAgentPlugin {
     readonly name = 'orchestrator-logging'
 
-    initMultiAgent(orchestrator: MultiAgent): void {
+    initMultiAgent(orchestrator: MultiAgentBase): void {
       orchestrator.addHook(BeforeNodeCallEvent, (event: BeforeNodeCallEvent) => {
         console.log(`Orchestrator node execution: ${event.nodeId}`)
       })
