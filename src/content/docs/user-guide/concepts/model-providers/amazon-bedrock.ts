@@ -204,7 +204,8 @@ async function s3LocationSupport() {
       format: 'pdf',
       name: 'report.pdf',
       source: {
-        s3Location: {
+        location: {
+          type: 's3',
           uri: 's3://my-bucket/documents/report.pdf',
           bucketOwner: '123456789012', // Optional: for cross-account access
         },
