@@ -1,5 +1,5 @@
 import { Agent, tool } from '@strands-agents/sdk'
-import { notebook } from '@strands-agents/sdk/vended_tools/notebook'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
 import type { AgentStreamEvent } from '@strands-agents/sdk'
 import { z } from 'zod'
 

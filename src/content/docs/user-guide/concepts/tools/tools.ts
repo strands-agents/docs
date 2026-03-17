@@ -1,7 +1,7 @@
 import { Agent, tool, FunctionTool } from '@strands-agents/sdk'
 import type { ToolContext, InvokableTool } from '@strands-agents/sdk'
-import { notebook } from '@strands-agents/sdk/vended_tools/notebook'
-import { fileEditor } from '@strands-agents/sdk/vended_tools/file_editor'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
 import { z } from 'zod'
 
 // Basic tool example
@@ -261,11 +261,11 @@ async function toolContextInvocationStateExample() {
 
 // Vended tools example
 async function vendedToolsExample() {
-  // --8<-- [start:vended_tools]
+  // --8<-- [start:vended-tools]
   const agent = new Agent({
     tools: [notebook, fileEditor],
   })
-  // --8<-- [end:vended_tools]
+  // --8<-- [end:vended-tools]
 }
 
 // Adding tools to agents example

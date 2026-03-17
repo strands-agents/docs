@@ -1,5 +1,5 @@
 import { Agent } from '@strands-agents/sdk'
-import { notebook } from '@strands-agents/sdk/vended_tools/notebook'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
 import express from 'express'
 
 // Basic Usage Example

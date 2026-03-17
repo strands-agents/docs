@@ -204,7 +204,7 @@ Create a `.ts` file alongside your `.md` file with snippet markers:
 ```typescript
 // docs/user-guide/concepts/agents/agent-loop.ts
 import { Agent } from '@strands-agents/sdk'
-import { notebook } from '@strands-agents/sdk/vended_tools/notebook'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
 
 // --8<-- [start:initialization]
 // Initialize the agent with tools, model, and configuration
