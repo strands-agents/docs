@@ -1,15 +1,75 @@
 ---
 /**
- * Custom Head override to add Mermaid diagram support, favicon, and AWS Shortbread cookie consent.
+ * Custom Head override to add Mermaid diagram support, favicon, AWS Shortbread cookie consent,
+ * and structured data (JSON-LD).
  * See ARCHITECTURE.md for details.
  */
 import SiteScripts from '../SiteScripts.astro'
+import { baseSchemas } from '../../util/structured-data'
 
 const { head } = Astro.locals.starlightRoute
+const route = Astro.locals.starlightRoute
 
 // Get base path for favicon
 const base = import.meta.env.BASE_URL || '/'
 const faviconHref = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon.svg`
+
+// Build breadcrumb list from URL path
+const siteUrl = Astro.site?.origin || 'https://strandsagents.com'
+const pathSegments = Astro.url.pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean)
+const breadcrumbLabels: Record<string, string> = {
+  'docs': 'Docs',
+  'user-guide': 'User Guide',
+  'concepts': 'Concepts',
+  'agents': 'Agents',
+  'tools': 'Tools',
+  'multi-agent': 'Multi-Agent',
+  'model-providers': 'Model Providers',
+  'streaming': 'Streaming',
+  'bidirectional-streaming': 'Voice & Realtime',
+  'deploy': 'Deploy',
+  'safety-security': 'Safety & Security',
+  'observability-evaluation': 'Observability',
+  'evals-sdk': 'Evals SDK',
+  'examples': 'Examples',
+  'community': 'Community',
+  'labs': 'Labs',
+  'contribute': 'Contribute',
+  'api': 'API Reference',
+  'plugins': 'Plugins',
+  'quickstart': 'Quickstart',
+  'experimental': 'Experimental',
+  'python': 'Python',
+  'typescript': 'TypeScript',
+  'integrations': 'Integrations',
+  'session-managers': 'Session Managers',
+  'contributing': 'Contributing',
+}
+
+const breadcrumbItems = pathSegments.map((segment, i) => {
+  const path = '/' + pathSegments.slice(0, i + 1).join('/') + '/'
+  const isLast = i === pathSegments.length - 1
+  const name = isLast
+    ? (route.entry.data.title || segment)
+    : (breadcrumbLabels[segment] || segment.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()))
+  return {
+    "@type": "ListItem" as const,
+    position: i + 1,
+    name,
+    ...(isLast ? {} : { item: siteUrl + path })
+  }
+})
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    ...baseSchemas(siteUrl),
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbItems
+    }
+  ]
+}
 ---
 
 {head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
@@ -19,6 +79,9 @@ const faviconHref = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon
 
 <!-- AWS Shortbread cookie consent -->
 <SiteScripts />
+
+<!-- Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
 <script>
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'

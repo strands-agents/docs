@@ -60,34 +60,34 @@ describe('resolveRedirect with redirectFromMap', () => {
   })
 })
 
-const urlCases: Array<{ description: string; url: string; expected: string | null }> = [
-  { description: 'latest root redirects to /',                         url: 'https://strandsagents.com/latest/',                                                                expected: '/' },
-  { description: '1.x root redirects to /',                            url: 'https://strandsagents.com/1.x/',                                                                  expected: '/' },
-  { description: '1.5.x root redirects to /',                          url: 'https://strandsagents.com/1.5.x/',                                                                expected: '/' },
-  { description: '1.x docs index redirects to docs/',                  url: 'https://strandsagents.com/1.x/documentation/docs/',                                               expected: 'docs/' },
-  { description: 'latest docs index redirects to docs/',               url: 'https://strandsagents.com/latest/documentation/docs/',                                            expected: 'docs/' },
-  { description: '1.5.x doc page with trailing slash passes through',  url: 'https://strandsagents.com/1.5.x/documentation/docs/user-guide/concepts/agents/state/',            expected: 'docs/user-guide/concepts/agents/state/' },
-  { description: '1.5.x doc page without trailing slash',              url: 'https://strandsagents.com/1.5.x/documentation/docs/user-guide/concepts/agents/state',             expected: 'docs/user-guide/concepts/agents/state' },
-  { description: 'unrecognised URL with trailing slash passes through', url: 'https://strandsagents.com/latest/some/other/path/',                                              expected: 'some/other/path/' },
-  { description: 'unrecognised URL without trailing slash',            url: 'https://strandsagents.com/latest/some/other/path',                                               expected: 'some/other/path' },
-  { description: 'unchanged slug with trailing slash from 1.x',        url: 'https://strandsagents.com/1.x/documentation/docs/community/community-packages/',                 expected: 'docs/community/community-packages/' },
-  { description: 'unchanged slug without trailing slash from 1.x',     url: 'https://strandsagents.com/1.x/documentation/docs/community/community-packages',                  expected: 'docs/community/community-packages' },
-  { description: 'renamed page with trailing slash',                   url: 'https://strandsagents.com/latest/documentation/docs/user-guide/concepts/tools/python-tools/',    expected: 'docs/user-guide/concepts/tools/custom-tools/' },
-  { description: 'renamed page without trailing slash',                url: 'https://strandsagents.com/latest/documentation/docs/user-guide/concepts/tools/python-tools',     expected: 'docs/user-guide/concepts/tools/custom-tools' },
+const urlCases: Array<{ description: string; path: string; expected: string | null }> = [
+  { description: 'latest root redirects to /',                         path: '/latest/',                                                                expected: '/' },
+  { description: '1.x root redirects to /',                            path: '/1.x/',                                                                  expected: '/' },
+  { description: '1.5.x root redirects to /',                          path: '/1.5.x/',                                                                expected: '/' },
+  { description: '1.x docs index redirects to docs/',                  path: '/1.x/documentation/docs/',                                               expected: 'docs/' },
+  { description: 'latest docs index redirects to docs/',               path: '/latest/documentation/docs/',                                            expected: 'docs/' },
+  { description: '1.5.x doc page with trailing slash passes through',  path: '/1.5.x/documentation/docs/user-guide/concepts/agents/state/',            expected: 'docs/user-guide/concepts/agents/state/' },
+  { description: '1.5.x doc page without trailing slash',              path: '/1.5.x/documentation/docs/user-guide/concepts/agents/state',             expected: 'docs/user-guide/concepts/agents/state' },
+  { description: 'unrecognised path with trailing slash passes through', path: '/latest/some/other/path/',                                              expected: 'some/other/path/' },
+  { description: 'unrecognised path without trailing slash',            path: '/latest/some/other/path',                                               expected: 'some/other/path' },
+  { description: 'unchanged slug with trailing slash from 1.x',        path: '/1.x/documentation/docs/community/community-packages/',                 expected: 'docs/community/community-packages/' },
+  { description: 'unchanged slug without trailing slash from 1.x',     path: '/1.x/documentation/docs/community/community-packages',                  expected: 'docs/community/community-packages' },
+  { description: 'renamed page with trailing slash',                   path: '/latest/documentation/docs/user-guide/concepts/tools/python-tools/',    expected: 'docs/user-guide/concepts/tools/custom-tools/' },
+  { description: 'renamed page without trailing slash',                path: '/latest/documentation/docs/user-guide/concepts/tools/python-tools',     expected: 'docs/user-guide/concepts/tools/custom-tools' },
   // we don't rewrite these because they're subject to change quite a bit
-  { description: 'api-reference URL passes through unrewritten',       url: 'https://strandsagents.com/latest/documentation/docs/api-reference/python/agent/agent/',          expected: 'docs/api-reference/python/agent/agent/' },
-  // URLs with file extensions must not have a trailing slash added
-  { description: 'index.md URL has no trailing slash added',           url: 'https://strandsagents.com/latest/documentation/docs/some/files/index.md',                        expected: 'docs/some/files/index.md' },
-  { description: '.txt URL has no trailing slash added',               url: 'https://strandsagents.com/latest/documentation/docs/llms.txt',                                   expected: 'docs/llms.txt' },
+  { description: 'api-reference path passes through unrewritten',      path: '/latest/documentation/docs/api-reference/python/agent/agent/',          expected: 'docs/api-reference/python/agent/agent/' },
+  // paths with file extensions must not have a trailing slash added
+  { description: 'index.md path has no trailing slash added',          path: '/latest/documentation/docs/some/files/index.md',                        expected: 'docs/some/files/index.md' },
+  { description: '.txt path has no trailing slash added',              path: '/latest/documentation/docs/llms.txt',                                   expected: 'docs/llms.txt' },
   // Top-level versioned paths (not under /documentation/docs/) pass through after version strip
-  { description: 'versioned llms.txt redirects to llms.txt',           url: 'https://strandsagents.com/latest/llms.txt',                                                      expected: 'llms.txt' },
+  { description: 'versioned llms.txt redirects to llms.txt',           path: '/latest/llms.txt',                                                      expected: 'llms.txt' },
 ]
 
 describe('resolveRedirectFromUrl', () => {
-  it.each(urlCases.map((c) => [c.description, c.url, c.expected]))(
+  it.each(urlCases.map((c) => [c.description, c.path, c.expected]))(
     '%s',
-    (_description, url, expected) => {
-      expect(resolveRedirectFromUrl(url)).toBe(expected)
+    (_description, path, expected) => {
+      expect(resolveRedirectFromUrl(path)).toBe(expected)
     }
   )
 })

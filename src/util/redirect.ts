@@ -81,20 +81,16 @@ export function resolveRedirect(slug: string, redirectFromMap?: Record<string, s
 }
 
 /**
- * Given a full URL from the old site, normalise it to a slug and apply redirect rules.
- * Returns '/' for versioned root URLs, or null if the URL isn't recognisable.
+ * Given a path from the old site, normalise it to a slug and apply redirect rules.
+ * Returns '/' for versioned root paths, or null if the path isn't recognisable.
  *
- * @param url - The URL to resolve
+ * @param path - The URL path to resolve (e.g. "/docs/user-guide/...")
  * @param redirectFromMap - Optional map of source slugs to target slugs (from frontmatter redirectFrom)
  */
 export function resolveRedirectFromUrl(
-  url: string,
+  path: string,
   redirectFromMap?: Record<string, string>
 ): string | null {
-  const pathMatch = url.match(/^https?:\/\/[^/]+(\/.*)?$/)
-  if (!pathMatch) return null
-  let path = pathMatch[1] ?? '/'
-
   // Strip leading version segment: /latest/, /1.x/, /1.5.x/, etc.
   path = path.replace(/^\/?(latest|[\d]+(?:\.[\dx]+)*)\//, '/')
 
