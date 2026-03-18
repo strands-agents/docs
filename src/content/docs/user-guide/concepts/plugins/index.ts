@@ -178,13 +178,13 @@ async function stateManagementExample() {
 
     initAgent(agent: LocalAgent): void {
       // Initialize state values if not present
-      if (!agent.state.get('metrics_call_count')) {
-        agent.state.set('metrics_call_count', 0)
+      if (!agent.appState.get('metrics_call_count')) {
+        agent.appState.set('metrics_call_count', 0)
       }
 
       agent.addHook(BeforeToolCallEvent, () => {
-        const current = (agent.state.get('metrics_call_count') as number) ?? 0
-        agent.state.set('metrics_call_count', current + 1)
+        const current = (agent.appState.get('metrics_call_count') as number) ?? 0
+        agent.appState.set('metrics_call_count', current + 1)
       })
     }
   }
@@ -194,7 +194,7 @@ async function stateManagementExample() {
   const agent = new Agent({
     plugins: [metricsPlugin],
   })
-  console.log(`Tool calls: ${agent.state.get('metrics_call_count')}`)
+  console.log(`Tool calls: ${agent.appState.get('metrics_call_count')}`)
   // --8<-- [end:state_management]
   void metricsPlugin
 }

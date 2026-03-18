@@ -236,8 +236,8 @@ async function toolContextInvocationStateExample() {
         throw new Error('Context is required')
       }
 
-      // Access state via context.agent.state
-      const userId = context.agent.state.get('userId') as string | undefined
+      // Access state via context.agent.appState
+      const userId = context.agent.appState.get('userId') as string | undefined
 
       const response = await fetch('https://api.example.com/search', {
         method: 'GET',
@@ -253,7 +253,7 @@ async function toolContextInvocationStateExample() {
   const agent = new Agent({ tools: [apiCallTool] })
 
   // Set state before invoking
-  agent.state.set('userId', 'user123')
+  agent.appState.set('userId', 'user123')
 
   const result = await agent.invoke('Get my profile data')
   // --8<-- [end:tool_context_invocation_state]
