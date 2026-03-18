@@ -142,6 +142,23 @@ const { code, lang = 'python', filename } = Astro.props
     font-size: inherit;
     line-height: inherit;
   }
+
+  @media (max-width: 480px) {
+    .code-block {
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    .code-block :global(pre) {
+      padding: 0.75rem 0.875rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .code-header {
+      padding: 0.375rem 0.75rem;
+      min-height: 28px;
+    }
+  }
 </style>
 
 <script>

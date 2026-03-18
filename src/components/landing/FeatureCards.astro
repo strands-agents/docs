@@ -182,18 +182,25 @@ agent = Agent(trace_attributes={
     line-height: 1.5;
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     .features-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .feature-card {
+      padding: 1.25rem;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     .features-section {
       padding: 2rem 1.5rem 3rem;
     }
     .features-grid {
       grid-template-columns: 1fr;
+    }
+    .feature-code :global(.code-block) {
+      font-size: 0.72rem;
     }
   }
 </style>

@@ -283,6 +283,14 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
       white-space: nowrap;
     }
 
+    /* Narrow desktop: compact nav tabs */
+    @media (min-width: 50rem) and (max-width: 68.75rem) {
+      .nav-tab {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+      }
+    }
+
     /* Hover state with Strands green highlight */
     .nav-tab:hover {
       color: var(--strands-dark-text);
