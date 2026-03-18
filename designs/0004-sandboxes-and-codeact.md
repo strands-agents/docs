@@ -1,4 +1,4 @@
-# Sandboxes, programmatic tool calling, and CodeAct
+# Sandboxes and code execution
 
 ## Overview
 
@@ -310,12 +310,14 @@ This executes as a single tool call instead of 100 separate round-trips. The int
 
 #### Relationship to Sandbox
 
-The programmatic tool caller uses the Sandbox for code execution but adds tool-bridging logic on top. It:
+The programmatic tool caller does not run its code in the sandbox. It runs the model's orchestration code in the host process, injecting tool wrappers as async functions that call `agent.tool.X()`. Those tools in turn use the sandbox. The sandbox is used by the individual tools, not by the orchestration layer.
+
+It:
 
 1. Introspects the agent's tool registry to find available tools
 2. Creates async wrapper functions for each tool
-3. Injects these wrappers into the code execution namespace
-4. Executes the model's code in the Sandbox
+3. Injects these wrappers into the local execution namespace
+4. Runs the model's code in-process via `exec()`
 5. Captures `print()` output as the tool result
 
 ```python
@@ -325,20 +327,20 @@ class ProgrammaticToolCaller:
     def __init__(self, allowed_tools: list[str] | None = None):
         self.allowed_tools = allowed_tools
 
-    async def execute(self, code: str, agent: Agent, sandbox: Sandbox) -> str:
-        # Build namespace with tool wrappers
+    async def execute(self, code: str, agent: Agent) -> str:
+        # Build namespace with tool wrappers that call agent.tool.X()
         namespace = self._build_tool_namespace(agent)
 
-        # Execute in sandbox with tool namespace available
-        result = await sandbox.execute_code(code, namespace=namespace)
-        return result.stdout
+        # Execute in host process — tools use the sandbox internally
+        exec(compile(code, "<programmatic_tool_caller>", "exec"), namespace)
+        return namespace.get("__output__", "")
 ```
 
-The key insight: the programmatic tool caller does not need its own `Executor` class (as PR #387 currently defines). It uses whatever Sandbox the agent is configured with. This means programmatic tool calling works in Docker, AgentCore, or locally — with no changes to the tool itself.
+This means programmatic tool calling works with any sandbox — the orchestration code does not need to know or care what sandbox is configured.
 
 ### Layer 3: CodeAct plugin
 
-CodeAct is a higher-level paradigm where the agent always responds with code instead of JSON tool calls. It is a plugin that wraps an agent, not a modification to the SDK's agent loop.
+CodeAct is a higher-level paradigm where the agent always responds with code instead of JSON tool calls. It is implemented as a hook using the existing agent lifecycle, not a modification to the agent loop.
 
 #### The CodeAct paradigm
 
@@ -346,45 +348,96 @@ In standard tool calling, the model outputs structured JSON to invoke tools one 
 
 - Loops, conditionals, and data transformations are native (no multi-turn back-and-forth)
 - Intermediate results stay in code variables, not the context window
-- The model can self-correct by catching exceptions and retrying
+- The model can self-correct by catching exceptions and retrying in the next turn
 - Token usage drops dramatically (up to 98.7% reduction reported)
 
 HuggingFace's [smolagents](https://huggingface.co/docs/smolagents/en/index) implements this as `CodeAgent` — a separate agent class that generates Python code instead of JSON tool calls.
 
 #### How it works in Strands
 
-Rather than creating a separate agent class, CodeAct is a plugin that transforms an existing agent. It:
+CodeAct maps naturally to Strands' hook system. The [`AfterInvocationEvent.resume`](https://strandsagents.com/docs/user-guide/concepts/agents/hooks/index.md) property triggers a follow-up agent invocation with new input, which is exactly the CodeAct observation loop: model generates code → execute → feed results back as next observation → model generates more code.
 
-1. Takes an agent with its configured tools
-2. Removes all tools from the agent
-3. Registers itself as the only tool (or modifies the system prompt to force code output)
-4. Exposes the original tools as callable Python functions inside the Sandbox
-5. All model responses go through code execution
+The plugin registers hooks on the agent:
+
+1. `BeforeInvocationEvent` — modifies the system prompt to instruct the model to respond with Python code, and injects tool function signatures into the prompt
+2. `AfterInvocationEvent` — parses code from the model's response, executes it in a persistent namespace with tools available as callable functions, and sets `event.resume` with the execution result (stdout, errors) as the next observation
+3. The loop terminates when the model calls `final_answer()` in its code or responds without a code block
 
 ```python
 from strands import Agent
-from strands_tools import shell, python_repl, http_request, calculator
-from strands_tools.plugins import CodeActPlugin
+from strands.hooks import AfterInvocationEvent, BeforeInvocationEvent
 
-# Create a normal agent
-agent = Agent(
-    tools=[shell, python_repl, http_request, calculator],
-    sandbox=DockerSandbox(image="python:3.12-slim"),
-)
 
-# Wrap it with CodeAct — the agent now always uses code to call tools
-codeact_agent = CodeActPlugin(agent)
+class CodeActPlugin:
+    """Implements CodeAct via agent hooks."""
 
-# The model writes Python code that calls shell(), http_request(), etc.
-result = codeact_agent("Fetch the top 10 HN stories and save them to a file")
+    def __init__(self, agent: Agent):
+        self.agent = agent
+        self.namespace = {"__builtins__": __builtins__}
+
+        # Inject tool wrappers into the execution namespace
+        self._inject_tools()
+
+        # Register hooks
+        agent.hooks.add_callback(BeforeInvocationEvent, self._setup_prompt)
+        agent.hooks.add_callback(AfterInvocationEvent, self._execute_and_resume)
+
+    def _inject_tools(self):
+        """Make agent tools callable as Python functions in the namespace."""
+        for tool_name in self.agent.tool_registry.registry:
+            self.namespace[tool_name] = self._make_tool_wrapper(tool_name)
+
+        def final_answer(result):
+            self.namespace["__final_answer__"] = result
+
+        self.namespace["final_answer"] = final_answer
+
+    async def _setup_prompt(self, event: BeforeInvocationEvent):
+        """Instruct the model to respond with Python code."""
+        # Prepend CodeAct instructions to system prompt
+        ...
+
+    async def _execute_and_resume(self, event: AfterInvocationEvent):
+        """Parse code from response, execute, resume with results."""
+        code = self._parse_code(event.result.message)
+        if not code:
+            return  # No code block — model is done
+
+        if "__final_answer__" in self.namespace:
+            return  # Model called final_answer() — done
+
+        try:
+            exec(compile(code, "<codeact>", "exec"), self.namespace)
+            output = self.namespace.get("__stdout__", "")
+        except Exception as e:
+            output = f"Error: {e}"
+
+        # Feed execution result back as next observation
+        event.resume = f"Execution result:\n{output}"
 ```
 
-The model's response would look something like:
+Usage:
 
 ```python
+from strands import Agent
+from strands_tools import shell, http_request, calculator
+
+agent = Agent(tools=[shell, http_request, calculator])
+
+# Apply CodeAct — the agent now responds with code
+codeact = CodeActPlugin(agent)
+
+result = agent("Fetch the top 10 HN stories and save them to a file")
+```
+
+The model's response would be natural language with a code block:
+
+```
+I'll fetch the top stories from the Hacker News API and save them.
+
+\```python
 import json
 
-# Fetch stories
 response = await http_request(url="https://hacker-news.firebaseio.com/v0/topstories.json")
 story_ids = json.loads(response)[:10]
 
@@ -393,51 +446,33 @@ for sid in story_ids:
     story = await http_request(url=f"https://hacker-news.firebaseio.com/v0/item/{sid}.json")
     stories.append(json.loads(story))
 
-# Format and save
 output = "\n".join(f"- {s['title']} ({s.get('url', 'no url')})" for s in stories)
-await shell(command=f"echo '{output}' > top_stories.txt")
-
-print(f"Saved {len(stories)} stories to top_stories.txt")
+final_answer(output)
+\```
 ```
 
-#### Plugin architecture
+Key properties of this approach:
 
-```python
-class CodeActPlugin:
-    """Wraps an agent to use code-based tool orchestration."""
-
-    def __init__(self, agent: Agent):
-        self.agent = agent
-        self.original_tools = list(agent.tool_registry.registry.values())
-
-        # Replace all tools with the codeact tool
-        self._setup()
-
-    def _setup(self):
-        # Remove original tools from agent
-        # Register codeact as the only tool
-        # Modify system prompt to instruct code generation
-        ...
-
-    def _build_codeact_tool(self) -> AgentTool:
-        """Create a tool that executes code with original tools available."""
-        ...
-
-    def __call__(self, prompt: str, **kwargs) -> Any:
-        return self.agent(prompt, **kwargs)
-```
+- Works within the existing agent loop — no custom loop needed
+- The model outputs natural language reasoning alongside code (matching the paper)
+- State persists across turns via the shared `namespace` dict
+- Errors feed back as observations, enabling self-correction
+- `final_answer()` terminates the loop
+- `resume` handles the observation cycle natively
 
 #### Difference from programmatic tool caller
 
-| Aspect | Programmatic tool caller | CodeAct plugin |
-|--------|------------------------|----------------|
-| Scope | One tool among many | Replaces all tools |
+| Aspect | Programmatic tool caller | CodeAct |
+|--------|------------------------|---------|
+| Scope | One tool among many | Replaces the agent's interaction mode |
 | Model choice | Model decides when to use it | Always active |
-| Tool calling | Standard JSON + code option | Code only |
-| Integration | Drop-in tool | Agent wrapper/plugin |
+| Tool calling | Standard JSON tool calls | Code blocks in natural language response |
+| State | Stateless per call | Persistent namespace across turns |
+| Self-correction | Not built in | Native via error feedback loop |
+| Integration | Drop-in tool | Hook-based plugin |
 | Use case | Optimization for batch operations | Full paradigm shift |
 
-The programmatic tool caller is a tool the model can optionally use. CodeAct is a mode where the model always writes code. Both use the Sandbox for execution.
+The programmatic tool caller is a tool the model can optionally use within standard tool calling. CodeAct changes how the agent interacts entirely — the model always writes code, and the hook system handles execution and feedback.
 
 
 ## API surface
@@ -596,7 +631,7 @@ Rejected because the shared-environment property (tools operating in the same fi
 
 smolagents implements CodeAct as a separate `CodeAgent` class. We considered adding `CodeActAgent` to the SDK alongside `Agent`.
 
-Rejected because it duplicates the agent loop and creates a maintenance burden. A plugin that wraps an existing agent is simpler and composes with other agent features (hooks, conversation management, streaming) without reimplementation.
+Rejected because it duplicates the agent loop and creates a maintenance burden. The hook-based approach using `AfterInvocationEvent.resume` implements the CodeAct observation loop within the existing agent lifecycle, composing with other agent features (hooks, conversation management, streaming) without reimplementation.
 
 ### Extending ToolExecutor for Sandbox
 
