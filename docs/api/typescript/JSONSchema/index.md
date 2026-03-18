@@ -2,7 +2,7 @@
 type JSONSchema = JSONSchema7;
 ```
 
-Defined in: [src/types/json.ts:46](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/json.ts#L46)
+Defined in: [src/types/json.ts:46](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/json.ts#L46)
 
 Represents a JSON Schema definition. Used for defining the structure of tool inputs and outputs.
 

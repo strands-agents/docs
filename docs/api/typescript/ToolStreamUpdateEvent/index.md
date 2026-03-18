@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L378)
+Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/hooks/events.ts#L378)
 
 Event triggered for each streaming progress event from a tool during execution. Wraps a [ToolStreamEvent](/docs/api/typescript/ToolStreamEvent/index.md) with agent context, keeping the tool authoring interface unchanged — tools construct `ToolStreamEvent` without knowledge of agents or hooks, and the agent layer wraps them at the boundary.
 
@@ -16,7 +16,7 @@ Consistent with [ModelStreamUpdateEvent](/docs/api/typescript/ModelStreamUpdateE
 new ToolStreamUpdateEvent(data): ToolStreamUpdateEvent;
 ```
 
-Defined in: [src/hooks/events.ts:383](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L383)
+Defined in: [src/hooks/events.ts:383](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/hooks/events.ts#L383)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [src/hooks/events.ts:383](https://github.com/strands-agents/sdk-type
 readonly type: "toolStreamUpdateEvent";
 ```
 
-Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L379)
+Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/hooks/events.ts#L379)
 
 ---
 
@@ -52,7 +52,7 @@ Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L380)
+Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/hooks/events.ts#L380)
 
 ---
 
@@ -62,4 +62,4 @@ Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-type
 readonly event: ToolStreamEvent;
 ```
 
-Defined in: [src/hooks/events.ts:381](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L381)
+Defined in: [src/hooks/events.ts:381](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/hooks/events.ts#L381)

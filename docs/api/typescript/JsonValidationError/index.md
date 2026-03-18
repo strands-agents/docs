@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:84](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L84)
+Defined in: [src/errors.ts:84](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/errors.ts#L84)
 
 Error thrown when attempting to serialize a value that is not JSON-serializable.
 
@@ -16,7 +16,7 @@ This error indicates that a value contains non-serializable types such as functi
 new JsonValidationError(message): JsonValidationError;
 ```
 
-Defined in: [src/errors.ts:90](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L90)
+Defined in: [src/errors.ts:90](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/errors.ts#L90)
 
 Creates a new JsonValidationError.
 

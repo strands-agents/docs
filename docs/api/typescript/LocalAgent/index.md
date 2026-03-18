@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:92](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L92)
+Defined in: [src/types/agent.ts:92](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L92)
 
 Interface for agents with locally accessible state, messages, tools, and hooks. Used by ToolContext and hook events that need access to agent internals.
 
@@ -10,7 +10,7 @@ Interface for agents with locally accessible state, messages, tools, and hooks. 
 state: AppState;
 ```
 
-Defined in: [src/types/agent.ts:96](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L96)
+Defined in: [src/types/agent.ts:96](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L96)
 
 App state storage accessible to tools and application logic.
 
@@ -22,7 +22,7 @@ App state storage accessible to tools and application logic.
 messages: Message[];
 ```
 
-Defined in: [src/types/agent.ts:101](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L101)
+Defined in: [src/types/agent.ts:101](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L101)
 
 The conversation history of messages between user and assistant.
 
@@ -34,7 +34,7 @@ The conversation history of messages between user and assistant.
 readonly toolRegistry: ToolRegistry;
 ```
 
-Defined in: [src/types/agent.ts:106](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L106)
+Defined in: [src/types/agent.ts:106](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L106)
 
 The tool registry for registering tools with the agent.
 
@@ -46,7 +46,7 @@ The tool registry for registering tools with the agent.
 addHook<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/types/agent.ts:115](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L115)
+Defined in: [src/types/agent.ts:115](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L115)
 
 Register a hook callback for a specific event type.
 

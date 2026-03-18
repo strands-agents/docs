@@ -18,7 +18,7 @@ flowchart TD
 
 **Example**:
 
-```Python
+```python
 from typing import Any
 
 from strands import Agent, tool

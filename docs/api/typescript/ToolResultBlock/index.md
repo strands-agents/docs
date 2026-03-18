@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:319](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L319)
+Defined in: [src/types/messages.ts:319](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L319)
 
 Tool result content block.
 
@@ -14,7 +14,7 @@ Tool result content block.
 new ToolResultBlock(data): ToolResultBlock;
 ```
 
-Defined in: [src/types/messages.ts:347](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L347)
+Defined in: [src/types/messages.ts:347](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L347)
 
 #### Parameters
 
@@ -38,7 +38,7 @@ Defined in: [src/types/messages.ts:347](https://github.com/strands-agents/sdk-ty
 readonly type: "toolResultBlock";
 ```
 
-Defined in: [src/types/messages.ts:323](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L323)
+Defined in: [src/types/messages.ts:323](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L323)
 
 Discriminator for tool result content.
 
@@ -50,7 +50,7 @@ Discriminator for tool result content.
 readonly toolUseId: string;
 ```
 
-Defined in: [src/types/messages.ts:328](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L328)
+Defined in: [src/types/messages.ts:328](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L328)
 
 The ID of the tool use that this result corresponds to.
 
@@ -62,7 +62,7 @@ The ID of the tool use that this result corresponds to.
 readonly status: "success" | "error";
 ```
 
-Defined in: [src/types/messages.ts:333](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L333)
+Defined in: [src/types/messages.ts:333](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L333)
 
 Status of the tool execution.
 
@@ -74,7 +74,7 @@ Status of the tool execution.
 readonly content: ToolResultContent[];
 ```
 
-Defined in: [src/types/messages.ts:338](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L338)
+Defined in: [src/types/messages.ts:338](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L338)
 
 The content returned by the tool.
 
@@ -86,7 +86,7 @@ The content returned by the tool.
 readonly optional error: Error;
 ```
 
-Defined in: [src/types/messages.ts:345](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L345)
+Defined in: [src/types/messages.ts:345](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L345)
 
 The original error object when status is ‘error’. Available for inspection by hooks, error handlers, and agent loop. Tools must wrap non-Error thrown values into Error objects.
 
@@ -100,7 +100,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/messages.ts:361](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L361)
+Defined in: [src/types/messages.ts:361](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L361)
 
 Serializes the ToolResultBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Note: The error field is not serialized (deferred for future implementation).
 
@@ -114,7 +114,7 @@ Serializes the ToolResultBlock to a JSON-compatible ContentBlockData object. Cal
 
 | Name | Type | Defined in |
 | --- | --- | --- |
-| `toolResult` | [`ToolResultBlockData`](/docs/api/typescript/ToolResultBlockData/index.md) | [src/types/messages.ts:361](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L361) |
+| `toolResult` | [`ToolResultBlockData`](/docs/api/typescript/ToolResultBlockData/index.md) | [src/types/messages.ts:361](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L361) |
 
 #### Implementation of
 
@@ -130,7 +130,7 @@ JSONSerializable.toJSON
 static fromJSON(data): ToolResultBlock;
 ```
 
-Defined in: [src/types/messages.ts:377](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L377)
+Defined in: [src/types/messages.ts:377](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/messages.ts#L377)
 
 Creates a ToolResultBlock instance from its wrapped data format.
 

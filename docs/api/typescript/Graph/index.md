@@ -1,4 +1,4 @@
-Defined in: [src/multiagent/graph.ts:90](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L90)
+Defined in: [src/multiagent/graph.ts:90](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L90)
 
 Directed graph orchestration pattern.
 
@@ -35,7 +35,7 @@ const result = await graph.invoke('Explain quantum computing')
 new Graph(options): Graph;
 ```
 
-Defined in: [src/multiagent/graph.ts:100](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L100)
+Defined in: [src/multiagent/graph.ts:100](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L100)
 
 #### Parameters
 
@@ -55,7 +55,7 @@ Defined in: [src/multiagent/graph.ts:100](https://github.com/strands-agents/sdk-
 readonly id: string;
 ```
 
-Defined in: [src/multiagent/graph.ts:91](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L91)
+Defined in: [src/multiagent/graph.ts:91](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L91)
 
 Unique identifier for this orchestrator.
 
@@ -73,7 +73,7 @@ MultiAgent.id
 readonly nodes: ReadonlyMap<string, Node>;
 ```
 
-Defined in: [src/multiagent/graph.ts:92](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L92)
+Defined in: [src/multiagent/graph.ts:92](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L92)
 
 ---
 
@@ -83,7 +83,7 @@ Defined in: [src/multiagent/graph.ts:92](https://github.com/strands-agents/sdk-t
 readonly edges: readonly Edge[];
 ```
 
-Defined in: [src/multiagent/graph.ts:93](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L93)
+Defined in: [src/multiagent/graph.ts:93](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L93)
 
 ---
 
@@ -93,7 +93,7 @@ Defined in: [src/multiagent/graph.ts:93](https://github.com/strands-agents/sdk-t
 readonly config: Required<GraphConfig>;
 ```
 
-Defined in: [src/multiagent/graph.ts:94](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L94)
+Defined in: [src/multiagent/graph.ts:94](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L94)
 
 ## Methods
 
@@ -103,7 +103,7 @@ Defined in: [src/multiagent/graph.ts:94](https://github.com/strands-agents/sdk-t
 initialize(): Promise<void>;
 ```
 
-Defined in: [src/multiagent/graph.ts:125](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L125)
+Defined in: [src/multiagent/graph.ts:125](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L125)
 
 Initialize the graph. Invokes the MultiAgentInitializedEvent callback. Called automatically on first invocation.
 
@@ -119,7 +119,7 @@ Initialize the graph. Invokes the MultiAgentInitializedEvent callback. Called au
 invoke(input): Promise<MultiAgentResult>;
 ```
 
-Defined in: [src/multiagent/graph.ts:138](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L138)
+Defined in: [src/multiagent/graph.ts:138](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L138)
 
 Invoke graph and return final result (consumes stream).
 
@@ -149,7 +149,7 @@ MultiAgent.invoke
 addHook<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/multiagent/graph.ts:154](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L154)
+Defined in: [src/multiagent/graph.ts:154](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L154)
 
 Register a hook callback for a specific graph event type.
 
@@ -186,7 +186,7 @@ MultiAgent.addHook
 stream(input): AsyncGenerator<MultiAgentStreamEvent, MultiAgentResult, undefined>;
 ```
 
-Defined in: [src/multiagent/graph.ts:165](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/graph.ts#L165)
+Defined in: [src/multiagent/graph.ts:165](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/graph.ts#L165)
 
 Stream graph execution, yielding events as nodes execute. Invokes hook callbacks for each event before yielding.
 

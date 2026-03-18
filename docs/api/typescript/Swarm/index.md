@@ -1,4 +1,4 @@
-Defined in: [src/multiagent/swarm.ts:99](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L99)
+Defined in: [src/multiagent/swarm.ts:99](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L99)
 
 Swarm multi-agent orchestration pattern.
 
@@ -36,7 +36,7 @@ const result = await swarm.invoke('Explain quantum computing')
 new Swarm(options): Swarm;
 ```
 
-Defined in: [src/multiagent/swarm.ts:109](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L109)
+Defined in: [src/multiagent/swarm.ts:109](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L109)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [src/multiagent/swarm.ts:109](https://github.com/strands-agents/sdk-
 readonly id: string;
 ```
 
-Defined in: [src/multiagent/swarm.ts:100](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L100)
+Defined in: [src/multiagent/swarm.ts:100](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L100)
 
 Unique identifier for this orchestrator.
 
@@ -74,7 +74,7 @@ MultiAgent.id
 readonly nodes: ReadonlyMap<string, AgentNode>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:101](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L101)
+Defined in: [src/multiagent/swarm.ts:101](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L101)
 
 ---
 
@@ -84,7 +84,7 @@ Defined in: [src/multiagent/swarm.ts:101](https://github.com/strands-agents/sdk-
 readonly config: Required<SwarmConfig>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:102](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L102)
+Defined in: [src/multiagent/swarm.ts:102](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L102)
 
 ---
 
@@ -94,7 +94,7 @@ Defined in: [src/multiagent/swarm.ts:102](https://github.com/strands-agents/sdk-
 readonly start: AgentNode;
 ```
 
-Defined in: [src/multiagent/swarm.ts:105](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L105)
+Defined in: [src/multiagent/swarm.ts:105](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L105)
 
 ## Methods
 
@@ -104,7 +104,7 @@ Defined in: [src/multiagent/swarm.ts:105](https://github.com/strands-agents/sdk-
 initialize(): Promise<void>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:133](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L133)
+Defined in: [src/multiagent/swarm.ts:133](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L133)
 
 Initialize the swarm. Invokes the MultiAgentInitializedEvent callback. Called automatically on first invocation.
 
@@ -120,7 +120,7 @@ Initialize the swarm. Invokes the MultiAgentInitializedEvent callback. Called au
 addHook<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/multiagent/swarm.ts:147](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L147)
+Defined in: [src/multiagent/swarm.ts:147](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L147)
 
 Register a hook callback for a specific swarm event type.
 
@@ -157,7 +157,7 @@ MultiAgent.addHook
 invoke(input): Promise<MultiAgentResult>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:157](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L157)
+Defined in: [src/multiagent/swarm.ts:157](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L157)
 
 Invoke swarm and return final result (consumes stream).
 
@@ -187,7 +187,7 @@ MultiAgent.invoke
 stream(input): AsyncGenerator<MultiAgentStreamEvent, MultiAgentResult, undefined>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:173](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L173)
+Defined in: [src/multiagent/swarm.ts:173](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/multiagent/swarm.ts#L173)
 
 Stream swarm execution, yielding events as agents execute. Invokes hook callbacks for each event before yielding.
 
