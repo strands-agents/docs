@@ -61,7 +61,7 @@ Tools that need to run code or access a filesystem receive a Sandbox instead of 
 
 #### Interface
 
-The Sandbox ABC lives in the SDK (`strands-agents/sdk-python`). Concrete implementations live in the tools package (`strands-agents/tools`) or as third-party packages.
+The Sandbox ABC lives in the SDK (`strands-agents/sdk-python`). Concrete implementations (`LocalSandbox`, `DockerSandbox`, `AgentCoreSandbox`) also live in the SDK as vended sandbox providers, similar to how the SDK already vends tools and plugins. Third-party sandbox providers can be published as separate packages.
 
 There are two viable interface patterns from the ecosystem (see [Appendix B](#appendix-b-prior-art) for full survey). We present both and recommend Option A.
 
@@ -255,6 +255,72 @@ async def shell(command: str, tool_context: ToolContext) -> str:
 
 Because the agent always has a sandbox (defaulting to `LocalSandbox`), tools do not need fallback logic. They always delegate to the sandbox.
 
+#### Tool proxy
+
+When code runs inside a sandbox (for example, the programmatic tool caller or CodeAct executing model-generated code in Docker), that code needs to call agent tools. But agent tools are Python objects in the host process — they cannot be serialized into a remote sandbox. The tool proxy solves this by bridging tool calls from the sandbox back to the host.
+
+We considered three approaches:
+
+| Approach | How it works | Pros | Cons |
+|----------|-------------|------|------|
+| Host-process execution | Orchestration code runs locally, tools are local functions | Simple, no IPC | Orchestration code is unsandboxed |
+| Serialize tools as source code | Generate Python source for each tool, send to sandbox (smolagents approach) | Tools run fully in sandbox | Only works for self-contained tools. Strands tools have closures over the agent, access `ToolContext`, make API calls — they cannot be serialized as source |
+| Callback proxy | Sandbox code calls tools via HTTP back to the host | Full sandbox isolation, works with any tool | Requires proxy server, network latency per tool call |
+
+We recommend the callback proxy approach, implemented incrementally:
+
+1. Phase 1 (P0/P1): orchestration code runs in the host process. Tools are local async functions. This is simple and works today.
+2. Phase 2 (P2): add a tool proxy server. Orchestration code runs fully inside the sandbox. Tool calls are proxied back to the host via HTTP.
+
+The tool proxy works as follows:
+
+1. Before executing code in the sandbox, the host starts a lightweight HTTP server
+2. For each agent tool, a stub function is generated as Python source code. The stub makes an HTTP POST to the proxy server with the tool name and arguments
+3. The generated stubs are prepended to the model's code and sent to `sandbox.execute_code()`
+4. When the sandbox code calls a tool stub, the HTTP request reaches the host proxy
+5. The host proxy dispatches to `agent.tool.X()`, which executes the tool (using the sandbox for its own execution)
+6. The result is returned as the HTTP response, and sandbox code continues
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Sandbox (Docker, AgentCore, etc.)                      │
+│                                                         │
+│  # Generated stub (prepended to model's code)           │
+│  async def calculator(expression: str) -> str:          │
+│      resp = await httpx.post(                           │
+│          "http://host:9999/tool/calculator",             │
+│          json={"expression": expression}                │
+│      )                                                  │
+│      return resp.json()["result"]                       │
+│                                                         │
+│  # Model's code                                         │
+│  result = await calculator(expression="2 + 2")          │
+│  print(result)                                          │
+└──────────────────────┬──────────────────────────────────┘
+                       │ HTTP POST /tool/calculator
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│  Host process                                           │
+│                                                         │
+│  Tool Proxy Server (port 9999)                          │
+│  ├── POST /tool/calculator                              │
+│  │   → agent.tool.calculator(expression="2 + 2")        │
+│  │   → returns {"result": "4"}                          │
+│  └── POST /tool/shell                                   │
+│      → agent.tool.shell(command="ls")                   │
+│      → (shell tool uses sandbox.execute() internally)   │
+└─────────────────────────────────────────────────────────┘
+```
+
+The proxy server is managed by the sandbox or the tool that needs it (programmatic tool caller, CodeAct). It starts before code execution and stops after. The `Sandbox` interface does not change — the proxy is a layer on top.
+
+Considerations:
+
+- The proxy server must be reachable from the sandbox. For `DockerSandbox`, this means host networking or `host.docker.internal`. For `AgentCoreSandbox`, the sandbox must allow outbound HTTP.
+- `httpx` (or equivalent) must be available inside the sandbox for the stubs to work.
+- Each tool call adds network round-trip latency. For tools that are themselves fast (like `calculator`), this overhead is noticeable. For tools that do I/O (like `http_request` or `shell`), it is negligible.
+- The proxy should authenticate requests (for example, a short-lived token) to prevent unauthorized tool calls from other processes.
+
 
 ### Layer 2: Tooling
 
@@ -280,7 +346,7 @@ This is the approach from PR [#387](https://github.com/strands-agents/tools/pull
 
 1. The model receives `programmatic_tool_caller` as one of its available tools
 2. When the model wants to orchestrate multiple tools, it writes Python code that calls them as async functions
-3. The tool executes this code in the agent's configured Sandbox
+3. The tool executes this code in the host process with tool wrappers injected (Phase 1), or inside the sandbox via the tool proxy (Phase 2)
 4. Only `print()` output enters the agent's context window — intermediate tool results stay in the code execution context
 
 ```python
@@ -337,6 +403,8 @@ class ProgrammaticToolCaller:
 ```
 
 This means programmatic tool calling works with any sandbox — the orchestration code does not need to know or care what sandbox is configured.
+
+The initial implementation runs orchestration code in the host process. Once the tool proxy is available (see [Tool proxy](#tool-proxy) in Layer 1), the programmatic tool caller can be upgraded to run code fully inside the sandbox.
 
 ### Layer 3: CodeAct plugin
 
@@ -407,7 +475,12 @@ class CodeActPlugin:
             return  # Model called final_answer() — done
 
         try:
-            exec(compile(code, "<codeact>", "exec"), self.namespace)
+            # exec() does not support top-level await, so we wrap in an async main
+            wrapped = f"async def __codeact_main__():\n" + "\n".join(
+                f"    {line}" for line in code.splitlines()
+            )
+            exec(compile(wrapped, "<codeact>", "exec"), self.namespace)
+            await self.namespace["__codeact_main__"]()
             output = self.namespace.get("__stdout__", "")
         except Exception as e:
             output = f"Error: {e}"
@@ -430,26 +503,7 @@ codeact = CodeActPlugin(agent)
 result = agent("Fetch the top 10 HN stories and save them to a file")
 ```
 
-The model's response would be natural language with a code block:
-
-```
-I'll fetch the top stories from the Hacker News API and save them.
-
-\```python
-import json
-
-response = await http_request(url="https://hacker-news.firebaseio.com/v0/topstories.json")
-story_ids = json.loads(response)[:10]
-
-stories = []
-for sid in story_ids:
-    story = await http_request(url=f"https://hacker-news.firebaseio.com/v0/item/{sid}.json")
-    stories.append(json.loads(story))
-
-output = "\n".join(f"- {s['title']} ({s.get('url', 'no url')})" for s in stories)
-final_answer(output)
-\```
-```
+The model's response would be natural language with a code block. The CodeAct plugin parses the code block, executes it, and feeds the result back via `resume`.
 
 Key properties of this approach:
 
@@ -459,6 +513,8 @@ Key properties of this approach:
 - Errors feed back as observations, enabling self-correction
 - `final_answer()` terminates the loop
 - `resume` handles the observation cycle natively
+
+Note: the initial implementation runs code in the host process with tools as local functions. Once the tool proxy is available (see [Tool proxy](#tool-proxy) in Layer 1), CodeAct can run code fully inside the sandbox.
 
 #### Difference from programmatic tool caller
 
@@ -470,6 +526,7 @@ Key properties of this approach:
 | State | Stateless per call | Persistent namespace across turns |
 | Self-correction | Not built in | Native via error feedback loop |
 | Integration | Drop-in tool | Hook-based plugin |
+| Sandbox isolation | Phase 1: host process. Phase 2: full sandbox via tool proxy | Phase 1: host process. Phase 2: full sandbox via tool proxy |
 | Use case | Optimization for batch operations | Full paradigm shift |
 
 The programmatic tool caller is a tool the model can optionally use within standard tool calling. CodeAct changes how the agent interacts entirely — the model always writes code, and the hook system handles execution and feedback.
@@ -483,7 +540,8 @@ The Sandbox ABC and `ExecutionResult` dataclass are added to the SDK. The `Agent
 
 ```python
 from strands import Agent
-from strands.sandbox import Sandbox, LocalSandbox, DockerSandbox, ExecutionResult
+from strands.sandbox import Sandbox, LocalSandbox, ExecutionResult
+from strands.sandbox.docker import DockerSandbox
 
 # Default: LocalSandbox (backwards compatible, same behavior as today)
 agent = Agent(tools=[shell])
@@ -556,13 +614,7 @@ Migration path for existing tools:
 
 ## Open questions
 
-1. **Namespace injection for programmatic tool calling.** The `programmatic_tool_caller` needs to inject tool wrapper functions into the code execution namespace so the model's code can call `await calculator(expression="2+2")`. The current `Sandbox.execute_code()` signature has no mechanism for this.
-
-   We recommend that the programmatic tool caller runs orchestration code in the host process, not in the sandbox. The tool wrappers it injects are normal async functions that call `agent.tool.X()`, which in turn uses the sandbox. The sandbox is used by the individual tools, not by the orchestration code. This matches how smolagents works — the CodeAgent runs code locally with tools as callable functions in the namespace. No changes to the Sandbox interface are needed.
-
-   Alternatives considered:
-   - Adding a `globals` parameter to `execute_code()` — works for local/in-process sandboxes but tool wrappers are async closures over the agent and cannot be serialized to remote sandboxes.
-   - Code generation with a preamble that defines tool wrappers as IPC calls — works with remote sandboxes but adds complexity and latency per tool call.
+1. **Namespace injection for programmatic tool calling.** The programmatic tool caller and CodeAct need tool wrapper functions in the code execution namespace. Phase 1 runs orchestration code in the host process with tools as local functions. Phase 2 uses the tool proxy to run code fully inside the sandbox. See [Tool proxy](#tool-proxy) for the full design and alternatives considered.
 
 2. **Working directory persistence across commands.** The current `shell` tool tracks `cd` across invocations via `CommandContext`. A naive subprocess-per-command sandbox loses directory state between calls.
 
@@ -616,6 +668,7 @@ Migration path for existing tools:
 
 - [ ] Implement `CodeActPlugin`
 - [ ] Add Anthropic advanced tool use support (tool search tool, tool use examples)
+- [ ] Tool proxy: implement proxy server, stub generation, and integrate with programmatic tool caller and CodeAct
 - [ ] Mirror `Sandbox` interface in `sdk-typescript`
 - [ ] Implement `LocalSandbox` and `DockerSandbox` for TypeScript
 
@@ -658,7 +711,8 @@ Rejected because these are orthogonal concerns. `ToolExecutor` controls scheduli
 
 ---
 
-## Appendix A: Sandbox implementation sketches
+<details>
+<summary>Appendix A: Sandbox implementation sketches</summary>
 
 ### LocalSandbox
 
@@ -779,9 +833,12 @@ class AgentCoreSandbox(Sandbox):
         ...
 ```
 
+</details>
+
 ---
 
-## Appendix B: Prior art
+<details>
+<summary>Appendix B: Prior art</summary>
 
 A survey of sandbox interfaces across the AI agent ecosystem. This informed the interface design in [Layer 1](#layer-1-sandbox).
 
@@ -953,9 +1010,12 @@ Key design choices:
 
 The ecosystem converges on two patterns: (1) a single execution primitive with derived operations (LangChain, Google ADK), or (2) separate modules for commands, code, and files (E2B, Daytona). Our recommended Option A follows pattern 1, with the ability to override derived methods following pattern 2 where native APIs exist.
 
+</details>
+
 ---
 
-## Appendix C: Research on open questions
+<details>
+<summary>Appendix C: Research on open questions</summary>
 
 ### Namespace injection approaches in the ecosystem
 
@@ -994,3 +1054,5 @@ The challenge is `LocalSandbox` with a persistent shell. If two tools send comma
 3. Pool of shell processes — more complex, diminishing returns.
 
 Option 2 is the recommended approach for `LocalSandbox`.
+
+</details>
