@@ -74,10 +74,10 @@ const specificAgent = new Agent({
 // --8<-- [end:model-string]
 
 // --8<-- [start:bedrock-model]
-import { BedrockModel } from '@strands-agents/sdk'
+import { ConverseModel } from '@strands-agents/sdk'
 
-// Create a BedrockModel with custom configuration
-const bedrockModel = new BedrockModel({
+// Create a ConverseModel with custom configuration
+const bedrockModel = new ConverseModel({
   modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
   region: 'us-west-2',
   temperature: 0.3,

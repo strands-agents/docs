@@ -20,12 +20,12 @@ describe('Link Utilities', () => {
 
     it('should return true for @api/typescript links', () => {
       expect(isApiShorthand('@api/typescript/Agent')).toBe(true)
-      expect(isApiShorthand('@api/typescript/BedrockModel')).toBe(true)
+      expect(isApiShorthand('@api/typescript/ConverseModel')).toBe(true)
     })
 
     it('should return true for @api links with anchors', () => {
       expect(isApiShorthand('@api/python/strands.agent.agent#Agent')).toBe(true)
-      expect(isApiShorthand('@api/typescript/BedrockModel#constructor')).toBe(true)
+      expect(isApiShorthand('@api/typescript/ConverseModel#constructor')).toBe(true)
     })
 
     it('should return false for non-@api links', () => {
@@ -47,7 +47,7 @@ describe('Link Utilities', () => {
 
     it('should resolve TypeScript API links', () => {
       expect(resolveApiShorthand('@api/typescript/Agent')).toBe('/docs/api/typescript/Agent/')
-      expect(resolveApiShorthand('@api/typescript/BedrockModel')).toBe('/docs/api/typescript/BedrockModel/')
+      expect(resolveApiShorthand('@api/typescript/ConverseModel')).toBe('/docs/api/typescript/ConverseModel/')
     })
 
     it('should preserve anchors', () => {
@@ -55,8 +55,8 @@ describe('Link Utilities', () => {
       expect(resolveApiShorthand('@api/python/strands.agent.agent_result#AgentResult')).toBe(
         '/docs/api/python/strands.agent.agent_result/#AgentResult'
       )
-      expect(resolveApiShorthand('@api/typescript/BedrockModel#constructor')).toBe(
-        '/docs/api/typescript/BedrockModel/#constructor'
+      expect(resolveApiShorthand('@api/typescript/ConverseModel#constructor')).toBe(
+        '/docs/api/typescript/ConverseModel/#constructor'
       )
     })
 
@@ -281,9 +281,9 @@ describe('Link Utilities', () => {
     })
 
     it('should resolve @api/typescript shorthand links', () => {
-      const slugs = new Set(['docs/api/typescript/Agent', 'docs/api/typescript/BedrockModel'])
-      const result = resolveHref('@api/typescript/BedrockModel', '/user-guide/quickstart/', slugs)
-      expect(result.resolvedHref).toBe('/docs/api/typescript/BedrockModel/')
+      const slugs = new Set(['docs/api/typescript/Agent', 'docs/api/typescript/ConverseModel'])
+      const result = resolveHref('@api/typescript/ConverseModel', '/user-guide/quickstart/', slugs)
+      expect(result.resolvedHref).toBe('/docs/api/typescript/ConverseModel/')
       expect(result.found).toBe(true)
     })
 
@@ -330,7 +330,7 @@ describe('Link Resolution with Content Collection', () => {
     // Test TypeScript API links
     const tsTests = [
       { href: '@api/typescript/Agent', expectedSlug: 'api/typescript/Agent' },
-      { href: '@api/typescript/BedrockModel', expectedSlug: 'api/typescript/BedrockModel' },
+      { href: '@api/typescript/ConverseModel', expectedSlug: 'api/typescript/ConverseModel' },
     ]
 
     for (const { href, expectedSlug } of tsTests) {

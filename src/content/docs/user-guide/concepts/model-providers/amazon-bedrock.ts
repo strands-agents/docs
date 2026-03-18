@@ -1,11 +1,11 @@
 /**
  * TypeScript examples for Amazon Bedrock model provider documentation.
- * These examples demonstrate common usage patterns for the BedrockModel.
+ * These examples demonstrate common usage patterns for the ConverseModel.
  */
 // @ts-nocheck
 // Imports are in amazon-bedrock_imports.ts
 
-import { Agent, BedrockModel, DocumentBlock, CachePointBlock, Message } from '@strands-agents/sdk'
+import { Agent, ConverseModel, DocumentBlock, CachePointBlock, Message } from '@strands-agents/sdk'
 
 // Basic usage examples
 async function basicUsageDefault() {
@@ -28,13 +28,13 @@ async function basicUsageModelId() {
 async function basicUsageModelInstance() {
   // --8<-- [start:basic_model_instance]
   // Create a Bedrock model instance
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'us.amazon.nova-premier-v1:0',
     temperature: 0.3,
     topP: 0.8,
   })
 
-  // Create an agent using the BedrockModel instance
+  // Create an agent using the ConverseModel instance
   const agent = new Agent({ model: bedrockModel })
 
   // Use the agent
@@ -46,7 +46,7 @@ async function basicUsageModelInstance() {
 async function configurationExample() {
   // --8<-- [start:configuration]
   // Create a configured Bedrock model
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     region: 'us-east-1', // Specify a different region than the default
     temperature: 0.3,
@@ -70,13 +70,13 @@ async function configurationExample() {
 async function streamingExample() {
   // --8<-- [start:streaming]
   // Streaming model (default)
-  const streamingModel = new BedrockModel({
+  const streamingModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     stream: true, // This is the default
   })
 
   // Non-streaming model
-  const nonStreamingModel = new BedrockModel({
+  const nonStreamingModel = new ConverseModel({
     modelId: 'us.meta.llama3-2-90b-instruct-v1:0',
     stream: false, // Disable streaming
   })
@@ -87,7 +87,7 @@ async function streamingExample() {
 async function updateConfiguration() {
   // --8<-- [start:update_config]
   // Create the model with initial configuration
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     temperature: 0.7,
   })
@@ -120,7 +120,7 @@ async function toolBasedConfigUpdate() {
   })
 
   const agent = new Agent({
-    model: new BedrockModel({ modelId: 'anthropic.claude-sonnet-4-20250514-v1:0' }),
+    model: new ConverseModel({ modelId: 'anthropic.claude-sonnet-4-20250514-v1:0' }),
     tools: [updateTemperature],
   })
   // --8<-- [end:tool_update_config]
@@ -130,7 +130,7 @@ async function toolBasedConfigUpdate() {
 async function reasoningSupport() {
   // --8<-- [start:reasoning]
   // Create a Bedrock model with reasoning configuration
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     additionalRequestFields: {
       thinking: {
@@ -157,7 +157,7 @@ async function customCredentials() {
   // See AWS SDK for JavaScript documentation for all credential options:
   // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html
 
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     region: 'us-west-2',
     clientConfig: {
@@ -174,7 +174,7 @@ async function customCredentials() {
 // Multimodal support
 async function multimodalSupport() {
   // --8<-- [start:multimodal_full]
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
   })
 
@@ -197,7 +197,7 @@ async function multimodalSupport() {
 // S3 location support for multimodal content
 async function s3LocationSupport() {
   // --8<-- [start:s3_location]
-  const agent = new Agent({ model: new BedrockModel() })
+  const agent = new Agent({ model: new ConverseModel() })
 
   const response = await agent.invoke([
     new DocumentBlock({
@@ -256,7 +256,7 @@ async function systemPromptCachingFull() {
 // Tool caching
 async function toolCachingFull() {
   // --8<-- [start:tool_caching_full]
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     cacheConfig: { strategy: 'auto' },
   })
@@ -294,7 +294,7 @@ async function toolCachingFull() {
 // Automatic cache strategy for messages
 async function automaticCacheStrategy() {
   // --8<-- [start:automatic_cache_strategy]
-  const bedrockModel = new BedrockModel({
+  const bedrockModel = new ConverseModel({
     modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
     cacheConfig: { strategy: 'auto' },
   })
@@ -395,8 +395,8 @@ async function cacheMetrics() {
 // Guardrails configuration
 async function guardrailsExample() {
   // --8<-- [start:guardrails]
-  // Using guardrails with BedrockModel
-  const bedrockModel = new BedrockModel({
+  // Using guardrails with ConverseModel
+  const bedrockModel = new ConverseModel({
     modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     guardrailConfig: {
       guardrailIdentifier: 'your-guardrail-id',

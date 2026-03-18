@@ -510,7 +510,7 @@ Namespaces
   └── telemetry
 Classes
   ├── Agent
-  ├── BedrockModel
+  ├── ConverseModel
   └── Tool
 Interfaces
   ├── AgentConfig

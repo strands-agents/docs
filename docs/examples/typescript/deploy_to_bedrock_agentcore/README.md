@@ -215,7 +215,7 @@ const myCustomTool = strands.tool({
 })
 
 const agent = new strands.Agent({
-  model: new strands.BedrockModel({
+  model: new strands.ConverseModel({
     region: 'ap-southeast-2',
   }),
   tools: [calculatorTool, myCustomTool], // Add your tool here
