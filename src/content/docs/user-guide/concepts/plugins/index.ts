@@ -1,5 +1,5 @@
 import { Agent, FunctionTool, Tool } from '@strands-agents/sdk'
-import type { AgentData, Plugin } from '@strands-agents/sdk'
+import type { LocalAgent, Plugin } from '@strands-agents/sdk'
 import {
   BeforeToolCallEvent,
   AfterToolCallEvent,
@@ -31,7 +31,7 @@ async function usingPluginsExample() {
 
     name = 'guidance-plugin'
 
-    initAgent(agent: AgentData): void {
+    initAgent(agent: LocalAgent): void {
       // Register hooks to guide agent behavior
       agent.addHook(BeforeModelCallEvent, () => {
         console.log(`[Guidance] System prompt: ${this.systemPrompt}`)
@@ -63,7 +63,7 @@ async function basicPluginExample() {
   class LoggingPlugin implements Plugin {
     name = 'logging-plugin'
 
-    initAgent(agent: AgentData): void {
+    initAgent(agent: LocalAgent): void {
       // Register hooks manually in initAgent
       agent.addHook(BeforeToolCallEvent, (event) => {
         console.log(`[LOG] Calling tool: ${event.toolUse.name}`)
@@ -116,7 +116,7 @@ async function hookDecoratorAlternativeExample() {
   class ModelMonitorPlugin implements Plugin {
     name = 'model-monitor'
 
-    initAgent(agent: AgentData): void {
+    initAgent(agent: LocalAgent): void {
       // Register a hook for a single event type
       agent.addHook(BeforeModelCallEvent, () => {
         console.log('Model call starting...')
@@ -150,7 +150,7 @@ async function manualRegistrationExample() {
       this.verbose = options.verbose ?? false
     }
 
-    initAgent(agent: AgentData): void {
+    initAgent(agent: LocalAgent): void {
       // Conditionally register additional hooks
       if (this.verbose) {
         agent.addHook(BeforeToolCallEvent, (event) => {
@@ -176,7 +176,7 @@ async function stateManagementExample() {
   class MetricsPlugin implements Plugin {
     name = 'metrics-plugin'
 
-    initAgent(agent: AgentData): void {
+    initAgent(agent: LocalAgent): void {
       // Initialize state values if not present
       if (!agent.state.get('metrics_call_count')) {
         agent.state.set('metrics_call_count', 0)
@@ -210,7 +210,7 @@ async function asyncInitializationExample() {
 
     name = 'async-config'
 
-    async initAgent(agent: AgentData): Promise<void> {
+    async initAgent(agent: LocalAgent): Promise<void> {
       // Async initialization
       this.config = await this.loadConfig()
 
@@ -238,7 +238,7 @@ async function pluginForHooksExample() {
   class LoggingPlugin implements Plugin {
     name = 'logging-plugin'
 
-    initAgent(agent: AgentData): void {
+    initAgent(agent: LocalAgent): void {
       agent.addHook(BeforeToolCallEvent, (event) => {
         console.log(`Calling: ${event.toolUse.name}`)
       })

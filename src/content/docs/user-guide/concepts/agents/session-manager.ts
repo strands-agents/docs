@@ -1,4 +1,5 @@
-import { Agent, SessionManager, FileStorage, S3Storage } from '@strands-agents/sdk'
+import { Agent, SessionManager, FileStorage } from '@strands-agents/sdk'
+import { S3Storage } from '@strands-agents/sdk/session/s3-storage'
 import type { SnapshotStorage, SnapshotLocation, Snapshot, SnapshotManifest } from '@strands-agents/sdk'
 import { S3Client } from '@aws-sdk/client-s3'
 
