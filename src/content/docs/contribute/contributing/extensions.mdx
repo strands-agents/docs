@@ -8,6 +8,22 @@ You've built a tool that calls your company's internal API. Or a model provider 
 
 This guide walks you through packaging and publishing your Strands components so other developers can install them with `pip install`.
 
+## Start from the template
+
+The fastest way to create a publishable extension is the [extension template](https://github.com/strands-agents/extension-template-python). It gives you a ready-made project structure with skeleton implementations, testing setup, and a GitHub Actions workflow for publishing to PyPI.
+
+1. Click "Use this template" on GitHub to create your repository
+2. Run `python setup_template.py` to customize the project — pick a package name, select which components you need (tool, model provider, plugin, session manager, conversation manager), and fill in your author info
+3. Install dependencies with `pip install -e ".[dev]"`
+4. Implement your component logic in the generated files
+5. Run `hatch run prepare` to validate everything (format, lint, typecheck, test)
+
+The template follows Strands naming conventions automatically — your package becomes `strands-{name}` on PyPI and `strands_{name}` as a Python module.
+
+:::tip
+You don't have to use the template. If you already have a project structure you prefer, skip ahead to [What you can publish](#what-you-can-publish) for the extension points available.
+:::
+
 ## Why publish
 
 When you build a useful component, you have two choices: keep it in your project, or publish it as a package.
