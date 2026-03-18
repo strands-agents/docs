@@ -1,0 +1,233 @@
+---
+/**
+ * Steering narrative section: Problem → Solution → Proof.
+ * Inspired by Clare's steering blog post.
+ */
+import CodeBlock from './CodeBlock.astro'
+
+const messyPrompt = `agent = Agent(
+    system_prompt="""You are a report generator. Always use markdown tables
+    for comparisons. Never use bullet lists for data. Format currency as
+    $X,XXX.XX. Always include a summary section at the top. When comparing
+    more than 3 items, split into sub-tables. Use ISO dates. Don't forget
+    to cite sources. If the user asks about competitors, be neutral..."""
+    # 47 more lines of instructions the model will partially ignore
+)`
+
+const steeringCode = `from strands import Agent
+from strands.vended_plugins.steering import LLMSteeringHandler
+
+steering = LLMSteeringHandler(
+    system_prompt="""
+    Ensure all reports use markdown tables
+    for comparisons.
+    Cite sources with inline links.
+    """
+)
+
+agent = Agent(
+    tools=[generate_report, search_web],
+    plugins=[steering],
+)`
+---
+
+<section class="steering-section">
+  <div class="steering-inner">
+
+    <!-- Part 1: The Problem -->
+    <div class="steering-problem">
+      <h2 class="section-heading">System prompts don't scale</h2>
+      <p class="section-description">
+        As agents get more capable, their system prompts get longer. Models start ignoring instructions buried at line 40. Hard-coded workflows break on inputs you didn't anticipate. There's a better pattern.
+      </p>
+      <div class="problem-code">
+        <CodeBlock code={messyPrompt} filename="the_old_way.py" />
+      </div>
+    </div>
+
+    <!-- Part 2: The Solution -->
+    <div class="steering-solution">
+      <h2 class="section-heading">Inject guidance when it matters</h2>
+      <p class="section-description">
+        Steering plugins attach guidance to your agent. The model gets formatting rules when it's generating a report, not when it's planning what to do next. Targeted context at call time instead of everything up front.
+      </p>
+      <div class="solution-code">
+        <CodeBlock code={steeringCode} filename="steered_agent.py" />
+      </div>
+    </div>
+
+    <!-- Part 3: The Proof -->
+    <div class="steering-proof">
+      <div class="proof-stats">
+        <div class="stat-primary">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">accuracy across 600 evaluation runs</span>
+        </div>
+        <div class="stat-comparison">
+          vs <strong>82.5%</strong> with prompt-only approaches and <strong>80.8%</strong> with hard-coded workflows
+        </div>
+      </div>
+      <a href="/blog/steering-accuracy-beats-prompts-workflows/" class="proof-link">
+        Read the blog post →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .steering-section {
+    padding: 5rem 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .steering-inner {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .section-heading {
+    font-family: 'Figtree', sans-serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: var(--sl-color-white);
+    text-align: center;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .section-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--sl-color-gray-2);
+    text-align: center;
+    max-width: 640px;
+    margin: 0;
+  }
+
+  /* Problem */
+  .steering-problem,
+  .steering-solution {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .problem-code {
+    width: 100%;
+    opacity: 0.6;
+    position: relative;
+  }
+
+  .problem-code::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent, var(--sl-color-bg));
+    pointer-events: none;
+    border-radius: 0 0 12px 12px;
+  }
+
+  :global([data-theme='light']) .problem-code::after {
+    background: linear-gradient(to bottom, transparent, var(--sl-color-bg));
+  }
+
+  .solution-code {
+    width: 100%;
+  }
+
+  /* Proof / Stats */
+  .steering-proof {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .proof-stats {
+    text-align: center;
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(0, 204, 95, 0.15) 0%, transparent 70%),
+      rgba(0, 204, 95, 0.04);
+    border: 1px solid rgba(0, 204, 95, 0.2);
+    width: 100%;
+  }
+
+  :global([data-theme='light']) .proof-stats {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(0, 204, 95, 0.1) 0%, transparent 70%),
+      rgba(0, 204, 95, 0.03);
+    border-color: rgba(0, 204, 95, 0.15);
+  }
+
+  .stat-primary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-number {
+    font-family: 'Figtree', sans-serif;
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    font-weight: 700;
+    color: var(--strands-green);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1.125rem;
+    color: var(--sl-color-gray-3);
+  }
+
+  .stat-comparison {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1rem;
+    color: var(--sl-color-gray-4);
+  }
+
+  .stat-comparison strong {
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+
+  .proof-link {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.95rem;
+    color: var(--strands-green);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+
+  .proof-link:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .steering-section {
+      padding: 3rem 1.5rem;
+    }
+
+    .proof-stats {
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>

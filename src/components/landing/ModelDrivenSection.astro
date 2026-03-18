@@ -1,0 +1,115 @@
+---
+/**
+ * "Model-driven by design" section with explanatory text and a large code example.
+ */
+import CodeBlock from './CodeBlock.astro'
+
+const researchCode = `from strands import Agent, tool
+from strands_tools import http_request
+
+@tool
+def save_report(title: str, content: str) -> str:
+    """Save a research report to disk."""
+    Path(f"reports/{title}.md").write_text(content)
+    return f"Saved {title}.md"
+
+# The model decides how to classify, research, and draft
+agent = Agent(
+    system_prompt="""You are a research assistant. Classify the topic,
+    research it using the web, then save a summary report.""",
+    tools=[http_request, save_report],
+)
+
+agent("Summarize recent AI agent papers")`
+---
+
+<section class="model-driven-section">
+  <div class="model-driven-inner">
+    <h2 class="section-heading">Your model is smarter than your workflow</h2>
+    <p class="section-description">
+      Early agent frameworks made sense when models couldn't reliably reason or use tools. Now they can, and all that orchestration logic just gets in the way. Strands strips it out. You define a prompt and tools; the model handles <em>when</em> to call them, <em>how</em> to chain them, and <em>whether</em> to reflect and retry.
+    </p>
+    <div class="model-driven-code">
+      <CodeBlock code={researchCode} filename="research_agent.py" />
+    </div>
+    <p class="section-annotation">
+      No workflow graph. No step definitions. The model decides how to classify the topic, which tools to call, and when it has enough information to write the report. Teams at AWS ship agents like this to production in days, not months.
+    </p>
+  </div>
+</section>
+
+<style>
+  .model-driven-section {
+    padding: 5rem 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .model-driven-inner {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .section-heading {
+    font-family: 'Figtree', sans-serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: var(--sl-color-white);
+    text-align: center;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .section-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--sl-color-gray-2);
+    text-align: center;
+    max-width: 640px;
+    margin: 0;
+  }
+
+  .section-description em {
+    color: var(--sl-color-white);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .model-driven-code {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .section-annotation {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-4);
+    text-align: center;
+    margin: 0;
+  }
+
+  .section-annotation code {
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 0.85em;
+    color: var(--sl-color-gray-3);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  :global([data-theme='light']) .section-annotation code {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--sl-color-gray-2);
+  }
+
+  @media (max-width: 768px) {
+    .model-driven-section {
+      padding: 3rem 1.5rem;
+    }
+  }
+</style>

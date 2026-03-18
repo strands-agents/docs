@@ -1,51 +1,21 @@
 ---
 /**
- * Custom Landing Page for Strands Agents SDK
- * 
- * This page uses a custom layout with the Starlight Header but without
- * the full page layout, allowing for full-width content.
+ * Homepage for Strands Agents SDK
+ *
+ * Sections: Hero → Model-Driven → Steering → Feature Cards → Tabbed Examples → Testimonials → Footer
  */
 import { getCollection, render } from 'astro:content'
 import { Image } from 'astro:assets'
 import LandingLayout from '../layouts/LandingLayout.astro'
 import Copyright from '../components/Copyright.astro'
+import HeroSection from '../components/landing/HeroSection.astro'
+import ModelDrivenSection from '../components/landing/ModelDrivenSection.astro'
+import SteeringSection from '../components/landing/SteeringSection.astro'
+import FeatureCards from '../components/landing/FeatureCards.astro'
 import curvePrimary from '../assets/curve-primary.svg'
 import curveSecondary from '../assets/curve-secondary.svg'
-import iconZap from '../assets/icons/icon-zap.svg?raw'
-import iconBot from '../assets/icons/icon-bot.svg?raw'
-import iconLayers from '../assets/icons/icon-layers.svg?raw'
-import iconBolt from '../assets/icons/icon-bolt.svg?raw'
 
-// Get base path for links
 const base = import.meta.env.BASE_URL || '/'
-const withBase = (path: string) => {
-  const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base
-  return normalizedBase + path
-}
-
-// Features data
-const features = [
-  {
-    icon: iconZap,
-    title: "Model driven orchestration",
-    description: "Strands leverages model reasoning to plan, orchestrate tasks, and reflect on goals",
-  },
-  {
-    icon: iconBot,
-    title: "Model & provider agnostic",
-    description: "Work with any LLM provider - Amazon Bedrock, OpenAI, Anthropic, local models. Switch providers without changing your code.",
-  },
-  {
-    icon: iconLayers,
-    title: "Simple multi-agent primitives",
-    description: "Simple primitives for handoffs, swarms, and graph workflows with built-in support for A2A",
-  },
-  {
-    icon: iconBolt,
-    title: "Best in-class AWS integrations",
-    description: "Native tools for AWS service interactions. Deploy easily into Bedrock AgentCore, EKS, Lambda, EC2, and more.",
-  },
-]
 
 // Testimonials from content collection
 const testimonialEntries = await getCollection('testimonials')
@@ -70,39 +40,14 @@ const testimonials = await Promise.all(
   </div>
 
   <div class="landing-page">
-    <!-- Hero Section with Parallax -->
-    <section class="hero-section">
-      <div class="hero-background"></div>
-      <div class="hero-content">
-        <h1 class="hero-title">
-          Build production-ready,<br />
-          multi-agent AI systems<br />
-          <span class="hero-highlight">in a few lines of code</span>
-        </h1>
-        <div class="hero-cta">
-          <a href={withBase('/docs/user-guide/quickstart/overview/')} class="cta-button primary">Get Started</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section">
-      <div class="features-grid">
-        {features.map((feature) => (
-          <div class="feature-card">
-            <div class="feature-icon" set:html={feature.icon} />
-            <h3 class="feature-title">{feature.title}</h3>
-            <p class="feature-description">{feature.description}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <HeroSection baseUrl={base} />
+    <SteeringSection />
+    <ModelDrivenSection />
+    <FeatureCards />
 
     <!-- Testimonials Section -->
     <section class="testimonials-section">
-      <!-- Slider Dots above container -->
       <div class="slider-dots" id="slider-dots"></div>
-      
       <div class="testimonials-container">
         <div class="testimonials-slider" id="testimonials-slider">
           {testimonials.map((testimonial, index) => {
@@ -140,7 +85,7 @@ const testimonials = await Promise.all(
 </LandingLayout>
 
 <style>
-  /* Animated Curves Background */
+  /* ========== Animated Curves Background ========== */
   .strands-curves-container {
     position: fixed;
     top: var(--sl-nav-height);
@@ -149,8 +94,14 @@ const testimonials = await Promise.all(
     height: 100%;
     z-index: -1;
     pointer-events: none;
-    filter: blur(4px);
+    filter: blur(12px);
+    opacity: 0.2;
     overflow: hidden;
+  }
+
+  :global([data-theme='light']) .strands-curves-container {
+    filter: blur(20px);
+    opacity: 0.2;
   }
 
   .strands-curve-secondary {
@@ -195,231 +146,34 @@ const testimonials = await Promise.all(
     background: transparent;
   }
 
-  .hero-section {
-    position: relative;
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 2rem;
-  }
-
-  .hero-background {
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(ellipse at 30% 20%, rgba(0, 204, 95, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 80%, rgba(0, 255, 119, 0.1) 0%, transparent 50%);
-    z-index: 0;
-  }
-
-  @supports (animation-timeline: scroll()) {
-    .hero-background {
-      animation: parallax-bg linear;
-      animation-timeline: scroll();
-    }
-    @keyframes parallax-bg {
-      from { transform: translateY(0); }
-      to { transform: translateY(30%); }
-    }
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    text-align: left;
-    width: 100%;
-    max-width: 1200px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(50px);
-    -webkit-backdrop-filter: blur(50px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    padding: 3rem;
-    margin: 0 2rem;
-  }
-  :global([data-theme='dark']) .hero-content {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-  .hero-title {
-    font-family: 'Figtree', sans-serif;
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 500;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    color: var(--sl-color-white);
-    letter-spacing: -0.03em;
-  }
-
-  .hero-highlight {
-    font-weight: 600;
-  }
-
-  .hero-cta { display: flex; gap: 1rem; justify-content: flex-start; flex-wrap: wrap; }
-
-  .cta-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.875rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-  }
-
-  .cta-button.primary { background: var(--strands-green); color: var(--strands-dark); }
-  .cta-button.primary:hover {
-    background: var(--strands-green-bright);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 204, 95, 0.4);
-    color: var(--strands-dark);
-  }
-
-  .cta-button.secondary {
-    background: transparent;
-    color: var(--sl-color-white);
-    border: 2px solid var(--sl-color-gray-4);
-  }
-  .cta-button.secondary:hover { border-color: var(--strands-green); color: var(--strands-green); }
-  .cta-button.large { padding: 1rem 2.5rem; font-size: 1.125rem; }
-
-  .features-section { padding: 2rem; background: transparent; }
-  .features-grid {
-    display: flex;
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .feature-card {
-    position: relative;
-    min-width: 200px;
-    height: 140px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(50px);
-    -webkit-backdrop-filter: blur(50px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: flex 0.5s ease;
-    padding: 1.25rem;
-    flex: 1;
-    overflow: hidden;
-  }
-  :global([data-theme='dark']) .feature-card {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  }
-  .feature-card:hover {
-    flex: 1.5;
-  }
-
-  .feature-icon {
-    margin-bottom: 0.75rem;
-    transition: transform 0.5s ease;
-    transition-delay: 0.25s;
-    color: var(--sl-color-gray-3);
-  }
-  .feature-icon :global(svg) {
-    width: 28px;
-    height: 28px;
-  }
-  .feature-card:hover .feature-icon {
-    transform: scale(0);
-    transition-delay: 0s;
-  }
-
-  .feature-title {
-    font-family: 'Figtree', sans-serif;
-    font-size: 1.125rem;
-    font-weight: 400;
-    text-align: center;
-    color: var(--sl-color-white);
-    margin: 0;
-    transition: transform 0.5s ease;
-    transition-delay: 0.25s;
-    max-width: 160px;
-    line-height: 1.2;
-  }
-  .feature-card:hover .feature-title {
-    transform: scale(0);
-    transition-delay: 0s;
-  }
-
-  .feature-description {
-    position: absolute;
-    color: var(--sl-color-white);
-    font-family: 'Figtree', sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: center;
-    margin: 0;
-    padding: 0 1rem;
-    transform: scale(0);
-    transition: transform 0.5s ease;
-    transition-delay: 0s;
-  }
-  .feature-card:hover .feature-description {
-    transform: scale(1);
-    transition-delay: 0.25s;
-  }
-
-  /* Responsive: stack on mobile */
-  @media (max-width: 768px) {
-    .features-grid {
-      flex-direction: column;
-    }
-    .feature-card {
-      flex: none;
-      width: 100%;
-      min-width: unset;
-    }
-    .feature-card:hover {
-      flex: none;
-    }
-  }
-
+  /* ========== Testimonials ========== */
   .testimonials-section {
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 5rem;
     background: transparent;
-    /* Set min-height to avoid different quotes from changing the page height */
-    min-height: 600px;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
   }
+
   .testimonials-container {
-    max-width: 900px;
+    max-width: 800px;
     width: 100%;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(50px);
-    -webkit-backdrop-filter: blur(50px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 1.5rem 2rem 2rem;
   }
-  :global([data-theme='dark']) .testimonials-container {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  :global([data-theme='light']) .testimonials-container {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
   }
+
   .testimonials-slider {
     position: relative;
     transition: height 0.5s ease-in-out;
@@ -448,9 +202,9 @@ const testimonials = await Promise.all(
 
   .testimonial-quote {
     font-family: 'Figtree', sans-serif;
-    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--sl-color-white);
     margin: 0 0 2rem 0;
     padding: 0;
@@ -458,9 +212,6 @@ const testimonials = await Promise.all(
     font-style: italic;
     text-align: center;
   }
-  .testimonial-quote::before { content: '\201C'; }
-  .testimonial-quote::after { content: '\201D'; }
-  /* The markdown renderer wraps content in <p>; move quotes onto that element */
   .testimonial-quote::before,
   .testimonial-quote::after { content: none; }
   .testimonial-quote :global(p:first-of-type)::before { content: '\201C'; }
@@ -471,12 +222,6 @@ const testimonials = await Promise.all(
     align-items: center;
     justify-content: center;
     gap: 1rem;
-  }
-  .author-icon {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    flex-shrink: 0;
   }
   .author-logo {
     display: flex;
@@ -489,9 +234,7 @@ const testimonials = await Promise.all(
     max-width: 120px;
     object-fit: contain;
   }
-  /* default: show light logo, hide dark logo */
   .author-logo .logo-dark { display: none; }
-  /* dark theme: swap */
   :global([data-theme='dark']) .author-logo .logo-light { display: none; }
   :global([data-theme='dark']) .author-logo .logo-dark { display: block; }
   .author-info {
@@ -504,20 +247,19 @@ const testimonials = await Promise.all(
     font-family: 'Figtree', sans-serif;
     font-weight: 600;
     color: var(--sl-color-white);
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   .author-title {
     font-family: 'Figtree', sans-serif;
     color: var(--sl-color-gray-3);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-top: 0.25rem;
   }
 
   .slider-dots { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 1.5rem; }
-
   :global(.slider-dot) {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: rgba(183, 183, 183, 0.3);
     border: none;
@@ -528,24 +270,10 @@ const testimonials = await Promise.all(
   :global(.slider-dot.active) { background: var(--strands-green); }
   :global(.slider-dot:hover) { background: var(--strands-green-hover); }
 
-  .cta-section { padding: 3rem 2rem; text-align: center; background: transparent; }
-  .cta-section h2 {
-    font-family: 'Figtree', sans-serif;
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
-    margin-bottom: 2rem;
-    color: var(--sl-color-white);
-  }
-  .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-
-  @media (max-width: 768px) {
-    .hero-section { min-height: 50vh; padding: 1.5rem; }
-    .features-section, .testimonials-section, .cta-section { padding: 2rem 1.5rem; }
-  }
-
+  /* ========== Footer ========== */
   .landing-footer {
     padding: 1.5rem 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     background-color: var(--sl-color-bg-nav);
   }
 
@@ -554,6 +282,10 @@ const testimonials = await Promise.all(
     text-align: left;
     margin: 0 auto;
   }
+
+  @media (max-width: 768px) {
+    .testimonials-section { padding: 2rem 1.5rem 3rem; }
+  }
 </style>
 
 <script>
@@ -561,20 +293,19 @@ const testimonials = await Promise.all(
     const slider = document.querySelector<HTMLElement>('.testimonials-slider')
     const slides = document.querySelectorAll<HTMLElement>('.testimonial-slide')
     const dotsContainer = document.getElementById('slider-dots')
-    
+
     if (!slides.length || !dotsContainer || !slider) return
-    
+
     let currentIndex = 0
     let autoplayInterval: number | undefined
-    
-    // Set initial height after a brief delay to ensure layout is complete
+
     requestAnimationFrame(() => {
       const activeSlide = slides[0]
       if (activeSlide && slider) {
         slider.style.height = `${activeSlide.offsetHeight}px`
       }
     })
-    
+
     slides.forEach((_, index) => {
       const dot = document.createElement('button')
       dot.className = `slider-dot ${index === 0 ? 'active' : ''}`
@@ -582,40 +313,37 @@ const testimonials = await Promise.all(
       dot.addEventListener('click', () => goToSlide(index))
       dotsContainer.appendChild(dot)
     })
-    
+
     const dots = dotsContainer.querySelectorAll<HTMLButtonElement>('.slider-dot')
-    
+
     function goToSlide(index: number) {
       const oldSlide = slides[currentIndex]
       const newIndex = (index + slides.length) % slides.length
       const newSlide = slides[newIndex]
-      
-      if (oldSlide) {
-        oldSlide.classList.remove('active')
-      }
+
+      if (oldSlide) oldSlide.classList.remove('active')
       dots[currentIndex]?.classList.remove('active')
-      
+
       currentIndex = newIndex
-      
+
       if (newSlide && slider) {
         newSlide.classList.add('active')
-        // Use requestAnimationFrame to ensure the new slide is rendered before measuring
         requestAnimationFrame(() => {
           slider.style.height = `${newSlide.offsetHeight}px`
         })
       }
       dots[currentIndex]?.classList.add('active')
-      
+
       if (autoplayInterval) clearInterval(autoplayInterval)
       startAutoplay()
     }
-    
+
     function startAutoplay() {
       autoplayInterval = window.setInterval(() => goToSlide(currentIndex + 1), 6000)
     }
-    
+
     startAutoplay()
-    
+
     const container = document.querySelector('.testimonials-container')
     container?.addEventListener('mouseenter', () => { if (autoplayInterval) clearInterval(autoplayInterval) })
     container?.addEventListener('mouseleave', startAutoplay)

@@ -1,0 +1,199 @@
+---
+/**
+ * 6 feature cards with mini code snippets.
+ */
+import CodeBlock from './CodeBlock.astro'
+
+const features = [
+  {
+    title: "Any Model Provider",
+    description: "Bedrock, OpenAI, Anthropic, Ollama, LiteLLM. Swap providers with a single line. Your agent code doesn't change.",
+    code: `from strands.models.openai import OpenAIModel
+
+agent = Agent(model=OpenAIModel(
+    model_id="gpt-4o"
+))`,
+  },
+  {
+    title: "Tools from Any Python Function",
+    description: "Turn any function into an agent tool with @tool. The docstring becomes the LLM's tool description. No schema files, no registration boilerplate.",
+    code: `@tool
+def search_db(query: str) -> list:
+    """Search the product database."""
+    return db.search(query)`,
+  },
+  {
+    title: "Native MCP Support",
+    description: "Connect to any MCP server. Use thousands of community tools without writing integration code.",
+    code: `from strands.tools.mcp import MCPClient
+from mcp import stdio_client, StdioServerParameters
+
+mcp = MCPClient(lambda: stdio_client(
+    StdioServerParameters(
+        command="uvx",
+        args=["my-mcp-server"],
+    )
+))`,
+  },
+  {
+    title: "Multi-Agent Systems",
+    description: "Compose agents with graphs, swarms, workflows, or simple agent-as-tool patterns. Built-in A2A protocol support for distributed systems.",
+    code: `@tool
+def research(query: str) -> str:
+    """Research a topic thoroughly."""
+    agent = Agent(tools=[search_web])
+    return str(agent(query))
+
+writer = Agent(tools=[research])
+writer("Write a post about AI agents")`,
+  },
+  {
+    title: "Conversation Memory",
+    description: "Sliding window, summarization, and session persistence out of the box. Manage context across long conversations without manual token counting.",
+    code: `from strands.agent.conversation_manager import (
+    SlidingWindowConversationManager,
+)
+
+agent = Agent(
+    conversation_manager=SlidingWindowConversationManager(
+        window_size=5
+    ),
+)`,
+  },
+  {
+    title: "Built-in Observability",
+    description: "OpenTelemetry traces, metrics, and logs with no extra instrumentation. See every tool call, model invocation, and token count.",
+    code: `from strands import Agent
+
+agent = Agent(trace_attributes={
+    "service": "my-app",
+    "env": "production",
+})`,
+  },
+]
+---
+
+<section class="features-section">
+  <div class="features-inner">
+    <h2 class="section-heading">Everything you need to build agents</h2>
+    <p class="section-description">
+      Tools, orchestration, observability, and deployment. From prototype to production.
+    </p>
+    <div class="features-grid">
+      {features.map((feature) => (
+        <div class="feature-card">
+          <h3 class="feature-title">{feature.title}</h3>
+          <p class="feature-description">{feature.description}</p>
+          <div class="feature-code">
+            <CodeBlock code={feature.code} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .features-section {
+    padding: 3rem 2rem 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .features-inner {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .section-heading {
+    font-family: 'Figtree', sans-serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: var(--sl-color-white);
+    text-align: center;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .section-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--sl-color-gray-3);
+    text-align: center;
+    margin: 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  :global([data-theme='light']) .feature-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .feature-card:hover {
+    border-color: rgba(0, 204, 95, 0.3);
+    box-shadow: 0 0 24px rgba(0, 204, 95, 0.06);
+  }
+
+  .feature-title {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--sl-color-white);
+    margin: 0;
+  }
+
+  .feature-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-3);
+    margin: 0;
+  }
+
+  .feature-code {
+    margin-top: auto;
+  }
+
+  .feature-code :global(.code-block) {
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 1024px) {
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .features-section {
+      padding: 2rem 1.5rem 3rem;
+    }
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
