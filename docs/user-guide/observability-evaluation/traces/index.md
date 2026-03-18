@@ -86,11 +86,23 @@ Strands natively integrates with OpenTelemetry, an industry standard for distrib
 ## Enabling Tracing
 
 (( tab "Python" ))
-!!! warning “To enable OTEL exporting, install Strands Agents with `otel` extra dependencies: `pip install 'strands-agents[otel]'`”
+Install OpenTelemetry Dependencies
+
+To enable OTEL exporting, install Strands Agents with `otel` optional dependency:
+
+```shell
+pip install 'strands-agents[otel]'
+```
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-To enable OTEL exporting, install the OpenTelemetry peer dependencies: `npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/resources @opentelemetry/exporter-trace-otlp-http`
+Install OpenTelemetry Dependencies
+
+To enable OTEL exporting, install the OpenTelemetry peer dependencies:
+
+```shell
+npm install @opentelemetry/api @opentelemetry/sdk-trace-node @opentelemetry/sdk-trace-base @opentelemetry/resources @opentelemetry/exporter-trace-otlp-http
+```
 (( /tab "TypeScript" ))
 
 ### Environment Variables
@@ -101,6 +113,9 @@ export OTEL_EXPORTER_OTLP_ENDPOINT="http://collector.example.com:4318"
 
 # Set Default OTLP Headers
 export OTEL_EXPORTER_OTLP_HEADERS="key1=value1,key2=value2"
+
+# To use OTEL latest semantic conventions, and send tool defenitions as spans
+export OTEL_SEMCONV_STABILITY_OPT_IN="gen_ai_latest_experimental,gen_ai_tool_definitions"
 ```
 
 ### Code Configuration
@@ -156,20 +171,22 @@ const agent = new Agent({
   systemPrompt: 'You are a helpful AI assistant',
 })
 
-import { telemetry, Agent } from '@strands-agents/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { setupTracer } from '@strands-agents/sdk/telemetry'
 
-// Option 2: Use telemetry.setupTracer() to handle complete OpenTelemetry setup
+// Option 2: Use setupTracer() to handle complete OpenTelemetry setup
 // (creates a new tracer provider and registers it as global)
-telemetry.setupTracer({
+setupTracer({
   exporters: { otlp: true, console: true }, // Send traces to OTLP endpoint and console debug
 })
 
-import { telemetry, Agent } from '@strands-agents/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { setupTracer } from '@strands-agents/sdk/telemetry'
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 
 // Option 3: Use setupTracer() with your own tracer provider
 const provider = new NodeTracerProvider()
-telemetry.setupTracer({
+setupTracer({
   provider,
   exporters: { otlp: true, console: true },
 })
@@ -323,9 +340,9 @@ StrandsTelemetry().setup_console_exporter()
 
 (( tab "TypeScript" ))
 ```typescript
-import { telemetry } from '@strands-agents/sdk'
+import { setupTracer } from '@strands-agents/sdk/telemetry'
 
-telemetry.setupTracer({
+setupTracer({
   exporters: { console: true },
 })
 ```
@@ -414,7 +431,7 @@ For more information about the accepted arguments, refer to `ConsoleSpanExporter
 The `telemetry.setupTracer()` function reads OTLP configuration from standard OpenTelemetry environment variables (`OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_EXPORTER_OTLP_HEADERS`). For full control over exporter configuration, provide your own `NodeTracerProvider`:
 
 ```typescript
-import { telemetry } from '@strands-agents/sdk'
+import { setupTracer } from '@strands-agents/sdk/telemetry'
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
@@ -435,7 +452,7 @@ provider.addSpanProcessor(
 provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()))
 
 // Register the provider with Strands
-telemetry.setupTracer({ provider })
+setupTracer({ provider })
 ```
 
 For more information about the accepted arguments, refer to the [OpenTelemetry JS documentation](https://opentelemetry.io/docs/languages/js/).
@@ -495,13 +512,14 @@ print(response)
 
 (( tab "TypeScript" ))
 ```typescript
-import { telemetry, Agent } from '@strands-agents/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { setupTracer } from '@strands-agents/sdk/telemetry'
 
 // Set environment variables for OTLP endpoint
 process.env.OTEL_EXPORTER_OTLP_ENDPOINT = 'http://localhost:4318'
 
 // Configure telemetry
-telemetry.setupTracer({
+setupTracer({
   exporters: { otlp: true, console: true },
 })
 

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:410](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L410)
+Defined in: [src/hooks/events.ts:410](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L410)
 
 Event triggered before executing tools. Fired when the model returns tool use blocks that need to be executed.
 
@@ -14,14 +14,14 @@ Event triggered before executing tools. Fired when the model returns tool use bl
 new BeforeToolsEvent(data): BeforeToolsEvent;
 ```
 
-Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L415)
+Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L415)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `message`: [`Message`](/docs/api/typescript/Message/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `message`: [`Message`](/docs/api/typescript/Message/index.md); } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 | `data.message` | [`Message`](/docs/api/typescript/Message/index.md) |
 
 #### Returns
@@ -40,17 +40,17 @@ Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-type
 readonly type: "beforeToolsEvent";
 ```
 
-Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L411)
+Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L411)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L412)
+Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L412)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:413](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L413)
+Defined in: [src/hooks/events.ts:413](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L413)

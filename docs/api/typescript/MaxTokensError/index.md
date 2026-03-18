@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:58](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/errors.ts#L58)
+Defined in: [src/errors.ts:58](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L58)
 
 Error thrown when the model reaches its maximum token limit during generation.
 
@@ -16,7 +16,7 @@ This error indicates that the model stopped generating content because it reache
 new MaxTokensError(message, partialMessage): MaxTokensError;
 ```
 
-Defined in: [src/errors.ts:71](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/errors.ts#L71)
+Defined in: [src/errors.ts:71](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L71)
 
 Creates a new MaxTokensError.
 
@@ -43,6 +43,6 @@ Creates a new MaxTokensError.
 readonly partialMessage: Message;
 ```
 
-Defined in: [src/errors.ts:63](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/errors.ts#L63)
+Defined in: [src/errors.ts:63](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L63)
 
 The partial assistant message that was generated before hitting the token limit. This can be useful for understanding what the model was trying to generate.

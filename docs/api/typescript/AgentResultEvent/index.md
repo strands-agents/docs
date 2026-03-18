@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L394)
+Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L394)
 
 Event triggered as the final event in the agent stream. Wraps the agent result containing the stop reason and last message.
 
@@ -14,14 +14,14 @@ Event triggered as the final event in the agent stream. Wraps the agent result c
 new AgentResultEvent(data): AgentResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:399](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L399)
+Defined in: [src/hooks/events.ts:399](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L399)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `result`: [`AgentResult`](/docs/api/typescript/AgentResult/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `result`: [`AgentResult`](/docs/api/typescript/AgentResult/index.md); } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 | `data.result` | [`AgentResult`](/docs/api/typescript/AgentResult/index.md) |
 
 #### Returns
@@ -40,17 +40,17 @@ Defined in: [src/hooks/events.ts:399](https://github.com/strands-agents/sdk-type
 readonly type: "agentResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L395)
+Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L395)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L396)
+Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L396)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-type
 readonly result: AgentResult;
 ```
 
-Defined in: [src/hooks/events.ts:397](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L397)
+Defined in: [src/hooks/events.ts:397](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L397)

@@ -53,7 +53,7 @@ const myCallback = (event: BeforeInvocationEvent) => {
   console.log('Custom callback triggered')
 }
 
-agent.hooks.addCallback(BeforeInvocationEvent, myCallback)
+agent.addHook(BeforeInvocationEvent, myCallback)
 ```
 (( /tab "TypeScript" ))
 
@@ -73,8 +73,23 @@ orchestrator.hooks.add_callback(BeforeNodeCallEvent, my_callback)
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
+const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+})
+
+// Register individual callbacks on the orchestrator
+graph.addHook(BeforeNodeCallEvent, (event) => {
+  console.log(`Node ${event.nodeId} starting`)
+})
+
+graph.addHook(AfterNodeCallEvent, (event) => {
+  console.log(`Node ${event.nodeId} completed`)
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -104,8 +119,22 @@ agent = Agent(plugins=[LoggingPlugin()])
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+class LoggingPlugin implements Plugin {
+  name = 'logging-plugin'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Calling: ${event.toolUse.name}`)
+    })
+
+    agent.addHook(AfterToolCallEvent, (event) => {
+      console.log(`Completed: ${event.toolUse.name}`)
+    })
+  }
+}
+
+const agent = new Agent({ plugins: [new LoggingPlugin()] })
 ```
 (( /tab "TypeScript" ))
 
@@ -228,8 +257,34 @@ Init --> Invocation
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Multi-agent orchestration is not yet available in TypeScript SDK
+```mermaid
+flowchart LR
+subgraph Init["Initialization"]
+    direction TB
+    MultiAgentInitializedEvent["MultiAgentInitializedEvent"]
+end
+subgraph Invocation["Invocation Lifecycle"]
+    direction TB
+    BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
+    AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
+    MultiAgentResultEvent["MultiAgentResultEvent"]
+    BeforeMultiAgentInvocationEvent --> NodeExecution
+    NodeExecution --> AfterMultiAgentInvocationEvent
+    AfterMultiAgentInvocationEvent --> MultiAgentResultEvent
+end
+subgraph NodeExecution["Node Execution (Repeated)"]
+    direction TB
+    BeforeNodeCallEvent["BeforeNodeCallEvent"]
+    NodeStreamUpdateEvent["NodeStreamUpdateEvent"]
+    AfterNodeCallEvent["AfterNodeCallEvent"]
+    NodeResultEvent["NodeResultEvent"]
+    MultiAgentHandoffEvent["MultiAgentHandoffEvent"]
+    BeforeNodeCallEvent --> NodeStreamUpdateEvent
+    NodeStreamUpdateEvent --> AfterNodeCallEvent
+    AfterNodeCallEvent --> NodeResultEvent
+    NodeResultEvent --> MultiAgentHandoffEvent
+end
+Init --> Invocation
 ```
 (( /tab "TypeScript" ))
 
@@ -274,6 +329,16 @@ All events extend `HookableEvent`, making them both streamable via `agent.stream
 | `ToolStreamUpdateEvent` | Wraps streaming progress events from tool execution. Access via `.event` |
 | `ToolResultEvent` | Wraps a completed tool result. Access via `.result` |
 | `AgentResultEvent` | Wraps the final agent result at the end of the invocation. Access via `.result` |
+| `MultiAgentInitializedEvent` | Triggered when a multi-agent orchestrator has finished initialization |
+| `BeforeMultiAgentInvocationEvent` | Triggered before orchestrator execution starts |
+| `AfterMultiAgentInvocationEvent` | Triggered after orchestrator execution completes. Uses reverse callback ordering |
+| `BeforeNodeCallEvent` | Triggered before individual node execution starts |
+| `NodeStreamUpdateEvent` | Wraps an inner streaming event from a node with the node’s identity. Access via `.event` |
+| `NodeCancelEvent` | Triggered when a node is cancelled via `BeforeNodeCallEvent.cancel` |
+| `AfterNodeCallEvent` | Triggered after individual node execution completes. Uses reverse callback ordering |
+| `NodeResultEvent` | Wraps a completed node result. Access via `.result` |
+| `MultiAgentHandoffEvent` | Triggered when execution transitions between nodes |
+| `MultiAgentResultEvent` | Wraps the final multi-agent result at the end of orchestration. Access via `.result` |
 (( /tab "TypeScript" ))
 
 ## Hook Behaviors
@@ -375,11 +440,17 @@ result = agent(
 
 Multi-agent hook events provide access to:
 
+(( tab "Python" ))
 -   **source**: The multi-agent orchestrator instance (for example: Graph/Swarm)
 -   **node\_id**: Identifier of the node being executed (for node-level events)
 -   **invocation\_state**: Configuration and context data passed through the orchestrator invocation
+(( /tab "Python" ))
 
-Multi-agent hooks provide configuration and context data passed through the orchestrator’s lifecycle.
+(( tab "TypeScript" ))
+-   **orchestrator**: The multi-agent orchestrator instance (for example: Graph/Swarm)
+-   **nodeId**: Identifier of the node being executed (for node-level events)
+-   **state**: The `MultiAgentState` for the current invocation, including an `app` field for custom consumer state
+(( /tab "TypeScript" ))
 
 ### Tool Interception
 
@@ -453,8 +524,26 @@ class ConditionalExecutionHook(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
+const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+const reviewer = new Agent({ id: 'reviewer', systemPrompt: 'You are a review specialist.' })
+
+const graph = new Graph({
+  nodes: [researcher, writer, reviewer],
+  edges: [
+    ['researcher', 'writer'],
+    ['writer', 'reviewer'],
+  ],
+})
+
+// Cancel specific nodes based on custom conditions
+graph.addHook(BeforeNodeCallEvent, (event) => {
+  if (event.nodeId === 'reviewer') {
+    // Cancel with a custom message
+    event.cancel = 'Skipping review for this run'
+  }
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -478,25 +567,16 @@ class RequestLoggingHook(HookProvider):
 
 (( tab "TypeScript" ))
 ```typescript
-class RequestLoggingHook implements HookProvider {
-  registerCallbacks(registry: HookRegistry): void {
-    registry.addCallback(BeforeInvocationEvent, (ev) => this.logRequest(ev))
-    registry.addCallback(AfterInvocationEvent, (ev) => this.logResponse(ev))
-    registry.addCallback(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
+class RequestLoggingHook implements Plugin {
+  name = 'request-logging'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeInvocationEvent, (ev) => this.logRequest(ev))
+    agent.addHook(AfterInvocationEvent, (ev) => this.logResponse(ev))
+    agent.addHook(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
   }
 
-  private logRequest(event: BeforeInvocationEvent): void {
-    // ...
-  }
-
-  private logResponse(event: AfterInvocationEvent): void {
-    // ...
-  }
-
-  private logToolUse(event: BeforeToolCallEvent): void {
-    // ...
-  }
-}
+  // ...
 ```
 (( /tab "TypeScript" ))
 
@@ -555,8 +635,31 @@ class UniversalMultiAgentHook(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+class UniversalMultiAgentPlugin implements MultiAgentPlugin {
+  readonly name = 'universal-multi-agent'
+
+  initMultiAgent(orchestrator: MultiAgent): void {
+    orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+      console.log(`Executing node ${event.nodeId} in ${orchestrator.id} orchestrator`)
+
+      // Handle orchestrator-specific logic if needed
+      if (orchestrator instanceof Graph) {
+        this.handleGraphNode(event)
+      } else if (orchestrator instanceof Swarm) {
+        this.handleSwarmNode(event)
+      }
+    })
+  }
+
+  private handleGraphNode(event: BeforeNodeCallEvent): void {
+    // Graph-specific handling
+  }
+
+  private handleSwarmNode(event: BeforeNodeCallEvent): void {
+    // Swarm-specific handling
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -595,8 +698,39 @@ orchestrator = Graph(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+// Agent-level hooks via plugins
+class AgentLoggingPlugin implements Plugin {
+  name = 'agent-logging'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Agent tool call: ${event.toolUse.name}`)
+    })
+  }
+}
+
+// Create agents with individual hooks
+const agent1 = new Agent({ id: 'agent1', plugins: [new AgentLoggingPlugin()] })
+const agent2 = new Agent({ id: 'agent2', plugins: [new AgentLoggingPlugin()] })
+
+// Orchestrator-level hooks via MultiAgentPlugin
+class OrchestratorLoggingPlugin implements MultiAgentPlugin {
+  readonly name = 'orchestrator-logging'
+
+  initMultiAgent(orchestrator: MultiAgent): void {
+    orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+      console.log(`Orchestrator node execution: ${event.nodeId}`)
+    })
+  }
+}
+
+// Create orchestrator with multi-agent hooks
+const graph = new Graph({
+  nodes: [agent1, agent2],
+  edges: [['agent1', 'agent2']],
+  plugins: [new OrchestratorLoggingPlugin()],
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -642,7 +776,7 @@ class ConstantToolArguments(HookProvider):
 
 (( tab "TypeScript" ))
 ```typescript
-class ConstantToolArguments implements HookProvider {
+class ConstantToolArguments implements Plugin {
   private fixedToolArguments: Record<string, Record<string, unknown>>
 
   /**
@@ -656,8 +790,10 @@ class ConstantToolArguments implements HookProvider {
     this.fixedToolArguments = fixedToolArguments
   }
 
-  registerCallbacks(registry: HookRegistry): void {
-    registry.addCallback(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
+  name = 'constant-tool-arguments'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
   }
 
   private fixToolArguments(event: BeforeToolCallEvent): void {
@@ -695,7 +831,7 @@ const fixParameters = new ConstantToolArguments({
   },
 })
 
-const agent = new Agent({ tools: [calculator], hooks: [fixParameters] })
+const agent = new Agent({ tools: [calculator], plugins: [fixParameters] })
 const result = await agent.invoke('What is 2 / 3?')
 ```
 (( /tab "TypeScript" ))
@@ -1068,12 +1204,30 @@ agent = Agent(hooks=[RequestLogger()])
 # Or add after creation
 agent.hooks.add_hook(RequestLogger())
 ```
+
+For most use cases, [Plugins](/docs/user-guide/concepts/plugins/index.md) provide a more convenient way to bundle multiple hooks with additional features like auto-discovery and tool registration.
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+TypeScript SDK
+
+The TypeScript SDK does not export a `HookProvider` interface. Instead, use the [Plugin](/docs/user-guide/concepts/plugins/index.md) class to bundle multiple hooks together. The `Plugin` class provides `initAgent()` for registering hooks and `getTools()` for providing tools.
+
+```typescript
+class LoggingPlugin implements Plugin {
+  name = 'logging-plugin'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Calling: ${event.toolUse.name}`)
+    })
+
+    agent.addHook(AfterToolCallEvent, (event) => {
+      console.log(`Completed: ${event.toolUse.name}`)
+    })
+  }
+}
+
+const agent = new Agent({ plugins: [new LoggingPlugin()] })
 ```
 (( /tab "TypeScript" ))
-
-For most use cases, [Plugins](/docs/user-guide/concepts/plugins/index.md) provide a more convenient way to bundle multiple hooks with additional features like auto-discovery and tool registration.

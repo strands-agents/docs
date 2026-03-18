@@ -1,4 +1,4 @@
-Defined in: [src/multiagent/swarm.ts:97](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L97)
+Defined in: [src/multiagent/swarm.ts:99](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L99)
 
 Swarm multi-agent orchestration pattern.
 
@@ -26,7 +26,7 @@ const result = await swarm.invoke('Explain quantum computing')
 
 ## Implements
 
--   `MultiAgentBase`
+-   `MultiAgent`
 
 ## Constructors
 
@@ -36,7 +36,7 @@ const result = await swarm.invoke('Explain quantum computing')
 new Swarm(options): Swarm;
 ```
 
-Defined in: [src/multiagent/swarm.ts:106](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L106)
+Defined in: [src/multiagent/swarm.ts:109](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L109)
 
 #### Parameters
 
@@ -56,14 +56,14 @@ Defined in: [src/multiagent/swarm.ts:106](https://github.com/strands-agents/sdk-
 readonly id: string;
 ```
 
-Defined in: [src/multiagent/swarm.ts:98](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L98)
+Defined in: [src/multiagent/swarm.ts:100](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L100)
 
 Unique identifier for this orchestrator.
 
 #### Implementation of
 
 ```ts
-MultiAgentBase.id
+MultiAgent.id
 ```
 
 ---
@@ -74,7 +74,7 @@ MultiAgentBase.id
 readonly nodes: ReadonlyMap<string, AgentNode>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:99](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L99)
+Defined in: [src/multiagent/swarm.ts:101](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L101)
 
 ---
 
@@ -84,17 +84,17 @@ Defined in: [src/multiagent/swarm.ts:99](https://github.com/strands-agents/sdk-t
 readonly config: Required<SwarmConfig>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:100](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L100)
+Defined in: [src/multiagent/swarm.ts:102](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L102)
 
 ---
 
-### hooks
+### start
 
 ```ts
-readonly hooks: HookRegistry;
+readonly start: AgentNode;
 ```
 
-Defined in: [src/multiagent/swarm.ts:101](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L101)
+Defined in: [src/multiagent/swarm.ts:105](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L105)
 
 ## Methods
 
@@ -104,7 +104,7 @@ Defined in: [src/multiagent/swarm.ts:101](https://github.com/strands-agents/sdk-
 initialize(): Promise<void>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:130](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L130)
+Defined in: [src/multiagent/swarm.ts:133](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L133)
 
 Initialize the swarm. Invokes the MultiAgentInitializedEvent callback. Called automatically on first invocation.
 
@@ -114,13 +114,50 @@ Initialize the swarm. Invokes the MultiAgentInitializedEvent callback. Called au
 
 ---
 
+### addHook()
+
+```ts
+addHook<T>(eventType, callback): HookCleanup;
+```
+
+Defined in: [src/multiagent/swarm.ts:147](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L147)
+
+Register a hook callback for a specific swarm event type.
+
+#### Type Parameters
+
+| Type Parameter |
+| --- |
+| `T` *extends* [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md) |
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `eventType` | [`HookableEventConstructor`](/docs/api/typescript/HookableEventConstructor/index.md)<`T`\> | The event class constructor to register the callback for |
+| `callback` | [`HookCallback`](/docs/api/typescript/HookCallback/index.md)<`T`\> | The callback function to invoke when the event occurs |
+
+#### Returns
+
+`HookCleanup`
+
+Cleanup function that removes the callback when invoked
+
+#### Implementation of
+
+```ts
+MultiAgent.addHook
+```
+
+---
+
 ### invoke()
 
 ```ts
 invoke(input): Promise<MultiAgentResult>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:142](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L142)
+Defined in: [src/multiagent/swarm.ts:157](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L157)
 
 Invoke swarm and return final result (consumes stream).
 
@@ -128,7 +165,7 @@ Invoke swarm and return final result (consumes stream).
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `input` | `InvokeArgs` | The input to pass to the start agent |
+| `input` | `MultiAgentInput` | The input to pass to the start agent |
 
 #### Returns
 
@@ -139,7 +176,7 @@ Promise resolving to the final MultiAgentResult
 #### Implementation of
 
 ```ts
-MultiAgentBase.invoke
+MultiAgent.invoke
 ```
 
 ---
@@ -150,7 +187,7 @@ MultiAgentBase.invoke
 stream(input): AsyncGenerator<MultiAgentStreamEvent, MultiAgentResult, undefined>;
 ```
 
-Defined in: [src/multiagent/swarm.ts:158](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/multiagent/swarm.ts#L158)
+Defined in: [src/multiagent/swarm.ts:173](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/multiagent/swarm.ts#L173)
 
 Stream swarm execution, yielding events as agents execute. Invokes hook callbacks for each event before yielding.
 
@@ -158,7 +195,7 @@ Stream swarm execution, yielding events as agents execute. Invokes hook callback
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `input` | `InvokeArgs` | The input to pass to the start agent |
+| `input` | `MultiAgentInput` | The input to pass to the start agent |
 
 #### Returns
 
@@ -169,5 +206,5 @@ Async generator yielding streaming events and returning a MultiAgentResult
 #### Implementation of
 
 ```ts
-MultiAgentBase.stream
+MultiAgent.stream
 ```

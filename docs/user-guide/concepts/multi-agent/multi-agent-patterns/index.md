@@ -12,7 +12,7 @@ The key principles are:
 -   Specialization: An agent has a specific role or expertise, and a set of tools that it can use.
 -   Collaboration: Agents communicate and share information to work upon each other’s work.
 
-Graph, Swarm, and Workflow are different methods of orchestration. Graph and Swarm are fundamental components in `strands-agents` and can also be used as tools from `strands-agents-tools`. We recommend using them from the SDK, while Workflow can only be used as a tool from `strands-agents-tools`.
+Graph, Swarm, and Workflow are different methods of orchestration. Graph and Swarm are built-in SDK orchestrators. Workflow is a pattern you implement in code by chaining agents together. Python also offers a ready-made `workflow` tool in `strands-agents-tools` that handles task dependencies and parallel execution automatically.
 
 ## High Level Commonality in Graph, Swarm and Workflow
 
@@ -32,12 +32,12 @@ They share some common things within Strands system:
 | Structure | A developer defines all nodes (agents) and edges (transitions) in advance. | A developer provides a pool of agents. The agents themselves decide the path. | A developer defines all tasks and their dependencies in code. |
 | Execution Flow | Controlled but Dynamic.  
 The flow follows graph edges, but an LLM’s decision at each node determines the path. | Sequential & Autonomous.  
-An agent performs a task and then uses a handoff\_to\_agent tool to pass control to the most suitable peer. | Deterministic & Parallel.  
+An agent performs a task and then hands off control to the most suitable peer. | Deterministic & Parallel.  
 The flow is fixed by the dependency graph. Independent tasks run in parallel. |
 | Allow Cycle? | Yes. | Yes. | No. |
-| State Sharing Mechanism | A single, shared dict object is passed to all agents, who can freely read and modify it. | A “shared context” or working memory is available to all agents, containing the original request, task history, and knowledge from previous agents. | The tool automatically captures task outputs and passes them as inputs to dependent tasks. |
+| State Sharing Mechanism | A shared state object is passed to all agents, who can freely read and modify it. | A shared context or working memory is available to all agents, containing the original request, task history, and knowledge from previous agents. | The tool automatically captures task outputs and passes them as inputs to dependent tasks. |
 | Conversation History | Full Transcript.  
-The entire dialogue history is a key within the shared state, giving every agent complete and open context. | Shared Transcript.  
+The entire dialogue history is part of the shared state, giving every agent complete and open context. | Shared Transcript.  
 The shared context provides a full history of agent handoffs and knowledge contributed by previous agents, available to the current agent. | Task-Specific context.  
 A task receives a curated summary of relevant results from its dependencies, not the full history. |
 | Behavior Control | The user’s input at each step can directly influence which path the graph takes next. | The user’s initial prompt defines the goal, but the swarm runs autonomously from there. | The user’s prompt can trigger a pre-defined workflow, but it cannot alter its internal structure. |
@@ -79,6 +79,7 @@ Some Examples:
 
 ## Shared State Across Multi-Agent Patterns
 
+(( tab "Python" ))
 Both Graph and Swarm patterns support passing shared state to all agents through the `invocation_state` parameter. This enables sharing context and configuration across agents without exposing it to the LLM.
 
 ### How Shared State Works
@@ -124,13 +125,47 @@ def query_data(query: str, tool_context: ToolContext) -> str:
     debug_mode = tool_context.invocation_state.get("debug_mode", False)
     # Use context for personalized queries...
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+`MultiAgentState` is shared across all nodes in the orchestration and provides access to execution progress, node results, and custom application state. Key fields include:
+
+-   `results` — all `NodeResult` entries in completion order
+-   `nodes` — per-node state (status, results) accessible via `state.node(id)`
+-   `steps` — number of node executions so far
+-   `app` — an `AppState` key-value store for custom data shared across hooks, edge handlers, and custom nodes
+
+```typescript
+import { Graph, BeforeNodeCallEvent } from '@strands-agents/sdk'
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+})
+
+graph.addHook(BeforeNodeCallEvent, (event) => {
+  // Read execution progress
+  console.log(`Step ${event.state.steps}, node ${event.nodeId} starting`)
+
+  // Check a previous node's status
+  const researcherState = event.state.node('researcher')
+  if (researcherState) {
+    console.log(`Researcher status: ${researcherState.status}`)
+  }
+
+  // Read/write custom shared state
+  event.state.app.set('requestId', 'req-123')
+  const requestId = event.state.app.get('requestId')
+})
+```
+(( /tab "TypeScript" ))
 
 ### Important Distinctions
 
--   **Shared State**: Configuration and objects passed via `invocation_state`, not visible in prompts
+-   **Shared State**: Configuration and objects shared across agents without appearing in prompts. See the language-specific tabs above for details on how shared state works in each SDK.
 -   **Pattern-Specific Data Flow**: Each pattern has its own mechanisms for passing data that the LLM should reason about including shared context for swarms and agent inputs for graphs
 
-Use `invocation_state` for context and configuration that shouldn’t appear in prompts, while using each pattern’s specific data flow mechanisms for data the LLM should reason about.
+Use shared state for context and configuration that shouldn’t appear in prompts, while using each pattern’s specific data flow mechanisms for data the LLM should reason about.
 
 ## Conclusion
 

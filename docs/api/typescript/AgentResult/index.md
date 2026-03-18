@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:42](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L42)
+Defined in: [src/types/agent.ts:121](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L121)
 
 Result returned by the agent loop.
 
@@ -10,7 +10,7 @@ Result returned by the agent loop.
 new AgentResult(data): AgentResult;
 ```
 
-Defined in: [src/types/agent.ts:67](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L67)
+Defined in: [src/types/agent.ts:146](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L146)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/types/agent.ts:67](https://github.com/strands-agents/sdk-typesc
 readonly type: "agentResult";
 ```
 
-Defined in: [src/types/agent.ts:43](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L43)
+Defined in: [src/types/agent.ts:122](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L122)
 
 ---
 
@@ -44,7 +44,7 @@ Defined in: [src/types/agent.ts:43](https://github.com/strands-agents/sdk-typesc
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/types/agent.ts:48](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L48)
+Defined in: [src/types/agent.ts:127](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L127)
 
 The stop reason from the final model response.
 
@@ -56,7 +56,7 @@ The stop reason from the final model response.
 readonly lastMessage: Message;
 ```
 
-Defined in: [src/types/agent.ts:53](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L53)
+Defined in: [src/types/agent.ts:132](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L132)
 
 The last message added to the messages array.
 
@@ -68,7 +68,7 @@ The last message added to the messages array.
 readonly optional structuredOutput: unknown;
 ```
 
-Defined in: [src/types/agent.ts:59](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L59)
+Defined in: [src/types/agent.ts:138](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L138)
 
 The validated structured output from the LLM, if a schema was provided. Type represents any validated Zod schema output.
 
@@ -80,7 +80,7 @@ The validated structured output from the LLM, if a schema was provided. Type rep
 readonly optional metrics: AgentMetrics;
 ```
 
-Defined in: [src/types/agent.ts:65](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L65)
+Defined in: [src/types/agent.ts:144](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L144)
 
 Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token usage, tool execution stats, and model latency.
 
@@ -92,7 +92,7 @@ Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token 
 toString(): string;
 ```
 
-Defined in: [src/types/agent.ts:89](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/agent.ts#L89)
+Defined in: [src/types/agent.ts:168](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/agent.ts#L168)
 
 Extracts and concatenates all text content from the last message. Includes text from TextBlock and ReasoningBlock content blocks.
 

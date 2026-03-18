@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:717](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/messages.ts#L717)
+Defined in: [src/types/messages.ts:730](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L730)
 
 Text content to be evaluated by guardrails.
 
@@ -10,7 +10,7 @@ Text content to be evaluated by guardrails.
 qualifiers: GuardQualifier[];
 ```
 
-Defined in: [src/types/messages.ts:721](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/messages.ts#L721)
+Defined in: [src/types/messages.ts:734](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L734)
 
 Qualifiers that specify how this content should be evaluated.
 
@@ -22,6 +22,6 @@ Qualifiers that specify how this content should be evaluated.
 text: string;
 ```
 
-Defined in: [src/types/messages.ts:726](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/messages.ts#L726)
+Defined in: [src/types/messages.ts:739](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L739)
 
 The text content to be evaluated.

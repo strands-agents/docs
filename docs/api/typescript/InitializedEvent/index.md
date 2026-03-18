@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:84](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L84)
+Defined in: [src/hooks/events.ts:84](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L84)
 
 Event triggered when an agent has finished initialization. Fired after the agent has been fully constructed and all built-in components have been initialized.
 
@@ -14,14 +14,14 @@ Event triggered when an agent has finished initialization. Fired after the agent
 new InitializedEvent(data): InitializedEvent;
 ```
 
-Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L88)
+Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L88)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 
 #### Returns
 
@@ -39,14 +39,14 @@ Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-types
 readonly type: "initializedEvent";
 ```
 
-Defined in: [src/hooks/events.ts:85](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L85)
+Defined in: [src/hooks/events.ts:85](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L85)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L86)
+Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L86)

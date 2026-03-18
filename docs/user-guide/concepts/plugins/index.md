@@ -25,8 +25,14 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+import { Agent, Plugin, Tool } from '@strands-agents/sdk'
+
+// Create an agent with plugins
+const agent = new Agent({
+  tools: [myTool],
+  plugins: [new GuidancePlugin('Guide the agent...')],
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -77,8 +83,53 @@ agent("Calculate 2 + 2 and print the result")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+import { Agent, FunctionTool, Plugin, Tool } from '@strands-agents/sdk'
+import { BeforeToolCallEvent, AfterToolCallEvent } from '@strands-agents/sdk'
+
+class LoggingPlugin implements Plugin {
+  name = 'logging-plugin'
+
+  initAgent(agent: LocalAgent): void {
+    // Register hooks manually in initAgent
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`[LOG] Calling tool: ${event.toolUse.name}`)
+      console.log(`[LOG] Input: ${JSON.stringify(event.toolUse.input)}`)
+    })
+
+    agent.addHook(AfterToolCallEvent, (event) => {
+      console.log(`[LOG] Tool completed: ${event.toolUse.name}`)
+    })
+  }
+
+  getTools(): Tool[] {
+    // Provide additional tools via the plugin
+    return [debugPrintTool]
+  }
+}
+
+// Using the plugin
+const agent = new Agent({
+  plugins: [new LoggingPlugin()],
+})
+
+// Custom tool to add
+const debugPrintTool = new FunctionTool({
+  name: 'debug_print',
+  description: 'Print a debug message',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      message: { type: 'string', description: 'The message to print' },
+    },
+    required: ['message'],
+  },
+  callback: async (input: unknown) => {
+    const typedInput = input as { message: string }
+    console.log(`[DEBUG] ${typedInput.message}`)
+    return `Printed: ${typedInput.message}`
+  },
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -86,27 +137,38 @@ agent("Calculate 2 + 2 and print the result")
 
 When you attach a plugin to an agent, the following happens:
 
+(( tab "Python" ))
 1.  **Discovery**: The `Plugin` base class scans for methods decorated with `@hook` and `@tool`
 2.  **Hook Registration**: Each `@hook` method is registered with the agent’s hook registry based on its event type hint
 3.  **Tool Registration**: Each `@tool` method is added to the agent’s tools list
 4.  **Initialization**: The `init_agent(agent)` method is called for any custom setup
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+1.  **Tool Registration**: The `getTools()` method is called to get tools provided by the plugin
+2.  **Initialization**: The `initAgent(agent)` method is called for hook registration and setup
+3.  **Hook Registration**: In `initAgent`, use `agent.addHook()` to register event callbacks manually
+
+**Note**: TypeScript does not use `@hook` or `@tool` decorators. Instead, tools are returned from `getTools()` and hooks are registered manually in `initAgent()`.
+(( /tab "TypeScript" ))
 
 ```mermaid
 flowchart TD
-    A[Plugin Attached] --> B[Scan for @hook methods]
-    A --> C[Scan for @tool methods]
-    B --> D[Register hooks with agent]
-    C --> E[Add tools to agent]
-    D --> F[init_agent called]
+    A[Plugin Attached] --> B["Discover Tools\n(@tool / getTools)"]
+    A --> C["Initialize\n(init_agent / initAgent)"]
+    B --> D[Add Tools]
+    C --> E["Register Hooks\n(@hook / addHook)"]
+    D --> F[Plugin Ready]
     E --> F
-    F --> G[Plugin Ready]
 ```
 
-### The `@hook` Decorator
+### Registering Hooks in Plugins
+
+(( tab "Python" ))
+#### The `@hook` Decorator
 
 The `@hook` decorator marks methods as hook callbacks. The event type is automatically inferred from the type hint:
 
-(( tab "Python" ))
 ```python
 from strands.plugins import Plugin, hook
 from strands.hooks import BeforeModelCallEvent, AfterModelCallEvent
@@ -127,8 +189,31 @@ class ModelMonitorPlugin(Plugin):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+#### Manual Hook Registration
+
+TypeScript plugins register hooks manually in the `initAgent` method using `agent.addHook()`:
+
+```typescript
+import { Plugin } from '@strands-agents/sdk'
+import { BeforeModelCallEvent, AfterModelCallEvent } from '@strands-agents/sdk'
+
+class ModelMonitorPlugin implements Plugin {
+  name = 'model-monitor'
+
+  initAgent(agent: LocalAgent): void {
+    // Register a hook for a single event type
+    agent.addHook(BeforeModelCallEvent, () => {
+      console.log('Model call starting...')
+    })
+
+    // Register the same handler for multiple event types (union equivalent)
+    const onModelEvent = (event: BeforeModelCallEvent | AfterModelCallEvent) => {
+      console.log(`Model event: ${event.constructor.name}`)
+    }
+    agent.addHook(BeforeModelCallEvent, onModelEvent)
+    agent.addHook(AfterModelCallEvent, onModelEvent)
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -162,8 +247,31 @@ class ManualPlugin(Plugin):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+import { Plugin } from '@strands-agents/sdk'
+import { BeforeToolCallEvent } from '@strands-agents/sdk'
+
+class ManualPlugin implements Plugin {
+  private verbose: boolean
+
+  name = 'manual-plugin'
+
+  constructor(options: { verbose?: boolean } = {}) {
+    this.verbose = options.verbose ?? false
+  }
+
+  initAgent(agent: LocalAgent): void {
+    // Conditionally register additional hooks
+    if (this.verbose) {
+      agent.addHook(BeforeToolCallEvent, (event) => {
+        console.log(`[VERBOSE] ${JSON.stringify(event.toolUse)}`)
+      })
+    }
+
+    // Access agent tools via toolRegistry
+    console.log(`Attached to agent with ${agent.toolRegistry.list().length} tools`)
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -200,8 +308,32 @@ print(f"Tool calls: {agent.state.get('metrics_call_count')}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+import { Agent, Plugin } from '@strands-agents/sdk'
+import { BeforeToolCallEvent } from '@strands-agents/sdk'
+
+class MetricsPlugin implements Plugin {
+  name = 'metrics-plugin'
+
+  initAgent(agent: LocalAgent): void {
+    // Initialize state values if not present
+    if (!agent.state.get('metrics_call_count')) {
+      agent.state.set('metrics_call_count', 0)
+    }
+
+    agent.addHook(BeforeToolCallEvent, () => {
+      const current = (agent.state.get('metrics_call_count') as number) ?? 0
+      agent.state.set('metrics_call_count', current + 1)
+    })
+  }
+}
+
+// Usage
+const metricsPlugin = new MetricsPlugin()
+const agent = new Agent({
+  plugins: [metricsPlugin],
+})
+console.log(`Tool calls: ${agent.state.get('metrics_call_count')}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -235,8 +367,29 @@ class AsyncConfigPlugin(Plugin):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+import { Plugin } from '@strands-agents/sdk'
+import { BeforeToolCallEvent } from '@strands-agents/sdk'
+
+class AsyncConfigPlugin implements Plugin {
+  private config: Record<string, unknown> = {}
+
+  name = 'async-config'
+
+  async initAgent(agent: LocalAgent): Promise<void> {
+    // Async initialization
+    this.config = await this.loadConfig()
+
+    agent.addHook(BeforeToolCallEvent, () => {
+      console.log(`Config: ${JSON.stringify(this.config)}`)
+    })
+  }
+
+  private async loadConfig(): Promise<Record<string, unknown>> {
+    await new Promise((resolve) => setTimeout(resolve, 100)) // Simulate async operation
+    return { setting: 'value' }
+  }
+}
 ```
 (( /tab "TypeScript" ))
 

@@ -18,7 +18,7 @@ Key Features:
 class GraphState()
 ```
 
-Defined in: [src/strands/multiagent/graph.py:63](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L63)
+Defined in: [src/strands/multiagent/graph.py:64](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L64)
 
 Graph execution state.
 
@@ -40,7 +40,7 @@ def should_continue(max_node_executions: int | None,
                     execution_timeout: float | None) -> tuple[bool, str]
 ```
 
-Defined in: [src/strands/multiagent/graph.py:106](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L106)
+Defined in: [src/strands/multiagent/graph.py:107](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L107)
 
 Check if the graph should continue execution.
 
@@ -53,7 +53,7 @@ Returns: (should\_continue, reason)
 class GraphResult(MultiAgentResult)
 ```
 
-Defined in: [src/strands/multiagent/graph.py:129](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L129)
+Defined in: [src/strands/multiagent/graph.py:130](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L130)
 
 Result from graph execution - extends MultiAgentResult with graph-specific details.
 
@@ -64,7 +64,7 @@ Result from graph execution - extends MultiAgentResult with graph-specific detai
 class GraphEdge()
 ```
 
-Defined in: [src/strands/multiagent/graph.py:142](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L142)
+Defined in: [src/strands/multiagent/graph.py:143](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L143)
 
 Represents an edge in the graph with an optional condition.
 
@@ -74,7 +74,7 @@ Represents an edge in the graph with an optional condition.
 def __hash__() -> int
 ```
 
-Defined in: [src/strands/multiagent/graph.py:149](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L149)
+Defined in: [src/strands/multiagent/graph.py:150](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L150)
 
 Return hash for GraphEdge based on from\_node and to\_node.
 
@@ -84,7 +84,7 @@ Return hash for GraphEdge based on from\_node and to\_node.
 def should_traverse(state: GraphState) -> bool
 ```
 
-Defined in: [src/strands/multiagent/graph.py:153](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L153)
+Defined in: [src/strands/multiagent/graph.py:154](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L154)
 
 Check if this edge should be traversed based on condition.
 
@@ -95,7 +95,7 @@ Check if this edge should be traversed based on condition.
 class GraphNode()
 ```
 
-Defined in: [src/strands/multiagent/graph.py:161](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L161)
+Defined in: [src/strands/multiagent/graph.py:162](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L162)
 
 Represents a node in the graph.
 
@@ -105,7 +105,7 @@ Represents a node in the graph.
 def __post_init__() -> None
 ```
 
-Defined in: [src/strands/multiagent/graph.py:173](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L173)
+Defined in: [src/strands/multiagent/graph.py:174](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L174)
 
 Capture initial executor state after initialization.
 
@@ -115,7 +115,7 @@ Capture initial executor state after initialization.
 def reset_executor_state() -> None
 ```
 
-Defined in: [src/strands/multiagent/graph.py:182](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L182)
+Defined in: [src/strands/multiagent/graph.py:183](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L183)
 
 Reset GraphNode executor state to initial state when graph was created.
 
@@ -127,7 +127,7 @@ This is useful when nodes are executed multiple times and need to start fresh on
 def __hash__() -> int
 ```
 
-Defined in: [src/strands/multiagent/graph.py:198](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L198)
+Defined in: [src/strands/multiagent/graph.py:199](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L199)
 
 Return hash for GraphNode based on node\_id.
 
@@ -137,7 +137,7 @@ Return hash for GraphNode based on node\_id.
 def __eq__(other: Any) -> bool
 ```
 
-Defined in: [src/strands/multiagent/graph.py:202](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L202)
+Defined in: [src/strands/multiagent/graph.py:203](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L203)
 
 Return equality for GraphNode based on node\_id.
 
@@ -147,7 +147,7 @@ Return equality for GraphNode based on node\_id.
 class GraphBuilder()
 ```
 
-Defined in: [src/strands/multiagent/graph.py:231](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L231)
+Defined in: [src/strands/multiagent/graph.py:232](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L232)
 
 Builder pattern for constructing graphs.
 
@@ -157,7 +157,7 @@ Builder pattern for constructing graphs.
 def __init__() -> None
 ```
 
-Defined in: [src/strands/multiagent/graph.py:234](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L234)
+Defined in: [src/strands/multiagent/graph.py:235](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L235)
 
 Initialize GraphBuilder with empty collections.
 
@@ -168,7 +168,7 @@ def add_node(executor: AgentBase | MultiAgentBase,
              node_id: str | None = None) -> GraphNode
 ```
 
-Defined in: [src/strands/multiagent/graph.py:249](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L249)
+Defined in: [src/strands/multiagent/graph.py:250](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L250)
 
 Add an AgentBase or MultiAgentBase instance as a node to the graph.
 
@@ -181,7 +181,7 @@ def add_edge(
         condition: Callable[[GraphState], bool] | None = None) -> GraphEdge
 ```
 
-Defined in: [src/strands/multiagent/graph.py:264](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L264)
+Defined in: [src/strands/multiagent/graph.py:265](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L265)
 
 Add an edge between two nodes with optional condition function that receives full GraphState.
 
@@ -191,7 +191,7 @@ Add an edge between two nodes with optional condition function that receives ful
 def set_entry_point(node_id: str) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:291](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L291)
+Defined in: [src/strands/multiagent/graph.py:292](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L292)
 
 Set a node as an entry point for graph execution.
 
@@ -201,7 +201,7 @@ Set a node as an entry point for graph execution.
 def reset_on_revisit(enabled: bool = True) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:298](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L298)
+Defined in: [src/strands/multiagent/graph.py:299](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L299)
 
 Control whether nodes reset their state when revisited.
 
@@ -217,7 +217,7 @@ When enabled, nodes will reset their messages and state to initial values each t
 def set_max_node_executions(max_executions: int) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:311](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L311)
+Defined in: [src/strands/multiagent/graph.py:312](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L312)
 
 Set maximum number of node executions allowed.
 
@@ -231,7 +231,7 @@ Set maximum number of node executions allowed.
 def set_execution_timeout(timeout: float) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:320](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L320)
+Defined in: [src/strands/multiagent/graph.py:321](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L321)
 
 Set total execution timeout.
 
@@ -245,7 +245,7 @@ Set total execution timeout.
 def set_node_timeout(timeout: float) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:329](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L329)
+Defined in: [src/strands/multiagent/graph.py:330](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L330)
 
 Set individual node execution timeout.
 
@@ -259,7 +259,7 @@ Set individual node execution timeout.
 def set_graph_id(graph_id: str) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:338](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L338)
+Defined in: [src/strands/multiagent/graph.py:339](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L339)
 
 Set graph id.
 
@@ -273,7 +273,7 @@ Set graph id.
 def set_session_manager(session_manager: SessionManager) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:347](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L347)
+Defined in: [src/strands/multiagent/graph.py:348](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L348)
 
 Set session manager for the graph.
 
@@ -287,7 +287,7 @@ Set session manager for the graph.
 def set_hook_providers(hooks: list[HookProvider]) -> "GraphBuilder"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:356](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L356)
+Defined in: [src/strands/multiagent/graph.py:357](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L357)
 
 Set hook providers for the graph.
 
@@ -301,7 +301,7 @@ Set hook providers for the graph.
 def build() -> "Graph"
 ```
 
-Defined in: [src/strands/multiagent/graph.py:365](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L365)
+Defined in: [src/strands/multiagent/graph.py:366](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L366)
 
 Build and validate the graph with configured settings.
 
@@ -311,7 +311,7 @@ Build and validate the graph with configured settings.
 class Graph(MultiAgentBase)
 ```
 
-Defined in: [src/strands/multiagent/graph.py:408](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L408)
+Defined in: [src/strands/multiagent/graph.py:409](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L409)
 
 Directed Graph multi-agent orchestration with configurable revisit behavior.
 
@@ -332,7 +332,7 @@ def __init__(
         trace_attributes: Mapping[str, AttributeValue] | None = None) -> None
 ```
 
-Defined in: [src/strands/multiagent/graph.py:411](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L411)
+Defined in: [src/strands/multiagent/graph.py:412](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L412)
 
 Initialize Graph with execution limits and reset behavior.
 
@@ -358,7 +358,7 @@ def __call__(task: MultiAgentInput,
              **kwargs: Any) -> GraphResult
 ```
 
-Defined in: [src/strands/multiagent/graph.py:470](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L470)
+Defined in: [src/strands/multiagent/graph.py:471](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L471)
 
 Invoke the graph synchronously.
 
@@ -376,7 +376,7 @@ async def invoke_async(task: MultiAgentInput,
                        **kwargs: Any) -> GraphResult
 ```
 
-Defined in: [src/strands/multiagent/graph.py:486](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L486)
+Defined in: [src/strands/multiagent/graph.py:487](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L487)
 
 Invoke the graph asynchronously.
 
@@ -396,7 +396,7 @@ async def stream_async(task: MultiAgentInput,
                        **kwargs: Any) -> AsyncIterator[dict[str, Any]]
 ```
 
-Defined in: [src/strands/multiagent/graph.py:510](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L510)
+Defined in: [src/strands/multiagent/graph.py:511](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L511)
 
 Stream events during graph execution.
 
@@ -421,7 +421,7 @@ Dictionary events during graph execution, such as:
 def serialize_state() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/multiagent/graph.py:1141](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L1141)
+Defined in: [src/strands/multiagent/graph.py:1149](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L1149)
 
 Serialize the current graph state to a dictionary.
 
@@ -431,7 +431,7 @@ Serialize the current graph state to a dictionary.
 def deserialize_state(payload: dict[str, Any]) -> None
 ```
 
-Defined in: [src/strands/multiagent/graph.py:1161](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L1161)
+Defined in: [src/strands/multiagent/graph.py:1169](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/graph.py#L1169)
 
 Restore graph state from a session dict and prepare for execution.
 

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:357](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L357)
+Defined in: [src/hooks/events.ts:357](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L357)
 
 Event triggered when a tool execution completes. Wraps the tool result block after a tool finishes execution.
 
@@ -14,14 +14,14 @@ Event triggered when a tool execution completes. Wraps the tool result block aft
 new ToolResultEvent(data): ToolResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:362](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L362)
+Defined in: [src/hooks/events.ts:362](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L362)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `result`: [`ToolResultBlock`](/docs/api/typescript/ToolResultBlock/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `result`: [`ToolResultBlock`](/docs/api/typescript/ToolResultBlock/index.md); } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 | `data.result` | [`ToolResultBlock`](/docs/api/typescript/ToolResultBlock/index.md) |
 
 #### Returns
@@ -40,17 +40,17 @@ Defined in: [src/hooks/events.ts:362](https://github.com/strands-agents/sdk-type
 readonly type: "toolResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:358](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L358)
+Defined in: [src/hooks/events.ts:358](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L358)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:359](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L359)
+Defined in: [src/hooks/events.ts:359](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L359)
 
 ---
 
@@ -60,4 +60,4 @@ Defined in: [src/hooks/events.ts:359](https://github.com/strands-agents/sdk-type
 readonly result: ToolResultBlock;
 ```
 
-Defined in: [src/hooks/events.ts:360](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L360)
+Defined in: [src/hooks/events.ts:360](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L360)

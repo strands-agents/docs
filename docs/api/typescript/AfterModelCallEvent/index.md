@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:267](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L267)
+Defined in: [src/hooks/events.ts:267](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L267)
 
 Event triggered after the model invocation completes. Fired after the model finishes generating a response, whether successful or failed. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -16,14 +16,14 @@ Note: stopData may be undefined if an error occurs before the model completes.
 new AfterModelCallEvent(data): AfterModelCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:279](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L279)
+Defined in: [src/hooks/events.ts:279](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L279)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `stopData?`: [`ModelStopResponse`](/docs/api/typescript/ModelStopResponse/index.md); `error?`: `Error`; } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `stopData?`: [`ModelStopResponse`](/docs/api/typescript/ModelStopResponse/index.md); `error?`: `Error`; } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 | `data.stopData?` | [`ModelStopResponse`](/docs/api/typescript/ModelStopResponse/index.md) |
 | `data.error?` | `Error` |
 
@@ -43,17 +43,17 @@ Defined in: [src/hooks/events.ts:279](https://github.com/strands-agents/sdk-type
 readonly type: "afterModelCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:268](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L268)
+Defined in: [src/hooks/events.ts:268](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L268)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:269](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L269)
+Defined in: [src/hooks/events.ts:269](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L269)
 
 ---
 
@@ -63,7 +63,7 @@ Defined in: [src/hooks/events.ts:269](https://github.com/strands-agents/sdk-type
 readonly optional stopData: ModelStopResponse;
 ```
 
-Defined in: [src/hooks/events.ts:270](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L270)
+Defined in: [src/hooks/events.ts:270](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L270)
 
 ---
 
@@ -73,7 +73,7 @@ Defined in: [src/hooks/events.ts:270](https://github.com/strands-agents/sdk-type
 readonly optional error: Error;
 ```
 
-Defined in: [src/hooks/events.ts:271](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L271)
+Defined in: [src/hooks/events.ts:271](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L271)
 
 ---
 
@@ -83,6 +83,6 @@ Defined in: [src/hooks/events.ts:271](https://github.com/strands-agents/sdk-type
 optional retry: boolean;
 ```
 
-Defined in: [src/hooks/events.ts:277](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L277)
+Defined in: [src/hooks/events.ts:277](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L277)
 
 Optional flag that can be set by hook callbacks to request a retry of the model call. When set to true, the agent will retry the model invocation.

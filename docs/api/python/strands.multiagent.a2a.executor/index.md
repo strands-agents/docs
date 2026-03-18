@@ -58,7 +58,7 @@ This method executes the user’s input using the Strands Agent in streaming mod
 async def cancel(context: RequestContext, event_queue: EventQueue) -> None
 ```
 
-Defined in: [src/strands/multiagent/a2a/executor.py:215](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L215)
+Defined in: [src/strands/multiagent/a2a/executor.py:219](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L219)
 
 Cancel an ongoing execution.
 

@@ -290,12 +290,58 @@ See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-In TypeScript, conversation managers don’t have a base interface. Instead, they are simply [HookProviders](/docs/user-guide/concepts/agents/hooks/index.md) that can subscribe to any event in the agent lifecycle.
+To create a custom conversation manager, extend the abstract [`ConversationManager`](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/conversation-manager.ts) base class and implement the `reduce` method:
 
-For implementing custom conversation management, it’s recommended to:
+1.  **`reduce(options: ReduceOptions): boolean`**: Called automatically when a `ContextWindowOverflowError` occurs. Mutate `agent.messages` in place to reduce history, then return `true` if any reduction was made. Return `false` to let the error propagate out of the agent loop uncaught.
+    
+2.  **`initAgent(agent)` (optional)**: Override to add proactive management (e.g. trimming after each invocation). Always call `super.initAgent(agent)` to preserve the built-in overflow recovery hook.
+    
 
--   Register for the `AfterInvocationEvent` (or other After events) to perform proactive context trimming after each agent invocation completes
--   Register for the `AfterModelCallEvent` to handle reactive context trimming when the model’s context window is exceeded
+```typescript
+import { Agent, ConversationManager, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
+
+class Last10MessagesManager extends ConversationManager {
+  readonly name = 'my:last-10-messages'
+
+  reduce({ agent }: ConversationManagerReduceOptions): boolean {
+    if (agent.messages.length <= 10) return false
+    agent.messages.splice(0, agent.messages.length - 10)
+    return true
+  }
+}
+
+const agent = new Agent({
+  conversationManager: new Last10MessagesManager(),
+})
+```
+
+For proactive management alongside overflow recovery, override `initAgent`:
+
+```typescript
+import { Agent, ConversationManager, AfterInvocationEvent, type AgentData, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
+
+class MyManager extends ConversationManager {
+  readonly name = 'my:manager'
+  private readonly _maxMessages = 5
+
+  reduce({ agent }: ConversationManagerReduceOptions): boolean {
+    return this._trim(agent.messages)
+  }
+
+  override initAgent(agent: LocalAgent): void {
+    super.initAgent(agent) // preserves overflow recovery
+    agent.addHook(AfterInvocationEvent, (event) => {
+      this._trim(event.agent.messages)
+    })
+  }
+
+  private _trim(messages: LocalAgent['messages']): boolean {
+    if (messages.length <= this._maxMessages) return false
+    messages.splice(0, messages.length - this._maxMessages)
+    return true
+  }
+}
+```
 
 See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
 (( /tab "TypeScript" ))

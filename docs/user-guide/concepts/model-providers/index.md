@@ -6,25 +6,37 @@ A model provider is a service or platform that hosts and serves large language m
 
 The following table shows all model providers supported by Strands Agents SDK and their availability in Python and TypeScript:
 
-| Provider | Python Support | TypeScript Support |
+| Provider | Python Supported | TypeScript Supported |
 | --- | --- | --- |
-| [Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) | ✅ | ✅ |
 | [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) | ✅ | ✅ |
 | [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) | ✅ | ❌ |
-| [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) | ✅ | ✅ |
 | [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ❌ |
+| [Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) | ✅ | ✅ |
 | [Gemini](/docs/user-guide/concepts/model-providers/gemini/index.md) | ✅ | ✅ |
 | [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) | ✅ | ❌ |
 | [llama.cpp](/docs/user-guide/concepts/model-providers/llamacpp/index.md) | ✅ | ❌ |
 | [LlamaAPI](/docs/user-guide/concepts/model-providers/llamaapi/index.md) | ✅ | ❌ |
 | [MistralAI](/docs/user-guide/concepts/model-providers/mistral/index.md) | ✅ | ❌ |
 | [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) | ✅ | ❌ |
+| [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) | ✅ | ✅ |
 | [SageMaker](/docs/user-guide/concepts/model-providers/sagemaker/index.md) | ✅ | ❌ |
 | [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) | ✅ | ❌ |
-| [Cohere](/docs/user-guide/concepts/model-providers/cohere/index.md) | ✅ | ❌ |
-| [CLOVA Studio](/docs/user-guide/concepts/model-providers/clova-studio/index.md) | ✅ | ❌ |
-| [FireworksAI](/docs/user-guide/concepts/model-providers/fireworksai/index.md) | ✅ | ❌ |
-| [xAI](/docs/user-guide/concepts/model-providers/xai/index.md) | ✅ | ❌ |
+
+### Community providers
+
+The following providers are built and maintained by the Strands community. Browse the [Community Catalog](/docs/community/community-packages/index.md) to explore additional community packages.
+
+| Provider | Python Supported | TypeScript Supported |
+| --- | --- | --- |
+| [CLOVA Studio](/docs/community/model-providers/clova-studio/index.md) | ✅ | ❌ |
+| [Cohere](/docs/community/model-providers/cohere/index.md) | ✅ | ❌ |
+| [Fireworks AI](/docs/community/model-providers/fireworksai/index.md) | ✅ | ❌ |
+| [MLX](/docs/community/model-providers/mlx/index.md) | ✅ | ❌ |
+| [Nebius Token Factory](/docs/community/model-providers/nebius-token-factory/index.md) | ✅ | ❌ |
+| [NVIDIA NIM](/docs/community/model-providers/nvidia-nim/index.md) | ✅ | ❌ |
+| [SGLang](/docs/community/model-providers/sglang/index.md) | ✅ | ❌ |
+| [vLLM](/docs/community/model-providers/vllm/index.md) | ✅ | ❌ |
+| [xAI](/docs/community/model-providers/xai/index.md) | ✅ | ❌ |
 
 ## Getting Started
 

@@ -56,7 +56,7 @@ Initialize S3SessionManager with S3 storage.
 def create_session(session: Session, **kwargs: Any) -> Session
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:158](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L158)
+Defined in: [src/strands/session/s3\_session\_manager.py:161](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L161)
 
 Create a new session in S3.
 
@@ -66,7 +66,7 @@ Create a new session in S3.
 def read_session(session_id: str, **kwargs: Any) -> Session | None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:175](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L175)
+Defined in: [src/strands/session/s3\_session\_manager.py:178](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L178)
 
 Read session data from S3.
 
@@ -76,7 +76,7 @@ Read session data from S3.
 def delete_session(session_id: str, **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:183](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L183)
+Defined in: [src/strands/session/s3\_session\_manager.py:186](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L186)
 
 Delete session and all associated data from S3.
 
@@ -87,7 +87,7 @@ def create_agent(session_id: str, session_agent: SessionAgent,
                  **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:206](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L206)
+Defined in: [src/strands/session/s3\_session\_manager.py:209](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L209)
 
 Create a new agent in S3.
 
@@ -98,7 +98,7 @@ def read_agent(session_id: str, agent_id: str,
                **kwargs: Any) -> SessionAgent | None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:213](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L213)
+Defined in: [src/strands/session/s3\_session\_manager.py:216](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L216)
 
 Read agent data from S3.
 
@@ -109,7 +109,7 @@ def update_agent(session_id: str, session_agent: SessionAgent,
                  **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:221](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L221)
+Defined in: [src/strands/session/s3\_session\_manager.py:224](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L224)
 
 Update agent data in S3.
 
@@ -120,7 +120,7 @@ def create_message(session_id: str, agent_id: str,
                    session_message: SessionMessage, **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:233](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L233)
+Defined in: [src/strands/session/s3\_session\_manager.py:236](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L236)
 
 Create a new message in S3.
 
@@ -131,7 +131,7 @@ def read_message(session_id: str, agent_id: str, message_id: int,
                  **kwargs: Any) -> SessionMessage | None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:240](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L240)
+Defined in: [src/strands/session/s3\_session\_manager.py:243](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L243)
 
 Read message data from S3.
 
@@ -142,7 +142,7 @@ def update_message(session_id: str, agent_id: str,
                    session_message: SessionMessage, **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:248](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L248)
+Defined in: [src/strands/session/s3\_session\_manager.py:251](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L251)
 
 Update message data in S3.
 
@@ -156,7 +156,7 @@ def list_messages(session_id: str,
                   **kwargs: Any) -> list[SessionMessage]
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:260](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L260)
+Defined in: [src/strands/session/s3\_session\_manager.py:263](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L263)
 
 List messages for an agent with pagination from S3.
 
@@ -183,7 +183,7 @@ def create_multi_agent(session_id: str, multi_agent: "MultiAgentBase",
                        **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:351](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L351)
+Defined in: [src/strands/session/s3\_session\_manager.py:354](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L354)
 
 Create a new multiagent state in S3.
 
@@ -194,7 +194,7 @@ def read_multi_agent(session_id: str, multi_agent_id: str,
                      **kwargs: Any) -> dict[str, Any] | None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:358](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L358)
+Defined in: [src/strands/session/s3\_session\_manager.py:361](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L361)
 
 Read multi-agent state from S3.
 
@@ -205,6 +205,6 @@ def update_multi_agent(session_id: str, multi_agent: "MultiAgentBase",
                        **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/s3\_session\_manager.py:363](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L363)
+Defined in: [src/strands/session/s3\_session\_manager.py:366](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/s3_session_manager.py#L366)
 
 Update multi-agent state in S3.

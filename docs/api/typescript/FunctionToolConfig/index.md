@@ -1,4 +1,4 @@
-Defined in: [src/tools/function-tool.ts:51](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/function-tool.ts#L51)
+Defined in: [src/tools/function-tool.ts:59](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/tools/function-tool.ts#L59)
 
 Configuration options for creating a FunctionTool.
 
@@ -10,7 +10,7 @@ Configuration options for creating a FunctionTool.
 name: string;
 ```
 
-Defined in: [src/tools/function-tool.ts:53](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/function-tool.ts#L53)
+Defined in: [src/tools/function-tool.ts:61](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/tools/function-tool.ts#L61)
 
 The unique name of the tool
 
@@ -22,7 +22,7 @@ The unique name of the tool
 description: string;
 ```
 
-Defined in: [src/tools/function-tool.ts:55](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/function-tool.ts#L55)
+Defined in: [src/tools/function-tool.ts:63](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/tools/function-tool.ts#L63)
 
 Human-readable description of the tool’s purpose
 
@@ -34,7 +34,7 @@ Human-readable description of the tool’s purpose
 optional inputSchema: JSONSchema7;
 ```
 
-Defined in: [src/tools/function-tool.ts:57](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/function-tool.ts#L57)
+Defined in: [src/tools/function-tool.ts:65](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/tools/function-tool.ts#L65)
 
 JSON Schema defining the expected input structure. If omitted, defaults to an empty object schema.
 
@@ -46,6 +46,6 @@ JSON Schema defining the expected input structure. If omitted, defaults to an em
 callback: FunctionToolCallback;
 ```
 
-Defined in: [src/tools/function-tool.ts:59](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/tools/function-tool.ts#L59)
+Defined in: [src/tools/function-tool.ts:67](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/tools/function-tool.ts#L67)
 
 Function that implements the tool logic

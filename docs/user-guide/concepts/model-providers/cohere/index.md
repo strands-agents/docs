@@ -1,1 +1,0 @@
-This guide has moved to [community/model-providers/cohere](/docs/community/model-providers/cohere/index.md).

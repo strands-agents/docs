@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:18](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/errors.ts#L18)
+Defined in: [src/errors.ts:18](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L18)
 
 Base exception class for all model-related errors.
 
@@ -22,7 +22,7 @@ This class serves as the common base type for errors that originate from model p
 new ModelError(message, options?): ModelError;
 ```
 
-Defined in: [src/errors.ts:25](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/errors.ts#L25)
+Defined in: [src/errors.ts:25](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/errors.ts#L25)
 
 Creates a new ModelError.
 

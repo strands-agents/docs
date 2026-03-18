@@ -2,6 +2,8 @@
 type ImageFormat = "png" | "jpg" | "jpeg" | "gif" | "webp";
 ```
 
-Defined in: [src/types/media.ts:168](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L168)
+Defined in: [src/mime.ts:7](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/mime.ts#L7)
 
-Image format type.
+MIME type utilities for media format detection and conversion.
+
+Provides bidirectional mapping between media formats and MIME types.

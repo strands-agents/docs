@@ -1,10 +1,11 @@
-Defined in: [src/agent/agent.ts:181](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L181)
+Defined in: [src/agent/agent.ts:169](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L169)
 
 Orchestrates the interaction between a model, a set of tools, and MCP clients. The Agent is responsible for managing the lifecycle of tools and clients and invoking the core decision-making loop.
 
 ## Implements
 
--   [`AgentData`](/docs/api/typescript/AgentData/index.md)
+-   [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md)
+-   `InvokableAgent`
 
 ## Constructors
 
@@ -14,7 +15,7 @@ Orchestrates the interaction between a model, a set of tools, and MCP clients. T
 new Agent(config?): Agent;
 ```
 
-Defined in: [src/agent/agent.ts:241](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L241)
+Defined in: [src/agent/agent.ts:223](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L223)
 
 Creates an instance of the Agent.
 
@@ -36,13 +37,13 @@ Creates an instance of the Agent.
 readonly messages: Message[];
 ```
 
-Defined in: [src/agent/agent.ts:185](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L185)
+Defined in: [src/agent/agent.ts:173](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L173)
 
 The conversation history of messages between user and assistant.
 
 #### Implementation of
 
-[`AgentData`](/docs/api/typescript/AgentData/index.md).[`messages`](/docs/api/typescript/AgentData/index.md#messages)
+[`LocalAgent`](/docs/api/typescript/LocalAgent/index.md).[`messages`](/docs/api/typescript/LocalAgent/index.md#messages)
 
 ---
 
@@ -52,37 +53,13 @@ The conversation history of messages between user and assistant.
 readonly state: AppState;
 ```
 
-Defined in: [src/agent/agent.ts:190](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L190)
+Defined in: [src/agent/agent.ts:178](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L178)
 
 App state storage accessible to tools and application logic. State is not passed to the model during inference.
 
 #### Implementation of
 
-[`AgentData`](/docs/api/typescript/AgentData/index.md).[`state`](/docs/api/typescript/AgentData/index.md#state)
-
----
-
-### conversationManager
-
-```ts
-readonly conversationManager: HookProvider;
-```
-
-Defined in: [src/agent/agent.ts:194](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L194)
-
-Conversation manager for handling message history and context overflow.
-
----
-
-### hooks
-
-```ts
-readonly hooks: HookRegistry;
-```
-
-Defined in: [src/agent/agent.ts:199](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L199)
-
-Hook registry for managing event callbacks. Hooks enable observing and extending agent behavior.
+[`LocalAgent`](/docs/api/typescript/LocalAgent/index.md).[`state`](/docs/api/typescript/LocalAgent/index.md#state)
 
 ---
 
@@ -92,7 +69,7 @@ Hook registry for managing event callbacks. Hooks enable observing and extending
 model: Model;
 ```
 
-Defined in: [src/agent/agent.ts:204](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L204)
+Defined in: [src/agent/agent.ts:184](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L184)
 
 The model provider used by the agent for inference.
 
@@ -104,7 +81,7 @@ The model provider used by the agent for inference.
 optional systemPrompt: SystemPrompt;
 ```
 
-Defined in: [src/agent/agent.ts:209](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L209)
+Defined in: [src/agent/agent.ts:189](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L189)
 
 The system prompt to pass to the model provider.
 
@@ -116,21 +93,33 @@ The system prompt to pass to the model provider.
 readonly name: string;
 ```
 
-Defined in: [src/agent/agent.ts:214](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L214)
+Defined in: [src/agent/agent.ts:194](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L194)
 
 The name of the agent.
 
----
-
-### agentId
+#### Implementation of
 
 ```ts
-readonly agentId: string;
+InvokableAgent.name
 ```
 
-Defined in: [src/agent/agent.ts:219](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L219)
+---
+
+### id
+
+```ts
+readonly id: string;
+```
+
+Defined in: [src/agent/agent.ts:199](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L199)
 
 The unique identifier of the agent instance.
+
+#### Implementation of
+
+```ts
+InvokableAgent.id
+```
 
 ---
 
@@ -140,9 +129,15 @@ The unique identifier of the agent instance.
 readonly optional description: string;
 ```
 
-Defined in: [src/agent/agent.ts:224](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L224)
+Defined in: [src/agent/agent.ts:204](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L204)
 
 Optional description of what the agent does.
+
+#### Implementation of
+
+```ts
+InvokableAgent.description
+```
 
 ## Accessors
 
@@ -154,7 +149,7 @@ Optional description of what the agent does.
 get tools(): Tool[];
 ```
 
-Defined in: [src/agent/agent.ts:330](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L330)
+Defined in: [src/agent/agent.ts:339](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L339)
 
 The tools this agent can use.
 
@@ -172,7 +167,7 @@ The tools this agent can use.
 get toolRegistry(): ToolRegistry;
 ```
 
-Defined in: [src/agent/agent.ts:337](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L337)
+Defined in: [src/agent/agent.ts:346](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L346)
 
 The tool registry for managing the agent’s tools.
 
@@ -180,7 +175,61 @@ The tool registry for managing the agent’s tools.
 
 `ToolRegistry`
 
+The tool registry for registering tools with the agent.
+
+#### Implementation of
+
+[`LocalAgent`](/docs/api/typescript/LocalAgent/index.md).[`toolRegistry`](/docs/api/typescript/LocalAgent/index.md#toolregistry)
+
 ## Methods
+
+### addHook()
+
+```ts
+addHook<T>(eventType, callback): HookCleanup;
+```
+
+Defined in: [src/agent/agent.ts:293](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L293)
+
+Register a hook callback for a specific event type.
+
+#### Type Parameters
+
+| Type Parameter |
+| --- |
+| `T` *extends* [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md) |
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `eventType` | [`HookableEventConstructor`](/docs/api/typescript/HookableEventConstructor/index.md)<`T`\> | The event class constructor to register the callback for |
+| `callback` | [`HookCallback`](/docs/api/typescript/HookCallback/index.md)<`T`\> | The callback function to invoke when the event occurs |
+
+#### Returns
+
+`HookCleanup`
+
+Cleanup function that removes the callback when invoked
+
+#### Example
+
+```typescript
+const agent = new Agent({ model })
+
+const cleanup = agent.addHook(BeforeInvocationEvent, (event) => {
+  console.log('Invocation started')
+})
+
+// Later, to remove the hook:
+cleanup()
+```
+
+#### Implementation of
+
+[`LocalAgent`](/docs/api/typescript/LocalAgent/index.md).[`addHook`](/docs/api/typescript/LocalAgent/index.md#addhook)
+
+---
 
 ### initialize()
 
@@ -188,7 +237,7 @@ The tool registry for managing the agent’s tools.
 initialize(): Promise<void>;
 ```
 
-Defined in: [src/agent/agent.ts:291](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L291)
+Defined in: [src/agent/agent.ts:297](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L297)
 
 #### Returns
 
@@ -202,7 +251,7 @@ Defined in: [src/agent/agent.ts:291](https://github.com/strands-agents/sdk-types
 invoke(args, options?): Promise<AgentResult>;
 ```
 
-Defined in: [src/agent/agent.ts:359](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L359)
+Defined in: [src/agent/agent.ts:368](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L368)
 
 Invokes the agent and returns the final result.
 
@@ -229,6 +278,12 @@ const result = await agent.invoke('What is 2 + 2?')
 console.log(result.lastMessage) // Agent's response
 ```
 
+#### Implementation of
+
+```ts
+InvokableAgent.invoke
+```
+
 ---
 
 ### stream()
@@ -237,7 +292,7 @@ console.log(result.lastMessage) // Agent's response
 stream(args, options?): AsyncGenerator<AgentStreamEvent, AgentResult, undefined>;
 ```
 
-Defined in: [src/agent/agent.ts:398](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/agent/agent.ts#L398)
+Defined in: [src/agent/agent.ts:407](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/agent/agent.ts#L407)
 
 Streams the agent execution, yielding events and returning the final result.
 
@@ -273,4 +328,10 @@ for await (const event of agent.stream('Hello')) {
   console.log('Event:', event.type)
 }
 // Messages array is mutated in place and contains the full conversation
+```
+
+#### Implementation of
+
+```ts
+InvokableAgent.stream
 ```

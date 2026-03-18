@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:219](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L219)
+Defined in: [src/hooks/events.ts:219](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L219)
 
 Event triggered just before the model is invoked. Fired before sending messages to the model for inference.
 
@@ -14,14 +14,14 @@ Event triggered just before the model is invoked. Fired before sending messages 
 new BeforeModelCallEvent(data): BeforeModelCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L223)
+Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L223)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 
 #### Returns
 
@@ -39,14 +39,14 @@ Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-type
 readonly type: "beforeModelCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L220)
+Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L220)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:221](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L221)
+Defined in: [src/hooks/events.ts:221](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L221)

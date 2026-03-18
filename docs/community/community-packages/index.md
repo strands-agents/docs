@@ -6,47 +6,60 @@ Community maintained
 
 These packages are maintained by their authors, not the Strands team. Review packages before using them in production. Quality and support may vary.
 
-## Tools
+## Integrations
 
-Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
+Platform integrations help you connect Strands agents with external services and user interfaces.
 
-| Package | Description |
-| --- | --- |
-| [strands-deepgram](/docs/community/tools/strands-deepgram/index.md) | Deepgram speech-to-text |
-| [strands-hubspot](/docs/community/tools/strands-hubspot/index.md) | HubSpot CRM integration |
-| [strands-teams](/docs/community/tools/strands-teams/index.md) | Microsoft Teams |
-| [strands-telegram](/docs/community/tools/strands-telegram/index.md) | Telegram bot |
-| [strands-telegram-listener](/docs/community/tools/strands-telegram-listener/index.md) | Telegram listener |
-| [UTCP](/docs/community/tools/utcp/index.md) | Universal Tool Calling Protocol |
+| Package | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [AG-UI](/docs/community/integrations/ag-ui/index.md) | AG-UI integration | ✅ | ❌ |
+
+## Plugins
+
+Plugins extend agent behavior by hooking into lifecycle events. Use these to add cross-cutting capabilities like policy enforcement, logging, or output control without modifying your agent code.
+
+| Package | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [Agent Control](/docs/community/plugins/agent-control/index.md) | Runtime policy enforcement for agents | ✅ | ❌ |
+| [Datadog AI Guard](/docs/community/plugins/datadog-ai-guard/index.md) | Real-time AI security with Datadog AI Guard | ✅ | ❌ |
 
 ## Model providers
 
 Model providers add support for additional LLM services beyond the built-in providers. Use these to integrate with specialized or regional LLM platforms.
 
-| Package | Description |
-| --- | --- |
-| [Cohere](/docs/community/model-providers/cohere/index.md) | Cohere LLM |
-| [CLOVA Studio](/docs/community/model-providers/clova-studio/index.md) | Naver CLOVA Studio |
-| [Fireworks AI](/docs/community/model-providers/fireworksai/index.md) | Fireworks AI |
-| [Nebius](/docs/community/model-providers/nebius-token-factory/index.md) | Nebius Token Factory |
+| Package | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [CLOVA Studio](/docs/community/model-providers/clova-studio/index.md) | Naver CLOVA Studio | ✅ | ❌ |
+| [Cohere](/docs/community/model-providers/cohere/index.md) | Cohere LLM | ✅ | ❌ |
+| [Fireworks AI](/docs/community/model-providers/fireworksai/index.md) | Fireworks AI | ✅ | ❌ |
+| [MLX](/docs/community/model-providers/mlx/index.md) | MLX | ✅ | ❌ |
+| [Nebius Token Factory](/docs/community/model-providers/nebius-token-factory/index.md) | Nebius Token Factory | ✅ | ❌ |
+| [NVIDIA NIM](/docs/community/model-providers/nvidia-nim/index.md) | NVIDIA NIM | ✅ | ❌ |
+| [SGLang](/docs/community/model-providers/sglang/index.md) | SGLang | ✅ | ❌ |
+| [vLLM](/docs/community/model-providers/vllm/index.md) | vLLM | ✅ | ❌ |
+| [xAI](/docs/community/model-providers/xai/index.md) | xAI Grok | ✅ | ❌ |
 
 ## Session managers
 
 Session managers provide alternative storage backends for conversation history. Use these when you need persistent, scalable, or distributed session storage.
 
-| Package | Description |
-| --- | --- |
-| [AgentCore Memory](/docs/community/session-managers/agentcore-memory/index.md) | Amazon AgentCore |
-| [Valkey](/docs/community/session-managers/strands-valkey-session-manager/index.md) | Valkey session manager |
+| Package | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [Amazon AgentCore Memory](/docs/community/session-managers/agentcore-memory/index.md) | Amazon AgentCore | ✅ | ❌ |
+| [Valkey/Redis](/docs/community/session-managers/strands-valkey-session-manager/index.md) | Valkey session manager | ✅ | ❌ |
 
-## Integrations
+## Tools
 
-Platform integrations help you connect Strands agents with external services and user interfaces.
+Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
 
-| Package | Description |
-| --- | --- |
-| [AG-UI](/docs/community/integrations/ag-ui/index.md) | AG-UI integration |
-| [Datadog AI Guard](/docs/community/plugins/datadog-ai-guard/index.md) | Real-time AI security with Datadog AI Guard |
+| Package | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [deepgram](/docs/community/tools/strands-deepgram/index.md) | Deepgram speech-to-text | ✅ | ❌ |
+| [hubspot](/docs/community/tools/strands-hubspot/index.md) | HubSpot CRM integration | ✅ | ❌ |
+| [teams](/docs/community/tools/strands-teams/index.md) | Microsoft Teams | ✅ | ❌ |
+| [telegram](/docs/community/tools/strands-telegram/index.md) | Telegram bot | ✅ | ❌ |
+| [telegram-listener](/docs/community/tools/strands-telegram-listener/index.md) | Telegram listener | ✅ | ❌ |
+| [UTCP](/docs/community/tools/utcp/index.md) | Universal Tool Calling Protocol | ✅ | ❌ |
 
 ---
 

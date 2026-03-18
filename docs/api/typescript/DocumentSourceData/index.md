@@ -10,10 +10,10 @@ type DocumentSourceData =
   content: DocumentContentBlockData[];
 }
   | {
-  s3Location: S3LocationData;
+  location: S3LocationData;
 };
 ```
 
-Defined in: [src/types/media.ts:423](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L423)
+Defined in: [src/types/media.ts:380](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L380)
 
 Source for a document (Data version). Supports multiple formats including structured content.

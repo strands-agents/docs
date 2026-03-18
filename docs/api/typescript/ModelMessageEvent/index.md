@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:339](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L339)
+Defined in: [src/hooks/events.ts:339](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L339)
 
 Event triggered when the model completes a full message. Wraps the assembled message and stop reason after model streaming finishes.
 
@@ -14,14 +14,14 @@ Event triggered when the model completes a full message. Wraps the assembled mes
 new ModelMessageEvent(data): ModelMessageEvent;
 ```
 
-Defined in: [src/hooks/events.ts:345](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L345)
+Defined in: [src/hooks/events.ts:345](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L345)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `message`: [`Message`](/docs/api/typescript/Message/index.md); `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `message`: [`Message`](/docs/api/typescript/Message/index.md); `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); } |
+| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
 | `data.message` | [`Message`](/docs/api/typescript/Message/index.md) |
 | `data.stopReason` | [`StopReason`](/docs/api/typescript/StopReason/index.md) |
 
@@ -41,17 +41,17 @@ Defined in: [src/hooks/events.ts:345](https://github.com/strands-agents/sdk-type
 readonly type: "modelMessageEvent";
 ```
 
-Defined in: [src/hooks/events.ts:340](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L340)
+Defined in: [src/hooks/events.ts:340](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L340)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:341](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L341)
+Defined in: [src/hooks/events.ts:341](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L341)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [src/hooks/events.ts:341](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:342](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L342)
+Defined in: [src/hooks/events.ts:342](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L342)
 
 ---
 
@@ -71,4 +71,4 @@ Defined in: [src/hooks/events.ts:342](https://github.com/strands-agents/sdk-type
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/hooks/events.ts:343](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/hooks/events.ts#L343)
+Defined in: [src/hooks/events.ts:343](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/hooks/events.ts#L343)

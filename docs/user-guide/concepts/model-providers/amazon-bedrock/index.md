@@ -270,7 +270,9 @@ Common configuration parameters include:
 -   `max_tokens` - Maximum number of tokens to generate
 -   `streaming` - Enable/disable streaming mode
 -   `guardrail_id` - ID of the guardrail to apply
--   `cache_prompt` / `cache_tools` - Enable prompt/tool caching
+-   `cache_prompt` - Cache point type for the system prompt (deprecated, use `cache_config`)
+-   `cache_config` - Configuration for prompt caching (e.g., `CacheConfig(strategy="auto")`)
+-   `cache_tools` - Enable tool caching
 -   `boto_session` - Custom boto3 session for AWS credentials
 -   `additional_request_fields` - Additional model-specific parameters
 (( /tab "Python" ))
@@ -283,10 +285,10 @@ Common configuration parameters include:
 -   `modelId` - The Bedrock model identifier
 -   `temperature` - Controls randomness (higher = more random)
 -   `maxTokens` - Maximum number of tokens to generate
--   `streaming` - Enable/disable streaming mode
--   `cacheTools` - Enable tool caching
+-   `stream` - Enable/disable streaming mode
+-   `cacheConfig` - Enable prompt caching with `{ strategy: 'auto' }` or `{ strategy: 'anthropic' }`
 -   `region` - AWS region to use
--   `credentials` - AWS credentials configuration
+-   `clientConfig` - AWS SDK client configuration
 -   `additionalArgs` - Additional model-specific parameters
 (( /tab "TypeScript" ))
 
@@ -663,6 +665,8 @@ console.log(`Cache read tokens: ${cacheReadTokens}`)
 Tool caching allows you to reuse a cached tool definition across multiple requests:
 
 (( tab "Python" ))
+In Python, use the `cache_tools` parameter to enable tool caching independently:
+
 ```python
 from strands import Agent, tool
 from strands.models import BedrockModel
@@ -692,24 +696,41 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+In TypeScript, tool caching is enabled through `cacheConfig`. When `cacheConfig` is set, the SDK automatically appends a cache point after the tool definitions in each request. There is no separate `cacheTools` option — `cacheConfig` handles both tool and message caching together.
+
 ```typescript
 const bedrockModel = new BedrockModel({
   modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
-  cacheTools: 'default',
+  cacheConfig: { strategy: 'auto' },
 })
 
 const agent = new Agent({
   model: bedrockModel,
-  // Add your tools here when they become available
+  // Add your tools here
 })
 
 // First request will cache the tools
-await agent.invoke('What time is it?')
+let cacheWriteTokens = 0
+let cacheReadTokens = 0
+
+for await (const event of agent.stream('What time is it?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 
 // Second request will reuse the cached tools
-await agent.invoke('What is the square root of 1764?')
-
-// Note: Cache metrics are not yet available in the TypeScript SDK
+for await (const event of agent.stream('What is the square root of 1764?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -719,7 +740,7 @@ Messages caching allows you to reuse cached conversation context across multiple
 
 **Option A: Automatic Cache Strategy (Claude models only)**
 
-Enable automatic cache point management for agent workflows with repeated tool calls and multi-turn conversations. The SDK automatically places a cache point at the end of each assistant message to maximize cache hits without requiring manual management.
+Enable automatic cache point management for agent workflows with multi-turn conversations. The SDK automatically places a cache point at the end of the last user message to maximize cache hits without requiring manual management.
 
 (( tab "Python" ))
 ```python
@@ -755,8 +776,36 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Automatic cache strategy is not yet supported in the TypeScript SDK
+```typescript
+const bedrockModel = new BedrockModel({
+  modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+  cacheConfig: { strategy: 'auto' },
+})
+
+const agent = new Agent({ model: bedrockModel })
+
+// Agent call - cache write and read occur as context accumulates
+let cacheWriteTokens = 0
+let cacheReadTokens = 0
+
+for await (const event of agent.stream('Search for Python async patterns, then compare with error handling')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
+
+// Follow-up reuses cached context from previous conversation
+for await (const event of agent.stream('Summarize the key differences')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -824,12 +873,27 @@ const agent = new Agent({
 })
 
 // First request will cache the message
-await agent.invoke('What is in that document?')
+let cacheWriteTokens = 0
+let cacheReadTokens = 0
+
+for await (const event of agent.stream('What is in that document?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 
 // Second request will reuse the cached message
-await agent.invoke('How long is the document?')
-
-// Note: Cache metrics are not yet available in the TypeScript SDK
+for await (const event of agent.stream('How long is the document?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 ```
 (( /tab "TypeScript" ))
 

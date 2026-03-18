@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:190](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L190)
+Defined in: [src/types/media.ts:157](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L157)
 
 Data for an image block.
 
@@ -10,7 +10,7 @@ Data for an image block.
 format: ImageFormat;
 ```
 
-Defined in: [src/types/media.ts:194](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L194)
+Defined in: [src/types/media.ts:161](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L161)
 
 Image format.
 
@@ -22,6 +22,6 @@ Image format.
 source: ImageSourceData;
 ```
 
-Defined in: [src/types/media.ts:199](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L199)
+Defined in: [src/types/media.ts:166](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L166)
 
 Image source.

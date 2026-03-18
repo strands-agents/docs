@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:732](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/messages.ts#L732)
+Defined in: [src/types/messages.ts:745](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L745)
 
 Image content to be evaluated by guardrails.
 
@@ -10,7 +10,7 @@ Image content to be evaluated by guardrails.
 format: GuardImageFormat;
 ```
 
-Defined in: [src/types/messages.ts:736](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/messages.ts#L736)
+Defined in: [src/types/messages.ts:749](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L749)
 
 Image format.
 
@@ -22,6 +22,6 @@ Image format.
 source: GuardImageSource;
 ```
 
-Defined in: [src/types/messages.ts:741](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/messages.ts#L741)
+Defined in: [src/types/messages.ts:754](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/messages.ts#L754)
 
 Image source (bytes only).

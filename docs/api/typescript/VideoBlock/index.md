@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:330](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L330)
+Defined in: [src/types/media.ts:292](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L292)
 
 Video content block.
 
@@ -15,7 +15,7 @@ Video content block.
 new VideoBlock(data): VideoBlock;
 ```
 
-Defined in: [src/types/media.ts:346](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L346)
+Defined in: [src/types/media.ts:308](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L308)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:346](https://github.com/strands-agents/sdk-types
 readonly type: "videoBlock";
 ```
 
-Defined in: [src/types/media.ts:334](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L334)
+Defined in: [src/types/media.ts:296](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L296)
 
 Discriminator for video content.
 
@@ -47,7 +47,7 @@ Discriminator for video content.
 readonly format: VideoFormat;
 ```
 
-Defined in: [src/types/media.ts:339](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L339)
+Defined in: [src/types/media.ts:301](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L301)
 
 Video format.
 
@@ -63,7 +63,7 @@ Video format.
 readonly source: VideoSource;
 ```
 
-Defined in: [src/types/media.ts:344](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L344)
+Defined in: [src/types/media.ts:306](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L306)
 
 Video source.
 
@@ -83,7 +83,8 @@ toJSON(): {
         bytes: string;
       }
         | {
-        s3Location: {
+        location: {
+           type: "s3";
            uri: string;
            bucketOwner?: string;
         };
@@ -92,7 +93,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/media.ts:369](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L369)
+Defined in: [src/types/media.ts:331](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L331)
 
 Serializes the VideoBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array bytes are encoded as base64 string.
 
@@ -106,7 +107,8 @@ Serializes the VideoBlock to a JSON-compatible ContentBlockData object. Called a
         bytes: string;
       }
         | {
-        s3Location: {
+        location: {
+           type: "s3";
            uri: string;
            bucketOwner?: string;
         };
@@ -117,9 +119,9 @@ Serializes the VideoBlock to a JSON-compatible ContentBlockData object. Called a
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `video` | { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; }; } | \- | [src/types/media.ts:369](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L369) |
-| `video.format` | [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md) | Video format. | [src/types/media.ts:319](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L319) |
-| `video.source` | | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | Video source. | [src/types/media.ts:324](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L324) |
+| `video` | { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; } | \- | [src/types/media.ts:331](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L331) |
+| `video.format` | [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md) | Video format. | [src/types/media.ts:281](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L281) |
+| `video.source` | | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Video source. | [src/types/media.ts:286](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L286) |
 
 #### Implementation of
 
@@ -135,7 +137,7 @@ JSONSerializable.toJSON
 static fromJSON(data): VideoBlock;
 ```
 
-Defined in: [src/types/media.ts:391](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/types/media.ts#L391)
+Defined in: [src/types/media.ts:353](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/types/media.ts#L353)
 
 Creates a VideoBlock instance from its wrapped data format. Base64-encoded bytes are decoded back to Uint8Array.
 
@@ -143,10 +145,10 @@ Creates a VideoBlock instance from its wrapped data format. Base64-encoded bytes
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | { `video`: { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; }; }; } | Wrapped VideoBlockData to deserialize (accepts both string and Uint8Array for bytes) |
-| `data.video` | { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; }; } | \- |
+| `data` | { `video`: { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; }; } | Wrapped VideoBlockData to deserialize (accepts both string and Uint8Array for bytes) |
+| `data.video` | { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; } | \- |
 | `data.video.format` | [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md) | Video format. |
-| `data.video.source` | | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | Video source. |
+| `data.video.source` | | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Video source. |
 
 #### Returns
 

@@ -30,7 +30,7 @@ npm install @strands-agents/sdk
 The Strands Agents SDK includes optional vended tools that are built-in and production-ready for your agents to use. These tools can be imported directly as follows:
 
 ```typescript
-import { bash } from '@strands-agents/sdk/vended_tools/bash'
+import { bash } from '@strands-agents/sdk/vended-tools/bash'
 ```
 
 ## Configuring Credentials

@@ -1,10 +1,12 @@
-Defined in: [src/conversation-manager/null-conversation-manager.ts:16](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/conversation-manager/null-conversation-manager.ts#L16)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/conversation-manager/null-conversation-manager.ts#L17)
 
-A no-op conversation manager that does not modify the conversation history. Implements HookProvider but registers zero hooks.
+A no-op conversation manager that does not modify the conversation history.
 
-## Implements
+Does not register any proactive hooks. Overflow errors will not be retried since `reduce` always returns `false`.
 
--   [`HookProvider`](/docs/api/typescript/HookProvider/index.md)
+## Extends
+
+-   [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md)
 
 ## Constructors
 
@@ -18,28 +20,80 @@ new NullConversationManager(): NullConversationManager;
 
 `NullConversationManager`
 
-## Methods
+#### Inherited from
 
-### registerCallbacks()
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`constructor`](/docs/api/typescript/ConversationManager/index.md#constructor)
+
+## Properties
+
+### name
 
 ```ts
-registerCallbacks(_registry): void;
+readonly name: "strands:null-conversation-manager" = 'strands:null-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/null-conversation-manager.ts:23](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/conversation-manager/null-conversation-manager.ts#L23)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/conversation-manager/null-conversation-manager.ts#L21)
 
-Registers callbacks with the hook registry. This implementation registers no hooks, providing a complete no-op behavior.
+Unique identifier for this conversation manager.
+
+#### Overrides
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`name`](/docs/api/typescript/ConversationManager/index.md#name)
+
+## Methods
+
+### initAgent()
+
+```ts
+initAgent(agent): void;
+```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:92](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/conversation-manager/conversation-manager.ts#L92)
+
+Initialize the conversation manager with the agent instance.
+
+Registers overflow recovery: when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs, calls [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce) and retries the model call if reduction succeeded. If `reduce` returns `false`, the error propagates out of the agent loop uncaught.
+
+Subclasses that need proactive management MUST call `super.initAgent(agent)` to preserve this overflow recovery behavior.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `_registry` | `HookRegistry` | The hook registry to register callbacks with (unused) |
+| `agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) | The agent to register hooks with |
 
 #### Returns
 
 `void`
 
-#### Implementation of
+#### Inherited from
 
-[`HookProvider`](/docs/api/typescript/HookProvider/index.md).[`registerCallbacks`](/docs/api/typescript/HookProvider/index.md#registercallbacks)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`initAgent`](/docs/api/typescript/ConversationManager/index.md#initagent)
+
+---
+
+### reduce()
+
+```ts
+reduce(_args): boolean;
+```
+
+Defined in: [src/conversation-manager/null-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/conversation-manager/null-conversation-manager.ts#L28)
+
+No-op reduction — never modifies the conversation history.
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `_args` | [`ConversationManagerReduceOptions`](/docs/api/typescript/ConversationManagerReduceOptions/index.md) |
+
+#### Returns
+
+`boolean`
+
+`false` always
+
+#### Overrides
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`reduce`](/docs/api/typescript/ConversationManager/index.md#reduce)

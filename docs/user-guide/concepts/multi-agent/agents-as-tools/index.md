@@ -27,7 +27,7 @@ When implementing the “Agents as Tools” pattern with Strands Agents SDK:
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides a powerful framework for implementing the “Agents as Tools” pattern through its `@tool` decorator. This allows you to transform specialized agents into callable functions that can be used by an orchestrator agent.
+Strands Agents SDK provides a powerful framework for implementing the “Agents as Tools” pattern. Specialized agents are wrapped as callable tool functions that can be used by an orchestrator agent.
 
 ```mermaid
 flowchart TD
@@ -43,8 +43,9 @@ flowchart TD
 
 ### Creating Specialized Tool Agents
 
-First, define specialized agents as tool functions using Strands Agents SDK’s `@tool` decorator:
+First, define specialized agents as tool functions:
 
+(( tab "Python" ))
 ```python
 from strands import Agent, tool
 from strands_tools import retrieve, http_request
@@ -80,9 +81,33 @@ def research_assistant(query: str) -> str:
     except Exception as e:
         return f"Error in research assistant: {str(e)}"
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const researchAssistant = tool({
+  name: 'research_assistant',
+  description: 'Process and respond to research-related queries requiring factual information.',
+  inputSchema: z.object({
+    query: z.string().describe('A research question requiring factual information'),
+  }),
+  callback: async (input) => {
+    const researchAgent = new Agent({
+      systemPrompt: `You are a specialized research assistant. Focus only on providing
+factual, well-sourced information in response to research questions.
+Always cite your sources when possible.`,
+    })
+
+    const response = await researchAgent.invoke(input.query)
+    return response.lastMessage.content.map((block) => ('text' in block ? block.text : '')).join('')
+  },
+})
+```
+(( /tab "TypeScript" ))
 
 You can create multiple specialized agents following the same pattern:
 
+(( tab "Python" ))
 ```python
 @tool
 def product_recommendation_assistant(query: str) -> str:
@@ -130,11 +155,51 @@ def trip_planning_assistant(query: str) -> str:
     except Exception as e:
         return f"Error in trip planning: {str(e)}"
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const productRecommendationAssistant = tool({
+  name: 'product_recommendation_assistant',
+  description: 'Handle product recommendation queries by suggesting appropriate products.',
+  inputSchema: z.object({
+    query: z.string().describe('A product inquiry with user preferences'),
+  }),
+  callback: async (input) => {
+    const productAgent = new Agent({
+      systemPrompt: `You are a specialized product recommendation assistant.
+Provide personalized product suggestions based on user preferences.`,
+    })
+
+    const response = await productAgent.invoke(input.query)
+    return response.lastMessage.content.map((block) => ('text' in block ? block.text : '')).join('')
+  },
+})
+
+const tripPlanningAssistant = tool({
+  name: 'trip_planning_assistant',
+  description: 'Create travel itineraries and provide travel advice.',
+  inputSchema: z.object({
+    query: z.string().describe('A travel planning request with destination and preferences'),
+  }),
+  callback: async (input) => {
+    const travelAgent = new Agent({
+      systemPrompt: `You are a specialized travel planning assistant.
+Create detailed travel itineraries based on user preferences.`,
+    })
+
+    const response = await travelAgent.invoke(input.query)
+    return response.lastMessage.content.map((block) => ('text' in block ? block.text : '')).join('')
+  },
+})
+```
+(( /tab "TypeScript" ))
 
 ### Creating the Orchestrator Agent
 
 Next, create an orchestrator agent that has access to all specialized agents as tools:
 
+(( tab "Python" ))
 ```python
 from strands import Agent
 from .specialized_agents import research_assistant, product_recommendation_assistant, trip_planning_assistant
@@ -157,11 +222,28 @@ orchestrator = Agent(
     tools=[research_assistant, product_recommendation_assistant, trip_planning_assistant]
 )
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const orchestrator = new Agent({
+    systemPrompt: `You are an assistant that routes queries to specialized agents:
+- For research questions and factual information → Use the research_assistant tool
+- For product recommendations and shopping advice → Use the product_recommendation_assistant tool
+- For travel planning and itineraries → Use the trip_planning_assistant tool
+- For simple questions not requiring specialized knowledge → Answer directly
+
+Always select the most appropriate tool based on the user's query.`,
+    tools: [researchAssistant, productRecommendationAssistant, tripPlanningAssistant],
+  })
+```
+(( /tab "TypeScript" ))
 
 ### Real-World Example Scenario
 
 Here’s how this multi-agent system might handle a complex user query:
 
+(( tab "Python" ))
 ```python
 # Example: E-commerce Customer Service System
 customer_query = "I'm looking for hiking boots for a trip to Patagonia next month"
@@ -180,8 +262,15 @@ response = orchestrator(customer_query)
 # 3. Combine these specialized responses into a cohesive answer that addresses both the
 #    travel planning and product recommendation aspects of the query
 ```
+(( /tab "Python" ))
 
-This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer. By following the best practices outlined earlier and leveraging Strands Agents SDK’s capabilities, you can build sophisticated multi-agent systems that handle complex tasks through specialized expertise and coordinated collaboration.
+(( tab "TypeScript" ))
+```typescript
+const response = await orchestrator.invoke("I'm looking for hiking boots for a trip to Patagonia next month")
+```
+(( /tab "TypeScript" ))
+
+This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer.
 
 ## Remote Agents with A2A
 
@@ -189,4 +278,12 @@ You can also use remote agents as tools through the [Agent-to-Agent (A2A) protoc
 
 ## Complete Working Example
 
-For a fully implemented example of the “Agents as Tools” pattern, check out the [“Teacher’s Assistant”](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/multi_agent_example.md) example in our repository. This example demonstrates a practical implementation of the concepts discussed in this document, showing how multiple specialized agents can work together to provide comprehensive assistance in an educational context.
+For complete implementations of this pattern, see the following examples:
+
+(( tab "Python" ))
+The [Teacher’s Assistant](/docs/examples/python/multi_agent_example/multi_agent_example/index.md) example demonstrates an orchestrator agent that routes student queries to specialized agents for math, English, language translation, computer science, and general knowledge.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The [Agents as Tools](https://github.com/strands-agents/sdk-typescript/tree/main/examples/agents-as-tools) example demonstrates an orchestrator agent that routes student queries to specialized tool agents for math, English, computer science, and general knowledge.
+(( /tab "TypeScript" ))

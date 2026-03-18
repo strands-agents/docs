@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:139](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/model.ts#L139)
+Defined in: [src/models/model.ts:152](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/models/model.ts#L152)
 
 Base abstract class for model providers. Defines the contract that all model provider implementations must follow.
 
@@ -36,7 +36,7 @@ new Model<T>(): Model<T>;
 get modelId(): string;
 ```
 
-Defined in: [src/models/model.ts:158](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/model.ts#L158)
+Defined in: [src/models/model.ts:171](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/models/model.ts#L171)
 
 The model ID from the current configuration, if configured.
 
@@ -52,7 +52,7 @@ The model ID from the current configuration, if configured.
 abstract updateConfig(modelConfig): void;
 ```
 
-Defined in: [src/models/model.ts:146](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/model.ts#L146)
+Defined in: [src/models/model.ts:159](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/models/model.ts#L159)
 
 Updates the model configuration. Merges the provided configuration with existing settings.
 
@@ -74,7 +74,7 @@ Updates the model configuration. Merges the provided configuration with existing
 abstract getConfig(): T;
 ```
 
-Defined in: [src/models/model.ts:153](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/model.ts#L153)
+Defined in: [src/models/model.ts:166](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/models/model.ts#L166)
 
 Retrieves the current model configuration.
 
@@ -92,7 +92,7 @@ The current configuration object
 abstract stream(messages, options?): AsyncIterable<ModelStreamEvent>;
 ```
 
-Defined in: [src/models/model.ts:170](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/model.ts#L170)
+Defined in: [src/models/model.ts:183](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/models/model.ts#L183)
 
 Streams a conversation with the model. Returns an async iterable that yields streaming events as they occur.
 
@@ -119,7 +119,7 @@ streamAggregated(messages, options?): AsyncGenerator<
 | ModelStreamEvent, StreamAggregatedResult, undefined>;
 ```
 
-Defined in: [src/models/model.ts:226](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/models/model.ts#L226)
+Defined in: [src/models/model.ts:239](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/models/model.ts#L239)
 
 Streams a conversation with aggregated content blocks and messages. Returns an async generator that yields streaming events and content blocks, and returns the final message with stop reason and optional metadata.
 

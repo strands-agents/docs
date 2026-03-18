@@ -1,4 +1,4 @@
-Defined in: [src/telemetry/meter.ts:140](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L140)
+Defined in: [src/telemetry/meter.ts:147](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L147)
 
 Read-only snapshot of aggregated agent metrics.
 
@@ -8,10 +8,10 @@ Returned by Meter.metrics and stored on [AgentResult](/docs/api/typescript/Agent
 
 ```typescript
 const result = await agent.invoke('Hello')
-console.log(result.metrics.cycleCount)
-console.log(result.metrics.totalDuration)
-console.log(result.metrics.accumulatedData)
-console.log(result.metrics.toolMetrics)
+console.log(result.metrics?.cycleCount)
+console.log(result.metrics?.totalDuration)
+console.log(result.metrics?.accumulatedData)
+console.log(result.metrics?.toolMetrics)
 console.log(JSON.stringify(result.metrics))
 ```
 
@@ -27,7 +27,7 @@ console.log(JSON.stringify(result.metrics))
 new AgentMetrics(data?): AgentMetrics;
 ```
 
-Defined in: [src/telemetry/meter.ts:166](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L166)
+Defined in: [src/telemetry/meter.ts:173](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L173)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ Defined in: [src/telemetry/meter.ts:166](https://github.com/strands-agents/sdk-t
 readonly cycleCount: number;
 ```
 
-Defined in: [src/telemetry/meter.ts:144](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L144)
+Defined in: [src/telemetry/meter.ts:151](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L151)
 
 Number of agent loop cycles executed.
 
@@ -59,7 +59,7 @@ Number of agent loop cycles executed.
 readonly accumulatedUsage: Usage;
 ```
 
-Defined in: [src/telemetry/meter.ts:149](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L149)
+Defined in: [src/telemetry/meter.ts:156](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L156)
 
 Accumulated token usage across all model invocations.
 
@@ -71,7 +71,7 @@ Accumulated token usage across all model invocations.
 readonly accumulatedMetrics: Metrics;
 ```
 
-Defined in: [src/telemetry/meter.ts:154](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L154)
+Defined in: [src/telemetry/meter.ts:161](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L161)
 
 Accumulated performance metrics across all model invocations.
 
@@ -83,7 +83,7 @@ Accumulated performance metrics across all model invocations.
 readonly agentInvocations: InvocationMetricsData[];
 ```
 
-Defined in: [src/telemetry/meter.ts:159](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L159)
+Defined in: [src/telemetry/meter.ts:166](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L166)
 
 Per-invocation metrics.
 
@@ -95,7 +95,7 @@ Per-invocation metrics.
 readonly toolMetrics: Record<string, ToolMetricsData>;
 ```
 
-Defined in: [src/telemetry/meter.ts:164](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L164)
+Defined in: [src/telemetry/meter.ts:171](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L171)
 
 Per-tool execution metrics keyed by tool name.
 
@@ -109,7 +109,7 @@ Per-tool execution metrics keyed by tool name.
 get latestAgentInvocation(): InvocationMetricsData;
 ```
 
-Defined in: [src/telemetry/meter.ts:177](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L177)
+Defined in: [src/telemetry/meter.ts:184](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L184)
 
 The most recent agent invocation, or undefined if none exist.
 
@@ -130,7 +130,7 @@ get accumulatedData(): {
 };
 ```
 
-Defined in: [src/telemetry/meter.ts:184](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L184)
+Defined in: [src/telemetry/meter.ts:191](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L191)
 
 Accumulated usage and performance metrics across all model invocations.
 
@@ -145,8 +145,8 @@ Accumulated usage and performance metrics across all model invocations.
 
 | Name | Type | Defined in |
 | --- | --- | --- |
-| `usage` | [`Usage`](/docs/api/typescript/Usage/index.md) | [src/telemetry/meter.ts:184](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L184) |
-| `metrics` | [`Metrics`](/docs/api/typescript/Metrics/index.md) | [src/telemetry/meter.ts:184](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L184) |
+| `usage` | [`Usage`](/docs/api/typescript/Usage/index.md) | [src/telemetry/meter.ts:191](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L191) |
+| `metrics` | [`Metrics`](/docs/api/typescript/Metrics/index.md) | [src/telemetry/meter.ts:191](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L191) |
 
 ---
 
@@ -158,7 +158,7 @@ Accumulated usage and performance metrics across all model invocations.
 get totalDuration(): number;
 ```
 
-Defined in: [src/telemetry/meter.ts:191](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L191)
+Defined in: [src/telemetry/meter.ts:198](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L198)
 
 Total duration of all cycles in milliseconds.
 
@@ -176,7 +176,7 @@ Total duration of all cycles in milliseconds.
 get averageCycleTime(): number;
 ```
 
-Defined in: [src/telemetry/meter.ts:198](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L198)
+Defined in: [src/telemetry/meter.ts:205](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L205)
 
 Average cycle duration in milliseconds, or 0 if no cycles exist.
 
@@ -197,7 +197,7 @@ get toolUsage(): Record<string, ToolMetricsData & {
 }>;
 ```
 
-Defined in: [src/telemetry/meter.ts:206](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L206)
+Defined in: [src/telemetry/meter.ts:213](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L213)
 
 Per-tool execution statistics with computed averages and rates.
 
@@ -213,7 +213,7 @@ Per-tool execution statistics with computed averages and rates.
 toJSON(): AgentMetricsData;
 ```
 
-Defined in: [src/telemetry/meter.ts:224](https://github.com/strands-agents/sdk-typescript/blob/84a619a6ec3bc07ad7e98e552a65b06801e9e91d/src/telemetry/meter.ts#L224)
+Defined in: [src/telemetry/meter.ts:231](https://github.com/strands-agents/sdk-typescript/blob/0b08622ecec603e2b4c89b6437d0f688a35f1d4c/src/telemetry/meter.ts#L231)
 
 Returns a JSON-serializable representation of all collected metrics. Called automatically by JSON.stringify().
 
