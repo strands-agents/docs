@@ -1,17 +1,17 @@
 /**
  * TypeScript examples for OpenAI model provider documentation.
- * These examples demonstrate common usage patterns for the OpenAIModel.
+ * These examples demonstrate common usage patterns for the OpenAIChatModel.
  */
 // @ts-nocheck
 // Imports are in openai_imports.ts
 
 import { Agent } from '@strands-agents/sdk'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
+import { OpenAIChatModel } from '@strands-agents/sdk/openai-chat'
 
 // Basic usage
 async function basicUsage() {
   // --8<-- [start:basic_usage]
-  const model = new OpenAIModel({
+  const model = new OpenAIChatModel({
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
     modelId: 'gpt-4o',
     maxTokens: 1000,
@@ -27,7 +27,7 @@ async function basicUsage() {
 // Custom server
 async function customServer() {
   // --8<-- [start:custom_server]
-  const model = new OpenAIModel({
+  const model = new OpenAIChatModel({
     apiKey: '<KEY>',
     clientConfig: {
       baseURL: '<URL>',
@@ -43,7 +43,7 @@ async function customServer() {
 // Configuration
 async function customConfig() {
   // --8<-- [start:custom_config]
-  const model = new OpenAIModel({
+  const model = new OpenAIChatModel({
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
     modelId: 'gpt-4o',
     maxTokens: 1000,
@@ -62,7 +62,7 @@ async function customConfig() {
 // Update configuration
 async function updateConfig() {
   // --8<-- [start:update_config]
-  const model = new OpenAIModel({
+  const model = new OpenAIChatModel({
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
     modelId: 'gpt-4o',
     temperature: 0.7,

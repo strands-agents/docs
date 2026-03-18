@@ -6,8 +6,8 @@
 // Imports are in index_imports.ts
 
 import { Agent } from '@strands-agents/sdk'
-import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
-import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+import { BedrockModel } from '@strands-agents/sdk/bedrock'
+import { OpenAIChatModel } from '@strands-agents/sdk/openai-chat'
 
 async function basicUsage() {
   // --8<-- [start:basic_usage]
@@ -19,7 +19,7 @@ async function basicUsage() {
   let response = await agent.invoke('What can you help me with?')
 
   // Alternatively, use OpenAI by just switching model provider
-  const openaiModel = new OpenAIModel({
+  const openaiModel = new OpenAIChatModel({
     apiKey: process.env.OPENAI_API_KEY,
     modelId: 'gpt-4o',
   })
