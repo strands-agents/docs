@@ -40,17 +40,31 @@ agent("What's the weather in Seattle?")`
         <a href={withBase('/docs/user-guide/quickstart/overview/')} class="cta-button primary">Get Started</a>
         <a href="https://github.com/strands-agents/sdk-python" class="cta-button secondary">GitHub</a>
       </div>
-      <div class="hero-install" data-copy="pip install strands-agents">
-        <code>pip install strands-agents</code>
-        <button class="install-copy" aria-label="Copy install command">
-          <svg class="copy-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
-            <path d="M3 10.5V3a1.5 1.5 0 0 1 1.5-1.5H11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-          </svg>
-          <svg class="check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+      <div class="hero-install-group">
+        <div class="hero-install" data-copy="pip install strands-agents">
+          <code>pip install strands-agents</code>
+          <button class="install-copy" aria-label="Copy install command">
+            <svg class="copy-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M3 10.5V3a1.5 1.5 0 0 1 1.5-1.5H11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="hero-install" data-copy="npm install @strands-agents/sdk">
+          <code>npm install @strands-agents/sdk</code>
+          <button class="install-copy" aria-label="Copy install command">
+            <svg class="copy-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M3 10.5V3a1.5 1.5 0 0 1 1.5-1.5H11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <p class="hero-social-proof">
         5,200+ GitHub stars · Works with Bedrock, OpenAI, Anthropic, Ollama, and more
@@ -162,6 +176,12 @@ agent("What's the weather in Seattle?")`
     color: var(--strands-green);
   }
 
+  .hero-install-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
   .hero-install {
     display: inline-flex;
     align-items: center;
@@ -170,7 +190,7 @@ agent("What's the weather in Seattle?")`
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 6px;
-    padding: 0.5rem 0.75rem 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
     transition: border-color 0.2s ease;
   }
@@ -190,7 +210,7 @@ agent("What's the weather in Seattle?")`
 
   .hero-install code {
     font-family: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--sl-color-gray-3);
   }
 
@@ -258,21 +278,22 @@ agent("What's the weather in Seattle?")`
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const install = document.querySelector<HTMLElement>('.hero-install')
-    const btn = install?.querySelector<HTMLButtonElement>('.install-copy')
-    if (!install || !btn) return
+    document.querySelectorAll<HTMLElement>('.hero-install').forEach((install) => {
+      const btn = install.querySelector<HTMLButtonElement>('.install-copy')
+      if (!btn) return
 
-    const text = install.dataset.copy || ''
+      const text = install.dataset.copy || ''
 
-    const copy = async () => {
-      await navigator.clipboard.writeText(text)
-      btn.classList.add('copied')
-      setTimeout(() => btn.classList.remove('copied'), 2000)
-    }
+      const copy = async () => {
+        await navigator.clipboard.writeText(text)
+        btn.classList.add('copied')
+        setTimeout(() => btn.classList.remove('copied'), 2000)
+      }
 
-    btn.addEventListener('click', copy)
-    install.addEventListener('click', (e) => {
-      if (e.target !== btn && !btn.contains(e.target as Node)) copy()
+      btn.addEventListener('click', copy)
+      install.addEventListener('click', (e) => {
+        if (e.target !== btn && !btn.contains(e.target as Node)) copy()
+      })
     })
   })
 </script>
