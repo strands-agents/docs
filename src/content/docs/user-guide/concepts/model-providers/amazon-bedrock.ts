@@ -409,6 +409,7 @@ async function guardrailsExample() {
         output: false, // Default: false
         outputMessage: '[Assistant output redacted.]', // Custom redaction message
       },
+      guardLatestUserMessage: true, // Only evaluate the latest user message (default: false)
     },
   })
 
