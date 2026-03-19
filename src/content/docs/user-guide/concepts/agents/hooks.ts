@@ -5,7 +5,6 @@ import {
   AfterInvocationEvent,
   BeforeToolCallEvent,
   AfterToolCallEvent,
-  BeforeToolsEvent,
   BeforeModelCallEvent,
   AfterModelCallEvent,
   MessageAddedEvent,
