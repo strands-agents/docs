@@ -16,29 +16,30 @@ The table below compares feature availability between the Python and TypeScript 
 
 | Category | Feature | Python | TypeScript |
 | --- | --- | --- | --- |
-| **Core** | Agent creation and invocation | ✅ | ✅ |
-|  | Streaming responses | ✅ | ✅ |
-|  | Structured output | ✅ | ❌ |
-| **Model providers** | Amazon Bedrock | ✅ | ✅ |
-|  | OpenAI | ✅ | ✅ |
-|  | Anthropic | ✅ | ❌ |
-|  | Ollama | ✅ | ❌ |
-|  | LiteLLM | ✅ | ❌ |
-|  | Custom providers | ✅ | ✅ |
-| **Tools** | Custom function tools | ✅ | ✅ |
-|  | MCP (Model Context Protocol) | ✅ | ✅ |
-|  | Built-in tools | 30+ via community package | 4 built-in |
-| **Conversation** | Null manager | ✅ | ✅ |
-|  | Sliding window manager | ✅ | ✅ |
-|  | Summarizing manager | ✅ | ❌ |
-| **Hooks** | Lifecycle hooks | ✅ | ✅ |
-|  | Custom hook providers | ✅ | ✅ |
-| **Multi-agent** | Swarms | ✅ | ✅ |
-|  | Graphs | ✅ | ✅ |
-|  | Workflows | ✅ | ✅ |
-|  | Agents as tools | ✅ | ✅ |
-|  | Agent-to-Agent (A2A) | ✅ | ✅ |
-| **Session management** | File, S3, repository managers | ✅ | ❌ |
-| **Observability** | OpenTelemetry integration | ✅ | ❌ |
-| **Experimental** | Bidirectional streaming | ✅ | ❌ |
-|  | Agent steering | ✅ | ❌ |
+| **Core** | [Agent creation and invocation](/docs/user-guide/concepts/agents/agent-loop/index.md) | ✅ | ✅ |
+|  | [Streaming responses](/docs/user-guide/concepts/streaming/index.md) | ✅ | ✅ |
+|  | [Structured output](/docs/user-guide/concepts/agents/structured-output/index.md) | ✅ | ✅ |
+| **Model providers** | [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) | ✅ | ✅ |
+|  | [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) | ✅ | ✅ |
+|  | [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ✅ |
+|  | [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) | ✅ | ❌ |
+|  | [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) | ✅ | ❌ |
+|  | [Custom providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) | ✅ | ✅ |
+|  | [Additional providers](/docs/user-guide/concepts/model-providers/index.md) | 5+ | 1+ |
+| **Tools** | [Custom function tools](/docs/user-guide/concepts/tools/custom-tools/index.md) | ✅ | ✅ |
+|  | [MCP (Model Context Protocol)](/docs/user-guide/concepts/tools/mcp-tools/index.md) | ✅ | ✅ |
+|  | [Built-in tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) | 30+ via community package | 4 built-in |
+| **Conversation** | [Null manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
+|  | [Sliding window manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
+|  | [Summarizing manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ❌ |
+| **Hooks** | [Lifecycle hooks](/docs/user-guide/concepts/agents/hooks/index.md) | ✅ | ✅ |
+|  | [Custom hook providers](/docs/user-guide/concepts/agents/hooks/index.md) | ✅ | ✅ |
+| **Multi-agent** | [Swarms](/docs/user-guide/concepts/multi-agent/swarm/index.md) | ✅ | ✅ |
+|  | [Graphs](/docs/user-guide/concepts/multi-agent/graph/index.md) | ✅ | ✅ |
+|  | [Workflows](/docs/user-guide/concepts/multi-agent/workflow/index.md) | ✅ | ✅ |
+|  | [Agents as tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) | ✅ | ✅ |
+|  | [Agent-to-Agent (A2A)](/docs/user-guide/concepts/multi-agent/agent-to-agent/index.md) | ✅ | ✅ |
+| **Session management** | [File, S3, repository managers](/docs/user-guide/concepts/agents/session-management/index.md) | ✅ | ✅ |
+| **Observability** | [OpenTelemetry integration](/docs/user-guide/observability-evaluation/observability/index.md) | ✅ | ✅ |
+| **Experimental** | [Bidirectional streaming](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) | ✅ | ❌ |
+|  | [Agent steering](/docs/user-guide/concepts/plugins/steering/index.md) | ✅ | ❌ |

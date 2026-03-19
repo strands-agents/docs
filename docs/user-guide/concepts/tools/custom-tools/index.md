@@ -434,7 +434,7 @@ It’s important to understand how invocation state compares to other approaches
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-In TypeScript, tools access **agent state** through `context.agent.state`. The state provides key-value storage that persists across tool invocations but is not passed to the model:
+In TypeScript, tools access **agent state** through `context.agent.appState`. The state provides key-value storage that persists across tool invocations but is not passed to the model:
 
 ```typescript
 const apiCallTool = tool({
@@ -448,8 +448,8 @@ const apiCallTool = tool({
       throw new Error('Context is required')
     }
 
-    // Access state via context.agent.state
-    const userId = context.agent.state.get('userId') as string | undefined
+    // Access state via context.agent.appState
+    const userId = context.agent.appState.get('userId') as string | undefined
 
     const response = await fetch('https://api.example.com/search', {
       method: 'GET',
@@ -465,7 +465,7 @@ const apiCallTool = tool({
 const agent = new Agent({ tools: [apiCallTool] })
 
 // Set state before invoking
-agent.state.set('userId', 'user123')
+agent.appState.set('userId', 'user123')
 
 const result = await agent.invoke('Get my profile data')
 ```

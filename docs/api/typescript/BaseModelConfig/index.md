@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:66](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/model.ts#L66)
+Defined in: [src/models/model.ts:67](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L67)
 
 Base configuration interface for all model providers.
 
@@ -13,10 +13,10 @@ This interface defines the common configuration properties that all model provid
 ### modelId?
 
 ```ts
-optional modelId: string;
+optional modelId?: string;
 ```
 
-Defined in: [src/models/model.ts:71](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/model.ts#L71)
+Defined in: [src/models/model.ts:72](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L72)
 
 The model identifier. This typically specifies which model to use from the provider’s catalog.
 
@@ -25,10 +25,10 @@ The model identifier. This typically specifies which model to use from the provi
 ### maxTokens?
 
 ```ts
-optional maxTokens: number;
+optional maxTokens?: number;
 ```
 
-Defined in: [src/models/model.ts:78](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/model.ts#L78)
+Defined in: [src/models/model.ts:79](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L79)
 
 Maximum number of tokens to generate in the response.
 
@@ -41,10 +41,10 @@ Provider-specific documentation for exact behavior
 ### temperature?
 
 ```ts
-optional temperature: number;
+optional temperature?: number;
 ```
 
-Defined in: [src/models/model.ts:85](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/model.ts#L85)
+Defined in: [src/models/model.ts:86](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L86)
 
 Controls randomness in generation.
 
@@ -57,10 +57,10 @@ Provider-specific documentation for valid range
 ### topP?
 
 ```ts
-optional topP: number;
+optional topP?: number;
 ```
 
-Defined in: [src/models/model.ts:92](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/model.ts#L92)
+Defined in: [src/models/model.ts:93](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L93)
 
 Controls diversity via nucleus sampling.
 

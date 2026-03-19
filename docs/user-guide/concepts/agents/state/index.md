@@ -189,23 +189,23 @@ agent.state.delete("last_action")
 ```typescript
 // Create an agent with initial state
 const agent = new Agent({
-  state: { user_preferences: { theme: 'dark' }, session_count: 0 },
+  appState: { user_preferences: { theme: 'dark' }, session_count: 0 },
 })
 
 // Access state values
-const theme = agent.state.get('user_preferences')
+const theme = agent.appState.get('user_preferences')
 console.log(theme) // { theme: 'dark' }
 
 // Set new state values
-agent.state.set('last_action', 'login')
-agent.state.set('session_count', 1)
+agent.appState.set('last_action', 'login')
+agent.appState.set('session_count', 1)
 
 // Get state values individually
-console.log(agent.state.get('user_preferences'))
-console.log(agent.state.get('session_count'))
+console.log(agent.appState.get('user_preferences'))
+console.log(agent.appState.get('session_count'))
 
 // Delete state values
-agent.state.delete('last_action')
+agent.appState.delete('last_action')
 ```
 (( /tab "TypeScript" ))
 
@@ -240,16 +240,16 @@ except ValueError as e:
 const agent = new Agent()
 
 // Valid JSON-serializable values
-agent.state.set('string_value', 'hello')
-agent.state.set('number_value', 42)
-agent.state.set('boolean_value', true)
-agent.state.set('list_value', [1, 2, 3])
-agent.state.set('dict_value', { nested: 'data' })
-agent.state.set('null_value', null)
+agent.appState.set('string_value', 'hello')
+agent.appState.set('number_value', 42)
+agent.appState.set('boolean_value', true)
+agent.appState.set('list_value', [1, 2, 3])
+agent.appState.set('dict_value', { nested: 'data' })
+agent.appState.set('null_value', null)
 
 // Invalid values will raise an error
 try {
-  agent.state.set('function', () => 'test') // Not JSON serializable
+  agent.appState.set('function', () => 'test') // Not JSON serializable
 } catch (error) {
   console.log(`Error: ${error}`)
 }
@@ -317,11 +317,11 @@ const trackUserActionTool = tool({
     }
 
     // Get current action count
-    const actionCount = (context.agent.state.get('action_count') as number) || 0
+    const actionCount = (context.agent.appState.get('action_count') as number) || 0
 
     // Update state
-    context.agent.state.set('action_count', actionCount + 1)
-    context.agent.state.set('last_action', input.action)
+    context.agent.appState.set('action_count', actionCount + 1)
+    context.agent.appState.set('last_action', input.action)
 
     return `Action '${input.action}' recorded. Total actions: ${actionCount + 1}`
   },
@@ -336,8 +336,8 @@ const getUserStatsTool = tool({
       throw new Error('Context is required')
     }
 
-    const actionCount = (context.agent.state.get('action_count') as number) || 0
-    const lastAction = (context.agent.state.get('last_action') as string) || 'none'
+    const actionCount = (context.agent.appState.get('action_count') as number) || 0
+    const lastAction = (context.agent.appState.get('last_action') as string) || 'none'
 
     return `Actions performed: ${actionCount}, Last action: ${lastAction}`
   },
@@ -351,8 +351,8 @@ const agent = new Agent({
 // Use tools that modify and read state
 await agent.invoke('Track that I logged in')
 await agent.invoke('Track that I viewed my profile')
-console.log(`Actions taken: ${agent.state.get('action_count')}`)
-console.log(`Last action: ${agent.state.get('last_action')}`)
+console.log(`Actions taken: ${agent.appState.get('action_count')}`)
+console.log(`Last action: ${agent.appState.get('last_action')}`)
 ```
 (( /tab "TypeScript" ))
 

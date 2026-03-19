@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:446](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L446)
+Defined in: [src/models/streaming.ts:446](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L446)
 
 Reasoning content delta within a content block. Represents incremental reasoning or thinking content.
 
@@ -10,7 +10,7 @@ Reasoning content delta within a content block. Represents incremental reasoning
 type: "reasoningContentDelta";
 ```
 
-Defined in: [src/models/streaming.ts:450](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L450)
+Defined in: [src/models/streaming.ts:450](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L450)
 
 Discriminator for reasoning delta.
 
@@ -19,10 +19,10 @@ Discriminator for reasoning delta.
 ### text?
 
 ```ts
-optional text: string;
+optional text?: string;
 ```
 
-Defined in: [src/models/streaming.ts:455](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L455)
+Defined in: [src/models/streaming.ts:455](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L455)
 
 Incremental reasoning text.
 
@@ -31,10 +31,10 @@ Incremental reasoning text.
 ### signature?
 
 ```ts
-optional signature: string;
+optional signature?: string;
 ```
 
-Defined in: [src/models/streaming.ts:460](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L460)
+Defined in: [src/models/streaming.ts:460](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L460)
 
 Incremental signature data.
 
@@ -43,9 +43,9 @@ Incremental signature data.
 ### redactedContent?
 
 ```ts
-optional redactedContent: Uint8Array;
+optional redactedContent?: Uint8Array;
 ```
 
-Defined in: [src/models/streaming.ts:465](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L465)
+Defined in: [src/models/streaming.ts:465](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L465)
 
 Incremental redacted content data.

@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:121](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L121)
+Defined in: [src/types/agent.ts:121](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L121)
 
 Result returned by the agent loop.
 
@@ -10,7 +10,7 @@ Result returned by the agent loop.
 new AgentResult(data): AgentResult;
 ```
 
-Defined in: [src/types/agent.ts:146](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L146)
+Defined in: [src/types/agent.ts:146](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L146)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/types/agent.ts:146](https://github.com/strands-agents/sdk-types
 readonly type: "agentResult";
 ```
 
-Defined in: [src/types/agent.ts:122](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L122)
+Defined in: [src/types/agent.ts:122](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L122)
 
 ---
 
@@ -44,7 +44,7 @@ Defined in: [src/types/agent.ts:122](https://github.com/strands-agents/sdk-types
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/types/agent.ts:127](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L127)
+Defined in: [src/types/agent.ts:127](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L127)
 
 The stop reason from the final model response.
 
@@ -56,7 +56,7 @@ The stop reason from the final model response.
 readonly lastMessage: Message;
 ```
 
-Defined in: [src/types/agent.ts:132](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L132)
+Defined in: [src/types/agent.ts:132](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L132)
 
 The last message added to the messages array.
 
@@ -65,10 +65,10 @@ The last message added to the messages array.
 ### structuredOutput?
 
 ```ts
-readonly optional structuredOutput: unknown;
+readonly optional structuredOutput?: unknown;
 ```
 
-Defined in: [src/types/agent.ts:138](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L138)
+Defined in: [src/types/agent.ts:138](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L138)
 
 The validated structured output from the LLM, if a schema was provided. Type represents any validated Zod schema output.
 
@@ -77,10 +77,10 @@ The validated structured output from the LLM, if a schema was provided. Type rep
 ### metrics?
 
 ```ts
-readonly optional metrics: AgentMetrics;
+readonly optional metrics?: AgentMetrics;
 ```
 
-Defined in: [src/types/agent.ts:144](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L144)
+Defined in: [src/types/agent.ts:144](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L144)
 
 Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token usage, tool execution stats, and model latency.
 
@@ -92,7 +92,7 @@ Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token 
 toString(): string;
 ```
 
-Defined in: [src/types/agent.ts:168](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/types/agent.ts#L168)
+Defined in: [src/types/agent.ts:168](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/agent.ts#L168)
 
 Extracts and concatenates all text content from the last message. Includes text from TextBlock and ReasoningBlock content blocks.
 

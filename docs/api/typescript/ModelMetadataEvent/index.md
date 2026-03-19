@@ -1,10 +1,30 @@
-Defined in: [src/models/streaming.ts:257](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L257)
+Defined in: [src/models/streaming.ts:257](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L257)
 
 Event containing metadata about the stream. Includes usage statistics, performance metrics, and trace information.
 
 ## Implements
 
 -   [`ModelMetadataEventData`](/docs/api/typescript/ModelMetadataEventData/index.md)
+
+## Constructors
+
+### Constructor
+
+```ts
+new ModelMetadataEvent(data): ModelMetadataEvent;
+```
+
+Defined in: [src/models/streaming.ts:278](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L278)
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `data` | [`ModelMetadataEventData`](/docs/api/typescript/ModelMetadataEventData/index.md) |
+
+#### Returns
+
+`ModelMetadataEvent`
 
 ## Properties
 
@@ -14,66 +34,58 @@ Event containing metadata about the stream. Includes usage statistics, performan
 readonly type: "modelMetadataEvent";
 ```
 
-Defined in: [src/models/streaming.ts:261](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L261)
+Defined in: [src/models/streaming.ts:261](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L261)
 
 Discriminator for metadata events.
 
 #### Implementation of
 
-```ts
-ModelMetadataEventData.type
-```
+[`ModelMetadataEventData`](/docs/api/typescript/ModelMetadataEventData/index.md).[`type`](/docs/api/typescript/ModelMetadataEventData/index.md#type)
 
 ---
 
 ### usage?
 
 ```ts
-readonly optional usage: Usage;
+readonly optional usage?: Usage;
 ```
 
-Defined in: [src/models/streaming.ts:266](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L266)
+Defined in: [src/models/streaming.ts:266](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L266)
 
 Token usage information.
 
 #### Implementation of
 
-```ts
-ModelMetadataEventData.usage
-```
+[`ModelMetadataEventData`](/docs/api/typescript/ModelMetadataEventData/index.md).[`usage`](/docs/api/typescript/ModelMetadataEventData/index.md#usage)
 
 ---
 
 ### metrics?
 
 ```ts
-readonly optional metrics: Metrics;
+readonly optional metrics?: Metrics;
 ```
 
-Defined in: [src/models/streaming.ts:271](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L271)
+Defined in: [src/models/streaming.ts:271](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L271)
 
 Performance metrics.
 
 #### Implementation of
 
-```ts
-ModelMetadataEventData.metrics
-```
+[`ModelMetadataEventData`](/docs/api/typescript/ModelMetadataEventData/index.md).[`metrics`](/docs/api/typescript/ModelMetadataEventData/index.md#metrics)
 
 ---
 
 ### trace?
 
 ```ts
-readonly optional trace: unknown;
+readonly optional trace?: unknown;
 ```
 
-Defined in: [src/models/streaming.ts:276](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L276)
+Defined in: [src/models/streaming.ts:276](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L276)
 
 Trace information for observability.
 
 #### Implementation of
 
-```ts
-ModelMetadataEventData.trace
-```
+[`ModelMetadataEventData`](/docs/api/typescript/ModelMetadataEventData/index.md).[`trace`](/docs/api/typescript/ModelMetadataEventData/index.md#trace)

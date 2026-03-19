@@ -1,4 +1,4 @@
-Defined in: [src/session/session-manager.ts:29](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/session/session-manager.ts#L29)
+Defined in: [src/session/session-manager.ts:29](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/session-manager.ts#L29)
 
 ## Properties
 
@@ -10,7 +10,7 @@ storage: {
 };
 ```
 
-Defined in: [src/session/session-manager.ts:31](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/session/session-manager.ts#L31)
+Defined in: [src/session/session-manager.ts:31](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/session-manager.ts#L31)
 
 Pluggable storage backends for snapshot persistence. Defaults to FileStorage in Node.js; required in browser environments.
 
@@ -25,10 +25,10 @@ snapshot: SnapshotStorage;
 ### sessionId?
 
 ```ts
-optional sessionId: string;
+optional sessionId?: string;
 ```
 
-Defined in: [src/session/session-manager.ts:35](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/session/session-manager.ts#L35)
+Defined in: [src/session/session-manager.ts:35](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/session-manager.ts#L35)
 
 Unique session identifier. Defaults to `'default-session'`.
 
@@ -37,10 +37,10 @@ Unique session identifier. Defaults to `'default-session'`.
 ### saveLatestOn?
 
 ```ts
-optional saveLatestOn: SaveLatestStrategy;
+optional saveLatestOn?: SaveLatestStrategy;
 ```
 
-Defined in: [src/session/session-manager.ts:37](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/session/session-manager.ts#L37)
+Defined in: [src/session/session-manager.ts:37](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/session-manager.ts#L37)
 
 When to save snapshot\_latest. Default: `'invocation'` (after each agent invocation completes). See [SaveLatestStrategy](/docs/api/typescript/SaveLatestStrategy/index.md) for details.
 
@@ -49,9 +49,9 @@ When to save snapshot\_latest. Default: `'invocation'` (after each agent invocat
 ### snapshotTrigger?
 
 ```ts
-optional snapshotTrigger: SnapshotTriggerCallback;
+optional snapshotTrigger?: SnapshotTriggerCallback;
 ```
 
-Defined in: [src/session/session-manager.ts:39](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/session/session-manager.ts#L39)
+Defined in: [src/session/session-manager.ts:39](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/session-manager.ts#L39)
 
 Callback invoked after each invocation to decide whether to create an immutable snapshot.

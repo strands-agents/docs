@@ -133,7 +133,7 @@ def query_data(query: str, tool_context: ToolContext) -> str:
 -   `results` — all `NodeResult` entries in completion order
 -   `nodes` — per-node state (status, results) accessible via `state.node(id)`
 -   `steps` — number of node executions so far
--   `app` — an `AppState` key-value store for custom data shared across hooks, edge handlers, and custom nodes
+-   `app` — a `StateStore` key-value store for custom data shared across hooks, edge handlers, and custom nodes
 
 ```typescript
 import { Graph, BeforeNodeCallEvent } from '@strands-agents/sdk'

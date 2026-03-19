@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/conversation-manager.ts:57](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/conversation-manager/conversation-manager.ts#L57)
+Defined in: [src/conversation-manager/conversation-manager.ts:57](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/conversation-manager/conversation-manager.ts#L57)
 
 Abstract base class for conversation history management strategies.
 
@@ -49,7 +49,7 @@ new ConversationManager(): ConversationManager;
 abstract readonly name: string;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:61](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/conversation-manager/conversation-manager.ts#L61)
+Defined in: [src/conversation-manager/conversation-manager.ts:61](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/conversation-manager/conversation-manager.ts#L61)
 
 A stable string identifier for this conversation manager.
 
@@ -65,7 +65,7 @@ A stable string identifier for this conversation manager.
 abstract reduce(options): boolean;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:78](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/conversation-manager/conversation-manager.ts#L78)
+Defined in: [src/conversation-manager/conversation-manager.ts:78](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/conversation-manager/conversation-manager.ts#L78)
 
 Reduce the conversation history.
 
@@ -95,7 +95,7 @@ Implementations should mutate `agent.messages` in place and return `true` if any
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:92](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/conversation-manager/conversation-manager.ts#L92)
+Defined in: [src/conversation-manager/conversation-manager.ts:92](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/conversation-manager/conversation-manager.ts#L92)
 
 Initialize the conversation manager with the agent instance.
 

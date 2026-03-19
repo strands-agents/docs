@@ -494,7 +494,8 @@ const response = await agent.invoke([
     format: 'pdf',
     name: 'report.pdf',
     source: {
-      s3Location: {
+      location: {
+        type: 's3',
         uri: 's3://my-bucket/documents/report.pdf',
         bucketOwner: '123456789012', // Optional: for cross-account access
       },
@@ -507,7 +508,7 @@ const response = await agent.invoke([
 
 Supported Media Types
 
-The same `s3Location` pattern also works for images and videos.
+The same `location` pattern also works for images and videos.
 
 ### Guardrails
 

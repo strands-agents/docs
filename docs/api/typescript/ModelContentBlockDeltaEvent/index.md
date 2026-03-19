@@ -1,10 +1,30 @@
-Defined in: [src/models/streaming.ts:138](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L138)
+Defined in: [src/models/streaming.ts:138](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L138)
 
 Event emitted when there is new content in a content block.
 
 ## Implements
 
 -   [`ModelContentBlockDeltaEventData`](/docs/api/typescript/ModelContentBlockDeltaEventData/index.md)
+
+## Constructors
+
+### Constructor
+
+```ts
+new ModelContentBlockDeltaEvent(data): ModelContentBlockDeltaEvent;
+```
+
+Defined in: [src/models/streaming.ts:154](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L154)
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `data` | [`ModelContentBlockDeltaEventData`](/docs/api/typescript/ModelContentBlockDeltaEventData/index.md) |
+
+#### Returns
+
+`ModelContentBlockDeltaEvent`
 
 ## Properties
 
@@ -14,25 +34,23 @@ Event emitted when there is new content in a content block.
 readonly type: "modelContentBlockDeltaEvent";
 ```
 
-Defined in: [src/models/streaming.ts:142](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L142)
+Defined in: [src/models/streaming.ts:142](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L142)
 
 Discriminator for content block delta events.
 
 #### Implementation of
 
-```ts
-ModelContentBlockDeltaEventData.type
-```
+[`ModelContentBlockDeltaEventData`](/docs/api/typescript/ModelContentBlockDeltaEventData/index.md).[`type`](/docs/api/typescript/ModelContentBlockDeltaEventData/index.md#type)
 
 ---
 
 ### contentBlockIndex?
 
 ```ts
-readonly optional contentBlockIndex: number;
+readonly optional contentBlockIndex?: number;
 ```
 
-Defined in: [src/models/streaming.ts:147](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L147)
+Defined in: [src/models/streaming.ts:147](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L147)
 
 Index of the content block being updated.
 
@@ -44,12 +62,10 @@ Index of the content block being updated.
 readonly delta: ContentBlockDelta;
 ```
 
-Defined in: [src/models/streaming.ts:152](https://github.com/strands-agents/sdk-typescript/blob/19734c452665364ca10a2b019380f7f051c5ec23/src/models/streaming.ts#L152)
+Defined in: [src/models/streaming.ts:152](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L152)
 
 The incremental content update.
 
 #### Implementation of
 
-```ts
-ModelContentBlockDeltaEventData.delta
-```
+[`ModelContentBlockDeltaEventData`](/docs/api/typescript/ModelContentBlockDeltaEventData/index.md).[`delta`](/docs/api/typescript/ModelContentBlockDeltaEventData/index.md#delta)
