@@ -536,3 +536,56 @@ def search_database(query: str, max_results: int = 10) -> list:
 ```
 </Tab>
 </Tabs>
+
+### 4. Agents as Tools
+
+Any agent can be converted into a tool using `.as_tool()` and passed to another agent's tools array. This enables hierarchical multi-agent systems where an orchestrator delegates to specialized agents. For more details, see [Agents as Tools](../multi-agent/agents-as-tools.md).
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+
+research_agent = Agent(
+    system_prompt="You are a specialized research assistant.",
+)
+
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent.as_tool()],
+)
+
+orchestrator("What are the latest advances in quantum computing?")
+```
+
+You can also specify a custom name and description for the tool:
+
+```python
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[
+        research_agent.as_tool(
+            name="research_assistant",
+            description="Process and respond to research-related queries requiring factual information.",
+        ),
+    ],
+)
+```
+
+By default, the tool agent resets its conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True` when creating the tool:
+
+```python
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent.as_tool(preserve_context=True)],
+)
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+// .as_tool() not yet supported in TypeScript.
+```
+</Tab>
+</Tabs>
