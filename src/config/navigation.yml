@@ -217,6 +217,7 @@ sidebar:
           - docs/community/model-providers/sglang
           - docs/community/model-providers/vllm
           - docs/community/model-providers/mlx
+          - docs/community/model-providers/ovhcloud-ai-endpoints
           - docs/community/model-providers/xai
       - label: Session Managers
         items:
