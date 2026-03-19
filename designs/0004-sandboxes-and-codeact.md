@@ -73,7 +73,8 @@ LangChain DeepAgents is an example of this pattern — Daytona, Modal, E2B, and 
 
 ```python
 from abc import ABC, abstractmethod
-from collections.abc import AsyncGenerator
+import secrets
+import shlex
 from dataclasses import dataclass
 
 
@@ -105,14 +106,18 @@ class Sandbox(ABC):
         self,
         command: str,
         timeout: int | None = None,
-    ) -> AsyncGenerator[str | ExecutionResult, None]:
-        """Execute a shell command, streaming output.
+    ) -> ExecutionResult:
+        """Execute a shell command in the sandbox.
 
-        Yields stdout/stderr lines as they arrive. The final yield
-        is an ExecutionResult with the exit code and complete output.
+        This is the only method implementations must provide. All other
+        methods are built on top of this one by default.
 
-        This matches Strands' existing async tool streaming pattern
-        where tools yield intermediate results via AsyncGenerator.
+        Args:
+            command: The shell command to execute.
+            timeout: Maximum execution time in seconds. None means no timeout.
+
+        Returns:
+            The result of the command execution.
         """
         ...
 
@@ -123,43 +128,32 @@ class Sandbox(ABC):
         code: str,
         language: str = "python",
         timeout: int | None = None,
-    ) -> AsyncGenerator[str | ExecutionResult, None]:
+    ) -> ExecutionResult:
         """Execute code in the sandbox. Override for native code execution."""
-        escaped = code.replace("'", "'\\''")
-        async for chunk in self.execute(f"{language} -c '{escaped}'", timeout=timeout):
-            yield chunk
+        return await self.execute(f"{language} -c {shlex.quote(code)}", timeout=timeout)
 
     async def read_file(self, path: str) -> str:
         """Read a file from the sandbox filesystem. Override for native file I/O."""
-        result = await self._execute_to_result(f"cat '{path}'")
+        result = await self.execute(f"cat {shlex.quote(path)}")
         if result.exit_code != 0:
             raise FileNotFoundError(result.stderr)
         return result.stdout
 
     async def write_file(self, path: str, content: str) -> None:
         """Write a file to the sandbox filesystem. Override for native file I/O."""
-        result = await self._execute_to_result(
-            f"cat > '{path}' << 'STRANDS_EOF'\n{content}\nSTRANDS_EOF"
+        delimiter = f"STRANDS_EOF_{secrets.token_hex(8)}"
+        result = await self.execute(
+            f"cat > {shlex.quote(path)} << '{delimiter}'\n{content}\n{delimiter}"
         )
         if result.exit_code != 0:
             raise IOError(result.stderr)
 
     async def list_files(self, path: str = ".") -> list[str]:
         """List files in a sandbox directory. Override for native listing."""
-        result = await self._execute_to_result(f"ls -1 '{path}'")
+        result = await self.execute(f"ls -1 {shlex.quote(path)}")
         if result.exit_code != 0:
             raise FileNotFoundError(result.stderr)
         return [f for f in result.stdout.strip().split("\n") if f]
-
-    async def _execute_to_result(self, command: str, timeout: int | None = None) -> ExecutionResult:
-        """Helper: consume the execute() stream and return the final ExecutionResult."""
-        result = None
-        async for chunk in self.execute(command, timeout=timeout):
-            if isinstance(chunk, ExecutionResult):
-                result = chunk
-        if result is None:
-            raise RuntimeError("execute() did not yield an ExecutionResult")
-        return result
 
     # --- Lifecycle ---
 
@@ -181,7 +175,7 @@ class Sandbox(ABC):
 
 New sandbox providers implement one method. The base class handles everything else. Providers that have native filesystem or code execution APIs (for example, AgentCore's `invoke("executeCode", ...)` or Docker's `docker cp`) override the convenience methods for better performance, encoding safety, and binary file support.
 
-The streaming interface matches Strands' existing async tool pattern where tools `yield` intermediate results via `AsyncGenerator`. Tools that use the sandbox can forward these yields to provide real-time output to the user. Tools that do not need streaming can use the `_execute_to_result()` helper to consume the stream and get a final `ExecutionResult`.
+The convenience methods use `shlex.quote()` for shell escaping and a randomized heredoc delimiter (`STRANDS_EOF_{random_hex}`) to prevent content injection in `write_file()`. Providers that need better file handling (binary files, encoding) override the convenience methods with native implementations.
 
 ##### Option B: Multi-method ABC
 
@@ -262,22 +256,16 @@ agent = Agent(
 agent("Create a file called data.csv with some sample data, then analyze it with Python")
 ```
 
-Inside a tool, the Sandbox is accessed via [`ToolContext`](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/index.md). Tools can stream sandbox output using Strands' existing async generator pattern:
+Inside a tool, the Sandbox is accessed via [`ToolContext`](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/index.md):
 
 ```python
 from strands import tool, ToolContext
-from strands.sandbox import ExecutionResult
 
 
 @tool(context=True)
 async def shell(command: str, tool_context: ToolContext) -> str:
-    """Execute a shell command with streaming output."""
-    result = None
-    async for chunk in tool_context.agent.sandbox.execute(command):
-        if isinstance(chunk, str):
-            yield chunk  # Stream output to the user
-        elif isinstance(chunk, ExecutionResult):
-            result = chunk
+    """Execute a shell command in the sandbox."""
+    result = await tool_context.agent.sandbox.execute(command)
     return result.stdout
 ```
 
@@ -598,14 +586,12 @@ Tools access the sandbox via [`ToolContext`](https://strandsagents.com/docs/user
 
 ```python
 from strands import tool, ToolContext
-from strands.sandbox import ExecutionResult
 
 
 @tool(context=True)
 async def my_tool(tool_context: ToolContext) -> str:
-    async for chunk in tool_context.agent.sandbox.execute("ls -la"):
-        if isinstance(chunk, ExecutionResult):
-            return chunk.stdout
+    result = await tool_context.agent.sandbox.execute("ls -la")
+    return result.stdout
 ```
 
 ### Tools changes (`strands-agents/tools`)
@@ -628,11 +614,11 @@ interface ExecutionResult {
 }
 
 interface Sandbox {
-  // The only required method — yields output lines, final yield is ExecutionResult
-  execute(command: string, timeout?: number): AsyncGenerator<string | ExecutionResult>;
+  // The only required method
+  execute(command: string, timeout?: number): Promise<ExecutionResult>;
 
   // Convenience methods (default implementations built on execute())
-  executeCode?(code: string, language?: string, timeout?: number): AsyncGenerator<string | ExecutionResult>;
+  executeCode?(code: string, language?: string, timeout?: number): Promise<ExecutionResult>;
   readFile?(path: string): Promise<string>;
   writeFile?(path: string, content: string): Promise<void>;
   listFiles?(path?: string): Promise<string[]>;
@@ -753,7 +739,7 @@ Rejected because these are orthogonal concerns. `ToolExecutor` controls scheduli
 
 ### LocalSandbox
 
-Wraps the current behavior of `shell` and `python_repl` behind the Sandbox interface. Uses subprocess for command execution and the local filesystem directly. Overrides `read_file` and `write_file` with native filesystem calls for encoding safety.
+Wraps the current behavior of `shell` and `python_repl` behind the Sandbox interface. Uses `asyncio.create_subprocess_shell` for command execution and native filesystem calls for file I/O. Overrides `read_file` and `write_file` to avoid shell escaping issues entirely.
 
 ```python
 import asyncio
@@ -763,9 +749,14 @@ from strands.sandbox import Sandbox, ExecutionResult
 
 
 class LocalSandbox(Sandbox):
-    """Execute code and commands on the local host."""
+    """Execute code and commands on the local host.
 
-    def __init__(self, working_dir: str | None = None):
+    Uses asyncio subprocesses for command execution and native filesystem
+    operations for file I/O. This is the default sandbox, providing the
+    same behavior as running commands directly on the host.
+    """
+
+    def __init__(self, working_dir: str | None = None) -> None:
         self.working_dir = working_dir or os.getcwd()
 
     async def execute(self, command: str, timeout: int | None = None) -> ExecutionResult:
@@ -775,7 +766,12 @@ class LocalSandbox(Sandbox):
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
-        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+        try:
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+        except asyncio.TimeoutError:
+            proc.kill()
+            await proc.communicate()
+            raise
         return ExecutionResult(
             exit_code=proc.returncode or 0,
             stdout=stdout.decode(),
@@ -784,21 +780,32 @@ class LocalSandbox(Sandbox):
 
     # Override for native file I/O (avoids shell escaping issues)
     async def read_file(self, path: str) -> str:
-        full_path = os.path.join(self.working_dir, path)
+        full_path = os.path.join(self.working_dir, path) if not os.path.isabs(path) else path
         with open(full_path) as f:
             return f.read()
 
     async def write_file(self, path: str, content: str) -> None:
-        full_path = os.path.join(self.working_dir, path)
+        full_path = os.path.join(self.working_dir, path) if not os.path.isabs(path) else path
+        parent_dir = os.path.dirname(full_path)
+        if parent_dir:
+            os.makedirs(parent_dir, exist_ok=True)
         with open(full_path, "w") as f:
             f.write(content)
 ```
 
 ### DockerSandbox
 
-Runs commands inside a Docker container. The container is created on `start()` and destroyed on `stop()`. Files are shared via volume mounts or `docker cp`.
+Runs commands inside a Docker container. The container is created on `start()` and destroyed on `stop()`. Each `execute()` call runs `docker exec` on the running container. Filesystem state persists across calls (shared container), but working directory and environment variables set via `export` do not carry across calls (each `docker exec` starts a new shell process).
+
+Overrides `write_file` to pipe content via `docker exec -i ... cat >` instead of using heredocs, eliminating content injection risks entirely. Overrides `read_file` with `shlex.quote()` for safe path handling.
 
 ```python
+import asyncio
+import shlex
+
+from strands.sandbox import Sandbox, ExecutionResult
+
+
 class DockerSandbox(Sandbox):
     """Execute code and commands in a Docker container."""
 
@@ -807,30 +814,92 @@ class DockerSandbox(Sandbox):
         image: str = "python:3.12-slim",
         volumes: dict[str, str] | None = None,
         environment: dict[str, str] | None = None,
+        working_dir: str = "/workspace",
     ):
         self.image = image
         self.volumes = volumes or {}
         self.environment = environment or {}
+        self.working_dir = working_dir
         self._container_id: str | None = None
 
+    async def _run_docker(
+        self, args: list[str], timeout: int | None = None, stdin_data: bytes | None = None,
+    ) -> ExecutionResult:
+        """Run a docker CLI command and return the result."""
+        proc = await asyncio.create_subprocess_exec(
+            "docker", *args,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            stdin=asyncio.subprocess.PIPE if stdin_data else asyncio.subprocess.DEVNULL,
+        )
+        try:
+            stdout, stderr = await asyncio.wait_for(
+                proc.communicate(input=stdin_data), timeout=timeout,
+            )
+        except asyncio.TimeoutError:
+            proc.kill()
+            await proc.communicate()
+            raise
+        return ExecutionResult(
+            exit_code=proc.returncode or 0,
+            stdout=stdout.decode(),
+            stderr=stderr.decode(),
+        )
+
     async def start(self) -> None:
-        # docker create + docker start
-        ...
+        # docker create --rm -i -w /workspace <volumes> <env> <image> sleep infinity
+        create_args = ["create", "--rm", "-i", "-w", self.working_dir]
+        for host_path, container_path in self.volumes.items():
+            create_args += ["-v", f"{host_path}:{container_path}"]
+        for key, value in self.environment.items():
+            create_args += ["-e", f"{key}={value}"]
+        create_args += [self.image, "sleep", "infinity"]
+        result = await self._run_docker(create_args, timeout=60)
+        if result.exit_code != 0:
+            raise RuntimeError(f"failed to create container: {result.stderr}")
+        self._container_id = result.stdout.strip()
+        await self._run_docker(["start", self._container_id], timeout=30)
+        await self.execute(f"mkdir -p {shlex.quote(self.working_dir)}")
 
     async def execute(self, command: str, timeout: int | None = None) -> ExecutionResult:
-        # docker exec self._container_id sh -c {command}
-        ...
+        if self._container_id is None:
+            raise RuntimeError("docker sandbox not started")
+        return await self._run_docker(
+            ["exec", "-w", self.working_dir, self._container_id, "sh", "-c", command],
+            timeout=timeout,
+        )
+
+    # Override: pipe content via stdin to avoid heredoc injection
+    async def write_file(self, path: str, content: str) -> None:
+        if self._container_id is None:
+            raise RuntimeError("docker sandbox not started")
+        if not path.startswith("/"):
+            path = f"{self.working_dir}/{path}"
+        parent = "/".join(path.split("/")[:-1])
+        if parent:
+            await self.execute(f"mkdir -p {shlex.quote(parent)}")
+        result = await self._run_docker(
+            ["exec", "-i", "-w", self.working_dir, self._container_id,
+             "sh", "-c", f"cat > {shlex.quote(path)}"],
+            stdin_data=content.encode(),
+        )
+        if result.exit_code != 0:
+            raise IOError(result.stderr)
 
     async def stop(self) -> None:
-        # docker rm -f self._container_id
-        ...
+        if self._container_id:
+            await self._run_docker(["rm", "-f", self._container_id], timeout=30)
+            self._container_id = None
 ```
 
 ### AgentCoreSandbox
 
-Wraps the existing `AgentCoreCodeInterpreter` behind the Sandbox interface. This is largely a refactor of the current implementation in `strands_tools/code_interpreter/agent_core_code_interpreter.py`.
+Wraps the Bedrock AgentCore Code Interpreter behind the Sandbox interface. Overrides `execute_code()`, `read_file()`, `write_file()`, and `list_files()` with native AgentCore API calls for better performance and binary-file support.
 
 ```python
+import uuid
+from typing import Any
+
 from strands.sandbox import Sandbox, ExecutionResult
 
 
@@ -839,35 +908,68 @@ class AgentCoreSandbox(Sandbox):
 
     def __init__(self, region: str | None = None, session_name: str | None = None):
         self.region = region
-        self.session_name = session_name
-        self._client = None
+        self.session_name = session_name or f"sandbox-{uuid.uuid4().hex[:12]}"
+        self._client: Any = None
 
     async def start(self) -> None:
-        self._client = BedrockAgentCoreCodeInterpreterClient(region=self.region)
+        from bedrock_agentcore.tools.code_interpreter_client import (
+            CodeInterpreter as BedrockAgentCoreCodeInterpreterClient,
+        )
+        kwargs: dict[str, Any] = {}
+        if self.region:
+            kwargs["region"] = self.region
+        self._client = BedrockAgentCoreCodeInterpreterClient(**kwargs)
         self._client.start(identifier="aws.codeinterpreter.v1", name=self.session_name)
+
+    def _parse_stream_result(self, response: dict[str, Any]) -> ExecutionResult:
+        """Parse an AgentCore event-stream response into an ExecutionResult."""
+        if "stream" in response:
+            for event in response["stream"]:
+                if "result" in event:
+                    result = event["result"]
+                    content = str(result.get("content", ""))
+                    is_error = response.get("isError", False)
+                    return ExecutionResult(
+                        exit_code=1 if is_error else 0,
+                        stdout="" if is_error else content,
+                        stderr=content if is_error else "",
+                    )
+        return ExecutionResult(exit_code=1, stdout="", stderr=f"unexpected response: {response}")
 
     async def execute(self, command: str, timeout: int | None = None) -> ExecutionResult:
         response = self._client.invoke("executeCommand", {"command": command})
-        # Parse response stream into ExecutionResult
-        ...
+        return self._parse_stream_result(response)
 
     # Override: AgentCore has a native code execution API
     async def execute_code(self, code: str, language: str = "python", timeout: int | None = None) -> ExecutionResult:
-        response = self._client.invoke("executeCode", {
-            "code": code,
-            "language": language,
-        })
-        # Parse response stream into ExecutionResult
-        ...
+        response = self._client.invoke("executeCode", {"code": code, "language": language})
+        return self._parse_stream_result(response)
 
     # Override: AgentCore has native file APIs
     async def read_file(self, path: str) -> str:
         response = self._client.invoke("readFiles", {"paths": [path]})
-        ...
+        result = self._parse_stream_result(response)
+        if result.exit_code != 0:
+            raise FileNotFoundError(result.stderr)
+        return result.stdout
 
     async def write_file(self, path: str, content: str) -> None:
         response = self._client.invoke("writeFiles", {"content": [{"path": path, "text": content}]})
-        ...
+        result = self._parse_stream_result(response)
+        if result.exit_code != 0:
+            raise IOError(result.stderr)
+
+    async def list_files(self, path: str = ".") -> list[str]:
+        response = self._client.invoke("listFiles", {"path": path})
+        result = self._parse_stream_result(response)
+        if result.exit_code != 0:
+            raise FileNotFoundError(result.stderr)
+        return [f for f in result.stdout.strip().split("\n") if f]
+
+    async def stop(self) -> None:
+        if self._client:
+            self._client.stop()
+            self._client = None
 ```
 
 </details>
