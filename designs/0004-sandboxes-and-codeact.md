@@ -73,6 +73,7 @@ LangChain DeepAgents is an example of this pattern — Daytona, Modal, E2B, and 
 
 ```python
 from abc import ABC, abstractmethod
+from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 
 
@@ -104,8 +105,15 @@ class Sandbox(ABC):
         self,
         command: str,
         timeout: int | None = None,
-    ) -> ExecutionResult:
-        """Execute a shell command. The only method implementations must provide."""
+    ) -> AsyncGenerator[str | ExecutionResult, None]:
+        """Execute a shell command, streaming output.
+
+        Yields stdout/stderr lines as they arrive. The final yield
+        is an ExecutionResult with the exit code and complete output.
+
+        This matches Strands' existing async tool streaming pattern
+        where tools yield intermediate results via AsyncGenerator.
+        """
         ...
 
     # --- Convenience methods built on execute() ---
@@ -115,31 +123,43 @@ class Sandbox(ABC):
         code: str,
         language: str = "python",
         timeout: int | None = None,
-    ) -> ExecutionResult:
+    ) -> AsyncGenerator[str | ExecutionResult, None]:
         """Execute code in the sandbox. Override for native code execution."""
-        # Default: pipe code to interpreter via shell
         escaped = code.replace("'", "'\\''")
-        return await self.execute(f"{language} -c '{escaped}'", timeout=timeout)
+        async for chunk in self.execute(f"{language} -c '{escaped}'", timeout=timeout):
+            yield chunk
 
     async def read_file(self, path: str) -> str:
         """Read a file from the sandbox filesystem. Override for native file I/O."""
-        result = await self.execute(f"cat '{path}'")
+        result = await self._execute_to_result(f"cat '{path}'")
         if result.exit_code != 0:
             raise FileNotFoundError(result.stderr)
         return result.stdout
 
     async def write_file(self, path: str, content: str) -> None:
         """Write a file to the sandbox filesystem. Override for native file I/O."""
-        result = await self.execute(f"cat > '{path}' << 'STRANDS_EOF'\n{content}\nSTRANDS_EOF")
+        result = await self._execute_to_result(
+            f"cat > '{path}' << 'STRANDS_EOF'\n{content}\nSTRANDS_EOF"
+        )
         if result.exit_code != 0:
             raise IOError(result.stderr)
 
     async def list_files(self, path: str = ".") -> list[str]:
         """List files in a sandbox directory. Override for native listing."""
-        result = await self.execute(f"ls -1 '{path}'")
+        result = await self._execute_to_result(f"ls -1 '{path}'")
         if result.exit_code != 0:
             raise FileNotFoundError(result.stderr)
         return [f for f in result.stdout.strip().split("\n") if f]
+
+    async def _execute_to_result(self, command: str, timeout: int | None = None) -> ExecutionResult:
+        """Helper: consume the execute() stream and return the final ExecutionResult."""
+        result = None
+        async for chunk in self.execute(command, timeout=timeout):
+            if isinstance(chunk, ExecutionResult):
+                result = chunk
+        if result is None:
+            raise RuntimeError("execute() did not yield an ExecutionResult")
+        return result
 
     # --- Lifecycle ---
 
@@ -160,6 +180,8 @@ class Sandbox(ABC):
 ```
 
 New sandbox providers implement one method. The base class handles everything else. Providers that have native filesystem or code execution APIs (for example, AgentCore's `invoke("executeCode", ...)` or Docker's `docker cp`) override the convenience methods for better performance, encoding safety, and binary file support.
+
+The streaming interface matches Strands' existing async tool pattern where tools `yield` intermediate results via `AsyncGenerator`. Tools that use the sandbox can forward these yields to provide real-time output to the user. Tools that do not need streaming can use the `_execute_to_result()` helper to consume the stream and get a final `ExecutionResult`.
 
 ##### Option B: Multi-method ABC
 
@@ -240,20 +262,42 @@ agent = Agent(
 agent("Create a file called data.csv with some sample data, then analyze it with Python")
 ```
 
-Inside a tool, the Sandbox is accessed via [`ToolContext`](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/index.md):
+Inside a tool, the Sandbox is accessed via [`ToolContext`](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/index.md). Tools can stream sandbox output using Strands' existing async generator pattern:
 
 ```python
 from strands import tool, ToolContext
+from strands.sandbox import ExecutionResult
 
 
 @tool(context=True)
 async def shell(command: str, tool_context: ToolContext) -> str:
-    """Execute a shell command."""
-    result = await tool_context.agent.sandbox.execute(command)
+    """Execute a shell command with streaming output."""
+    result = None
+    async for chunk in tool_context.agent.sandbox.execute(command):
+        if isinstance(chunk, str):
+            yield chunk  # Stream output to the user
+        elif isinstance(chunk, ExecutionResult):
+            result = chunk
     return result.stdout
 ```
 
 Because the agent always has a sandbox (defaulting to `LocalSandbox`), tools do not need fallback logic. They always delegate to the sandbox.
+
+#### State management
+
+The sandbox must decide whether state (working directory, environment variables) persists between `execute()` calls.
+
+We recommend stateless by default: each `execute()` call is independent. This avoids concurrency issues when multiple tools call the sandbox in parallel (tool A does `cd /tmp`, tool B does `cd /home` — with shared state, the last one wins and both are confused). Stateless execution is predictable and matches the LangChain DeepAgents model.
+
+This means `cd`, `export`, and other state-modifying commands do not persist between calls. Tools that need state persistence (for example, a shell tool that tracks `cd` across calls) can manage it themselves, as the current `shell` tool already does via `CommandContext`.
+
+Each sandbox implementation handles this differently:
+
+- `LocalSandbox` — spawns a fresh subprocess per `execute()` call. Stateless by default.
+- `DockerSandbox` — each `docker exec` gets its own process. Filesystem changes persist (shared container), but cwd and env do not carry across calls.
+- `AgentCoreSandbox` — session state persists natively via the AgentCore API.
+
+Sandbox implementations may optionally offer a stateful mode (for example, `LocalSandbox` could use a persistent shell process for tools that opt in), but the default behavior and the abstract interface make no persistence promise.
 
 #### Tool proxy
 
@@ -554,12 +598,14 @@ Tools access the sandbox via [`ToolContext`](https://strandsagents.com/docs/user
 
 ```python
 from strands import tool, ToolContext
+from strands.sandbox import ExecutionResult
 
 
 @tool(context=True)
 async def my_tool(tool_context: ToolContext) -> str:
-    result = await tool_context.agent.sandbox.execute("ls -la")
-    return result.stdout
+    async for chunk in tool_context.agent.sandbox.execute("ls -la"):
+        if isinstance(chunk, ExecutionResult):
+            return chunk.stdout
 ```
 
 ### Tools changes (`strands-agents/tools`)
@@ -582,11 +628,11 @@ interface ExecutionResult {
 }
 
 interface Sandbox {
-  // The only required method
-  execute(command: string, timeout?: number): Promise<ExecutionResult>;
+  // The only required method — yields output lines, final yield is ExecutionResult
+  execute(command: string, timeout?: number): AsyncGenerator<string | ExecutionResult>;
 
   // Convenience methods (default implementations built on execute())
-  executeCode?(code: string, language?: string, timeout?: number): Promise<ExecutionResult>;
+  executeCode?(code: string, language?: string, timeout?: number): AsyncGenerator<string | ExecutionResult>;
   readFile?(path: string): Promise<string>;
   writeFile?(path: string, content: string): Promise<void>;
   listFiles?(path?: string): Promise<string[]>;
@@ -616,16 +662,7 @@ Migration path for existing tools:
 
 1. **Namespace injection for programmatic tool calling.** The programmatic tool caller and CodeAct need tool wrapper functions in the code execution namespace. Phase 1 runs orchestration code in the host process with tools as local functions. Phase 2 uses the tool proxy to run code fully inside the sandbox. See [Tool proxy](#tool-proxy) for the full design and alternatives considered.
 
-2. **Working directory persistence across commands.** The current `shell` tool tracks `cd` across invocations via `CommandContext`. A naive subprocess-per-command sandbox loses directory state between calls.
-
-   We recommend that the abstract `Sandbox` interface makes no persistence promise — it is an implementation concern. Each implementation handles it appropriately:
-   - `LocalSandbox` uses a persistent shell process (matching the approach in [devtools PR #39](https://github.com/strands-agents/devtools/pull/39)). Commands are sent to a long-running shell via stdin, so `cd`, `export`, and other state-modifying commands persist naturally.
-   - `DockerSandbox` gets this for free — `docker exec` on a running container inherits the container's state.
-   - `AgentCoreSandbox` maintains session state natively via the AgentCore API.
-
-   Alternatives considered:
-   - Tracking `cwd` and `env` as instance state in the base class, prepending `cd {cwd} &&` to each command — fragile because parsing `cd` from arbitrary shell commands is unreliable.
-   - Documenting statelessness as a feature — breaks tools that depend on `cd` persistence.
+2. **Stateful sandbox mode.** The default is stateless (see [State management](#state-management)). Some use cases may benefit from a stateful mode where `cd` and `export` persist across calls. Should this be a constructor flag on sandbox implementations, a separate `StatefulSandbox` subclass, or left entirely to individual tools?
 
 3. **Parallel tool execution.** Strands' `ConcurrentToolExecutor` runs multiple tool calls in parallel. If two tools both call `sandbox.execute()` concurrently on a persistent-shell-based sandbox, the interleaved stdin/stdout is a race condition. `DockerSandbox` and `AgentCoreSandbox` are naturally concurrent-safe (each `execute()` gets its own process or API call).
 
