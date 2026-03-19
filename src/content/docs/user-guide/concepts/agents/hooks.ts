@@ -83,7 +83,7 @@ async function toolInterceptionExample() {
     name = 'tool-interceptor'
 
     initAgent(agent: LocalAgent): void {
-      agent.addHook(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
+      agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
     }
 
     private interceptTool(event: BeforeToolCallEvent): void {
@@ -245,7 +245,7 @@ async function limitToolCountsExample() {
 
     initAgent(agent: LocalAgent): void {
       agent.addHook(BeforeInvocationEvent, () => this.resetCounts())
-      agent.addHook(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
+      agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
     }
 
     private resetCounts(): void {
