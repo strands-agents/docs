@@ -1,10 +1,11 @@
 // --8<-- [start:basic_import]
-import { Agent, SessionManager, FileStorage } from '@strands-agents/sdk'
+import { Agent } from '@strands-agents/sdk'
 import { bash } from '@strands-agents/sdk/vended-tools/bash'
 import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
 import { httpRequest } from '@strands-agents/sdk/vended-tools/http-request'
 import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
 // --8<-- [end:basic_import]
+import { SessionManager, FileStorage } from '@strands-agents/sdk'
 
 // Agent with vended tools example
 async function agentWithVendedToolsExample() {
