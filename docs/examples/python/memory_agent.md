@@ -18,7 +18,7 @@ The memory agent utilizes two primary tools:
 
 1. **memory**: Enables storing and retrieving information with capabilities for:
 
-    - Storing user-specific information, either persistently or temporarily
+    - Storing user-specific information persistently
     - Retrieving memories based on semantic relevance
     - Listing all stored memories for a user
     - Setting relevance thresholds and result limits
@@ -31,7 +31,7 @@ The memory agent utilizes two primary tools:
 ## Memory-Enhanced Response Generation Workflow
 
 > [!NOTE]
-> The memory used in this workflow is short-term and scoped to the current session. See [memory types](https://docs.mem0.ai/core-concepts/memory-types) for more details. Update the [configuration](https://docs.mem0.ai/components/vectordbs/config) to enable persistent storage across sessions.
+> By default, mem0 persists memories to local storage at `~/.mem0/`. See [mem0 vector store configuration](https://docs.mem0.ai/components/vectordbs/config) for options on using a different backend for production use.
 
 This example demonstrates a workflow where memories are used to generate contextually relevant responses.
 
