@@ -4,6 +4,7 @@
  * Inspired by Clare's steering blog post.
  */
 import CodeBlock from './CodeBlock.astro'
+import { pathWithBase } from '../../util/links'
 
 const messyPrompt = `agent = Agent(
     system_prompt="""You are a report generator. Always use markdown tables
@@ -67,7 +68,7 @@ agent = Agent(
           vs <strong>82.5%</strong> with prompt-only approaches and <strong>80.8%</strong> with hard-coded workflows
         </div>
       </div>
-      <a href="/blog/steering-accuracy-beats-prompts-workflows/" class="proof-link">
+      <a href={pathWithBase('/blog/steering-accuracy-beats-prompts-workflows/')} class="proof-link">
         Read the blog post →
       </a>
     </div>

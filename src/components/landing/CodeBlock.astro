@@ -16,9 +16,22 @@ const { code, lang = 'python', filename } = Astro.props
 ---
 
 <div class="code-block" data-code={code}>
-  <div class="code-header">
-    {filename && <span class="code-filename">{filename}</span>}
-    <button class="copy-button" aria-label="Copy code">
+  {filename && (
+    <div class="code-header">
+      <span class="code-filename">{filename}</span>
+      <button class="copy-button" aria-label="Copy code">
+        <svg class="copy-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M3 10.5V3a1.5 1.5 0 0 1 1.5-1.5H11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  )}
+  {!filename && (
+    <button class="copy-button copy-button-floating" aria-label="Copy code">
       <svg class="copy-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
         <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
         <path d="M3 10.5V3a1.5 1.5 0 0 1 1.5-1.5H11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
@@ -27,7 +40,7 @@ const { code, lang = 'python', filename } = Astro.props
         <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>
-  </div>
+  )}
   <div class="code-theme-light">
     <Code code={code} lang={lang} theme="github-light" />
   </div>
@@ -114,6 +127,13 @@ const { code, lang = 'python', filename } = Astro.props
   :global([data-theme='light']) .copy-button:hover {
     background: rgba(0, 0, 0, 0.06);
     color: var(--sl-color-gray-1);
+  }
+
+  .copy-button-floating {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
   }
 
   .copy-button .check-icon { display: none; }

@@ -3,6 +3,7 @@
  * Hero section: headline + subtext on left, code snippet on right.
  */
 import CodeBlock from './CodeBlock.astro'
+import { getStarCount } from '../../util/github'
 
 interface Props {
   baseUrl: string
@@ -13,6 +14,8 @@ const withBase = (path: string) => {
   const b = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
   return b + path
 }
+
+const stars = await getStarCount()
 
 const heroCode = `from strands import Agent, tool
 
@@ -67,7 +70,7 @@ agent("What's the weather in Seattle?")`
         </div>
       </div>
       <p class="hero-social-proof">
-        5,200+ GitHub stars · Works with Bedrock, OpenAI, Anthropic, Ollama, and more
+        {stars} GitHub stars · Works with Bedrock, OpenAI, Anthropic, Ollama, and more
       </p>
     </div>
     <div class="hero-code">
