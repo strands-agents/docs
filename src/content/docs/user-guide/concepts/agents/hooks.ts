@@ -82,7 +82,7 @@ async function toolInterceptionExample() {
     name = 'tool-interceptor'
 
     initAgent(agent: LocalAgent): void {
-      agent.addHook(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
+      agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
     }
 
     private interceptTool(event: BeforeToolCallEvent): void {
@@ -224,6 +224,60 @@ async function fixedToolArgumentsExample() {
   // --8<-- [end:fixed_tool_arguments_usage]
 }
 
+async function limitToolCountsExample() {
+  // --8<-- [start:limit_tool_counts_class]
+  class LimitToolCounts implements Plugin {
+    private maxToolCounts: Record<string, number>
+    private toolCounts: Record<string, number> = {}
+
+    /**
+     * Initialize with maximum allowed invocations per tool.
+     *
+     * @param maxToolCounts - A dictionary mapping tool names to their maximum
+     *     allowed invocation counts per agent invocation.
+     */
+    constructor(maxToolCounts: Record<string, number>) {
+      this.maxToolCounts = maxToolCounts
+    }
+
+    name = 'limit-tool-counts'
+
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(BeforeInvocationEvent, () => this.resetCounts())
+      agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
+    }
+
+    private resetCounts(): void {
+      this.toolCounts = {}
+    }
+
+    private interceptTool(event: BeforeToolCallEvent): void {
+      const toolName = event.toolUse.name
+      const maxToolCount = this.maxToolCounts[toolName]
+      const toolCount = (this.toolCounts[toolName] ?? 0) + 1
+      this.toolCounts[toolName] = toolCount
+
+      if (maxToolCount !== undefined && toolCount > maxToolCount) {
+        event.cancel =
+          `Tool '${toolName}' has been invoked too many times and is now being throttled. ` +
+          `DO NOT CALL THIS TOOL ANYMORE`
+      }
+    }
+  }
+  // --8<-- [end:limit_tool_counts_class]
+
+  // --8<-- [start:limit_tool_counts_usage]
+  const limitPlugin = new LimitToolCounts({ sleep: 3 })
+
+  const agent = new Agent({ tools: [sleep], plugins: [limitPlugin] })
+
+  // This call will only have 3 successful sleeps
+  await agent.invoke('Sleep 5 times for 10ms each or until you can\'t anymore')
+  // This will sleep successfully again because the count resets every invocation
+  await agent.invoke('Sleep once')
+  // --8<-- [end:limit_tool_counts_usage]
+}
+
 // =====================
 // Multi-Agent Hook Examples
 // =====================
@@ -342,6 +396,7 @@ async function layeredHooksExample() {
 }
 
 // Suppress unused function warnings
+void limitToolCountsExample
 void orchestratorCallbackExample
 void conditionalNodeExecutionExample
 void orchestratorAgnosticDesignExample
