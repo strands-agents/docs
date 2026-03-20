@@ -258,7 +258,7 @@ async function limitToolCountsExample() {
       this.toolCounts[toolName] = toolCount
 
       if (maxToolCount !== undefined && toolCount > maxToolCount) {
-        event.cancelTool =
+        event.cancel =
           `Tool '${toolName}' has been invoked too many times and is now being throttled. ` +
           `DO NOT CALL THIS TOOL ANYMORE`
       }
@@ -267,9 +267,9 @@ async function limitToolCountsExample() {
   // --8<-- [end:limit_tool_counts_class]
 
   // --8<-- [start:limit_tool_counts_usage]
-  const limitHook = new LimitToolCounts({ sleep: 3 })
+  const limitPlugin = new LimitToolCounts({ sleep: 3 })
 
-  const agent = new Agent({ tools: [sleep], plugins: [limitHook] })
+  const agent = new Agent({ tools: [sleep], plugins: [limitPlugin] })
 
   // This call will only have 3 successful sleeps
   await agent.invoke('Sleep 5 times for 10ms each or until you can\'t anymore')
