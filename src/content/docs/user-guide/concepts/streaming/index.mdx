@@ -179,6 +179,80 @@ See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm strea
 </Tab>
 </Tabs>
 
+## Wire-Safe Serialization (TypeScript)
+
+When streaming events over the wire (SSE, WebSockets, HTTP responses), each event in TypeScript carries a reference to the full `Agent` instance — including conversation history, app state, model configuration, and internal registries. Calling `JSON.stringify(event)` without serialization control would produce massively bloated output that grows with conversation length.
+
+All TypeScript streaming event classes implement a `toJSON()` method that `JSON.stringify()` calls automatically. This produces compact, wire-safe output that includes only the relevant data fields for each event — typically just 100–200 bytes per event regardless of conversation size.
+
+### How It Works
+
+The `toJSON()` method is a built-in JavaScript/TypeScript mechanism: when `JSON.stringify()` encounters an object with a `toJSON()` method, it calls that method and serializes the return value instead of the object itself. This means **no code changes are required** — existing code that calls `JSON.stringify(event)` automatically benefits from the compact serialization.
+
+```typescript
+// Same code, dramatically different wire output
+for await (const event of agent.stream('Hello')) {
+  // Compact wire-safe output (~100-200 bytes per event)
+  res.write(`data: ${JSON.stringify(event)}\n\n`)
+}
+```
+
+### What Each Event Serializes To
+
+Every event's `toJSON()` output includes the `type` discriminator field. Data events additionally include their relevant payload fields:
+
+| Event | `toJSON()` output |
+|---|---|
+| `ModelStreamUpdateEvent` | `{ type, event }` |
+| `ContentBlockEvent` | `{ type, contentBlock }` |
+| `ModelMessageEvent` | `{ type, message, stopReason }` |
+| `ToolResultEvent` | `{ type, result }` |
+| `ToolStreamUpdateEvent` | `{ type, event }` |
+| `AgentResultEvent` | `{ type, result }` |
+| `MessageAddedEvent` | `{ type, message }` |
+| `BeforeToolCallEvent` | `{ type, toolUse }` |
+| `AfterToolCallEvent` | `{ type, toolUse, result, error? }` |
+| `AfterModelCallEvent` | `{ type, stopData?, error? }` |
+| `BeforeToolsEvent` / `AfterToolsEvent` | `{ type, message }` |
+| Lifecycle events (`InitializedEvent`, `BeforeInvocationEvent`, `AfterInvocationEvent`, `BeforeModelCallEvent`) | `{ type }` |
+
+### Excluded Fields
+
+The following fields are excluded from all serialized events:
+
+- **`agent`**: The full `Agent` instance (conversation history, config, registries)
+- **`tool`**: Tool class instances with methods (present on tool-related events)
+- **`cancel`** / **`retry`**: Mutable control flags used only in hook callbacks
+
+### Error Handling
+
+Events that carry an `error` field (`AfterToolCallEvent`, `AfterModelCallEvent`) serialize errors as extensible objects rather than raw strings:
+
+```typescript
+// Error serialization format
+{ error: { message?: string } }
+```
+
+This allows future additions (e.g., `type`, `code`, `stack`) without breaking wire consumers.
+
+### In-Process Access
+
+The `toJSON()` method only affects serialization — it does **not** change the event objects themselves. In-process code (hooks, event handlers) still has full access to all fields:
+
+```typescript
+// In-process: full access to agent, tool, cancel, etc.
+agent.hooks.addCallback(AfterToolCallEvent, (event) => {
+  console.log(event.agent)  // ✅ Full Agent instance
+  console.log(event.tool)   // ✅ Tool class
+  event.retry = true         // ✅ Mutable flags
+})
+
+// Over the wire: compact serialization
+for await (const event of agent.stream('Hello')) {
+  socket.send(JSON.stringify(event))  // ✅ Only data fields
+}
+```
+
 ## Quick Examples
 <Tabs>
 <Tab label="Python">
