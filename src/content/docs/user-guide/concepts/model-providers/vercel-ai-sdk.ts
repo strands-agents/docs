@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import { Agent } from '@strands-agents/sdk'
-import { VercelModel } from '@strands-agents/sdk/vercel-model'
+import { VercelModel } from '@strands-agents/sdk/vercel'
 import { bedrock } from '@ai-sdk/amazon-bedrock'
 import { openai } from '@ai-sdk/openai'
 import { anthropic } from '@ai-sdk/anthropic'
@@ -14,7 +14,7 @@ import { google } from '@ai-sdk/google'
 async function basicUsageOpenAI() {
   // --8<-- [start:basic_usage_openai]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel-model'
+  import { VercelModel } from '@strands-agents/sdk/vercel'
   import { openai } from '@ai-sdk/openai'
 
   const agent = new Agent({
@@ -30,7 +30,7 @@ async function basicUsageOpenAI() {
 async function basicUsageBedrock() {
   // --8<-- [start:basic_usage_bedrock]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel-model'
+  import { VercelModel } from '@strands-agents/sdk/vercel'
   import { bedrock } from '@ai-sdk/amazon-bedrock'
 
   const agent = new Agent({
@@ -46,7 +46,7 @@ async function basicUsageBedrock() {
 async function basicUsageAnthropic() {
   // --8<-- [start:basic_usage_anthropic]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel-model'
+  import { VercelModel } from '@strands-agents/sdk/vercel'
   import { anthropic } from '@ai-sdk/anthropic'
 
   const agent = new Agent({
@@ -62,7 +62,7 @@ async function basicUsageAnthropic() {
 async function basicUsageGoogle() {
   // --8<-- [start:basic_usage_google]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel-model'
+  import { VercelModel } from '@strands-agents/sdk/vercel'
   import { google } from '@ai-sdk/google'
 
   const agent = new Agent({
