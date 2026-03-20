@@ -26,15 +26,15 @@ agent("Summarize recent AI agent papers")`
 
 <section class="model-driven-section">
   <div class="model-driven-inner">
-    <h2 class="section-heading">Your model is smarter than your workflow</h2>
+    <h2 class="section-heading">Write code, not pipelines</h2>
     <p class="section-description">
-      Early agent frameworks made sense when models couldn't reliably reason or use tools. Now they can, and all that orchestration logic just gets in the way. Strands strips it out. You define a prompt and tools; the model handles <em>when</em> to call them, <em>how</em> to chain them, and <em>whether</em> to reflect and retry.
+      Early agent frameworks wrapped models in orchestration logic because models couldn't reason reliably. Now they can. Strands gives you back control: define your tools as functions, write a system prompt, and the agent loop handles execution. No step definitions, no workflow graphs. Just code.
     </p>
     <div class="model-driven-code">
       <CodeBlock code={researchCode} filename="research_agent.py" />
     </div>
     <p class="section-annotation">
-      No workflow graph. No step definitions. The model decides how to classify the topic, which tools to call, and when it has enough information to write the report. Teams at AWS ship agents like this to production in days, not months.
+      The agent loop decides when to call tools, how to chain them, and when it has enough context to produce a result. Teams at AWS ship agents built this way to production in days, not months.
     </p>
   </div>
 </section>

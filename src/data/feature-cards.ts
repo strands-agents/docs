@@ -2,7 +2,8 @@ export const features = [
   {
     title: "Any Model Provider",
     description: "Bedrock, OpenAI, Anthropic, Ollama, LiteLLM. Swap providers with a single line. Your agent code doesn't change.",
-    code: `from strands.models.openai import OpenAIModel
+    code: `# Swap providers in one line
+from strands.models.openai import OpenAIModel
 
 agent = Agent(model=OpenAIModel(
     model_id="gpt-4o"
@@ -11,7 +12,8 @@ agent = Agent(model=OpenAIModel(
   {
     title: "Tools from Any Function",
     description: "Turn any function into an agent tool with @tool. The docstring becomes the LLM's tool description. No schema files, no registration boilerplate.",
-    code: `@tool
+    code: `# Any function becomes a tool
+@tool
 def search_db(query: str) -> list:
     """Search the product database."""
     return db.search(query)`,
@@ -19,7 +21,8 @@ def search_db(query: str) -> list:
   {
     title: "Native MCP Support",
     description: "Connect to any MCP server. Use thousands of community tools without writing integration code.",
-    code: `from strands.tools.mcp import MCPClient
+    code: `# Connect to any MCP server
+from strands.tools.mcp import MCPClient
 from mcp import stdio_client, StdioServerParameters
 
 mcp = MCPClient(lambda: stdio_client(
@@ -32,7 +35,8 @@ mcp = MCPClient(lambda: stdio_client(
   {
     title: "Multi-Agent Systems",
     description: "Compose agents with graphs, swarms, workflows, or simple agent-as-tool patterns. Built-in A2A protocol support for distributed systems.",
-    code: `@tool
+    code: `# Agents as tools for other agents
+@tool
 def research(query: str) -> str:
     """Research a topic thoroughly."""
     agent = Agent(tools=[search_web])
@@ -44,7 +48,8 @@ writer("Write a post about AI agents")`,
   {
     title: "Conversation Memory",
     description: "Sliding window, summarization, and session persistence out of the box. Manage context across long conversations without manual token counting.",
-    code: `from strands.agent.conversation_manager import (
+    code: `# Manage context automatically
+from strands.agent.conversation_manager import (
     SlidingWindowConversationManager,
 )
 
@@ -57,7 +62,8 @@ agent = Agent(
   {
     title: "Built-in Observability",
     description: "OpenTelemetry traces, metrics, and logs with no extra instrumentation. See every tool call, model invocation, and token count.",
-    code: `from strands import Agent
+    code: `# Traces with zero config
+from strands import Agent
 
 agent = Agent(trace_attributes={
     "service": "my-app",

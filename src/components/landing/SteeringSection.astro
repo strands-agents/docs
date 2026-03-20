@@ -39,7 +39,7 @@ agent = Agent(
     <div class="steering-problem">
       <h2 class="section-heading">System prompts don't scale</h2>
       <p class="section-description">
-        As agents get more capable, their system prompts get longer. Models start ignoring instructions buried at line 40. Hard-coded workflows break on inputs you didn't anticipate. There's a better pattern.
+        As agents get more capable, their system prompts get longer. Models start ignoring instructions buried at line 40. Hard-coded workflows break on inputs you didn't anticipate.
       </p>
       <div class="problem-code">
         <CodeBlock code={messyPrompt} filename="the_old_way.py" />
@@ -50,7 +50,7 @@ agent = Agent(
     <div class="steering-solution">
       <h2 class="section-heading">Inject guidance when it matters</h2>
       <p class="section-description">
-        Steering plugins attach guidance to your agent. The model gets formatting rules when it's generating a report, not when it's planning what to do next. Targeted context at call time instead of everything up front.
+        Steering plugins intercept the agent loop and inject context exactly when it's needed. Before a tool call, validate the workflow. After a response, check the tone. Each plugin is pure Python: deterministic, testable, and composable.
       </p>
       <div class="solution-code">
         <CodeBlock code={steeringCode} filename="steered_agent.py" />
