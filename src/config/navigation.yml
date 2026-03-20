@@ -85,6 +85,7 @@ sidebar:
               - docs/user-guide/concepts/model-providers/ollama
               - docs/user-guide/concepts/model-providers/openai
               - docs/user-guide/concepts/model-providers/sagemaker
+              - docs/user-guide/concepts/model-providers/vercel-ai-sdk
               - docs/user-guide/concepts/model-providers/writer
               - docs/user-guide/concepts/model-providers/custom_model_provider
           - label: Streaming
