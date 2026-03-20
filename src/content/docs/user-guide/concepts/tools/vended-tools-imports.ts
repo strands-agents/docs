@@ -1,5 +1,8 @@
+// @ts-nocheck
 // This file contains import snippets used in documentation examples.
 // Each snippet is a standalone import block for a specific tool.
+// @ts-nocheck is used because imports are intentionally repeated across snippets
+// for documentation clarity — each snippet shows the complete imports needed.
 
 // --8<-- [start:bash_import]
 import { Agent } from '@strands-agents/sdk'

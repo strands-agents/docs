@@ -1,5 +1,5 @@
 // --8<-- [start:basic_import]
-import { Agent } from '@strands-agents/sdk'
+import { Agent, SessionManager, FileStorage } from '@strands-agents/sdk'
 import { bash } from '@strands-agents/sdk/vended-tools/bash'
 import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
 import { httpRequest } from '@strands-agents/sdk/vended-tools/http-request'
