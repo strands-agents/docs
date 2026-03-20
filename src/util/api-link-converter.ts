@@ -3,11 +3,11 @@
  *
  * Old formats:
  * - Python: `../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult`
- * - TypeScript: `../api-reference/typescript/classes/BedrockModel.html`
+ * - TypeScript: `../api-reference/typescript/classes/ConverseModel.html`
  *
  * New formats:
  * - Python: `@api/python/strands.agent.agent_result#AgentResult`
- * - TypeScript: `@api/typescript/BedrockModel`
+ * - TypeScript: `@api/typescript/ConverseModel`
  */
 
 /**
@@ -104,15 +104,15 @@ export function convertPythonApiLink(link: string): string | null {
  * Convert an old TypeScript API link to the new @api shorthand format.
  *
  * Examples:
- * - `../api-reference/typescript/classes/BedrockModel.html` -> `@api/typescript/BedrockModel`
- * - `../api-reference/typescript/interfaces/BedrockModelOptions.html` -> `@api/typescript/BedrockModelOptions`
+ * - `../api-reference/typescript/classes/ConverseModel.html` -> `@api/typescript/ConverseModel`
+ * - `../api-reference/typescript/interfaces/ConverseModelOptions.html` -> `@api/typescript/ConverseModelOptions`
  * - `../api-reference/typescript/classes/Agent.html#constructor` -> `@api/typescript/Agent#constructor`
  */
 export function convertTypeScriptApiLink(link: string): string | null {
   const match = link.match(TS_API_PATTERN)
   if (!match) return null
 
-  const typeName = match[2] // e.g., "BedrockModel"
+  const typeName = match[2] // e.g., "ConverseModel"
   const anchor = match[4] // e.g., "constructor" or undefined
 
   if (anchor) {

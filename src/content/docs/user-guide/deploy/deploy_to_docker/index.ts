@@ -1,13 +1,13 @@
 import { Agent } from '@strands-agents/sdk'
 import express, { type Request, type Response } from 'express'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
+import { ChatModel } from '@strands-agents/sdk/models/openai'
 
 // --8<-- [start: agent]
 const PORT = Number(process.env.PORT) || 8080
 
 // Note: Any supported model provider can be configured
 // Automatically uses process.env.OPENAI_API_KEY
-const model = new OpenAIModel()
+const model = new ChatModel()
 
 const agent = new Agent({ model })
 

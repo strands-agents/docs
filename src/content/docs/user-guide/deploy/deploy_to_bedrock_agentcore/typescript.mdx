@@ -119,7 +119,7 @@ const calculatorTool = strands.tool({
 
 // Configure the agent with Amazon Bedrock
 const agent = new strands.Agent({
-  model: new strands.BedrockModel({
+  model: new strands.ConverseModel({
     region: 'ap-southeast-2', // Change to your preferred region
   }),
   tools: [calculatorTool],

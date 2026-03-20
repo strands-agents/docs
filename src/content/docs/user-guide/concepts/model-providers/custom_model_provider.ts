@@ -3,7 +3,7 @@
  * These examples demonstrate how to implement a custom model provider.
  */
 
-import { Agent, BedrockModel, type BedrockModelConfig } from '@strands-agents/sdk'
+import { Agent, ConverseModel, type ConverseModelConfig } from '@strands-agents/sdk'
 import type {
   Model,
   BaseModelConfig,
@@ -16,9 +16,9 @@ import type {
   ModelMessageStopEventData,
 } from '@strands-agents/sdk'
 
-// Example wrapper around BedrockModel for demonstration
-class YourCustomModel extends BedrockModel {
-  constructor(config: BedrockModelConfig = {
+// Example wrapper around ConverseModel for demonstration
+class YourCustomModel extends ConverseModel {
+  constructor(config: ConverseModelConfig = {
   modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0'
 }) {
     super(config)

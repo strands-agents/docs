@@ -188,7 +188,7 @@ response = agent("Tell me about Amazon Bedrock.")
 </Tab>
 <Tab label="TypeScript">
 
-The [`BedrockModel`](@api/typescript/BedrockModel) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4.5](https://aws.amazon.com/blogs/aws/introducing-claude-sonnet-4-5-in-amazon-bedrock-anthropics-most-intelligent-model-best-for-coding-and-complex-agents/) model by default. This basic example creates an agent using this default setup:
+The [`ConverseModel`](@api/typescript/ConverseModel) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4.5](https://aws.amazon.com/blogs/aws/introducing-claude-sonnet-4-5-in-amazon-bedrock-anthropics-most-intelligent-model-best-for-coding-and-complex-agents/) model by default. This basic example creates an agent using this default setup:
 
 ```typescript
 --8<-- "user-guide/concepts/model-providers/amazon-bedrock_imports.ts:basic_default_imports"
@@ -235,7 +235,7 @@ response = agent("Tell me about Amazon Bedrock.")
 </Tab>
 <Tab label="TypeScript">
 
-For more control over model configuration, you can create an instance of the [`BedrockModel`](@api/typescript/BedrockModel) class:
+For more control over model configuration, you can create an instance of the [`ConverseModel`](@api/typescript/ConverseModel) class:
 
 ```typescript
 --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:basic_model_instance"
@@ -265,7 +265,7 @@ Common configuration parameters include:
 </Tab>
 <Tab label="TypeScript">
 
-The [`BedrockModel`](@api/typescript/BedrockModelOptions) supports various configuration parameters. For a complete list of available options, see the [BedrockModelOptions API reference](@api/typescript/BedrockModelOptions).
+The [`ConverseModel`](@api/typescript/ConverseModelOptions) supports various configuration parameters. For a complete list of available options, see the [ConverseModelOptions API reference](@api/typescript/ConverseModelOptions).
 
 Common configuration parameters include:
 
@@ -485,7 +485,7 @@ guardrail_agent = Agent(model=bedrock_model)
 response = guardrail_agent("Can you tell me about the Strands SDK?")
 ```
 
-Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](@api/typescript/BedrockModel).
+Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`ConverseModel`](@api/typescript/ConverseModel).
 
 When a guardrail is triggered:
 
@@ -499,7 +499,7 @@ When `guardrail_latest_message=True`, only the most recent user message is sent 
 </Tab>
 <Tab label="TypeScript">
 
-Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](@api/typescript/BedrockModel):
+Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`ConverseModel`](@api/typescript/ConverseModel):
 
 ```typescript
 --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:guardrails"
@@ -857,7 +857,7 @@ response = agent("If a train travels at 120 km/h and needs to cover 450 km, how 
 </Tab>
 <Tab label="TypeScript">
 
-Strands allows you to enable and configure reasoning capabilities with your [`BedrockModel`](@api/typescript/BedrockModel):
+Strands allows you to enable and configure reasoning capabilities with your [`ConverseModel`](@api/typescript/ConverseModel):
 
 ```typescript
 --8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:reasoning"

@@ -33,20 +33,20 @@ describe('API link conversion', () => {
     })
 
     it('should convert TypeScript API links in markdown', () => {
-      const input = `Use the [BedrockModel](../api-reference/typescript/classes/BedrockModel.html) class.`
-      const expected = `Use the [BedrockModel](@api/typescript/BedrockModel) class.`
+      const input = `Use the [ConverseModel](../api-reference/typescript/classes/ConverseModel.html) class.`
+      const expected = `Use the [ConverseModel](@api/typescript/ConverseModel) class.`
       expect(convertApiLinks(input)).toBe(expected)
     })
 
     it('should convert multiple API links in the same content', () => {
       const input = `
 The [Agent](../api-reference/python/agent/agent.md#strands.agent.agent.Agent) class uses
-[BedrockModel](../../api-reference/typescript/classes/BedrockModel.html) by default.
+[ConverseModel](../../api-reference/typescript/classes/ConverseModel.html) by default.
 See also [AgentResult](../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult).
 `
       const expected = `
 The [Agent](@api/python/strands.agent.agent#Agent) class uses
-[BedrockModel](@api/typescript/BedrockModel) by default.
+[ConverseModel](@api/typescript/ConverseModel) by default.
 See also [AgentResult](@api/python/strands.agent.agent_result#AgentResult).
 `
       expect(convertApiLinks(input)).toBe(expected)
@@ -79,8 +79,8 @@ Check out [GitHub](https://github.com/strands-agents/sdk-python).
     })
 
     it('should handle TypeScript interface links', () => {
-      const input = `Configure with [BedrockModelOptions](../api-reference/typescript/interfaces/BedrockModelOptions.html).`
-      const expected = `Configure with [BedrockModelOptions](@api/typescript/BedrockModelOptions).`
+      const input = `Configure with [ConverseModelOptions](../api-reference/typescript/interfaces/ConverseModelOptions.html).`
+      const expected = `Configure with [ConverseModelOptions](@api/typescript/ConverseModelOptions).`
       expect(convertApiLinks(input)).toBe(expected)
     })
 
