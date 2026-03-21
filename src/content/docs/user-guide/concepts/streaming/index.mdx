@@ -179,15 +179,7 @@ See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm strea
 </Tab>
 </Tabs>
 
-## Event Serialization
-
-<Tabs>
-<Tab label="Python">
-
-Python streaming events are dictionaries and serialize directly with `json.dumps()`.
-
-</Tab>
-<Tab label="TypeScript">
+### Event Serialization
 
 When streaming events are serialized (e.g., via `JSON.stringify()`), each event keeps its `type` discriminator along with the relevant data fields for that event. This enables compact output for SSE, WebSockets, or HTTP responses:
 
@@ -215,8 +207,6 @@ for await (const event of agent.stream('Hello')) {
 }
 ```
 
-</Tab>
-</Tabs>
 
 
 ## Quick Examples
