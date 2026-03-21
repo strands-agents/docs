@@ -127,14 +127,19 @@ const testimonials = await Promise.all(
     animation: scroll-primary 36s linear infinite;
   }
 
+  .strands-curve-primary,
+  .strands-curve-secondary {
+    --scroll-offset: 0px;
+  }
+
   @keyframes scroll-primary {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 -344px; }
+    0% { background-position: 0 calc(0px + var(--scroll-offset)); }
+    100% { background-position: 0 calc(-344px + var(--scroll-offset)); }
   }
 
   @keyframes scroll-secondary {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 -344px; }
+    0% { background-position: 0 calc(0px + var(--scroll-offset)); }
+    100% { background-position: 0 calc(-344px + var(--scroll-offset)); }
   }
 
   .landing-page {
@@ -348,4 +353,32 @@ const testimonials = await Promise.all(
     container?.addEventListener('mouseenter', () => { if (autoplayInterval) clearInterval(autoplayInterval) })
     container?.addEventListener('mouseleave', startAutoplay)
   })
+</script>
+
+<script>
+  // Scroll-responsive strands background animation
+  // Adjusts background-position offset along the flow axis so scrolling
+  // feels like controlling the tempo of the strand movement
+  const primary = document.querySelector<HTMLElement>('.strands-curve-primary')
+  const secondary = document.querySelector<HTMLElement>('.strands-curve-secondary')
+
+  if (primary && secondary) {
+    let ticking = false
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY
+
+          // Offset background-position along the flow axis via CSS variable
+          // Primary responds more (0.3x scroll), secondary less (0.15x) for depth
+          primary.style.setProperty('--scroll-offset', `${-(scrollY * 0.3) % 344}px`)
+          secondary.style.setProperty('--scroll-offset', `${-(scrollY * 0.15) % 344}px`)
+
+          ticking = false
+        })
+        ticking = true
+      }
+    }, { passive: true })
+  }
 </script>
