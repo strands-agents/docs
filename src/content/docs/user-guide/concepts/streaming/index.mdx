@@ -179,20 +179,17 @@ See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm strea
 </Tab>
 </Tabs>
 
-## Wire-Safe Serialization (TypeScript)
+## Event Serialization
 
-When streaming events over the wire (SSE, WebSockets, HTTP responses), TypeScript events are automatically serialized to compact JSON. Fields like `agent`, `tool`, `cancel`, and `retry` are excluded from serialization since they contain large internal references or mutable control flags — these fields are still available for direct programmatic access in-process.
+<Tabs>
+<Tab label="Python">
 
-```typescript
-for await (const event of agent.stream('Hello')) {
-  // Automatically serialized to compact, wire-safe JSON
-  res.write(`data: ${JSON.stringify(event)}\n\n`)
-}
-```
+Python streaming events are dictionaries and serialize directly with `json.dumps()`.
 
-### Serialized Event Fields
+</Tab>
+<Tab label="TypeScript">
 
-Each serialized event includes a `type` discriminator and its relevant data fields:
+When streaming events are serialized (e.g., via `JSON.stringify()`), each event keeps its `type` discriminator along with the relevant data fields for that event. This enables compact output for SSE, WebSockets, or HTTP responses:
 
 | Event | Serialized fields |
 |---|---|
@@ -208,6 +205,18 @@ Each serialized event includes a `type` discriminator and its relevant data fiel
 | `AfterModelCallEvent` | `{ type, stopData?, error? }` |
 | `BeforeToolsEvent` / `AfterToolsEvent` | `{ type, message }` |
 | Lifecycle events (`InitializedEvent`, `BeforeInvocationEvent`, `AfterInvocationEvent`, `BeforeModelCallEvent`) | `{ type }` |
+
+Fields like `agent`, `tool`, `cancel`, and `retry` are not included in the serialized output since they hold large internal references — they remain accessible for direct programmatic use in-process.
+
+```typescript
+for await (const event of agent.stream('Hello')) {
+  // Each event serializes to compact JSON automatically
+  res.write(`data: ${JSON.stringify(event)}\n\n`)
+}
+```
+
+</Tab>
+</Tabs>
 
 
 ## Quick Examples
