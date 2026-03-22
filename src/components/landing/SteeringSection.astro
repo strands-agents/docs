@@ -7,28 +7,33 @@ import CodeBlock from './CodeBlock.astro'
 import { pathWithBase } from '../../util/links'
 
 const messyPrompt = `agent = Agent(
-    system_prompt="""You are a report generator. Always use markdown tables
-    for comparisons. Never use bullet lists for data. Format currency as
-    $X,XXX.XX. Always include a summary section at the top. When comparing
-    more than 3 items, split into sub-tables. Use ISO dates. Don't forget
-    to cite sources. If the user asks about competitors, be neutral..."""
-    # 47 more lines of instructions the model will partially ignore
+    system_prompt="""You are a report generator. Always use markdown
+    tables for comparisons. Never use bullet lists for data. Format
+    currency as $X,XXX.XX. Include a summary section at the top.
+    When comparing more than 3 items, split into sub-tables.
+    Use ISO 8601 dates. Cite sources with inline links.
+    If the user asks about competitors, stay neutral.
+    Never share internal pricing..."""
+    # The model will follow some of these. Guess which ones.
 )`
 
 const steeringCode = `from strands import Agent
-from strands.vended_plugins.steering import LLMSteeringHandler
-
-steering = LLMSteeringHandler(
-    system_prompt="""
-    Ensure all reports use markdown tables
-    for comparisons.
-    Cite sources with inline links.
-    """
+from strands.vended_plugins.steering import (
+    SteeringHandler, ToolSteeringAction,
 )
 
+class NoPricingLeaks(SteeringHandler):
+    async def steer_before_tool(self, *, agent, tool_use, **kwargs):
+        if tool_use["name"] == "send_email":
+            if "internal pricing" in str(tool_use["input"]):
+                return ToolSteeringAction.guide(
+                    "Contains internal pricing. Redact before sending."
+                )
+        return ToolSteeringAction.proceed()
+
 agent = Agent(
-    tools=[generate_report, search_web],
-    plugins=[steering],
+    tools=[send_email, generate_report],
+    plugins=[NoPricingLeaks()],
 )`
 ---
 
@@ -37,9 +42,9 @@ agent = Agent(
 
     <!-- Part 1: The Problem -->
     <div class="steering-problem">
-      <h2 class="section-heading">System prompts don't scale</h2>
+      <h2 class="section-heading">Your agent ignored your instructions again</h2>
       <p class="section-description">
-        As agents get more capable, their system prompts get longer. Models start ignoring instructions buried at line 40. Hard-coded workflows break on inputs you didn't anticipate.
+        You wrote the rules. The model skipped them. Longer prompts make it worse: by line 40, the model is guessing which instructions still matter. Hard-coded workflows are the other extreme: predictable but brittle, and they strip away the reasoning that makes agents useful.
       </p>
       <div class="problem-code">
         <CodeBlock code={messyPrompt} filename="the_old_way.py" />
@@ -48,12 +53,12 @@ agent = Agent(
 
     <!-- Part 2: The Solution -->
     <div class="steering-solution">
-      <h2 class="section-heading">Inject guidance when it matters</h2>
+      <h2 class="section-heading">Middleware for the agent loop</h2>
       <p class="section-description">
-        Steering plugins intercept the agent loop and inject context exactly when it's needed. Before a tool call, validate the workflow. After a response, check the tone. Each plugin is pure Python: deterministic, testable, and composable.
+        Steering hooks intercept the agent loop the same way middleware intercepts HTTP requests. Before a tool call, check the inputs. After a model response, validate the output. Each handler is a Python function you can read, test, and debug.
       </p>
       <div class="solution-code">
-        <CodeBlock code={steeringCode} filename="steered_agent.py" />
+        <CodeBlock code={steeringCode} filename="steering_handler.py" />
       </div>
     </div>
 
@@ -62,10 +67,10 @@ agent = Agent(
       <div class="proof-stats">
         <div class="stat-primary">
           <span class="stat-number">100%</span>
-          <span class="stat-label">accuracy across 600 evaluation runs</span>
+          <span class="stat-label">task accuracy with steering</span>
         </div>
         <div class="stat-comparison">
-          vs <strong>82.5%</strong> with prompt-only approaches and <strong>80.8%</strong> with hard-coded workflows
+          Prompt-only agents scored <strong>82.5%</strong>. Hard-coded workflows scored <strong>80.8%</strong>. Steered agents recovered from every mistake.
         </div>
       </div>
       <a href={pathWithBase('/blog/steering-accuracy-beats-prompts-workflows/')} class="proof-link">
