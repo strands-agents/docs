@@ -22,7 +22,7 @@ async function basicUsage() {
   const openaiModel = new OpenAIModel({
     api: 'chat',
     apiKey: process.env.OPENAI_API_KEY,
-    modelId: 'gpt-4o',
+    modelId: 'gpt-4.1',
   })
   agent = new Agent({ model: openaiModel })
   response = await agent.invoke('What can you help me with?')
