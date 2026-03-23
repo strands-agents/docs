@@ -62,9 +62,9 @@ print(response)
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { GeminiModel } from '@strands-agents/sdk/gemini'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
 
-const model = new GeminiModel({
+const model = new GoogleModel({
   apiKey: '<KEY>',
   modelId: 'gemini-2.5-flash',
   params: {
@@ -333,11 +333,11 @@ print(response)
 ```typescript
 import { GoogleGenAI } from '@google/genai'
 import { Agent } from '@strands-agents/sdk'
-import { GeminiModel } from '@strands-agents/sdk/gemini'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
 
 const client = new GoogleGenAI({ apiKey: '<KEY>' })
 
-const model = new GeminiModel({
+const model = new GoogleModel({
   client,
   modelId: 'gemini-2.5-flash',
   params: {
@@ -396,9 +396,9 @@ response = agent([
 
 ```typescript
 import { Agent, ImageBlock, TextBlock } from '@strands-agents/sdk'
-import { GeminiModel } from '@strands-agents/sdk/gemini'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
 
-const model = new GeminiModel({
+const model = new GoogleModel({
   apiKey: '<KEY>',
   modelId: 'gemini-2.5-flash',
 })
