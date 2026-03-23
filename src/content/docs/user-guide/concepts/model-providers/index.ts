@@ -20,6 +20,7 @@ async function basicUsage() {
 
   // Alternatively, use OpenAI by just switching model provider
   const openaiModel = new OpenAIModel({
+    api: 'chat',
     apiKey: process.env.OPENAI_API_KEY,
     modelId: 'gpt-4o',
   })

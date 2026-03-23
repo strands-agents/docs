@@ -114,7 +114,7 @@ nav:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Amazon Nova: user-guide/concepts/model-providers/amazon-nova.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
-        - Gemini: user-guide/concepts/model-providers/gemini.md
+        - Google: user-guide/concepts/model-providers/google.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
         - llama.cpp: user-guide/concepts/model-providers/llamacpp.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
