@@ -414,19 +414,19 @@ See [Controlling Conversation Lifecycle](#controlling-conversation-lifecycle) fo
 
 ## Graceful Shutdown
 
-Use the experimental `stop_conversation` tool to allow users to end conversations naturally:
+Use the `stop` tool from `strands_tools` to allow users to end conversations naturally. The `stop` tool sets `request_state["stop_event_loop"]`, which the agent loop checks to trigger a graceful shutdown:
 
 ```python
 import asyncio
 from strands.experimental.bidi import BidiAgent, BidiAudioIO
 from strands.experimental.bidi.models import BidiNovaSonicModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 model = BidiNovaSonicModel()
 agent = BidiAgent(
     model=model,
-    tools=[stop_conversation],
-    system_prompt="You are a helpful assistant. When the user says 'stop conversation', use the stop_conversation tool."
+    tools=[stop],
+    system_prompt="You are a helpful assistant. When the user says 'stop', use the stop tool."
 )
 
 audio_io = BidiAudioIO()
@@ -436,12 +436,27 @@ async def main():
         inputs=[audio_io.input()],
         outputs=[audio_io.output()]
     )
-    # Conversation ends when user says "stop conversation"
+    # Conversation ends when user says "stop"
 
 asyncio.run(main())
 ```
 
-The agent will gracefully close the connection when the user explicitly requests it.
+You can also create custom stop tools using the `request_state["stop_event_loop"]` flag:
+
+```python
+from strands import tool
+
+@tool
+def end_session(request_state: dict) -> str:
+    request_state["stop_event_loop"] = True
+    return "Goodbye!"
+```
+
+The agent will gracefully close the connection when any tool sets `request_state["stop_event_loop"] = True`.
+
+:::note[Deprecated: stop_conversation]
+The legacy `stop_conversation` tool from `strands.experimental.bidi.tools` is deprecated and will be removed in a future version. Migrate to `strands_tools.stop` or use `request_state["stop_event_loop"]` in custom tools.
+:::
 
 ## Debug Logs
 

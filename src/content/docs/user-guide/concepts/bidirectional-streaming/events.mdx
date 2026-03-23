@@ -164,7 +164,7 @@ Emitted when the streaming connection is closed.
   - `"timeout"`: Connection timed out
   - `"error"`: Error occurred
   - `"complete"`: Conversation completed normally
-  - `"user_request"`: User requested closure (via `stop_conversation` tool)
+  - `"user_request"`: User requested closure (via `strands_tools.stop` or any tool that sets `request_state["stop_event_loop"]`)
 
 ### Response Lifecycle Events
 

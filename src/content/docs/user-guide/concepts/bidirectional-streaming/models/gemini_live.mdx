@@ -39,7 +39,7 @@ import asyncio
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO, BidiTextIO
 from strands.experimental.bidi.models import BidiGeminiLiveModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 from strands_tools import calculator
 
@@ -54,8 +54,8 @@ async def main() -> None:
         },
         client_config={"api_key": "<GOOGLE_AI_API_KEY>"},
     )
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(model=model, tools=[calculator, stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(model=model, tools=[calculator, stop])
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
