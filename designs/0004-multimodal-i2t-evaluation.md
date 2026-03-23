@@ -34,6 +34,7 @@ New `MultimodalOutputEvaluator(OutputEvaluator[dict, str])` class for image-in, 
 
 |Priority	|Metric	|Scale	|Core Question	|
 |---	|---	|---	|---	|
+|P0	|Overall Quality	|Likert-5	|How good is the response overall?	|
 |P0	|Correctness	|Likert-5	|Is the response factually accurate and complete?	|
 |P1	|Faithfulness	|Likert-5	|Is the response grounded in the image without hallucinations?	|
 |P1	|Instruction Following	|Binary (Yes/No)	|Does the response address the query's requirements?	|
@@ -77,8 +78,8 @@ class MultimodalOutputEvaluator(OutputEvaluator[dict, str]):
 * **Extends `OutputEvaluator`**: Inherits `rubric`, `model`, `system_prompt`, `include_inputs` management, and `to_dict()` serialization. We override `evaluate()` completely — no risk of breaking the text-focused parent. This is the same subclassing pattern used by other evaluators in the SDK.
 * **Strands ContentBlock format:** Image blocks use `{"image": {"format": "jpeg", "source": {"bytes": b"..."}}}` — the native strands SDK format.
 * **Reference-based vs. reference-free:** When `expected_output` is provided, the prompt includes `<ExpectedOutput>` for comparison; when `None`, the judge evaluates from image alone.
-* **Built-in rubric templates:** Ships with `CORRECTNESS_RUBRIC`, `FAITHFULNESS_RUBRIC`, `INSTRUCTION_FOLLOWING_RUBRIC`. Users can also provide custom rubrics.
-* **Convenience subclasses:** `MultimodalCorrectnessEvaluator`, `MultimodalFaithfulnessEvaluator`, `MultimodalInstructionFollowingEvaluator` — each pre-configures the appropriate rubric.
+* **Built-in rubric templates:** Ships with `OVERALL_QUALITY_RUBRIC`, `CORRECTNESS_RUBRIC`, `FAITHFULNESS_RUBRIC`, `INSTRUCTION_FOLLOWING_RUBRIC`. Users can also provide custom rubrics.
+* **Convenience subclasses:** `MultimodalOverallQualityEvaluator`, `MultimodalCorrectnessEvaluator`, `MultimodalFaithfulnessEvaluator`, `MultimodalInstructionFollowingEvaluator` — each pre-configures the appropriate rubric.
 
 ## Developer Experience
 
@@ -141,7 +142,7 @@ evaluator = MultimodalOutputEvaluator(rubric=medical_rubric)
 
 * Same `Case` → `Experiment` → `Report` workflow for multimodal evaluation
 * Reference-based and reference-free supported via `expected_output`
-* Built-in rubrics for three dimensions; custom rubrics for domain-specific needs
+* Built-in rubrics for four dimensions; custom rubrics for domain-specific needs
 * `include_image=False` enables LLM-as-a-Judge comparison experiments with zero code change
 
 **Trade-offs:**
