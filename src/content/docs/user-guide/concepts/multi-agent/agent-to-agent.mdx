@@ -309,7 +309,7 @@ a2a_server.serve()
 <Tab label="TypeScript">
 
 ```typescript
-import { A2AExpressServer } from '@strands-agents/sdk/a2a'
+import { A2AExpressServer } from '@strands-agents/sdk/a2a/express'
 
 --8<-- "user-guide/concepts/multi-agent/agent-to-agent.ts:basic_server"
 ```
@@ -474,7 +474,7 @@ The TypeScript `A2AExpressServer` supports a custom `taskStore` for persisting t
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { A2AExpressServer } from '@strands-agents/sdk/a2a'
+import { A2AExpressServer } from '@strands-agents/sdk/a2a/express'
 
 const agent = new Agent({ systemPrompt: 'You are a helpful agent.' })
 
@@ -528,7 +528,7 @@ Use the `httpUrl` option to set the public URL for the agent card. For custom pa
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { A2AExpressServer } from '@strands-agents/sdk/a2a'
+import { A2AExpressServer } from '@strands-agents/sdk/a2a/express'
 
 const agent = new Agent({ systemPrompt: 'A calculator agent.' })
 
