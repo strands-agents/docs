@@ -14,7 +14,7 @@ async function basicUsage() {
   const model = new OpenAIModel({
     api: 'chat',
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
     maxTokens: 1000,
     temperature: 0.7,
   })
@@ -34,7 +34,7 @@ async function customServer() {
     clientConfig: {
       baseURL: '<URL>',
     },
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
   })
 
   const agent = new Agent({ model })
@@ -48,7 +48,7 @@ async function customConfig() {
   const model = new OpenAIModel({
     api: 'chat',
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
     maxTokens: 1000,
     temperature: 0.7,
     topP: 0.9,
@@ -68,7 +68,7 @@ async function updateConfig() {
   const model = new OpenAIModel({
     api: 'chat',
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
     temperature: 0.7,
   })
 
