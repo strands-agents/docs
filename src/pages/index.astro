@@ -144,6 +144,20 @@ const testimonials = await Promise.all(
     100% { background-position: 0 calc(-344px + var(--scroll-offset)); }
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .strands-curve-primary,
+    .strands-curve-secondary {
+      animation: none;
+    }
+  }
+
+  /* Global focus styles for keyboard navigation */
+  .landing-page :global(button:focus-visible),
+  .landing-page :global(a:focus-visible) {
+    outline: 2px solid var(--strands-green, #00cc5f);
+    outline-offset: 2px;
+  }
+
   .landing-page {
     --strands-green: #00cc5f;
     --strands-green-bright: #00FF77;
@@ -364,7 +378,7 @@ const testimonials = await Promise.all(
   const primary = document.querySelector<HTMLElement>('.strands-curve-primary')
   const secondary = document.querySelector<HTMLElement>('.strands-curve-secondary')
 
-  if (primary && secondary) {
+  if (primary && secondary && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let ticking = false
 
     window.addEventListener('scroll', () => {
