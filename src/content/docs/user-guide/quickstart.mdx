@@ -179,7 +179,10 @@ After running an agent, you can understand what happened during execution throug
 
 Traces provide detailed insight into the agent's reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](@api/python/strands.agent.agent_result#AgentResult), or export them using [OpenTelemetry](observability-evaluation/traces.md) to observability platforms.
 
-:::note[Example result.metrics.get_summary() output]
+<details>
+  <summary>
+    <strong>Example result.metrics.get_summary() output</strong>
+  </summary>
 
 ```python
 result = agent("What is the square root of 144?")
@@ -338,7 +341,7 @@ print(result.metrics.get_summary())
   ]
 }
 ```
-:::
+</details>
 
 This observability data helps you debug agent behavior, optimize performance, and understand the agent's reasoning process. For detailed information, see [Observability](observability-evaluation/observability.md), [Traces](observability-evaluation/traces.md), and [Metrics](observability-evaluation/metrics.md).
 
