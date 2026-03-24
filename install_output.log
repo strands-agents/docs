@@ -1,0 +1,18 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: '@astrojs/prism@4.0.1',
+npm warn EBADENGINE   required: { node: '>=22.12.0' },
+npm warn EBADENGINE   current: { node: 'v20.20.1', npm: '10.8.2' }
+npm warn EBADENGINE }
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 743 packages, and audited 744 packages in 1m
+
+265 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.

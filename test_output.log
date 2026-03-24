@@ -1,0 +1,433 @@
+
+> docs@1.0.0 test
+> vitest run
+
+[sitemap-lastmod] Loaded 214 git dates
+[auto-import] ⚠️ @astrojs/mdx initialized BEFORE astro-auto-import.
+              Auto imports in .mdx files won’t work!
+              Move the MDX integration after auto-import in your integrations array in astro.config.
+[33m`resolve.alias` contains an alias with `customResolver` option. This is deprecated and will be removed in Vite 9. Please use a custom plugin with a resolveId hook and `enforce: 'pre'` instead.[39m
+[sdk-setup] SDK build artifacts not found — running sdk:clone and sdk:generate...
+[sdk-setup] Running: npm run sdk:clone
+
+> docs@1.0.0 sdk:clone
+> tsx scripts/clone-sdks.ts
+
+🔄 SDK Clone/Pull Script
+
+📦 sdk-typescript: Cloning repository...
+Running: git clone https://github.com/strands-agents/sdk-typescript.git .build/sdk-typescript
+Cloning into '.build/sdk-typescript'...
+
+📦 sdk-python: Cloning repository...
+Running: git clone https://github.com/strands-agents/sdk-python.git .build/sdk-python
+Cloning into '.build/sdk-python'...
+
+✅ Done!
+[sdk-setup] Running: npm run sdk:generate
+
+> docs@1.0.0 sdk:generate
+> npm run sdk:generate:py && npm run sdk:generate:ts
+
+
+> docs@1.0.0 sdk:generate:py
+> command -v uv >/dev/null 2>&1 && uv run scripts/api-generation-python.py || (pip install pydoc-markdown>=4.8.2 && python scripts/api-generation-python.py)
+
+   Building docstring-parser==0.11
+      Built docstring-parser==0.11
+Installed 32 packages in 12ms
+2 cross-reference(s) could not be resolved:
+  strands.tools.decorator: Args, Returns
+Generated: .build/api-docs/python/strands.event_loop.event_loop.mdx
+Generated: .build/api-docs/python/strands.event_loop.streaming.mdx
+Skipping private module: strands.event_loop._retry
+Skipping private module: strands.event_loop._recover_message_on_max_tokens_reached
+Generated: .build/api-docs/python/strands.telemetry.metrics.mdx
+Generated: .build/api-docs/python/strands.telemetry.config.mdx
+Generated: .build/api-docs/python/strands.telemetry.tracer.mdx
+Skipping private module: strands._exception_notes
+Generated: .build/api-docs/python/strands.agent.conversation_manager.summarizing_conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.conversation_manager.null_conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.conversation_manager.conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.conversation_manager.sliding_window_conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.a2a_agent.mdx
+Generated: .build/api-docs/python/strands.agent.base.mdx
+Skipping excluded module: strands.agent
+Generated: .build/api-docs/python/strands.agent.agent_result.mdx
+Generated: .build/api-docs/python/strands.agent.agent.mdx
+Skipping private module: strands._async
+Generated: .build/api-docs/python/strands.experimental.agent_config.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.agent.agent.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.agent.loop.mdx
+Skipping private module: strands.experimental.bidi._async
+Skipping private module: strands.experimental.bidi._async._task_group
+Skipping private module: strands.experimental.bidi._async._task_pool
+Generated: .build/api-docs/python/strands.experimental.bidi.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.io.audio.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.io.text.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.types.events.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.types.io.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.types.model.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.gemini_live.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.nova_sonic.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.model.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.openai_realtime.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.tools.stop_conversation.mdx
+Generated: .build/api-docs/python/strands.experimental.hooks.events.mdx
+Generated: .build/api-docs/python/strands.multiagent.graph.mdx
+Generated: .build/api-docs/python/strands.multiagent.base.mdx
+Generated: .build/api-docs/python/strands.multiagent.swarm.mdx
+Skipping private module: strands.multiagent.a2a._converters
+Generated: .build/api-docs/python/strands.multiagent.a2a.server.mdx
+Generated: .build/api-docs/python/strands.multiagent.a2a.executor.mdx
+Generated: .build/api-docs/python/strands.handlers.callback_handler.mdx
+Generated: .build/api-docs/python/strands.session.session_manager.mdx
+Generated: .build/api-docs/python/strands.session.session_repository.mdx
+Generated: .build/api-docs/python/strands.session.repository_session_manager.mdx
+Generated: .build/api-docs/python/strands.session.file_session_manager.mdx
+Generated: .build/api-docs/python/strands.session.s3_session_manager.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.skills.skill.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.skills.agent_skills.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.steering.context_providers.ledger_provider.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.steering.handlers.llm.mappers.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.steering.handlers.llm.llm_handler.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.steering.core.handler.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.steering.core.context.mdx
+Generated: .build/api-docs/python/strands.vended_plugins.steering.core.action.mdx
+Generated: .build/api-docs/python/strands.types.media.mdx
+Generated: .build/api-docs/python/strands.types.content.mdx
+Generated: .build/api-docs/python/strands.types.event_loop.mdx
+Generated: .build/api-docs/python/strands.types.collections.mdx
+Generated: .build/api-docs/python/strands.types.citations.mdx
+Generated: .build/api-docs/python/strands.types.a2a.mdx
+Generated: .build/api-docs/python/strands.types.exceptions.mdx
+Generated: .build/api-docs/python/strands.types.json_dict.mdx
+Generated: .build/api-docs/python/strands.types.guardrails.mdx
+Generated: .build/api-docs/python/strands.types.session.mdx
+Generated: .build/api-docs/python/strands.types.streaming.mdx
+Generated: .build/api-docs/python/strands.types.agent.mdx
+Generated: .build/api-docs/python/strands.types.tools.mdx
+Generated: .build/api-docs/python/strands.types.interrupt.mdx
+Skipping private module: strands.types._events
+Generated: .build/api-docs/python/strands.hooks.events.mdx
+Skipping private module: strands.hooks._type_inference
+Generated: .build/api-docs/python/strands.hooks.registry.mdx
+Generated: .build/api-docs/python/strands.plugins.plugin.mdx
+Generated: .build/api-docs/python/strands.plugins.decorator.mdx
+Generated: .build/api-docs/python/strands.plugins.registry.mdx
+Generated: .build/api-docs/python/strands.interrupt.mdx
+Generated: .build/api-docs/python/strands.models.writer.mdx
+Generated: .build/api-docs/python/strands.models.gemini.mdx
+Generated: .build/api-docs/python/strands.models.mistral.mdx
+Generated: .build/api-docs/python/strands.models.llamacpp.mdx
+Generated: .build/api-docs/python/strands.models.litellm.mdx
+Skipping private module: strands.models._validation
+Generated: .build/api-docs/python/strands.models.ollama.mdx
+Generated: .build/api-docs/python/strands.models.mdx
+Generated: .build/api-docs/python/strands.models.openai_responses.mdx
+Generated: .build/api-docs/python/strands.models.model.mdx
+Generated: .build/api-docs/python/strands.models.openai.mdx
+Generated: .build/api-docs/python/strands.models.llamaapi.mdx
+Generated: .build/api-docs/python/strands.models.bedrock.mdx
+Generated: .build/api-docs/python/strands.models.sagemaker.mdx
+Generated: .build/api-docs/python/strands.models.anthropic.mdx
+Skipping private module: strands._identifier
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_types.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_instrumentation.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_tasks.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_agent_tool.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_client.mdx
+Generated: .build/api-docs/python/strands.tools.watcher.mdx
+Generated: .build/api-docs/python/strands.tools.tool_provider.mdx
+Generated: .build/api-docs/python/strands.tools.loader.mdx
+Generated: .build/api-docs/python/strands.tools.structured_output.structured_output_utils.mdx
+Generated: .build/api-docs/python/strands.tools.structured_output.structured_output_tool.mdx
+Skipping private module: strands.tools.structured_output._structured_output_context
+Skipping private module: strands.tools._validator
+Skipping private module: strands.tools._caller
+Skipping private module: strands.tools._tool_helpers
+Generated: .build/api-docs/python/strands.tools.decorator.mdx
+Generated: .build/api-docs/python/strands.tools.registry.mdx
+Generated: .build/api-docs/python/strands.tools.tools.mdx
+Generated: .build/api-docs/python/strands.tools.executors.sequential.mdx
+Generated: .build/api-docs/python/strands.tools.executors.concurrent.mdx
+Skipping private module: strands.tools.executors._executor
+
+Total modules documented: 97
+
+> docs@1.0.0 sdk:generate:ts
+> tsx scripts/api-generation-typescript.ts
+
+🔧 TypeScript API Documentation Generator
+
+
+📚 Running typedoc...
+
+[96m[info][0m Loaded plugin typedoc-plugin-markdown
+[93m[warning][0m InvokableAgent, defined in @strands-agents/sdk/src/types/agent.ts, is referenced by Agent but not included in the documentation
+[93m[warning][0m HookRegistry, defined in @strands-agents/sdk/src/hooks/registry.ts, is referenced by HookRegistry but not included in the documentation
+[93m[warning][0m RuntimeConfig, defined in @strands-agents/sdk/src/mcp.ts, is referenced by McpClientConfig but not included in the documentation
+[93m[warning][0m ModelContentBlockStopEventData, defined in @strands-agents/sdk/src/models/streaming.ts, is referenced by ModelStreamEvent but not included in the documentation
+[93m[warning][0m MultiAgent, defined in @strands-agents/sdk/src/multiagent/multiagent.ts, is referenced by Graph but not included in the documentation
+[93m[warning][0m StateSerializable, defined in @strands-agents/sdk/src/types/serializable.ts, is referenced by StateStore but not included in the documentation
+[93m[warning][0m JSONSerializable, defined in @strands-agents/sdk/src/types/json.ts, is referenced by AgentMetrics but not included in the documentation
+[93m[warning][0m AgentMetricsData, defined in @strands-agents/sdk/src/telemetry/meter.ts, is referenced by AgentMetrics but not included in the documentation
+[93m[warning][0m AgentTraceData, defined in @strands-agents/sdk/src/telemetry/tracer.ts, is referenced by AgentTrace but not included in the documentation
+[93m[warning][0m ZodInferred, defined in @strands-agents/sdk/src/tools/zod-tool.ts, is referenced by ZodTool but not included in the documentation
+[93m[warning][0m JsonBlockData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by JsonBlock but not included in the documentation
+[93m[warning][0m SystemContentBlockData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by SystemPromptData but not included in the documentation
+[93m[warning][0m Node, defined in @strands-agents/sdk/src/multiagent/nodes.ts, is referenced by Graph.nodes but not included in the documentation
+[93m[warning][0m Edge, defined in @strands-agents/sdk/src/multiagent/edge.ts, is referenced by Graph.edges but not included in the documentation
+[93m[warning][0m GraphConfig, defined in @strands-agents/sdk/src/multiagent/graph.ts, is referenced by Graph.config but not included in the documentation
+[93m[warning][0m AgentNode, defined in @strands-agents/sdk/src/multiagent/nodes.ts, is referenced by Swarm.nodes but not included in the documentation
+[93m[warning][0m SwarmConfig, defined in @strands-agents/sdk/src/multiagent/swarm.ts, is referenced by Swarm.config but not included in the documentation
+[93m[warning][0m InvocationMetricsData, defined in @strands-agents/sdk/src/telemetry/meter.ts, is referenced by AgentMetrics.agentInvocations but not included in the documentation
+[93m[warning][0m ToolMetricsData, defined in @strands-agents/sdk/src/telemetry/meter.ts, is referenced by AgentMetrics.toolMetrics but not included in the documentation
+[93m[warning][0m ToolRegistry, defined in @strands-agents/sdk/src/registry/tool-registry.ts, is referenced by LocalAgent.toolRegistry but not included in the documentation
+[93m[warning][0m ToolResultContentData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by ToolResultBlockData.content but not included in the documentation
+[93m[warning][0m HookCleanup, defined in @strands-agents/sdk/src/hooks/types.ts, is referenced by Agent.addHook but not included in the documentation
+[93m[warning][0m McpTool, defined in @strands-agents/sdk/src/tools/mcp-tool.ts, is referenced by McpClient.listTools but not included in the documentation
+[93m[warning][0m StreamAggregatedResult, defined in @strands-agents/sdk/src/models/model.ts, is referenced by BedrockModel.streamAggregated but not included in the documentation
+[93m[warning][0m MultiAgentResult, defined in @strands-agents/sdk/src/multiagent/state.ts, is referenced by Graph.invoke but not included in the documentation
+[93m[warning][0m MultiAgentStreamEvent, defined in @strands-agents/sdk/src/multiagent/events.ts, is referenced by Graph.stream but not included in the documentation
+[93m[warning][0m Serialized, defined in @strands-agents/sdk/src/types/json.ts, is referenced by CitationsBlock.__type.citations but not included in the documentation
+[93m[warning][0m InvokeArgs, defined in @strands-agents/sdk/src/types/agent.ts, is referenced by Agent.invoke.args but not included in the documentation
+[93m[warning][0m InvokeOptions, defined in @strands-agents/sdk/src/types/agent.ts, is referenced by Agent.invoke.options but not included in the documentation
+[93m[warning][0m GraphOptions, defined in @strands-agents/sdk/src/multiagent/graph.ts, is referenced by Graph.constructor.options but not included in the documentation
+[93m[warning][0m MultiAgentInput, defined in @strands-agents/sdk/src/multiagent/multiagent.ts, is referenced by Graph.invoke.input but not included in the documentation
+[93m[warning][0m SwarmOptions, defined in @strands-agents/sdk/src/multiagent/swarm.ts, is referenced by Swarm.constructor.options but not included in the documentation
+[93m[warning][0m The comment for AgentMetrics links to "Meter.metrics" which was resolved but is not included in the documentation. To fix this warning export it or add { "@strands-agents/sdk": { "Meter.metrics": "#" }} to the externalSymbolLinkMappings option
+[93m[warning][0m The comment for Graph.initialize links to "MultiAgentInitializedEvent" which was resolved but is not included in the documentation. To fix this warning export it or add { "@strands-agents/sdk": { "MultiAgentInitializedEvent": "#" }} to the externalSymbolLinkMappings option
+[93m[warning][0m The comment for Swarm.initialize links to "MultiAgentInitializedEvent" which was resolved but is not included in the documentation. To fix this warning export it or add { "@strands-agents/sdk": { "MultiAgentInitializedEvent": "#" }} to the externalSymbolLinkMappings option
+[96m[info][0m markdown generated at ./.build/api-docs/typescript
+[93m[warning][0m Found 0 errors and 35 warnings
+
+📝 Post-processing files...
+
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/functions/getMeter.md → functions/getMeter.mdx
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/functions/getTracer.md → functions/getTracer.mdx
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/functions/setupMeter.md → functions/setupMeter.mdx
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/functions/setupTracer.md → functions/setupTracer.mdx
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/index.md → namespaces/telemetry.mdx
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/interfaces/MeterConfig.md → interfaces/MeterConfig.mdx
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/interfaces/TracerConfig.md → interfaces/TracerConfig.mdx
+Processed: .build/api-docs/typescript/classes/AfterInvocationEvent.md → classes/AfterInvocationEvent.mdx
+Processed: .build/api-docs/typescript/classes/AfterModelCallEvent.md → classes/AfterModelCallEvent.mdx
+Processed: .build/api-docs/typescript/classes/AfterToolCallEvent.md → classes/AfterToolCallEvent.mdx
+Processed: .build/api-docs/typescript/classes/AfterToolsEvent.md → classes/AfterToolsEvent.mdx
+Processed: .build/api-docs/typescript/classes/Agent.md → classes/Agent.mdx
+Processed: .build/api-docs/typescript/classes/AgentMetrics.md → classes/AgentMetrics.mdx
+Processed: .build/api-docs/typescript/classes/AgentResult.md → classes/AgentResult.mdx
+Processed: .build/api-docs/typescript/classes/AgentResultEvent.md → classes/AgentResultEvent.mdx
+Processed: .build/api-docs/typescript/classes/AgentTrace.md → classes/AgentTrace.mdx
+Processed: .build/api-docs/typescript/classes/BedrockModel.md → classes/BedrockModel.mdx
+Processed: .build/api-docs/typescript/classes/BeforeInvocationEvent.md → classes/BeforeInvocationEvent.mdx
+Processed: .build/api-docs/typescript/classes/BeforeModelCallEvent.md → classes/BeforeModelCallEvent.mdx
+Processed: .build/api-docs/typescript/classes/BeforeToolCallEvent.md → classes/BeforeToolCallEvent.mdx
+Processed: .build/api-docs/typescript/classes/BeforeToolsEvent.md → classes/BeforeToolsEvent.mdx
+Processed: .build/api-docs/typescript/classes/CachePointBlock.md → classes/CachePointBlock.mdx
+Processed: .build/api-docs/typescript/classes/CitationsBlock.md → classes/CitationsBlock.mdx
+Processed: .build/api-docs/typescript/classes/ConcurrentInvocationError.md → classes/ConcurrentInvocationError.mdx
+Processed: .build/api-docs/typescript/classes/ContentBlockEvent.md → classes/ContentBlockEvent.mdx
+Processed: .build/api-docs/typescript/classes/ContextWindowOverflowError.md → classes/ContextWindowOverflowError.mdx
+Processed: .build/api-docs/typescript/classes/ConversationManager.md → classes/ConversationManager.mdx
+Processed: .build/api-docs/typescript/classes/DocumentBlock.md → classes/DocumentBlock.mdx
+Processed: .build/api-docs/typescript/classes/FileStorage.md → classes/FileStorage.mdx
+Processed: .build/api-docs/typescript/classes/FunctionTool.md → classes/FunctionTool.mdx
+Processed: .build/api-docs/typescript/classes/Graph.md → classes/Graph.mdx
+Processed: .build/api-docs/typescript/classes/GuardContentBlock.md → classes/GuardContentBlock.mdx
+Processed: .build/api-docs/typescript/classes/HookRegistry.md → classes/HookRegistry.mdx
+Processed: .build/api-docs/typescript/classes/HookableEvent.md → classes/HookableEvent.mdx
+Processed: .build/api-docs/typescript/classes/ImageBlock.md → classes/ImageBlock.mdx
+Processed: .build/api-docs/typescript/classes/InitializedEvent.md → classes/InitializedEvent.mdx
+Processed: .build/api-docs/typescript/classes/JsonBlock.md → classes/JsonBlock.mdx
+Processed: .build/api-docs/typescript/classes/JsonValidationError.md → classes/JsonValidationError.mdx
+Processed: .build/api-docs/typescript/classes/MaxTokensError.md → classes/MaxTokensError.mdx
+Processed: .build/api-docs/typescript/classes/McpClient.md → classes/McpClient.mdx
+Processed: .build/api-docs/typescript/classes/Message.md → classes/Message.mdx
+Processed: .build/api-docs/typescript/classes/MessageAddedEvent.md → classes/MessageAddedEvent.mdx
+Processed: .build/api-docs/typescript/classes/Model.md → classes/Model.mdx
+Processed: .build/api-docs/typescript/classes/ModelContentBlockDeltaEvent.md → classes/ModelContentBlockDeltaEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelContentBlockStartEvent.md → classes/ModelContentBlockStartEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelContentBlockStopEvent.md → classes/ModelContentBlockStopEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelError.md → classes/ModelError.mdx
+Processed: .build/api-docs/typescript/classes/ModelMessageEvent.md → classes/ModelMessageEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelMessageStartEvent.md → classes/ModelMessageStartEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelMessageStopEvent.md → classes/ModelMessageStopEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelMetadataEvent.md → classes/ModelMetadataEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelRedactionEvent.md → classes/ModelRedactionEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelStreamUpdateEvent.md → classes/ModelStreamUpdateEvent.mdx
+Processed: .build/api-docs/typescript/classes/ModelThrottledError.md → classes/ModelThrottledError.mdx
+Processed: .build/api-docs/typescript/classes/NullConversationManager.md → classes/NullConversationManager.mdx
+Processed: .build/api-docs/typescript/classes/ReasoningBlock.md → classes/ReasoningBlock.mdx
+Processed: .build/api-docs/typescript/classes/S3Location.md → classes/S3Location.mdx
+Processed: .build/api-docs/typescript/classes/SessionManager.md → classes/SessionManager.mdx
+Processed: .build/api-docs/typescript/classes/SlidingWindowConversationManager.md → classes/SlidingWindowConversationManager.mdx
+Processed: .build/api-docs/typescript/classes/StateStore.md → classes/StateStore.mdx
+Processed: .build/api-docs/typescript/classes/StreamEvent.md → classes/StreamEvent.mdx
+Processed: .build/api-docs/typescript/classes/StructuredOutputError.md → classes/StructuredOutputError.mdx
+Processed: .build/api-docs/typescript/classes/Swarm.md → classes/Swarm.mdx
+Processed: .build/api-docs/typescript/classes/TextBlock.md → classes/TextBlock.mdx
+Processed: .build/api-docs/typescript/classes/Tool.md → classes/Tool.mdx
+Processed: .build/api-docs/typescript/classes/ToolResultBlock.md → classes/ToolResultBlock.mdx
+Processed: .build/api-docs/typescript/classes/ToolResultEvent.md → classes/ToolResultEvent.mdx
+Processed: .build/api-docs/typescript/classes/ToolStreamEvent.md → classes/ToolStreamEvent.mdx
+Processed: .build/api-docs/typescript/classes/ToolStreamUpdateEvent.md → classes/ToolStreamUpdateEvent.mdx
+Processed: .build/api-docs/typescript/classes/ToolUseBlock.md → classes/ToolUseBlock.mdx
+Processed: .build/api-docs/typescript/classes/ToolValidationError.md → classes/ToolValidationError.mdx
+Processed: .build/api-docs/typescript/classes/VideoBlock.md → classes/VideoBlock.mdx
+Processed: .build/api-docs/typescript/classes/ZodTool.md → classes/ZodTool.mdx
+Processed: .build/api-docs/typescript/functions/configureLogging.md → functions/configureLogging.mdx
+Processed: .build/api-docs/typescript/functions/contentBlockFromData.md → functions/contentBlockFromData.mdx
+Processed: .build/api-docs/typescript/functions/isModelStreamEvent.md → functions/isModelStreamEvent.mdx
+Processed: .build/api-docs/typescript/functions/tool.md → functions/tool.mdx
+Processed: .build/api-docs/typescript/functions/toolResultContentFromData.md → functions/toolResultContentFromData.mdx
+Deleted: .build/api-docs/typescript/index.md (using custom index)
+Processed: .build/api-docs/typescript/interfaces/BaseModelConfig.md → interfaces/BaseModelConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/BedrockGuardrailConfig.md → interfaces/BedrockGuardrailConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/BedrockGuardrailRedactionConfig.md → interfaces/BedrockGuardrailRedactionConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/BedrockModelConfig.md → interfaces/BedrockModelConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/BedrockModelOptions.md → interfaces/BedrockModelOptions.mdx
+Processed: .build/api-docs/typescript/interfaces/CacheConfig.md → interfaces/CacheConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/CachePointBlockData.md → interfaces/CachePointBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/Citation.md → interfaces/Citation.mdx
+Processed: .build/api-docs/typescript/interfaces/CitationsBlockData.md → interfaces/CitationsBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/CitationsDelta.md → interfaces/CitationsDelta.mdx
+Processed: .build/api-docs/typescript/interfaces/DocumentBlockData.md → interfaces/DocumentBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/FunctionToolConfig.md → interfaces/FunctionToolConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/GuardContentBlockData.md → interfaces/GuardContentBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/GuardContentImage.md → interfaces/GuardContentImage.mdx
+Processed: .build/api-docs/typescript/interfaces/GuardContentText.md → interfaces/GuardContentText.mdx
+Processed: .build/api-docs/typescript/interfaces/ImageBlockData.md → interfaces/ImageBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/InvokableTool.md → interfaces/InvokableTool.mdx
+Processed: .build/api-docs/typescript/interfaces/LocalAgent.md → interfaces/LocalAgent.mdx
+Processed: .build/api-docs/typescript/interfaces/LocationData.md → interfaces/LocationData.mdx
+Processed: .build/api-docs/typescript/interfaces/Logger.md → interfaces/Logger.mdx
+Processed: .build/api-docs/typescript/interfaces/MessageData.md → interfaces/MessageData.mdx
+Processed: .build/api-docs/typescript/interfaces/Metrics.md → interfaces/Metrics.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockDeltaEventData.md → interfaces/ModelContentBlockDeltaEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockStartEventData.md → interfaces/ModelContentBlockStartEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelMessageStartEventData.md → interfaces/ModelMessageStartEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelMessageStopEventData.md → interfaces/ModelMessageStopEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelMetadataEventData.md → interfaces/ModelMetadataEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelRedactionEventData.md → interfaces/ModelRedactionEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ModelStopResponse.md → interfaces/ModelStopResponse.mdx
+Processed: .build/api-docs/typescript/interfaces/Plugin.md → interfaces/Plugin.mdx
+Processed: .build/api-docs/typescript/interfaces/ReasoningBlockData.md → interfaces/ReasoningBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/ReasoningContentDelta.md → interfaces/ReasoningContentDelta.mdx
+Processed: .build/api-docs/typescript/interfaces/RedactInputContent.md → interfaces/RedactInputContent.mdx
+Processed: .build/api-docs/typescript/interfaces/RedactOutputContent.md → interfaces/RedactOutputContent.mdx
+Processed: .build/api-docs/typescript/interfaces/Redaction.md → interfaces/Redaction.mdx
+Processed: .build/api-docs/typescript/interfaces/S3LocationData.md → interfaces/S3LocationData.mdx
+Processed: .build/api-docs/typescript/interfaces/SessionManagerConfig.md → interfaces/SessionManagerConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/Snapshot.md → interfaces/Snapshot.mdx
+Processed: .build/api-docs/typescript/interfaces/SnapshotManifest.md → interfaces/SnapshotManifest.mdx
+Processed: .build/api-docs/typescript/interfaces/SnapshotStorage.md → interfaces/SnapshotStorage.mdx
+Processed: .build/api-docs/typescript/interfaces/SnapshotTriggerParams.md → interfaces/SnapshotTriggerParams.mdx
+Processed: .build/api-docs/typescript/interfaces/StreamOptions.md → interfaces/StreamOptions.mdx
+Processed: .build/api-docs/typescript/interfaces/TasksConfig.md → interfaces/TasksConfig.mdx
+Processed: .build/api-docs/typescript/interfaces/TextBlockData.md → interfaces/TextBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/TextDelta.md → interfaces/TextDelta.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolContext.md → interfaces/ToolContext.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolResultBlockData.md → interfaces/ToolResultBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolSpec.md → interfaces/ToolSpec.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolStreamEventData.md → interfaces/ToolStreamEventData.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolUse.md → interfaces/ToolUse.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolUseBlockData.md → interfaces/ToolUseBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolUseInputDelta.md → interfaces/ToolUseInputDelta.mdx
+Processed: .build/api-docs/typescript/interfaces/ToolUseStart.md → interfaces/ToolUseStart.mdx
+Processed: .build/api-docs/typescript/interfaces/Usage.md → interfaces/Usage.mdx
+Processed: .build/api-docs/typescript/interfaces/VideoBlockData.md → interfaces/VideoBlockData.mdx
+Processed: .build/api-docs/typescript/interfaces/ZodToolConfig.md → interfaces/ZodToolConfig.mdx
+Processed: .build/api-docs/typescript/type-aliases/AgentConfig.md → type-aliases/AgentConfig.mdx
+Processed: .build/api-docs/typescript/type-aliases/AgentStreamEvent.md → type-aliases/AgentStreamEvent.mdx
+Processed: .build/api-docs/typescript/type-aliases/CitationGeneratedContent.md → type-aliases/CitationGeneratedContent.mdx
+Processed: .build/api-docs/typescript/type-aliases/CitationLocation.md → type-aliases/CitationLocation.mdx
+Processed: .build/api-docs/typescript/type-aliases/CitationSourceContent.md → type-aliases/CitationSourceContent.mdx
+Processed: .build/api-docs/typescript/type-aliases/ContentBlock.md → type-aliases/ContentBlock.mdx
+Processed: .build/api-docs/typescript/type-aliases/ContentBlockData.md → type-aliases/ContentBlockData.mdx
+Processed: .build/api-docs/typescript/type-aliases/ContentBlockDelta.md → type-aliases/ContentBlockDelta.mdx
+Processed: .build/api-docs/typescript/type-aliases/ContentBlockStart.md → type-aliases/ContentBlockStart.mdx
+Processed: .build/api-docs/typescript/type-aliases/ConversationManagerReduceOptions.md → type-aliases/ConversationManagerReduceOptions.mdx
+Processed: .build/api-docs/typescript/type-aliases/DocumentContentBlock.md → type-aliases/DocumentContentBlock.mdx
+Processed: .build/api-docs/typescript/type-aliases/DocumentContentBlockData.md → type-aliases/DocumentContentBlockData.mdx
+Processed: .build/api-docs/typescript/type-aliases/DocumentFormat.md → type-aliases/DocumentFormat.mdx
+Processed: .build/api-docs/typescript/type-aliases/DocumentSource.md → type-aliases/DocumentSource.mdx
+Processed: .build/api-docs/typescript/type-aliases/DocumentSourceData.md → type-aliases/DocumentSourceData.mdx
+Processed: .build/api-docs/typescript/type-aliases/FunctionToolCallback.md → type-aliases/FunctionToolCallback.mdx
+Processed: .build/api-docs/typescript/type-aliases/GuardImageFormat.md → type-aliases/GuardImageFormat.mdx
+Processed: .build/api-docs/typescript/type-aliases/GuardImageSource.md → type-aliases/GuardImageSource.mdx
+Processed: .build/api-docs/typescript/type-aliases/GuardQualifier.md → type-aliases/GuardQualifier.mdx
+Processed: .build/api-docs/typescript/type-aliases/HookCallback.md → type-aliases/HookCallback.mdx
+Processed: .build/api-docs/typescript/type-aliases/HookableEventConstructor.md → type-aliases/HookableEventConstructor.mdx
+Processed: .build/api-docs/typescript/type-aliases/ImageFormat.md → type-aliases/ImageFormat.mdx
+Processed: .build/api-docs/typescript/type-aliases/ImageSource.md → type-aliases/ImageSource.mdx
+Processed: .build/api-docs/typescript/type-aliases/ImageSourceData.md → type-aliases/ImageSourceData.mdx
+Processed: .build/api-docs/typescript/type-aliases/JSONSchema.md → type-aliases/JSONSchema.mdx
+Processed: .build/api-docs/typescript/type-aliases/JSONValue.md → type-aliases/JSONValue.mdx
+Processed: .build/api-docs/typescript/type-aliases/McpClientConfig.md → type-aliases/McpClientConfig.mdx
+Processed: .build/api-docs/typescript/type-aliases/ModelStreamEvent.md → type-aliases/ModelStreamEvent.mdx
+Processed: .build/api-docs/typescript/type-aliases/Role.md → type-aliases/Role.mdx
+Processed: .build/api-docs/typescript/type-aliases/SaveLatestStrategy.md → type-aliases/SaveLatestStrategy.mdx
+Processed: .build/api-docs/typescript/type-aliases/Scope.md → type-aliases/Scope.mdx
+Processed: .build/api-docs/typescript/type-aliases/SessionStorage.md → type-aliases/SessionStorage.mdx
+Processed: .build/api-docs/typescript/type-aliases/SlidingWindowConversationManagerConfig.md → type-aliases/SlidingWindowConversationManagerConfig.mdx
+Processed: .build/api-docs/typescript/type-aliases/SnapshotLocation.md → type-aliases/SnapshotLocation.mdx
+Processed: .build/api-docs/typescript/type-aliases/SnapshotTriggerCallback.md → type-aliases/SnapshotTriggerCallback.mdx
+Processed: .build/api-docs/typescript/type-aliases/StopReason.md → type-aliases/StopReason.mdx
+Processed: .build/api-docs/typescript/type-aliases/SystemContentBlock.md → type-aliases/SystemContentBlock.mdx
+Processed: .build/api-docs/typescript/type-aliases/SystemPrompt.md → type-aliases/SystemPrompt.mdx
+Processed: .build/api-docs/typescript/type-aliases/SystemPromptData.md → type-aliases/SystemPromptData.mdx
+Processed: .build/api-docs/typescript/type-aliases/ToolChoice.md → type-aliases/ToolChoice.mdx
+Processed: .build/api-docs/typescript/type-aliases/ToolList.md → type-aliases/ToolList.mdx
+Processed: .build/api-docs/typescript/type-aliases/ToolResultContent.md → type-aliases/ToolResultContent.mdx
+Processed: .build/api-docs/typescript/type-aliases/ToolResultStatus.md → type-aliases/ToolResultStatus.mdx
+Processed: .build/api-docs/typescript/type-aliases/ToolStreamGenerator.md → type-aliases/ToolStreamGenerator.mdx
+Processed: .build/api-docs/typescript/type-aliases/VideoFormat.md → type-aliases/VideoFormat.mdx
+Processed: .build/api-docs/typescript/type-aliases/VideoSource.md → type-aliases/VideoSource.mdx
+Processed: .build/api-docs/typescript/type-aliases/VideoSourceData.md → type-aliases/VideoSourceData.mdx
+
+✅ Done! Generated 181 API doc files.
+[sdk-setup] SDK setup complete.
+
+[1m[46m RUN [49m[22m [36mv4.1.1 [39m[90m/home/runner/work/docs/docs[39m
+
+[global-setup] Data store not populated — starting astro dev temporarily...
+Node.js v20.20.1 is not supported by Astro!
+Please upgrade Node.js to a supported version: ">=22.12.0"
+
+GitHub Actions CI Environment Detected!
+Additional steps may be needed to set your Node.js version:
+Documentation: https://docs.astro.build/en/guides/deploy/
+
+[31mNo test files found, exiting with code 1
+[39m
+[2minclude: [22m[33mtest/**/*.test.ts[39m
+[2mexclude:  [22m[33m**/node_modules/**[2m, [22m**/.git/**[39m
+
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: kill ESRCH[39m
+[90m [2m❯[22m process.kill node:internal/process/per_thread:[2m225:13[22m[39m
+[36m [2m❯[22m Object.setup test/global-setup.ts:[2m54:15[22m[39m
+    [90m 52|[39m   } [35mfinally[39m {
+    [90m 53|[39m     [35mif[39m (server[33m.[39mpid [33m!=[39m [35mnull[39m) {
+    [90m 54|[39m       process[33m.[39m[34mkill[39m([33m-[39mserver[33m.[39mpid[33m,[39m [32m'SIGTERM'[39m)
+    [90m   |[39m               [31m^[39m
+    [90m 55|[39m     }
+    [90m 56|[39m   }
+[90m [2m❯[22m processTicksAndRejections node:internal/process/task_queues:[2m95:5[22m[39m
+[90m [2m❯[22m TestProject._initializeGlobalSetup node_modules/vitest/dist/chunks/cli-api.BUXBO6jS.js:[2m10725:21[22m[39m
+[90m [2m❯[22m Vitest.initializeGlobalSetup node_modules/vitest/dist/chunks/cli-api.BUXBO6jS.js:[2m13688:35[22m[39m
+[90m [2m❯[22m node_modules/vitest/dist/chunks/cli-api.BUXBO6jS.js:[2m13551:6[22m[39m
+[90m [2m❯[22m node_modules/vitest/dist/chunks/cli-api.BUXBO6jS.js:[2m13580:11[22m[39m
+[90m [2m❯[22m node_modules/vitest/dist/chunks/cli-api.BUXBO6jS.js:[2m13442:19[22m[39m
+[90m [2m❯[22m startVitest node_modules/vitest/dist/chunks/cli-api.BUXBO6jS.js:[2m14492:8[22m[39m
+[90m [2m❯[22m start node_modules/vitest/dist/chunks/cac.CHfKU_gf.js:[2m2326:15[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22m[39m
+[31m[1mSerialized Error:[22m[39m [90m{ errno: -3, code: 'ESRCH', syscall: 'kill' }[39m
+
+
+
