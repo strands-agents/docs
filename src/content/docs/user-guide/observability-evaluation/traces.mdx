@@ -385,6 +385,37 @@ agent = Agent(
 </Tab>
 </Tabs>
 
+### Custom Spans
+
+You can access the configured tracer to create your own custom spans alongside the auto-instrumented ones:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from opentelemetry import trace
+
+# Get your configured tracer to optionally create your own custom spans
+tracer = trace.get_tracer(__name__)
+with tracer.start_as_current_span("my-custom-operation") as span:
+    span.set_attribute("custom.key", "value")
+    # ... do work ...
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/observability-evaluation/traces_imports.ts:custom_spans_imports"
+
+--8<-- "user-guide/observability-evaluation/traces.ts:custom_spans"
+```
+</Tab>
+</Tabs>
+
+:::tip
+`getTracer()` (TypeScript) and `trace.get_tracer()` (Python) use the global tracer provider. When you use `setupTracer()` or `StrandsTelemetry()` without a custom provider, it's automatically registered as global — so your custom spans will use the same provider as the agent's auto-instrumented spans.
+:::
+
 ### Configuring the exporters from source code
 
 <Tabs>
