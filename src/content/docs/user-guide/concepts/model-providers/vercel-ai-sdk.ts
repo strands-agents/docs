@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import { Agent } from '@strands-agents/sdk'
-import { VercelModel } from '@strands-agents/sdk/vercel'
+import { VercelModel } from '@strands-agents/sdk/models/vercel'
 import { bedrock } from '@ai-sdk/amazon-bedrock'
 import { openai } from '@ai-sdk/openai'
 import { anthropic } from '@ai-sdk/anthropic'
@@ -14,11 +14,11 @@ import { google } from '@ai-sdk/google'
 async function basicUsageOpenAI() {
   // --8<-- [start:basic_usage_openai]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel'
+  import { VercelModel } from '@strands-agents/sdk/models/vercel'
   import { openai } from '@ai-sdk/openai'
 
   const agent = new Agent({
-    model: new VercelModel(openai('gpt-4o')),
+    model: new VercelModel({ model: openai('gpt-4o') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -30,11 +30,11 @@ async function basicUsageOpenAI() {
 async function basicUsageBedrock() {
   // --8<-- [start:basic_usage_bedrock]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel'
+  import { VercelModel } from '@strands-agents/sdk/models/vercel'
   import { bedrock } from '@ai-sdk/amazon-bedrock'
 
   const agent = new Agent({
-    model: new VercelModel(bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0')),
+    model: new VercelModel({ model: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -46,11 +46,11 @@ async function basicUsageBedrock() {
 async function basicUsageAnthropic() {
   // --8<-- [start:basic_usage_anthropic]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel'
+  import { VercelModel } from '@strands-agents/sdk/models/vercel'
   import { anthropic } from '@ai-sdk/anthropic'
 
   const agent = new Agent({
-    model: new VercelModel(anthropic('claude-sonnet-4-20250514')),
+    model: new VercelModel({ model: anthropic('claude-sonnet-4-20250514') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -62,11 +62,11 @@ async function basicUsageAnthropic() {
 async function basicUsageGoogle() {
   // --8<-- [start:basic_usage_google]
   import { Agent } from '@strands-agents/sdk'
-  import { VercelModel } from '@strands-agents/sdk/vercel'
+  import { VercelModel } from '@strands-agents/sdk/models/vercel'
   import { google } from '@ai-sdk/google'
 
   const agent = new Agent({
-    model: new VercelModel(google('gemini-2.5-flash')),
+    model: new VercelModel({ model: google('gemini-2.5-flash') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -77,10 +77,13 @@ async function basicUsageGoogle() {
 // Configuration example
 async function configExample() {
   // --8<-- [start:config_example]
-  const model = new VercelModel(openai('gpt-4o'), {
-    maxTokens: 1000,
-    temperature: 0.7,
-    topP: 0.9,
+  const model = new VercelModel({
+    model: openai('gpt-4o'),
+    config: {
+      maxTokens: 1000,
+      temperature: 0.7,
+      topP: 0.9,
+    },
   })
 
   const agent = new Agent({ model })
@@ -93,7 +96,7 @@ async function configExample() {
 async function streamingExample() {
   // --8<-- [start:streaming]
   const agent = new Agent({
-    model: new VercelModel(openai('gpt-4o')),
+    model: new VercelModel({ model: openai('gpt-4o') }),
   })
 
   for await (const event of agent.stream('Tell me a story')) {
