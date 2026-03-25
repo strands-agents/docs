@@ -30,6 +30,10 @@ import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@o
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 // --8<-- [end:configuring_exporters_imports]
 
+// --8<-- [start:custom_spans_imports]
+import { setupTracer, getTracer } from '@strands-agents/sdk/telemetry'
+// --8<-- [end:custom_spans_imports]
+
 // --8<-- [start:end_to_end_imports]
 import { Agent } from '@strands-agents/sdk'
 import { setupTracer } from '@strands-agents/sdk/telemetry'
