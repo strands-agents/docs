@@ -1,4 +1,4 @@
-import { Agent, StructuredOutputException, tool } from '@strands-agents/sdk'
+import { Agent, StructuredOutputError, tool } from '@strands-agents/sdk'
 import { z } from 'zod'
 
 // --8<-- [start:basic_usage]
@@ -39,7 +39,7 @@ async function errorHandling() {
   try {
     const result = await agent.invoke('some prompt')
   } catch (error) {
-    if (error instanceof StructuredOutputException) {
+    if (error instanceof StructuredOutputError) {
       console.log(`Structured output failed: ${error.message}`)
     }
   }

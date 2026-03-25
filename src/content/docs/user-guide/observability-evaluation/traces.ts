@@ -1,5 +1,5 @@
 import { Agent } from '@strands-agents/sdk'
-import { setupTracer } from '@strands-agents/sdk/telemetry'
+import { setupTracer, getTracer } from '@strands-agents/sdk/telemetry'
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
@@ -88,6 +88,20 @@ function configuringExporters() {
   // Register the provider with Strands
   setupTracer({ provider })
   // --8<-- [end:configuring_exporters]
+}
+
+function customSpans() {
+  // --8<-- [start:custom_spans]
+  // Set up telemetry first (or register your own NodeTracerProvider)
+  setupTracer({ exporters: { otlp: true } })
+
+  // Get a tracer and create custom spans
+  const tracer = getTracer()
+  const span = tracer.startSpan('my-custom-operation')
+  span.setAttribute('custom.key', 'value')
+  // ... do work ...
+  span.end()
+  // --8<-- [end:custom_spans]
 }
 
 async function endToEnd() {

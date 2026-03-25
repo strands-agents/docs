@@ -6,14 +6,15 @@
 // Imports are in openai_imports.ts
 
 import { Agent } from '@strands-agents/sdk'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 
 // Basic usage
 async function basicUsage() {
   // --8<-- [start:basic_usage]
   const model = new OpenAIModel({
+    api: 'chat',
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
     maxTokens: 1000,
     temperature: 0.7,
   })
@@ -28,11 +29,12 @@ async function basicUsage() {
 async function customServer() {
   // --8<-- [start:custom_server]
   const model = new OpenAIModel({
+    api: 'chat',
     apiKey: '<KEY>',
     clientConfig: {
       baseURL: '<URL>',
     },
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
   })
 
   const agent = new Agent({ model })
@@ -44,8 +46,9 @@ async function customServer() {
 async function customConfig() {
   // --8<-- [start:custom_config]
   const model = new OpenAIModel({
+    api: 'chat',
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
     maxTokens: 1000,
     temperature: 0.7,
     topP: 0.9,
@@ -63,8 +66,9 @@ async function customConfig() {
 async function updateConfig() {
   // --8<-- [start:update_config]
   const model = new OpenAIModel({
+    api: 'chat',
     apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-    modelId: 'gpt-4o',
+    modelId: 'gpt-5.4',
     temperature: 0.7,
   })
 

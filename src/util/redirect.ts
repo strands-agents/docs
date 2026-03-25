@@ -16,6 +16,12 @@ type SlugRule =
   | { match: RegExp; to: (m: RegExpMatchArray) => string }
 
 const SLUG_RULES: SlugRule[] = [
+  // gemini was renamed to google
+  {
+    match: exactly('docs/user-guide/concepts/model-providers/gemini'),
+    to: 'docs/user-guide/concepts/model-providers/google',
+  },
+
   // python-tools was renamed to custom-tools
   {
     match: exactly('docs/user-guide/concepts/tools/python-tools'),

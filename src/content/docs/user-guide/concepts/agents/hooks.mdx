@@ -349,6 +349,7 @@ Most event properties are read-only to prevent unintended modifications. However
 - [`AfterToolCallEvent`](@api/python/strands.hooks.events#AfterToolCallEvent)
     - `result` - Modify the tool result. See [Result Modification](#result-modification).
     - `retry` - Request a retry of the tool invocation. See [Tool Call Retry](#tool-call-retry).
+    - `exception` *(read-only)* - The original exception if the tool raised one, otherwise `None`. See [Exception Handling](#exception-handling).
 
 - [`AfterInvocationEvent`](@api/python/strands.hooks.events#AfterInvocationEvent)
     - `resume` - Trigger a follow-up agent invocation with new input. See [Invocation resume](#invocation-resume).
@@ -894,6 +895,49 @@ agent = Agent(hooks=[retry_hook])
 
 result = agent("What is the capital of France?")
 ```
+</Tab>
+<Tab label="TypeScript">
+
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+</Tab>
+</Tabs>
+
+### Exception Handling
+
+When a tool raises an exception, the agent converts it to an error result and returns it to the model, allowing the model to adjust its approach and retry. This works well for expected errors like validation failures, but for unexpected errors—assertion failures, configuration errors, or bugs—you may want to fail immediately rather than let the model retry futilely. The `exception` property on `AfterToolCallEvent` provides access to the original exception, enabling hooks to inspect error types and selectively propagate those that shouldn't be retried:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+class PropagateUnexpectedExceptions(HookProvider):
+    """Re-raise unexpected exceptions instead of returning them to the model."""
+
+    def __init__(self, allowed_exceptions: tuple[type[Exception], ...] = (ValueError,)):
+        self.allowed_exceptions = allowed_exceptions
+
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(AfterToolCallEvent, self._check_exception)
+
+    def _check_exception(self, event: AfterToolCallEvent) -> None:
+        if event.exception is None:
+            return  # Tool succeeded
+        if isinstance(event.exception, self.allowed_exceptions):
+            return  # Let model retry these
+        raise event.exception  # Propagate unexpected errors
+```
+
+```python
+# Usage
+agent = Agent(
+    model=model,
+    tools=[my_tool],
+    hooks=[PropagateUnexpectedExceptions(allowed_exceptions=(ValueError, ValidationError))],
+)
+```
+
 </Tab>
 <Tab label="TypeScript">
 
