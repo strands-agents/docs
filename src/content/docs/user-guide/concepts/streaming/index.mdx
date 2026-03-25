@@ -181,7 +181,47 @@ See [Graph streaming](../multi-agent/graph.md#streaming-events) and [Swarm strea
 
 ### Event Serialization
 
-When streaming events are serialized (e.g., via `JSON.stringify()`), each event keeps its `type` discriminator along with the relevant data fields for that event. This enables compact output for SSE, WebSockets, or HTTP responses:
+<Tabs>
+<Tab label="Python">
+
+Python streaming events are plain dictionaries. The SDK does not include a built-in serialization filter — you have full control over which events and fields to forward from your processes and servers.
+
+When serving streamed responses (for example, over SSE or WebSockets), you can filter the yielded events to keep payloads compact:
+
+```python
+import json
+
+def filter_event(event: dict) -> dict | None:
+    """Filter streaming events to only forward relevant data over the wire."""
+    # Forward text deltas for real-time display
+    if "data" in event:
+        return {"type": "text", "data": event["data"]}
+
+    # Forward tool usage for progress indicators
+    if "current_tool_use" in event and event["current_tool_use"].get("name"):
+        return {"type": "tool", "name": event["current_tool_use"]["name"]}
+
+    # Forward the final result
+    if "result" in event:
+        return {"type": "result", "stop_reason": str(event["result"].stop_reason)}
+
+    # Skip everything else (lifecycle signals, raw deltas, reasoning, etc.)
+    return None
+
+
+async for event in agent.stream_async("Hello"):
+    filtered = filter_event(event)
+    if filtered:
+        await response.write(f"data: {json.dumps(filtered)}\n\n")
+```
+
+This approach lets you tailor the streamed output to your use case — for example, forwarding only text deltas for a chat UI or including tool events for a progress dashboard.
+</Tab>
+<Tab label="TypeScript">
+
+When streaming events are serialized (for example, with `JSON.stringify()`), each event keeps its `type` discriminator along with the relevant data fields for that event. This enables compact output for SSE, WebSockets, or HTTP responses.
+
+**Agent events**
 
 | Event | Serialized fields |
 |---|---|
@@ -198,7 +238,27 @@ When streaming events are serialized (e.g., via `JSON.stringify()`), each event 
 | `BeforeToolsEvent` / `AfterToolsEvent` | `{ type, message }` |
 | Lifecycle events (`InitializedEvent`, `BeforeInvocationEvent`, `AfterInvocationEvent`, `BeforeModelCallEvent`) | `{ type }` |
 
-Fields like `agent`, `tool`, `cancel`, and `retry` are not included in the serialized output since they hold large internal references — they remain accessible for direct programmatic use in-process.
+**Multi-agent events**
+
+| Event | Serialized fields |
+|---|---|
+| `NodeStreamUpdateEvent` | `{ type, nodeId, nodeType, inner }` |
+| `NodeResultEvent` | `{ type, nodeId, nodeType, result }` |
+| `MultiAgentHandoffEvent` | `{ type, source, targets }` |
+| `NodeCancelEvent` | `{ type, nodeId, message }` |
+| `BeforeNodeCallEvent` | `{ type, nodeId }` |
+| `AfterNodeCallEvent` | `{ type, nodeId, error? }` |
+| `MultiAgentResultEvent` | `{ type, result }` |
+| Lifecycle events (`MultiAgentInitializedEvent`, `BeforeMultiAgentInvocationEvent`, `AfterMultiAgentInvocationEvent`) | `{ type }` |
+
+**A2A events**
+
+| Event | Serialized fields |
+|---|---|
+| `A2AStreamUpdateEvent` | `{ type, event }` |
+| `A2AResultEvent` | `{ type, result }` |
+
+Fields like `agent`, `orchestrator`, `state`, `tool`, `cancel`, and `retry` are not included in the serialized output since they hold large internal references — they remain accessible for direct programmatic use in-process. `Error` objects are converted to `{ message: string }`.
 
 ```typescript
 for await (const event of agent.stream('Hello')) {
@@ -206,8 +266,8 @@ for await (const event of agent.stream('Hello')) {
   res.write(`data: ${JSON.stringify(event)}\n\n`)
 }
 ```
-
-
+</Tab>
+</Tabs>
 
 ## Quick Examples
 <Tabs>
