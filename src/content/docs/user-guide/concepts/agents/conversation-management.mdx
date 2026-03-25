@@ -22,7 +22,7 @@ The SDK provides a flexible system for context management through the Conversati
 
 - [**NullConversationManager**](#nullconversationmanager): A simple implementation that does not modify conversation history
 - [**SlidingWindowConversationManager**](#slidingwindowconversationmanager): Maintains a fixed number of recent messages (default manager)
-- [**SummarizingConversationManager**](#summarizingconversationmanager): Intelligently summarizes older messages to preserve context
+- [**SummarizingConversationManager**](#summarizingconversationmanager) (Python) / [**SummarizationConversationManager**](#summarizingconversationmanager) (TypeScript): Intelligently summarizes older messages to preserve context
 
 or [build your own manager](#creating-a-conversationmanager) that matches your requirements.
 
@@ -139,12 +139,10 @@ The `per_turn` parameter accepts:
 
 ### SummarizingConversationManager
 
-{/* https://github.com/strands-agents/sdk-typescript/issues/279 */}
-:::note[Not supported in TypeScript]
+The [`SummarizingConversationManager`](@api/python/strands.agent.conversation_manager.summarizing_conversation_manager#SummarizingConversationManager) (Python) / `SummarizationConversationManager` (TypeScript) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
 
-:::
-
-The [`SummarizingConversationManager`](@api/python/strands.agent.conversation_manager.summarizing_conversation_manager#SummarizingConversationManager) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
+<Tabs>
+<Tab label="Python">
 
 Configuration parameters:
 
@@ -153,12 +151,25 @@ Configuration parameters:
 - **`summarization_agent`** (Agent, optional): Custom agent for generating summaries. If not provided, uses the main agent instance. Cannot be used together with `summarization_system_prompt`.
 - **`summarization_system_prompt`** (str, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format. Cannot be used together with `summarization_agent`.
 
-**Basic Usage:**
+</Tab>
+<Tab label="TypeScript">
 
-By default, the `SummarizingConversationManager` leverages the same model and configuration as your main agent to perform summarization.
+Configuration parameters:
+
+- **`model`** (Model, required): The model to use for generating summaries.
+- **`summaryRatio`** (number, default: 0.3): Ratio of messages to summarize when reducing context (clamped between 0.1 and 0.8)
+- **`preserveRecentMessages`** (number, default: 10): Minimum number of recent messages to always keep
+- **`summarizationSystemPrompt`** (string, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format.
+
+</Tab>
+</Tabs>
+
+**Basic Usage:**
 
 <Tabs>
 <Tab label="Python">
+
+By default, the `SummarizingConversationManager` leverages the same model and configuration as your main agent to perform summarization.
 
 ```python
 from strands import Agent
@@ -171,8 +182,12 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+The `SummarizationConversationManager` requires a `model` to use for generating summaries. This can be any model supported by the SDK.
+
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarization_conversation_manager_basic_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarization_conversation_manager_basic"
 ```
 </Tab>
 </Tabs>
@@ -199,8 +214,10 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarization_conversation_manager_custom_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarization_conversation_manager_custom"
 ```
 </Tab>
 </Tabs>
@@ -238,18 +255,20 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarization_conversation_manager_system_prompt_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarization_conversation_manager_system_prompt"
 ```
 </Tab>
 </Tabs>
 
 **Advanced Configuration with Custom Summarization Agent:**
 
-For advanced use cases, you can provide a custom `summarization_agent` to handle the summarization process. This enables using a different model (such as a faster or a more cost-effective one), incorporating tools during summarization, or implementing specialized summarization logic tailored to your domain. The custom agent can leverage its own system prompt, tools, and model configuration to generate summaries that best preserve the essential context for your specific use case.
-
 <Tabs>
 <Tab label="Python">
+
+For advanced use cases, you can provide a custom `summarization_agent` to handle the summarization process. This enables using a different model (such as a faster or a more cost-effective one), incorporating tools during summarization, or implementing specialized summarization logic tailored to your domain. The custom agent can leverage its own system prompt, tools, and model configuration to generate summaries that best preserve the essential context for your specific use case.
 
 ```python
 from strands import Agent
@@ -283,7 +302,7 @@ agent = Agent(
 </Tab>
 </Tabs>
 
-Key features of the `SummarizingConversationManager`:
+Key features:
 
 - **Context Window Management**: Automatically reduces context when token limits are exceeded
 - **Intelligent Summarization**: Uses structured bullet-point summaries to capture key information

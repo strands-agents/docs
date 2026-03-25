@@ -1,4 +1,4 @@
-import { Agent, ConversationManager, AfterInvocationEvent, NullConversationManager, SlidingWindowConversationManager } from '@strands-agents/sdk'
+import { Agent, ConversationManager, AfterInvocationEvent, NullConversationManager, SlidingWindowConversationManager, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
 import type { LocalAgent, ConversationManagerReduceOptions } from '@strands-agents/sdk'
 
 async function nullConversationManagerAgent() {
@@ -62,3 +62,59 @@ class MyManager extends ConversationManager {
   }
 }
 // --8<-- [end:custom_conversation_manager_proactive]
+
+async function summarizationBasic() {
+  // --8<-- [start:summarization_conversation_manager_basic]
+  const model = new BedrockModel({
+    modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  })
+
+  const agent = new Agent({
+    conversationManager: new SummarizationConversationManager({ model }),
+  })
+  // --8<-- [end:summarization_conversation_manager_basic]
+}
+
+async function summarizationCustom() {
+  // --8<-- [start:summarization_conversation_manager_custom]
+  const model = new BedrockModel({
+    modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  })
+
+  const conversationManager = new SummarizationConversationManager({
+    model,
+    summaryRatio: 0.3, // Summarize 30% of messages when context reduction is needed
+    preserveRecentMessages: 10, // Always keep 10 most recent messages
+  })
+
+  const agent = new Agent({
+    conversationManager,
+  })
+  // --8<-- [end:summarization_conversation_manager_custom]
+}
+
+async function summarizationSystemPrompt() {
+  // --8<-- [start:summarization_conversation_manager_system_prompt]
+  const model = new BedrockModel({
+    modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  })
+
+  // Custom system prompt for technical conversations
+  const customSystemPrompt = `You are summarizing a technical conversation. Create a concise bullet-point summary that:
+- Focuses on code changes, architectural decisions, and technical solutions
+- Preserves specific function names, file paths, and configuration details
+- Omits conversational elements and focuses on actionable information
+- Uses technical terminology appropriate for software development
+
+Format as bullet points without conversational language.`
+
+  const conversationManager = new SummarizationConversationManager({
+    model,
+    summarizationSystemPrompt: customSystemPrompt,
+  })
+
+  const agent = new Agent({
+    conversationManager,
+  })
+  // --8<-- [end:summarization_conversation_manager_system_prompt]
+}

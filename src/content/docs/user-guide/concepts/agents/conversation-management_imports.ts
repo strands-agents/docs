@@ -15,3 +15,15 @@ import { Agent, ConversationManager, type ConversationManagerReduceOptions } fro
 // --8<-- [start:custom_conversation_manager_proactive_imports]
 import { Agent, ConversationManager, AfterInvocationEvent, type AgentData, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
 // --8<-- [end:custom_conversation_manager_proactive_imports]
+
+// --8<-- [start:summarization_conversation_manager_basic_imports]
+import { Agent, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
+// --8<-- [end:summarization_conversation_manager_basic_imports]
+
+// --8<-- [start:summarization_conversation_manager_custom_imports]
+import { Agent, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
+// --8<-- [end:summarization_conversation_manager_custom_imports]
+
+// --8<-- [start:summarization_conversation_manager_system_prompt_imports]
+import { Agent, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
+// --8<-- [end:summarization_conversation_manager_system_prompt_imports]
