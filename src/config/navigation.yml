@@ -189,7 +189,7 @@ sidebar:
       - docs/examples/python/file_operations
       - docs/examples/python/agents_workflows
       - docs/examples/python/knowledge_base_agent
-      - docs/examples/python/structured_output
+      - docs/examples/structured_output
       - docs/examples/python/multi_agent_example/multi_agent_example
       - docs/examples/python/graph_loops_example
       - docs/examples/python/meta_tooling

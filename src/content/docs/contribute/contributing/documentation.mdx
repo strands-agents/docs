@@ -89,6 +89,9 @@ Code examples are critical—they show developers exactly what to do. Always tes
 - Add comments — explain non-obvious parts
 - Use realistic names — avoid foo/bar, use descriptive names
 
+<Tabs>
+<Tab label="Python">
+
 ```python
 # Good: Start simple
 from strands import Agent
@@ -100,9 +103,17 @@ from strands import Agent
 from strands.models import BedrockModel
 
 agent = Agent(
-    model=BedrockModel(model_id="anthropic.claude-3-sonnet"),
+    model=BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514"),
     system_prompt="You are a helpful assistant."
 )
 agent("What's the weather like?")
 ```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "contribute/contributing/documentation.ts:basic_agent"
+```
+</Tab>
+</Tabs>
 
