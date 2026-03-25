@@ -24,6 +24,9 @@ Choose your AI coding tool below and follow the setup instructions.
 
 You can use the Strands Agents MCP server as a tool within your own Strands agents:
 
+<Tabs>
+<Tab label="Python">
+
 ```python
 from mcp import stdio_client, StdioServerParameters
 from strands import Agent
@@ -39,6 +42,16 @@ mcp_client = MCPClient(lambda: stdio_client(
 agent = Agent(tools=[mcp_client])
 agent("How do I create a custom tool in Strands Agents?")
 ```
+
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/build-with-ai.ts:mcp_strands"
+```
+
+</Tab>
+</Tabs>
 
 See the [MCP tools documentation](/docs/user-guide/concepts/tools/mcp-tools/) for more details on using MCP tools with Strands agents.
 
@@ -72,26 +85,6 @@ claude mcp add strands uvx strands-agents-mcp-server
 ```
 
 See the [Claude Code MCP documentation](https://docs.anthropic.com/en/docs/claude-code/tutorials#configure-mcp-servers) for more details.
-
-</Tab>
-<Tab label="Kiro">
-
-Add the following to `~/.kiro/settings/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "strands-agents": {
-      "command": "uvx",
-      "args": ["strands-agents-mcp-server"],
-      "disabled": false,
-      "autoApprove": ["search_docs", "fetch_doc"]
-    }
-  }
-}
-```
-
-See the [Kiro MCP documentation](https://kiro.dev/docs/mcp/) for more details.
 
 </Tab>
 <Tab label="Cursor">
