@@ -219,46 +219,13 @@ This approach lets you tailor the streamed output to your use case — for examp
 </Tab>
 <Tab label="TypeScript">
 
-When streaming events are serialized (for example, with `JSON.stringify()`), each event keeps its `type` discriminator along with the relevant data fields for that event. This enables compact output for SSE, WebSockets, or HTTP responses.
+Every event class implements a `toJSON()` method that controls what `JSON.stringify()` produces. This keeps serialized payloads compact for SSE, WebSockets, or HTTP responses — without changing the in-process API.
 
-**Agent events**
+Each serialized event always includes its `type` discriminator alongside the data fields relevant to that event. For example, a `ModelStreamUpdateEvent` serializes to `{ type, event }` with just the streaming delta, and an `AgentResultEvent` includes `{ type, result }` with the final output. Lifecycle events like `BeforeInvocationEvent` and `AfterInvocationEvent` serialize to just `{ type }`, since they signal state transitions without carrying additional data.
 
-| Event | Serialized fields |
-|---|---|
-| `ModelStreamUpdateEvent` | `{ type, event }` |
-| `ContentBlockEvent` | `{ type, contentBlock }` |
-| `ModelMessageEvent` | `{ type, message, stopReason }` |
-| `ToolResultEvent` | `{ type, result }` |
-| `ToolStreamUpdateEvent` | `{ type, event }` |
-| `AgentResultEvent` | `{ type, result }` |
-| `MessageAddedEvent` | `{ type, message }` |
-| `BeforeToolCallEvent` | `{ type, toolUse }` |
-| `AfterToolCallEvent` | `{ type, toolUse, result, error? }` |
-| `AfterModelCallEvent` | `{ type, stopData?, error? }` |
-| `BeforeToolsEvent` / `AfterToolsEvent` | `{ type, message }` |
-| Lifecycle events (`InitializedEvent`, `BeforeInvocationEvent`, `AfterInvocationEvent`, `BeforeModelCallEvent`) | `{ type }` |
+Properties that hold large runtime references — such as `agent`, `orchestrator`, `state`, and `tool` — are excluded from the serialized output. These remain available for direct programmatic access in-process but are not needed over the wire. Similarly, mutable hook properties like `cancel` and `retry` are omitted. `Error` objects are converted to `{ message: string }` for safe transport.
 
-**Multi-agent events**
-
-| Event | Serialized fields |
-|---|---|
-| `NodeStreamUpdateEvent` | `{ type, nodeId, nodeType, inner }` |
-| `NodeResultEvent` | `{ type, nodeId, nodeType, result }` |
-| `MultiAgentHandoffEvent` | `{ type, source, targets }` |
-| `NodeCancelEvent` | `{ type, nodeId, message }` |
-| `BeforeNodeCallEvent` | `{ type, nodeId }` |
-| `AfterNodeCallEvent` | `{ type, nodeId, error? }` |
-| `MultiAgentResultEvent` | `{ type, result }` |
-| Lifecycle events (`MultiAgentInitializedEvent`, `BeforeMultiAgentInvocationEvent`, `AfterMultiAgentInvocationEvent`) | `{ type }` |
-
-**A2A events**
-
-| Event | Serialized fields |
-|---|---|
-| `A2AStreamUpdateEvent` | `{ type, event }` |
-| `A2AResultEvent` | `{ type, result }` |
-
-Fields like `agent`, `orchestrator`, `state`, `tool`, `cancel`, and `retry` are not included in the serialized output since they hold large internal references — they remain accessible for direct programmatic use in-process. `Error` objects are converted to `{ message: string }`.
+The same behavior applies to multi-agent and A2A events. Multi-agent events include identifying context like `nodeId` and `nodeType` alongside their data, while the `orchestrator` and `state` references are filtered out. This means you can serialize any event from `agent.stream()` or a multi-agent orchestrator's stream without additional processing:
 
 ```typescript
 for await (const event of agent.stream('Hello')) {
