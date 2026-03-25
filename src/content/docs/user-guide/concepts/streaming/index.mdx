@@ -248,12 +248,6 @@ for await (const event of agent.stream('Hello')) {
   //       "delta": { "type": "textDelta", "text": "Hi" }
   //     }
   //   }
-  //
-  // Lifecycle events serialize down to just the type:
-  //   { "type": "beforeInvocationEvent" }
-  //
-  // Result events keep the result payload:
-  //   { "type": "agentResultEvent", "result": { "stopReason": "endTurn", ... } }
 
   res.write(`data: ${JSON.stringify(event)}\n\n`)
 }
