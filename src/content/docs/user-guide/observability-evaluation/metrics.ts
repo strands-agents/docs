@@ -66,6 +66,20 @@ async function agentLoopMetricsExample() {
   // --8<-- [end:agent_loop_metrics]
 }
 
+// Local traces example
+async function localTracesExample() {
+  // --8<-- [start:local_traces]
+  const agent = new Agent({
+    tools: [notebook],
+  })
+
+  const result = await agent.invoke('What is 15 * 8 + 42?')
+
+  // Access traces directly from the result
+  console.log(JSON.stringify(result.traces))
+  // --8<-- [end:local_traces]
+}
+
 // Metrics summary example
 async function metricsSummaryExample() {
   // --8<-- [start:metrics_summary]
