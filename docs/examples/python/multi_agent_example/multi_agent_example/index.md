@@ -70,7 +70,7 @@ teacher_agent = Agent(
 )
 ```
 
--   The orchestrator suppresses its intermediate output by setting `callback_handler` to `None`. Without this suppression, the default [`PrintingStreamHandler`](/docs/api/python/strands.handlers.callback_handler#PrintingCallbackHandler) would print all outputs to stdout, creating a cluttered experience with duplicate information from each agent’s thinking process and tool calls.
+-   The orchestrator suppresses its intermediate output by setting `callback_handler` to `None`. Without this suppression, the default [<code dir="auto">PrintingStreamHandler</code>](/docs/api/python/strands.handlers.callback_handler#PrintingCallbackHandler) would print all outputs to stdout, creating a cluttered experience with duplicate information from each agent’s thinking process and tool calls.
 
 ### 2\. Specialized Agents
 

@@ -1,10 +1,10 @@
-Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L394)
+Defined in: [src/hooks/events.ts:517](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L517)
 
 Event triggered as the final event in the agent stream. Wraps the agent result containing the stop reason and last message.
 
 ## Extends
 
--   [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md)
+-   [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md)
 
 ## Constructors
 
@@ -14,15 +14,15 @@ Event triggered as the final event in the agent stream. Wraps the agent result c
 new AgentResultEvent(data): AgentResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:399](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L399)
+Defined in: [src/hooks/events.ts:522](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L522)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `result`: [`AgentResult`](/docs/api/typescript/AgentResult/index.md); } |
-| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
-| `data.result` | [`AgentResult`](/docs/api/typescript/AgentResult/index.md) |
+| `data` | { `agent`: [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md); `result`: [<code dir="auto">AgentResult</code>](/docs/api/typescript/AgentResult/index.md); } |
+| `data.agent` | [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md) |
+| `data.result` | [<code dir="auto">AgentResult</code>](/docs/api/typescript/AgentResult/index.md) |
 
 #### Returns
 
@@ -30,7 +30,7 @@ Defined in: [src/hooks/events.ts:399](https://github.com/strands-agents/sdk-type
 
 #### Overrides
 
-[`HookableEvent`](/docs/api/typescript/HookableEvent/index.md).[`constructor`](/docs/api/typescript/HookableEvent/index.md#constructor)
+[<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/HookableEvent/index.md#constructor)
 
 ## Properties
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:399](https://github.com/strands-agents/sdk-type
 readonly type: "agentResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L395)
+Defined in: [src/hooks/events.ts:518](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L518)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L396)
+Defined in: [src/hooks/events.ts:519](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L519)
 
 ---
 
@@ -60,4 +60,20 @@ Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-type
 readonly result: AgentResult;
 ```
 
-Defined in: [src/hooks/events.ts:397](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L397)
+Defined in: [src/hooks/events.ts:520](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L520)
+
+## Methods
+
+### toJSON()
+
+```ts
+toJSON(): Pick<AgentResultEvent, "type" | "result">;
+```
+
+Defined in: [src/hooks/events.ts:532](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L532)
+
+Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`AgentResultEvent`, `"type"` | `"result"`\>

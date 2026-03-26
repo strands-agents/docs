@@ -276,7 +276,7 @@ def task_with_metrics(case: Case) -> dict:
 
 ## Related Evaluators
 
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates the quality of final outputs
--   [**ToolParameterAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are correct
--   [**ToolSelectionAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md): Evaluates if correct tools were selected
--   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates the quality of final outputs
+-   [<strong>ToolParameterAccuracyEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are correct
+-   [<strong>ToolSelectionAccuracyEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md): Evaluates if correct tools were selected
+-   [<strong>GoalSuccessRateEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved

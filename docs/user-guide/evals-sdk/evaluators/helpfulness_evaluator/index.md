@@ -222,7 +222,7 @@ Evaluation: Above and beyond (1.0) - Comprehensive, proactive, anticipates issue
 
 ## Related Evaluators
 
--   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates overall output quality with custom criteria
--   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall user goals were achieved
--   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the sequence of actions taken
+-   [<strong>FaithfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates overall output quality with custom criteria
+-   [<strong>GoalSuccessRateEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall user goals were achieved
+-   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the sequence of actions taken

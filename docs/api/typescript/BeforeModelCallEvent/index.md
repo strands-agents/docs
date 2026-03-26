@@ -1,10 +1,10 @@
-Defined in: [src/hooks/events.ts:219](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L219)
+Defined in: [src/hooks/events.ts:281](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L281)
 
 Event triggered just before the model is invoked. Fired before sending messages to the model for inference.
 
 ## Extends
 
--   [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md)
+-   [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md)
 
 ## Constructors
 
@@ -14,14 +14,14 @@ Event triggered just before the model is invoked. Fired before sending messages 
 new BeforeModelCallEvent(data): BeforeModelCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L223)
+Defined in: [src/hooks/events.ts:285](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L285)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); } |
-| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
+| `data` | { `agent`: [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md); } |
+| `data.agent` | [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md) |
 
 #### Returns
 
@@ -29,7 +29,7 @@ Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-type
 
 #### Overrides
 
-[`HookableEvent`](/docs/api/typescript/HookableEvent/index.md).[`constructor`](/docs/api/typescript/HookableEvent/index.md#constructor)
+[<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/HookableEvent/index.md#constructor)
 
 ## Properties
 
@@ -39,7 +39,7 @@ Defined in: [src/hooks/events.ts:223](https://github.com/strands-agents/sdk-type
 readonly type: "beforeModelCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L220)
+Defined in: [src/hooks/events.ts:282](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L282)
 
 ---
 
@@ -49,4 +49,20 @@ Defined in: [src/hooks/events.ts:220](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:221](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L221)
+Defined in: [src/hooks/events.ts:283](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L283)
+
+## Methods
+
+### toJSON()
+
+```ts
+toJSON(): Pick<BeforeModelCallEvent, "type">;
+```
+
+Defined in: [src/hooks/events.ts:294](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L294)
+
+Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`BeforeModelCallEvent`, `"type"`\>

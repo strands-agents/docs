@@ -178,7 +178,7 @@ Detect when agents should have used a tool but didn’t.
 
 ## Related Evaluators
 
--   [**ToolParameterAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are correct
--   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the overall sequence of tool calls
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates the quality of final outputs
--   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved
+-   [<strong>ToolParameterAccuracyEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are correct
+-   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the overall sequence of tool calls
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates the quality of final outputs
+-   [<strong>GoalSuccessRateEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved

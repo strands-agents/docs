@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:38](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/errors.ts#L38)
+Defined in: [src/errors.ts:39](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/errors.ts#L39)
 
 Error thrown when input exceeds the model’s context window.
 
@@ -6,7 +6,7 @@ This error indicates that the combined length of the input (prompt, messages, sy
 
 ## Extends
 
--   [`ModelError`](/docs/api/typescript/ModelError/index.md)
+-   [<code dir="auto">ModelError</code>](/docs/api/typescript/ModelError/index.md)
 
 ## Constructors
 
@@ -16,7 +16,7 @@ This error indicates that the combined length of the input (prompt, messages, sy
 new ContextWindowOverflowError(message): ContextWindowOverflowError;
 ```
 
-Defined in: [src/errors.ts:44](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/errors.ts#L44)
+Defined in: [src/errors.ts:45](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/errors.ts#L45)
 
 Creates a new ContextWindowOverflowError.
 
@@ -32,4 +32,4 @@ Creates a new ContextWindowOverflowError.
 
 #### Overrides
 
-[`ModelError`](/docs/api/typescript/ModelError/index.md).[`constructor`](/docs/api/typescript/ModelError/index.md#constructor)
+[<code dir="auto">ModelError</code>](/docs/api/typescript/ModelError/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/ModelError/index.md#constructor)

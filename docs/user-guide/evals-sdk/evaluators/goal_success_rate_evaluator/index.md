@@ -228,7 +228,7 @@ Evaluate completion of complex, multi-step processes.
 
 ## Related Evaluators
 
--   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates helpfulness of individual responses
--   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the sequence of actions taken
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates overall output quality with custom criteria
--   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context
+-   [<strong>HelpfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates helpfulness of individual responses
+-   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the sequence of actions taken
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates overall output quality with custom criteria
+-   [<strong>FaithfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context

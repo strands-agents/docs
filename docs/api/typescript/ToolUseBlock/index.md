@@ -1,11 +1,11 @@
-Defined in: [src/types/messages.ts:211](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L211)
+Defined in: [src/types/messages.ts:211](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L211)
 
 Tool use content block.
 
 ## Implements
 
--   [`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md)
--   `JSONSerializable`<{ `toolUse`: [`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md); }>
+-   [<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md)
+-   `JSONSerializable`<{ `toolUse`: [<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md); }>
 
 ## Constructors
 
@@ -15,13 +15,13 @@ Tool use content block.
 new ToolUseBlock(data): ToolUseBlock;
 ```
 
-Defined in: [src/types/messages.ts:239](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L239)
+Defined in: [src/types/messages.ts:239](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L239)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md) |
+| `data` | [<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md) |
 
 #### Returns
 
@@ -35,7 +35,7 @@ Defined in: [src/types/messages.ts:239](https://github.com/strands-agents/sdk-ty
 readonly type: "toolUseBlock";
 ```
 
-Defined in: [src/types/messages.ts:215](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L215)
+Defined in: [src/types/messages.ts:215](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L215)
 
 Discriminator for tool use content.
 
@@ -47,13 +47,13 @@ Discriminator for tool use content.
 readonly name: string;
 ```
 
-Defined in: [src/types/messages.ts:220](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L220)
+Defined in: [src/types/messages.ts:220](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L220)
 
 The name of the tool to execute.
 
 #### Implementation of
 
-[`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md).[`name`](/docs/api/typescript/ToolUseBlockData/index.md#name)
+[<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md).[<code dir="auto">name</code>](/docs/api/typescript/ToolUseBlockData/index.md#name)
 
 ---
 
@@ -63,13 +63,13 @@ The name of the tool to execute.
 readonly toolUseId: string;
 ```
 
-Defined in: [src/types/messages.ts:225](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L225)
+Defined in: [src/types/messages.ts:225](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L225)
 
 Unique identifier for this tool use instance.
 
 #### Implementation of
 
-[`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md).[`toolUseId`](/docs/api/typescript/ToolUseBlockData/index.md#tooluseid)
+[<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md).[<code dir="auto">toolUseId</code>](/docs/api/typescript/ToolUseBlockData/index.md#tooluseid)
 
 ---
 
@@ -79,13 +79,13 @@ Unique identifier for this tool use instance.
 readonly input: JSONValue;
 ```
 
-Defined in: [src/types/messages.ts:231](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L231)
+Defined in: [src/types/messages.ts:231](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L231)
 
 The input parameters for the tool. This can be any JSON-serializable value.
 
 #### Implementation of
 
-[`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md).[`input`](/docs/api/typescript/ToolUseBlockData/index.md#input)
+[<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md).[<code dir="auto">input</code>](/docs/api/typescript/ToolUseBlockData/index.md#input)
 
 ---
 
@@ -95,13 +95,13 @@ The input parameters for the tool. This can be any JSON-serializable value.
 readonly optional reasoningSignature?: string;
 ```
 
-Defined in: [src/types/messages.ts:237](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L237)
+Defined in: [src/types/messages.ts:237](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L237)
 
 Reasoning signature from thinking models (e.g., Gemini). Must be preserved and sent back to the model for multi-turn tool use.
 
 #### Implementation of
 
-[`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md).[`reasoningSignature`](/docs/api/typescript/ToolUseBlockData/index.md#reasoningsignature)
+[<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md).[<code dir="auto">reasoningSignature</code>](/docs/api/typescript/ToolUseBlockData/index.md#reasoningsignature)
 
 ## Methods
 
@@ -113,7 +113,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/messages.ts:252](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L252)
+Defined in: [src/types/messages.ts:252](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L252)
 
 Serializes the ToolUseBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify().
 
@@ -127,7 +127,7 @@ Serializes the ToolUseBlock to a JSON-compatible ContentBlockData object. Called
 
 | Name | Type | Defined in |
 | --- | --- | --- |
-| `toolUse` | [`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md) | [src/types/messages.ts:252](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L252) |
+| `toolUse` | [<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md) | [src/types/messages.ts:252](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L252) |
 
 #### Implementation of
 
@@ -143,7 +143,7 @@ JSONSerializable.toJSON
 static fromJSON(data): ToolUseBlock;
 ```
 
-Defined in: [src/types/messages.ts:269](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L269)
+Defined in: [src/types/messages.ts:269](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L269)
 
 Creates a ToolUseBlock instance from its wrapped data format.
 
@@ -151,8 +151,8 @@ Creates a ToolUseBlock instance from its wrapped data format.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | { `toolUse`: [`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md); } | Wrapped ToolUseBlockData to deserialize |
-| `data.toolUse` | [`ToolUseBlockData`](/docs/api/typescript/ToolUseBlockData/index.md) | \- |
+| `data` | { `toolUse`: [<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md); } | Wrapped ToolUseBlockData to deserialize |
+| `data.toolUse` | [<code dir="auto">ToolUseBlockData</code>](/docs/api/typescript/ToolUseBlockData/index.md) | \- |
 
 #### Returns
 

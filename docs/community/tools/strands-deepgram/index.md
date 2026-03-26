@@ -47,5 +47,5 @@ Get your API key at: [console.deepgram.com](https://console.deepgram.com/)
 
 -   [PyPI Package](https://pypi.org/project/strands-deepgram/)
 -   [GitHub Repository](https://github.com/eraykeskinmac/strands-deepgram)
--   [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+-   [Examples &amp; Demos](https://github.com/eraykeskinmac/strands-tools-examples)
 -   [Deepgram API](https://console.deepgram.com/)

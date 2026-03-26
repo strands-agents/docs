@@ -313,6 +313,6 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 
 ## Related Documentation
 
--   [Quickstart Guide](/docs/user-guide/quickstart/index.md): Get started with Strands Evals
+-   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with Strands Evals
 -   [Simulators Overview](/docs/user-guide/evals-sdk/simulators/index.md): Learn about simulators
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate test cases automatically

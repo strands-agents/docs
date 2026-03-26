@@ -195,7 +195,7 @@ Evaluation: Neutral/Mixed (0.5) - First part faithful, second part unsupported
 
 ## Related Evaluators
 
--   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates helpfulness from user perspective
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates overall output quality
--   [**ToolParameterAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are grounded in context
--   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved
+-   [<strong>HelpfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates helpfulness from user perspective
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates overall output quality
+-   [<strong>ToolParameterAccuracyEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are grounded in context
+-   [<strong>GoalSuccessRateEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved

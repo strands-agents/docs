@@ -1,10 +1,10 @@
-Defined in: [src/types/media.ts:71](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L71)
+Defined in: [src/types/media.ts:71](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L71)
 
 Base interface for a document/media source location.
 
 ## Extended by
 
--   [`S3LocationData`](/docs/api/typescript/S3LocationData/index.md)
+-   [<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md)
 
 ## Properties
 
@@ -14,6 +14,6 @@ Base interface for a document/media source location.
 type: string;
 ```
 
-Defined in: [src/types/media.ts:75](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L75)
+Defined in: [src/types/media.ts:75](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L75)
 
 Location type discriminator.

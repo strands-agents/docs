@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:232](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L232)
+Defined in: [src/hooks/events.ts:302](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L302)
 
 Redaction information when guardrails block content.
 
@@ -10,6 +10,6 @@ Redaction information when guardrails block content.
 userMessage: string;
 ```
 
-Defined in: [src/hooks/events.ts:237](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L237)
+Defined in: [src/hooks/events.ts:307](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L307)
 
 The text to replace the user message with. When present, indicates the last user message should be redacted with this text.

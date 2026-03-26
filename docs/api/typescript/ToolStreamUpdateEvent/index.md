@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L378)
+Defined in: [src/hooks/events.ts:493](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L493)
 
 Event triggered for each streaming progress event from a tool during execution. Wraps a [ToolStreamEvent](/docs/api/typescript/ToolStreamEvent/index.md) with agent context, keeping the tool authoring interface unchanged — tools construct `ToolStreamEvent` without knowledge of agents or hooks, and the agent layer wraps them at the boundary.
 
@@ -6,7 +6,7 @@ Consistent with [ModelStreamUpdateEvent](/docs/api/typescript/ModelStreamUpdateE
 
 ## Extends
 
--   [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md)
+-   [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md)
 
 ## Constructors
 
@@ -16,15 +16,15 @@ Consistent with [ModelStreamUpdateEvent](/docs/api/typescript/ModelStreamUpdateE
 new ToolStreamUpdateEvent(data): ToolStreamUpdateEvent;
 ```
 
-Defined in: [src/hooks/events.ts:383](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L383)
+Defined in: [src/hooks/events.ts:498](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L498)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md); `event`: [`ToolStreamEvent`](/docs/api/typescript/ToolStreamEvent/index.md); } |
-| `data.agent` | [`LocalAgent`](/docs/api/typescript/LocalAgent/index.md) |
-| `data.event` | [`ToolStreamEvent`](/docs/api/typescript/ToolStreamEvent/index.md) |
+| `data` | { `agent`: [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md); `event`: [<code dir="auto">ToolStreamEvent</code>](/docs/api/typescript/ToolStreamEvent/index.md); } |
+| `data.agent` | [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md) |
+| `data.event` | [<code dir="auto">ToolStreamEvent</code>](/docs/api/typescript/ToolStreamEvent/index.md) |
 
 #### Returns
 
@@ -32,7 +32,7 @@ Defined in: [src/hooks/events.ts:383](https://github.com/strands-agents/sdk-type
 
 #### Overrides
 
-[`HookableEvent`](/docs/api/typescript/HookableEvent/index.md).[`constructor`](/docs/api/typescript/HookableEvent/index.md#constructor)
+[<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/HookableEvent/index.md#constructor)
 
 ## Properties
 
@@ -42,7 +42,7 @@ Defined in: [src/hooks/events.ts:383](https://github.com/strands-agents/sdk-type
 readonly type: "toolStreamUpdateEvent";
 ```
 
-Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L379)
+Defined in: [src/hooks/events.ts:494](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L494)
 
 ---
 
@@ -52,7 +52,7 @@ Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L380)
+Defined in: [src/hooks/events.ts:495](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L495)
 
 ---
 
@@ -62,4 +62,20 @@ Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-type
 readonly event: ToolStreamEvent;
 ```
 
-Defined in: [src/hooks/events.ts:381](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/events.ts#L381)
+Defined in: [src/hooks/events.ts:496](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L496)
+
+## Methods
+
+### toJSON()
+
+```ts
+toJSON(): Pick<ToolStreamUpdateEvent, "type" | "event">;
+```
+
+Defined in: [src/hooks/events.ts:508](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/events.ts#L508)
+
+Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`ToolStreamUpdateEvent`, `"type"` | `"event"`\>

@@ -39,7 +39,7 @@ Tool configuration
 function tool<TInput, TReturn>(config): InvokableTool<output<TInput>, TReturn>;
 ```
 
-Defined in: [src/tools/tool-factory.ts:26](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool-factory.ts#L26)
+Defined in: [src/tools/tool-factory.ts:26](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool-factory.ts#L26)
 
 Creates an InvokableTool from a Zod schema and callback function.
 
@@ -48,17 +48,17 @@ Creates an InvokableTool from a Zod schema and callback function.
 | Type Parameter | Default type | Description |
 | --- | --- | --- |
 | `TInput` *extends* `ZodType`<`unknown`, `unknown`, `$ZodTypeInternals`<`unknown`, `unknown`\>> | \- | Zod schema type for input validation |
-| `TReturn` *extends* [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | Return type of the callback function |
+| `TReturn` *extends* [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md) | [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md) | Return type of the callback function |
 
 ### Parameters
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `config` | [`ZodToolConfig`](/docs/api/typescript/ZodToolConfig/index.md)<`TInput`, `TReturn`\> | Tool configuration with Zod schema |
+| `config` | [<code dir="auto">ZodToolConfig</code>](/docs/api/typescript/ZodToolConfig/index.md)<`TInput`, `TReturn`\> | Tool configuration with Zod schema |
 
 ### Returns
 
-[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`output`<`TInput`\>, `TReturn`\>
+[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md)<`output`<`TInput`\>, `TReturn`\>
 
 An InvokableTool with typed input and output
 
@@ -68,7 +68,7 @@ An InvokableTool with typed input and output
 function tool(config): InvokableTool<unknown, JSONValue>;
 ```
 
-Defined in: [src/tools/tool-factory.ts:36](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool-factory.ts#L36)
+Defined in: [src/tools/tool-factory.ts:36](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool-factory.ts#L36)
 
 Creates an InvokableTool from a JSON schema and callback function.
 
@@ -76,10 +76,10 @@ Creates an InvokableTool from a JSON schema and callback function.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `config` | [`FunctionToolConfig`](/docs/api/typescript/FunctionToolConfig/index.md) | Tool configuration with optional JSON schema |
+| `config` | [<code dir="auto">FunctionToolConfig</code>](/docs/api/typescript/FunctionToolConfig/index.md) | Tool configuration with optional JSON schema |
 
 ### Returns
 
-[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`unknown`, [`JSONValue`](/docs/api/typescript/JSONValue/index.md)\>
+[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md)<`unknown`, [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md)\>
 
 An InvokableTool with unknown input

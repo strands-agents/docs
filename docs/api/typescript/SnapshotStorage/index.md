@@ -1,4 +1,4 @@
-Defined in: [src/session/storage.ts:47](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L47)
+Defined in: [src/session/storage.ts:47](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L47)
 
 Interface for snapshot persistence. Implementations provide storage backends (S3, filesystem, etc.).
 
@@ -23,7 +23,7 @@ sessions/<session_id>/
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/storage.ts:51](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L51)
+Defined in: [src/session/storage.ts:51](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L51)
 
 Persists a snapshot to storage.
 
@@ -31,11 +31,11 @@ Persists a snapshot to storage.
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); `snapshotId`: `string`; `isLatest`: `boolean`; `snapshot`: [`Snapshot`](/docs/api/typescript/Snapshot/index.md); } |
-| `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params` | { `location`: [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md); `snapshotId`: `string`; `isLatest`: `boolean`; `snapshot`: [<code dir="auto">Snapshot</code>](/docs/api/typescript/Snapshot/index.md); } |
+| `params.location` | [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md) |
 | `params.snapshotId` | `string` |
 | `params.isLatest` | `boolean` |
-| `params.snapshot` | [`Snapshot`](/docs/api/typescript/Snapshot/index.md) |
+| `params.snapshot` | [<code dir="auto">Snapshot</code>](/docs/api/typescript/Snapshot/index.md) |
 
 #### Returns
 
@@ -49,7 +49,7 @@ Persists a snapshot to storage.
 loadSnapshot(params): Promise<Snapshot>;
 ```
 
-Defined in: [src/session/storage.ts:61](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L61)
+Defined in: [src/session/storage.ts:61](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L61)
 
 Loads a snapshot from storage.
 
@@ -57,13 +57,13 @@ Loads a snapshot from storage.
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); `snapshotId?`: `string`; } |
-| `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params` | { `location`: [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md); `snapshotId?`: `string`; } |
+| `params.location` | [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md) |
 | `params.snapshotId?` | `string` |
 
 #### Returns
 
-`Promise`<[`Snapshot`](/docs/api/typescript/Snapshot/index.md)\>
+`Promise`<[<code dir="auto">Snapshot</code>](/docs/api/typescript/Snapshot/index.md)\>
 
 ---
 
@@ -73,7 +73,7 @@ Loads a snapshot from storage.
 listSnapshotIds(params): Promise<string[]>;
 ```
 
-Defined in: [src/session/storage.ts:77](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L77)
+Defined in: [src/session/storage.ts:77](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L77)
 
 Lists all available immutable snapshot IDs for a session scope, sorted chronologically. Snapshot IDs are UUID v7 strings vended by the SDK — callers should treat them as opaque handles and never construct them manually.
 
@@ -90,8 +90,8 @@ const page2 = await storage.listSnapshotIds({ location, startAfter: page1.at(-1)
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); `limit?`: `number`; `startAfter?`: `string`; } |
-| `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params` | { `location`: [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md); `limit?`: `number`; `startAfter?`: `string`; } |
+| `params.location` | [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md) |
 | `params.limit?` | `number` |
 | `params.startAfter?` | `string` |
 
@@ -107,7 +107,7 @@ const page2 = await storage.listSnapshotIds({ location, startAfter: page1.at(-1)
 deleteSession(params): Promise<void>;
 ```
 
-Defined in: [src/session/storage.ts:82](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L82)
+Defined in: [src/session/storage.ts:82](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L82)
 
 Deletes all snapshots and directories belonging to the session ID.
 
@@ -130,7 +130,7 @@ Deletes all snapshots and directories belonging to the session ID.
 loadManifest(params): Promise<SnapshotManifest>;
 ```
 
-Defined in: [src/session/storage.ts:87](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L87)
+Defined in: [src/session/storage.ts:87](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L87)
 
 Loads the snapshot manifest.
 
@@ -138,12 +138,12 @@ Loads the snapshot manifest.
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); } |
-| `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params` | { `location`: [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md); } |
+| `params.location` | [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md) |
 
 #### Returns
 
-`Promise`<[`SnapshotManifest`](/docs/api/typescript/SnapshotManifest/index.md)\>
+`Promise`<[<code dir="auto">SnapshotManifest</code>](/docs/api/typescript/SnapshotManifest/index.md)\>
 
 ---
 
@@ -153,7 +153,7 @@ Loads the snapshot manifest.
 saveManifest(params): Promise<void>;
 ```
 
-Defined in: [src/session/storage.ts:92](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/session/storage.ts#L92)
+Defined in: [src/session/storage.ts:92](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/session/storage.ts#L92)
 
 Saves the snapshot manifest.
 
@@ -161,9 +161,9 @@ Saves the snapshot manifest.
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `location`: [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md); `manifest`: [`SnapshotManifest`](/docs/api/typescript/SnapshotManifest/index.md); } |
-| `params.location` | [`SnapshotLocation`](/docs/api/typescript/SnapshotLocation/index.md) |
-| `params.manifest` | [`SnapshotManifest`](/docs/api/typescript/SnapshotManifest/index.md) |
+| `params` | { `location`: [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md); `manifest`: [<code dir="auto">SnapshotManifest</code>](/docs/api/typescript/SnapshotManifest/index.md); } |
+| `params.location` | [<code dir="auto">SnapshotLocation</code>](/docs/api/typescript/SnapshotLocation/index.md) |
+| `params.manifest` | [<code dir="auto">SnapshotManifest</code>](/docs/api/typescript/SnapshotManifest/index.md) |
 
 #### Returns
 

@@ -1,7 +1,3 @@
-Experimental SDK
-
-The TypeScript SDK is currently experimental. It does not yet support all features available in the Python SDK, and breaking changes are expected as development continues. Use with caution in production environments.
-
 This quickstart guide shows you how to create your first basic Strands agent with TypeScript, add built-in and custom tools to your agent, use different model providers, emit debug logs, and run the agent locally.
 
 After completing this guide you can integrate your agent with a web server or browser, evaluate and improve your agent, along with deploying to production and running at scale.
@@ -142,7 +138,7 @@ More details can be found in the [Agent Loop](/docs/user-guide/concepts/agents/a
 
 Our agent is just TypeScript, so we can run it using Node.js, Bun, Deno, or any TypeScript runtime!
 
-To test our agent, we’ll use [`tsx`](https://tsx.is/) to run the file on Node.js:
+To test our agent, we’ll use [<code dir="auto">tsx</code>](https://tsx.is/) to run the file on Node.js:
 
 ```bash
 npx tsx src/agent.ts
@@ -214,7 +210,7 @@ More details in the [Amazon Bedrock Model Provider](/docs/user-guide/concepts/mo
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 -   **[OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md)** - Access to OpenAI or OpenAI-compatible models
--   **[Gemini](/docs/user-guide/concepts/model-providers/gemini/index.md)** - Access to Google’s Gemini models
+-   **[Google](/docs/user-guide/concepts/model-providers/google/index.md)** - Access to Google’s Gemini models
 
 ## Capturing Streamed Data & Events
 

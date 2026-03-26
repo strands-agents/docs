@@ -1,6 +1,6 @@
 You’ve built a tool that calls your company’s internal API. Or a model provider for a regional LLM service. Or a session manager that persists to Redis. It works great for your project—now you want to share it with others.
 
-This guide walks you through packaging and publishing your Strands components so other developers can install them with `pip install`.
+This guide walks you through packaging and publishing your Strands components so other developers can install and use them in their own agents.
 
 ## Why publish
 
@@ -18,11 +18,27 @@ Strands has several extension points. Each serves a different purpose in the age
 | --- | --- | --- |
 | **Tools** | Add capabilities to agents—call APIs, access databases, interact with services | [Custom tools](/docs/user-guide/concepts/tools/custom-tools/index.md) |
 | **Model providers** | Integrate LLM APIs beyond the built-in providers | [Custom model providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) |
-| **Hook providers** | Extend or modify agent behavior during lifecycle events such as invocations, tool calls, and model calls | [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) |
+| **Plugins** | Extend or modify agent behavior during lifecycle events such as invocations, tool calls, and model calls | [Plugins](/docs/user-guide/concepts/plugins/index.md) |
 | **Session managers** | Persist conversations to external storage for resumption or sharing | [Session management](/docs/user-guide/concepts/agents/session-management/index.md) |
 | **Conversation managers** | Control how message history grows—trim old messages or summarize context | [Conversation management](/docs/user-guide/concepts/agents/conversation-management/index.md) |
 
 Tools are the most common extension type. They let agents interact with specific services like Slack, databases, or internal APIs.
+
+## Start from the template
+
+Python only
+
+The extension template is currently Python-only.
+
+The fastest way to create a publishable extension is the [extension template](https://github.com/strands-agents/extension-template-python). It gives you a ready-made project structure with skeleton implementations, testing setup, and a GitHub Actions workflow for publishing to PyPI.
+
+1.  Click “Use this template” on GitHub to create your repository
+2.  Run `python setup_template.py` to customize the project — pick a package name, select which components you need (tool, model provider, plugin, session manager, conversation manager), and fill in your author info
+3.  Install dependencies with `pip install -e ".[dev]"`
+4.  Implement your component logic in the generated files
+5.  Run `hatch run prepare` to validate everything (format, lint, typecheck, test)
+
+The template follows Strands naming conventions automatically — your package becomes `strands-{name}` on PyPI and `strands_{name}` as a Python module.
 
 ## Get discovered
 

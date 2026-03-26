@@ -1,4 +1,4 @@
-Defined in: [src/hooks/registry.ts:30](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/registry.ts#L30)
+Defined in: [src/hooks/registry.ts:30](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/registry.ts#L30)
 
 Implementation of the hook registry for managing hook callbacks. Maintains mappings between event types and callback functions.
 
@@ -14,7 +14,7 @@ Implementation of the hook registry for managing hook callbacks. Maintains mappi
 new HookRegistry(): HookRegistryImplementation;
 ```
 
-Defined in: [src/hooks/registry.ts:33](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/registry.ts#L33)
+Defined in: [src/hooks/registry.ts:33](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/registry.ts#L33)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [src/hooks/registry.ts:33](https://github.com/strands-agents/sdk-typ
 addCallback<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/hooks/registry.ts:44](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/registry.ts#L44)
+Defined in: [src/hooks/registry.ts:44](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/registry.ts#L44)
 
 Register a callback function for a specific event type.
 
@@ -36,14 +36,14 @@ Register a callback function for a specific event type.
 
 | Type Parameter |
 | --- |
-| `T` *extends* [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md) |
+| `T` *extends* [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md) |
 
 #### Parameters
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `eventType` | [`HookableEventConstructor`](/docs/api/typescript/HookableEventConstructor/index.md)<`T`\> | The event class constructor to register the callback for |
-| `callback` | [`HookCallback`](/docs/api/typescript/HookCallback/index.md)<`T`\> | The callback function to invoke when the event occurs |
+| `eventType` | [<code dir="auto">HookableEventConstructor</code>](/docs/api/typescript/HookableEventConstructor/index.md)<`T`\> | The event class constructor to register the callback for |
+| `callback` | [<code dir="auto">HookCallback</code>](/docs/api/typescript/HookCallback/index.md)<`T`\> | The callback function to invoke when the event occurs |
 
 #### Returns
 
@@ -65,7 +65,7 @@ HookRegistry.addCallback
 invokeCallbacks<T>(event): Promise<T>;
 ```
 
-Defined in: [src/hooks/registry.ts:67](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/hooks/registry.ts#L67)
+Defined in: [src/hooks/registry.ts:67](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/hooks/registry.ts#L67)
 
 Invoke all registered callbacks for the given event. Awaits each callback, supporting both sync and async.
 
@@ -73,7 +73,7 @@ Invoke all registered callbacks for the given event. Awaits each callback, suppo
 
 | Type Parameter |
 | --- |
-| `T` *extends* [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md) |
+| `T` *extends* [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md) |
 
 #### Parameters
 

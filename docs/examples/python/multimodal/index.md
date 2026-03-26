@@ -14,8 +14,8 @@ This [example](https://github.com/strands-agents/docs/tree/main/docs/examples/py
 
 The multimodal example utilizes two tools to work with image content.
 
-1.  The [`generate_image`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/generate_image.py) tool enables the creation of images based on text prompts, allowing the agent to generate visual content from textual descriptions.
-2.  The [`image_reader`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/image_reader.py) tool provides the capability to analyze and interpret image content, enabling the agent to “see” and describe what’s in the images.
+1.  The [<code dir="auto">generate\_image</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/generate_image.py) tool enables the creation of images based on text prompts, allowing the agent to generate visual content from textual descriptions.
+2.  The [<code dir="auto">image\_reader</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/image_reader.py) tool provides the capability to analyze and interpret image content, enabling the agent to “see” and describe what’s in the images.
 
 Together, these tools create a complete pipeline for both generating and evaluating visual content through natural language interactions.
 

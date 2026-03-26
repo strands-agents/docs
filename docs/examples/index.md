@@ -1,86 +1,48 @@
-The examples directory provides a collection of sample implementations to help you get started with building intelligent agents using Strands Agents. This directory contains two main subdirectories: `/examples/python` for Python-based agent examples and `/examples/cdk` for Cloud Development Kit integration examples.
-
-## Purpose
-
-These examples demonstrate how to leverage Strands Agents to build intelligent agents for various use cases. From simple file operations to complex multi-agent systems, each example illustrates key concepts, patterns, and best practices in agent development.
-
-By exploring these reference implementations, you’ll gain practical insights into Strands Agents’ capabilities and learn how to apply them to your own projects. The examples emphasize real-world applications that you can adapt and extend for your specific needs.
-
-## Prerequisites
-
--   Python 3.10 or higher
--   Strands Agents SDK
--   AWS credentials configured with access to a Bedrock model provider using the Claude 4 model (modifiable as needed)
--   For specific examples, additional requirements may be needed (see individual example READMEs)
-
-For more information, see the [Getting Started](/docs/user-guide/quickstart/index.md) guide.
+A collection of sample implementations to help you get started with Strands Agents. From simple agents to complex multi-agent systems, each example illustrates key concepts and patterns you can adapt for your own projects.
 
 ## Getting Started
 
-1.  Clone the repository containing these examples
-2.  Install the required dependencies:
-    -   [strands-agents](https://github.com/strands-agents/sdk-python)
-    -   [strands-agents-tools](https://github.com/strands-agents/tools)
-3.  Navigate to the examples directory:
+1.  Set up the SDK for your language:
+    -   [Python quickstart](/docs/user-guide/quickstart/python/index.md) (Python 3.10+, pip)
+    -   [TypeScript quickstart](/docs/user-guide/quickstart/typescript/index.md) (Node.js 20+, npm)
+2.  Configure AWS credentials for Amazon Bedrock (covered in both quickstart guides above), or set up an [alternative model provider](/docs/user-guide/concepts/model-providers/index.md)
+3.  Clone the examples:
     
     ```bash
-    cd /path/to/examples/
+    git clone https://github.com/strands-agents/docs.git
+    cd docs/docs/examples
     ```
     
-4.  Browse the available examples in the `/examples/python` and `/examples/cdk` directories
-5.  Each example includes its own README or documentation file with specific instructions
-6.  Follow the documentation to run the example and understand its implementation
+4.  Browse the examples below and follow the instructions in each one
 
-## Directory Structure
+## Agent Examples
 
-### Python Examples
+| Example | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [Structured Output](/docs/examples/structured_output/index.md) | Type-safe, validated responses | ✅ | ✅ |
+| [Agents Workflows](/docs/examples/python/agents_workflows/index.md) | Sequential agent workflow pattern | ✅ |  |
+| [CLI Reference Agent](/docs/examples/python/cli-reference-agent/index.md) | Command-line reference agent | ✅ |  |
+| [File Operations](/docs/examples/python/file_operations/index.md) | File manipulation capabilities | ✅ |  |
+| [Graph Loops](/docs/examples/python/graph_loops_example/index.md) | Graph orchestration with loops | ✅ |  |
+| [Knowledge Base Agent](/docs/examples/python/knowledge_base_agent/index.md) | Knowledge base retrieval | ✅ |  |
+| [MCP Calculator](/docs/examples/python/mcp_calculator/index.md) | Model Context Protocol capabilities | ✅ |  |
+| [Memory Agent](/docs/examples/python/memory_agent/index.md) | Persistent memory | ✅ |  |
+| [Meta Tooling](/docs/examples/python/meta_tooling/index.md) | Meta tooling capabilities | ✅ |  |
+| [Multi-Agent Example](/docs/examples/python/multi_agent_example/multi_agent_example/index.md) | Multi-agent system | ✅ |  |
+| [Multimodal](/docs/examples/python/multimodal/index.md) | Multimodal capabilities | ✅ |  |
+| [Weather Forecaster](/docs/examples/python/weather_forecaster/index.md) | Weather forecasting agent | ✅ |  |
 
-The `/examples/python` directory contains various Python-based examples demonstrating different agent capabilities. Each example includes detailed documentation explaining its purpose, implementation details, and instructions for running it.
+## Deployment Examples
 
-These examples cover a diverse range of agent capabilities and patterns, showcasing the flexibility and power of Strands Agents. The directory is regularly updated with new examples as additional features and use cases are developed.
+Also see [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) for best practices on security, monitoring, and scaling.
 
-Available Python examples:
-
--   [Agents Workflows](/docs/examples/python/agents_workflows/index.md) - Example of a sequential agent workflow pattern
--   [CLI Reference Agent](/docs/examples/python/cli-reference-agent/index.md) - Example of Command-line reference agent implementation
--   [File Operations](/docs/examples/python/file_operations/index.md) - Example of agent with file manipulation capabilities
--   [MCP Calculator](/docs/examples/python/mcp_calculator/index.md) - Example of agent with Model Context Protocol capabilities
--   [Meta Tooling](/docs/examples/python/meta_tooling/index.md) - Example of agent with Meta tooling capabilities
--   [Multi-Agent Example](/docs/examples/python/multi_agent_example/multi_agent_example/index.md) - Example of a multi-agent system
--   [Weather Forecaster](/docs/examples/python/weather_forecaster/index.md) - Example of a weather forecasting agent with http\_request capabilities
-
-### CDK Examples
-
-The `/examples/cdk` directory contains examples for using the AWS Cloud Development Kit (CDK) with agents. The CDK is an open-source software development framework for defining cloud infrastructure as code and provisioning it through AWS CloudFormation. These examples demonstrate how to deploy agent-based applications to AWS using infrastructure as code principles.
-
-Each CDK example includes its own documentation with instructions for setup and deployment.
-
-Available CDK examples:
-
--   [Deploy to EC2](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_ec2/README.md) - Guide for deploying agents to Amazon EC2 instances
--   [Deploy to Fargate](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_fargate/README.md) - Guide for deploying agents to AWS Fargate
--   [Deploy to App Runner](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_apprunner/README.md) - Guide for deploying agents to AWS App Runner
--   [Deploy to Lambda](https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_lambda/README.md) - Guide for deploying agents to AWS Lambda
-
-### TypeScript Examples
-
-The `/examples/typescript` directory contains TypeScript-based examples demonstrating agent deployment and integration patterns. These examples showcase how to build and Deploy Typescript agents.
-
-Available TypeScript examples:
-
--   [Deploy to Bedrock AgentCore](https://github.com/strands-agents/docs/blob/main/docs/examples/typescript/deploy_to_bedrock_agentcore/README.md) - Complete example for deploying TypeScript agents to Amazon Bedrock AgentCore Runtime.
-
-### Amazon EKS Example
-
-The `/examples/deploy_to_eks` directory contains examples for using Amazon EKS with agents.  
-The [Deploy to Amazon EKS](https://github.com/strands-agents/docs/blob/main/docs/examples/deploy_to_eks/README.md) includes its own documentation with instruction for setup and deployment.
-
-## Example Structure
-
-Each example typically follows this structure:
-
--   Python implementation file(s) (`.py`)
--   Documentation file (`.md`) explaining the example’s purpose, architecture, and usage
--   Any additional resources needed for the example
-
-To run any specific example, refer to its associated documentation for detailed instructions and requirements.
+| Guide | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [Bedrock AgentCore](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md) | Serverless agent runtime | ✅ | ✅ |
+| [Docker](/docs/user-guide/deploy/deploy_to_docker/index.md) | Containerized deployment | ✅ | ✅ |
+| [AWS Lambda](/docs/user-guide/deploy/deploy_to_aws_lambda/index.md) | Serverless compute | ✅ |  |
+| [AWS Fargate](/docs/user-guide/deploy/deploy_to_aws_fargate/index.md) | Serverless containers | ✅ |  |
+| [AWS App Runner](/docs/user-guide/deploy/deploy_to_aws_apprunner/index.md) | Managed web applications | ✅ |  |
+| [Amazon EC2](/docs/user-guide/deploy/deploy_to_amazon_ec2/index.md) | Virtual machines | ✅ |  |
+| [Amazon EKS](/docs/user-guide/deploy/deploy_to_amazon_eks/index.md) | Managed Kubernetes | ✅ |  |
+| [Kubernetes](/docs/user-guide/deploy/deploy_to_kubernetes/index.md) | Self-managed Kubernetes | ✅ |  |

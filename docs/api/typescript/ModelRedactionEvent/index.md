@@ -1,10 +1,10 @@
-Defined in: [src/models/streaming.ts:344](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L344)
+Defined in: [src/models/streaming.ts:344](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L344)
 
 Event emitted when guardrails block content and trigger redaction.
 
 ## Implements
 
--   [`ModelRedactionEventData`](/docs/api/typescript/ModelRedactionEventData/index.md)
+-   [<code dir="auto">ModelRedactionEventData</code>](/docs/api/typescript/ModelRedactionEventData/index.md)
 
 ## Constructors
 
@@ -14,13 +14,13 @@ Event emitted when guardrails block content and trigger redaction.
 new ModelRedactionEvent(data): ModelRedactionEvent;
 ```
 
-Defined in: [src/models/streaming.ts:360](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L360)
+Defined in: [src/models/streaming.ts:360](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L360)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [`ModelRedactionEventData`](/docs/api/typescript/ModelRedactionEventData/index.md) |
+| `data` | [<code dir="auto">ModelRedactionEventData</code>](/docs/api/typescript/ModelRedactionEventData/index.md) |
 
 #### Returns
 
@@ -34,13 +34,13 @@ Defined in: [src/models/streaming.ts:360](https://github.com/strands-agents/sdk-
 readonly type: "modelRedactionEvent";
 ```
 
-Defined in: [src/models/streaming.ts:348](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L348)
+Defined in: [src/models/streaming.ts:348](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L348)
 
 Discriminator for redact events.
 
 #### Implementation of
 
-[`ModelRedactionEventData`](/docs/api/typescript/ModelRedactionEventData/index.md).[`type`](/docs/api/typescript/ModelRedactionEventData/index.md#type)
+[<code dir="auto">ModelRedactionEventData</code>](/docs/api/typescript/ModelRedactionEventData/index.md).[<code dir="auto">type</code>](/docs/api/typescript/ModelRedactionEventData/index.md#type)
 
 ---
 
@@ -50,13 +50,13 @@ Discriminator for redact events.
 readonly optional inputRedaction?: RedactInputContent;
 ```
 
-Defined in: [src/models/streaming.ts:353](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L353)
+Defined in: [src/models/streaming.ts:353](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L353)
 
 Input redaction information (when input is blocked).
 
 #### Implementation of
 
-[`ModelRedactionEventData`](/docs/api/typescript/ModelRedactionEventData/index.md).[`inputRedaction`](/docs/api/typescript/ModelRedactionEventData/index.md#inputredaction)
+[<code dir="auto">ModelRedactionEventData</code>](/docs/api/typescript/ModelRedactionEventData/index.md).[<code dir="auto">inputRedaction</code>](/docs/api/typescript/ModelRedactionEventData/index.md#inputredaction)
 
 ---
 
@@ -66,10 +66,10 @@ Input redaction information (when input is blocked).
 readonly optional outputRedaction?: RedactOutputContent;
 ```
 
-Defined in: [src/models/streaming.ts:358](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/streaming.ts#L358)
+Defined in: [src/models/streaming.ts:358](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L358)
 
 Output redaction information (when output is blocked).
 
 #### Implementation of
 
-[`ModelRedactionEventData`](/docs/api/typescript/ModelRedactionEventData/index.md).[`outputRedaction`](/docs/api/typescript/ModelRedactionEventData/index.md#outputredaction)
+[<code dir="auto">ModelRedactionEventData</code>](/docs/api/typescript/ModelRedactionEventData/index.md).[<code dir="auto">outputRedaction</code>](/docs/api/typescript/ModelRedactionEventData/index.md#outputredaction)

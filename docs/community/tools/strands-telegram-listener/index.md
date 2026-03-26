@@ -48,6 +48,6 @@ Get your bot token at: [BotFather](https://core.telegram.org/bots#botfather)
 
 -   [PyPI Package](https://pypi.org/project/strands-telegram-listener/)
 -   [GitHub Repository](https://github.com/eraykeskinmac/strands-telegram-listener)
--   [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+-   [Examples &amp; Demos](https://github.com/eraykeskinmac/strands-tools-examples)
 -   [Bot Creation Guide](https://core.telegram.org/bots)
 -   [Telegram Bot API](https://core.telegram.org/bots/api)

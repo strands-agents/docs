@@ -45,6 +45,6 @@ Setup webhook: Teams Channel → Connectors → Incoming Webhook
 
 -   [PyPI Package](https://pypi.org/project/strands-teams/)
 -   [GitHub Repository](https://github.com/eraykeskinmac/strands-teams)
--   [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+-   [Examples &amp; Demos](https://github.com/eraykeskinmac/strands-tools-examples)
 -   [Adaptive Cards](https://adaptivecards.io/)
 -   [Teams Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/what-are-webhooks-and-connectors)

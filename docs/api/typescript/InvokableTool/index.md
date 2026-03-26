@@ -1,10 +1,10 @@
-Defined in: [src/tools/tool.ts:154](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool.ts#L154)
+Defined in: [src/tools/tool.ts:154](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool.ts#L154)
 
 Extended tool interface that supports direct invocation with type-safe input and output. This interface is useful for testing and standalone tool execution.
 
 ## Extends
 
--   [`Tool`](/docs/api/typescript/Tool/index.md)
+-   [<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md)
 
 ## Type Parameters
 
@@ -21,13 +21,13 @@ Extended tool interface that supports direct invocation with type-safe input and
 abstract name: string;
 ```
 
-Defined in: [src/tools/tool.ts:97](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool.ts#L97)
+Defined in: [src/tools/tool.ts:97](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool.ts#L97)
 
 The unique name of the tool. This MUST match the name in the toolSpec.
 
 #### Inherited from
 
-[`Tool`](/docs/api/typescript/Tool/index.md).[`name`](/docs/api/typescript/Tool/index.md#name)
+[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">name</code>](/docs/api/typescript/Tool/index.md#name)
 
 ---
 
@@ -37,7 +37,7 @@ The unique name of the tool. This MUST match the name in the toolSpec.
 abstract description: string;
 ```
 
-Defined in: [src/tools/tool.ts:104](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool.ts#L104)
+Defined in: [src/tools/tool.ts:104](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool.ts#L104)
 
 Human-readable description of what the tool does. This helps the model understand when to use the tool.
 
@@ -45,7 +45,7 @@ This MUST match the description in the toolSpec.description.
 
 #### Inherited from
 
-[`Tool`](/docs/api/typescript/Tool/index.md).[`description`](/docs/api/typescript/Tool/index.md#description)
+[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">description</code>](/docs/api/typescript/Tool/index.md#description)
 
 ---
 
@@ -55,13 +55,13 @@ This MUST match the description in the toolSpec.description.
 abstract toolSpec: ToolSpec;
 ```
 
-Defined in: [src/tools/tool.ts:109](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool.ts#L109)
+Defined in: [src/tools/tool.ts:109](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool.ts#L109)
 
 OpenAPI JSON specification for the tool. Defines the tool’s name, description, and input schema.
 
 #### Inherited from
 
-[`Tool`](/docs/api/typescript/Tool/index.md).[`toolSpec`](/docs/api/typescript/Tool/index.md#toolspec)
+[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">toolSpec</code>](/docs/api/typescript/Tool/index.md#toolspec)
 
 ## Methods
 
@@ -71,7 +71,7 @@ OpenAPI JSON specification for the tool. Defines the tool’s name, description,
 abstract stream(toolContext): ToolStreamGenerator;
 ```
 
-Defined in: [src/tools/tool.ts:144](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool.ts#L144)
+Defined in: [src/tools/tool.ts:144](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool.ts#L144)
 
 Executes the tool with streaming support. Yields zero or more ToolStreamEvents during execution, then returns exactly one ToolResultBlock as the final value.
 
@@ -79,11 +79,11 @@ Executes the tool with streaming support. Yields zero or more ToolStreamEvents d
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `toolContext` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | Context information including the tool use request and invocation state |
+| `toolContext` | [<code dir="auto">ToolContext</code>](/docs/api/typescript/ToolContext/index.md) | Context information including the tool use request and invocation state |
 
 #### Returns
 
-[`ToolStreamGenerator`](/docs/api/typescript/ToolStreamGenerator/index.md)
+[<code dir="auto">ToolStreamGenerator</code>](/docs/api/typescript/ToolStreamGenerator/index.md)
 
 Async generator that yields ToolStreamEvents and returns a ToolResultBlock
 
@@ -115,7 +115,7 @@ console.log('Final result:', result.value.status)
 
 #### Inherited from
 
-[`Tool`](/docs/api/typescript/Tool/index.md).[`stream`](/docs/api/typescript/Tool/index.md#stream)
+[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">stream</code>](/docs/api/typescript/Tool/index.md#stream)
 
 ---
 
@@ -125,7 +125,7 @@ console.log('Final result:', result.value.status)
 invoke(input, context?): Promise<TReturn>;
 ```
 
-Defined in: [src/tools/tool.ts:167](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/tools/tool.ts#L167)
+Defined in: [src/tools/tool.ts:167](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/tools/tool.ts#L167)
 
 Invokes the tool directly with type-safe input and returns the unwrapped result.
 
@@ -140,7 +140,7 @@ Unlike stream(), this method:
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `input` | `TInput` | The input parameters for the tool |
-| `context?` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | Optional tool execution context |
+| `context?` | [<code dir="auto">ToolContext</code>](/docs/api/typescript/ToolContext/index.md) | Optional tool execution context |
 
 #### Returns
 

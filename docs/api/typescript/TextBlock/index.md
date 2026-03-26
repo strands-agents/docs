@@ -1,11 +1,11 @@
-Defined in: [src/types/messages.ts:147](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L147)
+Defined in: [src/types/messages.ts:147](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L147)
 
 Text content block within a message.
 
 ## Implements
 
--   [`TextBlockData`](/docs/api/typescript/TextBlockData/index.md)
--   `JSONSerializable`<[`TextBlockData`](/docs/api/typescript/TextBlockData/index.md)\>
+-   [<code dir="auto">TextBlockData</code>](/docs/api/typescript/TextBlockData/index.md)
+-   `JSONSerializable`<[<code dir="auto">TextBlockData</code>](/docs/api/typescript/TextBlockData/index.md)\>
 
 ## Constructors
 
@@ -15,7 +15,7 @@ Text content block within a message.
 new TextBlock(data): TextBlock;
 ```
 
-Defined in: [src/types/messages.ts:158](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L158)
+Defined in: [src/types/messages.ts:158](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L158)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/messages.ts:158](https://github.com/strands-agents/sdk-ty
 readonly type: "textBlock";
 ```
 
-Defined in: [src/types/messages.ts:151](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L151)
+Defined in: [src/types/messages.ts:151](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L151)
 
 Discriminator for text content.
 
@@ -47,13 +47,13 @@ Discriminator for text content.
 readonly text: string;
 ```
 
-Defined in: [src/types/messages.ts:156](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L156)
+Defined in: [src/types/messages.ts:156](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L156)
 
 Plain text content.
 
 #### Implementation of
 
-[`TextBlockData`](/docs/api/typescript/TextBlockData/index.md).[`text`](/docs/api/typescript/TextBlockData/index.md#text)
+[<code dir="auto">TextBlockData</code>](/docs/api/typescript/TextBlockData/index.md).[<code dir="auto">text</code>](/docs/api/typescript/TextBlockData/index.md#text)
 
 ## Methods
 
@@ -63,13 +63,13 @@ Plain text content.
 toJSON(): TextBlockData;
 ```
 
-Defined in: [src/types/messages.ts:166](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L166)
+Defined in: [src/types/messages.ts:166](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L166)
 
 Serializes the TextBlock to a JSON-compatible TextBlockData object. Called automatically by JSON.stringify().
 
 #### Returns
 
-[`TextBlockData`](/docs/api/typescript/TextBlockData/index.md)
+[<code dir="auto">TextBlockData</code>](/docs/api/typescript/TextBlockData/index.md)
 
 #### Implementation of
 
@@ -85,7 +85,7 @@ JSONSerializable.toJSON
 static fromJSON(data): TextBlock;
 ```
 
-Defined in: [src/types/messages.ts:176](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/messages.ts#L176)
+Defined in: [src/types/messages.ts:176](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/messages.ts#L176)
 
 Creates a TextBlock instance from TextBlockData.
 
@@ -93,7 +93,7 @@ Creates a TextBlock instance from TextBlockData.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | [`TextBlockData`](/docs/api/typescript/TextBlockData/index.md) | TextBlockData to deserialize |
+| `data` | [<code dir="auto">TextBlockData</code>](/docs/api/typescript/TextBlockData/index.md) | TextBlockData to deserialize |
 
 #### Returns
 

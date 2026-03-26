@@ -35,6 +35,7 @@ Model providers add support for additional LLM services beyond the built-in prov
 | [MLX](/docs/community/model-providers/mlx/index.md) | MLX | ✅ | ❌ |
 | [Nebius Token Factory](/docs/community/model-providers/nebius-token-factory/index.md) | Nebius Token Factory | ✅ | ❌ |
 | [NVIDIA NIM](/docs/community/model-providers/nvidia-nim/index.md) | NVIDIA NIM | ✅ | ❌ |
+| [OVHcloud AI Endpoints](/docs/community/model-providers/ovhcloud-ai-endpoints/index.md) | OVHcloud AI Endpoints | ✅ | ❌ |
 | [SGLang](/docs/community/model-providers/sglang/index.md) | SGLang | ✅ | ❌ |
 | [vLLM](/docs/community/model-providers/vllm/index.md) | vLLM | ✅ | ❌ |
 | [xAI](/docs/community/model-providers/xai/index.md) | xAI Grok | ✅ | ❌ |
@@ -55,7 +56,9 @@ Tools extend your agents with capabilities for specific services and platforms. 
 | Package | Description | Python | TypeScript |
 | --- | --- | --- | --- |
 | [deepgram](/docs/community/tools/strands-deepgram/index.md) | Deepgram speech-to-text | ✅ | ❌ |
+| [google](/docs/community/tools/strands-google/index.md) | Google API integration | ✅ | ❌ |
 | [hubspot](/docs/community/tools/strands-hubspot/index.md) | HubSpot CRM integration | ✅ | ❌ |
+| [perplexity](/docs/community/tools/strands-perplexity/index.md) | Perplexity web search | ✅ | ❌ |
 | [teams](/docs/community/tools/strands-teams/index.md) | Microsoft Teams | ✅ | ❌ |
 | [telegram](/docs/community/tools/strands-telegram/index.md) | Telegram bot | ✅ | ❌ |
 | [telegram-listener](/docs/community/tools/strands-telegram-listener/index.md) | Telegram listener | ✅ | ❌ |

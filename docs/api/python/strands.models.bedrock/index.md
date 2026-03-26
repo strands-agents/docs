@@ -156,7 +156,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:1047](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1047)
+Defined in: [src/strands/models/bedrock.py:1020](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1020)
 
 Get structured output from the model.
 

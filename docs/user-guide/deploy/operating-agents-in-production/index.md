@@ -77,7 +77,7 @@ agent = Agent(
 )
 ```
 
-The [`SlidingWindowConversationManager`](/docs/user-guide/concepts/agents/conversation-management/index.md#slidingwindowconversationmanager) helps prevent context window overflow exceptions by maintaining a reasonable conversation history size.
+The [<code dir="auto">SlidingWindowConversationManager</code>](/docs/user-guide/concepts/agents/conversation-management/index.md#slidingwindowconversationmanager) helps prevent context window overflow exceptions by maintaining a reasonable conversation history size.
 
 ### Streaming for Responsiveness
 

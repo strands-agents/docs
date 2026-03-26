@@ -1,11 +1,11 @@
-Defined in: [src/types/media.ts:428](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L428)
+Defined in: [src/types/media.ts:428](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L428)
 
 Document content block.
 
 ## Implements
 
--   [`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md)
--   `JSONSerializable`<{ `document`: `Serialized`<[`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md)\>; }>
+-   [<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md)
+-   `JSONSerializable`<{ `document`: `Serialized`<[<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md)\>; }>
 
 ## Constructors
 
@@ -15,13 +15,13 @@ Document content block.
 new DocumentBlock(data): DocumentBlock;
 ```
 
-Defined in: [src/types/media.ts:459](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L459)
+Defined in: [src/types/media.ts:459](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L459)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md) |
+| `data` | [<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md) |
 
 #### Returns
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:459](https://github.com/strands-agents/sdk-types
 readonly type: "documentBlock";
 ```
 
-Defined in: [src/types/media.ts:432](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L432)
+Defined in: [src/types/media.ts:432](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L432)
 
 Discriminator for document content.
 
@@ -47,13 +47,13 @@ Discriminator for document content.
 readonly name: string;
 ```
 
-Defined in: [src/types/media.ts:437](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L437)
+Defined in: [src/types/media.ts:437](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L437)
 
 Document name.
 
 #### Implementation of
 
-[`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md).[`name`](/docs/api/typescript/DocumentBlockData/index.md#name)
+[<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md).[<code dir="auto">name</code>](/docs/api/typescript/DocumentBlockData/index.md#name)
 
 ---
 
@@ -63,13 +63,13 @@ Document name.
 readonly format: DocumentFormat;
 ```
 
-Defined in: [src/types/media.ts:442](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L442)
+Defined in: [src/types/media.ts:442](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L442)
 
 Document format.
 
 #### Implementation of
 
-[`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md).[`format`](/docs/api/typescript/DocumentBlockData/index.md#format)
+[<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md).[<code dir="auto">format</code>](/docs/api/typescript/DocumentBlockData/index.md#format)
 
 ---
 
@@ -79,13 +79,13 @@ Document format.
 readonly source: DocumentSource;
 ```
 
-Defined in: [src/types/media.ts:447](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L447)
+Defined in: [src/types/media.ts:447](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L447)
 
 Document source.
 
 #### Implementation of
 
-[`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md).[`source`](/docs/api/typescript/DocumentBlockData/index.md#source)
+[<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md).[<code dir="auto">source</code>](/docs/api/typescript/DocumentBlockData/index.md#source)
 
 ---
 
@@ -97,7 +97,7 @@ readonly optional citations?: {
 };
 ```
 
-Defined in: [src/types/media.ts:452](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L452)
+Defined in: [src/types/media.ts:452](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L452)
 
 Citation configuration.
 
@@ -109,7 +109,7 @@ enabled: boolean;
 
 #### Implementation of
 
-[`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md).[`citations`](/docs/api/typescript/DocumentBlockData/index.md#citations)
+[<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md).[<code dir="auto">citations</code>](/docs/api/typescript/DocumentBlockData/index.md#citations)
 
 ---
 
@@ -119,13 +119,13 @@ enabled: boolean;
 readonly optional context?: string;
 ```
 
-Defined in: [src/types/media.ts:457](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L457)
+Defined in: [src/types/media.ts:457](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L457)
 
 Context information for the document.
 
 #### Implementation of
 
-[`DocumentBlockData`](/docs/api/typescript/DocumentBlockData/index.md).[`context`](/docs/api/typescript/DocumentBlockData/index.md#context)
+[<code dir="auto">DocumentBlockData</code>](/docs/api/typescript/DocumentBlockData/index.md).[<code dir="auto">context</code>](/docs/api/typescript/DocumentBlockData/index.md#context)
 
 ## Methods
 
@@ -162,7 +162,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/media.ts:504](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L504)
+Defined in: [src/types/media.ts:504](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L504)
 
 Serializes the DocumentBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array bytes are encoded as base64 string.
 
@@ -201,13 +201,13 @@ Serializes the DocumentBlock to a JSON-compatible ContentBlockData object. Calle
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `document` | { `name`: `string`; `format`: [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; } | \- | [src/types/media.ts:504](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L504) |
-| `document.name` | `string` | Document name. | [src/types/media.ts:402](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L402) |
-| `document.format` | [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md) | Document format. | [src/types/media.ts:407](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L407) |
-| `document.source` | | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Document source. | [src/types/media.ts:412](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L412) |
-| `document.citations?` | { `enabled`: `boolean`; } | Citation configuration. | [src/types/media.ts:417](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L417) |
-| `document.citations.enabled` | `boolean` | \- | [src/types/media.ts:417](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L417) |
-| `document.context?` | `string` | Context information for the document. | [src/types/media.ts:422](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L422) |
+| `document` | { `name`: `string`; `format`: [<code dir="auto">DocumentFormat</code>](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; } | \- | [src/types/media.ts:504](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L504) |
+| `document.name` | `string` | Document name. | [src/types/media.ts:402](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L402) |
+| `document.format` | [<code dir="auto">DocumentFormat</code>](/docs/api/typescript/DocumentFormat/index.md) | Document format. | [src/types/media.ts:407](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L407) |
+| `document.source` | | { `bytes`: `string`; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Document source. | [src/types/media.ts:412](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L412) |
+| `document.citations?` | { `enabled`: `boolean`; } | Citation configuration. | [src/types/media.ts:417](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L417) |
+| `document.citations.enabled` | `boolean` | \- | [src/types/media.ts:417](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L417) |
+| `document.context?` | `string` | Context information for the document. | [src/types/media.ts:422](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L422) |
 
 #### Implementation of
 
@@ -223,7 +223,7 @@ JSONSerializable.toJSON
 static fromJSON(data): DocumentBlock;
 ```
 
-Defined in: [src/types/media.ts:533](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L533)
+Defined in: [src/types/media.ts:533](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L533)
 
 Creates a DocumentBlock instance from its wrapped data format. Base64-encoded bytes are decoded back to Uint8Array.
 
@@ -231,10 +231,10 @@ Creates a DocumentBlock instance from its wrapped data format. Base64-encoded by
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | { `document`: { `name`: `string`; `format`: [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; }; } | Wrapped DocumentBlockData to deserialize (accepts both string and Uint8Array for bytes) |
-| `data.document` | { `name`: `string`; `format`: [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; } | \- |
+| `data` | { `document`: { `name`: `string`; `format`: [<code dir="auto">DocumentFormat</code>](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; }; } | Wrapped DocumentBlockData to deserialize (accepts both string and Uint8Array for bytes) |
+| `data.document` | { `name`: `string`; `format`: [<code dir="auto">DocumentFormat</code>](/docs/api/typescript/DocumentFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; `citations?`: { `enabled`: `boolean`; }; `context?`: `string`; } | \- |
 | `data.document.name` | `string` | Document name. |
-| `data.document.format` | [`DocumentFormat`](/docs/api/typescript/DocumentFormat/index.md) | Document format. |
+| `data.document.format` | [<code dir="auto">DocumentFormat</code>](/docs/api/typescript/DocumentFormat/index.md) | Document format. |
 | `data.document.source` | | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `text`: `string`; } | { `content`: { `text`: `string`; }\[\]; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Document source. |
 | `data.document.citations?` | { `enabled`: `boolean`; } | Citation configuration. |
 | `data.document.citations.enabled` | `boolean` | \- |

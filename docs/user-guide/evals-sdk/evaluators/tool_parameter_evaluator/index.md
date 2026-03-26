@@ -149,7 +149,7 @@ The judge determines if each parameter value can be traced back to information i
 
 ## Related Evaluators
 
--   [**ToolSelectionAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md): Evaluates if correct tools were selected
--   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the overall sequence of tool calls
--   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates the quality of final outputs
+-   [<strong>ToolSelectionAccuracyEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md): Evaluates if correct tools were selected
+-   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the overall sequence of tool calls
+-   [<strong>FaithfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates the quality of final outputs

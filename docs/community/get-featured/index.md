@@ -11,6 +11,10 @@ We feature **reusable packages** that extend Strands Agents capabilities:
 
 We’re not looking for example agents or one-off projects — the focus is on packages published to PyPI that others can `pip install` or `npm install` and use in their own agents. See [Community Packages](/docs/community/community-packages/index.md) for guidance on creating and publishing your package.
 
+Starting from scratch?
+
+The [extension template](https://github.com/strands-agents/extension-template-python) gives you a ready-made project structure with testing, linting, and PyPI publishing already set up.
+
 ## Quick Steps
 
 1.  **Create a PR** to [strands-agents/docs](https://github.com/strands-agents/docs)

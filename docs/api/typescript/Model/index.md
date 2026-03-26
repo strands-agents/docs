@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:153](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L153)
+Defined in: [src/models/model.ts:153](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/model.ts#L153)
 
 Base abstract class for model providers. Defines the contract that all model provider implementations must follow.
 
@@ -6,13 +6,13 @@ Model providers handle communication with LLM APIs and implement streaming respo
 
 ## Extended by
 
--   [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md)
+-   [<code dir="auto">BedrockModel</code>](/docs/api/typescript/BedrockModel/index.md)
 
 ## Type Parameters
 
 | Type Parameter | Default type | Description |
 | --- | --- | --- |
-| `T` *extends* [`BaseModelConfig`](/docs/api/typescript/BaseModelConfig/index.md) | [`BaseModelConfig`](/docs/api/typescript/BaseModelConfig/index.md) | Model configuration type extending BaseModelConfig |
+| `T` *extends* [<code dir="auto">BaseModelConfig</code>](/docs/api/typescript/BaseModelConfig/index.md) | [<code dir="auto">BaseModelConfig</code>](/docs/api/typescript/BaseModelConfig/index.md) | Model configuration type extending BaseModelConfig |
 
 ## Constructors
 
@@ -36,7 +36,7 @@ new Model<T>(): Model<T>;
 get modelId(): string;
 ```
 
-Defined in: [src/models/model.ts:172](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L172)
+Defined in: [src/models/model.ts:172](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/model.ts#L172)
 
 The model ID from the current configuration, if configured.
 
@@ -52,7 +52,7 @@ The model ID from the current configuration, if configured.
 abstract updateConfig(modelConfig): void;
 ```
 
-Defined in: [src/models/model.ts:160](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L160)
+Defined in: [src/models/model.ts:160](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/model.ts#L160)
 
 Updates the model configuration. Merges the provided configuration with existing settings.
 
@@ -74,7 +74,7 @@ Updates the model configuration. Merges the provided configuration with existing
 abstract getConfig(): T;
 ```
 
-Defined in: [src/models/model.ts:167](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L167)
+Defined in: [src/models/model.ts:167](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/model.ts#L167)
 
 Retrieves the current model configuration.
 
@@ -92,7 +92,7 @@ The current configuration object
 abstract stream(messages, options?): AsyncIterable<ModelStreamEvent>;
 ```
 
-Defined in: [src/models/model.ts:184](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L184)
+Defined in: [src/models/model.ts:184](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/model.ts#L184)
 
 Streams a conversation with the model. Returns an async iterable that yields streaming events as they occur.
 
@@ -100,12 +100,12 @@ Streams a conversation with the model. Returns an async iterable that yields str
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `messages` | [`Message`](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
-| `options?` | [`StreamOptions`](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
+| `messages` | [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
+| `options?` | [<code dir="auto">StreamOptions</code>](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
 
 #### Returns
 
-`AsyncIterable`<[`ModelStreamEvent`](/docs/api/typescript/ModelStreamEvent/index.md)\>
+`AsyncIterable`<[<code dir="auto">ModelStreamEvent</code>](/docs/api/typescript/ModelStreamEvent/index.md)\>
 
 Async iterable of streaming events
 
@@ -119,7 +119,7 @@ streamAggregated(messages, options?): AsyncGenerator<
 | ModelStreamEvent, StreamAggregatedResult, undefined>;
 ```
 
-Defined in: [src/models/model.ts:240](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/models/model.ts#L240)
+Defined in: [src/models/model.ts:240](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/model.ts#L240)
 
 Streams a conversation with aggregated content blocks and messages. Returns an async generator that yields streaming events and content blocks, and returns the final message with stop reason and optional metadata.
 
@@ -140,12 +140,12 @@ All exceptions thrown from this method are wrapped in ModelError to provide a co
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `messages` | [`Message`](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
-| `options?` | [`StreamOptions`](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
+| `messages` | [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
+| `options?` | [<code dir="auto">StreamOptions</code>](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
 
 #### Returns
 
-`AsyncGenerator`< | [`ContentBlock`](/docs/api/typescript/ContentBlock/index.md) | [`ModelStreamEvent`](/docs/api/typescript/ModelStreamEvent/index.md), `StreamAggregatedResult`, `undefined`\>
+`AsyncGenerator`< | [<code dir="auto">ContentBlock</code>](/docs/api/typescript/ContentBlock/index.md) | [<code dir="auto">ModelStreamEvent</code>](/docs/api/typescript/ModelStreamEvent/index.md), `StreamAggregatedResult`, `undefined`\>
 
 Async generator yielding ModelStreamEvent | ContentBlock and returning a StreamAggregatedResult
 

@@ -1,10 +1,10 @@
-Defined in: [src/types/media.ts:81](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L81)
+Defined in: [src/types/media.ts:81](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L81)
 
 Data for an S3 location.
 
 ## Extends
 
--   [`LocationData`](/docs/api/typescript/LocationData/index.md)
+-   [<code dir="auto">LocationData</code>](/docs/api/typescript/LocationData/index.md)
 
 ## Properties
 
@@ -14,13 +14,13 @@ Data for an S3 location.
 type: "s3";
 ```
 
-Defined in: [src/types/media.ts:85](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L85)
+Defined in: [src/types/media.ts:85](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L85)
 
 Location type — always “s3”.
 
 #### Overrides
 
-[`LocationData`](/docs/api/typescript/LocationData/index.md).[`type`](/docs/api/typescript/LocationData/index.md#type)
+[<code dir="auto">LocationData</code>](/docs/api/typescript/LocationData/index.md).[<code dir="auto">type</code>](/docs/api/typescript/LocationData/index.md#type)
 
 ---
 
@@ -30,7 +30,7 @@ Location type — always “s3”.
 uri: string;
 ```
 
-Defined in: [src/types/media.ts:90](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L90)
+Defined in: [src/types/media.ts:90](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L90)
 
 S3 URI in format: s3://bucket-name/key-name
 
@@ -42,6 +42,6 @@ S3 URI in format: s3://bucket-name/key-name
 optional bucketOwner?: string;
 ```
 
-Defined in: [src/types/media.ts:96](https://github.com/strands-agents/sdk-typescript/blob/4ab6306cee14134c3f8938275d64dbac6fb2c8ac/src/types/media.ts#L96)
+Defined in: [src/types/media.ts:96](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/media.ts#L96)
 
 AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs to another AWS account.

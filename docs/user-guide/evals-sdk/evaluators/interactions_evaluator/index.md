@@ -280,7 +280,7 @@ Verify that agents respect declared dependencies.
 
 ## Related Evaluators
 
--   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates tool call sequences (single agent)
--   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates overall goal achievement
--   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates final output quality
--   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates individual response helpfulness
+-   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates tool call sequences (single agent)
+-   [<strong>GoalSuccessRateEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates overall goal achievement
+-   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluates final output quality
+-   [<strong>HelpfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates individual response helpfulness
