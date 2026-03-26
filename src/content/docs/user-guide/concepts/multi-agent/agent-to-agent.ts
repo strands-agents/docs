@@ -2,7 +2,8 @@
 // NOTE: Type-checking is disabled because the examples reference remote services not available at build time.
 
 import { Agent, tool } from '@strands-agents/sdk'
-import { A2AAgent, A2AExpressServer } from '@strands-agents/sdk/a2a'
+import { A2AAgent } from '@strands-agents/sdk/a2a'
+import { A2AExpressServer } from '@strands-agents/sdk/a2a/express'
 import { z } from 'zod'
 
 async function basicUsageExample() {
