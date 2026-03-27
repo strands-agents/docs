@@ -293,6 +293,58 @@ This summary provides a complete picture of the agent's execution, including cyc
 </Tab>
 </Tabs>
 
+## Local Execution Traces
+
+<Tabs>
+<Tab label="Python">
+
+In addition to aggregate metrics, the Strands Agents SDK automatically collects **local execution traces** — lightweight, in-memory timing trees that capture the hierarchy and duration of operations within the agent loop. These traces are always collected regardless of OpenTelemetry configuration and are returned directly in the `AgentResult`.
+
+Each trace represents a cycle in the agent loop, with child traces for model invocations and tool calls:
+
+```python
+from strands import Agent
+from strands_tools import calculator
+
+agent = Agent(tools=[calculator])
+result = agent("What is 15 * 8 + 42?")
+
+# Traces are included in the summary output
+print(result.metrics.get_summary())
+```
+
+Each trace contains:
+
+- **name**: Human-readable label (e.g., "Cycle 1", "stream_messages", "Tool: calculator")
+- **duration**: Execution time in seconds
+- **children**: Nested traces for operations within the cycle
+- **metadata**: Associated data like `cycleId`, `toolUseId`, and `toolName`
+- **message**: The model output message (for model invocation traces)
+
+Traces are included in the `get_summary()` output, giving you a complete hierarchical view of agent execution alongside aggregate metrics.
+</Tab>
+<Tab label="TypeScript">
+
+In addition to aggregate metrics, the Strands Agents SDK automatically collects **local execution traces** — lightweight, in-memory timing trees that capture the hierarchy and duration of operations within the agent loop. These traces are always collected regardless of OpenTelemetry configuration and are returned directly in `AgentResult.traces`.
+
+Each trace is an `AgentTrace` instance representing a cycle in the agent loop, with child traces for model invocations and tool calls:
+
+```typescript
+--8<-- "user-guide/observability-evaluation/metrics.ts:local_traces"
+```
+
+Each `AgentTrace` contains:
+
+- **name**: Human-readable label (e.g., "Cycle 1", "stream_messages", "Tool: calculator")
+- **duration**: Execution time in milliseconds
+- **children**: Nested `AgentTrace` instances for operations within the cycle
+- **metadata**: Associated data like `cycleId`, `toolUseId`, and `toolName`
+- **message**: The model output message (for model invocation traces)
+
+Traces are separate from `AgentMetrics` and are accessed via `result.traces`. Note that `AgentResult.toJSON()` excludes traces and metrics by default to keep API responses lean — access them directly via `result.traces` and `result.metrics`.
+</Tab>
+</Tabs>
+
 ## Best Practices
 
 1. **Monitor Token Usage**: Keep track of token usage to ensure you stay within limits and optimize costs. Set up alerts for when token usage approaches predefined thresholds to avoid unexpected costs.
