@@ -35,8 +35,8 @@ New `MultimodalOutputEvaluator(OutputEvaluator[dict, str])` class for image-in, 
 |Priority	|Metric	|Scale	|Core Question	|
 |---	|---	|---	|---	|
 |P0	|Overall Quality	|Likert-5	|How good is the response overall?	|
-|P0	|Correctness	|Likert-5	|Is the response factually accurate and complete?	|
-|P1	|Faithfulness	|Likert-5	|Is the response grounded in the image without hallucinations?	|
+|P0	|Correctness	|Binary (Yes/No)	|Is the response factually accurate and complete?	|
+|P1	|Faithfulness	|Binary (Yes/No)	|Is the response grounded in the image without hallucinations?	|
 |P1	|Instruction Following	|Binary (Yes/No)	|Does the response address the query's requirements?	|
 
 ### Core API
