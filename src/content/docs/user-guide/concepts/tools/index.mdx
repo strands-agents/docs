@@ -458,6 +458,34 @@ with sse_mcp_client:
 
 For more information on using MCP tools, see [MCP Tools](mcp-tools.md).
 
+### 4. Agents as Tools
+
+Agents can be passed directly in another agent's `tools` array — the SDK automatically converts them into tools. Use `.as_tool()` when you need to customize the tool name, description, or context behavior. For full details, see [Agents as Tools](../multi-agent/agents-as-tools.md).
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+
+research_agent = Agent(
+    system_prompt="You are a specialized research assistant.",
+)
+
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent],
+)
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+// Automatic agent-to-tool conversion not yet supported in TypeScript.
+```
+</Tab>
+</Tabs>
+
 ## Tool Design Best Practices
 
 ### Effective Tool Descriptions
@@ -533,60 +561,6 @@ def search_database(query: str, max_results: int = 10) -> list:
 
 ```typescript
 --8<-- "user-guide/concepts/tools/tools.ts:search_database"
-```
-</Tab>
-</Tabs>
-
-### 4. Agents as Tools
-
-Agents can be passed directly in another agent's `tools` array — the SDK automatically converts them into tools. This enables hierarchical multi-agent systems where an orchestrator delegates to specialized agents. For more details, see [Agents as Tools](../multi-agent/agents-as-tools.md).
-
-<Tabs>
-<Tab label="Python">
-
-```python
-from strands import Agent
-
-research_agent = Agent(
-    system_prompt="You are a specialized research assistant.",
-)
-
-# Simply pass the agent in the tools array — it's automatically converted
-orchestrator = Agent(
-    system_prompt="You are an assistant that routes queries to specialized agents.",
-    tools=[research_agent],
-)
-
-orchestrator("What are the latest advances in quantum computing?")
-```
-
-For more control, use `.as_tool()` to customize the tool name, description, or context behavior:
-
-```python
-orchestrator = Agent(
-    system_prompt="You are an assistant that routes queries to specialized agents.",
-    tools=[
-        research_agent.as_tool(
-            name="research_assistant",
-            description="Process and respond to research-related queries requiring factual information.",
-        ),
-    ],
-)
-```
-
-By default, the tool agent resets its conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True`:
-
-```python
-orchestrator = Agent(
-    system_prompt="You are an assistant that routes queries to specialized agents.",
-    tools=[research_agent.as_tool(preserve_context=True)],
-)
-```
-</Tab>
-<Tab label="TypeScript">
-
-```typescript
-// Automatic agent-to-tool conversion not yet supported in TypeScript.
 ```
 </Tab>
 </Tabs>
