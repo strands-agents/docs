@@ -79,11 +79,9 @@ async function configExample() {
   // --8<-- [start:config_example]
   const model = new VercelModel({
     model: openai('gpt-4o'),
-    config: {
-      maxTokens: 1000,
-      temperature: 0.7,
-      topP: 0.9,
-    },
+    maxTokens: 1000,
+    temperature: 0.7,
+    topP: 0.9,
   })
 
   const agent = new Agent({ model })
