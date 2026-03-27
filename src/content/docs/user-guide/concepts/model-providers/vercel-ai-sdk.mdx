@@ -58,7 +58,7 @@ Create a `LanguageModelV3` instance from any Vercel provider and wrap it with `V
 
 ## Configuration
 
-`VercelModel` accepts configuration directly alongside the `model` option. These include all [LanguageModelV3CallOptions](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3) settings (temperature, topP, topK, penalties, stop sequences, seed, etc.) plus the base Strands model config fields.
+`VercelModel` accepts configuration directly alongside the `provider` option. These include all [LanguageModelV3CallOptions](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3) settings (temperature, topP, topK, penalties, stop sequences, seed, etc.) plus the base Strands model config fields.
 
 ```typescript
 --8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:config_example"

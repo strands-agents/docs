@@ -18,7 +18,7 @@ async function basicUsageOpenAI() {
   import { openai } from '@ai-sdk/openai'
 
   const agent = new Agent({
-    model: new VercelModel({ model: openai('gpt-4o') }),
+    model: new VercelModel({ provider: openai('gpt-4o') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -34,7 +34,7 @@ async function basicUsageBedrock() {
   import { bedrock } from '@ai-sdk/amazon-bedrock'
 
   const agent = new Agent({
-    model: new VercelModel({ model: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0') }),
+    model: new VercelModel({ provider: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -50,7 +50,7 @@ async function basicUsageAnthropic() {
   import { anthropic } from '@ai-sdk/anthropic'
 
   const agent = new Agent({
-    model: new VercelModel({ model: anthropic('claude-sonnet-4-20250514') }),
+    model: new VercelModel({ provider: anthropic('claude-sonnet-4-20250514') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -66,7 +66,7 @@ async function basicUsageGoogle() {
   import { google } from '@ai-sdk/google'
 
   const agent = new Agent({
-    model: new VercelModel({ model: google('gemini-2.5-flash') }),
+    model: new VercelModel({ provider: google('gemini-2.5-flash') }),
   })
 
   const result = await agent.invoke('Hello!')
@@ -78,7 +78,7 @@ async function basicUsageGoogle() {
 async function configExample() {
   // --8<-- [start:config_example]
   const model = new VercelModel({
-    model: openai('gpt-4o'),
+    provider: openai('gpt-4o'),
     maxTokens: 1000,
     temperature: 0.7,
     topP: 0.9,
@@ -94,7 +94,7 @@ async function configExample() {
 async function streamingExample() {
   // --8<-- [start:streaming]
   const agent = new Agent({
-    model: new VercelModel({ model: openai('gpt-4o') }),
+    model: new VercelModel({ provider: openai('gpt-4o') }),
   })
 
   for await (const event of agent.stream('Tell me a story')) {
