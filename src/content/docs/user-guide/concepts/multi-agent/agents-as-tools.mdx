@@ -33,7 +33,7 @@ When implementing the "Agents as Tools" pattern with Strands Agents SDK:
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides a powerful framework for implementing the "Agents as Tools" pattern. Specialized agents are wrapped as callable tool functions that can be used by an orchestrator agent.
+Strands Agents SDK provides two ways to implement the "Agents as Tools" pattern: the built-in `.as_tool()` method for quick setup, and the `@tool` decorator for full control over how the agent is invoked.
 
 ```mermaid
 flowchart TD
@@ -41,15 +41,97 @@ flowchart TD
     Orchestrator --> RA["Research Assistant"]
     Orchestrator --> PA["Product Recommendation Assistant"]
     Orchestrator --> TA["Trip Planning Assistant"]
-    
+
     RA --> Orchestrator
     PA --> Orchestrator
     TA --> Orchestrator
 ```
 
-### Creating Specialized Tool Agents
+### Using `.as_tool()`
 
-First, define specialized agents as tool functions:
+The simplest way to use an agent as a tool is with the built-in `.as_tool()` method. This wraps the agent so it accepts an `input` string parameter and returns the agent's text response.
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+from strands_tools import retrieve, http_request
+
+# Create specialized agents
+research_agent = Agent(
+    system_prompt="""You are a specialized research assistant. Focus only on providing
+    factual, well-sourced information in response to research questions.
+    Always cite your sources when possible.""",
+    tools=[retrieve, http_request],
+)
+
+product_agent = Agent(
+    system_prompt="""You are a specialized product recommendation assistant.
+    Provide personalized product suggestions based on user preferences.""",
+    tools=[retrieve, http_request],
+)
+
+travel_agent = Agent(
+    system_prompt="""You are a specialized travel planning assistant.
+    Create detailed travel itineraries based on user preferences.""",
+    tools=[retrieve, http_request],
+)
+
+# Create the orchestrator with agents as tools
+orchestrator = Agent(
+    system_prompt="""You are an assistant that routes queries to specialized agents:
+    - For research questions and factual information → Use the research_agent tool
+    - For product recommendations and shopping advice → Use the product_agent tool
+    - For travel planning and itineraries → Use the travel_agent tool
+    - For simple questions not requiring specialized knowledge → Answer directly
+
+    Always select the most appropriate tool based on the user's query.""",
+    tools=[
+        research_agent.as_tool(),
+        product_agent.as_tool(),
+        travel_agent.as_tool(),
+    ],
+)
+```
+
+You can customize the tool name and description:
+
+```python
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[
+        research_agent.as_tool(
+            name="research_assistant",
+            description="Process and respond to research-related queries requiring factual information.",
+        ),
+    ],
+)
+```
+
+#### Context Management
+
+By default, `.as_tool()` resets the agent's conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True`:
+
+```python
+# Agent will remember prior interactions within the same orchestrator session
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent.as_tool(preserve_context=True)],
+)
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+// .as_tool() not yet supported in TypeScript.
+```
+</Tab>
+</Tabs>
+
+### Using the `@tool` Decorator
+
+For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can use the `@tool` decorator to wrap an agent manually:
 
 <Tabs>
 <Tab label="Python">
@@ -58,7 +140,6 @@ First, define specialized agents as tool functions:
 from strands import Agent, tool
 from strands_tools import retrieve, http_request
 
-# Define a specialized system prompt
 RESEARCH_ASSISTANT_PROMPT = """
 You are a specialized research assistant. Focus only on providing
 factual, well-sourced information in response to research questions.
@@ -69,21 +150,19 @@ Always cite your sources when possible.
 def research_assistant(query: str) -> str:
     """
     Process and respond to research-related queries.
-    
+
     Args:
         query: A research question requiring factual information
-        
+
     Returns:
         A detailed research answer with citations
     """
     try:
-        # Strands Agents SDK makes it easy to create a specialized agent
         research_agent = Agent(
             system_prompt=RESEARCH_ASSISTANT_PROMPT,
-            tools=[retrieve, http_request]  # Research-specific tools
+            tools=[retrieve, http_request]
         )
-        
-        # Call the agent and return its response
+
         response = research_agent(query)
         return str(response)
     except Exception as e:
@@ -108,10 +187,10 @@ You can create multiple specialized agents following the same pattern:
 def product_recommendation_assistant(query: str) -> str:
     """
     Handle product recommendation queries by suggesting appropriate products.
-    
+
     Args:
         query: A product inquiry with user preferences
-        
+
     Returns:
         Personalized product recommendations with reasoning
     """
@@ -119,7 +198,7 @@ def product_recommendation_assistant(query: str) -> str:
         product_agent = Agent(
             system_prompt="""You are a specialized product recommendation assistant.
             Provide personalized product suggestions based on user preferences.""",
-            tools=[retrieve, http_request, dialog],  # Tools for getting product data
+            tools=[retrieve, http_request, dialog],
         )
         # Implementation with response handling
         # ...
@@ -131,10 +210,10 @@ def product_recommendation_assistant(query: str) -> str:
 def trip_planning_assistant(query: str) -> str:
     """
     Create travel itineraries and provide travel advice.
-    
+
     Args:
         query: A travel planning request with destination and preferences
-        
+
     Returns:
         A detailed travel itinerary or travel advice
     """
@@ -142,7 +221,7 @@ def trip_planning_assistant(query: str) -> str:
         travel_agent = Agent(
             system_prompt="""You are a specialized travel planning assistant.
             Create detailed travel itineraries based on user preferences.""",
-            tools=[retrieve, http_request],  # Travel information tools
+            tools=[retrieve, http_request],
         )
         # Implementation with response handling
         # ...
@@ -159,9 +238,9 @@ def trip_planning_assistant(query: str) -> str:
 </Tab>
 </Tabs>
 
-### Creating the Orchestrator Agent
+#### Creating the Orchestrator Agent
 
-Next, create an orchestrator agent that has access to all specialized agents as tools:
+Create an orchestrator agent that has access to all specialized agents as tools:
 
 <Tabs>
 <Tab label="Python">
@@ -170,7 +249,6 @@ Next, create an orchestrator agent that has access to all specialized agents as 
 from strands import Agent
 from .specialized_agents import research_assistant, product_recommendation_assistant, trip_planning_assistant
 
-# Define the orchestrator system prompt with clear tool selection guidance
 MAIN_SYSTEM_PROMPT = """
 You are an assistant that routes queries to specialized agents:
 - For research questions and factual information → Use the research_assistant tool
@@ -181,7 +259,6 @@ You are an assistant that routes queries to specialized agents:
 Always select the most appropriate tool based on the user's query.
 """
 
-# Strands Agents SDK allows easy integration of agent tools
 orchestrator = Agent(
     system_prompt=MAIN_SYSTEM_PROMPT,
     callback_handler=None,

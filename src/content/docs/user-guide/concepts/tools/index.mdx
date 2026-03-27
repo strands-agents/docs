@@ -573,15 +573,12 @@ orchestrator = Agent(
 )
 ```
 
-By default, the tool agent preserves its conversation context across invocations. The orchestrator can reset the tool agent's context by passing `preserve_context=False` when calling the tool:
+By default, the tool agent resets its conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True` when creating the tool:
 
 ```python
-# The orchestrator's system prompt can instruct it when to reset context
 orchestrator = Agent(
-    system_prompt="""You are an assistant that routes queries to specialized agents.
-When the user changes topics, call the research assistant with preserve_context=False
-to start a fresh conversation.""",
-    tools=[research_agent.as_tool()],
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent.as_tool(preserve_context=True)],
 )
 ```
 </Tab>
