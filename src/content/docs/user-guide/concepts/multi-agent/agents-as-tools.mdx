@@ -33,7 +33,7 @@ When implementing the "Agents as Tools" pattern with Strands Agents SDK:
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides two ways to implement the "Agents as Tools" pattern: the built-in `.as_tool()` method for quick setup, and the `@tool` decorator for full control over how the agent is invoked.
+Strands Agents SDK provides three ways to implement the "Agents as Tools" pattern: passing agents directly in the `tools` array for the simplest setup, the `.as_tool()` method when you need to customize tool name, description, or context behavior, and the `@tool` decorator for full control over how the agent is invoked.
 
 ```mermaid
 flowchart TD
@@ -47,9 +47,9 @@ flowchart TD
     TA --> Orchestrator
 ```
 
-### Using `.as_tool()`
+### Passing Agents Directly
 
-The simplest way to use an agent as a tool is with the built-in `.as_tool()` method. This wraps the agent so it accepts an `input` string parameter and returns the agent's text response.
+The simplest way to use an agent as a tool is to pass it directly in the `tools` array. The SDK automatically converts it into a tool that accepts an `input` string parameter and returns the agent's text response.
 
 <Tabs>
 <Tab label="Python">
@@ -78,7 +78,7 @@ travel_agent = Agent(
     tools=[retrieve, http_request],
 )
 
-# Create the orchestrator with agents as tools
+# Create the orchestrator — agents are automatically converted to tools
 orchestrator = Agent(
     system_prompt="""You are an assistant that routes queries to specialized agents:
     - For research questions and factual information → Use the research_agent tool
@@ -87,15 +87,24 @@ orchestrator = Agent(
     - For simple questions not requiring specialized knowledge → Answer directly
 
     Always select the most appropriate tool based on the user's query.""",
-    tools=[
-        research_agent.as_tool(),
-        product_agent.as_tool(),
-        travel_agent.as_tool(),
-    ],
+    tools=[research_agent, product_agent, travel_agent],
 )
 ```
+</Tab>
+<Tab label="TypeScript">
 
-You can customize the tool name and description:
+```typescript
+// Automatic agent-to-tool conversion not yet supported in TypeScript.
+```
+</Tab>
+</Tabs>
+
+### Using `.as_tool()` for Customization
+
+When you need to customize the tool name, description, or context behavior, use the `.as_tool()` method explicitly:
+
+<Tabs>
+<Tab label="Python">
 
 ```python
 orchestrator = Agent(
@@ -111,7 +120,7 @@ orchestrator = Agent(
 
 #### Context Management
 
-By default, `.as_tool()` resets the agent's conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True`:
+By default, both direct passing and `.as_tool()` reset the agent's conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, use `.as_tool()` with `preserve_context=True`:
 
 ```python
 # Agent will remember prior interactions within the same orchestrator session

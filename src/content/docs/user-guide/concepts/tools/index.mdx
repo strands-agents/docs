@@ -539,7 +539,7 @@ def search_database(query: str, max_results: int = 10) -> list:
 
 ### 4. Agents as Tools
 
-Any agent can be converted into a tool using `.as_tool()` and passed to another agent's tools array. This enables hierarchical multi-agent systems where an orchestrator delegates to specialized agents. For more details, see [Agents as Tools](../multi-agent/agents-as-tools.md).
+Agents can be passed directly in another agent's `tools` array — the SDK automatically converts them into tools. This enables hierarchical multi-agent systems where an orchestrator delegates to specialized agents. For more details, see [Agents as Tools](../multi-agent/agents-as-tools.md).
 
 <Tabs>
 <Tab label="Python">
@@ -551,15 +551,16 @@ research_agent = Agent(
     system_prompt="You are a specialized research assistant.",
 )
 
+# Simply pass the agent in the tools array — it's automatically converted
 orchestrator = Agent(
     system_prompt="You are an assistant that routes queries to specialized agents.",
-    tools=[research_agent.as_tool()],
+    tools=[research_agent],
 )
 
 orchestrator("What are the latest advances in quantum computing?")
 ```
 
-You can also specify a custom name and description for the tool:
+For more control, use `.as_tool()` to customize the tool name, description, or context behavior:
 
 ```python
 orchestrator = Agent(
@@ -573,7 +574,7 @@ orchestrator = Agent(
 )
 ```
 
-By default, the tool agent resets its conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True` when creating the tool:
+By default, the tool agent resets its conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, pass `preserve_context=True`:
 
 ```python
 orchestrator = Agent(
@@ -585,7 +586,7 @@ orchestrator = Agent(
 <Tab label="TypeScript">
 
 ```typescript
-// .as_tool() not yet supported in TypeScript.
+// Automatic agent-to-tool conversion not yet supported in TypeScript.
 ```
 </Tab>
 </Tabs>
