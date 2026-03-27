@@ -129,24 +129,11 @@ Combine vended tools to build powerful agent workflows:
 --8<-- "user-guide/concepts/tools/vended-tools.ts:combined_tools_example"
 ```
 
-## Differences from Community Tools
-
-Vended tools in TypeScript differ from the Python [Community Tools Package](community-tools-package.mdx) in how they handle tool consent. Python's community tools use the `BYPASS_TOOL_CONSENT` environment variable to control whether tools prompt for user confirmation before executing sensitive operations. TypeScript vended tools do not use environment variables and do not implement a built-in tool consent mechanism—tools execute immediately when called by the agent.
-
-To implement approval workflows for sensitive operations in TypeScript, use the SDK's [Interrupts](../interrupts.mdx) feature to pause agent execution for human approval, or use [Hooks](../agents/hooks.mdx) to intercept tool calls with `BeforeToolCallEvent` and add custom validation or approval logic.
-
-| Feature | TypeScript (Vended Tools) | Python (Community Tools Package) |
-|---------|---------------------------|----------------------------------|
-| Package | Included in SDK | Separate `strands-agents-tools` package |
-| Tool Count | 4 core tools | 30+ tools |
-| Consent Workflow | Use Interrupts/Hooks | `BYPASS_TOOL_CONSENT` env var |
-| Platform | Node.js (some browser support) | Python 3.10+ |
-
 ## Versioning & Maintenance
 
 Vended tools ship as part of the SDK and are updated alongside it. Report bugs and feature requests in the [TypeScript SDK GitHub repository](https://github.com/strands-agents/sdk-typescript/issues).
 
-Tool parameters may be added or adjusted between releases to improve effectiveness — these changes are noted in SDK release notes. Pin your SDK version and test after upgrades to avoid unexpected behavior.
+Tool names are stable and will not change. In minor versions, a tool's description, spec, or parameters may be updated to improve effectiveness — these changes are noted in SDK release notes. Pin your SDK version and test after upgrades if your workflows depend on specific tool behavior.
 
 ## See also
 
