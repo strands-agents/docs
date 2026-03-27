@@ -148,7 +148,7 @@ And that’s it! We now have a running agent with powerful tools and abilities i
 
 ## Understanding What Agents Did
 
-After running an agent, you can understand what happened during execution by examining the agent’s messages and through traces and metrics. Every agent invocation returns an `AgentResult` object that contains the data the agent used along with (comming soon) comprehensive observability data.
+After running an agent, you can understand what happened during execution by examining the agent’s messages, traces, and metrics. Every agent invocation returns an `AgentResult` object that contains the data the agent used along with comprehensive observability data including [local execution traces](/docs/user-guide/observability-evaluation/metrics/index.md#local-execution-traces) and [metrics](/docs/user-guide/observability-evaluation/metrics/index.md).
 
 ```typescript
 // Access the agent's message array

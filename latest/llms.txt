@@ -25,6 +25,7 @@
     - [mcp-tools](https://strandsagents.com/docs/user-guide/concepts/tools/mcp-tools/index.md)
     - [executors](https://strandsagents.com/docs/user-guide/concepts/tools/executors/index.md)
     - [community-tools-package](https://strandsagents.com/docs/user-guide/concepts/tools/community-tools-package/index.md)
+    - [vended-tools](https://strandsagents.com/docs/user-guide/concepts/tools/vended-tools/index.md)
   - Plugins
     - [plugins](https://strandsagents.com/docs/user-guide/concepts/plugins/index.md)
     - [skills](https://strandsagents.com/docs/user-guide/concepts/plugins/skills/index.md)
@@ -42,6 +43,7 @@
     - [ollama](https://strandsagents.com/docs/user-guide/concepts/model-providers/ollama/index.md)
     - [openai](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai/index.md)
     - [sagemaker](https://strandsagents.com/docs/user-guide/concepts/model-providers/sagemaker/index.md)
+    - [vercel](https://strandsagents.com/docs/user-guide/concepts/model-providers/vercel/index.md)
     - [writer](https://strandsagents.com/docs/user-guide/concepts/model-providers/writer/index.md)
     - [custom_model_provider](https://strandsagents.com/docs/user-guide/concepts/model-providers/custom_model_provider/index.md)
   - Streaming
@@ -407,6 +409,8 @@
 - [StreamEvent](https://strandsagents.com/docs/api/typescript/StreamEvent/index.md)
 - [StreamOptions](https://strandsagents.com/docs/api/typescript/StreamOptions/index.md)
 - [StructuredOutputError](https://strandsagents.com/docs/api/typescript/StructuredOutputError/index.md)
+- [SummarizationConversationManager](https://strandsagents.com/docs/api/typescript/SummarizationConversationManager/index.md)
+- [SummarizationConversationManagerConfig](https://strandsagents.com/docs/api/typescript/SummarizationConversationManagerConfig/index.md)
 - [Swarm](https://strandsagents.com/docs/api/typescript/Swarm/index.md)
 - [SystemContentBlock](https://strandsagents.com/docs/api/typescript/SystemContentBlock/index.md)
 - [SystemPrompt](https://strandsagents.com/docs/api/typescript/SystemPrompt/index.md)

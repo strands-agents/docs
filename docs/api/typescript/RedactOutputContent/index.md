@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:307](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L307)
+Defined in: [src/models/streaming.ts:307](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L307)
 
 Information about output content redaction. May include the original content if captured during streaming.
 
@@ -10,7 +10,7 @@ Information about output content redaction. May include the original content if 
 optional redactedContent?: string;
 ```
 
-Defined in: [src/models/streaming.ts:312](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L312)
+Defined in: [src/models/streaming.ts:312](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L312)
 
 The original content that was blocked by guardrails. May not be available for all providers.
 
@@ -22,6 +22,6 @@ The original content that was blocked by guardrails. May not be available for al
 replaceContent: string;
 ```
 
-Defined in: [src/models/streaming.ts:317](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L317)
+Defined in: [src/models/streaming.ts:317](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L317)
 
 The content to replace the redacted output with.

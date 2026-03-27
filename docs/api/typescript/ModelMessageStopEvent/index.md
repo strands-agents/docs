@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:204](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L204)
+Defined in: [src/models/streaming.ts:204](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L204)
 
 Event emitted when the message completes.
 
@@ -14,7 +14,7 @@ Event emitted when the message completes.
 new ModelMessageStopEvent(data): ModelMessageStopEvent;
 ```
 
-Defined in: [src/models/streaming.ts:220](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L220)
+Defined in: [src/models/streaming.ts:220](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L220)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/models/streaming.ts:220](https://github.com/strands-agents/sdk-
 readonly type: "modelMessageStopEvent";
 ```
 
-Defined in: [src/models/streaming.ts:208](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L208)
+Defined in: [src/models/streaming.ts:208](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L208)
 
 Discriminator for message stop events.
 
@@ -50,7 +50,7 @@ Discriminator for message stop events.
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/models/streaming.ts:213](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L213)
+Defined in: [src/models/streaming.ts:213](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L213)
 
 Reason why generation stopped.
 
@@ -66,7 +66,7 @@ Reason why generation stopped.
 readonly optional additionalModelResponseFields?: JSONValue;
 ```
 
-Defined in: [src/models/streaming.ts:218](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/models/streaming.ts#L218)
+Defined in: [src/models/streaming.ts:218](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/models/streaming.ts#L218)
 
 Additional provider-specific response fields.
 

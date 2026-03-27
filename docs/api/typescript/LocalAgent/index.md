@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:93](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L93)
+Defined in: [src/types/agent.ts:93](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L93)
 
 Interface for agents with locally accessible state, messages, tools, and hooks. Used by ToolContext and hook events that need access to agent internals.
 
@@ -10,7 +10,7 @@ Interface for agents with locally accessible state, messages, tools, and hooks. 
 readonly id: string;
 ```
 
-Defined in: [src/types/agent.ts:97](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L97)
+Defined in: [src/types/agent.ts:97](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L97)
 
 The unique identifier of the agent instance.
 
@@ -22,7 +22,7 @@ The unique identifier of the agent instance.
 appState: StateStore;
 ```
 
-Defined in: [src/types/agent.ts:102](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L102)
+Defined in: [src/types/agent.ts:102](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L102)
 
 App state storage accessible to tools and application logic.
 
@@ -34,7 +34,7 @@ App state storage accessible to tools and application logic.
 messages: Message[];
 ```
 
-Defined in: [src/types/agent.ts:107](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L107)
+Defined in: [src/types/agent.ts:107](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L107)
 
 The conversation history of messages between user and assistant.
 
@@ -46,7 +46,7 @@ The conversation history of messages between user and assistant.
 readonly toolRegistry: ToolRegistry;
 ```
 
-Defined in: [src/types/agent.ts:112](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L112)
+Defined in: [src/types/agent.ts:112](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L112)
 
 The tool registry for registering tools with the agent.
 
@@ -58,7 +58,7 @@ The tool registry for registering tools with the agent.
 optional systemPrompt?: SystemPrompt;
 ```
 
-Defined in: [src/types/agent.ts:117](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L117)
+Defined in: [src/types/agent.ts:117](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L117)
 
 The system prompt to pass to the model provider.
 
@@ -70,7 +70,7 @@ The system prompt to pass to the model provider.
 addHook<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/types/agent.ts:126](https://github.com/strands-agents/sdk-typescript/blob/62c272f819df2f6c572cf6cb79f78da40464fec5/src/types/agent.ts#L126)
+Defined in: [src/types/agent.ts:126](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/agent.ts#L126)
 
 Register a hook callback for a specific event type.
 
