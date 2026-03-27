@@ -1,5 +1,5 @@
 ---
-title: Vercel AI SDK
+title: Vercel
 languages: TypeScript
 integrationType: model-provider
 ---
@@ -35,25 +35,25 @@ Create a `LanguageModelV3` instance from any Vercel provider and wrap it with `V
 ### OpenAI
 
 ```typescript
---8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:basic_usage_openai"
+--8<-- "user-guide/concepts/model-providers/vercel.ts:basic_usage_openai"
 ```
 
 ### Amazon Bedrock
 
 ```typescript
---8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:basic_usage_bedrock"
+--8<-- "user-guide/concepts/model-providers/vercel.ts:basic_usage_bedrock"
 ```
 
 ### Anthropic
 
 ```typescript
---8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:basic_usage_anthropic"
+--8<-- "user-guide/concepts/model-providers/vercel.ts:basic_usage_anthropic"
 ```
 
 ### Google Generative AI
 
 ```typescript
---8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:basic_usage_google"
+--8<-- "user-guide/concepts/model-providers/vercel.ts:basic_usage_google"
 ```
 
 ## Configuration
@@ -61,7 +61,7 @@ Create a `LanguageModelV3` instance from any Vercel provider and wrap it with `V
 `VercelModel` accepts configuration directly alongside the `provider` option. These include all [LanguageModelV3CallOptions](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3) settings (temperature, topP, topK, penalties, stop sequences, seed, etc.) plus the base Strands model config fields.
 
 ```typescript
---8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:config_example"
+--8<-- "user-guide/concepts/model-providers/vercel.ts:config_example"
 ```
 
 | Parameter | Description | Example |
@@ -83,7 +83,7 @@ When new fields are added to the Language Model Specification, they become avail
 The adapter supports streaming text, reasoning content, and tool use:
 
 ```typescript
---8<-- "user-guide/concepts/model-providers/vercel-ai-sdk.ts:streaming"
+--8<-- "user-guide/concepts/model-providers/vercel.ts:streaming"
 ```
 
 ## Supported features
