@@ -209,6 +209,7 @@ sidebar:
         items:
           - docs/community/plugins/agent-control
           - docs/community/plugins/datadog-ai-guard
+          - docs/community/plugins/strands-arise
       - label: Model Providers
         items:
           - docs/community/model-providers/cohere
