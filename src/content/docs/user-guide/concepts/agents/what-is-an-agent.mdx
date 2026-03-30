@@ -42,7 +42,7 @@ Without tools, an agent can only generate text. With tools, it can take action. 
 
 Context is the conversation history: the sequence of user messages, assistant responses, and tool results that accumulates as the agent works. Each iteration of the agent loop adds to this history, giving the model a growing understanding of the task.
 
-Context is managed automatically. The [Conversation Management](./conversation-management/) system keeps it within the model's token limits. For persistence across sessions, see [Session Management](./session-management/).
+Context grows with every turn. When it approaches the model's token limit, the [Conversation Management](./conversation-management/) system automatically trims or summarizes it to keep the agent working. For persistence across sessions, see [Session Management](./session-management/).
 
 ## Putting It Together
 
@@ -153,6 +153,18 @@ def handle_request(user_message):
 agent = Agent(system_prompt="You are a helpful assistant.")
 agent("Help me draft an email to my manager")  # Conversation 1
 agent("What is the capital of France?")          # Sees the email context
+```
+
+**❌ Caching agents per user**
+
+```python
+# Wrong: treats agents like user profiles instead of conversation processors
+user_agents = {}
+
+def get_agent(user_id):
+    if user_id not in user_agents:
+        user_agents[user_id] = Agent(system_prompt="You are a helpful assistant.")
+    return user_agents[user_id]  # History from old conversations leaks into new ones
 ```
 
 **✅ Sharing configuration, not instances**
