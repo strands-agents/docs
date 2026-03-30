@@ -1,0 +1,369 @@
+---
+title: Using hooks
+description: "Register hook callbacks on agents and orchestrators to observe and modify behavior during the agent loop."
+sidebar:
+  order: 1
+---
+
+This guide covers how to register hooks on agents, bundle hooks with plugins, pass context through invocation state, and use hooks with multi-agent orchestrators. It assumes familiarity with [hooks concepts](./index) and a working agent.
+
+## Register a hook callback
+
+Register a callback for a specific event with `agent.add_hook()` (Python) or `agent.addHook()` (TypeScript).
+
+<Tabs>
+<Tab label="Python">
+
+Add a type hint to the callback parameter and the event type is inferred automatically. Or pass the event class explicitly:
+
+```python
+from strands import Agent
+from strands.hooks import BeforeInvocationEvent, BeforeToolCallEvent
+
+agent = Agent()
+
+# Type-inferred registration (recommended)
+def on_invocation(event: BeforeInvocationEvent) -> None:
+    print(f"Invocation starting for agent: {event.agent.name}")
+
+agent.add_hook(on_invocation)
+
+# Explicit registration with event class
+def on_tool_call(event: BeforeToolCallEvent) -> None:
+    print(f"Tool called: {event.tool_use['name']}")
+
+agent.add_hook(on_tool_call, BeforeToolCallEvent)
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+TypeScript always requires the event class as the first argument:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { BeforeInvocationEvent, BeforeToolCallEvent } from '@strands-agents/sdk'
+
+const agent = new Agent()
+
+agent.addHook(BeforeInvocationEvent, (event) => {
+  console.log('Invocation starting')
+})
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log(`Tool called: ${event.toolUse.name}`)
+})
+```
+
+</Tab>
+</Tabs>
+
+## Bundle hooks with plugins
+
+Group related hooks into a single unit with the `Plugin` class. See [Plugins](../../plugins/index.md) for the full plugin API.
+
+<Tabs>
+<Tab label="Python">
+
+Decorate methods with `@hook`. The event type is inferred from the type hint:
+
+```python
+from strands import Agent
+from strands.plugins import Plugin, hook
+from strands.hooks import BeforeToolCallEvent, AfterToolCallEvent
+
+class LoggingPlugin(Plugin):
+    name = "logging-plugin"
+
+    @hook
+    def log_before(self, event: BeforeToolCallEvent) -> None:
+        print(f"Calling: {event.tool_use['name']} with {event.tool_use['input']}")
+
+    @hook
+    def log_after(self, event: AfterToolCallEvent) -> None:
+        print(f"Completed: {event.tool_use['name']}")
+
+agent = Agent(plugins=[LoggingPlugin()])
+agent("Summarize today's news")
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+Register hooks manually in `initAgent()`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import type { LocalAgent, Plugin } from '@strands-agents/sdk'
+import { BeforeToolCallEvent, AfterToolCallEvent } from '@strands-agents/sdk'
+
+class LoggingPlugin implements Plugin {
+  name = 'logging-plugin'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Calling: ${event.toolUse.name}`)
+    })
+
+    agent.addHook(AfterToolCallEvent, (event) => {
+      console.log(`Completed: ${event.toolUse.name}`)
+    })
+  }
+}
+
+const agent = new Agent({ plugins: [new LoggingPlugin()] })
+```
+
+</Tab>
+</Tabs>
+
+## Pass context through invocation state
+
+Pass request-scoped data (user IDs, database connections, configuration) into hooks via `invocation_state`. Add custom values as keyword arguments when invoking the agent:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+import sqlite3
+from strands import Agent
+from strands.hooks import BeforeToolCallEvent
+
+def audit_tool_calls(event: BeforeToolCallEvent) -> None:
+    user_id = event.invocation_state.get("user_id", "unknown")
+    db = event.invocation_state.get("db")
+    tool_name = event.tool_use["name"]
+
+    print(f"[audit] user={user_id} tool={tool_name}")
+
+    if db:
+        cursor = db.cursor()
+        cursor.execute(
+            "INSERT INTO audit_log (user_id, tool_name) VALUES (?, ?)",
+            (user_id, tool_name),
+        )
+        db.commit()
+
+agent = Agent()
+agent.add_hook(audit_tool_calls)
+
+db_conn = sqlite3.connect(":memory:")
+db_conn.execute("CREATE TABLE audit_log (user_id TEXT, tool_name TEXT)")
+
+result = agent(
+    "Look up the weather in Portland",
+    user_id="user-42",
+    db=db_conn,
+)
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+Single-agent invocation state is not yet available in the TypeScript SDK. For multi-agent orchestrators, use `state.app` to pass custom data. See [Use hooks with multi-agent orchestrators](#use-hooks-with-multi-agent-orchestrators) below.
+
+</Tab>
+</Tabs>
+
+## Use hooks with multi-agent orchestrators
+
+Register hooks on `Graph` or `Swarm` orchestrators for node-level events like `BeforeNodeCallEvent` and `AfterNodeCallEvent`.
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+from strands.hooks import BeforeNodeCallEvent, AfterNodeCallEvent
+from strands.multiagent import Graph
+
+researcher = Agent(system_prompt="You are a research specialist.")
+writer = Agent(system_prompt="You are a writing specialist.")
+
+graph = Graph(
+    agents={"researcher": researcher, "writer": writer},
+    edges=[("researcher", "writer")],
+)
+
+def log_node_start(event: BeforeNodeCallEvent) -> None:
+    print(f"Node {event.node_id} starting")
+
+def log_node_end(event: AfterNodeCallEvent) -> None:
+    print(f"Node {event.node_id} completed")
+
+graph.hooks.add_callback(BeforeNodeCallEvent, log_node_start)
+graph.hooks.add_callback(AfterNodeCallEvent, log_node_end)
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { Graph, BeforeNodeCallEvent, AfterNodeCallEvent } from '@strands-agents/sdk/multiagent'
+
+const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
+const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+})
+
+graph.addHook(BeforeNodeCallEvent, (event) => {
+  console.log(`Node ${event.nodeId} starting`)
+})
+
+graph.addHook(AfterNodeCallEvent, (event) => {
+  console.log(`Node ${event.nodeId} completed`)
+})
+```
+
+</Tab>
+</Tabs>
+
+### Layered hooks: agent-level and orchestrator-level
+
+Combine agent-level and orchestrator-level hooks. Both fire during execution:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+from strands.plugins import Plugin, hook
+from strands.hooks import (
+    BeforeToolCallEvent,
+    BeforeNodeCallEvent,
+    AfterNodeCallEvent,
+    HookProvider,
+    HookRegistry,
+)
+from strands.multiagent import Graph
+
+# Agent-level plugin: logs every tool call inside each agent
+class AgentLoggingPlugin(Plugin):
+    name = "agent-logging"
+
+    @hook
+    def log_tool(self, event: BeforeToolCallEvent) -> None:
+        print(f"  [agent] tool call: {event.tool_use['name']}")
+
+# Orchestrator-level hook provider: logs node transitions
+class OrchestratorLoggingHook(HookProvider):
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(BeforeNodeCallEvent, self.on_node_start)
+        registry.add_callback(AfterNodeCallEvent, self.on_node_end)
+
+    def on_node_start(self, event: BeforeNodeCallEvent) -> None:
+        print(f"[orchestrator] node {event.node_id} starting")
+
+    def on_node_end(self, event: AfterNodeCallEvent) -> None:
+        print(f"[orchestrator] node {event.node_id} completed")
+
+# Wire both layers together
+agent1 = Agent(system_prompt="You research topics.", plugins=[AgentLoggingPlugin()])
+agent2 = Agent(system_prompt="You write summaries.", plugins=[AgentLoggingPlugin()])
+
+graph = Graph(
+    agents={"researcher": agent1, "writer": agent2},
+    edges=[("researcher", "writer")],
+    hooks=[OrchestratorLoggingHook()],
+)
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import type { LocalAgent, Plugin } from '@strands-agents/sdk'
+import { BeforeToolCallEvent } from '@strands-agents/sdk'
+import {
+  Graph,
+  BeforeNodeCallEvent,
+  AfterNodeCallEvent,
+} from '@strands-agents/sdk/multiagent'
+import type { MultiAgent, MultiAgentPlugin } from '@strands-agents/sdk/multiagent'
+
+// Agent-level plugin: logs every tool call inside each agent
+class AgentLoggingPlugin implements Plugin {
+  name = 'agent-logging'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`  [agent] tool call: ${event.toolUse.name}`)
+    })
+  }
+}
+
+// Orchestrator-level plugin: logs node transitions
+class OrchestratorLoggingPlugin extends MultiAgentPlugin {
+  readonly name = 'orchestrator-logging'
+
+  initMultiAgent(orchestrator: MultiAgent): void {
+    orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+      console.log(`[orchestrator] node ${event.nodeId} starting`)
+    })
+
+    orchestrator.addHook(AfterNodeCallEvent, (event) => {
+      console.log(`[orchestrator] node ${event.nodeId} completed`)
+    })
+  }
+}
+
+// Wire both layers together
+const agent1 = new Agent({ id: 'researcher', systemPrompt: 'You research topics.', plugins: [new AgentLoggingPlugin()] })
+const agent2 = new Agent({ id: 'writer', systemPrompt: 'You write summaries.', plugins: [new AgentLoggingPlugin()] })
+
+const graph = new Graph({
+  nodes: [agent1, agent2],
+  edges: [['researcher', 'writer']],
+  plugins: [new OrchestratorLoggingPlugin()],
+})
+```
+
+</Tab>
+</Tabs>
+
+## Create a reusable hook collection (Python)
+
+Create a reusable hook collection by implementing the `HookProvider` protocol. This is lighter than a full plugin when you only need hooks:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+from strands.hooks import (
+    HookProvider,
+    HookRegistry,
+    BeforeInvocationEvent,
+    AfterInvocationEvent,
+)
+
+class RequestLogger(HookProvider):
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(BeforeInvocationEvent, self.log_start)
+        registry.add_callback(AfterInvocationEvent, self.log_end)
+
+    def log_start(self, event: BeforeInvocationEvent) -> None:
+        print(f"Request started for agent: {event.agent.name}")
+
+    def log_end(self, event: AfterInvocationEvent) -> None:
+        print(f"Request completed for agent: {event.agent.name}")
+
+# Pass via hooks parameter
+agent = Agent(hooks=[RequestLogger()])
+
+# Or add after construction
+agent.hooks.add_hook(RequestLogger())
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+The TypeScript SDK does not export a `HookProvider` interface. Use [Plugin](../../plugins/index.md) to bundle multiple hooks together.
+
+</Tab>
+</Tabs>
