@@ -1,0 +1,202 @@
+---
+title: What is an Agent?
+description: "Understand what an agent is in Strands, the four parts that define one, and how to scope agents correctly in your application."
+---
+
+An agent is a program that uses a language model to decide what to do. Rather than following a fixed script, it reasons about a request, takes actions through tools, observes the results, and repeats until the task is complete.
+
+In Strands, an agent is a lightweight runtime that coordinates four things: a **model**, a **system prompt**, **tools**, and **context**. The SDK manages the loop between them. You define the parts; the agent decides how to use them.
+
+## The Four Parts of an Agent
+
+Every Strands agent is composed of four parts:
+
+```mermaid
+flowchart LR
+    SP[System Prompt] --> A[Agent Loop]
+    M[Model] --> A
+    T[Tools] --> A
+    C[Context] --> A
+    A --> R[Response]
+```
+
+### 1. Model
+
+The model is the language model that powers the agent's reasoning. It decides what to say, which tools to call, and when the task is done. Strands supports multiple providers — Amazon Bedrock, OpenAI, Anthropic, Ollama, and others.
+
+The model is the only required part. An agent with just a model behaves like a simple chatbot.
+
+### 2. System Prompt
+
+The system prompt defines the agent's role, constraints, and behavior. It is sent to the model at the start of every request and shapes how the model interprets user messages and selects tools.
+
+A well-written system prompt is the most effective way to control agent behavior. See [Prompts](./prompts/) for details.
+
+### 3. Tools
+
+Tools are functions the agent can call to interact with the outside world — read files, query databases, call APIs, run code. The model decides when and how to use them based on the user's request and the tool descriptions you provide.
+
+Without tools, an agent can only generate text. With tools, it can take action. See [Tools Overview](../tools/) for details.
+
+### 4. Context
+
+Context is the conversation history: the sequence of user messages, assistant responses, and tool results that accumulates as the agent works. Each iteration of the agent loop adds to this history, giving the model a growing understanding of the task.
+
+Context is managed automatically. The [Conversation Management](./conversation-management/) system keeps it within the model's token limits. For persistence across sessions, see [Session Management](./session-management/).
+
+## Putting It Together
+
+Here is a minimal agent that uses all four parts:
+
+<Tabs>
+<Tab label="Python">
+```python
+from strands import Agent, tool
+from strands.models.bedrock import BedrockModel
+
+@tool
+def weather(city: str) -> str:
+    """Get current weather for a city."""
+    return f"Weather for {city}: Sunny, 72°F"
+
+agent = Agent(
+    model=BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514"),
+    system_prompt="You are a helpful weather assistant.",
+    tools=[weather],
+)
+
+agent("What's the weather in Seattle?")
+```
+</Tab>
+<Tab label="TypeScript">
+```typescript
+import { Agent, tool } from '@strands-agents/sdk';
+import { z } from 'zod';
+
+const weatherTool = tool({
+  name: 'weather',
+  description: 'Get current weather for a city',
+  inputSchema: z.object({
+    city: z.string().describe('City name'),
+  }),
+  callback: (input) => `Weather for ${input.city}: Sunny, 72°F`,
+});
+
+const agent = new Agent({
+  systemPrompt: 'You are a helpful weather assistant.',
+  tools: [weatherTool],
+});
+
+await agent.invoke("What's the weather in Seattle?");
+```
+</Tab>
+</Tabs>
+
+When this agent receives the request, the model reads the system prompt, reasons about the question, calls the `weather` tool, receives the result, and produces a final response. The [Agent Loop](./agent-loop/) page explains this cycle in detail.
+
+## Agent Lifecycle and Scope
+
+An agent instance owns its conversation history. This is the most important thing to understand about agent scope.
+
+### One agent per conversation
+
+Each conversation should use its own agent instance. When a user starts a new conversation, create a new agent. When the conversation ends, the agent can be discarded.
+
+<Tabs>
+<Tab label="Python">
+```python
+# ✅ Correct: each request gets its own agent
+def handle_request(user_message: str) -> str:
+    agent = Agent(
+        system_prompt="You are a helpful assistant.",
+        tools=[search, calculator],
+    )
+    result = agent(user_message)
+    return str(result)
+```
+</Tab>
+<Tab label="TypeScript">
+```typescript
+// ✅ Correct: each request gets its own agent
+async function handleRequest(userMessage: string): Promise<string> {
+  const agent = new Agent({
+    systemPrompt: 'You are a helpful assistant.',
+    tools: [search, calculator],
+  });
+  const result = await agent.invoke(userMessage);
+  return String(result);
+}
+```
+</Tab>
+</Tabs>
+
+### Common anti-patterns
+
+:::caution[Don't share agents across users or conversations]
+Sharing a single agent instance across multiple users or conversations causes conversation history to bleed between them. User A's messages become visible to User B. This is both a correctness bug and a security risk.
+:::
+
+**❌ Shared singleton agent**
+
+```python
+# Wrong: all users share the same conversation history
+app_agent = Agent(system_prompt="You are a helpful assistant.")
+
+def handle_request(user_message):
+    return app_agent(user_message)  # History accumulates across all users
+```
+
+**❌ Reusing an agent across conversations**
+
+```python
+# Wrong: previous conversation leaks into the next one
+agent = Agent(system_prompt="You are a helpful assistant.")
+agent("Help me draft an email to my manager")  # Conversation 1
+agent("What is the capital of France?")          # Sees the email context
+```
+
+**✅ Sharing configuration, not instances**
+
+If multiple conversations need the same setup, share the configuration and create fresh instances:
+
+<Tabs>
+<Tab label="Python">
+```python
+AGENT_CONFIG = {
+    "system_prompt": "You are a helpful assistant.",
+    "tools": [search, calculator],
+}
+
+def handle_request(user_message: str) -> str:
+    agent = Agent(**AGENT_CONFIG)
+    return str(agent(user_message))
+```
+</Tab>
+<Tab label="TypeScript">
+```typescript
+const AGENT_CONFIG = {
+  systemPrompt: 'You are a helpful assistant.',
+  tools: [search, calculator],
+};
+
+async function handleRequest(userMessage: string): Promise<string> {
+  const agent = new Agent(AGENT_CONFIG);
+  const result = await agent.invoke(userMessage);
+  return String(result);
+}
+```
+</Tab>
+</Tabs>
+
+For multi-turn conversations that span multiple requests, use [Session Management](./session-management/) to persist and restore conversation state rather than keeping a long-lived agent instance.
+
+## What Comes Next
+
+Now that you understand what an agent is and how to scope one correctly, explore the details:
+
+- [Agent Loop](./agent-loop/) — How the reasoning-action cycle works
+- [Prompts](./prompts/) — Writing effective system prompts
+- [Tools Overview](../tools/) — Building and using tools
+- [State Management](./state/) — Conversation history, agent state, and request state
+- [Session Management](./session-management/) — Persisting conversations across requests
+- [Conversation Management](./conversation-management/) — Strategies for managing context window limits
