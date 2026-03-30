@@ -300,12 +300,12 @@ Most event properties are read-only. The following events expose writable proper
 
 | Event | Writable property | Effect | Cookbook recipe |
 |---|---|---|---|
-| `BeforeToolCallEvent` | `cancel_tool` | Cancels tool calling with a message returned to the model | [Limit tool counts](./cookbook#limit-tool-counts) |
-| `BeforeToolCallEvent` | `selected_tool` | Replaces the tool to be called | [Tool interception](./cookbook#tool-interception) |
-| `BeforeToolCallEvent` | `tool_use` | Modifies tool parameters before calling | [Fixed tool arguments](./cookbook#fixed-tool-arguments) |
-| `AfterModelCallEvent` | `retry` | Retries the model call | [Model call retry](./cookbook#model-call-retry) |
-| `AfterToolCallEvent` | `result` | Rewrites the tool result | [Result modification](./cookbook#result-modification) |
-| `AfterToolCallEvent` | `retry` | Retries the tool call | [Tool call retry](./cookbook#retry-tool-calls) |
+| `BeforeToolCallEvent` | `cancel_tool` | Cancels tool calling with a message returned to the model | [Limit tool call counts](./cookbook#limit-tool-call-counts) |
+| `BeforeToolCallEvent` | `selected_tool` | Replaces the tool to be called | |
+| `BeforeToolCallEvent` | `tool_use` | Modifies tool parameters before calling | [Fix tool arguments](./cookbook#fix-tool-arguments) |
+| `AfterModelCallEvent` | `retry` | Retries the model call | [Retry model calls](./cookbook#retry-model-calls) |
+| `AfterToolCallEvent` | `result` | Rewrites the tool result | |
+| `AfterToolCallEvent` | `retry` | Retries the tool call | [Retry tool calls](./cookbook#retry-tool-calls) |
 | `AfterInvocationEvent` | `resume` | Triggers a follow-up invocation with new input | [Resume after invocation](./cookbook#resume-after-invocation) |
 
 You can also read `AfterToolCallEvent.exception` to inspect the original error if the tool raised one.
