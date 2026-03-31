@@ -219,13 +219,9 @@ This approach lets you tailor the streamed output to your use case — for examp
 </Tab>
 <Tab label="TypeScript">
 
-Every event class implements a `toJSON()` method that controls what `JSON.stringify()` produces. This keeps serialized payloads compact for SSE, WebSockets, or HTTP responses — without changing the in-process API.
+Every event class implements a `toJSON()` method that `JSON.stringify()` calls automatically. Each serialized event retains its `type` discriminator and the relevant data fields — matching the general shape of the class — while excluding in-memory runtime references (`agent`, `orchestrator`, `state`, `tool`) and mutable hook properties (`cancel`, `retry`). `Error` objects are converted to `{ message: string }`. This applies to single-agent, multi-agent, and A2A events alike.
 
-Each serialized event always includes its `type` discriminator alongside the data fields relevant to that event. For example, a `ModelStreamUpdateEvent` serializes to `{ type, event }` with just the streaming delta, and an `AgentResultEvent` includes `{ type, result }` with the final output. Lifecycle events like `BeforeInvocationEvent` and `AfterInvocationEvent` serialize to just `{ type }`, since they signal state transitions without carrying additional data.
-
-Properties that hold large runtime references — such as `agent`, `orchestrator`, `state`, and `tool` — are excluded from the serialized output. These remain available for direct programmatic access in-process but are not needed over the wire. Similarly, mutable hook properties like `cancel` and `retry` are omitted. `Error` objects are converted to `{ message: string }` for safe transport.
-
-The same behavior applies to multi-agent and A2A events. Multi-agent events include identifying context like `nodeId` and `nodeType` alongside their data, while the `orchestrator` and `state` references are filtered out. This means you can serialize any event from `agent.stream()` or a multi-agent orchestrator's stream without additional processing:
+Like the Python example, you can filter which events to forward:
 
 ```typescript
 --8<-- "user-guide/concepts/streaming/overview.ts:event_serialization"

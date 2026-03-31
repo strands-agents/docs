@@ -127,27 +127,27 @@ async function eventSerializationExample() {
 
   // --8<-- [start:event_serialization]
   for await (const event of agent.stream('Hello')) {
-    // Every event is a class instance. In-process, it carries the full agent reference:
-    //
-    //   event.type   → "modelStreamUpdateEvent"
-    //   event.agent  → LocalAgent { messages, model, tools, hooks, ... }
-    //   event.event  → { type: "modelContentBlockDeltaEvent",
-    //                     delta: { type: "textDelta", text: "Hi" } }
+    switch (event.type) {
+      // Forward text deltas for real-time display
+      case 'modelStreamUpdateEvent':
+        if (
+          event.event.type === 'modelContentBlockDeltaEvent' &&
+          event.event.delta.type === 'textDelta'
+        ) {
+          console.log(`data: ${JSON.stringify({ type: 'text', text: event.event.delta.text })}`)
+        }
+        break
 
-    // JSON.stringify() calls the event's toJSON() automatically.
-    // The agent reference and other runtime objects are stripped out,
-    // leaving only the type discriminator and relevant data fields:
-    //
-    //   JSON.stringify(event) →
-    //   {
-    //     "type": "modelStreamUpdateEvent",
-    //     "event": {
-    //       "type": "modelContentBlockDeltaEvent",
-    //       "delta": { "type": "textDelta", "text": "Hi" }
-    //     }
-    //   }
+      // Forward tool names for progress indicators
+      case 'beforeToolCallEvent':
+        console.log(`data: ${JSON.stringify({ type: 'tool', name: event.toolUse.name })}`)
+        break
 
-    console.log(`data: ${JSON.stringify(event)}`)
+      // Forward the final result
+      case 'agentResultEvent':
+        console.log(`data: ${JSON.stringify(event)}`)
+        break
+    }
   }
   // --8<-- [end:event_serialization]
 }
