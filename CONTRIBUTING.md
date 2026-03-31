@@ -46,6 +46,16 @@ npm run format:check  # formatting
 
 Pre-commit hooks run these automatically.
 
+### Sync Docs with Source Code Updates
+
+After merging source code changes, run 
+
+```bash
+npm run sdk:sync
+```
+
+to make the doc types and generated API pages even with the new source code state.
+New implementations should link to the API page from the User Guide.
 
 ## Reporting Bugs/Feature Requests
 

@@ -16,14 +16,14 @@ import { Agent, ConversationManager, type ConversationManagerReduceOptions } fro
 import { Agent, ConversationManager, AfterInvocationEvent, type AgentData, type ConversationManagerReduceOptions } from '@strands-agents/sdk'
 // --8<-- [end:custom_conversation_manager_proactive_imports]
 
-// --8<-- [start:summarization_conversation_manager_basic_imports]
-import { Agent, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
-// --8<-- [end:summarization_conversation_manager_basic_imports]
+// --8<-- [start:summarizing_conversation_manager_basic_imports]
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+// --8<-- [end:summarizing_conversation_manager_basic_imports]
 
-// --8<-- [start:summarization_conversation_manager_custom_imports]
-import { Agent, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
-// --8<-- [end:summarization_conversation_manager_custom_imports]
+// --8<-- [start:summarizing_conversation_manager_custom_imports]
+import { Agent, SummarizingConversationManager, BedrockModel } from '@strands-agents/sdk'
+// --8<-- [end:summarizing_conversation_manager_custom_imports]
 
-// --8<-- [start:summarization_conversation_manager_system_prompt_imports]
-import { Agent, SummarizationConversationManager, BedrockModel } from '@strands-agents/sdk'
-// --8<-- [end:summarization_conversation_manager_system_prompt_imports]
+// --8<-- [start:summarizing_conversation_manager_system_prompt_imports]
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+// --8<-- [end:summarizing_conversation_manager_system_prompt_imports]

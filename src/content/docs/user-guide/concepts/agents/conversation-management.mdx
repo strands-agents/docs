@@ -22,7 +22,7 @@ The SDK provides a flexible system for context management through the Conversati
 
 - [**NullConversationManager**](#nullconversationmanager): A simple implementation that does not modify conversation history
 - [**SlidingWindowConversationManager**](#slidingwindowconversationmanager): Maintains a fixed number of recent messages (default manager)
-- [**SummarizingConversationManager**](#summarizingconversationmanager) (Python) / [**SummarizationConversationManager**](#summarizingconversationmanager) (TypeScript): Intelligently summarizes older messages to preserve context
+- [**SummarizingConversationManager**](#summarizingconversationmanager): Intelligently summarizes older messages to preserve context
 
 or [build your own manager](#creating-a-conversationmanager) that matches your requirements.
 
@@ -139,7 +139,7 @@ The `per_turn` parameter accepts:
 
 ### SummarizingConversationManager
 
-The [`SummarizingConversationManager`](@api/python/strands.agent.conversation_manager.summarizing_conversation_manager#SummarizingConversationManager) (Python) / `SummarizationConversationManager` (TypeScript) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
+The [`SummarizingConversationManager`](@api/python/strands.agent.conversation_manager.summarizing_conversation_manager#SummarizingConversationManager) (Python) / [`SummarizingConversationManager`](@api/typescript/SummarizingConversationManager) (TypeScript) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
 
 <Tabs>
 <Tab label="Python">
@@ -156,7 +156,7 @@ Configuration parameters:
 
 Configuration parameters:
 
-- **`model`** (Model, required): The model to use for generating summaries.
+- **`model`** (Model, optional): Override model to use for generating summaries. When not provided, uses the agent's own model.
 - **`summaryRatio`** (number, default: 0.3): Ratio of messages to summarize when reducing context (clamped between 0.1 and 0.8)
 - **`preserveRecentMessages`** (number, default: 10): Minimum number of recent messages to always keep
 - **`summarizationSystemPrompt`** (string, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format.
@@ -182,12 +182,12 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-The `SummarizationConversationManager` requires a `model` to use for generating summaries. This can be any model supported by the SDK.
+By default, the `SummarizingConversationManager` uses the agent's own model for summarization. You can optionally provide a different model to override this behavior.
 
 ```typescript
---8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarization_conversation_manager_basic_imports"
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarizing_conversation_manager_basic_imports"
 
---8<-- "user-guide/concepts/agents/conversation-management.ts:summarization_conversation_manager_basic"
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarizing_conversation_manager_basic"
 ```
 </Tab>
 </Tabs>
@@ -215,9 +215,9 @@ agent = Agent(
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarization_conversation_manager_custom_imports"
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarizing_conversation_manager_custom_imports"
 
---8<-- "user-guide/concepts/agents/conversation-management.ts:summarization_conversation_manager_custom"
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarizing_conversation_manager_custom"
 ```
 </Tab>
 </Tabs>
@@ -256,9 +256,9 @@ agent = Agent(
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarization_conversation_manager_system_prompt_imports"
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarizing_conversation_manager_system_prompt_imports"
 
---8<-- "user-guide/concepts/agents/conversation-management.ts:summarization_conversation_manager_system_prompt"
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarizing_conversation_manager_system_prompt"
 ```
 </Tab>
 </Tabs>
