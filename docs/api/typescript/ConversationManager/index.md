@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/conversation-manager.ts:57](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L57)
+Defined in: [src/conversation-manager/conversation-manager.ts:64](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L64)
 
 Abstract base class for conversation history management strategies.
 
@@ -24,7 +24,7 @@ class Last10MessagesManager extends ConversationManager {
 
 -   [<code dir="auto">NullConversationManager</code>](/docs/api/typescript/NullConversationManager/index.md)
 -   [<code dir="auto">SlidingWindowConversationManager</code>](/docs/api/typescript/SlidingWindowConversationManager/index.md)
--   [<code dir="auto">SummarizationConversationManager</code>](/docs/api/typescript/SummarizationConversationManager/index.md)
+-   [<code dir="auto">SummarizingConversationManager</code>](/docs/api/typescript/SummarizingConversationManager/index.md)
 
 ## Implements
 
@@ -50,7 +50,7 @@ new ConversationManager(): ConversationManager;
 abstract readonly name: string;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:61](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L61)
+Defined in: [src/conversation-manager/conversation-manager.ts:68](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L68)
 
 A stable string identifier for this conversation manager.
 
@@ -66,7 +66,7 @@ A stable string identifier for this conversation manager.
 abstract reduce(options): boolean | Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:79](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L79)
+Defined in: [src/conversation-manager/conversation-manager.ts:86](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L86)
 
 Reduce the conversation history.
 
@@ -96,7 +96,7 @@ Implementations should mutate `agent.messages` in place and return `true` if any
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:93](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L93)
+Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L100)
 
 Initialize the conversation manager with the agent instance.
 
@@ -108,7 +108,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `agent` | [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md) | The agent to register hooks with |
+| `agent` | `LocalAgent` | The agent to register hooks with |
 
 #### Returns
 

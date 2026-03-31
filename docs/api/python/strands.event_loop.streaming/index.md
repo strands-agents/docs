@@ -193,6 +193,7 @@ async def stream_messages(model: Model,
                           system_prompt_content: list[SystemContentBlock]
                           | None = None,
                           invocation_state: dict[str, Any] | None = None,
+                          model_state: dict[str, Any] | None = None,
                           cancel_signal: threading.Event | None = None,
                           **kwargs: Any) -> AsyncGenerator[TypedEvent, None]
 ```
@@ -210,6 +211,7 @@ Streams messages to the model and processes the response.
 -   `tool_choice` - Optional tool choice constraint for forcing specific tool usage.
 -   `system_prompt_content` - The authoritative system prompt content blocks that always contains the system prompt data.
 -   `invocation_state` - Caller-provided state/context that was passed to the agent when it was invoked.
+-   `model_state` - Runtime state for model providers (e.g., server-side response ids).
 -   `cancel_signal` - Optional threading.Event to check for cancellation during streaming.
 -   `**kwargs` - Additional keyword arguments for future extensibility.
 

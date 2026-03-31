@@ -136,7 +136,7 @@ Convert an Agent to a SessionAgent.
 def from_bidi_agent(cls, agent: "BidiAgent") -> "SessionAgent"
 ```
 
-Defined in: [src/strands/types/session.py:141](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L141)
+Defined in: [src/strands/types/session.py:142](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L142)
 
 Convert a BidiAgent to a SessionAgent.
 
@@ -155,7 +155,7 @@ SessionAgent with empty conversation\_manager\_state (BidiAgent doesn’t use co
 def from_dict(cls, env: dict[str, Any]) -> "SessionAgent"
 ```
 
-Defined in: [src/strands/types/session.py:166](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L166)
+Defined in: [src/strands/types/session.py:167](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L167)
 
 Initialize a SessionAgent from a dictionary, ignoring keys that are not class parameters.
 
@@ -165,7 +165,7 @@ Initialize a SessionAgent from a dictionary, ignoring keys that are not class pa
 def to_dict() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/types/session.py:170](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L170)
+Defined in: [src/strands/types/session.py:171](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L171)
 
 Convert the SessionAgent to a dictionary representation.
 
@@ -175,7 +175,7 @@ Convert the SessionAgent to a dictionary representation.
 def initialize_internal_state(agent: "Agent") -> None
 ```
 
-Defined in: [src/strands/types/session.py:174](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L174)
+Defined in: [src/strands/types/session.py:175](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L175)
 
 Initialize internal state of agent.
 
@@ -185,7 +185,7 @@ Initialize internal state of agent.
 def initialize_bidi_internal_state(agent: "BidiAgent") -> None
 ```
 
-Defined in: [src/strands/types/session.py:179](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L179)
+Defined in: [src/strands/types/session.py:182](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L182)
 
 Initialize internal state of BidiAgent.
 
@@ -200,7 +200,7 @@ Initialize internal state of BidiAgent.
 class Session()
 ```
 
-Defined in: [src/strands/types/session.py:192](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L192)
+Defined in: [src/strands/types/session.py:195](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L195)
 
 Session data model.
 
@@ -211,7 +211,7 @@ Session data model.
 def from_dict(cls, env: dict[str, Any]) -> "Session"
 ```
 
-Defined in: [src/strands/types/session.py:201](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L201)
+Defined in: [src/strands/types/session.py:204](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L204)
 
 Initialize a Session from a dictionary, ignoring keys that are not class parameters.
 
@@ -221,6 +221,6 @@ Initialize a Session from a dictionary, ignoring keys that are not class paramet
 def to_dict() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/types/session.py:205](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L205)
+Defined in: [src/strands/types/session.py:208](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/session.py#L208)
 
 Convert the Session to a dictionary representation.

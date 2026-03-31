@@ -1,0 +1,193 @@
+The [Responses API](https://platform.openai.com/docs/api-reference/responses) is OpenAI’s interface for generating model responses and building agents. It is a superset of the [Chat Completions](/docs/user-guide/concepts/model-providers/openai/index.md) API, with additional support for [built-in tools](#built-in-tools), server-side conversation state management, and multi-modal inputs.
+
+Note
+
+`OpenAIResponsesModel` requires `openai>=2.0.0`. Install or upgrade with `pip install -U openai`.
+
+## Installation
+
+OpenAI is configured as an optional dependency in Strands Agents. To install, run:
+
+```bash
+pip install 'strands-agents[openai]' strands-agents-tools
+```
+
+## Usage
+
+After installing dependencies, you can import and initialize the OpenAI Responses provider as follows:
+
+```python
+from strands import Agent
+from strands.models.openai_responses import OpenAIResponsesModel
+
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+response = agent("Hello!")
+print(response)
+```
+
+### Amazon Bedrock (Mantle)
+
+`OpenAIResponsesModel` can connect to [Amazon Bedrock’s OpenAI-compatible endpoints](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) powered by Mantle. Authenticate with a [Bedrock API key](https://docs.aws.amazon.com/bedrock/latest/userguide/api-key-management.html) and point the client at your region’s Mantle endpoint.
+
+```python
+from strands import Agent
+from strands.models.openai_responses import OpenAIResponsesModel
+
+region = "us-east-1"
+model = OpenAIResponsesModel(
+    model_id="openai.gpt-oss-120b",
+    client_args={
+        "api_key": "<BEDROCK_API_KEY>",
+        "base_url": f"https://bedrock-mantle.{region}.api.aws/v1",
+    },
+)
+
+agent = Agent(model=model)
+response = agent("What is 2+2?")
+print(response)
+```
+
+## Configuration
+
+### Client Configuration
+
+The `client_args` configure the underlying OpenAI client. For a complete list of available arguments, refer to the [OpenAI Python SDK](https://github.com/openai/openai-python).
+
+### Model Configuration
+
+The model configuration sets parameters for inference:
+
+| Parameter | Description | Example | Options |
+| --- | --- | --- | --- |
+| `model_id` | ID of a model to use | `gpt-4o` | [reference](https://platform.openai.com/docs/models) |
+| `params` | Model and tool parameters | `{"tools": [{"type": "web_search"}]}` | [reference](https://platform.openai.com/docs/api-reference/responses/create) |
+| `stateful` | Enable server-side conversation state | `True` | `True` / `False` |
+
+## Built-in Tools
+
+Built-in tools run server-side and are passed via the `params` configuration. They work alongside any function tools registered on the agent.
+
+### Web Search
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    params={"tools": [{"type": "web_search"}]},
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+response = agent("What are the latest developments in AI?")
+```
+
+Web search responses include URL citations that are streamed through the SDK’s citation system.
+
+### File Search
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    params={
+        "tools": [{"type": "file_search", "vector_store_ids": ["vs_abc123"]}],
+    },
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+response = agent("What does the document say about pricing?")
+```
+
+File search requires a [vector store](https://platform.openai.com/docs/guides/tools-file-search) with uploaded files. Text responses stream correctly; file citation annotations are not yet mapped to the SDK citation schema.
+
+### Code Interpreter
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    params={
+        "tools": [{"type": "code_interpreter", "container": {"type": "auto"}}],
+    },
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+response = agent("Calculate the SHA-256 hash of 'hello world'")
+```
+
+The model executes Python code server-side and includes the results in its text response. The executed code and stdout/stderr are not currently surfaced to the caller.
+
+### Remote MCP
+
+The `mcp` built-in tool connects the model to a remote [MCP](https://modelcontextprotocol.io/) server, letting it call tools hosted externally without any local MCP client setup.
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    params={
+        "tools": [
+            {
+                "type": "mcp",
+                "server_label": "deepwiki",
+                "server_url": "https://mcp.deepwiki.com/mcp",
+                "require_approval": "never",
+            }
+        ]
+    },
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+response = agent("Using deepwiki, what language is the strands-agents/sdk-python repo written in?")
+```
+
+The model discovers and calls tools exposed by the remote MCP server. The approval flow is not currently surfaced, so `require_approval` must be set to `"never"`.
+
+### Shell
+
+The `shell` built-in tool runs shell commands inside a hosted container managed by OpenAI.
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    params={
+        "tools": [{"type": "shell", "environment": {"type": "container_auto"}}],
+    },
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+response = agent("Use the shell to compute the md5sum of the string 'hello world'.")
+```
+
+The model executes commands server-side and includes the output in its text response.
+
+## Server-side Conversation State
+
+When `stateful=True`, the model manages conversation history server-side using OpenAI’s `previous_response_id` mechanism. The agent’s local message history is cleared after each turn, reducing payload size for multi-turn conversations.
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4o",
+    stateful=True,
+    client_args={"api_key": "<KEY>"},
+)
+
+agent = Agent(model=model)
+agent("My name is Alice.")
+# agent.messages is empty; conversation state is on the server
+
+response = agent("What is my name?")
+# The model remembers "Alice" via server-side state
+```
+
+## References
+
+-   [API](/docs/api/python/strands.models.openai_responses)
+-   [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
+-   [Amazon Bedrock Mantle](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)
+-   [OpenAI Chat Completions](/docs/user-guide/concepts/model-providers/openai/index.md) (alternative provider using the Chat Completions API)

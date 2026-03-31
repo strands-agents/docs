@@ -8,7 +8,7 @@ This module provides the central registry for all tools available to the agent, 
 class ToolRegistry()
 ```
 
-Defined in: [src/strands/tools/registry.py:31](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L31)
+Defined in: [src/strands/tools/registry.py:32](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L32)
 
 Central registry for all tools available to the agent.
 
@@ -20,7 +20,7 @@ This class manages tool registration, validation, discovery, and invocation.
 def __init__() -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:37](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L37)
+Defined in: [src/strands/tools/registry.py:38](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L38)
 
 Initialize the tool registry.
 
@@ -30,7 +30,7 @@ Initialize the tool registry.
 def process_tools(tools: list[Any]) -> list[str]
 ```
 
-Defined in: [src/strands/tools/registry.py:45](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L45)
+Defined in: [src/strands/tools/registry.py:46](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L46)
 
 Process tools list.
 
@@ -48,6 +48,7 @@ Process list of tools that can contain local file path string, module import pat
     3.  A module for a module based tool
     4.  Instances of AgentTool (@tool decorated functions)
     5.  Dictionaries with name/path keys (deprecated)
+    6.  Agent instances with an `as_tool()` method (auto-wrapped)
 
 **Returns**:
 
@@ -59,7 +60,7 @@ List of tool names that were processed.
 def load_tool_from_filepath(tool_name: str, tool_path: str) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:155](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L155)
+Defined in: [src/strands/tools/registry.py:163](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L163)
 
 DEPRECATED: Load a tool from a file path.
 
@@ -79,7 +80,7 @@ DEPRECATED: Load a tool from a file path.
 def get_all_tools_config() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/tools/registry.py:190](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L190)
+Defined in: [src/strands/tools/registry.py:198](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L198)
 
 Dynamically generate tool configuration by combining built-in and dynamic tools.
 
@@ -93,7 +94,7 @@ Dictionary containing all tool configurations.
 def register_tool(tool: AgentTool) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:230](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L230)
+Defined in: [src/strands/tools/registry.py:238](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L238)
 
 Register a tool function with the given name.
 
@@ -107,7 +108,7 @@ Register a tool function with the given name.
 def replace(new_tool: AgentTool) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:283](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L283)
+Defined in: [src/strands/tools/registry.py:291](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L291)
 
 Replace an existing tool with a new implementation.
 
@@ -127,7 +128,7 @@ This performs a swap of the tool implementation in the registry. The replacement
 def get_tools_dirs() -> list[Path]
 ```
 
-Defined in: [src/strands/tools/registry.py:309](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L309)
+Defined in: [src/strands/tools/registry.py:317](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L317)
 
 Get all tool directory paths.
 
@@ -141,7 +142,7 @@ A list of Path objects for current working directory’s ”./tools/“.
 def discover_tool_modules() -> dict[str, Path]
 ```
 
-Defined in: [src/strands/tools/registry.py:329](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L329)
+Defined in: [src/strands/tools/registry.py:337](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L337)
 
 Discover available tool modules in all tools directories.
 
@@ -155,7 +156,7 @@ Dictionary mapping tool names to their full paths.
 def reload_tool(tool_name: str) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:354](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L354)
+Defined in: [src/strands/tools/registry.py:362](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L362)
 
 Reload a specific tool module.
 
@@ -176,7 +177,7 @@ Reload a specific tool module.
 def initialize_tools(load_tools_from_directory: bool = False) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:454](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L454)
+Defined in: [src/strands/tools/registry.py:462](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L462)
 
 Initialize all tools by discovering and loading them dynamically from all tool directories.
 
@@ -190,7 +191,7 @@ Initialize all tools by discovering and loading them dynamically from all tool d
 def get_all_tool_specs() -> list[ToolSpec]
 ```
 
-Defined in: [src/strands/tools/registry.py:565](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L565)
+Defined in: [src/strands/tools/registry.py:573](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L573)
 
 Get all the tool specs for all tools in this registry..
 
@@ -204,7 +205,7 @@ A list of ToolSpecs.
 def register_dynamic_tool(tool: AgentTool) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:575](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L575)
+Defined in: [src/strands/tools/registry.py:583](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L583)
 
 Register a tool dynamically for temporary use.
 
@@ -222,7 +223,7 @@ Register a tool dynamically for temporary use.
 def validate_tool_spec(tool_spec: ToolSpec) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:590](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L590)
+Defined in: [src/strands/tools/registry.py:598](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L598)
 
 Validate tool specification against required schema.
 
@@ -240,7 +241,7 @@ Validate tool specification against required schema.
 class NewToolDict(TypedDict)
 ```
 
-Defined in: [src/strands/tools/registry.py:640](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L640)
+Defined in: [src/strands/tools/registry.py:648](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L648)
 
 Dictionary type for adding or updating a tool in the configuration.
 
@@ -254,6 +255,6 @@ Dictionary type for adding or updating a tool in the configuration.
 def cleanup(**kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/tools/registry.py:708](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L708)
+Defined in: [src/strands/tools/registry.py:716](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/registry.py#L716)
 
 Synchronously clean up all tool providers in this registry.

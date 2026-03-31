@@ -11,6 +11,6 @@ type ImageSourceData =
 };
 ```
 
-Defined in: [src/types/media.ts:141](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/types/media.ts#L141)
+Defined in: [src/types/media.ts:141](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L141)
 
 Source for an image (Data version). Supports multiple formats for different providers.

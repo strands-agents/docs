@@ -7,7 +7,7 @@ Abstract base class for Agent model providers.
 class CacheConfig()
 ```
 
-Defined in: [src/strands/models/model.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L21)
+Defined in: [src/strands/models/model.py:26](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L26)
 
 Configuration for prompt caching.
 
@@ -23,11 +23,26 @@ Configuration for prompt caching.
 class Model(abc.ABC)
 ```
 
-Defined in: [src/strands/models/model.py:33](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L33)
+Defined in: [src/strands/models/model.py:38](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L38)
 
 Abstract base class for Agent model providers.
 
 This class defines the interface for all model implementations in the Strands Agents SDK. It provides a standardized way to configure and process requests for different AI model providers.
+
+#### stateful
+
+```python
+@property
+def stateful() -> bool
+```
+
+Defined in: [src/strands/models/model.py:46](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L46)
+
+Whether the model manages conversation state server-side.
+
+**Returns**:
+
+False by default. Model providers that support server-side state should override this.
 
 #### update\_config
 
@@ -36,7 +51,7 @@ This class defines the interface for all model implementations in the Strands Ag
 def update_config(**model_config: Any) -> None
 ```
 
-Defined in: [src/strands/models/model.py:42](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L42)
+Defined in: [src/strands/models/model.py:56](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L56)
 
 Update the model configuration with the provided arguments.
 
@@ -51,7 +66,7 @@ Update the model configuration with the provided arguments.
 def get_config() -> Any
 ```
 
-Defined in: [src/strands/models/model.py:52](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L52)
+Defined in: [src/strands/models/model.py:66](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L66)
 
 Return the model configuration.
 
@@ -70,7 +85,7 @@ def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/model.py:62](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L62)
+Defined in: [src/strands/models/model.py:76](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L76)
 
 Get structured output from the model.
 
@@ -103,7 +118,7 @@ def stream(messages: Messages,
            **kwargs: Any) -> AsyncIterable[StreamEvent]
 ```
 
-Defined in: [src/strands/models/model.py:83](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L83)
+Defined in: [src/strands/models/model.py:97](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L97)
 
 Stream conversation with the model.
 
@@ -130,3 +145,38 @@ Formatted message chunks from the model.
 **Raises**:
 
 -   `ModelThrottledException` - When the model service is throttling requests from the client.
+
+## \_ModelPlugin
+
+```python
+class _ModelPlugin(Plugin)
+```
+
+Defined in: [src/strands/models/model.py:134](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L134)
+
+Plugin that manages model-related lifecycle hooks.
+
+#### name
+
+```python
+@property
+def name() -> str
+```
+
+Defined in: [src/strands/models/model.py:138](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L138)
+
+A stable string identifier for this plugin.
+
+#### init\_agent
+
+```python
+def init_agent(agent: "Agent") -> None
+```
+
+Defined in: [src/strands/models/model.py:156](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L156)
+
+Register model lifecycle hooks with the agent.
+
+**Arguments**:
+
+-   `agent` - The agent instance to register hooks with.

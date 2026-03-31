@@ -1,11 +1,12 @@
 ```ts
 type ConversationManagerReduceOptions = {
   agent: LocalAgent;
+  model: Model;
   error: ContextWindowOverflowError;
 };
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:16](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L16)
+Defined in: [src/conversation-manager/conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L17)
 
 Options passed to [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce).
 
@@ -17,9 +18,21 @@ Options passed to [ConversationManager.reduce](/docs/api/typescript/Conversation
 agent: LocalAgent;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:20](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L20)
+Defined in: [src/conversation-manager/conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L21)
 
 The agent instance. Mutate `agent.messages` in place to reduce history.
+
+---
+
+### model
+
+```ts
+model: Model;
+```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:27](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L27)
+
+The model instance that triggered the overflow. Used by conversation managers that perform model-based reduction (e.g. summarization).
 
 ---
 
@@ -29,6 +42,6 @@ The agent instance. Mutate `agent.messages` in place to reduce history.
 error: ContextWindowOverflowError;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:27](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/conversation-manager/conversation-manager.ts#L27)
+Defined in: [src/conversation-manager/conversation-manager.ts:34](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L34)
 
 The [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) that triggered this call. `reduce` MUST remove enough history for the next model call to succeed, or this error will propagate out of the agent loop uncaught.

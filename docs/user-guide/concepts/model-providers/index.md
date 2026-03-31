@@ -19,6 +19,7 @@ The following table shows all model providers supported by Strands Agents SDK an
 | [MistralAI](/docs/user-guide/concepts/model-providers/mistral/index.md) | ✅ | ❌ |
 | [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) | ✅ | ❌ |
 | [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) | ✅ | ✅ |
+| [OpenAI Responses API](/docs/user-guide/concepts/model-providers/openai-responses/index.md) | ✅ | ❌ |
 | [SageMaker](/docs/user-guide/concepts/model-providers/sagemaker/index.md) | ✅ | ❌ |
 | [Vercel](/docs/user-guide/concepts/model-providers/vercel/index.md) | ❌ | ✅ |
 | [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) | ✅ | ❌ |

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:181](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L181)
+Defined in: [src/hooks/events.ts:182](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L182)
 
 Event triggered just before a tool is executed. Fired after tool lookup but before execution begins. Hook callbacks can set [cancel](#cancel) to prevent the tool from executing.
 
@@ -14,14 +14,14 @@ Event triggered just before a tool is executed. Fired after tool lookup but befo
 new BeforeToolCallEvent(data): BeforeToolCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:198](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L198)
+Defined in: [src/hooks/events.ts:199](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L199)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md); `toolUse`: { `name`: `string`; `toolUseId`: `string`; `input`: [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md); }; `tool`: [<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md); } |
-| `data.agent` | [<code dir="auto">LocalAgent</code>](/docs/api/typescript/LocalAgent/index.md) |
+| `data` | { `agent`: `LocalAgent`; `toolUse`: { `name`: `string`; `toolUseId`: `string`; `input`: [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md); }; `tool`: [<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md); } |
+| `data.agent` | `LocalAgent` |
 | `data.toolUse` | { `name`: `string`; `toolUseId`: `string`; `input`: [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md); } |
 | `data.toolUse.name` | `string` |
 | `data.toolUse.toolUseId` | `string` |
@@ -44,7 +44,7 @@ Defined in: [src/hooks/events.ts:198](https://github.com/strands-agents/sdk-type
 readonly type: "beforeToolCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:182](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L182)
+Defined in: [src/hooks/events.ts:183](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L183)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [src/hooks/events.ts:182](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:183](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L183)
+Defined in: [src/hooks/events.ts:184](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L184)
 
 ---
 
@@ -68,7 +68,7 @@ readonly toolUse: {
 };
 ```
 
-Defined in: [src/hooks/events.ts:184](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L184)
+Defined in: [src/hooks/events.ts:185](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L185)
 
 #### name
 
@@ -96,7 +96,7 @@ input: JSONValue;
 readonly tool: Tool;
 ```
 
-Defined in: [src/hooks/events.ts:189](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L189)
+Defined in: [src/hooks/events.ts:190](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L190)
 
 ---
 
@@ -106,7 +106,7 @@ Defined in: [src/hooks/events.ts:189](https://github.com/strands-agents/sdk-type
 cancel: string | boolean = false;
 ```
 
-Defined in: [src/hooks/events.ts:196](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L196)
+Defined in: [src/hooks/events.ts:197](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L197)
 
 Set by hook callbacks to cancel this tool call. When set to `true`, a default cancel message is used. When set to a string, that string is used as the tool result error message.
 
@@ -118,7 +118,7 @@ Set by hook callbacks to cancel this tool call. When set to `true`, a default ca
 toJSON(): Pick<BeforeToolCallEvent, "type" | "toolUse">;
 ```
 
-Defined in: [src/hooks/events.ts:213](https://github.com/strands-agents/sdk-typescript/blob/9ec24fe83310636ff1de9ec11dc1fea9ef62c4ad/src/hooks/events.ts#L213)
+Defined in: [src/hooks/events.ts:214](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L214)
 
 Serializes for wire transport, excluding the agent reference, tool instance, and mutable cancel flag. Called automatically by JSON.stringify().
 

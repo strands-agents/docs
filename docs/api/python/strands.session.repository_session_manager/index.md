@@ -85,7 +85,7 @@ Only updates the agent if state has been modified or internal state has changed.
 def initialize(agent: "Agent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/repository\_session\_manager.py:165](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L165)
+Defined in: [src/strands/session/repository\_session\_manager.py:169](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L169)
 
 Initialize an agent with a session.
 
@@ -100,7 +100,7 @@ Initialize an agent with a session.
 def sync_multi_agent(source: "MultiAgentBase", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/repository\_session\_manager.py:295](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L295)
+Defined in: [src/strands/session/repository\_session\_manager.py:309](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L309)
 
 Serialize and update the multi-agent state into the session repository.
 
@@ -115,7 +115,7 @@ Serialize and update the multi-agent state into the session repository.
 def initialize_multi_agent(source: "MultiAgentBase", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/repository\_session\_manager.py:304](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L304)
+Defined in: [src/strands/session/repository\_session\_manager.py:318](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L318)
 
 Initialize multi-agent state from the session repository.
 
@@ -130,7 +130,7 @@ Initialize multi-agent state from the session repository.
 def initialize_bidi_agent(agent: "BidiAgent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/repository\_session\_manager.py:325](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L325)
+Defined in: [src/strands/session/repository\_session\_manager.py:339](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L339)
 
 Initialize a bidirectional agent with a session.
 
@@ -146,7 +146,7 @@ def append_bidi_message(message: Message, agent: "BidiAgent",
                         **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/repository\_session\_manager.py:384](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L384)
+Defined in: [src/strands/session/repository\_session\_manager.py:398](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L398)
 
 Append a message to the bidirectional agent’s session.
 
@@ -162,7 +162,7 @@ Append a message to the bidirectional agent’s session.
 def sync_bidi_agent(agent: "BidiAgent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/session/repository\_session\_manager.py:403](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L403)
+Defined in: [src/strands/session/repository\_session\_manager.py:417](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/repository_session_manager.py#L417)
 
 Serialize and update the bidirectional agent into the session repository.
 
