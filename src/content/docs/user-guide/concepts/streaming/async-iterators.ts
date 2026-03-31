@@ -41,7 +41,7 @@ async function expressExample() {
     })
 
     for await (const event of agent.stream(prompt)) {
-      // Events automatically serialize to compact, wire-safe JSON via toJSON().
+      // Events automatically serialize to compact JSON via toJSON().
       // Only relevant data fields are included — the full Agent instance,
       // Tool classes, and mutable hook flags (cancel/retry) are excluded.
       res.write(`${JSON.stringify(event)}\n`)

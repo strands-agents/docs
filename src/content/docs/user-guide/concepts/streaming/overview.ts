@@ -120,3 +120,34 @@ async function subAgentStreamingExample() {
 
   // --8<-- [end:sub_agent_basic]
 }
+
+// Event Serialization Example
+async function eventSerializationExample() {
+  const agent = new Agent()
+
+  // --8<-- [start:event_serialization]
+  for await (const event of agent.stream('Hello')) {
+    // Every event is a class instance. In-process, it carries the full agent reference:
+    //
+    //   event.type   → "modelStreamUpdateEvent"
+    //   event.agent  → LocalAgent { messages, model, tools, hooks, ... }
+    //   event.event  → { type: "modelContentBlockDeltaEvent",
+    //                     delta: { type: "textDelta", text: "Hi" } }
+
+    // JSON.stringify() calls the event's toJSON() automatically.
+    // The agent reference and other runtime objects are stripped out,
+    // leaving only the type discriminator and relevant data fields:
+    //
+    //   JSON.stringify(event) →
+    //   {
+    //     "type": "modelStreamUpdateEvent",
+    //     "event": {
+    //       "type": "modelContentBlockDeltaEvent",
+    //       "delta": { "type": "textDelta", "text": "Hi" }
+    //     }
+    //   }
+
+    console.log(`data: ${JSON.stringify(event)}`)
+  }
+  // --8<-- [end:event_serialization]
+}
