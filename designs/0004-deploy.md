@@ -327,6 +327,141 @@ The second call updates the existing deployment rather than creating a duplicate
 
 The entire working directory (minus excluded paths like `.git`, `__pycache__`, `.venv`, etc.) is zipped and uploaded. The caller's source file is transformed into an AgentCore entrypoint, with the `deploy()` call stripped and a wrapper appended. This means all local Python files — tool definitions, utility modules, config files — are available to the deployed agent.
 
+## Alternative approach: `DeployableAgent` wrapper in extensions
+
+An alternative to placing deploy in `strands.experimental` within the core SDK is to ship it as a `DeployableAgent` wrapper class in the `strands-agents-extensions` package. This keeps cloud infrastructure concerns entirely out of the core SDK while preserving a clean, agent-centric API.
+
+### Motivation
+
+The core SDK's identity is platform-agnostic agent building. Deployment pulls in `boto3`, `bedrock-agentcore-starter-toolkit`, IAM role management, and state tracking — none of which are relevant to building or running an agent locally. Placing deploy in the core SDK (even under `experimental`) means:
+
+- Cloud-specific dependencies live in a package whose purpose is provider neutrality.
+- The `strands-agents` package grows an optional extra (`[deploy]`) for functionality that isn't core to agents.
+- The graduation path to `agent.deploy()` permanently couples deployment to the Agent class.
+
+The extensions package (`strands-agents-extensions`) already exists to house optional, provider-specific, or opinionated functionality. It already depends on `strands-agents>=1.32.0` and uses optional extras for heavy dependencies (`[budget]` requires `litellm`, etc.). Deploy fits this pattern naturally.
+
+### Design: wrapper implementing `AgentBase`
+
+Rather than subclassing `Agent` (which would tightly couple to its constructor) or using a standalone function (which loses the `agent.deploy()` ergonomics), `DeployableAgent` is a **wrapper** that implements the SDK's `AgentBase` protocol and transparently delegates to the inner agent:
+
+```python
+from strands import Agent, AgentBase, AgentResult
+from strands_agents_extensions.agents import DeployableAgent
+
+agent = Agent(name="my_agent", tools=[my_tool], system_prompt="You are helpful.")
+deployable = DeployableAgent(agent)
+
+# Deploy and destroy are first-class methods
+result = deployable.deploy(target="agentcore", region="us-west-2")
+deployable.destroy()
+
+# Use it like a normal agent — invocation, properties, everything works
+response = deployable("What's 2+2?")
+print(deployable.name)        # → "my_agent"
+print(deployable.tool_names)  # → ["my_tool"]
+```
+
+### Implementation sketch
+
+```python
+class DeployableAgent(AgentBase):
+    """Wraps an Agent with deploy/destroy lifecycle methods."""
+
+    def __init__(self, agent: Agent, *, state_dir: str | Path | None = None):
+        self._agent = agent
+        self._state_manager = StateManager(state_dir or Path.cwd() / ".strands_deploy")
+
+    # ── AgentBase protocol (explicit, type-safe) ──────────────
+
+    def __call__(self, prompt, **kwargs) -> AgentResult:
+        return self._agent(prompt, **kwargs)
+
+    async def invoke_async(self, prompt, **kwargs) -> AgentResult:
+        return await self._agent.invoke_async(prompt, **kwargs)
+
+    async def stream_async(self, prompt, **kwargs):
+        async for event in self._agent.stream_async(prompt, **kwargs):
+            yield event
+
+    # ── Transparent proxy for everything else ─────────────────
+
+    def __getattr__(self, name):
+        return getattr(self._agent, name)
+
+    # ── Deployment lifecycle ──────────────────────────────────
+
+    def deploy(self, *, target: str = "agentcore", region: str | None = None,
+               environment_variables: dict[str, str] | None = None) -> DeployResult:
+        deploy_target = self._resolve_target(target)
+        config = DeployConfig(
+            name=self._agent.name, target=target, region=region,
+            environment_variables=environment_variables or {},
+        )
+        return deploy_target.deploy(self._agent, config, self._state_manager)
+
+    def destroy(self, *, region: str | None = None) -> None:
+        deploy_target = self._resolve_target(...)
+        deploy_target.destroy(self._agent.name, self._state_manager, region=region)
+```
+
+**How delegation works:**
+
+- `AgentBase` is a Protocol in the SDK with `__call__`, `invoke_async`, and `stream_async`. Implementing it explicitly gives type checkers and IDE autocomplete full visibility into the core agent operations.
+- `__getattr__` is only invoked when normal attribute lookup fails, so `deploy()` and `destroy()` resolve directly on the wrapper, while `.name`, `.tools`, `.tool_names`, `.system_prompt`, `.cancel()`, `.add_hook()`, etc. transparently delegate to the inner agent with zero boilerplate.
+- Dunder methods like `__call__` bypass `__getattr__` in Python's data model, which is why the three protocol methods are explicitly delegated.
+
+**Note:** `isinstance(deployable, Agent)` returns `False`, but `isinstance(deployable, AgentBase)` returns `True`. Code that accepts agents generically should check `AgentBase`, not `Agent`.
+
+### Where it lives in extensions
+
+```
+src/strands_agents_extensions/
+    agents/
+        __init__.py            # DeployableAgent
+        _deploy/
+            __init__.py        # deploy(), DeployConfig, DeployResult
+            _base.py           # DeployTarget ABC
+            _agentcore.py      # AgentCoreTarget implementation
+            _constants.py      # Python version mapping, packaging excludes
+            _packaging.py      # Entrypoint generation, code zipping
+            _state.py          # StateManager, DeployState TypedDict
+            _exceptions.py     # Exception hierarchy
+    plugins/
+        ...                    # existing plugins
+    session_managers/
+        ...                    # existing session managers
+```
+
+Installation via optional extra:
+
+```bash
+pip install 'strands-agents-extensions[deploy]'
+```
+
+This adds `bedrock-agentcore-starter-toolkit` and `boto3` as dependencies only when the deploy extra is requested, matching the existing pattern (`[budget]` pulls in `litellm`, `[dynamodb]` pulls in `boto3`, etc.).
+
+### Trade-offs vs. the `strands.experimental` approach
+
+| Dimension | `strands.experimental.deploy` (core SDK) | `DeployableAgent` wrapper (extensions) |
+|---|---|---|
+| **Core SDK purity** | Deploy code and cloud deps live in the agent SDK | Core SDK stays focused on agent building |
+| **API ergonomics** | `deploy(agent)` standalone function | `deployable.deploy()` method on wrapper |
+| **Graduation path** | Promote to `agent.deploy()` on Agent class | Wrapper is the permanent home — no graduation needed |
+| **Dependency isolation** | `pip install 'strands-agents[deploy]'` | `pip install 'strands-agents-extensions[deploy]'` |
+| **Works with existing agents** | Yes (standalone function takes any Agent) | Yes (wrapper takes any Agent) |
+| **`isinstance` compatibility** | Agent is still Agent | `isinstance(x, AgentBase)` works, `isinstance(x, Agent)` does not |
+| **Pattern consistency** | New pattern for core SDK (experimental module) | New pattern for extensions (wrapper class), but extensions already has diverse patterns |
+| **Iteration freedom** | `experimental` signals instability | Extensions package is already alpha; no special signaling needed |
+
+### Why wrapper over subclass
+
+A subclass (`class DeployableAgent(Agent)`) was considered but the wrapper is preferred because:
+
+- **Works with any existing Agent.** Users can wrap agents from factory functions, config loaders (`config_to_agent`), or third-party code without changing how the agent was constructed.
+- **Decoupled from Agent internals.** The wrapper depends on `AgentBase` (a stable protocol), not on Agent's constructor signature. If Agent adds or changes constructor parameters, the wrapper is unaffected.
+- **Consistent with composition-over-inheritance.** The extensions library uses composition throughout (plugins hook into agents, session managers are injected). A wrapper follows this philosophy.
+
 ## Follow-up items
 
 - **Complex project layouts.** Validate and improve source capture for editable installs, custom `PYTHONPATH`, and deeply nested package hierarchies where `sys.path` manipulation may not suffice.
