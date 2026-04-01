@@ -148,7 +148,7 @@ async def steer_before_tool(
     return Proceed(reason="Workflow validation passed")
 ```
 
-This handler is pure Python, no LLM calls, fully deterministic, and easy to unit test. It reads from the built-in ledger that tracks every tool call the agent has made, and provides targeted guidance when the agent tries to skip steps or use incorrect data. ([Full implementation on GitHub](https://github.com/strands-agents/samples/blob/main/02-samples/19-library-book-renewal-agent/src/library_agent_demo/steering/renewal_workflow_steering_handler.py))
+This handler is pure Python, no LLM calls, fully deterministic, and easy to unit test. It reads from the built-in ledger that tracks every tool call the agent has made, and provides targeted guidance when the agent tries to skip steps or use incorrect data. ([Full implementation on GitHub](https://github.com/strands-agents/samples/blob/main/python/05-technical-use-cases/steering/library-book-renewal-agent/src/library_agent_demo/steering/renewal_workflow_steering_handler.py))
 
 Here’s the **tone validation steering handler**, which intercepts and evaluates model responses using a standalone LLM judge agent:
 
@@ -179,7 +179,7 @@ async def steer_after_model(
     return Proceed(reason="Tone check passed")
 ```
 
-This handler uses an LLM as a judge to evaluate the primary agent’s output, which lets you enforce nuanced behavioral rules like tone that are difficult to express as deterministic code. ([Full implementation on GitHub](https://github.com/strands-agents/samples/blob/main/02-samples/19-library-book-renewal-agent/src/library_agent_demo/steering/model_tone_steering_handler.py))
+This handler uses an LLM as a judge to evaluate the primary agent’s output, which lets you enforce nuanced behavioral rules like tone that are difficult to express as deterministic code. ([Full implementation on GitHub](https://github.com/strands-agents/samples/blob/main/python/05-technical-use-cases/steering/library-book-renewal-agent/src/library_agent_demo/steering/model_tone_steering_handler.py))
 
 ## Evaluation results
 
@@ -248,7 +248,7 @@ The right choice for how to guide your agent’s behavior depends on what level 
 Ready to step off the prompting treadmill? Strands steering is available in the [Strands Agents SDK](https://strandsagents.com). To get started:
 
 -   Read the [steering documentation](https://strandsagents.com/docs/user-guide/concepts/plugins/steering/)
--   Explore the [library book renewal sample agent](https://github.com/strands-agents/samples/tree/main/02-samples/19-library-book-renewal-agent) that demonstrates all the approaches discussed in this post
+-   Explore the [library book renewal sample agent](https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/steering/library-book-renewal-agent) that demonstrates all the approaches discussed in this post
 
 We’re also experimenting with different ways to express agents and steering guidance. [AI Functions](https://github.com/strands-labs/ai-functions) is an experimental project in Strands Labs. With AI Functions, you can define regular Python functions powered by AI agents and add post-condition checks on the result, similar to the model response steering handlers I described above.
 
