@@ -58,13 +58,13 @@ Let's walk through how Agent SOPs work in practice by running the *codebase-summ
 
 First, install the `strands-agents-sops` Python package:
 
-```
+```bash
 pip install strands-agents-sops
 ```
 
 Next, update your MCP server configuration to include the `strands-agents-sops` MCP server:
 
-```
+```json
 {
   "mcpServers" : {
     "strands-agents-sops" : {
@@ -77,7 +77,7 @@ Next, update your MCP server configuration to include the `strands-agents-sops` 
 
 This MCP server makes SOPs available as MCP prompts that can be invoked by your AI assistant. In Kiro CLI, we can confirm that the pre-packaged Agent SOPs are now available via the `/prompts` command:
 
-```
+```text
 [strands-agents-sop] > /prompts
 
 
@@ -95,13 +95,13 @@ strands-agents-sop (MCP):
 
 Next, we invoke the codebase-summary SOP:
 
-```
+```text
 @codebase-summary
 ```
 
 Kiro CLI reads the SOP and asks for required and optional parameters:
 
-```
+```text
 > I'll help you run the codebase summary SOP. Let me gather the required parameters first.
 
 Please provide the following parameters for the codebase analysis:
@@ -128,7 +128,7 @@ What parameters would you like to use for this codebase analysis?
 
 We provide the requested parameters in natural language. In this example, we'll run this SOP on the strands-agents-sop python source code:
 
-```
+```text
 [strands-agents-sop] > codebase_path: ~/github/agent-sop/python
 consolidate: true
 consolidate_target: README.md
@@ -136,7 +136,7 @@ consolidate_target: README.md
 
 The agent then follows the SOP's structured steps, starting with setting up the directory structure. You can see that the agent validates the codebase path exists, because the SOP constraints specify that the agent MUST validate the path exists before proceeding:
 
-```
+```text
 ## Step 1: Setup and Directory Structure
 
 ...
@@ -148,7 +148,7 @@ The agent then follows the SOP's structured steps, starting with setting up the 
 
 The SOP's steps and constraints guide the agent through systematic analysis of the codebase, analyzing the codebase structure, generating documentation files, reviewing and consolidating the documentation into a README.md file, and ending with providing a summary:
 
-```
+```text
 ## Step 6: Summary and Next Steps
 
 ## Summary
@@ -205,7 +205,7 @@ Agent SOPs are not tied to a specific agentic product and work in many environme
 
 Agent SOPs can be used as the system prompts for your Strands agents. Simply install the PyPI package, then import an SOP as an agent's system prompt. Here is an example of a code-assist CLI agent:
 
-```
+```python
 from strands import Agent
 from strands_tools import editor, shell
 from strands_agents_sops import code_assist
@@ -223,7 +223,7 @@ while(True):
 
 After executing this Python script, you may see an output that looks something like this:
 
-```
+```text
 I'll help you implement a code task using the test-driven development workflow. Let me gather the required parameters to get started.
 
 Please provide the following information:
@@ -245,7 +245,7 @@ Please provide these details so we can begin the implementation process.
 
 Building on the codebase-summary example from earlier, you can create a Strands agent that automatically keeps your documentation current:
 
-```
+```python
 from strands import Agent
 from strands_tools import editor, shell, git
 from strands_agents_sops import codebase_summary
@@ -267,7 +267,7 @@ Agent SOPs are fully compatible with Claude's [Skills system](https://support.cl
 
 Each Agent SOP can be automatically converted to Anthropic's Skills format:
 
-```
+```bash
 # Generate Skills format from SOPs
 strands-agents-sops skills
 
@@ -277,7 +277,7 @@ strands-agents-sops skills --output-dir my-skills
 
 This creates individual skill directories:
 
-```
+```text
 skills/
 ├── code-assist/
 │   └── SKILL.md
@@ -307,7 +307,7 @@ One of the most powerful aspects of Agent SOPs is how easy it is to create them 
 
 Depending on which AI application you use, you can install the Agent SOP format as a steering file or rule. However, for the purposes of this walkthrough, let's have Kiro CLI read the Agent SOP rule directly:
 
-```
+```text
 [strands-agents-sop] > Run `strands-agents-sops rule`
 ...
 > The command executed successfully and displayed the Agent SOP format specification.
@@ -316,7 +316,7 @@ Depending on which AI application you use, you can install the Agent SOP format 
 
 Now that Kiro CLI understands the Agent SOP format, we simply describe what we want in natural language to our AI assistant:
 
-```
+```text
 [strands-agents-sop] > I want to create an Agent SOP that takes meeting notes and generates action items, decisions made, and follow-up tasks with assigned owners and deadlines.
 ```
 
