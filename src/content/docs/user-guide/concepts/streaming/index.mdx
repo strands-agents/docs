@@ -221,7 +221,7 @@ This approach lets you tailor the streamed output to your use case — for examp
 
 Every event class implements a `toJSON()` method that `JSON.stringify()` calls automatically. Each serialized event retains its `type` discriminator and the relevant data fields — matching the general shape of the class — while excluding in-memory runtime references (`agent`, `orchestrator`, `state`, `tool`) and mutable hook properties (`cancel`, `retry`). `Error` objects are converted to `{ message: string }`. This applies to single-agent, multi-agent, and A2A events alike.
 
-Like the Python example, you can filter which events to forward:
+You can filter which events to forward to the client:
 
 ```typescript
 --8<-- "user-guide/concepts/streaming/overview.ts:event_serialization"
