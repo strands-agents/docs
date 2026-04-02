@@ -38,7 +38,7 @@ The model engages in continuous reasoning:
 
 This internal reasoning process is what makes model-driven agents powerful. They don't just execute predefined steps – they think, adapt, and evolve their approach in real-time.
 
-![Agent definition diagram](./model-driven-prompt-diagram.png)
+![Agent definition diagram](./resources/model-driven-prompt-diagram.png)
 
 ## Guiding intelligence through context
 
@@ -66,7 +66,7 @@ agent = Agent(
 agent("Calculate the compound interest on $10,000 at 5% annually for 10 years")
 ```
 
-![Strands agentic loop](./model-driven-agentic-loop.png)
+![Strands agentic loop](./resources/model-driven-agentic-loop.png)
 
 ## Multi-agent patterns
 
@@ -94,19 +94,19 @@ Strands is flexible enough to support a variety of production architectures:
 
 **Local execution** – The agent runs entirely in the user's environment through a client application.
 
-![Agent architecture — local](./model-driven-architecture-1.png)
+![Agent architecture — local](./resources/model-driven-architecture-1.png)
 
 **API deployment** – The agent and its tools are deployed behind an API in production, using [AWS Lambda](/user-guide/deploy/deploy-to-aws-lambda/), [AWS Fargate](/user-guide/deploy/deploy-to-aws-fargate/), or [Amazon EC2](/user-guide/deploy/deploy-to-amazon-ec2/).
 
-![Agent architecture — behind an API](./model-driven-architecture-2.png)
+![Agent architecture — behind an API](./resources/model-driven-architecture-2.png)
 
 **Isolated tools** – The agent invokes its tools via API, with tools running in an isolated backend environment separate from the agent's environment.
 
-![Agent architecture — isolated tools](./model-driven-architecture-3.png)
+![Agent architecture — isolated tools](./resources/model-driven-architecture-3.png)
 
 **Return of control** – The client is responsible for running tools, mixing backend-hosted tools with tools that run locally through the client application.
 
-![Agent architecture — return of control](./model-driven-architecture-4.png)
+![Agent architecture — return of control](./resources/model-driven-architecture-4.png)
 
 ## Building confidence through evaluation
 
@@ -124,3 +124,4 @@ Key evaluation dimensions include:
 The model-driven approach represents a fundamental shift in how we think about AI agents. Instead of trying to control every aspect of agent behavior through complex orchestration, we provide the right tools, context, and objectives, then let the model determine the best approach dynamically.
 
 Ready to try it? Check out the [Strands Agents documentation](/) and [examples](/examples/) to start building your own model-driven agents.
+n agents.
