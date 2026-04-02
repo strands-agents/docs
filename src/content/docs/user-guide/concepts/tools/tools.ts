@@ -289,7 +289,9 @@ async function directInvocationExample() {
   })
 
   // Find the tool by name and cast to InvokableTool
-  const notebookTool = agent.tools.find((t: { name: string }) => t.name === 'notebook') as InvokableTool<any, any>
+  const notebookTool = agent.tools.find(
+    (t: { name: string }) => t.name === 'notebook'
+  ) as InvokableTool<any, any>
 
   // Directly invoke the tool
   const result = await notebookTool.invoke(
@@ -355,7 +357,9 @@ async function toolStreamingExample() {
     inputSchema: z.object({
       records: z.number().describe('Number of records to process'),
     }),
-    callback: async function* (input: { records: number }): AsyncGenerator<string, string, unknown> {
+    callback: async function* (input: {
+      records: number
+    }): AsyncGenerator<string, string, unknown> {
       const start = Date.now()
 
       for (let i = 0; i < input.records; i++) {
@@ -427,8 +431,13 @@ Notes:
     inputSchema: z.object({
       query: z
         .string()
-        .describe('The search string (product name, category, or keywords). Example: "red running shoes"'),
-      maxResults: z.number().default(10).describe('Maximum number of results to return (default: 10, range: 1-100)'),
+        .describe(
+          'The search string (product name, category, or keywords). Example: "red running shoes"'
+        ),
+      maxResults: z
+        .number()
+        .default(10)
+        .describe('Maximum number of results to return (default: 10, range: 1-100)'),
     }),
     callback: () => {
       // Implementation would go here

@@ -18,9 +18,11 @@ import type {
 
 // Example wrapper around BedrockModel for demonstration
 class YourCustomModel extends BedrockModel {
-  constructor(config: BedrockModelConfig = {
-  modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0'
-}) {
+  constructor(
+    config: BedrockModelConfig = {
+      modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+    }
+  ) {
     super(config)
     // Add any custom initialization here
   }
@@ -55,7 +57,7 @@ export interface CustomModelConfig extends BaseModelConfig {
 
 /**
  * Custom model provider implementation.
- * 
+ *
  * Note: In practice, you would extend the Model abstract class from the SDK.
  * This example shows the interface implementation for documentation purposes.
  */
@@ -96,8 +98,6 @@ export class CustomModel {
 }
 // --8<-- [end:create_model_class]
 
-
-
 // --8<-- [start:implement_stream]
 // Implementation of the stream method and helper methods
 
@@ -132,7 +132,9 @@ export class CustomModelStreamExample {
   ): AsyncIterable<ModelStreamEvent> {
     // 1. Format messages for your model's API
     const formattedMessages = this.formatMessages(messages)
-    const formattedTools = options?.toolSpecs ? this.formatTools(options.toolSpecs) : undefined
+    const formattedTools = options?.toolSpecs
+      ? this.formatTools(options.toolSpecs)
+      : undefined
 
     // 2. Prepare the API request
     const request = {
@@ -216,8 +218,13 @@ export class CustomModelStreamExample {
     throw new Error(`Unsupported chunk type: ${chunk.type}`)
   }
 
-  private mapStopReason(reason: string): 'endTurn' | 'maxTokens' | 'toolUse' | 'stopSequence' {
-    const stopReasonMap: Record<string, 'endTurn' | 'maxTokens' | 'toolUse' | 'stopSequence'> = {
+  private mapStopReason(
+    reason: string
+  ): 'endTurn' | 'maxTokens' | 'toolUse' | 'stopSequence' {
+    const stopReasonMap: Record<
+      string,
+      'endTurn' | 'maxTokens' | 'toolUse' | 'stopSequence'
+    > = {
       end_turn: 'endTurn',
       max_tokens: 'maxTokens',
       tool_use: 'toolUse',

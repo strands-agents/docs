@@ -4,7 +4,8 @@ import { z } from 'zod'
 // --8<-- [start:research_assistant]
 const researchAssistant = tool({
   name: 'research_assistant',
-  description: 'Process and respond to research-related queries requiring factual information.',
+  description:
+    'Process and respond to research-related queries requiring factual information.',
   inputSchema: z.object({
     query: z.string().describe('A research question requiring factual information'),
   }),
@@ -16,7 +17,9 @@ Always cite your sources when possible.`,
     })
 
     const response = await researchAgent.invoke(input.query)
-    return response.lastMessage.content.map((block) => ('text' in block ? block.text : '')).join('')
+    return response.lastMessage.content
+      .map((block) => ('text' in block ? block.text : ''))
+      .join('')
   },
 })
 // --8<-- [end:research_assistant]
@@ -24,7 +27,8 @@ Always cite your sources when possible.`,
 // --8<-- [start:multiple_specialists]
 const productRecommendationAssistant = tool({
   name: 'product_recommendation_assistant',
-  description: 'Handle product recommendation queries by suggesting appropriate products.',
+  description:
+    'Handle product recommendation queries by suggesting appropriate products.',
   inputSchema: z.object({
     query: z.string().describe('A product inquiry with user preferences'),
   }),
@@ -35,7 +39,9 @@ Provide personalized product suggestions based on user preferences.`,
     })
 
     const response = await productAgent.invoke(input.query)
-    return response.lastMessage.content.map((block) => ('text' in block ? block.text : '')).join('')
+    return response.lastMessage.content
+      .map((block) => ('text' in block ? block.text : ''))
+      .join('')
   },
 })
 
@@ -43,7 +49,9 @@ const tripPlanningAssistant = tool({
   name: 'trip_planning_assistant',
   description: 'Create travel itineraries and provide travel advice.',
   inputSchema: z.object({
-    query: z.string().describe('A travel planning request with destination and preferences'),
+    query: z
+      .string()
+      .describe('A travel planning request with destination and preferences'),
   }),
   callback: async (input) => {
     const travelAgent = new Agent({
@@ -52,7 +60,9 @@ Create detailed travel itineraries based on user preferences.`,
     })
 
     const response = await travelAgent.invoke(input.query)
-    return response.lastMessage.content.map((block) => ('text' in block ? block.text : '')).join('')
+    return response.lastMessage.content
+      .map((block) => ('text' in block ? block.text : ''))
+      .join('')
   },
 })
 // --8<-- [end:multiple_specialists]
@@ -72,7 +82,9 @@ Always select the most appropriate tool based on the user's query.`,
   // --8<-- [end:orchestrator]
 
   // --8<-- [start:usage]
-  const response = await orchestrator.invoke("I'm looking for hiking boots for a trip to Patagonia next month")
+  const response = await orchestrator.invoke(
+    "I'm looking for hiking boots for a trip to Patagonia next month"
+  )
   // --8<-- [end:usage]
   void response
 }

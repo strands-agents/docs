@@ -141,8 +141,12 @@ async function multipleOutputTypes() {
   const personAgent = new Agent({ structuredOutputSchema: PersonSchema })
   const taskAgent = new Agent({ structuredOutputSchema: TaskSchema })
 
-  const personResult = await personAgent.invoke('Extract person: John Doe, 35, john@test.com')
-  const taskResult = await taskAgent.invoke('Create task: Review code, high priority, completed')
+  const personResult = await personAgent.invoke(
+    'Extract person: John Doe, 35, john@test.com'
+  )
+  const taskResult = await taskAgent.invoke(
+    'Create task: Review code, high priority, completed'
+  )
   // --8<-- [end:multiple_types]
 }
 
@@ -164,7 +168,9 @@ async function conversationHistory() {
   await agent.invoke('Tell me about the weather there in spring.')
 
   // Extract structured information from the conversation
-  const result = await agent.invoke('Extract structured information about Paris from our conversation')
+  const result = await agent.invoke(
+    'Extract structured information about Paris from our conversation'
+  )
 
   const cityInfo = result.structuredOutput as CityInfo
   console.log(`City: ${cityInfo.city}`) // "Paris"
@@ -214,7 +220,9 @@ async function overridingDefaults() {
 
   // Create a new agent with CompanyInfo schema for this specific use case
   const companyAgent = new Agent({ structuredOutputSchema: CompanySchema })
-  const result = await companyAgent.invoke('TechCorp is a software company with 500 employees')
+  const result = await companyAgent.invoke(
+    'TechCorp is a software company with 500 employees'
+  )
 
   const company = result.structuredOutput as Company
   console.log(`Company: ${company.name}`) // "TechCorp"

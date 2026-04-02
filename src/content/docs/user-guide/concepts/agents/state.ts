@@ -44,11 +44,11 @@ async function conversationManagerExample() {
   // Create a conversation manager with custom window size
   // By default, SlidingWindowConversationManager is used even if not specified
   const conversationManager = new SlidingWindowConversationManager({
-    windowSize: 10
+    windowSize: 10,
   })
-  
+
   const agent = new Agent({
-    conversationManager
+    conversationManager,
   })
   // --8<-- [end:conversation_manager]
 }

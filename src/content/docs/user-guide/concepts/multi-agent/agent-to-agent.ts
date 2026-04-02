@@ -90,7 +90,9 @@ async function serverConfigExample() {
     port: 8080,
     version: '1.0.0',
     httpUrl: 'https://my-agent.example.com', // Public URL override
-    skills: [{ id: 'math', name: 'Math', description: 'Performs calculations', tags: [] }],
+    skills: [
+      { id: 'math', name: 'Math', description: 'Performs calculations', tags: [] },
+    ],
   })
 
   await server.serve()

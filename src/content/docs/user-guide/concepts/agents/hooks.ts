@@ -9,7 +9,12 @@ import {
   AfterModelCallEvent,
   MessageAddedEvent,
 } from '@strands-agents/sdk'
-import { Graph, Swarm, BeforeNodeCallEvent, AfterNodeCallEvent } from '@strands-agents/sdk/multiagent'
+import {
+  Graph,
+  Swarm,
+  BeforeNodeCallEvent,
+  AfterNodeCallEvent,
+} from '@strands-agents/sdk/multiagent'
 import type { MultiAgent, MultiAgentPlugin } from '@strands-agents/sdk/multiagent'
 
 // Mock tools for examples
@@ -108,7 +113,9 @@ async function resultModificationExample() {
     private processResult(event: AfterToolCallEvent): void {
       if (event.toolUse.name === 'calculator') {
         // Add formatting to calculator results
-        const textContent = event.result.content.find((block) => block.type === 'textBlock')
+        const textContent = event.result.content.find(
+          (block) => block.type === 'textBlock'
+        )
         if (textContent && textContent.type === 'textBlock') {
           // Note: In actual implementation, result modification may work differently
           console.log(`Would modify result: ${textContent.text}`)
@@ -162,7 +169,9 @@ async function loggingModificationsExample() {
 
     private processResult(event: AfterToolCallEvent): void {
       if (event.toolUse.name === 'calculator') {
-        const textContent = event.result.content.find((block) => block.type === 'textBlock')
+        const textContent = event.result.content.find(
+          (block) => block.type === 'textBlock'
+        )
         if (textContent && textContent.type === 'textBlock') {
           const originalContent = textContent.text
           console.log(`Modifying calculator result: ${originalContent}`)
@@ -284,8 +293,14 @@ async function limitToolCountsExample() {
 
 async function orchestratorCallbackExample() {
   // --8<-- [start:orchestrator_callback]
-  const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
-  const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+  const researcher = new Agent({
+    id: 'researcher',
+    systemPrompt: 'You are a research specialist.',
+  })
+  const writer = new Agent({
+    id: 'writer',
+    systemPrompt: 'You are a writing specialist.',
+  })
 
   const graph = new Graph({
     nodes: [researcher, writer],
@@ -305,9 +320,18 @@ async function orchestratorCallbackExample() {
 
 async function conditionalNodeExecutionExample() {
   // --8<-- [start:conditional_node_execution]
-  const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
-  const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
-  const reviewer = new Agent({ id: 'reviewer', systemPrompt: 'You are a review specialist.' })
+  const researcher = new Agent({
+    id: 'researcher',
+    systemPrompt: 'You are a research specialist.',
+  })
+  const writer = new Agent({
+    id: 'writer',
+    systemPrompt: 'You are a writing specialist.',
+  })
+  const reviewer = new Agent({
+    id: 'reviewer',
+    systemPrompt: 'You are a review specialist.',
+  })
 
   const graph = new Graph({
     nodes: [researcher, writer, reviewer],

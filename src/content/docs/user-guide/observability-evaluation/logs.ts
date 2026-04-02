@@ -1,6 +1,6 @@
 /**
  * TypeScript logging examples for Strands SDK documentation.
- * 
+ *
  * These examples demonstrate how to configure logging in the TypeScript SDK.
  */
 
@@ -20,9 +20,9 @@ const pinoLogger = pino({
   transport: {
     target: 'pino-pretty',
     options: {
-      colorize: true
-    }
-  }
+      colorize: true,
+    },
+  },
 })
 
 configureLogging(pinoLogger)
@@ -48,9 +48,8 @@ const customLogger: Logger = {
   },
   error: (...args: unknown[]) => {
     myLoggingService.log('ERROR', ...args)
-  }
+  },
 }
 
 configureLogging(customLogger)
 // --8<-- [end:custom_logger]
-

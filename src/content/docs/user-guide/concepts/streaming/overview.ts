@@ -68,7 +68,9 @@ async function agentLoopLifecycleExample() {
       process.stdout.write(event.event.delta.text)
     }
   }
-  const responseGenerator = agent.stream('What is the capital of France and what is 42+7? Record in the notebook.')
+  const responseGenerator = agent.stream(
+    'What is the capital of France and what is 42+7? Record in the notebook.'
+  )
   for await (const event of responseGenerator) {
     processEvent(event)
   }

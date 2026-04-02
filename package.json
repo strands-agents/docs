@@ -9,8 +9,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "typecheck:snippets": "npm run typecheck --prefix test-snippets",
-    "format": "prettier --write docs",
-    "format:check": "prettier --check docs",
+    "format": "prettier --write docs 'src/content/docs/**/*.ts'",
+    "format:check": "prettier --check docs 'src/content/docs/**/*.ts'",
     "clean": "rm -rf .build && rm -rf .astro",
     "preview": "astro preview",
     "cms:build": "npm run build:all",
@@ -77,6 +77,14 @@
     "singleQuote": true,
     "printWidth": 120,
     "tabWidth": 2,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "overrides": [
+      {
+        "files": "src/content/docs/**/*.ts",
+        "options": {
+          "printWidth": 90
+        }
+      }
+    ]
   }
 }

@@ -1,7 +1,11 @@
 import { Agent } from '@strands-agents/sdk'
 import { setupTracer, getTracer } from '@strands-agents/sdk/telemetry'
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
-import { BatchSpanProcessor, SimpleSpanProcessor, ConsoleSpanExporter } from '@opentelemetry/sdk-trace-base'
+import {
+  BatchSpanProcessor,
+  SimpleSpanProcessor,
+  ConsoleSpanExporter,
+} from '@opentelemetry/sdk-trace-base'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 
 async function codeConfigurationOption1() {
@@ -120,7 +124,9 @@ async function endToEnd() {
   })
 
   // Execute interactions that will be traced
-  const response = await agent.invoke('Find me information about Mars. What is its atmosphere like?')
+  const response = await agent.invoke(
+    'Find me information about Mars. What is its atmosphere like?'
+  )
   console.log(response)
 
   // Each interaction creates a complete trace that can be visualized in your tracing tool

@@ -124,8 +124,10 @@ All checks must pass before commit is allowed.
 - No semicolons
 - Single quotes
 - Line length: 120 characters
+- Line length for doc snippet files under `src/content/docs/`: 90 characters
 - Tab width: 2 spaces
 - Trailing commas in ES5 style
+- Template literal contents in doc snippets must also stay under 90 characters per line. Prettier does not enforce this automatically.
 
 **Example**:
 ```typescript
@@ -288,8 +290,8 @@ const result = await agent.invoke('Hello')
 {
   "scripts": {
     "test": "tsc --noEmit",
-    "format": "prettier --write docs",
-    "format:check": "prettier --check docs"
+    "format": "prettier --write docs 'src/content/docs/**/*.ts'",
+    "format:check": "prettier --check docs 'src/content/docs/**/*.ts'"
   }
 }
 ```

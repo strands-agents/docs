@@ -31,7 +31,7 @@ app.post('/invocations', async (req: Request, res: Response) => {
 
     if (!prompt) {
       return res.status(400).json({
-        detail: 'No prompt found in input. Please provide a "prompt" key in the input.'
+        detail: 'No prompt found in input. Please provide a "prompt" key in the input.',
       })
     }
 
@@ -48,7 +48,7 @@ app.post('/invocations', async (req: Request, res: Response) => {
   } catch (err) {
     console.error('Error processing request:', err)
     return res.status(500).json({
-      detail: `Agent processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`
+      detail: `Agent processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
     })
   }
 })

@@ -18,10 +18,14 @@ async function basicMetricsExample() {
 
     // Cache metrics (when available)
     if (result.metrics.accumulatedUsage.cacheReadInputTokens) {
-      console.log(`Cache read tokens: ${result.metrics.accumulatedUsage.cacheReadInputTokens}`)
+      console.log(
+        `Cache read tokens: ${result.metrics.accumulatedUsage.cacheReadInputTokens}`
+      )
     }
     if (result.metrics.accumulatedUsage.cacheWriteInputTokens) {
-      console.log(`Cache write tokens: ${result.metrics.accumulatedUsage.cacheWriteInputTokens}`)
+      console.log(
+        `Cache write tokens: ${result.metrics.accumulatedUsage.cacheWriteInputTokens}`
+      )
     }
   }
   // --8<-- [end:basic_metrics]

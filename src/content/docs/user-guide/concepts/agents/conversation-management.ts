@@ -1,4 +1,12 @@
-import { Agent, ConversationManager, AfterInvocationEvent, NullConversationManager, SlidingWindowConversationManager, SummarizingConversationManager, BedrockModel } from '@strands-agents/sdk'
+import {
+  Agent,
+  ConversationManager,
+  AfterInvocationEvent,
+  NullConversationManager,
+  SlidingWindowConversationManager,
+  SummarizingConversationManager,
+  BedrockModel,
+} from '@strands-agents/sdk'
 import type { LocalAgent, ConversationManagerReduceOptions } from '@strands-agents/sdk'
 
 async function nullConversationManagerAgent() {
@@ -93,13 +101,16 @@ async function summarizingCustom() {
 async function summarizingSystemPrompt() {
   // --8<-- [start:summarizing_conversation_manager_system_prompt]
   // Custom system prompt for technical conversations
-  const customSystemPrompt = `You are summarizing a technical conversation. Create a concise bullet-point summary that:
+  const customSystemPrompt = `
+You are summarizing a technical conversation.
+Create a concise bullet-point summary that:
 - Focuses on code changes, architectural decisions, and technical solutions
 - Preserves specific function names, file paths, and configuration details
 - Omits conversational elements and focuses on actionable information
 - Uses technical terminology appropriate for software development
 
-Format as bullet points without conversational language.`
+Format as bullet points without conversational language.
+`
 
   const conversationManager = new SummarizingConversationManager({
     summarizationSystemPrompt: customSystemPrompt,

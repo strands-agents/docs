@@ -1,8 +1,16 @@
 import { Agent, Graph, Swarm, ImageBlock, TextBlock } from '@strands-agents/sdk'
 import type { ContentBlock } from '@strands-agents/sdk'
 import { A2AAgent } from '@strands-agents/sdk/a2a'
-import { EdgeHandler, Node, MultiAgentState, Status } from '@strands-agents/sdk/multiagent'
-import type { MultiAgentStreamEvent, NodeResultUpdate } from '@strands-agents/sdk/multiagent'
+import {
+  EdgeHandler,
+  Node,
+  MultiAgentState,
+  Status,
+} from '@strands-agents/sdk/multiagent'
+import type {
+  MultiAgentStreamEvent,
+  NodeResultUpdate,
+} from '@strands-agents/sdk/multiagent'
 
 async function createGraph() {
   // --8<-- [start:create_graph]
@@ -43,7 +51,9 @@ async function createGraph() {
   })
 
   // Execute the graph on a task
-  const result = await graph.invoke('Research the impact of AI on healthcare and create a comprehensive report')
+  const result = await graph.invoke(
+    'Research the impact of AI on healthcare and create a comprehensive report'
+  )
 
   // Access the results
   console.log('Status:', result.status)
@@ -57,14 +67,19 @@ async function conditionalEdges() {
 
   // --8<-- [start:conditional_edge]
   const onlyIfResearchSuccessful: EdgeHandler = (state) => {
-    const resultText = state.node('research')!.content.map((b) => ('text' in b ? b.text : '')).join('')
+    const resultText = state
+      .node('research')!
+      .content.map((b) => ('text' in b ? b.text : ''))
+      .join('')
     return resultText.toLowerCase().includes('successful')
   }
 
   // Add conditional edge
   const graph = new Graph({
     nodes: [researcher, analyst],
-    edges: [{ source: 'research', target: 'analysis', handler: onlyIfResearchSuccessful }],
+    edges: [
+      { source: 'research', target: 'analysis', handler: onlyIfResearchSuccessful },
+    ],
   })
   // --8<-- [end:conditional_edge]
 }
@@ -107,7 +122,7 @@ async function remoteAgents() {
 class ValidatorNode extends Node {
   async *handle(
     args: string | ContentBlock[],
-    _state: MultiAgentState,
+    _state: MultiAgentState
   ): AsyncGenerator<MultiAgentStreamEvent, NodeResultUpdate, undefined> {
     const input = typeof args === 'string' ? args : ''
 
@@ -121,7 +136,10 @@ class ValidatorNode extends Node {
 
 // Pass the custom node directly to the graph
 const validator = new ValidatorNode('validator', { description: 'Validates input data' })
-const processor = new Agent({ id: 'processor', systemPrompt: 'Process the validated data.' })
+const processor = new Agent({
+  id: 'processor',
+  systemPrompt: 'Process the validated data.',
+})
 
 const pipelineGraph = new Graph({
   nodes: [validator, processor],
@@ -164,7 +182,9 @@ async function nestedPatterns() {
     edges: [['research_swarm', 'analysis']],
   })
 
-  const result = await graph.invoke('Research the impact of AI on healthcare and create a comprehensive report')
+  const result = await graph.invoke(
+    'Research the impact of AI on healthcare and create a comprehensive report'
+  )
   console.log(result)
   // --8<-- [end:nested]
 }
@@ -329,12 +349,18 @@ async function topologyBranching() {
 
   // --8<-- [start:topology_branching]
   const isTechnical: EdgeHandler = (state) => {
-    const resultText = state.node('classifier')!.content.map((b) => ('text' in b ? b.text : '')).join('')
+    const resultText = state
+      .node('classifier')!
+      .content.map((b) => ('text' in b ? b.text : ''))
+      .join('')
     return resultText.toLowerCase().includes('technical')
   }
 
   const isBusiness: EdgeHandler = (state) => {
-    const resultText = state.node('classifier')!.content.map((b) => ('text' in b ? b.text : '')).join('')
+    const resultText = state
+      .node('classifier')!
+      .content.map((b) => ('text' in b ? b.text : ''))
+      .join('')
     return resultText.toLowerCase().includes('business')
   }
 
@@ -357,12 +383,18 @@ async function topologyFeedbackLoop() {
 
   // --8<-- [start:topology_feedback]
   const needsRevision: EdgeHandler = (state) => {
-    const resultText = state.node('reviewer')!.content.map((b) => ('text' in b ? b.text : '')).join('')
+    const resultText = state
+      .node('reviewer')!
+      .content.map((b) => ('text' in b ? b.text : ''))
+      .join('')
     return resultText.toLowerCase().includes('revision needed')
   }
 
   const isApproved: EdgeHandler = (state) => {
-    const resultText = state.node('reviewer')!.content.map((b) => ('text' in b ? b.text : '')).join('')
+    const resultText = state
+      .node('reviewer')!
+      .content.map((b) => ('text' in b ? b.text : ''))
+      .join('')
     return resultText.toLowerCase().includes('approved')
   }
 

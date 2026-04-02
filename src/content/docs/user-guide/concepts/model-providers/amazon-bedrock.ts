@@ -5,7 +5,13 @@
 // @ts-nocheck
 // Imports are in amazon-bedrock_imports.ts
 
-import { Agent, BedrockModel, DocumentBlock, CachePointBlock, Message } from '@strands-agents/sdk'
+import {
+  Agent,
+  BedrockModel,
+  DocumentBlock,
+  CachePointBlock,
+  Message,
+} from '@strands-agents/sdk'
 
 // Basic usage examples
 async function basicUsageDefault() {
@@ -305,7 +311,9 @@ async function automaticCacheStrategy() {
   let cacheWriteTokens = 0
   let cacheReadTokens = 0
 
-  for await (const event of agent.stream('Search for Python async patterns, then compare with error handling')) {
+  for await (const event of agent.stream(
+    'Search for Python async patterns, then compare with error handling'
+  )) {
     if (event.type === 'modelMetadataEvent' && event.usage) {
       cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
       cacheReadTokens = event.usage.cacheReadInputTokens || 0

@@ -1,6 +1,11 @@
 import { Agent, SessionManager, FileStorage } from '@strands-agents/sdk'
 import { S3Storage } from '@strands-agents/sdk/session/s3-storage'
-import type { SnapshotStorage, SnapshotLocation, Snapshot, SnapshotManifest } from '@strands-agents/sdk'
+import type {
+  SnapshotStorage,
+  SnapshotLocation,
+  Snapshot,
+  SnapshotManifest,
+} from '@strands-agents/sdk'
 import { S3Client } from '@aws-sdk/client-s3'
 
 // =====================
@@ -61,8 +66,9 @@ async function s3StorageExample() {
     storage: {
       snapshot: new S3Storage({
         bucket: 'my-agent-sessions',
-        prefix: 'production',           // Optional key prefix
-        s3Client: new S3Client({        // Optional pre-configured client
+        prefix: 'production', // Optional key prefix
+        s3Client: new S3Client({
+          // Optional pre-configured client
           region: 'us-west-2',
         }),
         // Alternatively, use region directly (cannot be combined with s3Client):
@@ -104,8 +110,8 @@ async function snapshotTriggerExample() {
   })
 
   const agent = new Agent({ sessionManager: session })
-  await agent.invoke('First message')   // 2 messages — no snapshot
-  await agent.invoke('Second message')  // 4 messages — immutable snapshot created
+  await agent.invoke('First message') // 2 messages — no snapshot
+  await agent.invoke('Second message') // 4 messages — immutable snapshot created
   // --8<-- [end:snapshot_trigger]
 }
 
@@ -116,7 +122,11 @@ async function snapshotTriggerExample() {
 async function listAndRestoreExample() {
   // --8<-- [start:list_and_restore]
   const storage = new FileStorage('./sessions')
-  const location = { sessionId: 'my-session', scope: 'agent' as const, scopeId: 'default' }
+  const location = {
+    sessionId: 'my-session',
+    scope: 'agent' as const,
+    scopeId: 'default',
+  }
 
   // List all immutable snapshot IDs (chronological order)
   const snapshotIds = await storage.listSnapshotIds({ location })
@@ -129,7 +139,10 @@ async function listAndRestoreExample() {
   })
 
   // Restore agent to a specific checkpoint
-  const session = new SessionManager({ sessionId: 'my-session', storage: { snapshot: storage } })
+  const session = new SessionManager({
+    sessionId: 'my-session',
+    storage: { snapshot: storage },
+  })
   const agent = new Agent({ sessionManager: session })
   await agent.initialize()
   await session.restoreSnapshot({ target: agent, snapshotId: snapshotIds[0]! })
@@ -144,21 +157,36 @@ async function customStorageExample() {
   // --8<-- [start:custom_storage]
   // Implement SnapshotStorage to plug in any backend (database, Redis, etc.)
   class MyStorage implements SnapshotStorage {
-    async saveSnapshot({ location, snapshotId, snapshot }: {
-      location: SnapshotLocation; snapshotId: string; isLatest: boolean; snapshot: Snapshot
+    async saveSnapshot({
+      location,
+      snapshotId,
+      snapshot,
+    }: {
+      location: SnapshotLocation
+      snapshotId: string
+      isLatest: boolean
+      snapshot: Snapshot
     }) {
       // Store the snapshot JSON keyed by location + snapshotId
     }
 
-    async loadSnapshot({ location, snapshotId }: {
-      location: SnapshotLocation; snapshotId?: string
+    async loadSnapshot({
+      location,
+      snapshotId,
+    }: {
+      location: SnapshotLocation
+      snapshotId?: string
     }) {
       // Return the snapshot for the given location, or null if not found
       return null
     }
 
-    async listSnapshotIds({ location }: {
-      location: SnapshotLocation; limit?: number; startAfter?: string
+    async listSnapshotIds({
+      location,
+    }: {
+      location: SnapshotLocation
+      limit?: number
+      startAfter?: string
     }) {
       // Return immutable snapshot IDs sorted chronologically
       return []
@@ -168,13 +196,21 @@ async function customStorageExample() {
       // Remove all stored data for this session
     }
 
-    async loadManifest({ location }: { location: SnapshotLocation }): Promise<SnapshotManifest> {
+    async loadManifest({
+      location,
+    }: {
+      location: SnapshotLocation
+    }): Promise<SnapshotManifest> {
       // Return the manifest for the given location
       return { schemaVersion: '1', updatedAt: new Date().toISOString() }
     }
 
-    async saveManifest({ location, manifest }: {
-      location: SnapshotLocation; manifest: SnapshotManifest
+    async saveManifest({
+      location,
+      manifest,
+    }: {
+      location: SnapshotLocation
+      manifest: SnapshotManifest
     }) {
       // Persist the manifest
     }

@@ -87,9 +87,7 @@ const githubMcpClient = new McpClient({
 import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js'
 
 const sseClient = new McpClient({
-  transport: new SSEClientTransport(
-    new URL('http://localhost:8000/sse')
-  ),
+  transport: new SSEClientTransport(new URL('http://localhost:8000/sse')),
 })
 
 const agentSse = new Agent({

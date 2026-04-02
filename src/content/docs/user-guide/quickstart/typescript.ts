@@ -5,7 +5,8 @@ import z from 'zod'
 
 const letterCounter = tool({
   name: 'letter_counter',
-  description: 'Count occurrences of a specific letter in a word. Performs case-insensitive matching.',
+  description:
+    'Count occurrences of a specific letter in a word. Performs case-insensitive matching.',
   // Zod schema for letter counter input validation
   inputSchema: z
     .object({

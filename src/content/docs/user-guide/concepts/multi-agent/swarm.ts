@@ -65,7 +65,9 @@ async function swarmTeam() {
   })
 
   // Execute the swarm on a task
-  const result = await swarm.invoke('Design and implement a simple REST API for a todo app')
+  const result = await swarm.invoke(
+    'Design and implement a simple REST API for a todo app'
+  )
 
   // Access the final result
   console.log('Status:', result.status)
