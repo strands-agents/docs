@@ -238,37 +238,36 @@ The step/orchestrator decomposition enables several capabilities that benefit fr
 
 ### Cross-Cutting Middleware
 
-Middleware applies behavior uniformly across steps without each step needing to know about it. Tracing is a good example: a single middleware can create a telemetry span around any step, record its result or error, and emit metrics, all without touching the step's implementation.
+Middleware applies behavior uniformly across steps without each step needing to know about it. Caching is a good example: a middleware can check for a cached result before a step runs and store the result after it completes, without any step being aware of the cache.
 
 ```typescript
-class TracingMiddleware implements Middleware {
+class CacheMiddleware implements Middleware {
+  constructor(private _cache: Map<string, unknown> = new Map()) {}
+
   wrap(step: Step): Step {
     return {
       ...step,
       async *stream(ctx, state) {
-        const span = ctx.tracer.startSpan(step.name)
-        try {
-          const result = yield* step.stream(ctx, state)
-          span.setStatus('ok')
-          return result
-        } catch (error) {
-          span.recordException(error)
-          span.setStatus('error')
-          throw error
-        } finally {
-          span.end()
+        const key = this._buildKey(step.name, state)
+        const cached = this._cache.get(key)
+        if (cached) {
+          return cached
         }
+
+        const result = yield* step.stream(ctx, state)
+        this._cache.set(key, result)
+        return result
       },
     }
   }
 }
 
 const agent = new Agent({
-  middleware: [new TracingMiddleware()],
+  middleware: [new CacheMiddleware()],
 })
 ```
 
-Every step (model calls, tool calls, sub-orchestrators) gets traced with the same logic. Multiple middleware compose naturally: tracing, a rate limiter, and a guardrail can each be separate middleware applied to every step, rather than duplicated logic inside each one.
+Every step (model calls, tool calls, sub-orchestrators) gets the same caching logic. Multiple middleware compose naturally: a cache, a rate limiter, and a guardrail can each be separate middleware applied to every step, rather than duplicated logic inside each one.
 
 ### Checkpointing
 
