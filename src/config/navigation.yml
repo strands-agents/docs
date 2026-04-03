@@ -210,6 +210,7 @@ sidebar:
         items:
           - docs/community/plugins/agent-control
           - docs/community/plugins/datadog-ai-guard
+          - docs/community/plugins/s3-vectors-memory
       - label: Model Providers
         items:
           - docs/community/model-providers/cohere
