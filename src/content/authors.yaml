@@ -52,3 +52,18 @@
   name: Strands Agents Team
   role: Core Team
   bio: The team behind the Strands Agents SDK.
+
+- id: cagatay-cali
+  name: Cagatay Cali
+  role: "Research Engineer, AWS"
+  bio: Cagatay Cali is a Research Engineer at AWS focused on Agentic AI and robotics. He designs interfaces that connect AI agents to physical robots, enabling developers to control robotic systems through natural language.
+
+- id: rachita-chandra
+  name: Rachita Chandra
+  role: "Prototyping Solutions Architect, AWS"
+  bio: Rachita Chandra is a Prototyping Solutions Architect specializing in implementing generative AI and machine learning solutions for workloads on AWS.
+
+- id: aaron-su
+  name: Aaron Su
+  role: "Solutions Architect, AWS"
+  bio: Aaron Su is a Solutions Architect at Amazon Web Services, helping startups build and scale AI solutions from concept to production. He is passionate about physical AI and agentic systems.
