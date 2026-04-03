@@ -238,32 +238,37 @@ The step/orchestrator decomposition enables several capabilities that benefit fr
 
 ### Cross-Cutting Middleware
 
-Middleware applies behavior uniformly across steps without each step needing to know about it. Guardrails are a good example: a single middleware can evaluate the result of any step and decide whether to block or let it through.
+Middleware applies behavior uniformly across steps without each step needing to know about it. Tracing is a good example: a single middleware can create a telemetry span around any step, record its result or error, and emit metrics, all without touching the step's implementation.
 
 ```typescript
-class GuardrailMiddleware implements Middleware {
-  constructor(private _evaluate: (result: unknown) => 'pass' | 'block') {}
-
+class TracingMiddleware implements Middleware {
   wrap(step: Step): Step {
     return {
       ...step,
       async *stream(ctx, state) {
-        const result = yield* step.stream(ctx, state)
-        if (this._evaluate(result) === 'block') {
-          throw new GuardrailError('blocked by guardrail')
+        const span = ctx.tracer.startSpan(step.name)
+        try {
+          const result = yield* step.stream(ctx, state)
+          span.setStatus('ok')
+          return result
+        } catch (error) {
+          span.recordException(error)
+          span.setStatus('error')
+          throw error
+        } finally {
+          span.end()
         }
-        return result
       },
     }
   }
 }
 
 const agent = new Agent({
-  middleware: [new GuardrailMiddleware(myEvaluator)],
+  middleware: [new TracingMiddleware()],
 })
 ```
 
-Multiple middleware compose naturally. A guardrail, a rate limiter, and a custom logger can each be separate middleware applied to every step, rather than one monolithic wrapper or duplicated logic inside each step.
+Every step (model calls, tool calls, sub-orchestrators) gets traced with the same logic. Multiple middleware compose naturally: tracing, a rate limiter, and a guardrail can each be separate middleware applied to every step, rather than duplicated logic inside each one.
 
 ### Checkpointing
 
