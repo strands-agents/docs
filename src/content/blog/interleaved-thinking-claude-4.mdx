@@ -38,7 +38,7 @@ agent(prompt)
 
 Strands has everything it needs to provide an answer, equipped with Claude 4 Sonnet, its prompt, and tools to generate Python code and make HTTP requests. Here's how the event loop works.
 
-First, Strands structures your prompt and any previous conversation history into a format the language model (like Claude) can understand. Then, Strands automatically loads available tools—these can be MCP Server tools or custom Python functions decorated with @tool. Your Python docstrings become tool descriptions, and type hints define the parameter schemas. In this example, we use two built-in tools from the [strands-agents-tools](/docs/user-guide/concepts/tools/tools_overview/#3-example-built-in-tools) package. The SDK manages errors (like rate limiting or context overflows), performs retries when needed, and emits detailed traces and metrics for observability.
+First, Strands structures your prompt and any previous conversation history into a format the language model (like Claude) can understand. Then, Strands automatically loads available tools—these can be MCP Server tools or custom Python functions decorated with @tool. Your Python docstrings become tool descriptions, and type hints define the parameter schemas. In this example, we use two built-in tools from the [strands-agents-tools](/docs/user-guide/concepts/tools/community-tools-package/) package. The SDK manages errors (like rate limiting or context overflows), performs retries when needed, and emits detailed traces and metrics for observability.
 
 With this setup complete, Strands manages an event loop that invokes the model, handles tool calling, and manages the conversation until the model provides a final answer.
 
@@ -49,6 +49,8 @@ With this setup complete, Strands manages an event loop that invokes the model, 
 You will see this loop in action when running the ISS example with Python. The model makes a plan to use its tools, including API calls for real-time data about the ISS and using its Python REPL (Read evaluate print loop) to calculate distances and vectors. The agent will respond with an answer to the question, including a statement like "The ISS is currently positioned over the western Pacific Ocean, making the western North American cities (Vancouver, Seattle, Portland) much closer than New York. Vancouver's slightly more northern latitude gives it the advantage over Seattle and Portland."
 
 The model makes a plan to use its tools, involving API calls for real-time data about the ISS and using its Python REPL to calculate distances and vectors. It then generates an answer and shows its work. The following is example output from this agent running locally.
+
+<div style="max-height: 24rem; overflow-y: auto;">
 
 ```text
 To answer this question, I need to:
@@ -153,6 +155,8 @@ The ISS is currently positioned over the South Atlantic Ocean at coordinates -24
 - **Elevation:** 2.1° above the horizon
 The ISS is currently positioned over the South Atlantic Ocean, making New York significantly closer than the three Pacific Northwest cities. New York is about 4,800 km closer to the ISS than the nearest west coast city (Vancouver).
 ```
+
+</div>
 
 ## Supercharging the Strands event loop with Claude 4's interleaved thinking
 
