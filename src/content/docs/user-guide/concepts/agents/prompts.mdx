@@ -113,10 +113,58 @@ Direct tool calls bypass the natural language interface and execute the tool usi
 
 ## Prompt Engineering
 
-For guidance on how to write safe and responsible prompts, please refer to our [Safety & Security - Prompt Engineering](../../safety-security/prompt-engineering.md) documentation.
+Crafting effective prompts is essential for building useful agents. While simple text instructions work for basic tasks, getting complex behavior out of agents benefits from more structured approaches.
 
-Further resources:
+### Prompting with Agent SOPs
 
+[Agent SOPs](/blog/introducing-strands-agent-sops) (Standard Operating Procedures) are a standardized markdown format for defining agent workflows in natural language. They hit a "determin-ish-tic" sweet spot between fully code-defined workflows and open-ended model-driven agents, providing structure for consistency while preserving the agent's reasoning ability.
+
+Here is a minimal example of an Agent SOP used as a system prompt:
+
+```python
+from strands import Agent
+
+agent = Agent(
+    system_prompt="""# Code Review SOP
+
+## Parameters
+- repo_path (REQUIRED): Path to the repository to review
+
+## Steps
+
+### Step 1: Understand the Changes
+- MUST read the diff of all changed files
+- SHOULD summarize what the changes are doing at a high level
+
+### Step 2: Review for Issues
+- MUST check for bugs, security vulnerabilities, and logic errors
+- SHOULD flag any style or readability concerns
+- MAY suggest alternative approaches where appropriate
+
+### Step 3: Provide Feedback
+- MUST output a structured review with file-level comments
+- SHOULD categorize findings by severity (critical, warning, suggestion)
+"""
+)
+```
+
+Following this [Agent SOP format](/blog/introducing-strands-agent-sops) gives the benefits of understanding the agent's behavior, debugging it when it does not follow instructions, and steering agents regardless of the underlying model.
+
+:::tip
+For example, if the agent follows steps 1 and 2, but gets sidetracked by a comment on an issue, you know that you need to provide more guidance on step 2 in order to better direct the agent's attention.
+:::
+
+Debugging and fixing system prompts is a difficult and expensive problem to face, usually involving costly evaluations to run and validate your agent is working as expected. Turning system prompts into SOPs makes the system prompt editing process straightforward and easy.
+
+For more on authoring and using Agent SOPs, including SOP chaining for multi-phase workflows, see the [Agent SOPs GitHub repository](https://github.com/strands-agents/agent-sop).
+
+### Safety and Security
+
+For guidance on writing safe and responsible prompts, including defending against prompt injection and adversarial attacks, refer to our [Safety & Security - Prompt Engineering](../../safety-security/prompt-engineering.md) documentation.
+
+### Further Resources
+
+* [Agent SOPs GitHub Repository](https://github.com/strands-agents/agent-sop)
 * [Prompt Engineering Guide](https://www.promptingguide.ai)
 * [Amazon Bedrock - Prompt engineering concepts](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html)
 * [Llama - Prompting](https://www.llama.com/docs/how-to-guides/prompting/)
