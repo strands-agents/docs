@@ -1,9 +1,9 @@
 ---
-title: "How We Built the TypeScript SDK Using GitHub-Based Agents"
+title: "How We built Strands Typescript SDK with Strands Agents"
 date: 2026-04-03
-description: "How the Strands team used GitHub-based AI agents to build the TypeScript SDK, turning agents into team members that refine requirements, implement features, and respond to code review feedback through pull requests and issues."
+description: "How the Strands team used GitHub-based AI agents to build the TypeScript SDK, turning agents into team members."
 authors:
-  - nick-clegg
+  - nicholas-clegg
 tags:
   - Best Practices
   - Open Source
@@ -11,9 +11,11 @@ tags:
 draft: false
 ---
 
-When we decided to add TypeScript support to the Strands Agents SDK, we knew the codebase would be roughly 15,000 lines of code, similar to the Python SDK. We also knew we wanted to build it differently. The Python SDK was originally built by a dedicated team of engineers who used early AI coding tools to bootstrap development. Those tools helped us move fast, but much of what they produced was vibe coding: low-quality code that required significant time reviewing, debugging, and steering the agents to produce something we were comfortable shipping.
+One of the [most requested features](https://github.com/strands-agents/sdk-python/issues/156) to the Strands team was to add support for running Strands in TypeScript. A feature request like this was expected, TypeScript and JavaScript together topped popular leaderboards as the most used language by developers in 2025 ([github](https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/), [stack overflow](https://survey.stackoverflow.co/2025/technology#most-popular-technologies-language-language)).
 
-We wanted to figure out how agents could help us write code **better** and **faster**. We came up with interesting solutions for each.
+As the team was considering this feature, we wanted to reflect on our experience of building the Strands Python SDK, and the challenges we faced. The Python codebase started as a passion project among some of the early engineers in the team, and was developed with the help of Coding Agents written by that very same codebase! These Agents were powered by models released in mid-2024 (think Claude 3.5) which were not nearly as capable as models we have available to us today. The LLM's of that generation were not known for their code quality, and lead to the reputation around "Vibe-Coding" we all know so well today, so its easy to understand that they required a lot of oversight in order to produce good results.
+
+Looking forward to the development of a new SDK, we wanted to learn from our lessons and utilize agent to write code **better** and **faster**.
 
 ## Writing code better with agent SOPs
 
@@ -63,6 +65,9 @@ We also built a **reviewer** agent (`/strands review`) that performs comprehensi
 One thing I want to highlight is how the SOP format helped us iterate on these agents. Early on, the implementer agent couldn't create pull requests because it didn't have the right GitHub token permissions. Instead of spending time debugging the permissions model, we added a step to the SOP telling the agent to provide us a link so we could create the PR on its behalf. That's the kind of targeted fix that SOPs make easy: you identify which step went wrong and add more instruction at that step.
 
 ## Results
+
+![Strands Agent topping our contributors leaderboard](./resources/how-we-built-typescript-with-agents/sdk-typescript-contributions.png)
+
 
 The efficiency gains have been significant. The key insight is the asynchronous nature of the workflow. I can kick off the implementer agent on a feature, and it runs for 30 minutes while I work on something else. I'm not sitting there writing and debugging code. I'm reviewing, refining, and bar-raising.
 

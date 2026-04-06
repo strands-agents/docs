@@ -1,8 +1,3 @@
-- id: nick-clegg
-  name: Nick Clegg
-  role: "Senior Software Engineer, AWS"
-  bio: Nick Clegg is a Senior Software Engineer at AWS and the technical lead for the Strands Agents TypeScript SDK.
-
 - id: namrataghadi-galileo
   name: Namrata Ghadi
   role: "Engineer, Galileo"
