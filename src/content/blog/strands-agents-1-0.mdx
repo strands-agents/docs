@@ -263,7 +263,7 @@ a2a_tool_provider = A2AClientToolProvider(
 )
 
 # Orchestrate remote agents
-orchestrator = Agent(tools=[a2a_tool_provider.tools])
+orchestrator = Agent(tools=a2a_tool_provider.tools)
 ```
 
 Because A2A provides features like the agent card, a standardized description of agent capabilities, A2A-enabled multi-agent systems can easily discover and connect to agents created by other teams or other organizations. Strands auto-generates the agent card based on the tools you've given the agent. To see complete working examples and get started with the A2A integration, check out our [samples repository](https://github.com/strands-agents/samples/tree/main/03-integrations/Native-A2A-Support) and the [Strands A2A documentation](/docs/user-guide/concepts/multi-agent/agent-to-agent/).
