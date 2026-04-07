@@ -1,6 +1,74 @@
 import { Agent, tool } from '@strands-agents/sdk'
 import { z } from 'zod'
 
+// --8<-- [start:direct_passing]
+// Create specialized agents
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description:
+    'Provides factual, well-sourced information in response to research questions.',
+  systemPrompt: `You are a specialized research assistant. Focus only on providing
+factual, well-sourced information in response to research questions.
+Always cite your sources when possible.`,
+  printer: false,
+})
+
+const productAgent = new Agent({
+  name: 'product_agent',
+  description: 'Provides personalized product suggestions based on user preferences.',
+  systemPrompt: `You are a specialized product recommendation assistant.
+Provide personalized product suggestions based on user preferences.`,
+  printer: false,
+})
+
+const travelAgent = new Agent({
+  name: 'travel_agent',
+  description: 'Creates detailed travel itineraries based on user preferences.',
+  systemPrompt: `You are a specialized travel planning assistant.
+Create detailed travel itineraries based on user preferences.`,
+  printer: false,
+})
+
+// Create the orchestrator — agents are automatically converted to tools
+const orchestratorDirect = new Agent({
+  systemPrompt: `You are an assistant that routes queries to specialized agents:
+- For research questions and factual information → Use the research_agent tool
+- For product recommendations and shopping advice → Use the product_agent tool
+- For travel planning and itineraries → Use the travel_agent tool
+- For simple questions not requiring specialized knowledge → Answer directly
+
+Always select the most appropriate tool based on the user's query.`,
+  tools: [researchAgent, productAgent, travelAgent],
+})
+// --8<-- [end:direct_passing]
+
+void orchestratorDirect
+
+// --8<-- [start:as_tool_customization]
+const orchestratorAsTool = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [
+    researchAgent.asTool({
+      name: 'research_assistant',
+      description:
+        'Process and respond to research-related queries requiring factual information.',
+    }),
+  ],
+})
+// --8<-- [end:as_tool_customization]
+
+void orchestratorAsTool
+
+// --8<-- [start:as_tool_context]
+// Agent will remember prior interactions within the same orchestrator session
+const orchestratorWithContext = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent.asTool({ preserveContext: true })],
+})
+// --8<-- [end:as_tool_context]
+
+void orchestratorWithContext
+
 // --8<-- [start:research_assistant]
 const researchAssistant = tool({
   name: 'research_assistant',

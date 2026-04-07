@@ -481,7 +481,19 @@ orchestrator = Agent(
 <Tab label="TypeScript">
 
 ```typescript
-// Automatic agent-to-tool conversion not yet supported in TypeScript.
+import { Agent } from '@strands-agents/sdk'
+
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description: 'A specialized research assistant.',
+  systemPrompt: 'You are a specialized research assistant.',
+  printer: false,
+})
+
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent],
+})
 ```
 </Tab>
 </Tabs>

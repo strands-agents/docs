@@ -137,8 +137,38 @@ The agent returns a result with `stop_reason="cancelled"`. The cancel signal cle
     ```
   </Tab>
   <Tab label="TypeScript">
-    ```ts
-    // Cancellation is not yet available in TypeScript SDK
+    ```typescript
+    import { Agent } from '@strands-agents/sdk'
+
+    const agent = new Agent()
+
+    // Cancel after 30 seconds
+    setTimeout(() => agent.cancel(), 30_000)
+
+    const result = await agent.invoke('Analyze this large dataset')
+
+    if (result.stopReason === 'cancelled') {
+      console.log('Agent was cancelled due to timeout')
+    }
+    ```
+
+    Tools can check the cancellation signal to abort their own work:
+
+    ```typescript
+    import { Agent, tool } from '@strands-agents/sdk'
+    import { z } from 'zod'
+
+    const myTool = tool({
+      name: 'long_running_task',
+      description: 'A task that respects cancellation',
+      inputSchema: z.object({ url: z.string() }),
+      callback: async (input, context) => {
+        const response = await fetch(input.url, {
+          signal: context.agent.cancelSignal,
+        })
+        return response.text()
+      },
+    })
     ```
   </Tab>
 </Tabs>
