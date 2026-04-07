@@ -119,13 +119,10 @@ Crafting effective prompts is essential for building useful agents. While simple
 
 [Agent SOPs](/blog/introducing-strands-agent-sops) (Standard Operating Procedures) are a standardized markdown format for defining agent workflows in natural language. They hit a "determin-ish-tic" sweet spot between fully code-defined workflows and open-ended model-driven agents, providing structure for consistency while preserving the agent's reasoning ability.
 
-Here is a minimal example of an Agent SOP used as a system prompt:
+Here is a minimal example of an Agent SOP:
 
-```python
-from strands import Agent
-
-agent = Agent(
-    system_prompt="""# Code Review SOP
+```markdown
+# Code Review SOP
 
 ## Parameters
 - repo_path (REQUIRED): Path to the repository to review
@@ -144,14 +141,12 @@ agent = Agent(
 ### Step 3: Provide Feedback
 - MUST output a structured review with file-level comments
 - SHOULD categorize findings by severity (critical, warning, suggestion)
-"""
-)
 ```
 
 Following this [Agent SOP format](/blog/introducing-strands-agent-sops) gives the benefits of understanding the agent's behavior, debugging it when it does not follow instructions, and steering agents regardless of the underlying model.
 
-:::tip
-For example, if the agent follows steps 1 and 2, but gets sidetracked by a comment on an issue, you know that you need to provide more guidance on step 2 in order to better direct the agent's attention.
+:::tip[Debugging with SOPs]
+If an agent follows steps 1 and 2 of your SOP but gets sidetracked, you immediately know which step needs refinement — making debugging targeted rather than guesswork.
 :::
 
 Debugging and fixing system prompts is a difficult and expensive problem to face, usually involving costly evaluations to run and validate your agent is working as expected. Turning system prompts into SOPs makes the system prompt editing process straightforward and easy.
