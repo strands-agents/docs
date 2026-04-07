@@ -266,6 +266,84 @@ The reverse direction: expose a Strands agent as an MCP server. Claude Desktop, 
 
 ---
 
+## Tasks
+
+Strands has a working task-augmented execution implementation (`mcp_tasks.py` + `mcp_client.py`). Tasks allow tool calls to run asynchronously — the server returns a task handle, and the client polls until the result is ready. This is essential for long-running operations (multi-minute code generation, data processing, deployments).
+
+### What We Have
+
+- **Opt-in via `TasksConfig`**: Pass `TasksConfig()` to `MCPClient` constructor to enable
+- **Server capability detection**: Caches `tasks.requests.tools.call` during `session.initialize()`
+- **Tool-level negotiation**: Reads `execution.taskSupport` per tool (`required`, `optional`, `forbidden`)
+- **Full lifecycle**: `call_tool_as_task` → `poll_task` → `get_task_result` with timeout protection
+- **Configurable TTL + poll timeout**: Defaults to 1min TTL, 5min poll timeout
+- **Unit + integration tests**: Both sync and async paths covered, including edge cases (timeout, empty poll, retrieval failure)
+
+### Gaps vs. MCP Spec (2025-11-25)
+
+| Feature | MCP Spec | Strands Status |
+|---|---|---|
+| `tasks/get` (polling) | Explicit polling endpoint | ✅ Implemented |
+| `tasks/result` | Retrieve final result | ✅ Implemented |
+| `tasks/list` | List all active tasks | ❌ Not implemented |
+| `tasks/cancel` | Cancel a running task | ❌ Not implemented |
+| `notifications/tasks/status` | Push notifications for status changes | ❌ Not handled |
+| `input_required` status | Task pauses waiting for user input | ❌ Not handled |
+| Client-side tasks | Server creates tasks for sampling/elicitation requests | ❌ Not implemented |
+| `pollInterval` respect | Server hints how often to poll | ❌ We poll as fast as the SDK yields |
+
+### Priorities
+
+**P1 (extend soon):**
+- Handle `input_required` status — this is the bridge between tasks and elicitation (human-in-the-loop workflows)
+- Respect `pollInterval` from server responses — reduces unnecessary polling overhead
+- `tasks/list` — useful for observability and debugging
+- `tasks/cancel` — needed for long-running tools, but not blocking anyone today
+
+**P2 (when ready):**
+- `notifications/tasks/status` — push-based status reduces polling, better UX
+- Client-side task capabilities — exposing sampling/elicitation as tasks to servers
+
+The current implementation is solid for the happy path. The main risk is that as MCP servers start using `input_required`, our client won't handle it gracefully.
+
+---
+
+## Configuration & Auth
+
+### Config Sugars
+
+The `mcpServers` JSON config format we support today handles the basics (`command`, `args`, `url`, `headers`). A few small additions would improve the developer experience:
+
+- **Pass-through environment keys**: Let users specify env var names to forward from the host environment, instead of hardcoding values. Example: `"env": {"passthrough": ["AWS_PROFILE", "DATABASE_URL"]}` forwards those vars from the host into the stdio subprocess without exposing secrets in config files.
+- **Transport defaults**: Auto-detect SSE vs. Streamable HTTP from the URL instead of requiring users to know the difference.
+- **Server health/readiness**: Optional startup health check with timeout, so the agent gets a clear error rather than a hang when a server is unreachable.
+
+### Auth
+
+For HTTP-based transports, the MCP Python SDK already provides full OAuth 2.1 support (`OAuthClientProvider`) with PKCE, token refresh, and dynamic client registration. For stdio, servers inherit credentials from the environment.
+
+Today, users configure auth in their transport callable — this works but requires writing Python code. Adding config-level auth would reduce boilerplate:
+
+```json
+{
+  "mcpServers": {
+    "enterprise-server": {
+      "url": "https://my-server.com/mcp",
+      "auth": {
+        "type": "bearer",
+        "token_env": "MY_SERVER_TOKEN"
+      }
+    }
+  }
+}
+```
+
+This is a DX improvement, not a security architecture change. The MCP SDK handles token rotation and refresh. We just need to surface the config knobs so users don't have to write custom transport callables for common patterns.
+
+**Priority:** P1 for env passthrough (most requested), P2 for OAuth config sugar.
+
+---
+
 ## Immediate Improvements (Ship Regardless of Option)
 
 These are independent of which option we choose. Bug fixes, developer experience papercuts, and easy wins.
@@ -340,7 +418,9 @@ PRs with full diffs: https://github.com/agent-of-mkmeral/sdk-python/pulls
 
 4. **OAuth** — How much should Strands handle? The MCP SDK manages transport-level auth. Do we just surface config (token endpoints, client IDs, scopes) or do we need flow management?
 
-5. **Agent-as-MCP-Server** — Is this in-scope for the SDK or a separate project?
+6. **`model-immediate-response` / task completion triggering the agent** — The MCP spec defines `io.modelcontextprotocol/model-immediate-response`, where a task completes and the result should return control to the model. This is architecturally complex: we can invoke the agent from task completion callbacks, but where does the output go? The current agent loop expects synchronous tool results. Wiring async task completion back into the agent loop requires either a message queue, a callback-to-coroutine bridge, or a fundamentally different execution model. Worth exploring but significant plumbing — treat as a future concern.
+
+7. **Agent-as-MCP-Server** — Is this in-scope for the SDK or a separate project?
 
 ---
 
