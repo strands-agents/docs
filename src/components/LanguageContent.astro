@@ -1,0 +1,56 @@
+---
+/**
+ * Conditionally displays content based on the globally‑selected language.
+ *
+ * Usage in MDX:
+ *
+ *   <LanguageContent lang="python">
+ *     Python uses the `@tool` decorator to register tools.
+ *   </LanguageContent>
+ *
+ *   <LanguageContent lang="typescript">
+ *     TypeScript uses the `tool()` function to register tools.
+ *   </LanguageContent>
+ *
+ * The component renders BOTH blocks in the HTML (SEO‑friendly) and uses
+ * CSS (`data-strands-language` on <html>) + a tiny JS upgrade to toggle
+ * visibility.  If JS is disabled, both blocks are visible (graceful
+ * degradation).
+ *
+ * Props:
+ *   lang — "python" | "typescript" (case‑insensitive, matched against
+ *          the `data-strands-language` attribute which stores "Python" /
+ *          "TypeScript" with capital first letter).
+ */
+interface Props {
+  lang: 'python' | 'typescript' | 'Python' | 'TypeScript';
+}
+
+const { lang } = Astro.props;
+
+// Normalise to the label used by the selector ("Python" / "TypeScript")
+const normalised = lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase();
+// For TypeScript the naive toUpperCase+toLowerCase gives "Typescript" — fix:
+const label = lang.toLowerCase() === 'typescript' ? 'TypeScript' : normalised;
+---
+
+<div class="language-content" data-lang={label}>
+  <slot />
+</div>
+
+<style>
+  /*
+   * When a global language preference is active, hide the block that
+   * does NOT match.  The `data-strands-language` attribute on <html>
+   * is set by LanguageSelector (both server‑inline and client‑side).
+   *
+   * When NO preference is set (first visit, no JS), both blocks remain
+   * visible — content is never lost.
+   */
+  :global(html[data-strands-language='Python']) .language-content[data-lang='TypeScript'] {
+    display: none;
+  }
+  :global(html[data-strands-language='TypeScript']) .language-content[data-lang='Python'] {
+    display: none;
+  }
+</style>

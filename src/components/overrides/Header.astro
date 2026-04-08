@@ -19,6 +19,7 @@ import { Icon } from '@astrojs/starlight/components';
 import { navLinks, githubSections, type NavLink } from '../../config/navbar';
 import type { GitHubSection } from '../../sidebar';
 import GitHubDropdown from '../GitHubDropdown.astro';
+import LanguageSelector from '../LanguageSelector.astro';
 import { findCurrentNavSection } from '../../route-middleware';
 import logoHeaderDark from '../../assets/logo-header-dark.svg';
 import logoHeaderLight from '../../assets/logo-header-light.svg';
@@ -46,6 +47,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     </div>
     <div class="header-spacer"></div>
     {shouldRenderSearch && <div class="search-wrapper print:hidden"><Search /></div>}
+    <div class="mobile-lang-selector md:sl-hidden print:hidden"><LanguageSelector /></div>
     {/* Mobile nav dropdown */}
     {navLinks.length > 0 && (
       <nav class="mobile-nav md:sl-hidden print:hidden" aria-label="Main navigation">
@@ -86,6 +88,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
       </nav>
     )}
     <div class="sl-hidden md:sl-flex print:hidden right-group">
+      <LanguageSelector />
       <GitHubDropdown />
       <ThemeSelect />
       <LanguageSelect />
@@ -452,6 +455,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
       .header-spacer {
         /* In grid context, this element fills the 1fr column */
       }
+    }
+  }
+</style>
+
+<style>
+  @layer starlight.core {
+    .mobile-lang-selector {
+      display: flex;
+      align-items: center;
     }
   }
 </style>

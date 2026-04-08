@@ -5,6 +5,7 @@
  * See ARCHITECTURE.md for details.
  */
 import SiteScripts from '../SiteScripts.astro'
+import LanguageTabsMarker from '../LanguageTabsMarker.astro'
 import { baseSchemas } from '../../util/structured-data'
 
 const { head } = Astro.locals.starlightRoute
@@ -79,6 +80,7 @@ const structuredData = {
 
 <!-- AWS Shortbread cookie consent -->
 <SiteScripts />
+<LanguageTabsMarker />
 
 <!-- Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

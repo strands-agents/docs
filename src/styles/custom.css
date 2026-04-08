@@ -57,3 +57,46 @@ a[aria-current="page"]:hover {
 :root {
 	--sl-content-width: 50rem;
 }
+/* ============================================================================
+ * IMPLICIT LANGUAGE TABS
+ * ============================================================================
+ * When a global language preference is set (data-strands-language on <html>),
+ * hide the tab bar on Python/TypeScript tab groups. The content still switches
+ * via the global LanguageSelector — the tabs become "implicit".
+ *
+ * Tab groups that are NOT Python/TypeScript (e.g. npm/yarn/pnpm) keep their
+ * visible tab bar.
+ * ============================================================================ */
+
+/* When a language preference is active, hide tab headers on language tab groups.
+   We target tab groups where the tabs are exactly "Python" and "TypeScript". */
+html[data-strands-language] starlight-tabs .tablist-wrapper:has(
+  [role="tab"]:first-child:is([href*="python" i], :not([href]))
+) {
+  /* Fallback: we can't reliably detect Python/TS tabs via href alone since
+     Starlight generates anchors from panel IDs. Instead we use a JS-based
+     approach below. */
+}
+
+/* JS-based: LanguageSelector adds `data-lang-tabs` to language tab groups */
+starlight-tabs[data-lang-tabs] .tablist-wrapper {
+  display: none;
+}
+
+/* Add a subtle indicator showing which language is active on implicit tabs */
+starlight-tabs[data-lang-tabs]::before {
+  content: attr(data-active-lang);
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--sl-color-gray-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0;
+  margin-bottom: 0.25rem;
+}
+
+/* Remove the top margin that tab panels normally have (since there's no tab bar above) */
+starlight-tabs[data-lang-tabs] > [role="tabpanel"] {
+  margin-top: 0;
+}

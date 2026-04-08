@@ -1,0 +1,55 @@
+---
+/**
+ * Marks <starlight-tabs> elements that contain Python/TypeScript language tabs
+ * with a `data-lang-tabs` attribute so they can be styled as "implicit" tabs
+ * (hidden tab bar, content switched by the global LanguageSelector).
+ *
+ * Include this once per page (it's added to Head.astro).
+ * Runs immediately on DOM ready + observes new tabs added dynamically.
+ */
+---
+
+<script is:inline>
+(() => {
+  const LANG_LABELS = ['Python', 'TypeScript'];
+
+  function markLanguageTabs() {
+    document.querySelectorAll('starlight-tabs:not([data-lang-tabs-checked])').forEach((tabGroup) => {
+      tabGroup.setAttribute('data-lang-tabs-checked', '');
+      const tabs = tabGroup.querySelectorAll('[role="tab"]');
+      const labels = [...tabs].map(t => t.textContent?.trim());
+
+      // Only mark if ALL tab labels are language labels
+      const isLangTabs = labels.length > 0 && labels.every(l => LANG_LABELS.includes(l || ''));
+
+      if (isLangTabs) {
+        tabGroup.setAttribute('data-lang-tabs', '');
+
+        // Set the active language label
+        const activeTab = tabGroup.querySelector('[role="tab"][aria-selected="true"]');
+        if (activeTab) {
+          tabGroup.setAttribute('data-active-lang', activeTab.textContent?.trim() || '');
+        }
+      }
+    });
+  }
+
+  // Update data-active-lang when language changes
+  document.addEventListener('strands:language-change', (e) => {
+    document.querySelectorAll('starlight-tabs[data-lang-tabs]').forEach((tabGroup) => {
+      tabGroup.setAttribute('data-active-lang', e.detail.language);
+    });
+  });
+
+  // Mark tabs on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', markLanguageTabs);
+  } else {
+    markLanguageTabs();
+  }
+
+  // Also observe for dynamically added tabs (SPA-style navigation)
+  const observer = new MutationObserver(markLanguageTabs);
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>

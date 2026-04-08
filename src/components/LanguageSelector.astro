@@ -1,0 +1,223 @@
+---
+/**
+ * Global Language Selector — Python / TypeScript toggle.
+ *
+ * Sits in the header alongside the theme toggle.  When the user picks a
+ * language the selector:
+ *
+ *  1. Persists the choice in `localStorage` (`strands-language-preference`).
+ *  2. Writes the *same* key that Starlight's synced‑tabs use so every
+ *     `<Tabs>` / `<AutoSyncTabs>` group on every page instantly follows.
+ *  3. Emits a `strands:language-change` CustomEvent on `document` so that
+ *     the companion `<LanguageContent>` component (and any future
+ *     consumers) can react.
+ *  4. Programmatically clicks the matching tab in every `<starlight-tabs>`
+ *     on the current page to update the visible panel (Starlight only
+ *     restores from localStorage on page load — we need the live switch).
+ *  5. Applies `data-strands-language` on <html> so CSS can conditionally
+ *     show / hide content.
+ *
+ * The component renders as a segmented‑control pill (Python | TypeScript)
+ * that follows the site's Strands design tokens.
+ */
+
+// Compute the syncKey that AutoSyncTabs generates for Python|TypeScript
+// (must stay in sync with AutoSyncTabs.astro's hashString)
+function hashString(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36);
+}
+
+const syncKey = hashString('Python|TypeScript');
+---
+
+<strands-language-selector data-sync-key={syncKey}>
+  <div class="lang-selector" role="radiogroup" aria-label="Programming language">
+    <button
+      class="lang-btn"
+      role="radio"
+      aria-checked="true"
+      data-lang="Python"
+    >
+      Python
+    </button>
+    <button
+      class="lang-btn"
+      role="radio"
+      aria-checked="false"
+      data-lang="TypeScript"
+    >
+      TypeScript
+    </button>
+  </div>
+</strands-language-selector>
+
+{/* Inlined so the preference is applied before first paint — avoids FOUC */}
+<script is:inline>
+(() => {
+  // Restore preference immediately (before custom element upgrades)
+  const pref = typeof localStorage !== 'undefined'
+    ? localStorage.getItem('strands-language-preference')
+    : null;
+  if (pref) {
+    document.documentElement.setAttribute('data-strands-language', pref);
+  }
+})();
+</script>
+
+<script>
+  class StrandsLanguageSelector extends HTMLElement {
+    private buttons: HTMLButtonElement[];
+    private syncKey: string;
+    private storageKey = 'strands-language-preference';
+    // Must match the prefix Starlight uses for synced tabs
+    private starlightPrefix = 'starlight-synced-tabs__';
+
+    constructor() {
+      super();
+      this.buttons = [...this.querySelectorAll<HTMLButtonElement>('.lang-btn')];
+      this.syncKey = this.dataset.syncKey ?? '';
+
+      // Restore persisted preference
+      const saved = localStorage.getItem(this.storageKey);
+      if (saved) {
+        this.activate(saved, false);
+      }
+
+      // Wire up click handlers
+      this.buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.dataset.lang!;
+          this.activate(lang, true);
+        });
+      });
+
+      // Listen for external language-change events (e.g. from other selectors)
+      document.addEventListener('strands:language-change', ((e: CustomEvent) => {
+        this.activate(e.detail.language, false);
+      }) as EventListener);
+
+      // Also listen for Starlight tab clicks — if user manually clicks a
+      // Python/TypeScript tab, update the selector to match.
+      document.addEventListener('click', (e: MouseEvent) => {
+        const tab = (e.target as HTMLElement).closest?.('starlight-tabs [role="tab"]');
+        if (!tab) return;
+        const label = tab.textContent?.trim();
+        if (label === 'Python' || label === 'TypeScript') {
+          this.activate(label, false);
+        }
+      });
+    }
+
+    private activate(language: string, shouldSync: boolean) {
+      // Update button states
+      this.buttons.forEach((btn) => {
+        const isActive = btn.dataset.lang === language;
+        btn.setAttribute('aria-checked', String(isActive));
+        btn.classList.toggle('active', isActive);
+      });
+
+      // Persist
+      localStorage.setItem(this.storageKey, language);
+      // Also write the Starlight synced-tabs key so page loads respect it
+      localStorage.setItem(this.starlightPrefix + this.syncKey, language);
+
+      // Set data attribute on <html> for CSS-based content switching
+      document.documentElement.setAttribute('data-strands-language', language);
+
+      if (shouldSync) {
+        // Dispatch event for LanguageContent components
+        document.dispatchEvent(new CustomEvent('strands:language-change', {
+          detail: { language },
+        }));
+
+        // Programmatically switch all Starlight tab groups on this page
+        this.syncStarlightTabs(language);
+      }
+    }
+
+    private syncStarlightTabs(language: string) {
+      document.querySelectorAll('starlight-tabs').forEach((tabGroup) => {
+        const tabs = [...tabGroup.querySelectorAll<HTMLAnchorElement>('[role="tab"]')];
+        const panels = [...tabGroup.querySelectorAll<HTMLElement>(':scope > [role="tabpanel"]')];
+
+        const targetIndex = tabs.findIndex(
+          (tab) => tab.textContent?.trim() === language,
+        );
+        if (targetIndex === -1) return;
+
+        // Deselect all
+        tabs.forEach((tab) => {
+          tab.setAttribute('aria-selected', 'false');
+          tab.setAttribute('tabindex', '-1');
+        });
+        panels.forEach((panel) => {
+          panel.hidden = true;
+        });
+
+        // Select target
+        const newTab = tabs[targetIndex];
+        const newPanel = panels[targetIndex];
+        if (newTab) {
+          newTab.removeAttribute('tabindex');
+          newTab.setAttribute('aria-selected', 'true');
+        }
+        if (newPanel) {
+          newPanel.hidden = false;
+        }
+      });
+    }
+  }
+
+  customElements.define('strands-language-selector', StrandsLanguageSelector);
+</script>
+
+<style>
+  @layer starlight.components {
+    .lang-selector {
+      display: flex;
+      align-items: center;
+      background-color: var(--sl-color-gray-6);
+      border-radius: 999px;
+      padding: 2px;
+      gap: 0;
+    }
+
+    .lang-btn {
+      all: unset;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.625rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      line-height: 1.4;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--sl-color-gray-3);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .lang-btn:hover {
+      color: var(--sl-color-white);
+    }
+
+    .lang-btn.active,
+    .lang-btn[aria-checked='true'] {
+      background-color: var(--sl-color-accent);
+      color: var(--sl-color-black);
+      font-weight: 600;
+    }
+
+    :global([data-theme='light']) .lang-btn.active,
+    :global([data-theme='light']) .lang-btn[aria-checked='true'] {
+      color: #fff;
+    }
+  }
+</style>

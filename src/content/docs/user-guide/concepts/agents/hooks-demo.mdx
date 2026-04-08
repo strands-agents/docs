@@ -1,0 +1,166 @@
+---
+title: "Hooks (Language Selector Demo)"
+description: "Demo page showing the implicit language selector feature. Compare this with the original hooks page."
+---
+
+import LanguageContent from '../../../../../components/LanguageContent.astro';
+
+This page demonstrates the **implicit language selector** feature. Use the Python / TypeScript toggle in the header to switch all code examples and language-specific content on this page.
+
+## Overview
+
+Hooks are a composable extensibility mechanism for extending agent functionality by subscribing to events throughout the agent lifecycle.
+
+## Basic Usage — Implicit Tabs
+
+The tab groups below have their tab bar hidden. The global language selector in the header controls which panel is visible. No more clicking individual tabs!
+
+### Registering Individual Hook Callbacks
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+from strands.hooks import BeforeInvocationEvent, BeforeToolCallEvent
+
+agent = Agent()
+
+# Register individual callbacks
+def my_callback(event: BeforeInvocationEvent) -> None:
+    print("Custom callback triggered")
+
+agent.add_hook(my_callback, BeforeInvocationEvent)
+
+# Type inference: If your callback has a type hint, the event type is inferred
+def typed_callback(event: BeforeToolCallEvent) -> None:
+    print(f"Tool called: {event.tool_use['name']}")
+
+agent.add_hook(typed_callback)  # Event type inferred from type hint
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+import { Agent } from "@strands-agents/sdk";
+import { BeforeToolCallEvent } from "@strands-agents/sdk/hooks";
+
+const agent = new Agent({ model });
+
+// Register with add_hook — type-safe callback
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log(`Tool called: ${event.toolUse.name}`);
+});
+```
+</Tab>
+</Tabs>
+
+## Language-Specific Prose — LanguageContent
+
+The section below uses `<LanguageContent>` to show completely different prose depending on the selected language. This is for cases where the explanation itself differs — not just the code.
+
+<LanguageContent lang="python">
+
+### Python Hook Architecture
+
+In Python, hooks use a **decorator-based pattern** with `@hook` and are registered via `agent.add_hook()`. The hook system supports:
+
+- **Type inference** from callback type hints — no need to specify the event type explicitly
+- **`HookProvider` protocol** — classes that bundle related hooks together
+- **Plugin system** — `Plugin` base class with `@hook` decorator for packaging hooks with configuration
+
+Python hooks receive strongly-typed event dataclasses with `@property` accessors for read-only fields and explicit setters for mutable fields.
+
+</LanguageContent>
+
+<LanguageContent lang="typescript">
+
+### TypeScript Hook Architecture
+
+In TypeScript, hooks use a **class-based event pattern** where all events extend `HookableEvent`. The hook system supports:
+
+- **`agent.addHook(EventClass, callback)`** — type-safe registration with full IntelliSense
+- **Streaming integration** — all hook events are streamable via `agent.stream()` 
+- **Rich event wrappers** — `ContentBlockEvent`, `ModelMessageEvent`, `ToolResultEvent` provide structured access to streaming data
+- **Batch operations** — `BeforeToolsEvent` / `AfterToolsEvent` for intercepting tool batches
+
+TypeScript events carry their data as typed properties accessible via `.event`, `.message`, `.result`, etc.
+
+</LanguageContent>
+
+## Available Events
+
+The tables below show the different events available in each SDK. They switch automatically with the header toggle:
+
+<Tabs>
+<Tab label="Python">
+
+| Event                              | Description                                                                |
+|------------------------------------|----------------------------------------------------------------------------|
+| `AgentInitializedEvent`            | Agent construction completed                                               |
+| `BeforeInvocationEvent`            | New agent invocation starting                                              |
+| `AfterInvocationEvent`             | Agent request completed (success or failure)                               |
+| `MessageAddedEvent`                | Message added to conversation history                                      |
+| `BeforeModelCallEvent`             | Before model inference                                                     |
+| `AfterModelCallEvent`              | After model inference completes                                            |
+| `BeforeToolCallEvent`              | Before tool invocation                                                     |
+| `AfterToolCallEvent`               | After tool invocation completes                                            |
+</Tab>
+<Tab label="TypeScript">
+
+| Event                    | Description                                                                     |
+|--------------------------|---------------------------------------------------------------------------------|
+| `AgentInitializedEvent`  | Agent construction completed                                                    |
+| `BeforeInvocationEvent`  | New agent invocation starting                                                   |
+| `AfterInvocationEvent`   | Agent request completed                                                         |
+| `MessageAddedEvent`      | Message added to conversation history                                           |
+| `BeforeModelCallEvent`   | Before model inference                                                          |
+| `AfterModelCallEvent`    | After model inference completes                                                 |
+| `ModelStreamUpdateEvent` | Streaming delta from model                                                      |
+| `ContentBlockEvent`      | Fully assembled content block                                                   |
+| `ModelMessageEvent`      | Complete model message                                                          |
+| `BeforeToolCallEvent`    | Before tool invocation                                                          |
+| `AfterToolCallEvent`     | After tool invocation completes                                                 |
+| `BeforeToolsEvent`       | Before batch tool execution                                                     |
+| `AfterToolsEvent`        | After batch tool execution                                                      |
+| `ToolStreamUpdateEvent`  | Streaming progress from tools                                                   |
+| `ToolResultEvent`        | Completed tool result                                                           |
+| `AgentResultEvent`       | Final agent result                                                              |
+</Tab>
+</Tabs>
+
+## Mixed Content — Tabs + LanguageContent
+
+You can mix both approaches. Use `<Tabs>` for code blocks (where the tab UI is hidden but the switching mechanism is intact) and `<LanguageContent>` for prose sections:
+
+<LanguageContent lang="python">
+
+In Python, you modify tool parameters by accessing `event.tool_use` directly:
+
+</LanguageContent>
+
+<LanguageContent lang="typescript">
+
+In TypeScript, you modify tool parameters through the `event.toolUse` property:
+
+</LanguageContent>
+
+<Tabs>
+<Tab label="Python">
+
+```python
+def fix_args(event: BeforeToolCallEvent) -> None:
+    event.tool_use["input"]["region"] = "us-west-2"
+
+agent.add_hook(fix_args, BeforeToolCallEvent)
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+agent.addHook(BeforeToolCallEvent, (event) => {
+  event.toolUse.input.region = "us-west-2";
+});
+```
+</Tab>
+</Tabs>
