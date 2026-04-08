@@ -71,7 +71,7 @@ async def recurse_event_loop(
 ) -> AsyncGenerator[TypedEvent, None]
 ```
 
-Defined in: [src/strands/event\_loop/event\_loop.py:236](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/event_loop.py#L236)
+Defined in: [src/strands/event\_loop/event\_loop.py:243](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/event_loop.py#L243)
 
 Make a recursive call to event\_loop\_cycle with the current state.
 

@@ -2,7 +2,7 @@ AWS Lambda is a serverless compute service that lets you run code without provis
 
 If you’re not familiar with the AWS CDK, check out the [official documentation](https://docs.aws.amazon.com/cdk/v2/guide/home.html).
 
-This guide discusses Lambda integration at a high level - for a complete example project deploying to Lambda, check out the [<code dir="auto">deploy\_to\_lambda</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda).
+This guide discusses Lambda integration at a high level - for a complete example project deploying to Lambda, check out the [`deploy_to_lambda` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda).
 
 Note
 
@@ -20,7 +20,7 @@ The Lambda handler follows these steps:
 4.  Extract the text from the agent’s response
 5.  Format and return the response back to the client
 
-Here’s an example of a weather forecasting agent handler ([<code dir="auto">agent\_handler.py</code>](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/lambda/agent_handler.py)):
+Here’s an example of a weather forecasting agent handler ([`agent_handler.py`](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/lambda/agent_handler.py)):
 
 ```python
 from strands import Agent
@@ -99,7 +99,7 @@ aws lambda get-layer-version \
 
 ### Using a Custom Dependencies Layer
 
-If you need packages beyond the base `strands-agents` SDK (such as `strands-agents-tools`), create a custom layer ([<code dir="auto">AgentLambdaStack.ts</code>](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/lib/agent-lambda-stack.ts)):
+If you need packages beyond the base `strands-agents` SDK (such as `strands-agents-tools`), create a custom layer ([`AgentLambdaStack.ts`](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/lib/agent-lambda-stack.ts)):
 
 ```typescript
 const packagingDirectory = path.join(__dirname, "../packaging");
@@ -155,7 +155,7 @@ Failing to match the architecture can result in runtime errors when the Lambda f
 
 ### Packaging Your Code
 
-The CDK constructs above expect the Python code to be packaged before running the deployment - this can be done using a Python script that creates two ZIP files ([<code dir="auto">package\_for\_lambda.py</code>](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/bin/package_for_lambda.py)):
+The CDK constructs above expect the Python code to be packaged before running the deployment - this can be done using a Python script that creates two ZIP files ([`package_for_lambda.py`](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda/bin/package_for_lambda.py)):
 
 ```python
 def create_lambda_package():
@@ -284,7 +284,7 @@ Possible follow-up tasks would be to:
 
 ## Complete Example
 
-For the complete example code, including all files and configurations, see the [<code dir="auto">deploy\_to\_lambda</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda).
+For the complete example code, including all files and configurations, see the [`deploy_to_lambda` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_lambda).
 
 ## Related Resources
 

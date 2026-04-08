@@ -1,10 +1,10 @@
-Defined in: [src/hooks/events.ts:157](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L157)
+Defined in: [src/hooks/events.ts:157](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L157)
 
 Event triggered when the framework adds a message to the conversation history. Fired during the agent loop execution for framework-generated messages. Does not fire for initial messages from AgentConfig or user input messages.
 
 ## Extends
 
--   [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md)
+-   [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md)
 
 ## Constructors
 
@@ -14,15 +14,15 @@ Event triggered when the framework adds a message to the conversation history. F
 new MessageAddedEvent(data): MessageAddedEvent;
 ```
 
-Defined in: [src/hooks/events.ts:162](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L162)
+Defined in: [src/hooks/events.ts:162](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L162)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: `LocalAgent`; `message`: [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md); } |
+| `data` | { `agent`: `LocalAgent`; `message`: [`Message`](/docs/api/typescript/Message/index.md); } |
 | `data.agent` | `LocalAgent` |
-| `data.message` | [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md) |
+| `data.message` | [`Message`](/docs/api/typescript/Message/index.md) |
 
 #### Returns
 
@@ -30,7 +30,7 @@ Defined in: [src/hooks/events.ts:162](https://github.com/strands-agents/sdk-type
 
 #### Overrides
 
-[<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/HookableEvent/index.md#constructor)
+[`HookableEvent`](/docs/api/typescript/HookableEvent/index.md).[`constructor`](/docs/api/typescript/HookableEvent/index.md#constructor)
 
 ## Properties
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:162](https://github.com/strands-agents/sdk-type
 readonly type: "messageAddedEvent";
 ```
 
-Defined in: [src/hooks/events.ts:158](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L158)
+Defined in: [src/hooks/events.ts:158](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L158)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:158](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:159](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L159)
+Defined in: [src/hooks/events.ts:159](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L159)
 
 ---
 
@@ -60,7 +60,7 @@ Defined in: [src/hooks/events.ts:159](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:160](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L160)
+Defined in: [src/hooks/events.ts:160](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L160)
 
 ## Methods
 
@@ -70,7 +70,7 @@ Defined in: [src/hooks/events.ts:160](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<MessageAddedEvent, "type" | "message">;
 ```
 
-Defined in: [src/hooks/events.ts:172](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/events.ts#L172)
+Defined in: [src/hooks/events.ts:172](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L172)
 
 Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
 

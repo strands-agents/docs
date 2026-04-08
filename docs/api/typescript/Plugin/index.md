@@ -1,4 +1,4 @@
-Defined in: [src/plugins/plugin.ts:51](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/plugins/plugin.ts#L51)
+Defined in: [src/plugins/plugin.ts:51](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/plugins/plugin.ts#L51)
 
 Interface for objects that extend agent functionality.
 
@@ -45,7 +45,7 @@ class MyToolPlugin implements Plugin {
 readonly name: string;
 ```
 
-Defined in: [src/plugins/plugin.ts:58](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/plugins/plugin.ts#L58)
+Defined in: [src/plugins/plugin.ts:58](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/plugins/plugin.ts#L58)
 
 A stable string identifier for the plugin. Used for logging, duplicate detection, and plugin management.
 
@@ -59,7 +59,7 @@ For strands-vended plugins, names should be prefixed with `strands:`.
 initAgent(agent): void | Promise<void>;
 ```
 
-Defined in: [src/plugins/plugin.ts:68](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/plugins/plugin.ts#L68)
+Defined in: [src/plugins/plugin.ts:68](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/plugins/plugin.ts#L68)
 
 Initialize the plugin with the agent instance.
 
@@ -83,12 +83,12 @@ Implement this method to register hooks and perform custom initialization. Tool 
 optional getTools(): Tool[];
 ```
 
-Defined in: [src/plugins/plugin.ts:76](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/plugins/plugin.ts#L76)
+Defined in: [src/plugins/plugin.ts:76](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/plugins/plugin.ts#L76)
 
 Returns tools provided by this plugin for auto-registration. Implement to provide plugin-specific tools.
 
 #### Returns
 
-[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md)\[\]
+[`Tool`](/docs/api/typescript/Tool/index.md)\[\]
 
 Array of tools to register with the agent

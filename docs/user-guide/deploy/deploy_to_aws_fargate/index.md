@@ -2,7 +2,7 @@ AWS Fargate is a serverless compute engine for containers that works with Amazon
 
 If you’re not familiar with the AWS CDK, check out the [official documentation](https://docs.aws.amazon.com/cdk/v2/guide/home.html).
 
-This guide discusses Fargate integration at a high level - for a complete example project deploying to Fargate, check out the [<code dir="auto">deploy\_to\_fargate</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate).
+This guide discusses Fargate integration at a high level - for a complete example project deploying to Fargate, check out the [`deploy_to_fargate` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate).
 
 ## Creating Your Agent in Python
 
@@ -15,7 +15,7 @@ The FastAPI application follows these steps:
 3.  Process incoming requests through the agent
 4.  Return the response back to the client
 
-Here’s an example of a weather forecasting agent application ([<code dir="auto">app.py</code>](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate/docker/app/app.py)):
+Here’s an example of a weather forecasting agent application ([`app.py`](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate/docker/app/app.py)):
 
 ```python
 app = FastAPI(title="Weather API")
@@ -288,7 +288,7 @@ Possible follow-up tasks would be to:
 
 ## Complete Example
 
-For the complete example code, including all files and configurations, see the [<code dir="auto">deploy\_to\_fargate</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate).
+For the complete example code, including all files and configurations, see the [`deploy_to_fargate` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate).
 
 ## Related Resources
 

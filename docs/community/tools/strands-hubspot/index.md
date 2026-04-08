@@ -56,5 +56,5 @@ Get your API key at: [HubSpot Private Apps](https://developers.hubspot.com/docs/
 
 -   [PyPI Package](https://pypi.org/project/strands-hubspot/)
 -   [GitHub Repository](https://github.com/eraykeskinmac/strands-hubspot)
--   [Examples &amp; Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+-   [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
 -   [HubSpot API Docs](https://developers.hubspot.com/)

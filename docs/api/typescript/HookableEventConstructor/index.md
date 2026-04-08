@@ -2,7 +2,7 @@
 type HookableEventConstructor<T> = (...args) => T;
 ```
 
-Defined in: [src/hooks/types.ts:7](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/hooks/types.ts#L7)
+Defined in: [src/hooks/types.ts:7](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/types.ts#L7)
 
 Type for a constructor function that creates HookableEvent instances.
 
@@ -10,7 +10,7 @@ Type for a constructor function that creates HookableEvent instances.
 
 | Type Parameter | Default type |
 | --- | --- |
-| `T` *extends* [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md) | [<code dir="auto">HookableEvent</code>](/docs/api/typescript/HookableEvent/index.md) |
+| `T` *extends* [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md) | [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md) |
 
 ## Parameters
 

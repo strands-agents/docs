@@ -5,7 +5,7 @@ type FunctionToolCallback = (input, toolContext) =>
   | JSONValue;
 ```
 
-Defined in: [src/tools/function-tool.ts:51](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/function-tool.ts#L51)
+Defined in: [src/tools/function-tool.ts:51](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/function-tool.ts#L51)
 
 Callback function for FunctionTool implementations. The callback can return values in multiple ways, and FunctionTool handles the conversion to ToolResultBlock.
 
@@ -14,11 +14,11 @@ Callback function for FunctionTool implementations. The callback can return valu
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `input` | `unknown` | The input parameters conforming to the tool’s inputSchema |
-| `toolContext` | [<code dir="auto">ToolContext</code>](/docs/api/typescript/ToolContext/index.md) | The tool execution context with invocation state |
+| `toolContext` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | The tool execution context with invocation state |
 
 ## Returns
 
-| `AsyncGenerator`<[<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md), [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md), `never`\> | `Promise`<[<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md)\> | [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md)
+| `AsyncGenerator`<[`JSONValue`](/docs/api/typescript/JSONValue/index.md), [`JSONValue`](/docs/api/typescript/JSONValue/index.md), `never`\> | `Promise`<[`JSONValue`](/docs/api/typescript/JSONValue/index.md)\> | [`JSONValue`](/docs/api/typescript/JSONValue/index.md)
 
 Can return:
 

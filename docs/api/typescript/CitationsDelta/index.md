@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:472](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L472)
+Defined in: [src/models/streaming.ts:472](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L472)
 
 Citations content delta within a content block. Represents a citations content block from the model.
 
@@ -10,7 +10,7 @@ Citations content delta within a content block. Represents a citations content b
 type: "citationsDelta";
 ```
 
-Defined in: [src/models/streaming.ts:476](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L476)
+Defined in: [src/models/streaming.ts:476](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L476)
 
 Discriminator for citations content delta.
 
@@ -22,7 +22,7 @@ Discriminator for citations content delta.
 citations: Citation[];
 ```
 
-Defined in: [src/models/streaming.ts:481](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L481)
+Defined in: [src/models/streaming.ts:481](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L481)
 
 Array of citations linking generated content to source locations.
 
@@ -34,6 +34,6 @@ Array of citations linking generated content to source locations.
 content: CitationGeneratedContent[];
 ```
 
-Defined in: [src/models/streaming.ts:486](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L486)
+Defined in: [src/models/streaming.ts:486](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L486)
 
 The generated content associated with these citations.

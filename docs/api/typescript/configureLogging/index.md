@@ -2,7 +2,7 @@
 function configureLogging(customLogger): void;
 ```
 
-Defined in: [src/logging/logger.ts:44](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/logging/logger.ts#L44)
+Defined in: [src/logging/logger.ts:44](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/logging/logger.ts#L44)
 
 Configures the global logger.
 
@@ -12,7 +12,7 @@ Allows users to inject their own logger implementation (e.g., Pino, Winston) to 
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `customLogger` | [<code dir="auto">Logger</code>](/docs/api/typescript/Logger/index.md) | The logger implementation to use |
+| `customLogger` | [`Logger`](/docs/api/typescript/Logger/index.md) | The logger implementation to use |
 
 ## Returns
 

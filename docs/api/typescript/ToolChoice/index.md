@@ -13,7 +13,7 @@ type ToolChoice =
 };
 ```
 
-Defined in: [src/tools/types.ts:62](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/types.ts#L62)
+Defined in: [src/tools/types.ts:62](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/types.ts#L62)
 
 Specifies how the model should choose which tool to use.
 

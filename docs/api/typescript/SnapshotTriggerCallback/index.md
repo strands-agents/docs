@@ -2,7 +2,7 @@
 type SnapshotTriggerCallback = (params) => boolean;
 ```
 
-Defined in: [src/session/types.ts:41](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/session/types.ts#L41)
+Defined in: [src/session/types.ts:41](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/types.ts#L41)
 
 Callback function to determine when to create immutable snapshots. Called after each agent invocation to decide if a snapshot should be saved.
 
@@ -10,7 +10,7 @@ Callback function to determine when to create immutable snapshots. Called after 
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `params` | [<code dir="auto">SnapshotTriggerParams</code>](/docs/api/typescript/SnapshotTriggerParams/index.md) | Snapshot trigger parameters |
+| `params` | [`SnapshotTriggerParams`](/docs/api/typescript/SnapshotTriggerParams/index.md) | Snapshot trigger parameters |
 
 ## Returns
 

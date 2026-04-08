@@ -22,13 +22,28 @@ Represents the last result of invoking an agent with a prompt.
 -   `interrupts` - List of interrupts if raised by user.
 -   `structured_output` - Parsed structured output when structured\_output\_model was specified.
 
+#### context\_size
+
+```python
+@property
+def context_size() -> int | None
+```
+
+Defined in: [src/strands/agent/agent\_result.py:39](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L39)
+
+Most recent context size in tokens from the last LLM call.
+
+**Returns**:
+
+The input token count from the most recent cycle, or None if no data is available.
+
 #### \_\_str\_\_
 
 ```python
 def __str__() -> str
 ```
 
-Defined in: [src/strands/agent/agent\_result.py:38](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L38)
+Defined in: [src/strands/agent/agent\_result.py:47](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L47)
 
 Return a string representation of the agent result.
 
@@ -49,7 +64,7 @@ String representation based on the priority order above.
 def from_dict(cls, data: dict[str, Any]) -> "AgentResult"
 ```
 
-Defined in: [src/strands/agent/agent\_result.py:71](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L71)
+Defined in: [src/strands/agent/agent\_result.py:80](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L80)
 
 Rehydrate an AgentResult from persisted JSON.
 
@@ -71,7 +86,7 @@ AgentResult instance
 def to_dict() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/agent/agent\_result.py:89](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L89)
+Defined in: [src/strands/agent/agent\_result.py:98](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent_result.py#L98)
 
 Convert this AgentResult to JSON-serializable dictionary.
 

@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/conversation-manager.ts:64](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L64)
+Defined in: [src/conversation-manager/conversation-manager.ts:64](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L64)
 
 Abstract base class for conversation history management strategies.
 
@@ -22,13 +22,13 @@ class Last10MessagesManager extends ConversationManager {
 
 ## Extended by
 
--   [<code dir="auto">NullConversationManager</code>](/docs/api/typescript/NullConversationManager/index.md)
--   [<code dir="auto">SlidingWindowConversationManager</code>](/docs/api/typescript/SlidingWindowConversationManager/index.md)
--   [<code dir="auto">SummarizingConversationManager</code>](/docs/api/typescript/SummarizingConversationManager/index.md)
+-   [`NullConversationManager`](/docs/api/typescript/NullConversationManager/index.md)
+-   [`SlidingWindowConversationManager`](/docs/api/typescript/SlidingWindowConversationManager/index.md)
+-   [`SummarizingConversationManager`](/docs/api/typescript/SummarizingConversationManager/index.md)
 
 ## Implements
 
--   [<code dir="auto">Plugin</code>](/docs/api/typescript/Plugin/index.md)
+-   [`Plugin`](/docs/api/typescript/Plugin/index.md)
 
 ## Constructors
 
@@ -50,13 +50,13 @@ new ConversationManager(): ConversationManager;
 abstract readonly name: string;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:68](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L68)
+Defined in: [src/conversation-manager/conversation-manager.ts:68](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L68)
 
 A stable string identifier for this conversation manager.
 
 #### Implementation of
 
-[<code dir="auto">Plugin</code>](/docs/api/typescript/Plugin/index.md).[<code dir="auto">name</code>](/docs/api/typescript/Plugin/index.md#name)
+[`Plugin`](/docs/api/typescript/Plugin/index.md).[`name`](/docs/api/typescript/Plugin/index.md#name)
 
 ## Methods
 
@@ -66,7 +66,7 @@ A stable string identifier for this conversation manager.
 abstract reduce(options): boolean | Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:86](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L86)
+Defined in: [src/conversation-manager/conversation-manager.ts:86](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L86)
 
 Reduce the conversation history.
 
@@ -80,7 +80,7 @@ Implementations should mutate `agent.messages` in place and return `true` if any
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `options` | [<code dir="auto">ConversationManagerReduceOptions</code>](/docs/api/typescript/ConversationManagerReduceOptions/index.md) | The reduction options |
+| `options` | [`ConversationManagerReduceOptions`](/docs/api/typescript/ConversationManagerReduceOptions/index.md) | The reduction options |
 
 #### Returns
 
@@ -96,7 +96,7 @@ Implementations should mutate `agent.messages` in place and return `true` if any
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L100)
 
 Initialize the conversation manager with the agent instance.
 
@@ -116,4 +116,4 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 
 #### Implementation of
 
-[<code dir="auto">Plugin</code>](/docs/api/typescript/Plugin/index.md).[<code dir="auto">initAgent</code>](/docs/api/typescript/Plugin/index.md#initagent)
+[`Plugin`](/docs/api/typescript/Plugin/index.md).[`initAgent`](/docs/api/typescript/Plugin/index.md#initagent)

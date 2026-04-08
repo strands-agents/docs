@@ -60,7 +60,7 @@ If you encounter the error `ModuleNotFoundError: No module named 'anthropic'`, t
 
 ### Structured Output
 
-Anthropic’s Claude models support structured output through their tool calling capabilities. When you use [<code dir="auto">Agent.structured\_output()</code>](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to Anthropic’s tool specification format.
+Anthropic’s Claude models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to Anthropic’s tool specification format.
 
 ```python
 from pydantic import BaseModel, Field

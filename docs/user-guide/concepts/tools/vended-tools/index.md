@@ -1,6 +1,6 @@
 Vended tools are pre-built tools included directly in the Strands SDK for common agent tasks like file operations, shell commands, HTTP requests, and persistent notes.
 
-They ship as part of the SDK package and are updated alongside it — see [Versioning &amp; Maintenance](#versioning--maintenance) for details on how changes are communicated and what level of backwards compatibility they maintain.
+They ship as part of the SDK package and are updated alongside it — see [Versioning & Maintenance](#versioning--maintenance) for details on how changes are communicated and what level of backwards compatibility they maintain.
 
 ## Quick Start
 

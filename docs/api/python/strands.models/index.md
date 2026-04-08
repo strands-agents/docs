@@ -8,7 +8,7 @@ This package includes an abstract base Model class along with concrete implement
 def __getattr__(name: str) -> Any
 ```
 
-Defined in: [src/strands/models/<strong>init</strong>.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/__init__.py#L21)
+Defined in: [src/strands/models/**init**.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/__init__.py#L21)
 
 Lazy load model implementations only when accessed.
 

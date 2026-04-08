@@ -2,6 +2,6 @@
 type Scope = "agent" | "multiAgent";
 ```
 
-Defined in: [src/agent/snapshot.ts:51](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L51)
+Defined in: [src/types/snapshot.ts:15](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L15)
 
 Scope defines the context for snapshot data.

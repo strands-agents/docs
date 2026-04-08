@@ -1,6 +1,6 @@
-Defined in: [src/agent/snapshot.ts:56](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L56)
+Defined in: [src/types/snapshot.ts:20](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L20)
 
-Point-in-time capture of agent state.
+Point-in-time capture of agent or orchestrator state.
 
 ## Properties
 
@@ -10,7 +10,7 @@ Point-in-time capture of agent state.
 scope: Scope;
 ```
 
-Defined in: [src/agent/snapshot.ts:60](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L60)
+Defined in: [src/types/snapshot.ts:22](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L22)
 
 Scope identifying the snapshot context (agent or multi-agent).
 
@@ -22,7 +22,7 @@ Scope identifying the snapshot context (agent or multi-agent).
 schemaVersion: string;
 ```
 
-Defined in: [src/agent/snapshot.ts:65](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L65)
+Defined in: [src/types/snapshot.ts:24](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L24)
 
 Schema version string for forward compatibility.
 
@@ -34,7 +34,7 @@ Schema version string for forward compatibility.
 createdAt: string;
 ```
 
-Defined in: [src/agent/snapshot.ts:70](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L70)
+Defined in: [src/types/snapshot.ts:26](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L26)
 
 ISO 8601 timestamp of when snapshot was created.
 
@@ -46,9 +46,9 @@ ISO 8601 timestamp of when snapshot was created.
 data: Record<string, JSONValue>;
 ```
 
-Defined in: [src/agent/snapshot.ts:75](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L75)
+Defined in: [src/types/snapshot.ts:28](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L28)
 
-Agent’s evolving state (messages, state, systemPrompt). Strands-owned.
+Framework-owned state data.
 
 ---
 
@@ -58,6 +58,6 @@ Agent’s evolving state (messages, state, systemPrompt). Strands-owned.
 appData: Record<string, JSONValue>;
 ```
 
-Defined in: [src/agent/snapshot.ts:80](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/agent/snapshot.ts#L80)
+Defined in: [src/types/snapshot.ts:30](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/snapshot.ts#L30)
 
 Application-owned data. Strands does not read or modify this.

@@ -1,11 +1,11 @@
-Defined in: [src/types/media.ts:102](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L102)
+Defined in: [src/types/media.ts:102](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L102)
 
 S3 location for media and document sources.
 
 ## Implements
 
--   [<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md)
--   `JSONSerializable`<[<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md)\>
+-   [`S3LocationData`](/docs/api/typescript/S3LocationData/index.md)
+-   `JSONSerializable`<[`S3LocationData`](/docs/api/typescript/S3LocationData/index.md)\>
 
 ## Constructors
 
@@ -15,13 +15,13 @@ S3 location for media and document sources.
 new S3Location(data): S3Location;
 ```
 
-Defined in: [src/types/media.ts:107](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L107)
+Defined in: [src/types/media.ts:107](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L107)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | `Omit`<[<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md), `"type"`\> & { `type?`: `"s3"`; } |
+| `data` | `Omit`<[`S3LocationData`](/docs/api/typescript/S3LocationData/index.md), `"type"`\> & { `type?`: `"s3"`; } |
 
 #### Returns
 
@@ -35,13 +35,13 @@ Defined in: [src/types/media.ts:107](https://github.com/strands-agents/sdk-types
 readonly type: "s3";
 ```
 
-Defined in: [src/types/media.ts:103](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L103)
+Defined in: [src/types/media.ts:103](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L103)
 
 Location type — always “s3”.
 
 #### Implementation of
 
-[<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md).[<code dir="auto">type</code>](/docs/api/typescript/S3LocationData/index.md#type)
+[`S3LocationData`](/docs/api/typescript/S3LocationData/index.md).[`type`](/docs/api/typescript/S3LocationData/index.md#type)
 
 ---
 
@@ -51,13 +51,13 @@ Location type — always “s3”.
 readonly uri: string;
 ```
 
-Defined in: [src/types/media.ts:104](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L104)
+Defined in: [src/types/media.ts:104](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L104)
 
 S3 URI in format: s3://bucket-name/key-name
 
 #### Implementation of
 
-[<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md).[<code dir="auto">uri</code>](/docs/api/typescript/S3LocationData/index.md#uri)
+[`S3LocationData`](/docs/api/typescript/S3LocationData/index.md).[`uri`](/docs/api/typescript/S3LocationData/index.md#uri)
 
 ---
 
@@ -67,13 +67,13 @@ S3 URI in format: s3://bucket-name/key-name
 readonly optional bucketOwner?: string;
 ```
 
-Defined in: [src/types/media.ts:105](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L105)
+Defined in: [src/types/media.ts:105](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L105)
 
 AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs to another AWS account.
 
 #### Implementation of
 
-[<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md).[<code dir="auto">bucketOwner</code>](/docs/api/typescript/S3LocationData/index.md#bucketowner)
+[`S3LocationData`](/docs/api/typescript/S3LocationData/index.md).[`bucketOwner`](/docs/api/typescript/S3LocationData/index.md#bucketowner)
 
 ## Methods
 
@@ -83,13 +83,13 @@ AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs
 toJSON(): S3LocationData;
 ```
 
-Defined in: [src/types/media.ts:118](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L118)
+Defined in: [src/types/media.ts:118](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L118)
 
 Serializes the S3Location to a JSON-compatible S3LocationData object. Called automatically by JSON.stringify().
 
 #### Returns
 
-[<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md)
+[`S3LocationData`](/docs/api/typescript/S3LocationData/index.md)
 
 #### Implementation of
 
@@ -105,7 +105,7 @@ JSONSerializable.toJSON
 static fromJSON(data): S3Location;
 ```
 
-Defined in: [src/types/media.ts:132](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/media.ts#L132)
+Defined in: [src/types/media.ts:132](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/media.ts#L132)
 
 Creates an S3Location instance from S3LocationData.
 
@@ -113,7 +113,7 @@ Creates an S3Location instance from S3LocationData.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | [<code dir="auto">S3LocationData</code>](/docs/api/typescript/S3LocationData/index.md) | S3LocationData to deserialize |
+| `data` | [`S3LocationData`](/docs/api/typescript/S3LocationData/index.md) | S3LocationData to deserialize |
 
 #### Returns
 

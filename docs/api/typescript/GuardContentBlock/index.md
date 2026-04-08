@@ -1,11 +1,11 @@
-Defined in: [src/types/messages.ts:778](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L778)
+Defined in: [src/types/messages.ts:780](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L780)
 
 Guard content block for guardrail evaluation. Marks content that should be evaluated by guardrails for safety, grounding, or other policies. Can be used in both message content and system prompts.
 
 ## Implements
 
--   [<code dir="auto">GuardContentBlockData</code>](/docs/api/typescript/GuardContentBlockData/index.md)
--   `JSONSerializable`<{ `guardContent`: `Serialized`<[<code dir="auto">GuardContentBlockData</code>](/docs/api/typescript/GuardContentBlockData/index.md)\>; }>
+-   [`GuardContentBlockData`](/docs/api/typescript/GuardContentBlockData/index.md)
+-   `JSONSerializable`<{ `guardContent`: `Serialized`<[`GuardContentBlockData`](/docs/api/typescript/GuardContentBlockData/index.md)\>; }>
 
 ## Constructors
 
@@ -15,13 +15,13 @@ Guard content block for guardrail evaluation. Marks content that should be evalu
 new GuardContentBlock(data): GuardContentBlock;
 ```
 
-Defined in: [src/types/messages.ts:796](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L796)
+Defined in: [src/types/messages.ts:798](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L798)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [<code dir="auto">GuardContentBlockData</code>](/docs/api/typescript/GuardContentBlockData/index.md) |
+| `data` | [`GuardContentBlockData`](/docs/api/typescript/GuardContentBlockData/index.md) |
 
 #### Returns
 
@@ -35,7 +35,7 @@ Defined in: [src/types/messages.ts:796](https://github.com/strands-agents/sdk-ty
 readonly type: "guardContentBlock";
 ```
 
-Defined in: [src/types/messages.ts:784](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L784)
+Defined in: [src/types/messages.ts:786](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L786)
 
 Discriminator for guard content.
 
@@ -47,13 +47,13 @@ Discriminator for guard content.
 readonly optional text?: GuardContentText;
 ```
 
-Defined in: [src/types/messages.ts:789](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L789)
+Defined in: [src/types/messages.ts:791](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L791)
 
 Text content with evaluation qualifiers.
 
 #### Implementation of
 
-[<code dir="auto">GuardContentBlockData</code>](/docs/api/typescript/GuardContentBlockData/index.md).[<code dir="auto">text</code>](/docs/api/typescript/GuardContentBlockData/index.md#text)
+[`GuardContentBlockData`](/docs/api/typescript/GuardContentBlockData/index.md).[`text`](/docs/api/typescript/GuardContentBlockData/index.md#text)
 
 ---
 
@@ -63,13 +63,13 @@ Text content with evaluation qualifiers.
 readonly optional image?: GuardContentImage;
 ```
 
-Defined in: [src/types/messages.ts:794](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L794)
+Defined in: [src/types/messages.ts:796](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L796)
 
 Image content with evaluation qualifiers.
 
 #### Implementation of
 
-[<code dir="auto">GuardContentBlockData</code>](/docs/api/typescript/GuardContentBlockData/index.md).[<code dir="auto">image</code>](/docs/api/typescript/GuardContentBlockData/index.md#image)
+[`GuardContentBlockData`](/docs/api/typescript/GuardContentBlockData/index.md).[`image`](/docs/api/typescript/GuardContentBlockData/index.md#image)
 
 ## Methods
 
@@ -92,7 +92,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/messages.ts:816](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L816)
+Defined in: [src/types/messages.ts:818](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L818)
 
 Serializes the GuardContentBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array image bytes are encoded as base64 string.
 
@@ -117,14 +117,14 @@ Serializes the GuardContentBlock to a JSON-compatible ContentBlockData object. C
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `guardContent` | { `text?`: { `qualifiers`: [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; }; `image?`: { `format`: [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string`; }; }; } | \- | [src/types/messages.ts:816](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L816) |
-| `guardContent.text?` | { `qualifiers`: [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; } | Text content with evaluation qualifiers. | [src/types/messages.ts:765](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L765) |
-| `guardContent.text.qualifiers` | [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\] | Qualifiers that specify how this content should be evaluated. | [src/types/messages.ts:734](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L734) |
-| `guardContent.text.text` | `string` | The text content to be evaluated. | [src/types/messages.ts:739](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L739) |
-| `guardContent.image?` | { `format`: [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string`; }; } | Image content with evaluation qualifiers. | [src/types/messages.ts:770](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L770) |
-| `guardContent.image.format` | [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md) | Image format. | [src/types/messages.ts:749](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L749) |
-| `guardContent.image.source` | { `bytes`: `string`; } | Image source (bytes only). | [src/types/messages.ts:754](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L754) |
-| `guardContent.image.source.bytes` | `string` | \- | [src/types/messages.ts:725](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L725) |
+| `guardContent` | { `text?`: { `qualifiers`: [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; }; `image?`: { `format`: [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string`; }; }; } | \- | [src/types/messages.ts:818](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L818) |
+| `guardContent.text?` | { `qualifiers`: [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; } | Text content with evaluation qualifiers. | [src/types/messages.ts:767](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L767) |
+| `guardContent.text.qualifiers` | [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\] | Qualifiers that specify how this content should be evaluated. | [src/types/messages.ts:736](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L736) |
+| `guardContent.text.text` | `string` | The text content to be evaluated. | [src/types/messages.ts:741](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L741) |
+| `guardContent.image?` | { `format`: [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string`; }; } | Image content with evaluation qualifiers. | [src/types/messages.ts:772](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L772) |
+| `guardContent.image.format` | [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md) | Image format. | [src/types/messages.ts:751](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L751) |
+| `guardContent.image.source` | { `bytes`: `string`; } | Image source (bytes only). | [src/types/messages.ts:756](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L756) |
+| `guardContent.image.source.bytes` | `string` | \- | [src/types/messages.ts:727](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L727) |
 
 #### Implementation of
 
@@ -140,7 +140,7 @@ JSONSerializable.toJSON
 static fromJSON(data): GuardContentBlock;
 ```
 
-Defined in: [src/types/messages.ts:837](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L837)
+Defined in: [src/types/messages.ts:839](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L839)
 
 Creates a GuardContentBlock instance from its wrapped data format. Base64-encoded image bytes are decoded back to Uint8Array.
 
@@ -148,13 +148,13 @@ Creates a GuardContentBlock instance from its wrapped data format. Base64-encode
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | { `guardContent`: { `text?`: { `qualifiers`: [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; }; `image?`: { `format`: [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; }; }; }; } | Wrapped GuardContentBlockData to deserialize (accepts both string and Uint8Array for image bytes) |
-| `data.guardContent` | { `text?`: { `qualifiers`: [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; }; `image?`: { `format`: [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; }; }; } | \- |
-| `data.guardContent.text?` | { `qualifiers`: [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; } | Text content with evaluation qualifiers. |
-| `data.guardContent.text.qualifiers` | [<code dir="auto">GuardQualifier</code>](/docs/api/typescript/GuardQualifier/index.md)\[\] | Qualifiers that specify how this content should be evaluated. |
+| `data` | { `guardContent`: { `text?`: { `qualifiers`: [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; }; `image?`: { `format`: [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; }; }; }; } | Wrapped GuardContentBlockData to deserialize (accepts both string and Uint8Array for image bytes) |
+| `data.guardContent` | { `text?`: { `qualifiers`: [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; }; `image?`: { `format`: [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; }; }; } | \- |
+| `data.guardContent.text?` | { `qualifiers`: [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\]; `text`: `string`; } | Text content with evaluation qualifiers. |
+| `data.guardContent.text.qualifiers` | [`GuardQualifier`](/docs/api/typescript/GuardQualifier/index.md)\[\] | Qualifiers that specify how this content should be evaluated. |
 | `data.guardContent.text.text` | `string` | The text content to be evaluated. |
-| `data.guardContent.image?` | { `format`: [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; }; } | Image content with evaluation qualifiers. |
-| `data.guardContent.image.format` | [<code dir="auto">GuardImageFormat</code>](/docs/api/typescript/GuardImageFormat/index.md) | Image format. |
+| `data.guardContent.image?` | { `format`: [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md); `source`: { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; }; } | Image content with evaluation qualifiers. |
+| `data.guardContent.image.format` | [`GuardImageFormat`](/docs/api/typescript/GuardImageFormat/index.md) | Image format. |
 | `data.guardContent.image.source` | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | Image source (bytes only). |
 | `data.guardContent.image.source.bytes` | `string` | `Uint8Array`<`ArrayBufferLike`\> | \- |
 

@@ -2,7 +2,7 @@ Python-Only Package
 
 The Community Tools Package (`strands-agents-tools`) is currently Python-only. TypeScript users should use [vended tools](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools) included in the TypeScript SDK or create custom tools using the `tool()` function.
 
-Strands offers an optional, community-supported tools package [<code dir="auto">strands-agents-tools</code>](https://pypi.org/project/strands-agents-tools/) which includes pre-built tools to get started quickly experimenting with agents and tools during development. The package is also open source and available on [GitHub](https://github.com/strands-agents/tools).
+Strands offers an optional, community-supported tools package [`strands-agents-tools`](https://pypi.org/project/strands-agents-tools/) which includes pre-built tools to get started quickly experimenting with agents and tools during development. The package is also open source and available on [GitHub](https://github.com/strands-agents/tools).
 
 Install the `strands-agents-tools` package by running:
 
@@ -64,71 +64,71 @@ pip install 'strands-agents-tools[use_computer]'
 
 #### RAG & Memory
 
--   [<code dir="auto">retrieve</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/retrieve.py): Semantically retrieve data from Amazon Bedrock Knowledge Bases for RAG, memory, and other purposes
--   [<code dir="auto">memory</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/memory.py): Agent memory persistence in Amazon Bedrock Knowledge Bases
--   [<code dir="auto">agent\_core\_memory</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/agent_core_memory.py): Integration with Amazon Bedrock Agent Core Memory
--   [<code dir="auto">mem0\_memory</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/mem0_memory.py): Agent memory and personalization built on top of [Mem0](https://mem0.ai)
+-   [`retrieve`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/retrieve.py): Semantically retrieve data from Amazon Bedrock Knowledge Bases for RAG, memory, and other purposes
+-   [`memory`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/memory.py): Agent memory persistence in Amazon Bedrock Knowledge Bases
+-   [`agent_core_memory`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/agent_core_memory.py): Integration with Amazon Bedrock Agent Core Memory
+-   [`mem0_memory`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/mem0_memory.py): Agent memory and personalization built on top of [Mem0](https://mem0.ai)
 
 #### File Operations
 
--   [<code dir="auto">editor</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py): File editing operations like line edits, search, and undo
--   [<code dir="auto">file\_read</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py): Read and parse files
--   [<code dir="auto">file\_write</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_write.py): Create and modify files
+-   [`editor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/editor.py): File editing operations like line edits, search, and undo
+-   [`file_read`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_read.py): Read and parse files
+-   [`file_write`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/file_write.py): Create and modify files
 
 #### Shell & System
 
--   [<code dir="auto">environment</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/environment.py): Manage environment variables
--   [<code dir="auto">shell</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/shell.py): Execute shell commands
--   [<code dir="auto">cron</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/cron.py): Task scheduling with cron jobs
--   [<code dir="auto">use\_computer</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_computer.py): Automate desktop actions and GUI interactions
+-   [`environment`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/environment.py): Manage environment variables
+-   [`shell`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/shell.py): Execute shell commands
+-   [`cron`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/cron.py): Task scheduling with cron jobs
+-   [`use_computer`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_computer.py): Automate desktop actions and GUI interactions
 
 #### Code Interpretation
 
--   [<code dir="auto">python\_repl</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/python_repl.py): Run Python code
+-   [`python_repl`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/python_repl.py): Run Python code
     -   Not supported on Windows due to the `fcntl` module not being available on Windows.
--   [<code dir="auto">code\_interpreter</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/code_interpreter.py): Execute code in isolated sandboxes
+-   [`code_interpreter`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/code_interpreter.py): Execute code in isolated sandboxes
 
 #### Web & Network
 
--   [<code dir="auto">http\_request</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py): Make API calls, fetch web data, and call local HTTP servers
--   [<code dir="auto">slack</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
--   [<code dir="auto">browser</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/browser/browser.py): Automate web browser interactions
--   [<code dir="auto">rss</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/rss.py): Manage and process RSS feeds
+-   [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py): Make API calls, fetch web data, and call local HTTP servers
+-   [`slack`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/slack.py): Slack integration with real-time events, API access, and message sending
+-   [`browser`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/browser/browser.py): Automate web browser interactions
+-   [`rss`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/rss.py): Manage and process RSS feeds
 
 #### Multi-modal
 
--   [<code dir="auto">generate\_image\_stability</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/generate_image_stability.py): Create images with Stability AI
--   [<code dir="auto">image\_reader</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/image_reader.py): Process and analyze images
--   [<code dir="auto">generate\_image</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
--   [<code dir="auto">nova\_reels</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
--   [<code dir="auto">speak</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/speak.py): Generate speech from text using macOS say command or Amazon Polly
--   [<code dir="auto">diagram</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/diagram.py): Create cloud architecture and UML diagrams
+-   [`generate_image_stability`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/generate_image_stability.py): Create images with Stability AI
+-   [`image_reader`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/image_reader.py): Process and analyze images
+-   [`generate_image`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/generate_image.py): Create AI generated images with Amazon Bedrock
+-   [`nova_reels`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/nova_reels.py): Create AI generated videos with Nova Reels on Amazon Bedrock
+-   [`speak`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/speak.py): Generate speech from text using macOS say command or Amazon Polly
+-   [`diagram`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/diagram.py): Create cloud architecture and UML diagrams
 
 #### AWS Services
 
--   [<code dir="auto">use\_aws</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_aws.py): Interact with AWS services
+-   [`use_aws`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_aws.py): Interact with AWS services
 
 #### Utilities
 
--   [<code dir="auto">calculator</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/calculator.py): Perform mathematical operations
--   [<code dir="auto">current\_time</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/current_time.py): Get the current date and time
--   [<code dir="auto">load\_tool</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/load_tool.py): Dynamically load more tools at runtime
--   [<code dir="auto">sleep</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/sleep.py): Pause execution with interrupt support
+-   [`calculator`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/calculator.py): Perform mathematical operations
+-   [`current_time`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/current_time.py): Get the current date and time
+-   [`load_tool`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/load_tool.py): Dynamically load more tools at runtime
+-   [`sleep`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/sleep.py): Pause execution with interrupt support
 
 #### Agents & Workflows
 
--   [<code dir="auto">graph</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/graph.py): Create and manage multi-agent systems using Strands SDK Graph implementation
--   [<code dir="auto">agent\_graph</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/agent_graph.py): Create and manage graphs of agents
--   [<code dir="auto">journal</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/journal.py): Create structured tasks and logs for agents to manage and work from
--   [<code dir="auto">swarm</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/swarm.py): Coordinate multiple AI agents in a swarm / network of agents
--   [<code dir="auto">stop</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/stop.py): Force stop the agent event loop
--   [<code dir="auto">handoff\_to\_user</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/handoff_to_user.py): Enable human-in-the-loop workflows by pausing agent execution for user input or transferring control entirely to the user
--   [<code dir="auto">use\_agent</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py): Run a new AI event loop with custom prompts and different model providers
--   [<code dir="auto">think</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/think.py): Perform deep thinking by creating parallel branches of agentic reasoning
--   [<code dir="auto">use\_llm</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_llm.py): Run a new AI event loop with custom prompts
--   [<code dir="auto">workflow</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/workflow.py): Orchestrate sequenced workflows
--   [<code dir="auto">batch</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/batch.py): Call multiple tools from a single model request
--   [<code dir="auto">a2a\_client</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/a2a_client.py): Enable agent-to-agent communication
+-   [`graph`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/graph.py): Create and manage multi-agent systems using Strands SDK Graph implementation
+-   [`agent_graph`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/agent_graph.py): Create and manage graphs of agents
+-   [`journal`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/journal.py): Create structured tasks and logs for agents to manage and work from
+-   [`swarm`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/swarm.py): Coordinate multiple AI agents in a swarm / network of agents
+-   [`stop`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/stop.py): Force stop the agent event loop
+-   [`handoff_to_user`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/handoff_to_user.py): Enable human-in-the-loop workflows by pausing agent execution for user input or transferring control entirely to the user
+-   [`use_agent`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_agent.py): Run a new AI event loop with custom prompts and different model providers
+-   [`think`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/think.py): Perform deep thinking by creating parallel branches of agentic reasoning
+-   [`use_llm`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/use_llm.py): Run a new AI event loop with custom prompts
+-   [`workflow`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/workflow.py): Orchestrate sequenced workflows
+-   [`batch`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/batch.py): Call multiple tools from a single model request
+-   [`a2a_client`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/a2a_client.py): Enable agent-to-agent communication
 
 ## Tool Consent and Bypassing
 

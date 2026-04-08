@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:19](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/errors.ts#L19)
+Defined in: [src/errors.ts:19](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/errors.ts#L19)
 
 Base exception class for all model-related errors.
 
@@ -10,9 +10,9 @@ This class serves as the common base type for errors that originate from model p
 
 ## Extended by
 
--   [<code dir="auto">ContextWindowOverflowError</code>](/docs/api/typescript/ContextWindowOverflowError/index.md)
--   [<code dir="auto">MaxTokensError</code>](/docs/api/typescript/MaxTokensError/index.md)
--   [<code dir="auto">ModelThrottledError</code>](/docs/api/typescript/ModelThrottledError/index.md)
+-   [`ContextWindowOverflowError`](/docs/api/typescript/ContextWindowOverflowError/index.md)
+-   [`MaxTokensError`](/docs/api/typescript/MaxTokensError/index.md)
+-   [`ModelThrottledError`](/docs/api/typescript/ModelThrottledError/index.md)
 
 ## Constructors
 
@@ -22,7 +22,7 @@ This class serves as the common base type for errors that originate from model p
 new ModelError(message, options?): ModelError;
 ```
 
-Defined in: [src/errors.ts:26](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/errors.ts#L26)
+Defined in: [src/errors.ts:26](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/errors.ts#L26)
 
 Creates a new ModelError.
 

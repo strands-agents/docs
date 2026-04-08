@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:147](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L147)
+Defined in: [src/types/agent.ts:212](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L212)
 
 Result returned by the agent loop.
 
@@ -10,17 +10,17 @@ Result returned by the agent loop.
 new AgentResult(data): AgentResult;
 ```
 
-Defined in: [src/types/agent.ts:178](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L178)
+Defined in: [src/types/agent.ts:243](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L243)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `stopReason`: [<code dir="auto">StopReason</code>](/docs/api/typescript/StopReason/index.md); `lastMessage`: [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md); `traces?`: [<code dir="auto">AgentTrace</code>](/docs/api/typescript/AgentTrace/index.md)\[\]; `metrics?`: [<code dir="auto">AgentMetrics</code>](/docs/api/typescript/AgentMetrics/index.md); `structuredOutput?`: `unknown`; } |
-| `data.stopReason` | [<code dir="auto">StopReason</code>](/docs/api/typescript/StopReason/index.md) |
-| `data.lastMessage` | [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md) |
-| `data.traces?` | [<code dir="auto">AgentTrace</code>](/docs/api/typescript/AgentTrace/index.md)\[\] |
-| `data.metrics?` | [<code dir="auto">AgentMetrics</code>](/docs/api/typescript/AgentMetrics/index.md) |
+| `data` | { `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); `lastMessage`: [`Message`](/docs/api/typescript/Message/index.md); `traces?`: [`AgentTrace`](/docs/api/typescript/AgentTrace/index.md)\[\]; `metrics?`: [`AgentMetrics`](/docs/api/typescript/AgentMetrics/index.md); `structuredOutput?`: `unknown`; } |
+| `data.stopReason` | [`StopReason`](/docs/api/typescript/StopReason/index.md) |
+| `data.lastMessage` | [`Message`](/docs/api/typescript/Message/index.md) |
+| `data.traces?` | [`AgentTrace`](/docs/api/typescript/AgentTrace/index.md)\[\] |
+| `data.metrics?` | [`AgentMetrics`](/docs/api/typescript/AgentMetrics/index.md) |
 | `data.structuredOutput?` | `unknown` |
 
 #### Returns
@@ -35,7 +35,7 @@ Defined in: [src/types/agent.ts:178](https://github.com/strands-agents/sdk-types
 readonly type: "agentResult";
 ```
 
-Defined in: [src/types/agent.ts:148](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L148)
+Defined in: [src/types/agent.ts:213](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L213)
 
 ---
 
@@ -45,7 +45,7 @@ Defined in: [src/types/agent.ts:148](https://github.com/strands-agents/sdk-types
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/types/agent.ts:153](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L153)
+Defined in: [src/types/agent.ts:218](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L218)
 
 The stop reason from the final model response.
 
@@ -57,7 +57,7 @@ The stop reason from the final model response.
 readonly lastMessage: Message;
 ```
 
-Defined in: [src/types/agent.ts:158](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L158)
+Defined in: [src/types/agent.ts:223](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L223)
 
 The last message added to the messages array.
 
@@ -69,7 +69,7 @@ The last message added to the messages array.
 readonly optional traces?: AgentTrace[];
 ```
 
-Defined in: [src/types/agent.ts:164](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L164)
+Defined in: [src/types/agent.ts:229](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L229)
 
 Local execution traces collected during the agent invocation. Contains timing and hierarchy of operations within the agent loop.
 
@@ -81,7 +81,7 @@ Local execution traces collected during the agent invocation. Contains timing an
 readonly optional structuredOutput?: unknown;
 ```
 
-Defined in: [src/types/agent.ts:170](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L170)
+Defined in: [src/types/agent.ts:235](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L235)
 
 The validated structured output from the LLM, if a schema was provided. Type represents any validated Zod schema output.
 
@@ -93,7 +93,7 @@ The validated structured output from the LLM, if a schema was provided. Type rep
 readonly optional metrics?: AgentMetrics;
 ```
 
-Defined in: [src/types/agent.ts:176](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L176)
+Defined in: [src/types/agent.ts:241](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L241)
 
 Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token usage, tool execution stats, and model latency.
 
@@ -105,7 +105,7 @@ Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token 
 toJSON(): object;
 ```
 
-Defined in: [src/types/agent.ts:208](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L208)
+Defined in: [src/types/agent.ts:273](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L273)
 
 Custom JSON serialization that excludes traces and metrics by default. This prevents accidentally sending large trace/metric data over the wire when serializing AgentResult for API responses.
 
@@ -125,7 +125,7 @@ Object representation without traces/metrics for safe serialization
 toString(): string;
 ```
 
-Defined in: [src/types/agent.ts:223](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/agent.ts#L223)
+Defined in: [src/types/agent.ts:288](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L288)
 
 Extracts and concatenates all text content from the last message. Includes text from TextBlock and ReasoningBlock content blocks.
 

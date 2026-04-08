@@ -301,6 +301,6 @@ class MultiLevelEvaluator(Evaluator[InputT, OutputT]):
 
 ## Related Documentation
 
--   [<strong>OutputEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): LLM-based output evaluation with custom rubrics
--   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Sequence-based evaluation
--   [<strong>Evaluator Base Class</strong>](https://github.com/strands-agents/evals/blob/main/src/strands_evals/evaluators/evaluator.py#L19): Core evaluator interface
+-   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): LLM-based output evaluation with custom rubrics
+-   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Sequence-based evaluation
+-   [**Evaluator Base Class**](https://github.com/strands-agents/evals/blob/main/src/strands_evals/evaluators/evaluator.py#L19): Core evaluator interface

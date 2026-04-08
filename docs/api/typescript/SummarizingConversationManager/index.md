@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:80](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/summarizing-conversation-manager.ts#L80)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:80](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/summarizing-conversation-manager.ts#L80)
 
 Implements a summarization strategy for managing conversation history.
 
@@ -6,7 +6,7 @@ When a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowEr
 
 ## Extends
 
--   [<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md)
+-   [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md)
 
 ## Constructors
 
@@ -16,13 +16,13 @@ When a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowEr
 new SummarizingConversationManager(config?): SummarizingConversationManager;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/summarizing-conversation-manager.ts#L88)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/summarizing-conversation-manager.ts#L88)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `config?` | [<code dir="auto">SummarizingConversationManagerConfig</code>](/docs/api/typescript/SummarizingConversationManagerConfig/index.md) |
+| `config?` | [`SummarizingConversationManagerConfig`](/docs/api/typescript/SummarizingConversationManagerConfig/index.md) |
 
 #### Returns
 
@@ -30,7 +30,7 @@ Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](ht
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/ConversationManager/index.md#constructor)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`constructor`](/docs/api/typescript/ConversationManager/index.md#constructor)
 
 ## Properties
 
@@ -40,13 +40,13 @@ Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](ht
 readonly name: "strands:summarizing-conversation-manager" = 'strands:summarizing-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:81](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/summarizing-conversation-manager.ts#L81)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:81](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/summarizing-conversation-manager.ts#L81)
 
 A stable string identifier for this conversation manager.
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">name</code>](/docs/api/typescript/ConversationManager/index.md#name)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`name`](/docs/api/typescript/ConversationManager/index.md#name)
 
 ## Methods
 
@@ -56,7 +56,7 @@ A stable string identifier for this conversation manager.
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L100)
 
 Initialize the conversation manager with the agent instance.
 
@@ -76,7 +76,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 
 #### Inherited from
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">initAgent</code>](/docs/api/typescript/ConversationManager/index.md#initagent)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`initAgent`](/docs/api/typescript/ConversationManager/index.md#initagent)
 
 ---
 
@@ -86,7 +86,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 reduce(options): Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/summarizing-conversation-manager.ts#L103)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/summarizing-conversation-manager.ts#L103)
 
 Reduce the conversation history by summarizing older messages.
 
@@ -94,7 +94,7 @@ Reduce the conversation history by summarizing older messages.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `options` | [<code dir="auto">ConversationManagerReduceOptions</code>](/docs/api/typescript/ConversationManagerReduceOptions/index.md) | The reduction options |
+| `options` | [`ConversationManagerReduceOptions`](/docs/api/typescript/ConversationManagerReduceOptions/index.md) | The reduction options |
 
 #### Returns
 
@@ -104,4 +104,4 @@ Reduce the conversation history by summarizing older messages.
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">reduce</code>](/docs/api/typescript/ConversationManager/index.md#reduce)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`reduce`](/docs/api/typescript/ConversationManager/index.md#reduce)

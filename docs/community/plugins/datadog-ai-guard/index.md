@@ -53,7 +53,7 @@ AI Guard automatically evaluates all prompts, responses, and tool interactions a
 
 ## How it works
 
-The integration is provided by [<code dir="auto">ddtrace</code>](https://github.com/DataDog/dd-trace-py) through the `AIGuardStrandsPlugin` class. It registers callbacks for four agent lifecycle events:
+The integration is provided by [`ddtrace`](https://github.com/DataDog/dd-trace-py) through the `AIGuardStrandsPlugin` class. It registers callbacks for four agent lifecycle events:
 
 | Hook event | What it scans | On block |
 | --- | --- | --- |

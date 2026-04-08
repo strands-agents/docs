@@ -279,6 +279,7 @@
 - [AfterToolCallEvent](https://strandsagents.com/docs/api/typescript/AfterToolCallEvent/index.md)
 - [AfterToolsEvent](https://strandsagents.com/docs/api/typescript/AfterToolsEvent/index.md)
 - [Agent](https://strandsagents.com/docs/api/typescript/Agent/index.md)
+- [AgentAsToolOptions](https://strandsagents.com/docs/api/typescript/AgentAsToolOptions/index.md)
 - [AgentConfig](https://strandsagents.com/docs/api/typescript/AgentConfig/index.md)
 - [AgentMetrics](https://strandsagents.com/docs/api/typescript/AgentMetrics/index.md)
 - [AgentResult](https://strandsagents.com/docs/api/typescript/AgentResult/index.md)
@@ -346,6 +347,7 @@
 - [ImageSourceData](https://strandsagents.com/docs/api/typescript/ImageSourceData/index.md)
 - [InitializedEvent](https://strandsagents.com/docs/api/typescript/InitializedEvent/index.md)
 - [InvokableTool](https://strandsagents.com/docs/api/typescript/InvokableTool/index.md)
+- [InvokeOptions](https://strandsagents.com/docs/api/typescript/InvokeOptions/index.md)
 - [isModelStreamEvent](https://strandsagents.com/docs/api/typescript/isModelStreamEvent/index.md)
 - [JsonBlock](https://strandsagents.com/docs/api/typescript/JsonBlock/index.md)
 - [JSONSchema](https://strandsagents.com/docs/api/typescript/JSONSchema/index.md)
@@ -452,7 +454,10 @@
 
 ## Blog
 
+- [Strands Agents TypeScript SDK: Build AI Agents in TypeScript](https://strandsagents.com/blog/strands-agents-typescript-sdk/index.md)
 - [How Steering Hooks Achieved 100% Agent Accuracy Where Prompts and Workflows Failed](https://strandsagents.com/blog/steering-accuracy-beats-prompts-workflows/index.md)
 - [Runtime Guardrails for Strands Agents with Agent Control](https://strandsagents.com/blog/strands-agents-with-agent-control/index.md)
 - [Introducing Strands Labs: Get hands-on today with state-of-the-art, experimental approaches to agentic development](https://strandsagents.com/blog/introducing-strands-labs/index.md)
+- [Introducing Strands Agent SOPs – Natural Language Workflows for AI Agents](https://strandsagents.com/blog/introducing-strands-agent-sops/index.md)
+- [Strands Agents and the Model-Driven Approach](https://strandsagents.com/blog/strands-agents-model-driven-approach/index.md)
 - [Introducing Strands Agents, an Open Source AI Agents SDK](https://strandsagents.com/blog/introducing-strands-agents/index.md)

@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:122](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/errors.ts#L122)
+Defined in: [src/errors.ts:122](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/errors.ts#L122)
 
 Error thrown when a model provider returns a throttling or rate limit error.
 
@@ -6,7 +6,7 @@ This error indicates that the model API has rate limited the request. Users can 
 
 ## Extends
 
--   [<code dir="auto">ModelError</code>](/docs/api/typescript/ModelError/index.md)
+-   [`ModelError`](/docs/api/typescript/ModelError/index.md)
 
 ## Constructors
 
@@ -16,7 +16,7 @@ This error indicates that the model API has rate limited the request. Users can 
 new ModelThrottledError(message, options?): ModelThrottledError;
 ```
 
-Defined in: [src/errors.ts:129](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/errors.ts#L129)
+Defined in: [src/errors.ts:129](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/errors.ts#L129)
 
 Creates a new ModelThrottledError.
 
@@ -33,4 +33,4 @@ Creates a new ModelThrottledError.
 
 #### Overrides
 
-[<code dir="auto">ModelError</code>](/docs/api/typescript/ModelError/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/ModelError/index.md#constructor)
+[`ModelError`](/docs/api/typescript/ModelError/index.md).[`constructor`](/docs/api/typescript/ModelError/index.md#constructor)

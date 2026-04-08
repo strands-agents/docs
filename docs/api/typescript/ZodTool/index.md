@@ -1,21 +1,21 @@
-Defined in: [src/tools/zod-tool.ts:50](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L50)
+Defined in: [src/tools/zod-tool.ts:50](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L50)
 
 Zod-based tool implementation. Extends Tool abstract class and implements InvokableTool interface.
 
 ## Extends
 
--   [<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md)
+-   [`Tool`](/docs/api/typescript/Tool/index.md)
 
 ## Type Parameters
 
 | Type Parameter | Default type |
 | --- | --- |
 | `TInput` *extends* `z.ZodType` | `undefined` | \- |
-| `TReturn` *extends* [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md) | [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md) |
+| `TReturn` *extends* [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) |
 
 ## Implements
 
--   [<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md)<`ZodInferred`<`TInput`\>, `TReturn`\>
+-   [`InvokableTool`](/docs/api/typescript/InvokableTool/index.md)<`ZodInferred`<`TInput`\>, `TReturn`\>
 
 ## Constructors
 
@@ -25,13 +25,13 @@ Zod-based tool implementation. Extends Tool abstract class and implements Invoka
 new ZodTool<TInput, TReturn>(config): ZodTool<TInput, TReturn>;
 ```
 
-Defined in: [src/tools/zod-tool.ts:73](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L73)
+Defined in: [src/tools/zod-tool.ts:73](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L73)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `config` | [<code dir="auto">ZodToolConfig</code>](/docs/api/typescript/ZodToolConfig/index.md)<`TInput`, `TReturn`\> |
+| `config` | [`ZodToolConfig`](/docs/api/typescript/ZodToolConfig/index.md)<`TInput`, `TReturn`\> |
 
 #### Returns
 
@@ -39,7 +39,7 @@ Defined in: [src/tools/zod-tool.ts:73](https://github.com/strands-agents/sdk-typ
 
 #### Overrides
 
-[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/Tool/index.md#constructor)
+[`Tool`](/docs/api/typescript/Tool/index.md).[`constructor`](/docs/api/typescript/Tool/index.md#constructor)
 
 ## Accessors
 
@@ -51,7 +51,7 @@ Defined in: [src/tools/zod-tool.ts:73](https://github.com/strands-agents/sdk-typ
 get name(): string;
 ```
 
-Defined in: [src/tools/zod-tool.ts:117](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L117)
+Defined in: [src/tools/zod-tool.ts:117](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L117)
 
 The unique name of the tool.
 
@@ -63,11 +63,11 @@ The unique name of the tool. This MUST match the name in the toolSpec.
 
 #### Implementation of
 
-[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md).[<code dir="auto">name</code>](/docs/api/typescript/InvokableTool/index.md#name)
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`name`](/docs/api/typescript/InvokableTool/index.md#name)
 
 #### Overrides
 
-[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">name</code>](/docs/api/typescript/Tool/index.md#name)
+[`Tool`](/docs/api/typescript/Tool/index.md).[`name`](/docs/api/typescript/Tool/index.md#name)
 
 ---
 
@@ -79,7 +79,7 @@ The unique name of the tool. This MUST match the name in the toolSpec.
 get description(): string;
 ```
 
-Defined in: [src/tools/zod-tool.ts:124](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L124)
+Defined in: [src/tools/zod-tool.ts:124](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L124)
 
 Human-readable description of what the tool does.
 
@@ -93,11 +93,11 @@ This MUST match the description in the toolSpec.description.
 
 #### Implementation of
 
-[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md).[<code dir="auto">description</code>](/docs/api/typescript/InvokableTool/index.md#description)
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`description`](/docs/api/typescript/InvokableTool/index.md#description)
 
 #### Overrides
 
-[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">description</code>](/docs/api/typescript/Tool/index.md#description)
+[`Tool`](/docs/api/typescript/Tool/index.md).[`description`](/docs/api/typescript/Tool/index.md#description)
 
 ---
 
@@ -109,23 +109,23 @@ This MUST match the description in the toolSpec.description.
 get toolSpec(): ToolSpec;
 ```
 
-Defined in: [src/tools/zod-tool.ts:131](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L131)
+Defined in: [src/tools/zod-tool.ts:131](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L131)
 
 OpenAPI JSON specification for the tool.
 
 ##### Returns
 
-[<code dir="auto">ToolSpec</code>](/docs/api/typescript/ToolSpec/index.md)
+[`ToolSpec`](/docs/api/typescript/ToolSpec/index.md)
 
 OpenAPI JSON specification for the tool. Defines the tool’s name, description, and input schema.
 
 #### Implementation of
 
-[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md).[<code dir="auto">toolSpec</code>](/docs/api/typescript/InvokableTool/index.md#toolspec)
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`toolSpec`](/docs/api/typescript/InvokableTool/index.md#toolspec)
 
 #### Overrides
 
-[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">toolSpec</code>](/docs/api/typescript/Tool/index.md#toolspec)
+[`Tool`](/docs/api/typescript/Tool/index.md).[`toolSpec`](/docs/api/typescript/Tool/index.md#toolspec)
 
 ## Methods
 
@@ -135,7 +135,7 @@ OpenAPI JSON specification for the tool. Defines the tool’s name, description,
 stream(toolContext): ToolStreamGenerator;
 ```
 
-Defined in: [src/tools/zod-tool.ts:142](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L142)
+Defined in: [src/tools/zod-tool.ts:142](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L142)
 
 Executes the tool with streaming support. Delegates to internal FunctionTool implementation.
 
@@ -143,21 +143,21 @@ Executes the tool with streaming support. Delegates to internal FunctionTool imp
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `toolContext` | [<code dir="auto">ToolContext</code>](/docs/api/typescript/ToolContext/index.md) | Context information including the tool use request and invocation state |
+| `toolContext` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | Context information including the tool use request and invocation state |
 
 #### Returns
 
-[<code dir="auto">ToolStreamGenerator</code>](/docs/api/typescript/ToolStreamGenerator/index.md)
+[`ToolStreamGenerator`](/docs/api/typescript/ToolStreamGenerator/index.md)
 
 Async generator that yields ToolStreamEvents and returns a ToolResultBlock
 
 #### Implementation of
 
-[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md).[<code dir="auto">stream</code>](/docs/api/typescript/InvokableTool/index.md#stream)
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`stream`](/docs/api/typescript/InvokableTool/index.md#stream)
 
 #### Overrides
 
-[<code dir="auto">Tool</code>](/docs/api/typescript/Tool/index.md).[<code dir="auto">stream</code>](/docs/api/typescript/Tool/index.md#stream)
+[`Tool`](/docs/api/typescript/Tool/index.md).[`stream`](/docs/api/typescript/Tool/index.md#stream)
 
 ---
 
@@ -167,7 +167,7 @@ Async generator that yields ToolStreamEvents and returns a ToolResultBlock
 invoke(input, context?): Promise<TReturn>;
 ```
 
-Defined in: [src/tools/zod-tool.ts:158](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L158)
+Defined in: [src/tools/zod-tool.ts:158](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L158)
 
 Invokes the tool directly with type-safe input and returns the unwrapped result.
 
@@ -182,7 +182,7 @@ Unlike stream(), this method:
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `input` | `ZodInferred`<`TInput`\> | The input parameters for the tool |
-| `context?` | [<code dir="auto">ToolContext</code>](/docs/api/typescript/ToolContext/index.md) | Optional tool execution context |
+| `context?` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | Optional tool execution context |
 
 #### Returns
 
@@ -192,4 +192,4 @@ The unwrapped result
 
 #### Implementation of
 
-[<code dir="auto">InvokableTool</code>](/docs/api/typescript/InvokableTool/index.md).[<code dir="auto">invoke</code>](/docs/api/typescript/InvokableTool/index.md#invoke)
+[`InvokableTool`](/docs/api/typescript/InvokableTool/index.md).[`invoke`](/docs/api/typescript/InvokableTool/index.md#invoke)

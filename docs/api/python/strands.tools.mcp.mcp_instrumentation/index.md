@@ -52,7 +52,7 @@ This function is idempotent - multiple calls will not accumulate wrappers.
 class TransportContextExtractingReader(ObjectProxy)
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:185](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L185)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:186](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L186)
 
 A proxy reader that extracts OpenTelemetry context from MCP messages.
 
@@ -66,7 +66,7 @@ The reader handles both SessionMessage and JSONRPCMessage formats, and supports 
 def __init__(wrapped: Any) -> None
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:196](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L196)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:197](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L197)
 
 Initialize the context-extracting reader.
 
@@ -80,7 +80,7 @@ Initialize the context-extracting reader.
 async def __aenter__() -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:204](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L204)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:205](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L205)
 
 Enter the async context manager by delegating to the wrapped object.
 
@@ -90,7 +90,7 @@ Enter the async context manager by delegating to the wrapped object.
 async def __aexit__(exc_type: Any, exc_value: Any, traceback: Any) -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:208](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L208)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:209](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L209)
 
 Exit the async context manager by delegating to the wrapped object.
 
@@ -100,7 +100,7 @@ Exit the async context manager by delegating to the wrapped object.
 async def __aiter__() -> AsyncGenerator[Any, None]
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:212](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L212)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:213](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L213)
 
 Iterate over messages, extracting and activating context as needed.
 
@@ -116,7 +116,7 @@ Messages from the wrapped stream, processed under the appropriate OpenTelemetry 
 class SessionContextSavingWriter(ObjectProxy)
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:254](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L254)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:255](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L255)
 
 A proxy writer that preserves OpenTelemetry context with outgoing items.
 
@@ -128,7 +128,7 @@ Wraps an async message stream writer to capture the current OpenTelemetry contex
 def __init__(wrapped: Any) -> None
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:262](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L262)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:263](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L263)
 
 Initialize the context-saving writer.
 
@@ -142,7 +142,7 @@ Initialize the context-saving writer.
 async def __aenter__() -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:270](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L270)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:271](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L271)
 
 Enter the async context manager by delegating to the wrapped object.
 
@@ -152,7 +152,7 @@ Enter the async context manager by delegating to the wrapped object.
 async def __aexit__(exc_type: Any, exc_value: Any, traceback: Any) -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:274](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L274)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:275](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L275)
 
 Exit the async context manager by delegating to the wrapped object.
 
@@ -162,7 +162,7 @@ Exit the async context manager by delegating to the wrapped object.
 async def send(item: Any) -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:278](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L278)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:279](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L279)
 
 Send an item while preserving the current OpenTelemetry context.
 
@@ -182,7 +182,7 @@ Result of sending the wrapped item
 class SessionContextAttachingReader(ObjectProxy)
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:294](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L294)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:295](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L295)
 
 A proxy reader that restores OpenTelemetry context from wrapped items.
 
@@ -194,7 +194,7 @@ Wraps an async message stream reader to detect ItemWithContext instances and res
 def __init__(wrapped: Any) -> None
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:302](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L302)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:303](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L303)
 
 Initialize the context-attaching reader.
 
@@ -208,7 +208,7 @@ Initialize the context-attaching reader.
 async def __aenter__() -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:310](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L310)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:311](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L311)
 
 Enter the async context manager by delegating to the wrapped object.
 
@@ -218,7 +218,7 @@ Enter the async context manager by delegating to the wrapped object.
 async def __aexit__(exc_type: Any, exc_value: Any, traceback: Any) -> Any
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:314](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L314)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:315](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L315)
 
 Exit the async context manager by delegating to the wrapped object.
 
@@ -228,7 +228,7 @@ Exit the async context manager by delegating to the wrapped object.
 async def __aiter__() -> AsyncGenerator[Any, None]
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:318](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L318)
+Defined in: [src/strands/tools/mcp/mcp\_instrumentation.py:319](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_instrumentation.py#L319)
 
 Iterate over items, restoring context for ItemWithContext instances.
 

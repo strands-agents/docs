@@ -50,6 +50,7 @@ Configuration options for Bedrock models.
 -   `max_tokens` - Maximum number of tokens to generate in the response
 -   `model_id` - The Bedrock model ID (e.g., “us.anthropic.claude-sonnet-4-20250514-v1:0”)
 -   `include_tool_result_status` - Flag to include status field in tool results. True includes status, False removes status, “auto” determines based on model\_id. Defaults to “auto”.
+-   `service_tier` - Service tier for the request, controlling the trade-off between latency and cost. Valid values: “default” (standard), “priority” (faster, premium), “flex” (cheaper, slower). Please check [https://docs.aws.amazon.com/bedrock/latest/userguide/service-tiers-inference.html](https://docs.aws.amazon.com/bedrock/latest/userguide/service-tiers-inference.html) for supported service tiers, models, and regions
 -   `stop_sequences` - List of sequences that will stop generation when encountered
 -   `streaming` - Flag to enable/disable streaming. Defaults to True.
 -   `temperature` - Controls randomness in generation (higher = more random)
@@ -66,7 +67,7 @@ def __init__(*,
              **model_config: Unpack[BedrockConfig])
 ```
 
-Defined in: [src/strands/models/bedrock.py:125](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L125)
+Defined in: [src/strands/models/bedrock.py:130](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L130)
 
 Initialize provider instance.
 
@@ -85,7 +86,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[BedrockConfig]) -> None
 ```
 
-Defined in: [src/strands/models/bedrock.py:192](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L192)
+Defined in: [src/strands/models/bedrock.py:197](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L197)
 
 Update the Bedrock Model configuration with the provided arguments.
 
@@ -100,7 +101,7 @@ Update the Bedrock Model configuration with the provided arguments.
 def get_config() -> BedrockConfig
 ```
 
-Defined in: [src/strands/models/bedrock.py:202](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L202)
+Defined in: [src/strands/models/bedrock.py:207](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L207)
 
 Get the current Bedrock Model configuration.
 
@@ -121,7 +122,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:736](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L736)
+Defined in: [src/strands/models/bedrock.py:742](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L742)
 
 Stream conversation with the Bedrock model.
 
@@ -156,7 +157,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:1020](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1020)
+Defined in: [src/strands/models/bedrock.py:1026](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1026)
 
 Get structured output from the model.
 

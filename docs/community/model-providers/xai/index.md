@@ -8,7 +8,7 @@ Language Support
 
 This provider is only supported in Python.
 
-[xAI](https://x.ai/) is an AI company that develops the Grok family of large language models with advanced reasoning capabilities. The [<code dir="auto">strands-xai</code>](https://pypi.org/project/strands-xai/) package ([GitHub](https://github.com/Cerrix/strands-xai)) provides a community-maintained integration for the Strands Agents SDK, enabling seamless use of xAI’s Grok models with powerful server-side tools including real-time X platform access, web search, and code execution.
+[xAI](https://x.ai/) is an AI company that develops the Grok family of large language models with advanced reasoning capabilities. The [`strands-xai`](https://pypi.org/project/strands-xai/) package ([GitHub](https://github.com/Cerrix/strands-xai)) provides a community-maintained integration for the Strands Agents SDK, enabling seamless use of xAI’s Grok models with powerful server-side tools including real-time X platform access, web search, and code execution.
 
 ## Installation
 

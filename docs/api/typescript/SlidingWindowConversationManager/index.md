@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:43](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/sliding-window-conversation-manager.ts#L43)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:43](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L43)
 
 Implements a sliding window strategy for managing conversation history.
 
@@ -11,7 +11,7 @@ Registers hooks for:
 
 ## Extends
 
--   [<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md)
+-   [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md)
 
 ## Constructors
 
@@ -21,7 +21,7 @@ Registers hooks for:
 new SlidingWindowConversationManager(config?): SlidingWindowConversationManager;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:57](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/sliding-window-conversation-manager.ts#L57)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:57](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L57)
 
 Initialize the sliding window conversation manager.
 
@@ -29,7 +29,7 @@ Initialize the sliding window conversation manager.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `config?` | [<code dir="auto">SlidingWindowConversationManagerConfig</code>](/docs/api/typescript/SlidingWindowConversationManagerConfig/index.md) | Configuration options for the sliding window manager. |
+| `config?` | [`SlidingWindowConversationManagerConfig`](/docs/api/typescript/SlidingWindowConversationManagerConfig/index.md) | Configuration options for the sliding window manager. |
 
 #### Returns
 
@@ -37,7 +37,7 @@ Initialize the sliding window conversation manager.
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/ConversationManager/index.md#constructor)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`constructor`](/docs/api/typescript/ConversationManager/index.md#constructor)
 
 ## Properties
 
@@ -47,13 +47,13 @@ Initialize the sliding window conversation manager.
 readonly name: "strands:sliding-window-conversation-manager" = 'strands:sliding-window-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:50](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/sliding-window-conversation-manager.ts#L50)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:50](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L50)
 
 Unique identifier for this conversation manager.
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">name</code>](/docs/api/typescript/ConversationManager/index.md#name)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`name`](/docs/api/typescript/ConversationManager/index.md#name)
 
 ## Methods
 
@@ -63,7 +63,7 @@ Unique identifier for this conversation manager.
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:72](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/sliding-window-conversation-manager.ts#L72)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:72](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L72)
 
 Initialize the plugin by registering hooks with the agent.
 
@@ -84,7 +84,7 @@ Registers:
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">initAgent</code>](/docs/api/typescript/ConversationManager/index.md#initagent)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`initAgent`](/docs/api/typescript/ConversationManager/index.md#initagent)
 
 ---
 
@@ -94,7 +94,7 @@ Registers:
 reduce(options): boolean;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/sliding-window-conversation-manager.ts#L88)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L88)
 
 Reduce the conversation history in response to a context overflow.
 
@@ -104,7 +104,7 @@ Attempts to truncate large tool results first before falling back to message tri
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `options` | [<code dir="auto">ConversationManagerReduceOptions</code>](/docs/api/typescript/ConversationManagerReduceOptions/index.md) | The reduction options |
+| `options` | [`ConversationManagerReduceOptions`](/docs/api/typescript/ConversationManagerReduceOptions/index.md) | The reduction options |
 
 #### Returns
 
@@ -114,4 +114,4 @@ Attempts to truncate large tool results first before falling back to message tri
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">reduce</code>](/docs/api/typescript/ConversationManager/index.md#reduce)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`reduce`](/docs/api/typescript/ConversationManager/index.md#reduce)

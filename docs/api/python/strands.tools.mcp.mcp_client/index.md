@@ -308,14 +308,14 @@ Resource templates define URI patterns that can be used to access resources dyna
 #### call\_tool\_sync
 
 ```python
-def call_tool_sync(
-        tool_use_id: str,
-        name: str,
-        arguments: dict[str, Any] | None = None,
-        read_timeout_seconds: timedelta | None = None) -> MCPToolResult
+def call_tool_sync(tool_use_id: str,
+                   name: str,
+                   arguments: dict[str, Any] | None = None,
+                   read_timeout_seconds: timedelta | None = None,
+                   meta: dict[str, Any] | None = None) -> MCPToolResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:606](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L606)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:610](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L610)
 
 Synchronously calls a tool on the MCP server.
 
@@ -327,6 +327,7 @@ This method automatically uses task-augmented execution when appropriate, based 
 -   `name` - Name of the tool to call
 -   `arguments` - Optional arguments to pass to the tool
 -   `read_timeout_seconds` - Optional timeout for the tool call
+-   `meta` - Optional metadata to pass to the tool call per MCP spec (\_meta)
 
 **Returns**:
 
@@ -335,14 +336,14 @@ This method automatically uses task-augmented execution when appropriate, based 
 #### call\_tool\_async
 
 ```python
-async def call_tool_async(
-        tool_use_id: str,
-        name: str,
-        arguments: dict[str, Any] | None = None,
-        read_timeout_seconds: timedelta | None = None) -> MCPToolResult
+async def call_tool_async(tool_use_id: str,
+                          name: str,
+                          arguments: dict[str, Any] | None = None,
+                          read_timeout_seconds: timedelta | None = None,
+                          meta: dict[str, Any] | None = None) -> MCPToolResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:639](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L639)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:645](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L645)
 
 Asynchronously calls a tool on the MCP server.
 
@@ -354,6 +355,7 @@ This method automatically uses task-augmented execution when appropriate, based 
 -   `name` - Name of the tool to call
 -   `arguments` - Optional arguments to pass to the tool
 -   `read_timeout_seconds` - Optional timeout for the tool call
+-   `meta` - Optional metadata to pass to the tool call per MCP spec (\_meta)
 
 **Returns**:
 

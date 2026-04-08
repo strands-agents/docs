@@ -111,7 +111,7 @@ The `OutputEvaluator` returns `EvaluationOutput` objects with:
 
 ## Related Evaluators
 
--   [<strong>TrajectoryEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the sequence of actions/tools used
--   [<strong>FaithfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Checks if responses are grounded in conversation history
--   [<strong>HelpfulnessEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Specifically evaluates helpfulness from user perspective
--   [<strong>GoalSuccessRateEvaluator</strong>](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if user goals were achieved
+-   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluates the sequence of actions/tools used
+-   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Checks if responses are grounded in conversation history
+-   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Specifically evaluates helpfulness from user perspective
+-   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if user goals were achieved

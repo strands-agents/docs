@@ -24,7 +24,7 @@ Next we’ll install the `strands-agents` SDK package:
 pip install strands-agents
 ```
 
-The Strands Agents SDK additionally offers the [<code dir="auto">strands-agents-tools</code>](https://pypi.org/project/strands-agents-tools/) ([GitHub](https://github.com/strands-agents/tools)) and [<code dir="auto">strands-agents-builder</code>](https://pypi.org/project/strands-agents-builder/) ([GitHub](https://github.com/strands-agents/agent-builder)) packages for development. The [<code dir="auto">strands-agents-tools</code>](https://pypi.org/project/strands-agents-tools/) package is a community-driven project that provides a set of tools for your agents to use, bridging the gap between large language models and practical applications. The [<code dir="auto">strands-agents-builder</code>](https://pypi.org/project/strands-agents-builder/) package provides an agent that helps you to build your own Strands agents and tools.
+The Strands Agents SDK additionally offers the [`strands-agents-tools`](https://pypi.org/project/strands-agents-tools/) ([GitHub](https://github.com/strands-agents/tools)) and [`strands-agents-builder`](https://pypi.org/project/strands-agents-builder/) ([GitHub](https://github.com/strands-agents/agent-builder)) packages for development. The [`strands-agents-tools`](https://pypi.org/project/strands-agents-tools/) package is a community-driven project that provides a set of tools for your agents to use, bridging the gap between large language models and practical applications. The [`strands-agents-builder`](https://pypi.org/project/strands-agents-builder/) package provides an agent that helps you to build your own Strands agents and tools.
 
 Let’s install those development packages too:
 
@@ -171,9 +171,9 @@ And that’s it! We now have a running agent with powerful tools and abilities i
 
 ## Understanding What Agents Did
 
-After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [<code dir="auto">AgentResult</code>](/docs/api/python/strands.agent.agent_result#AgentResult) object with comprehensive observability data.
+After running an agent, you can understand what happened during execution through traces and metrics. Every agent invocation returns an [`AgentResult`](/docs/api/python/strands.agent.agent_result#AgentResult) object with comprehensive observability data.
 
-Traces provide detailed insight into the agent’s reasoning process. You can access in-memory traces and metrics directly from the [<code dir="auto">AgentResult</code>](/docs/api/python/strands.agent.agent_result#AgentResult), or export them using [OpenTelemetry](/docs/user-guide/observability-evaluation/traces/index.md) to observability platforms.
+Traces provide detailed insight into the agent’s reasoning process. You can access in-memory traces and metrics directly from the [`AgentResult`](/docs/api/python/strands.agent.agent_result#AgentResult), or export them using [OpenTelemetry](/docs/user-guide/observability-evaluation/traces/index.md) to observability platforms.
 
 Example result.metrics.get\_summary() output
 
@@ -379,7 +379,7 @@ See the [Logs documentation](/docs/user-guide/observability-evaluation/logs/inde
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [<code dir="auto">model.config</code>](/docs/api/python/strands.models.model#Model.get_config):
+Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](/docs/api/python/strands.models.model#Model.get_config):
 
 ```python
 from strands import Agent
@@ -442,9 +442,9 @@ Strands Agents supports several other model providers beyond Amazon Bedrock:
 -   **[Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md)** - Run models locally for privacy or offline use
 -   **[OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md)** - Access to OpenAI or OpenAI-compatible models
 -   **[Writer](/docs/user-guide/concepts/model-providers/writer/index.md)** - Access to Palmyra models
--   **[Cohere <sup> community</sup>](/docs/community/model-providers/cohere/index.md)** - Use Cohere models through an OpenAI compatible interface
--   **[CLOVA Studio<sup> community</sup>](/docs/community/model-providers/clova-studio/index.md)** - Korean-optimized AI models from Naver Cloud Platform
--   **[FireworksAI<sup> community</sup>](/docs/community/model-providers/fireworksai/index.md)** - Use FireworksAI models through an OpenAI compatible interface
+-   **[Cohere community](/docs/community/model-providers/cohere/index.md)** - Use Cohere models through an OpenAI compatible interface
+-   **[CLOVA Studio community](/docs/community/model-providers/clova-studio/index.md)** - Korean-optimized AI models from Naver Cloud Platform
+-   **[FireworksAI community](/docs/community/model-providers/fireworksai/index.md)** - Use FireworksAI models through an OpenAI compatible interface
 -   **[Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
@@ -453,7 +453,7 @@ Strands provides two main approaches to capture streaming events from an agent: 
 
 ### Async Iterators
 
-For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [<code dir="auto">stream\_async()</code>](/docs/api/python/strands.agent.agent#Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
+For asynchronous applications (like web servers or APIs), Strands provides an async iterator approach using [`stream_async()`](/docs/api/python/strands.agent.agent#Agent.stream_async). This is particularly useful with async frameworks like FastAPI or Django Channels.
 
 ```python
 import asyncio
@@ -490,7 +490,7 @@ The async iterator yields the same event types as the callback handler callbacks
 
 See the [Async Iterators](/docs/user-guide/concepts/streaming/async-iterators/index.md) documentation for full details.
 
-> Note, Strands also offers an [<code dir="auto">invoke\_async()</code>](/docs/api/python/strands.agent.agent#Agent.invoke_async) method for non-iterative async invocations.
+> Note, Strands also offers an [`invoke_async()`](/docs/api/python/strands.agent.agent#Agent.invoke_async) method for non-iterative async invocations.
 
 ### Callback Handlers (Callbacks)
 
@@ -543,7 +543,7 @@ Ready to learn more? Check out these resources:
 -   [Community Supported Tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) - The `strands-agents-tools` package provides many powerful example tools for your agents to use during development
 -   [Strands Agent Builder](https://github.com/strands-agents/agent-builder) - Use the accompanying `strands-agents-builder` agent builder to harness the power of LLMs to generate your own tools and agents
 -   [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) - Learn how Strands agents work under the hood
--   [State &amp; Sessions](/docs/user-guide/concepts/agents/state/index.md) - Understand how agents maintain context and state across a conversation or workflow
+-   [State & Sessions](/docs/user-guide/concepts/agents/state/index.md) - Understand how agents maintain context and state across a conversation or workflow
 -   [Multi-agent](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) - Orchestrate multiple agents together as one system, with each agent completing specialized tasks
--   [Observability &amp; Evaluation](/docs/user-guide/observability-evaluation/observability/index.md) - Understand how agents make decisions and improve them with data
+-   [Observability & Evaluation](/docs/user-guide/observability-evaluation/observability/index.md) - Understand how agents make decisions and improve them with data
 -   [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) - Taking agents from development to production, operating them responsibly at scale

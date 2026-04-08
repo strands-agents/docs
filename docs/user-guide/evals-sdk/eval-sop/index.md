@@ -402,8 +402,8 @@ python eval/run_evaluation.py
 
 ## Related Tools
 
--   [<strong>Strands Evaluation SDK</strong>](/docs/user-guide/evals-sdk/quickstart/index.md): Core evaluation framework and evaluators
--   [<strong>Experiment Generator</strong>](/docs/user-guide/evals-sdk/experiment_generator/index.md): Automated test case generation
--   [<strong>Output Evaluator</strong>](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Custom rubric-based evaluation
--   [<strong>Trajectory Evaluator</strong>](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Tool usage and sequence analysis
--   [<strong>Agent SOP Repository</strong>](https://github.com/strands-agents/agent-sop): Standard operating procedures for AI agents
+-   [**Strands Evaluation SDK**](/docs/user-guide/evals-sdk/quickstart/index.md): Core evaluation framework and evaluators
+-   [**Experiment Generator**](/docs/user-guide/evals-sdk/experiment_generator/index.md): Automated test case generation
+-   [**Output Evaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Custom rubric-based evaluation
+-   [**Trajectory Evaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Tool usage and sequence analysis
+-   [**Agent SOP Repository**](https://github.com/strands-agents/agent-sop): Standard operating procedures for AI agents

@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:568](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L568)
+Defined in: [src/types/messages.ts:568](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L568)
 
 JSON content block within a message. Used for structured data returned from tools or model responses.
 
@@ -15,7 +15,7 @@ JSON content block within a message. Used for structured data returned from tool
 new JsonBlock(data): JsonBlock;
 ```
 
-Defined in: [src/types/messages.ts:579](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L579)
+Defined in: [src/types/messages.ts:579](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L579)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/messages.ts:579](https://github.com/strands-agents/sdk-ty
 readonly type: "jsonBlock";
 ```
 
-Defined in: [src/types/messages.ts:572](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L572)
+Defined in: [src/types/messages.ts:572](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L572)
 
 Discriminator for JSON content.
 
@@ -47,7 +47,7 @@ Discriminator for JSON content.
 readonly json: JSONValue;
 ```
 
-Defined in: [src/types/messages.ts:577](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L577)
+Defined in: [src/types/messages.ts:577](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L577)
 
 Structured JSON data.
 
@@ -65,7 +65,7 @@ JsonBlockData.json
 toJSON(): JsonBlockData;
 ```
 
-Defined in: [src/types/messages.ts:587](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L587)
+Defined in: [src/types/messages.ts:587](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L587)
 
 Serializes the JsonBlock to a JSON-compatible JsonBlockData object. Called automatically by JSON.stringify().
 
@@ -87,7 +87,7 @@ JSONSerializable.toJSON
 static fromJSON(data): JsonBlock;
 ```
 
-Defined in: [src/types/messages.ts:597](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L597)
+Defined in: [src/types/messages.ts:597](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L597)
 
 Creates a JsonBlock instance from JsonBlockData.
 

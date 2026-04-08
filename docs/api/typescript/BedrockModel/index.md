@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:321](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/bedrock.ts#L321)
+Defined in: [src/models/bedrock.ts:322](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/bedrock.ts#L322)
 
 AWS Bedrock model provider implementation.
 
@@ -31,7 +31,7 @@ for await (const event of provider.stream(messages)) {
 
 ## Extends
 
--   [<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md)<[<code dir="auto">BedrockModelConfig</code>](/docs/api/typescript/BedrockModelConfig/index.md)\>
+-   [`Model`](/docs/api/typescript/Model/index.md)<[`BedrockModelConfig`](/docs/api/typescript/BedrockModelConfig/index.md)\>
 
 ## Constructors
 
@@ -41,7 +41,7 @@ for await (const event of provider.stream(messages)) {
 new BedrockModel(options?): BedrockModel;
 ```
 
-Defined in: [src/models/bedrock.ts:355](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/bedrock.ts#L355)
+Defined in: [src/models/bedrock.ts:356](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/bedrock.ts#L356)
 
 Creates a new BedrockModel instance.
 
@@ -49,7 +49,7 @@ Creates a new BedrockModel instance.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `options?` | [<code dir="auto">BedrockModelOptions</code>](/docs/api/typescript/BedrockModelOptions/index.md) | Optional configuration for model and client |
+| `options?` | [`BedrockModelOptions`](/docs/api/typescript/BedrockModelOptions/index.md) | Optional configuration for model and client |
 
 #### Returns
 
@@ -83,7 +83,7 @@ const provider = new BedrockModel({
 
 #### Overrides
 
-[<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/Model/index.md#constructor)
+[`Model`](/docs/api/typescript/Model/index.md).[`constructor`](/docs/api/typescript/Model/index.md#constructor)
 
 ## Accessors
 
@@ -95,7 +95,7 @@ const provider = new BedrockModel({
 get modelId(): string;
 ```
 
-Defined in: [src/models/model.ts:172](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/model.ts#L172)
+Defined in: [src/models/model.ts:172](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L172)
 
 The model ID from the current configuration, if configured.
 
@@ -105,7 +105,7 @@ The model ID from the current configuration, if configured.
 
 #### Inherited from
 
-[<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md).[<code dir="auto">modelId</code>](/docs/api/typescript/Model/index.md#modelid)
+[`Model`](/docs/api/typescript/Model/index.md).[`modelId`](/docs/api/typescript/Model/index.md#modelid)
 
 ## Methods
 
@@ -115,7 +115,7 @@ The model ID from the current configuration, if configured.
 updateConfig(modelConfig): void;
 ```
 
-Defined in: [src/models/bedrock.ts:443](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/bedrock.ts#L443)
+Defined in: [src/models/bedrock.ts:444](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/bedrock.ts#L444)
 
 Updates the model configuration. Merges the provided configuration with existing settings.
 
@@ -123,7 +123,7 @@ Updates the model configuration. Merges the provided configuration with existing
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `modelConfig` | [<code dir="auto">BedrockModelConfig</code>](/docs/api/typescript/BedrockModelConfig/index.md) | Configuration object with model-specific settings to update |
+| `modelConfig` | [`BedrockModelConfig`](/docs/api/typescript/BedrockModelConfig/index.md) | Configuration object with model-specific settings to update |
 
 #### Returns
 
@@ -141,7 +141,7 @@ provider.updateConfig({
 
 #### Overrides
 
-[<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md).[<code dir="auto">updateConfig</code>](/docs/api/typescript/Model/index.md#updateconfig)
+[`Model`](/docs/api/typescript/Model/index.md).[`updateConfig`](/docs/api/typescript/Model/index.md#updateconfig)
 
 ---
 
@@ -151,13 +151,13 @@ provider.updateConfig({
 getConfig(): BedrockModelConfig;
 ```
 
-Defined in: [src/models/bedrock.ts:458](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/bedrock.ts#L458)
+Defined in: [src/models/bedrock.ts:459](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/bedrock.ts#L459)
 
 Retrieves the current model configuration.
 
 #### Returns
 
-[<code dir="auto">BedrockModelConfig</code>](/docs/api/typescript/BedrockModelConfig/index.md)
+[`BedrockModelConfig`](/docs/api/typescript/BedrockModelConfig/index.md)
 
 The current configuration object
 
@@ -170,7 +170,7 @@ console.log(config.modelId)
 
 #### Overrides
 
-[<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md).[<code dir="auto">getConfig</code>](/docs/api/typescript/Model/index.md#getconfig)
+[`Model`](/docs/api/typescript/Model/index.md).[`getConfig`](/docs/api/typescript/Model/index.md#getconfig)
 
 ---
 
@@ -180,7 +180,7 @@ console.log(config.modelId)
 stream(messages, options?): AsyncIterable<ModelStreamEvent>;
 ```
 
-Defined in: [src/models/bedrock.ts:491](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/bedrock.ts#L491)
+Defined in: [src/models/bedrock.ts:492](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/bedrock.ts#L492)
 
 Streams a conversation with the Bedrock model. Returns an async iterable that yields streaming events as they occur.
 
@@ -188,12 +188,12 @@ Streams a conversation with the Bedrock model. Returns an async iterable that yi
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `messages` | [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
-| `options?` | [<code dir="auto">StreamOptions</code>](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
+| `messages` | [`Message`](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
+| `options?` | [`StreamOptions`](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
 
 #### Returns
 
-`AsyncIterable`<[<code dir="auto">ModelStreamEvent</code>](/docs/api/typescript/ModelStreamEvent/index.md)\>
+`AsyncIterable`<[`ModelStreamEvent`](/docs/api/typescript/ModelStreamEvent/index.md)\>
 
 Async iterable of streaming events
 
@@ -226,7 +226,7 @@ for await (const event of provider.stream(messages, options)) {
 
 #### Overrides
 
-[<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md).[<code dir="auto">stream</code>](/docs/api/typescript/Model/index.md#stream)
+[`Model`](/docs/api/typescript/Model/index.md).[`stream`](/docs/api/typescript/Model/index.md#stream)
 
 ---
 
@@ -238,7 +238,7 @@ streamAggregated(messages, options?): AsyncGenerator<
 | ModelStreamEvent, StreamAggregatedResult, undefined>;
 ```
 
-Defined in: [src/models/model.ts:240](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/model.ts#L240)
+Defined in: [src/models/model.ts:240](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L240)
 
 Streams a conversation with aggregated content blocks and messages. Returns an async generator that yields streaming events and content blocks, and returns the final message with stop reason and optional metadata.
 
@@ -259,12 +259,12 @@ All exceptions thrown from this method are wrapped in ModelError to provide a co
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `messages` | [<code dir="auto">Message</code>](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
-| `options?` | [<code dir="auto">StreamOptions</code>](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
+| `messages` | [`Message`](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages |
+| `options?` | [`StreamOptions`](/docs/api/typescript/StreamOptions/index.md) | Optional streaming configuration |
 
 #### Returns
 
-`AsyncGenerator`< | [<code dir="auto">ContentBlock</code>](/docs/api/typescript/ContentBlock/index.md) | [<code dir="auto">ModelStreamEvent</code>](/docs/api/typescript/ModelStreamEvent/index.md), `StreamAggregatedResult`, `undefined`\>
+`AsyncGenerator`< | [`ContentBlock`](/docs/api/typescript/ContentBlock/index.md) | [`ModelStreamEvent`](/docs/api/typescript/ModelStreamEvent/index.md), `StreamAggregatedResult`, `undefined`\>
 
 Async generator yielding ModelStreamEvent | ContentBlock and returning a StreamAggregatedResult
 
@@ -286,4 +286,4 @@ MaxTokensError - When the model reaches its maximum token limit
 
 #### Inherited from
 
-[<code dir="auto">Model</code>](/docs/api/typescript/Model/index.md).[<code dir="auto">streamAggregated</code>](/docs/api/typescript/Model/index.md#streamaggregated)
+[`Model`](/docs/api/typescript/Model/index.md).[`streamAggregated`](/docs/api/typescript/Model/index.md#streamaggregated)

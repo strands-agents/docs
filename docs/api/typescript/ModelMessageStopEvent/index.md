@@ -1,10 +1,10 @@
-Defined in: [src/models/streaming.ts:204](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L204)
+Defined in: [src/models/streaming.ts:204](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L204)
 
 Event emitted when the message completes.
 
 ## Implements
 
--   [<code dir="auto">ModelMessageStopEventData</code>](/docs/api/typescript/ModelMessageStopEventData/index.md)
+-   [`ModelMessageStopEventData`](/docs/api/typescript/ModelMessageStopEventData/index.md)
 
 ## Constructors
 
@@ -14,13 +14,13 @@ Event emitted when the message completes.
 new ModelMessageStopEvent(data): ModelMessageStopEvent;
 ```
 
-Defined in: [src/models/streaming.ts:220](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L220)
+Defined in: [src/models/streaming.ts:220](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L220)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [<code dir="auto">ModelMessageStopEventData</code>](/docs/api/typescript/ModelMessageStopEventData/index.md) |
+| `data` | [`ModelMessageStopEventData`](/docs/api/typescript/ModelMessageStopEventData/index.md) |
 
 #### Returns
 
@@ -34,13 +34,13 @@ Defined in: [src/models/streaming.ts:220](https://github.com/strands-agents/sdk-
 readonly type: "modelMessageStopEvent";
 ```
 
-Defined in: [src/models/streaming.ts:208](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L208)
+Defined in: [src/models/streaming.ts:208](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L208)
 
 Discriminator for message stop events.
 
 #### Implementation of
 
-[<code dir="auto">ModelMessageStopEventData</code>](/docs/api/typescript/ModelMessageStopEventData/index.md).[<code dir="auto">type</code>](/docs/api/typescript/ModelMessageStopEventData/index.md#type)
+[`ModelMessageStopEventData`](/docs/api/typescript/ModelMessageStopEventData/index.md).[`type`](/docs/api/typescript/ModelMessageStopEventData/index.md#type)
 
 ---
 
@@ -50,13 +50,13 @@ Discriminator for message stop events.
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/models/streaming.ts:213](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L213)
+Defined in: [src/models/streaming.ts:213](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L213)
 
 Reason why generation stopped.
 
 #### Implementation of
 
-[<code dir="auto">ModelMessageStopEventData</code>](/docs/api/typescript/ModelMessageStopEventData/index.md).[<code dir="auto">stopReason</code>](/docs/api/typescript/ModelMessageStopEventData/index.md#stopreason)
+[`ModelMessageStopEventData`](/docs/api/typescript/ModelMessageStopEventData/index.md).[`stopReason`](/docs/api/typescript/ModelMessageStopEventData/index.md#stopreason)
 
 ---
 
@@ -66,10 +66,10 @@ Reason why generation stopped.
 readonly optional additionalModelResponseFields?: JSONValue;
 ```
 
-Defined in: [src/models/streaming.ts:218](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L218)
+Defined in: [src/models/streaming.ts:218](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L218)
 
 Additional provider-specific response fields.
 
 #### Implementation of
 
-[<code dir="auto">ModelMessageStopEventData</code>](/docs/api/typescript/ModelMessageStopEventData/index.md).[<code dir="auto">additionalModelResponseFields</code>](/docs/api/typescript/ModelMessageStopEventData/index.md#additionalmodelresponsefields)
+[`ModelMessageStopEventData`](/docs/api/typescript/ModelMessageStopEventData/index.md).[`additionalModelResponseFields`](/docs/api/typescript/ModelMessageStopEventData/index.md#additionalmodelresponsefields)

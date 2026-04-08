@@ -169,7 +169,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/anthropic.py:427](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L427)
+Defined in: [src/strands/models/anthropic.py:441](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L441)
 
 Get structured output from the model.
 

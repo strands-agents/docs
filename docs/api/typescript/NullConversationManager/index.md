@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/null-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/null-conversation-manager.ts#L17)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/null-conversation-manager.ts#L17)
 
 A no-op conversation manager that does not modify the conversation history.
 
@@ -6,7 +6,7 @@ Does not register any proactive hooks. Overflow errors will not be retried since
 
 ## Extends
 
--   [<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md)
+-   [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md)
 
 ## Constructors
 
@@ -22,7 +22,7 @@ new NullConversationManager(): NullConversationManager;
 
 #### Inherited from
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">constructor</code>](/docs/api/typescript/ConversationManager/index.md#constructor)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`constructor`](/docs/api/typescript/ConversationManager/index.md#constructor)
 
 ## Properties
 
@@ -32,13 +32,13 @@ new NullConversationManager(): NullConversationManager;
 readonly name: "strands:null-conversation-manager" = 'strands:null-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/null-conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/null-conversation-manager.ts#L21)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/null-conversation-manager.ts#L21)
 
 Unique identifier for this conversation manager.
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">name</code>](/docs/api/typescript/ConversationManager/index.md#name)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`name`](/docs/api/typescript/ConversationManager/index.md#name)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Unique identifier for this conversation manager.
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L100)
 
 Initialize the conversation manager with the agent instance.
 
@@ -68,7 +68,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 
 #### Inherited from
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">initAgent</code>](/docs/api/typescript/ConversationManager/index.md#initagent)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`initAgent`](/docs/api/typescript/ConversationManager/index.md#initagent)
 
 ---
 
@@ -78,7 +78,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 reduce(_args): boolean;
 ```
 
-Defined in: [src/conversation-manager/null-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/conversation-manager/null-conversation-manager.ts#L28)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/null-conversation-manager.ts#L28)
 
 No-op reduction — never modifies the conversation history.
 
@@ -86,7 +86,7 @@ No-op reduction — never modifies the conversation history.
 
 | Parameter | Type |
 | --- | --- |
-| `_args` | [<code dir="auto">ConversationManagerReduceOptions</code>](/docs/api/typescript/ConversationManagerReduceOptions/index.md) |
+| `_args` | [`ConversationManagerReduceOptions`](/docs/api/typescript/ConversationManagerReduceOptions/index.md) |
 
 #### Returns
 
@@ -96,4 +96,4 @@ No-op reduction — never modifies the conversation history.
 
 #### Overrides
 
-[<code dir="auto">ConversationManager</code>](/docs/api/typescript/ConversationManager/index.md).[<code dir="auto">reduce</code>](/docs/api/typescript/ConversationManager/index.md#reduce)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`reduce`](/docs/api/typescript/ConversationManager/index.md#reduce)

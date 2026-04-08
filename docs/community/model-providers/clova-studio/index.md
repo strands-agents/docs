@@ -1,4 +1,4 @@
-[CLOVA Studio](https://www.ncloud.com/product/aiService/clovaStudio) is Naver Cloud Platform’s AI service that provides large language models optimized for Korean language processing. The [<code dir="auto">strands-clova</code>](https://pypi.org/project/strands-clova/) package ([GitHub](https://github.com/aidendef/strands-clova)) provides a community-maintained integration for the Strands Agents SDK, enabling seamless use of CLOVA Studio’s Korean-optimized AI models.
+[CLOVA Studio](https://www.ncloud.com/product/aiService/clovaStudio) is Naver Cloud Platform’s AI service that provides large language models optimized for Korean language processing. The [`strands-clova`](https://pypi.org/project/strands-clova/) package ([GitHub](https://github.com/aidendef/strands-clova)) provides a community-maintained integration for the Strands Agents SDK, enabling seamless use of CLOVA Studio’s Korean-optimized AI models.
 
 ## Installation
 

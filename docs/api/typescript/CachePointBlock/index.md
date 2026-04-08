@@ -1,11 +1,11 @@
-Defined in: [src/types/messages.ts:516](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L516)
+Defined in: [src/types/messages.ts:516](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L516)
 
 Cache point block for prompt caching. Marks a position in a message or system prompt where caching should occur.
 
 ## Implements
 
--   [<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md)
--   `JSONSerializable`<{ `cachePoint`: [<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md); }>
+-   [`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md)
+-   `JSONSerializable`<{ `cachePoint`: [`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md); }>
 
 ## Constructors
 
@@ -15,13 +15,13 @@ Cache point block for prompt caching. Marks a position in a message or system pr
 new CachePointBlock(data): CachePointBlock;
 ```
 
-Defined in: [src/types/messages.ts:527](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L527)
+Defined in: [src/types/messages.ts:527](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L527)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md) |
+| `data` | [`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md) |
 
 #### Returns
 
@@ -35,7 +35,7 @@ Defined in: [src/types/messages.ts:527](https://github.com/strands-agents/sdk-ty
 readonly type: "cachePointBlock";
 ```
 
-Defined in: [src/types/messages.ts:520](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L520)
+Defined in: [src/types/messages.ts:520](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L520)
 
 Discriminator for cache point.
 
@@ -47,13 +47,13 @@ Discriminator for cache point.
 readonly cacheType: "default";
 ```
 
-Defined in: [src/types/messages.ts:525](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L525)
+Defined in: [src/types/messages.ts:525](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L525)
 
 The cache type. Currently only ‘default’ is supported.
 
 #### Implementation of
 
-[<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md).[<code dir="auto">cacheType</code>](/docs/api/typescript/CachePointBlockData/index.md#cachetype)
+[`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md).[`cacheType`](/docs/api/typescript/CachePointBlockData/index.md#cachetype)
 
 ## Methods
 
@@ -65,7 +65,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/messages.ts:535](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L535)
+Defined in: [src/types/messages.ts:535](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L535)
 
 Serializes the CachePointBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify().
 
@@ -79,7 +79,7 @@ Serializes the CachePointBlock to a JSON-compatible ContentBlockData object. Cal
 
 | Name | Type | Defined in |
 | --- | --- | --- |
-| `cachePoint` | [<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md) | [src/types/messages.ts:535](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L535) |
+| `cachePoint` | [`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md) | [src/types/messages.ts:535](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L535) |
 
 #### Implementation of
 
@@ -95,7 +95,7 @@ JSONSerializable.toJSON
 static fromJSON(data): CachePointBlock;
 ```
 
-Defined in: [src/types/messages.ts:549](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/types/messages.ts#L549)
+Defined in: [src/types/messages.ts:549](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L549)
 
 Creates a CachePointBlock instance from its wrapped data format.
 
@@ -103,8 +103,8 @@ Creates a CachePointBlock instance from its wrapped data format.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | { `cachePoint`: [<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md); } | Wrapped CachePointBlockData to deserialize |
-| `data.cachePoint` | [<code dir="auto">CachePointBlockData</code>](/docs/api/typescript/CachePointBlockData/index.md) | \- |
+| `data` | { `cachePoint`: [`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md); } | Wrapped CachePointBlockData to deserialize |
+| `data.cachePoint` | [`CachePointBlockData`](/docs/api/typescript/CachePointBlockData/index.md) | \- |
 
 #### Returns
 

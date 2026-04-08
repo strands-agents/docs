@@ -67,6 +67,7 @@
     -   [VideoBlock](/docs/api/typescript/VideoBlock/index.md)
     -   [ZodTool](/docs/api/typescript/ZodTool/index.md)
 -   **Interfaces**
+    -   [AgentAsToolOptions](/docs/api/typescript/AgentAsToolOptions/index.md)
     -   [BaseModelConfig](/docs/api/typescript/BaseModelConfig/index.md)
     -   [BedrockGuardrailConfig](/docs/api/typescript/BedrockGuardrailConfig/index.md)
     -   [BedrockGuardrailRedactionConfig](/docs/api/typescript/BedrockGuardrailRedactionConfig/index.md)
@@ -84,6 +85,7 @@
     -   [GuardContentText](/docs/api/typescript/GuardContentText/index.md)
     -   [ImageBlockData](/docs/api/typescript/ImageBlockData/index.md)
     -   [InvokableTool](/docs/api/typescript/InvokableTool/index.md)
+    -   [InvokeOptions](/docs/api/typescript/InvokeOptions/index.md)
     -   [LocationData](/docs/api/typescript/LocationData/index.md)
     -   [Logger](/docs/api/typescript/Logger/index.md)
     -   [MessageData](/docs/api/typescript/MessageData/index.md)

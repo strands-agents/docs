@@ -1,10 +1,10 @@
-Defined in: [src/models/streaming.ts:101](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L101)
+Defined in: [src/models/streaming.ts:101](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L101)
 
 Event emitted when a new content block starts in the stream.
 
 ## Implements
 
--   [<code dir="auto">ModelContentBlockStartEventData</code>](/docs/api/typescript/ModelContentBlockStartEventData/index.md)
+-   [`ModelContentBlockStartEventData`](/docs/api/typescript/ModelContentBlockStartEventData/index.md)
 
 ## Constructors
 
@@ -14,13 +14,13 @@ Event emitted when a new content block starts in the stream.
 new ModelContentBlockStartEvent(data): ModelContentBlockStartEvent;
 ```
 
-Defined in: [src/models/streaming.ts:113](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L113)
+Defined in: [src/models/streaming.ts:113](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L113)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | [<code dir="auto">ModelContentBlockStartEventData</code>](/docs/api/typescript/ModelContentBlockStartEventData/index.md) |
+| `data` | [`ModelContentBlockStartEventData`](/docs/api/typescript/ModelContentBlockStartEventData/index.md) |
 
 #### Returns
 
@@ -34,13 +34,13 @@ Defined in: [src/models/streaming.ts:113](https://github.com/strands-agents/sdk-
 readonly type: "modelContentBlockStartEvent";
 ```
 
-Defined in: [src/models/streaming.ts:105](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L105)
+Defined in: [src/models/streaming.ts:105](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L105)
 
 Discriminator for content block start events.
 
 #### Implementation of
 
-[<code dir="auto">ModelContentBlockStartEventData</code>](/docs/api/typescript/ModelContentBlockStartEventData/index.md).[<code dir="auto">type</code>](/docs/api/typescript/ModelContentBlockStartEventData/index.md#type)
+[`ModelContentBlockStartEventData`](/docs/api/typescript/ModelContentBlockStartEventData/index.md).[`type`](/docs/api/typescript/ModelContentBlockStartEventData/index.md#type)
 
 ---
 
@@ -50,10 +50,10 @@ Discriminator for content block start events.
 readonly optional start?: ToolUseStart;
 ```
 
-Defined in: [src/models/streaming.ts:111](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/models/streaming.ts#L111)
+Defined in: [src/models/streaming.ts:111](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/streaming.ts#L111)
 
 Information about the content block being started. Only present for tool use blocks.
 
 #### Implementation of
 
-[<code dir="auto">ModelContentBlockStartEventData</code>](/docs/api/typescript/ModelContentBlockStartEventData/index.md).[<code dir="auto">start</code>](/docs/api/typescript/ModelContentBlockStartEventData/index.md#start)
+[`ModelContentBlockStartEventData`](/docs/api/typescript/ModelContentBlockStartEventData/index.md).[`start`](/docs/api/typescript/ModelContentBlockStartEventData/index.md#start)

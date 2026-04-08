@@ -63,7 +63,7 @@ If you encounter the error `ModuleNotFoundError: No module named 'llamaapi'`, th
 
 ### Structured Output
 
-Llama API models support structured output through their tool calling capabilities. When you use [<code dir="auto">Agent.structured\_output()</code>](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that Llama models can understand.
+Llama API models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that Llama models can understand.
 
 ```python
 from pydantic import BaseModel, Field

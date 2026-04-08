@@ -2,7 +2,7 @@ Amazon Elastic Kubernetes Service (EKS) is a managed container orchestration ser
 
 In this tutorial we are using [Amazon EKS Auto Mode](https://aws.amazon.com/eks/auto-mode), EKS Auto Mode extends AWS management of Kubernetes clusters beyond the cluster itself, to allow AWS to also set up and manage the infrastructure that enables the smooth operation of your workloads. This makes it an excellent choice for deploying Strands Agents SDK agents as containerized applications with high availability and scalability.
 
-This guide discuss EKS integration at a high level - for a complete example project deploying to EKS, check out the [<code dir="auto">deploy\_to\_eks</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks).
+This guide discuss EKS integration at a high level - for a complete example project deploying to EKS, check out the [`deploy_to_eks` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks).
 
 ## Creating Your Agent in Python
 
@@ -15,7 +15,7 @@ The FastAPI application follows these steps:
 3.  Process incoming requests through the agent
 4.  Return the response back to the client
 
-Here’s an example of a weather forecasting agent application ([<code dir="auto">app.py</code>](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks/docker/app/app.py)):
+Here’s an example of a weather forecasting agent application ([`app.py`](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks/docker/app/app.py)):
 
 ```python
 app = FastAPI(title="Weather API")
@@ -150,7 +150,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "
 To deploy our containerized agent to EKS, we will first need to provision an EKS Auto Mode cluster, define IAM role and policies, associate them with a Kubernetes Service Account and package & deploy our Agent using Helm.  
 Helm packages and deploys application to Kubernetes and EKS, Helm enables deployment to different environments, define version control, updates, and consistent deployments across EKS clusters.
 
-Follow the full example [<code dir="auto">deploy\_to\_eks</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks):
+Follow the full example [`deploy_to_eks` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks):
 
 1.  Using eksctl creates an EKS Auto Mode cluster and a VPC
 2.  Builds and pushes the Docker image from your Dockerfile to Amazon Elastic Container Registry (ECR).
@@ -212,7 +212,7 @@ Possible follow-up tasks would be to:
 
 ## Complete Example
 
-For the complete example code, including all files and configurations, see the [<code dir="auto">deploy\_to\_eks</code> sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks)
+For the complete example code, including all files and configurations, see the [`deploy_to_eks` sample project on GitHub](https://github.com/strands-agents/docs/tree/main/docs/examples/deploy_to_eks)
 
 ## Related Resources
 

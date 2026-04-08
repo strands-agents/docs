@@ -1,4 +1,4 @@
-Defined in: [src/tools/zod-tool.ts:20](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L20)
+Defined in: [src/tools/zod-tool.ts:20](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L20)
 
 Configuration for creating a Zod-based tool.
 
@@ -7,7 +7,7 @@ Configuration for creating a Zod-based tool.
 | Type Parameter | Default type | Description |
 | --- | --- | --- |
 | `TInput` *extends* `z.ZodType` | `undefined` | \- | Zod schema type for input validation |
-| `TReturn` *extends* [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md) | [<code dir="auto">JSONValue</code>](/docs/api/typescript/JSONValue/index.md) | Return type of the callback function |
+| `TReturn` *extends* [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | Return type of the callback function |
 
 ## Properties
 
@@ -17,7 +17,7 @@ Configuration for creating a Zod-based tool.
 name: string;
 ```
 
-Defined in: [src/tools/zod-tool.ts:22](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L22)
+Defined in: [src/tools/zod-tool.ts:22](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L22)
 
 The name of the tool
 
@@ -29,7 +29,7 @@ The name of the tool
 optional description?: string;
 ```
 
-Defined in: [src/tools/zod-tool.ts:25](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L25)
+Defined in: [src/tools/zod-tool.ts:25](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L25)
 
 A description of what the tool does (optional)
 
@@ -41,7 +41,7 @@ A description of what the tool does (optional)
 optional inputSchema?: TInput;
 ```
 
-Defined in: [src/tools/zod-tool.ts:31](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L31)
+Defined in: [src/tools/zod-tool.ts:31](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L31)
 
 Zod schema for input validation and JSON schema generation. If omitted or z.void(), the tool takes no input parameters.
 
@@ -56,7 +56,7 @@ callback: (input, context?) =>
 | Promise<TReturn>;
 ```
 
-Defined in: [src/tools/zod-tool.ts:40](https://github.com/strands-agents/sdk-typescript/blob/879129946a9cc414293ea8dcd1b7e768c83327e0/src/tools/zod-tool.ts#L40)
+Defined in: [src/tools/zod-tool.ts:40](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/zod-tool.ts#L40)
 
 Callback function that implements the tool’s functionality.
 
@@ -65,7 +65,7 @@ Callback function that implements the tool’s functionality.
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `input` | `ZodInferred`<`TInput`\> | Validated input matching the Zod schema |
-| `context?` | [<code dir="auto">ToolContext</code>](/docs/api/typescript/ToolContext/index.md) | Optional execution context |
+| `context?` | [`ToolContext`](/docs/api/typescript/ToolContext/index.md) | Optional execution context |
 
 #### Returns
 

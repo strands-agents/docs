@@ -71,7 +71,8 @@ import z from 'zod'
 
 const letterCounter = tool({
   name: 'letter_counter',
-  description: 'Count occurrences of a specific letter in a word. Performs case-insensitive matching.',
+  description:
+    'Count occurrences of a specific letter in a word. Performs case-insensitive matching.',
   // Zod schema for letter counter input validation
   inputSchema: z
     .object({
@@ -138,7 +139,7 @@ More details can be found in the [Agent Loop](/docs/user-guide/concepts/agents/a
 
 Our agent is just TypeScript, so we can run it using Node.js, Bun, Deno, or any TypeScript runtime!
 
-To test our agent, we’ll use [<code dir="auto">tsx</code>](https://tsx.is/) to run the file on Node.js:
+To test our agent, we’ll use [`tsx`](https://tsx.is/) to run the file on Node.js:
 
 ```bash
 npx tsx src/agent.ts

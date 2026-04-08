@@ -12,7 +12,7 @@ This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/py
 
 ## Tool Overview
 
-The [<code dir="auto">http\_request</code>](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py) tool enables Strands agents to connect with external web services and APIs, connecting conversational AI with data sources. This tool supports multiple HTTP methods (GET, POST, PUT, DELETE), handles URL encoding and response parsing, and returns structured data from web sources.
+The [`http_request`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/http_request.py) tool enables Strands agents to connect with external web services and APIs, connecting conversational AI with data sources. This tool supports multiple HTTP methods (GET, POST, PUT, DELETE), handles URL encoding and response parsing, and returns structured data from web sources.
 
 ## Code Structure and Implementation
 

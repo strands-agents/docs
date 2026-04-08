@@ -1,4 +1,4 @@
-[Amazon Nova](https://nova.amazon.com/) is a new generation of foundation models with frontier intelligence and industry leading price performance. Generate text, code, and images with natural language prompts. The [<code dir="auto">strands-amazon-nova</code>](https://pypi.org/project/strands-amazon-nova/) package ([GitHub](https://github.com/amazon-nova-api/strands-nova)) provides an integration for the Strands Agents SDK, enabling seamless use of Amazon Nova models.
+[Amazon Nova](https://nova.amazon.com/) is a new generation of foundation models with frontier intelligence and industry leading price performance. Generate text, code, and images with natural language prompts. The [`strands-amazon-nova`](https://pypi.org/project/strands-amazon-nova/) package ([GitHub](https://github.com/amazon-nova-api/strands-nova)) provides an integration for the Strands Agents SDK, enabling seamless use of Amazon Nova models.
 
 ## Installation
 

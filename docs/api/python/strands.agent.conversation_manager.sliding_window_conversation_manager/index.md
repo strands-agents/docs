@@ -137,4 +137,4 @@ The method handles special cases where trimming the messages leads to:
 
 **Raises**:
 
--   `ContextWindowOverflowException` - If the context cannot be reduced further. Such as when the conversation is already minimal or when tool result messages cannot be properly converted.
+-   `ContextWindowOverflowException` - If the context cannot be reduced further and a context overflow error was provided (e is not None). When called during routine window management (e is None), logs a warning and returns without modification.
