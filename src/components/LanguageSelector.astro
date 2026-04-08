@@ -17,10 +17,11 @@
  *  5. Applies `data-strands-language` on <html> so CSS can conditionally
  *     show / hide content.
  *
- * The component renders as a segmented‑control pill (Python | TypeScript)
+ * The component renders as a segmented‑control pill (Python | TS)
  * that follows the site's Strands design tokens.
  *
- * On mobile, uses compact labels (PY | TS) to save horizontal space.
+ * On mobile, it lives inside the nav dropdown menu (not in the header row)
+ * to keep the header clean. On desktop, it's in the header right group.
  */
 
 // Compute the syncKey that AutoSyncTabs generates for Python|TypeScript
@@ -46,8 +47,7 @@ const syncKey = hashString('Python|TypeScript');
       aria-checked="true"
       data-lang="Python"
     >
-      <span class="lang-full">Python</span>
-      <span class="lang-short">PY</span>
+      Python
     </button>
     <button
       class="lang-btn"
@@ -55,8 +55,7 @@ const syncKey = hashString('Python|TypeScript');
       aria-checked="false"
       data-lang="TypeScript"
     >
-      <span class="lang-full">TS</span>
-      <span class="lang-short">TS</span>
+      TS
     </button>
   </div>
 </strands-language-selector>
@@ -222,16 +221,6 @@ const syncKey = hashString('Python|TypeScript');
     :global([data-theme='light']) .lang-btn.active,
     :global([data-theme='light']) .lang-btn[aria-checked='true'] {
       color: #fff;
-    }
-
-    /* Mobile: show short labels, hide full labels */
-    .lang-short { display: inline; }
-    .lang-full { display: none; }
-
-    /* Desktop: show full labels, hide short labels */
-    @media (min-width: 50rem) {
-      .lang-short { display: none; }
-      .lang-full { display: inline; }
     }
   }
 </style>

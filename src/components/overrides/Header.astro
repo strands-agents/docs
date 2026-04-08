@@ -47,8 +47,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     </div>
     <div class="header-spacer"></div>
     {shouldRenderSearch && <div class="search-wrapper print:hidden"><Search /></div>}
-    <div class="mobile-lang-selector md:sl-hidden print:hidden"><LanguageSelector /></div>
-    {/* Mobile nav dropdown */}
+    {/* Mobile nav dropdown — language selector lives INSIDE here on mobile */}
     {navLinks.length > 0 && (
       <nav class="mobile-nav md:sl-hidden print:hidden" aria-label="Main navigation">
         <details class="mobile-nav-dropdown">
@@ -59,6 +58,11 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
             <Icon name="down-caret" class="mobile-nav-caret" size="1rem" />
           </summary>
           <div class="mobile-nav-menu">
+            {/* Language selector at top of mobile dropdown */}
+            <div class="mobile-nav-lang-row">
+              <LanguageSelector />
+            </div>
+            <div class="mobile-nav-divider"></div>
             {navLinks.map((link: NavLink) => {
               const isActive = activeNav?.label === link.label;
               return (
@@ -74,7 +78,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
             })}
             {githubSections.map((section: GitHubSection, i: number) => (
               <Fragment>
-                <div class={i === 0 ? 'mobile-nav-divider' : undefined}></div>
+                <div class="mobile-nav-divider"></div>
                 <div class="mobile-nav-section-label">{i === 0 ? 'GitHub' : section.title}</div>
                 {section.links.map((link) => (
                   <a href={link.href} target="_blank" rel="noopener noreferrer" class="mobile-nav-link">
@@ -391,6 +395,13 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
+    /* Language selector row inside mobile dropdown */
+    .mobile-nav-lang-row {
+      display: flex;
+      justify-content: center;
+      padding: 0.25rem 0.5rem;
+    }
+
     .mobile-nav-link {
       display: flex;
       align-items: center;
@@ -455,15 +466,6 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
       .header-spacer {
         /* In grid context, this element fills the 1fr column */
       }
-    }
-  }
-</style>
-
-<style>
-  @layer starlight.core {
-    .mobile-lang-selector {
-      display: flex;
-      align-items: center;
     }
   }
 </style>
