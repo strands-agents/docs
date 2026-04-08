@@ -138,27 +138,43 @@ The `agent.cancel()` method provides a way to stop the loop from outside, such a
   if result.stop_reason == "cancelled":
       print("Agent was cancelled due to timeout")
   ```
+
+  Cancellation differs from [interrupts](../interrupts.mdx) in that it stops the agent entirely rather than pausing for human input. Interrupts allow the agent to resume from where it left off; cancellation does not.
   </Tab>
   <Tab label="TypeScript">
 
   The agent checks for cancellation at four checkpoints:
 
-  | Checkpoint | Behavior |
-  |---|---|
-  | Top of each loop cycle | Agent stops before the next model invocation |
-  | During model response streaming | Partial output is discarded |
-  | Before tool execution | All pending tool calls are skipped with error results |
-  | Between sequential tool executions | Remaining tool calls are skipped with error results |
+  | Checkpoint | Behavior | Note |
+  |---|---|---|
+  | Top of each loop cycle | Agent stops before the next model invocation | |
+  | During model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
+  | Before tool execution | All pending tool calls are skipped with error results | |
+  | Between sequential tool executions | Remaining tool calls are skipped with error results | |
 
   The agent returns a result with `stopReason: 'cancelled'`. `cancel()` is idempotent — calling it multiple times is safe.
 
   ```typescript
   --8<-- "user-guide/concepts/agents/agent-loop.ts:cancel_timeout"
   ```
+
+  #### External cancellation signals
+
+  You can also pass your own `AbortSignal` into `invoke()` or `stream()` via the `cancelSignal` option. The agent composes it with its internal controller using `AbortSignal.any()`, so both `agent.cancel()` and the external signal can trigger cancellation independently. This is useful for declarative timeouts, custom `AbortController` workflows, or framework-driven cancellation on client disconnect.
+
+  ```typescript
+  --8<-- "user-guide/concepts/agents/agent-loop.ts:cancel_external_signal"
+  ```
+
+  #### Cancellation within tool execution
+
+  The SDK automatically checks for cancellation before and between tool invocations (see checkpoints above). However, once a tool callback is running, cancellation is **cooperative** — only the tool itself can respond mid-execution. Tools can participate by forwarding the signal to APIs that accept `AbortSignal`, or by polling `cancelSignal.aborted` between steps. If a tool does neither, it runs to completion and the agent resumes cancellation handling after the tool returns.
+
+  ```typescript
+  --8<-- "user-guide/concepts/agents/agent-loop.ts:cancel_signal"
+  ```
   </Tab>
 </Tabs>
-
-Cancellation differs from [interrupts](../interrupts.mdx) in that it stops the agent entirely rather than pausing for human input. Interrupts allow the agent to resume from where it left off; cancellation does not.
 
 ## Common Problems
 

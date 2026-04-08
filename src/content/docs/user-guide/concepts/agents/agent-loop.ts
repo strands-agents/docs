@@ -20,6 +20,7 @@ const myTool = tool({
   description: 'A task that respects cancellation',
   inputSchema: z.object({ url: z.string() }),
   callback: async (input, context) => {
+    // Forward the cancel signal to APIs that accept AbortSignal
     const response = await fetch(input.url, {
       signal: context?.agent.cancelSignal,
     })
@@ -27,3 +28,16 @@ const myTool = tool({
   },
 })
 // --8<-- [end:cancel_signal]
+
+// --8<-- [start:cancel_external_signal]
+// Timeout-based cancellation
+const timedResult = await agent.invoke('Analyze this large dataset', {
+  cancelSignal: AbortSignal.timeout(5000),
+})
+
+// Custom AbortController — call controller.abort() from anywhere to cancel
+const controller = new AbortController()
+const controllerResult = await agent.invoke('Hello', {
+  cancelSignal: controller.signal,
+})
+// --8<-- [end:cancel_external_signal]
