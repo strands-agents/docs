@@ -869,43 +869,43 @@ Strands allows you to enable and configure reasoning capabilities with your [`Be
 
 ### Structured Output
 
+Strands supports two modes for structured output with Bedrock models: **tool-based** (default) and **native**.
+
+#### Tool-Based Mode (Default)
+
+By default, the SDK converts your Pydantic model into a tool specification and forces the model to call it. This works with all Bedrock models that support tool use.
+
 <Tabs>
 <Tab label="Python">
-
-Amazon Bedrock models support structured output through their tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK converts your schema to Bedrock's tool specification format.
 
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
 from strands.models import BedrockModel
-from typing import List, Optional
 
 class ProductAnalysis(BaseModel):
     """Analyze product information from text."""
     name: str = Field(description="Product name")
     category: str = Field(description="Product category")
     price: float = Field(description="Price in USD")
-    features: List[str] = Field(description="Key product features")
-    rating: Optional[float] = Field(description="Customer rating 1-5", ge=1, le=5)
+    features: list[str] = Field(description="Key product features")
+    rating: float | None = Field(description="Customer rating 1-5", ge=1, le=5)
 
-bedrock_model = BedrockModel()
+agent = Agent(model=BedrockModel())
 
-agent = Agent(model=bedrock_model)
-
-result = agent.structured_output(
-    ProductAnalysis,
-    """
-    Analyze this product: The UltraBook Pro is a premium laptop computer
-    priced at $1,299. It features a 15-inch 4K display, 16GB RAM, 512GB SSD,
-    and 12-hour battery life. Customer reviews average 4.5 stars.
-    """
+result = agent(
+    "Analyze this product: The UltraBook Pro is a premium laptop priced at $1,299. "
+    "It features a 15-inch 4K display, 16GB RAM, 512GB SSD, and 12-hour battery life. "
+    "Customer reviews average 4.5 stars.",
+    structured_output_model=ProductAnalysis,
 )
 
-print(f"Product: {result.name}")
-print(f"Category: {result.category}")
-print(f"Price: ${result.price}")
-print(f"Features: {result.features}")
-print(f"Rating: {result.rating}")
+product = result.structured_output
+print(f"Product: {product.name}")
+print(f"Category: {product.category}")
+print(f"Price: ${product.price}")
+print(f"Features: {product.features}")
+print(f"Rating: {product.rating}")
 ```
 </Tab>
 <Tab label="TypeScript">
@@ -915,6 +915,60 @@ print(f"Rating: {result.rating}")
 ```
 </Tab>
 </Tabs>
+
+#### Native Mode
+
+Bedrock supports [native structured output](https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html) via `outputConfig.textFormat`, which enforces JSON schema compliance at the token generation level. This guarantees the response matches your schema exactly, without using tool calling.
+
+Enable native mode by setting `structured_output_mode="native"` on your `BedrockModel`:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models import BedrockModel
+
+class ProductAnalysis(BaseModel):
+    """Analyze product information from text."""
+    name: str = Field(description="Product name")
+    category: str = Field(description="Product category")
+    price: float = Field(description="Price in USD")
+    features: list[str] = Field(description="Key product features")
+    rating: float | None = Field(description="Customer rating 1-5", ge=1, le=5)
+
+model = BedrockModel(
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    structured_output_mode="native",
+)
+
+agent = Agent(model=model)
+
+result = agent(
+    "Analyze this product: The UltraBook Pro is a premium laptop priced at $1,299. "
+    "It features a 15-inch 4K display, 16GB RAM, 512GB SSD, and 12-hour battery life. "
+    "Customer reviews average 4.5 stars.",
+    structured_output_model=ProductAnalysis,
+)
+
+product = result.structured_output
+print(f"Product: {product.name}")
+print(f"Category: {product.category}")
+print(f"Price: ${product.price}")
+print(f"Features: {product.features}")
+print(f"Rating: {product.rating}")
+```
+</Tab>
+<Tab label="TypeScript">
+
+```ts
+// Structured output is not yet supported in the TypeScript SDK
+```
+</Tab>
+</Tabs>
+
+> **Note**: Native structured output requires a supported model. See the [Bedrock structured output documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html#structured-output-supported-models) for the list of supported models. If your model does not support native structured output, the Bedrock API will return an error.
 
 ## Troubleshooting
 
