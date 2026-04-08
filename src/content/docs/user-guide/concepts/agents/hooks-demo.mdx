@@ -3,7 +3,7 @@ title: "Hooks (Language Selector Demo)"
 description: "Demo page showing the implicit language selector feature. Compare this with the original hooks page."
 ---
 
-import LanguageContent from '../../../../../components/LanguageContent.astro';
+{/* LanguageContent is auto-imported via astro.config.mjs — no explicit import needed */}
 
 This page demonstrates the **implicit language selector** feature. Use the Python / TypeScript toggle in the header to switch all code examples and language-specific content on this page.
 
@@ -80,7 +80,7 @@ Python hooks receive strongly-typed event dataclasses with `@property` accessors
 In TypeScript, hooks use a **class-based event pattern** where all events extend `HookableEvent`. The hook system supports:
 
 - **`agent.addHook(EventClass, callback)`** — type-safe registration with full IntelliSense
-- **Streaming integration** — all hook events are streamable via `agent.stream()` 
+- **Streaming integration** — all hook events are streamable via `agent.stream()`
 - **Rich event wrappers** — `ContentBlockEvent`, `ModelMessageEvent`, `ToolResultEvent` provide structured access to streaming data
 - **Batch operations** — `BeforeToolsEvent` / `AfterToolsEvent` for intercepting tool batches
 

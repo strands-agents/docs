@@ -51,6 +51,27 @@ export default defineConfig({
         },
       },
     }),
+    // AutoImport MUST come before mdx() so auto-imports work in .mdx files.
+    // See: https://github.com/delucis/astro-auto-import#usage
+    AutoImport({
+      imports: [
+        {
+          '@astrojs/starlight/components': [
+            ['TabItem', 'Tab']
+          ],
+          './src/components/AutoSyncTabs.astro': [
+            ['default', "Tabs"]
+          ],
+          './src/components/LanguageContent.astro': [
+            ['default', "LanguageContent"]
+          ]
+        },
+      ],
+      defaultComponents: {
+        // override 'a' links so that we can use relative urls
+        a: './src/components/PageLink.astro'
+      }
+    }),
     mdx(),
     starlight({
       head: [
@@ -91,25 +112,6 @@ export default defineConfig({
       cacheExternalLinks: false,      // Optional: cache verified external links to disk (default: true)
       throwError: true,               // Optional: fail the build if broken links are found (default: false)
       linkCheckerDir: '.link-checker' // Optional: directory for cache and log files (default: '.link-checker')
-    }),
-   AutoImport({
-      imports: [
-        {
-          '@astrojs/starlight/components': [
-            ['TabItem', 'Tab']
-          ],
-          './src/components/AutoSyncTabs.astro': [
-            ['default', "Tabs"]
-          ],
-          './src/components/LanguageContent.astro': [
-            ['default', "LanguageContent"]
-          ]
-        },
-      ],
-      defaultComponents: {
-        // override 'a' links so that we can use relative urls
-        a: './src/components/PageLink.astro'
-      }
     }),
   ],
 })
