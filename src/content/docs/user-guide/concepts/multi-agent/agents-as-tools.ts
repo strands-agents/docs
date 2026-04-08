@@ -30,7 +30,7 @@ Create detailed travel itineraries based on user preferences.`,
 })
 
 // Create the orchestrator — agents are automatically converted to tools
-const orchestratorDirect = new Agent({
+const orchestrator = new Agent({
   systemPrompt: `You are an assistant that routes queries to specialized agents:
 - For research questions and factual information → Use the research_agent tool
 - For product recommendations and shopping advice → Use the product_agent tool
@@ -42,32 +42,32 @@ Always select the most appropriate tool based on the user's query.`,
 })
 // --8<-- [end:direct_passing]
 
-void orchestratorDirect
+void orchestrator
 
-// --8<-- [start:as_tool_customization]
-const orchestratorAsTool = new Agent({
-  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
-  tools: [
-    researchAgent.asTool({
-      name: 'research_assistant',
-      description:
-        'Process and respond to research-related queries requiring factual information.',
-    }),
-  ],
-})
-// --8<-- [end:as_tool_customization]
+{
+  // --8<-- [start:as_tool_customization]
+  const orchestrator = new Agent({
+    systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+    tools: [
+      researchAgent.asTool({
+        name: 'research_assistant',
+        description:
+          'Process and respond to research-related queries requiring factual information.',
+      }),
+    ],
+  })
+  // --8<-- [end:as_tool_customization]
+}
 
-void orchestratorAsTool
-
-// --8<-- [start:as_tool_context]
-// Agent will remember prior interactions within the same orchestrator session
-const orchestratorWithContext = new Agent({
-  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
-  tools: [researchAgent.asTool({ preserveContext: true })],
-})
-// --8<-- [end:as_tool_context]
-
-void orchestratorWithContext
+{
+  // --8<-- [start:as_tool_context]
+  // Agent will remember prior interactions within the same orchestrator session
+  const orchestrator = new Agent({
+    systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+    tools: [researchAgent.asTool({ preserveContext: true })],
+  })
+  // --8<-- [end:as_tool_context]
+}
 
 // --8<-- [start:research_assistant]
 const researchAssistant = tool({
@@ -140,7 +140,7 @@ async function orchestratorExample() {
   const orchestrator = new Agent({
     systemPrompt: `You are an assistant that routes queries to specialized agents:
 - For research questions and factual information → Use the research_assistant tool
-- For product recommendations and shopping advice → Use the product_recommendation_assistant tool
+- For recommendations and advice → Use the product_recommendation_assistant tool
 - For travel planning and itineraries → Use the trip_planning_assistant tool
 - For simple questions not requiring specialized knowledge → Answer directly
 

@@ -99,77 +99,62 @@ The agent emits lifecycle events at key points: before and after each invocation
 
 ### Cancellation
 
-The `agent.cancel()` method provides a thread-safe way to stop the loop from outside, such as on a client disconnect, a timeout, or a UI "Stop" button. Calling `cancel()` sets an internal signal that the agent checks at two checkpoints:
-
-| Checkpoint | Behavior | Note |
-|---|---|---|
-| Model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
-| Before tool execution | Tool calls are skipped with error results added to maintain valid conversation state | |
-
-The agent returns a result with `stop_reason="cancelled"`. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable. `cancel()` is thread-safe and idempotent. Calling it multiple times or from different threads is safe.
+The `agent.cancel()` method provides a way to stop the loop from outside, such as on a client disconnect, a timeout, or a UI "Stop" button. Calling `cancel()` sets an internal signal that the agent checks at key checkpoints. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable.
 
 <Tabs>
   <Tab label="Python">
-    ```python
-    import threading
-    import time
 
-    from strands import Agent
+  The agent checks for cancellation at two checkpoints:
+
+  | Checkpoint | Behavior | Note |
+  |---|---|---|
+  | Model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
+  | Before tool execution | Tool calls are skipped with error results added to maintain valid conversation state | |
+
+  The agent returns a result with `stop_reason="cancelled"`. `cancel()` is thread-safe and idempotent. Calling it multiple times or from different threads is safe.
+
+  ```python
+  import threading
+  import time
+
+  from strands import Agent
 
 
-    def timeout_watchdog(agent: Agent, timeout: float) -> None:
-        """Cancel the agent after a timeout period."""
-        time.sleep(timeout)
-        agent.cancel()
+  def timeout_watchdog(agent: Agent, timeout: float) -> None:
+      """Cancel the agent after a timeout period."""
+      time.sleep(timeout)
+      agent.cancel()
 
 
-    agent = Agent()
+  agent = Agent()
 
-    # Cancel from a background thread after 30 seconds
-    watchdog = threading.Thread(target=timeout_watchdog, args=(agent, 30.0))
-    watchdog.start()
+  # Cancel from a background thread after 30 seconds
+  watchdog = threading.Thread(target=timeout_watchdog, args=(agent, 30.0))
+  watchdog.start()
 
-    result = agent("Analyze this large dataset")
-    watchdog.join()
+  result = agent("Analyze this large dataset")
+  watchdog.join()
 
-    if result.stop_reason == "cancelled":
-        print("Agent was cancelled due to timeout")
-    ```
+  if result.stop_reason == "cancelled":
+      print("Agent was cancelled due to timeout")
+  ```
   </Tab>
   <Tab label="TypeScript">
-    ```typescript
-    import { Agent } from '@strands-agents/sdk'
 
-    const agent = new Agent()
+  The agent checks for cancellation at four checkpoints:
 
-    // Cancel after 30 seconds
-    setTimeout(() => agent.cancel(), 30_000)
+  | Checkpoint | Behavior |
+  |---|---|
+  | Top of each loop cycle | Agent stops before the next model invocation |
+  | During model response streaming | Partial output is discarded |
+  | Before tool execution | All pending tool calls are skipped with error results |
+  | Between sequential tool executions | Remaining tool calls are skipped with error results |
 
-    const result = await agent.invoke('Analyze this large dataset')
+  The agent returns a result with `stopReason: 'cancelled'`. `cancel()` is idempotent — calling it multiple times is safe.
 
-    if (result.stopReason === 'cancelled') {
-      console.log('Agent was cancelled due to timeout')
-    }
-    ```
-
-    Tools can check the cancellation signal to abort their own work:
-
-    ```typescript
-    import { Agent, tool } from '@strands-agents/sdk'
-    import { z } from 'zod'
-
-    const myTool = tool({
-      name: 'long_running_task',
-      description: 'A task that respects cancellation',
-      inputSchema: z.object({ url: z.string() }),
-      callback: async (input, context) => {
-        const response = await fetch(input.url, {
-          signal: context.agent.cancelSignal,
-        })
-        return response.text()
-      },
-    })
-    ```
+  ```typescript
+  --8<-- "user-guide/concepts/agents/agent-loop.ts:cancel_timeout"
+  ```
   </Tab>
 </Tabs>
 

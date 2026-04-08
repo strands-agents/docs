@@ -26,14 +26,14 @@ The "Agents as Tools" pattern offers several advantages:
 
 When implementing the "Agents as Tools" pattern with Strands Agents SDK:
 
-1. **Clear tool documentation**: Write descriptive docstrings that explain the agent's expertise
+1. **Clear tool documentation**: Write descriptive names and descriptions that explain the agent's expertise
 2. **Focused system prompts**: Keep each specialized agent tightly focused on its domain
 3. **Proper response handling**: Use consistent patterns to extract and format responses
 4. **Tool selection guidance**: Give the orchestrator clear criteria for when to use each specialized agent
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides three ways to implement the "Agents as Tools" pattern: passing agents directly in the `tools` array for the simplest setup, the `.as_tool()` method when you need to customize tool name, description, or context behavior, and the `@tool` decorator for full control over how the agent is invoked.
+Strands Agents SDK provides three ways to implement the "Agents as Tools" pattern: passing agents directly in the `tools` array for the simplest setup, `.as_tool()`/`.asTool()` when you need to customize tool name, description, or context behavior, and the `@tool` decorator or `tool()` function for full control over how the agent is invoked.
 
 ```mermaid
 flowchart TD
@@ -99,9 +99,9 @@ orchestrator = Agent(
 </Tab>
 </Tabs>
 
-### Using `.as_tool()` for Customization
+### Customizing Agent Tools
 
-When you need to customize the tool name, description, or context behavior, use the `.as_tool()` method explicitly:
+When you need to customize the tool name, description, or context behavior, use `.as_tool()` (Python) or `.asTool()` (TypeScript) explicitly:
 
 <Tabs>
 <Tab label="Python">
@@ -117,10 +117,21 @@ orchestrator = Agent(
     ],
 )
 ```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/multi-agent/agents-as-tools.ts:as_tool_customization"
+```
+</Tab>
+</Tabs>
 
 #### Context Management
 
-By default, both direct passing and `.as_tool()` reset the agent's conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, use `.as_tool()` with `preserve_context=True`:
+By default, both direct passing and `.as_tool()`/`.asTool()` reset the agent's conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations:
+
+<Tabs>
+<Tab label="Python">
 
 ```python
 # Agent will remember prior interactions within the same orchestrator session
@@ -133,22 +144,14 @@ orchestrator = Agent(
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/multi-agent/agents-as-tools.ts:as_tool_customization"
-```
-
-#### Context Management
-
-By default, both direct passing and `.asTool()` reset the agent's conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent's conversation history across invocations, use `.asTool()` with `preserveContext: true`:
-
-```typescript
 --8<-- "user-guide/concepts/multi-agent/agents-as-tools.ts:as_tool_context"
 ```
 </Tab>
 </Tabs>
 
-### Using the `@tool` Decorator
+### Creating Custom Agent Tools
 
-For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can use the `@tool` decorator to wrap an agent manually:
+For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can create a custom tool that wraps an agent:
 
 <Tabs>
 <Tab label="Python">

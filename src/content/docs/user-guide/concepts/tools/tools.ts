@@ -397,6 +397,23 @@ async function naturalLanguageInvocationExample() {
   // --8<-- [end:natural_language_invocation]
 }
 
+// Agents as tools example
+async function agentsAsToolsExample() {
+  // --8<-- [start:agents_as_tools]
+  const researchAgent = new Agent({
+    name: 'research_agent',
+    description: 'A specialized research assistant.',
+    systemPrompt: 'You are a specialized research assistant.',
+    printer: false,
+  })
+
+  const orchestrator = new Agent({
+    systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+    tools: [researchAgent],
+  })
+  // --8<-- [end:agents_as_tools]
+}
+
 // Search database tool with comprehensive description
 async function searchDatabaseExample() {
   // --8<-- [start:search_database]
