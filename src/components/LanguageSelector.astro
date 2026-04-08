@@ -19,6 +19,8 @@
  *
  * The component renders as a segmented‑control pill (Python | TypeScript)
  * that follows the site's Strands design tokens.
+ *
+ * On mobile, uses compact labels (PY | TS) to save horizontal space.
  */
 
 // Compute the syncKey that AutoSyncTabs generates for Python|TypeScript
@@ -44,7 +46,8 @@ const syncKey = hashString('Python|TypeScript');
       aria-checked="true"
       data-lang="Python"
     >
-      Python
+      <span class="lang-full">Python</span>
+      <span class="lang-short">PY</span>
     </button>
     <button
       class="lang-btn"
@@ -52,7 +55,8 @@ const syncKey = hashString('Python|TypeScript');
       aria-checked="false"
       data-lang="TypeScript"
     >
-      TypeScript
+      <span class="lang-full">TS</span>
+      <span class="lang-short">TS</span>
     </button>
   </div>
 </strands-language-selector>
@@ -218,6 +222,16 @@ const syncKey = hashString('Python|TypeScript');
     :global([data-theme='light']) .lang-btn.active,
     :global([data-theme='light']) .lang-btn[aria-checked='true'] {
       color: #fff;
+    }
+
+    /* Mobile: show short labels, hide full labels */
+    .lang-short { display: inline; }
+    .lang-full { display: none; }
+
+    /* Desktop: show full labels, hide short labels */
+    @media (min-width: 50rem) {
+      .lang-short { display: none; }
+      .lang-full { display: inline; }
     }
   }
 </style>

@@ -1,0 +1,39 @@
+---
+/**
+ * Inline language-conditional content — for use WITHIN paragraphs.
+ *
+ * Renders as a `<span>` so it can sit inside `<p>`, `<li>`, headings, etc.
+ * Use this to swap method names, API references, or short phrases inline:
+ *
+ *   Use the <Lang lang="python">`@tool` decorator</Lang><Lang lang="typescript">`tool()` function</Lang> to register tools.
+ *
+ * For block-level content (multiple paragraphs, code blocks, sections),
+ * use `<LanguageContent>` instead.
+ *
+ * Props:
+ *   lang — "python" | "typescript" (case-insensitive)
+ */
+interface Props {
+  lang: 'python' | 'typescript' | 'Python' | 'TypeScript';
+}
+
+const { lang } = Astro.props;
+
+const normalised = lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase();
+const label = lang.toLowerCase() === 'typescript' ? 'TypeScript' : normalised;
+---
+
+<span class="lang-inline" data-lang={label}><slot /></span>
+
+<style>
+  .lang-inline {
+    /* No visual chrome — content just appears inline */
+  }
+
+  :global(html[data-strands-language='Python']) .lang-inline[data-lang='TypeScript'] {
+    display: none;
+  }
+  :global(html[data-strands-language='TypeScript']) .lang-inline[data-lang='Python'] {
+    display: none;
+  }
+</style>

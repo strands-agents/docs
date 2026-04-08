@@ -2,25 +2,24 @@
 /**
  * Conditionally displays content based on the globally‑selected language.
  *
- * Usage in MDX:
+ * Renders as a transparent wrapper — no label, no visual chrome.
+ * Content just appears/disappears based on the language preference.
+ *
+ * For block-level content (paragraphs, sections):
  *
  *   <LanguageContent lang="python">
  *     Python uses the `@tool` decorator to register tools.
  *   </LanguageContent>
  *
- *   <LanguageContent lang="typescript">
- *     TypeScript uses the `tool()` function to register tools.
- *   </LanguageContent>
+ * For inline content within paragraphs (method names, API links), use
+ * the companion `<Lang>` component instead — it renders as a `<span>`.
  *
- * The component renders BOTH blocks in the HTML (SEO‑friendly) and uses
- * CSS (`data-strands-language` on <html>) + a tiny JS upgrade to toggle
- * visibility.  If JS is disabled, both blocks are visible (graceful
- * degradation).
+ * Both blocks render in the HTML (SEO‑friendly). CSS toggles visibility
+ * based on `data-strands-language` on <html>. If JS is disabled, both
+ * blocks are visible (graceful degradation).
  *
  * Props:
- *   lang — "python" | "typescript" (case‑insensitive, matched against
- *          the `data-strands-language` attribute which stores "Python" /
- *          "TypeScript" with capital first letter).
+ *   lang — "python" | "typescript" (case‑insensitive)
  */
 interface Props {
   lang: 'python' | 'typescript' | 'Python' | 'TypeScript';
@@ -30,7 +29,6 @@ const { lang } = Astro.props;
 
 // Normalise to the label used by the selector ("Python" / "TypeScript")
 const normalised = lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase();
-// For TypeScript the naive toUpperCase+toLowerCase gives "Typescript" — fix:
 const label = lang.toLowerCase() === 'typescript' ? 'TypeScript' : normalised;
 ---
 
@@ -40,13 +38,17 @@ const label = lang.toLowerCase() === 'typescript' ? 'TypeScript' : normalised;
 
 <style>
   /*
-   * When a global language preference is active, hide the block that
-   * does NOT match.  The `data-strands-language` attribute on <html>
-   * is set by LanguageSelector (both server‑inline and client‑side).
+   * Transparent wrapper — `display: contents` makes the div invisible to
+   * layout.  Children render as if the wrapper didn't exist.  When the
+   * other language is selected, the whole block hides via `display: none`.
    *
-   * When NO preference is set (first visit, no JS), both blocks remain
+   * When NO preference is set (first visit / no JS), both blocks remain
    * visible — content is never lost.
    */
+  .language-content {
+    display: contents;
+  }
+
   :global(html[data-strands-language='Python']) .language-content[data-lang='TypeScript'] {
     display: none;
   }

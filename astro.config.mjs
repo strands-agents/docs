@@ -64,6 +64,9 @@ export default defineConfig({
           ],
           './src/components/LanguageContent.astro': [
             ['default', "LanguageContent"]
+          ],
+          './src/components/Lang.astro': [
+            ['default', "Lang"]
           ]
         },
       ],

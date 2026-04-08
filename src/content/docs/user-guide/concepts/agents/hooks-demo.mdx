@@ -3,13 +3,21 @@ title: "Hooks (Language Selector Demo)"
 description: "Demo page showing the implicit language selector feature. Compare this with the original hooks page."
 ---
 
-{/* LanguageContent is auto-imported via astro.config.mjs — no explicit import needed */}
+{/* LanguageContent and Lang are auto-imported — no explicit import needed */}
 
-This page demonstrates the **implicit language selector** feature. Use the Python / TypeScript toggle in the header to switch all code examples and language-specific content on this page.
+This page demonstrates the **implicit language selector** feature. Use the **PY / TS** toggle in the header to switch all code examples and language-specific content on this page.
 
 ## Overview
 
 Hooks are a composable extensibility mechanism for extending agent functionality by subscribing to events throughout the agent lifecycle.
+
+## Inline Language Switching
+
+The `<Lang>` component lets you swap content **within** a paragraph — method names, API references, short phrases — without any visible label or wrapper.
+
+Register hooks using <Lang lang="python">`agent.add_hook()`</Lang><Lang lang="typescript">`agent.addHook()`</Lang>. The callback receives a strongly-typed event — <Lang lang="python">a dataclass with `@property` accessors</Lang><Lang lang="typescript">a class extending `HookableEvent`</Lang>.
+
+For example, to intercept tool calls, subscribe to <Lang lang="python">`BeforeToolCallEvent`</Lang><Lang lang="typescript">`BeforeToolCallEvent`</Lang> and access <Lang lang="python">`event.tool_use`</Lang><Lang lang="typescript">`event.toolUse`</Lang> to inspect or modify parameters.
 
 ## Basic Usage — Implicit Tabs
 
@@ -47,7 +55,7 @@ import { BeforeToolCallEvent } from "@strands-agents/sdk/hooks";
 
 const agent = new Agent({ model });
 
-// Register with add_hook — type-safe callback
+// Register with addHook — type-safe callback
 agent.addHook(BeforeToolCallEvent, (event) => {
   console.log(`Tool called: ${event.toolUse.name}`);
 });
@@ -129,21 +137,11 @@ The tables below show the different events available in each SDK. They switch au
 </Tab>
 </Tabs>
 
-## Mixed Content — Tabs + LanguageContent
+## Mixed Content — All Three Patterns
 
-You can mix both approaches. Use `<Tabs>` for code blocks (where the tab UI is hidden but the switching mechanism is intact) and `<LanguageContent>` for prose sections:
+You can mix all approaches. Use `<Tabs>` for code blocks (tab bar hidden), `<LanguageContent>` for prose sections, and `<Lang>` for inline swaps:
 
-<LanguageContent lang="python">
-
-In Python, you modify tool parameters by accessing `event.tool_use` directly:
-
-</LanguageContent>
-
-<LanguageContent lang="typescript">
-
-In TypeScript, you modify tool parameters through the `event.toolUse` property:
-
-</LanguageContent>
+To modify tool parameters before execution, access <Lang lang="python">`event.tool_use`</Lang><Lang lang="typescript">`event.toolUse`</Lang> in your hook callback:
 
 <Tabs>
 <Tab label="Python">
@@ -164,3 +162,5 @@ agent.addHook(BeforeToolCallEvent, (event) => {
 ```
 </Tab>
 </Tabs>
+
+See the <Lang lang="python">[Python hooks API reference](/docs/api/python/strands.agent.agent/)</Lang><Lang lang="typescript">[TypeScript hooks API reference](/docs/api/typescript/)</Lang> for the full API reference.

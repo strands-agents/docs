@@ -24,22 +24,9 @@
 
       if (isLangTabs) {
         tabGroup.setAttribute('data-lang-tabs', '');
-
-        // Set the active language label
-        const activeTab = tabGroup.querySelector('[role="tab"][aria-selected="true"]');
-        if (activeTab) {
-          tabGroup.setAttribute('data-active-lang', activeTab.textContent?.trim() || '');
-        }
       }
     });
   }
-
-  // Update data-active-lang when language changes
-  document.addEventListener('strands:language-change', (e) => {
-    document.querySelectorAll('starlight-tabs[data-lang-tabs]').forEach((tabGroup) => {
-      tabGroup.setAttribute('data-active-lang', e.detail.language);
-    });
-  });
 
   // Mark tabs on load
   if (document.readyState === 'loading') {
