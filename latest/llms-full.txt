@@ -7098,16 +7098,18 @@ The agent emits lifecycle events at key points: before and after each invocation
 
 ### Cancellation
 
-The `agent.cancel()` method provides a thread-safe way to stop the loop from outside, such as on a client disconnect, a timeout, or a UI “Stop” button. Calling `cancel()` sets an internal signal that the agent checks at two checkpoints:
+The `agent.cancel()` method provides a way to stop the loop from outside, such as on a client disconnect, a timeout, or a UI “Stop” button. Calling `cancel()` sets an internal signal that the agent checks at key checkpoints. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable.
+
+(( tab "Python" ))
+The agent checks for cancellation at two checkpoints:
 
 | Checkpoint | Behavior | Note |
 | --- | --- | --- |
 | Model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
 | Before tool execution | Tool calls are skipped with error results added to maintain valid conversation state |  |
 
-The agent returns a result with `stop_reason="cancelled"`. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable. `cancel()` is thread-safe and idempotent. Calling it multiple times or from different threads is safe.
+The agent returns a result with `stop_reason="cancelled"`. `cancel()` is thread-safe and idempotent. Calling it multiple times or from different threads is safe.
 
-(( tab "Python" ))
 ```python
 import threading
 import time
@@ -7133,15 +7135,71 @@ watchdog.join()
 if result.stop_reason == "cancelled":
     print("Agent was cancelled due to timeout")
 ```
+
+Cancellation differs from [interrupts](/docs/user-guide/concepts/interrupts/index.md) in that it stops the agent entirely rather than pausing for human input. Interrupts allow the agent to resume from where it left off; cancellation does not.
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Cancellation is not yet available in TypeScript SDK
+The agent checks for cancellation at four checkpoints:
+
+| Checkpoint | Behavior | Note |
+| --- | --- | --- |
+| Top of each loop cycle | Agent stops before the next model invocation |  |
+| During model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
+| Before tool execution | All pending tool calls are skipped with error results |  |
+| Between sequential tool executions | Remaining tool calls are skipped with error results |  |
+
+The agent returns a result with `stopReason: 'cancelled'`. `cancel()` is idempotent — calling it multiple times is safe.
+
+```typescript
+const agent = new Agent()
+
+// Cancel after 30 seconds
+setTimeout(() => agent.cancel(), 30_000)
+
+const result = await agent.invoke('Analyze this large dataset')
+
+if (result.stopReason === 'cancelled') {
+  console.log('Agent was cancelled due to timeout')
+}
+```
+
+#### External cancellation signals
+
+You can also pass your own `AbortSignal` into `invoke()` or `stream()` via the `cancelSignal` option. The agent composes it with its internal controller using `AbortSignal.any()`, so both `agent.cancel()` and the external signal can trigger cancellation independently. This is useful for declarative timeouts, custom `AbortController` workflows, or framework-driven cancellation on client disconnect.
+
+```typescript
+// Timeout-based cancellation
+const timedResult = await agent.invoke('Analyze this large dataset', {
+  cancelSignal: AbortSignal.timeout(5000),
+})
+
+// Custom AbortController — call controller.abort() from anywhere to cancel
+const controller = new AbortController()
+const controllerResult = await agent.invoke('Hello', {
+  cancelSignal: controller.signal,
+})
+```
+
+#### Cancellation within tool execution
+
+The SDK automatically checks for cancellation before and between tool invocations (see checkpoints above). However, once a tool callback is running, cancellation is **cooperative** — only the tool itself can respond mid-execution. Tools can participate by forwarding the signal to APIs that accept `AbortSignal`, or by polling `cancelSignal.aborted` between steps. If a tool does neither, it runs to completion and the agent resumes cancellation handling after the tool returns.
+
+```typescript
+const myTool = tool({
+  name: 'long_running_task',
+  description: 'A task that respects cancellation',
+  inputSchema: z.object({ url: z.string() }),
+  callback: async (input, context) => {
+    // Forward the cancel signal to APIs that accept AbortSignal
+    const response = await fetch(input.url, {
+      signal: context?.agent.cancelSignal,
+    })
+    return response.text()
+  },
+})
 ```
 (( /tab "TypeScript" ))
-
-Cancellation differs from [interrupts](/docs/user-guide/concepts/interrupts/index.md) in that it stops the agent entirely rather than pausing for human input. Interrupts allow the agent to resume from where it left off; cancellation does not.
 
 ## Common Problems
 
@@ -8577,7 +8635,7 @@ const limitPlugin = new LimitToolCounts({ sleep: 3 })
 const agent = new Agent({ tools: [sleep], plugins: [limitPlugin] })
 
 // This call will only have 3 successful sleeps
-await agent.invoke('Sleep 5 times for 10ms each or until you can\'t anymore')
+await agent.invoke("Sleep 5 times for 10ms each or until you can't anymore")
 // This will sleep successfully again because the count resets every invocation
 await agent.invoke('Sleep once')
 ```
@@ -18824,7 +18882,9 @@ import { VercelModel } from '@strands-agents/sdk/models/vercel'
 import { bedrock } from '@ai-sdk/amazon-bedrock'
 
 const agent = new Agent({
-  model: new VercelModel({ provider: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0') }),
+  model: new VercelModel({
+    provider: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0'),
+  }),
 })
 
 const result = await agent.invoke('Hello!')
@@ -18902,7 +18962,10 @@ const agent = new Agent({
 })
 
 for await (const event of agent.stream('Tell me a story')) {
-  if (event.type === 'modelContentBlockDeltaEvent' && event.delta.type === 'textDelta') {
+  if (
+    event.type === 'modelContentBlockDeltaEvent' &&
+    event.delta.type === 'textDelta'
+  ) {
     process.stdout.write(event.delta.text)
   }
 }
@@ -19907,14 +19970,14 @@ The “Agents as Tools” pattern offers several advantages:
 
 When implementing the “Agents as Tools” pattern with Strands Agents SDK:
 
-1.  **Clear tool documentation**: Write descriptive docstrings that explain the agent’s expertise
+1.  **Clear tool documentation**: Write descriptive names and descriptions that explain the agent’s expertise
 2.  **Focused system prompts**: Keep each specialized agent tightly focused on its domain
 3.  **Proper response handling**: Use consistent patterns to extract and format responses
 4.  **Tool selection guidance**: Give the orchestrator clear criteria for when to use each specialized agent
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides three ways to implement the “Agents as Tools” pattern: passing agents directly in the `tools` array for the simplest setup, the `.as_tool()` method when you need to customize tool name, description, or context behavior, and the `@tool` decorator for full control over how the agent is invoked.
+Strands Agents SDK provides three ways to implement the “Agents as Tools” pattern: passing agents directly in the `tools` array for the simplest setup, `.as_tool()`/`.asTool()` when you need to customize tool name, description, or context behavior, and the `@tool` decorator or `tool()` function for full control over how the agent is invoked.
 
 ```mermaid
 flowchart TD
@@ -19973,13 +20036,50 @@ orchestrator = Agent(
 
 (( tab "TypeScript" ))
 ```typescript
-// Automatic agent-to-tool conversion not yet supported in TypeScript.
+// Create specialized agents
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description:
+    'Provides factual, well-sourced information in response to research questions.',
+  systemPrompt: `You are a specialized research assistant. Focus only on providing
+factual, well-sourced information in response to research questions.
+Always cite your sources when possible.`,
+  printer: false,
+})
+
+const productAgent = new Agent({
+  name: 'product_agent',
+  description: 'Provides personalized product suggestions based on user preferences.',
+  systemPrompt: `You are a specialized product recommendation assistant.
+Provide personalized product suggestions based on user preferences.`,
+  printer: false,
+})
+
+const travelAgent = new Agent({
+  name: 'travel_agent',
+  description: 'Creates detailed travel itineraries based on user preferences.',
+  systemPrompt: `You are a specialized travel planning assistant.
+Create detailed travel itineraries based on user preferences.`,
+  printer: false,
+})
+
+// Create the orchestrator — agents are automatically converted to tools
+const orchestrator = new Agent({
+  systemPrompt: `You are an assistant that routes queries to specialized agents:
+- For research questions and factual information → Use the research_agent tool
+- For product recommendations and shopping advice → Use the product_agent tool
+- For travel planning and itineraries → Use the travel_agent tool
+- For simple questions not requiring specialized knowledge → Answer directly
+
+Always select the most appropriate tool based on the user's query.`,
+  tools: [researchAgent, productAgent, travelAgent],
+})
 ```
 (( /tab "TypeScript" ))
 
-### Using `.as_tool()` for Customization
+### Customizing Agent Tools
 
-When you need to customize the tool name, description, or context behavior, use the `.as_tool()` method explicitly:
+When you need to customize the tool name, description, or context behavior, use `.as_tool()` (Python) or `.asTool()` (TypeScript) explicitly:
 
 (( tab "Python" ))
 ```python
@@ -19993,11 +20093,28 @@ orchestrator = Agent(
     ],
 )
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [
+    researchAgent.asTool({
+      name: 'research_assistant',
+      description:
+        'Process and respond to research-related queries requiring factual information.',
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
 
 #### Context Management
 
-By default, both direct passing and `.as_tool()` reset the agent’s conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent’s conversation history across invocations, use `.as_tool()` with `preserve_context=True`:
+By default, both direct passing and `.as_tool()`/`.asTool()` reset the agent’s conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent’s conversation history across invocations:
 
+(( tab "Python" ))
 ```python
 # Agent will remember prior interactions within the same orchestrator session
 orchestrator = Agent(
@@ -20009,13 +20126,17 @@ orchestrator = Agent(
 
 (( tab "TypeScript" ))
 ```typescript
-// .as_tool() not yet supported in TypeScript.
+// Agent will remember prior interactions within the same orchestrator session
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent.asTool({ preserveContext: true })],
+})
 ```
 (( /tab "TypeScript" ))
 
-### Using the `@tool` Decorator
+### Creating Custom Agent Tools
 
-For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can use the `@tool` decorator to wrap an agent manually:
+For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can create a custom tool that wraps an agent:
 
 (( tab "Python" ))
 ```python
@@ -20206,7 +20327,7 @@ orchestrator = Agent(
 const orchestrator = new Agent({
     systemPrompt: `You are an assistant that routes queries to specialized agents:
 - For research questions and factual information → Use the research_assistant tool
-- For product recommendations and shopping advice → Use the product_recommendation_assistant tool
+- For recommendations and advice → Use the product_recommendation_assistant tool
 - For travel planning and itineraries → Use the trip_planning_assistant tool
 - For simple questions not requiring specialized knowledge → Answer directly
 
@@ -24436,7 +24557,7 @@ For more information on using MCP tools, see [MCP Tools](/docs/user-guide/concep
 
 ### 4\. Agents as Tools
 
-Agents can be passed directly in another agent’s `tools` array — the SDK automatically converts them into tools. Use `.as_tool()` when you need to customize the tool name, description, or context behavior. For full details, see [Agents as Tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md).
+Agents can be passed directly in another agent’s `tools` array — the SDK automatically converts them into tools. Use `.as_tool()` (Python) or `.asTool()` (TypeScript) when you need to customize the tool name, description, or context behavior. For full details, see [Agents as Tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md).
 
 (( tab "Python" ))
 ```python
@@ -24455,7 +24576,17 @@ orchestrator = Agent(
 
 (( tab "TypeScript" ))
 ```typescript
-// Automatic agent-to-tool conversion not yet supported in TypeScript.
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description: 'A specialized research assistant.',
+  systemPrompt: 'You are a specialized research assistant.',
+  printer: false,
+})
+
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent],
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -26577,7 +26708,7 @@ const agent = new Agent({
 // Agent plans the work, implements it, and tracks progress
 await agent.invoke(
   'Add input validation to the createUser function in src/users.ts. ' +
-    'It should reject empty names and invalid email formats.',
+    'It should reject empty names and invalid email formats.'
 )
 ```
 
@@ -39555,7 +39686,7 @@ The table below compares feature availability between the Python and TypeScript 
 |  | [Built-in tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) | 30+ via community package | 4 built-in |
 | **Conversation** | [Null manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
 |  | [Sliding window manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
-|  | [Summarizing manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ❌ |
+|  | [Summarizing manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
 | **Hooks** | [Lifecycle hooks](/docs/user-guide/concepts/agents/hooks/index.md) | ✅ | ✅ |
 |  | [Custom hook providers](/docs/user-guide/concepts/agents/hooks/index.md) | ✅ | ✅ |
 | **Multi-agent** | [Swarms](/docs/user-guide/concepts/multi-agent/swarm/index.md) | ✅ | ✅ |

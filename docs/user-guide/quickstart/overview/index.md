@@ -32,7 +32,7 @@ The table below compares feature availability between the Python and TypeScript 
 |  | [Built-in tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) | 30+ via community package | 4 built-in |
 | **Conversation** | [Null manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
 |  | [Sliding window manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
-|  | [Summarizing manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ❌ |
+|  | [Summarizing manager](/docs/user-guide/concepts/agents/conversation-management/index.md) | ✅ | ✅ |
 | **Hooks** | [Lifecycle hooks](/docs/user-guide/concepts/agents/hooks/index.md) | ✅ | ✅ |
 |  | [Custom hook providers](/docs/user-guide/concepts/agents/hooks/index.md) | ✅ | ✅ |
 | **Multi-agent** | [Swarms](/docs/user-guide/concepts/multi-agent/swarm/index.md) | ✅ | ✅ |

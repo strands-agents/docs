@@ -20,14 +20,14 @@ The “Agents as Tools” pattern offers several advantages:
 
 When implementing the “Agents as Tools” pattern with Strands Agents SDK:
 
-1.  **Clear tool documentation**: Write descriptive docstrings that explain the agent’s expertise
+1.  **Clear tool documentation**: Write descriptive names and descriptions that explain the agent’s expertise
 2.  **Focused system prompts**: Keep each specialized agent tightly focused on its domain
 3.  **Proper response handling**: Use consistent patterns to extract and format responses
 4.  **Tool selection guidance**: Give the orchestrator clear criteria for when to use each specialized agent
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides three ways to implement the “Agents as Tools” pattern: passing agents directly in the `tools` array for the simplest setup, the `.as_tool()` method when you need to customize tool name, description, or context behavior, and the `@tool` decorator for full control over how the agent is invoked.
+Strands Agents SDK provides three ways to implement the “Agents as Tools” pattern: passing agents directly in the `tools` array for the simplest setup, `.as_tool()`/`.asTool()` when you need to customize tool name, description, or context behavior, and the `@tool` decorator or `tool()` function for full control over how the agent is invoked.
 
 ```mermaid
 flowchart TD
@@ -86,13 +86,50 @@ orchestrator = Agent(
 
 (( tab "TypeScript" ))
 ```typescript
-// Automatic agent-to-tool conversion not yet supported in TypeScript.
+// Create specialized agents
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description:
+    'Provides factual, well-sourced information in response to research questions.',
+  systemPrompt: `You are a specialized research assistant. Focus only on providing
+factual, well-sourced information in response to research questions.
+Always cite your sources when possible.`,
+  printer: false,
+})
+
+const productAgent = new Agent({
+  name: 'product_agent',
+  description: 'Provides personalized product suggestions based on user preferences.',
+  systemPrompt: `You are a specialized product recommendation assistant.
+Provide personalized product suggestions based on user preferences.`,
+  printer: false,
+})
+
+const travelAgent = new Agent({
+  name: 'travel_agent',
+  description: 'Creates detailed travel itineraries based on user preferences.',
+  systemPrompt: `You are a specialized travel planning assistant.
+Create detailed travel itineraries based on user preferences.`,
+  printer: false,
+})
+
+// Create the orchestrator — agents are automatically converted to tools
+const orchestrator = new Agent({
+  systemPrompt: `You are an assistant that routes queries to specialized agents:
+- For research questions and factual information → Use the research_agent tool
+- For product recommendations and shopping advice → Use the product_agent tool
+- For travel planning and itineraries → Use the travel_agent tool
+- For simple questions not requiring specialized knowledge → Answer directly
+
+Always select the most appropriate tool based on the user's query.`,
+  tools: [researchAgent, productAgent, travelAgent],
+})
 ```
 (( /tab "TypeScript" ))
 
-### Using `.as_tool()` for Customization
+### Customizing Agent Tools
 
-When you need to customize the tool name, description, or context behavior, use the `.as_tool()` method explicitly:
+When you need to customize the tool name, description, or context behavior, use `.as_tool()` (Python) or `.asTool()` (TypeScript) explicitly:
 
 (( tab "Python" ))
 ```python
@@ -106,11 +143,28 @@ orchestrator = Agent(
     ],
 )
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [
+    researchAgent.asTool({
+      name: 'research_assistant',
+      description:
+        'Process and respond to research-related queries requiring factual information.',
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
 
 #### Context Management
 
-By default, both direct passing and `.as_tool()` reset the agent’s conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent’s conversation history across invocations, use `.as_tool()` with `preserve_context=True`:
+By default, both direct passing and `.as_tool()`/`.asTool()` reset the agent’s conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent’s conversation history across invocations:
 
+(( tab "Python" ))
 ```python
 # Agent will remember prior interactions within the same orchestrator session
 orchestrator = Agent(
@@ -122,13 +176,17 @@ orchestrator = Agent(
 
 (( tab "TypeScript" ))
 ```typescript
-// .as_tool() not yet supported in TypeScript.
+// Agent will remember prior interactions within the same orchestrator session
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent.asTool({ preserveContext: true })],
+})
 ```
 (( /tab "TypeScript" ))
 
-### Using the `@tool` Decorator
+### Creating Custom Agent Tools
 
-For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can use the `@tool` decorator to wrap an agent manually:
+For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can create a custom tool that wraps an agent:
 
 (( tab "Python" ))
 ```python
@@ -319,7 +377,7 @@ orchestrator = Agent(
 const orchestrator = new Agent({
     systemPrompt: `You are an assistant that routes queries to specialized agents:
 - For research questions and factual information → Use the research_assistant tool
-- For product recommendations and shopping advice → Use the product_recommendation_assistant tool
+- For recommendations and advice → Use the product_recommendation_assistant tool
 - For travel planning and itineraries → Use the trip_planning_assistant tool
 - For simple questions not requiring specialized knowledge → Answer directly
 

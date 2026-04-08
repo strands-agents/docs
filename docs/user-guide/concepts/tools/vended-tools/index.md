@@ -205,7 +205,7 @@ const agent = new Agent({
 // Agent plans the work, implements it, and tracks progress
 await agent.invoke(
   'Add input validation to the createUser function in src/users.ts. ' +
-    'It should reject empty names and invalid email formats.',
+    'It should reject empty names and invalid email formats.'
 )
 ```
 

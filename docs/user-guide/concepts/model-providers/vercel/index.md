@@ -49,7 +49,9 @@ import { VercelModel } from '@strands-agents/sdk/models/vercel'
 import { bedrock } from '@ai-sdk/amazon-bedrock'
 
 const agent = new Agent({
-  model: new VercelModel({ provider: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0') }),
+  model: new VercelModel({
+    provider: bedrock('us.anthropic.claude-sonnet-4-20250514-v1:0'),
+  }),
 })
 
 const result = await agent.invoke('Hello!')
@@ -127,7 +129,10 @@ const agent = new Agent({
 })
 
 for await (const event of agent.stream('Tell me a story')) {
-  if (event.type === 'modelContentBlockDeltaEvent' && event.delta.type === 'textDelta') {
+  if (
+    event.type === 'modelContentBlockDeltaEvent' &&
+    event.delta.type === 'textDelta'
+  ) {
     process.stdout.write(event.delta.text)
   }
 }

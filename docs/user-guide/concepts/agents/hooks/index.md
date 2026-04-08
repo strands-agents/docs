@@ -972,7 +972,7 @@ const limitPlugin = new LimitToolCounts({ sleep: 3 })
 const agent = new Agent({ tools: [sleep], plugins: [limitPlugin] })
 
 // This call will only have 3 successful sleeps
-await agent.invoke('Sleep 5 times for 10ms each or until you can\'t anymore')
+await agent.invoke("Sleep 5 times for 10ms each or until you can't anymore")
 // This will sleep successfully again because the count resets every invocation
 await agent.invoke('Sleep once')
 ```

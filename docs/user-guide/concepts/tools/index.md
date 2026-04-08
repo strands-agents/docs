@@ -463,7 +463,7 @@ For more information on using MCP tools, see [MCP Tools](/docs/user-guide/concep
 
 ### 4\. Agents as Tools
 
-Agents can be passed directly in another agent’s `tools` array — the SDK automatically converts them into tools. Use `.as_tool()` when you need to customize the tool name, description, or context behavior. For full details, see [Agents as Tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md).
+Agents can be passed directly in another agent’s `tools` array — the SDK automatically converts them into tools. Use `.as_tool()` (Python) or `.asTool()` (TypeScript) when you need to customize the tool name, description, or context behavior. For full details, see [Agents as Tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md).
 
 (( tab "Python" ))
 ```python
@@ -482,7 +482,17 @@ orchestrator = Agent(
 
 (( tab "TypeScript" ))
 ```typescript
-// Automatic agent-to-tool conversion not yet supported in TypeScript.
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description: 'A specialized research assistant.',
+  systemPrompt: 'You are a specialized research assistant.',
+  printer: false,
+})
+
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent],
+})
 ```
 (( /tab "TypeScript" ))
 
