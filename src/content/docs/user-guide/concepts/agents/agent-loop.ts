@@ -21,7 +21,7 @@ const myTool = tool({
   inputSchema: z.object({ url: z.string() }),
   callback: async (input, context) => {
     const response = await fetch(input.url, {
-      signal: context.agent.cancelSignal,
+      signal: context?.agent.cancelSignal,
     })
     return response.text()
   },
