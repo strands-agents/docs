@@ -1,0 +1,100 @@
+---
+title: ARISE — Self-Evolving Tools
+community: true
+description: Self-evolving tool synthesis — agents that create their own tools at runtime
+integrationType: plugin
+languages: Python
+project:
+  pypi: https://pypi.org/project/strands-arise/
+  github: https://github.com/abekek/strands-arise
+  maintainer: abekek
+service:
+  name: ARISE
+  link: https://arise-ai.dev
+---
+
+[strands-arise](https://github.com/abekek/strands-arise) adds self-evolving tool synthesis to Strands agents. When your agent fails at a task, ARISE detects the capability gap, synthesizes a Python tool, validates it in a sandbox, and promotes it to the agent's tool registry — automatically.
+
+One line to give your agent the ability to create its own tools:
+
+```python
+agent = Agent(model=my_model, plugins=[ARISEPlugin(failure_threshold=3)])
+```
+
+## Installation
+
+```bash
+pip install strands-arise
+```
+
+## Usage
+
+```python
+from strands import Agent
+from strands.models import BedrockModel
+from strands_arise import ARISEPlugin
+
+model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514-v1:0")
+
+plugin = ARISEPlugin(
+    model="gpt-4o-mini",          # cheap model for tool synthesis
+    failure_threshold=3,           # evolve after 3 consecutive failures
+    allowed_imports=["json", "re", "hashlib", "csv", "math"],
+    verbose=True,
+)
+
+agent = Agent(
+    model=model,
+    system_prompt="You are a helpful assistant. Use available tools to complete tasks.",
+    plugins=[plugin],
+)
+
+# Agent starts with no tools — ARISE evolves them from failures
+result = agent("Compute the SHA-256 hash of 'hello world'")
+```
+
+### What happens
+
+```
+Episode 1 | FAIL | reward=0.00 | skills=0   Agent can't hash — no tool
+Episode 2 | FAIL | reward=0.00 | skills=0
+
+[ARISE] Evolution triggered — analyzing gaps...
+[ARISE] Synthesizing 'compute_sha256'... 9/9 tests passed!
+[ARISE] Skill 'compute_sha256' promoted!
+
+Episode 3 | OK   | reward=1.00 | skills=1   Agent uses the evolved tool ✓
+```
+
+## How It Works
+
+The plugin hooks into the Strands agent lifecycle:
+
+- **`BeforeInvocationEvent`** — injects evolved tools into the agent's registry before each call
+- **`AfterToolCallEvent`** — records each tool call (name, result, error) for trajectory tracking
+- **`AfterInvocationEvent`** — scores the result with a reward function and checks if evolution should trigger
+
+When enough failures accumulate, ARISE:
+
+1. Analyzes failure trajectories to identify capability gaps
+2. Synthesizes a Python function + test suite via LLM
+3. Runs the tests in an isolated sandbox
+4. Promotes passing tools to the agent's registry
+
+## Configuration
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `model` | `"gpt-4o-mini"` | LLM for tool synthesis (not your agent's model) |
+| `failure_threshold` | `5` | Consecutive failures before evolution triggers |
+| `allowed_imports` | `None` | Whitelist of importable modules (set in production) |
+| `sandbox_backend` | `"subprocess"` | `"subprocess"` or `"docker"` |
+| `reward_fn` | default | Custom `(Trajectory) -> float` scoring function |
+| `skills_path` | `"./arise_skills"` | Path to persist evolved tools |
+| `verbose` | `True` | Print evolution progress |
+
+## References
+
+- [ARISE Framework](https://github.com/abekek/arise) — the core self-evolution engine
+- [ARISE Documentation](https://arise-ai.dev) — full docs with API reference
+- [PyPI](https://pypi.org/project/strands-arise/)
