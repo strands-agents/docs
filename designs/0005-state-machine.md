@@ -20,21 +20,30 @@ The agent loop is decomposed into five layers:
 - **Plugins**: register hook callbacks to observe and indirectly influence execution (e.g., cancel, retry)
 - **Orchestrators**: coordinate steps, handle routing, and can nest other orchestrators
 
-Steps and orchestrators share the same `invoke`/`stream` interface, enabling nesting and uniform wrapping. All layers operate on shared **state** (mutable invocation data) and **context** (read-only dependencies).
+Steps and orchestrators share the same `invoke`/`stream` interface, enabling nesting and uniform wrapping. All layers operate on shared **state** passed explicitly to each layer.
 
-### State and Context
+### State
 
-All layers receive state and context explicitly, giving them a clear, bounded data contract rather than reaching into the Agent instance for what they need.
+All layers receive state explicitly, giving them a clear, bounded data contract rather than reaching into the Agent instance for what they need.
 
-`AgentState` holds all mutable per-invocation data:
+`AgentState` holds all per-invocation data:
 
 ```typescript
 interface AgentState {
+  // Dependencies
+  model: Model
+  toolRegistry: ToolRegistry
+  systemPrompt?: SystemPrompt
+  tracer: Tracer
+  meter: Meter
+  pluginRegistry: PluginRegistry
+  name: string
+  id: string
+
+  // Execution data
   messages: Message[]
   metrics: AgentMetric[]
   traces: AgentTrace[]
-
-  // Sub-state objects
   interrupt?: InterruptState
   app: StateStore  // user-facing key-value state
 
@@ -45,22 +54,7 @@ interface AgentState {
 }
 ```
 
-`AgentContext` holds read-only dependencies:
-
-```typescript
-interface AgentContext {
-  readonly model: Model
-  readonly toolRegistry: ToolRegistry
-  readonly systemPrompt?: SystemPrompt
-  readonly tracer: Tracer
-  readonly meter: Meter
-  readonly pluginRegistry: PluginRegistry
-  readonly name: string
-  readonly id: string
-}
-```
-
-See [0002-isolated-state](https://github.com/strands-agents/docs/pull/551) for a complementary proposal on AgentState lifecycle management (creation, persistence, invocation keys).
+See [0002-isolated-state](https://github.com/strands-agents/docs/pull/551) for the complete proposal on AgentState lifecycle management (creation, persistence, invocation keys).
 
 ### Clients
 
@@ -75,10 +69,10 @@ Clients are stateless, reusable, and unaware of the agent loop.
 
 ### Steps
 
-`Step` is a generic base class for the smallest unit of work in the loop. It provides `invoke` (request/response) derived from `stream` (yields events, returns a result). Subclasses only implement `stream`. For the agent loop, steps extend `AgentStep`, which fills in the shared context and state types:
+`Step` is a generic base class for the smallest unit of work in the loop. It provides `invoke` (request/response) derived from `stream` (yields events, returns a result). Subclasses only implement `stream`. For the agent loop, steps extend `AgentStep`, which fills in the state type:
 
 ```typescript
-type AgentStep<TEvent, TResult> = Step<AgentContext, AgentState, TEvent, TResult>
+type AgentStep<TEvent, TResult> = Step<AgentState, TEvent, TResult>
 ```
 
 Steps write their full results into state (that's how data flows between steps). The `TResult` return value is a typed convenience that surfaces the notable parts, giving the orchestrator direct, namespaced access without digging through state fields. Here are two examples:
@@ -89,10 +83,10 @@ Steps write their full results into state (that's how data flows between steps).
 class ModelStep extends AgentStep<ModelStreamEvent, ModelStepResult> {
   readonly name = 'model'
 
-  async *stream(ctx, state) {
-    const result = yield* ctx.model.streamAggregated(
+  async *stream(state) {
+    const result = yield* state.model.streamAggregated(
       state.messages,
-      this._buildStreamOptions(ctx, state)
+      this._buildStreamOptions(state)
     )
     state.lastModelResult = result
     return { type: 'model', stopReason: result.stopReason, message: result.message }
@@ -106,9 +100,9 @@ class ModelStep extends AgentStep<ModelStreamEvent, ModelStepResult> {
 class ToolStep extends AgentStep<ToolStreamEvent, ToolStepResult> {
   readonly name = 'tool'
 
-  async *stream(ctx, state) {
+  async *stream(state) {
     const toolUse = state.currentToolUse!
-    const tool = ctx.toolRegistry.get(toolUse.name)
+    const tool = state.toolRegistry.get(toolUse.name)
     if (!tool) {
       return { type: 'tool', result: this._errorResult(toolUse, 'not found') }
     }
@@ -124,7 +118,7 @@ Middleware sits between the orchestrator and a step, wrapping the step's `stream
 
 There are two kinds:
 
-**Built-in middleware** ships with the SDK and is always present. It's configured through state or context at runtime. One possible way to manage built-in middleware is via decorator syntax (`@`) on step class methods, though the exact mechanism is an implementation detail. Examples:
+**Built-in middleware** ships with the SDK and is always present. It's configured through state at runtime. One possible way to manage built-in middleware is via decorator syntax (`@`) on step class methods, though the exact mechanism is an implementation detail. Examples:
 
 | Middleware | What it does |
 |-----------|-------------|
@@ -148,9 +142,9 @@ class RateLimiter implements Middleware {
   wrap(step: Step): Step {
     return {
       ...step,
-      async *stream(ctx, state) {
+      async *stream(state) {
         await this._acquireToken()
-        return yield* step.stream(ctx, state)
+        return yield* step.stream(state)
       },
     }
   }
@@ -180,39 +174,38 @@ const agent = new Agent({
 For the agent loop, orchestrators extend `AgentOrchestrator`:
 
 ```typescript
-type AgentOrchestrator = Orchestrator<AgentContext, AgentState, AgentStreamEvent>
+type AgentOrchestrator = Orchestrator<AgentState, AgentStreamEvent>
 ```
 
 **ToolOrchestrator**: runs `ToolStep` for each tool use block.
 
 ```typescript
 class ToolOrchestrator extends AgentOrchestrator {
-  async *stream(ctx, state) {
+  async *stream(state) {
     const toolUseBlocks = this._extractToolUseBlocks(state)
     for (const block of toolUseBlocks) {
-      yield* this._toolStep.stream(ctx, { ...state, currentToolUse: block })
+      yield* this._toolStep.stream({ ...state, currentToolUse: block })
     }
     return { type: 'tools' }
   }
 }
 ```
 
-**Agent**: the top-level orchestrator. Agent follows the orchestrator pattern internally but doesn't extend `Orchestrator` directly, since its public `stream` method takes `InvokeArgs` rather than `(ctx, state)` for backwards compatibility. It creates the context and state, then runs the loop.
+**Agent**: the top-level orchestrator. Agent follows the orchestrator pattern internally but doesn't extend `Orchestrator` directly, since its public `stream` method takes `InvokeArgs` rather than `(state)` for backwards compatibility. It creates the state, then runs the loop.
 
 ```typescript
 class Agent {
   async *stream(args: InvokeArgs) {
-    const ctx = this._buildContext()
     const state = this._buildState(args)
 
     while (true) {
-      const result = yield* this._model.stream(ctx, state)
+      const result = yield* this._model.stream(state)
 
       if (result.stopReason !== 'toolUse') {
         return { type: 'done', result: this._buildResult(state) }
       }
 
-      yield* this._toolOrchestrator.stream(ctx, state)
+      yield* this._toolOrchestrator.stream(state)
     }
   }
 }
@@ -247,14 +240,14 @@ class CacheMiddleware implements Middleware {
   wrap(step: Step): Step {
     return {
       ...step,
-      async *stream(ctx, state) {
+      async *stream(state) {
         const key = this._buildKey(step.name, state)
         const cached = this._cache.get(key)
         if (cached) {
           return cached
         }
 
-        const result = yield* step.stream(ctx, state)
+        const result = yield* step.stream(state)
         this._cache.set(key, result)
         return result
       },
@@ -277,14 +270,18 @@ Because the agent loop is composed of discrete steps, the orchestrator can retur
 class Agent {
   private _steps = [this._modelStep, this._toolOrchestrator]
 
+  /**
+   * Variant of the agent loop that resolves steps by index, enabling checkpoint/resume
+   * at any position. The loop doesn't have to be structured this way though. This is
+   * more demonstrative.
+   */
   async *stream(args: InvokeArgs) {
-    const ctx = this._buildContext()
     const state = args.checkpoint?.state ?? this._buildState(args)
     let stepIndex = args.checkpoint?.stepIndex ?? 0
 
     while (true) {
       const step = this._steps[stepIndex]
-      const result = yield* step.stream(ctx, state)
+      const result = yield* step.stream(state)
 
       if (result.stopReason === 'done') {
         return { type: 'done', result: this._buildResult(state) }
@@ -292,7 +289,7 @@ class Agent {
 
       stepIndex = (stepIndex + 1) % this._steps.length
 
-      if (ctx.checkpointing) {
+      if (state.checkpointing) {
         return { type: 'checkpoint', checkpoint: { stepIndex, state } }
       }
     }
@@ -340,7 +337,7 @@ const [result1, result2] = await Promise.all([
 // result1 and result2 operated on separate AgentState instances
 ```
 
-The agent's context (model, tools, configuration) is shared and read-only. The state (messages, metrics, traces) is per-invocation. Steps don't reach into the agent instance for what they need, they operate on the state they're given. This is the same state/context split proposed in [0002-isolated-state](https://github.com/strands-agents/docs/pull/551), which we discussed in a previous meeting.
+The agent's dependencies and execution data all live in `AgentState`. Steps don't reach into the agent instance for what they need, they operate on the state they're given. See [0002-isolated-state](https://github.com/strands-agents/docs/pull/551) for the full proposal on state lifecycle management.
 
 ## Guidelines
 
