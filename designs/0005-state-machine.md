@@ -33,7 +33,7 @@ interface AgentState {
   // Dependencies
   model: Model
   toolRegistry: ToolRegistry
-  systemPrompt?: SystemPrompt
+  systemPrompt: SystemPrompt
   tracer: Tracer
   meter: Meter
   pluginRegistry: PluginRegistry
@@ -44,7 +44,7 @@ interface AgentState {
   messages: Message[]
   metrics: AgentMetric[]
   traces: AgentTrace[]
-  interrupt?: InterruptState
+  interrupt: InterruptState
   app: StateStore  // user-facing key-value state
 
   // Intra-loop temporaries (step-to-step communication)
