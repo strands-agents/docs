@@ -354,6 +354,63 @@ Swarms include several safety mechanisms to prevent infinite loops and ensure re
 
 The specific parameters and their defaults vary by SDK. See the [Swarm Configuration](#swarm-configuration) table for details.
 
+## Custom Agent Implementations
+
+:::note[Python only]
+Custom `AgentBase` support in Swarm is currently only available in Python.
+:::
+
+Swarm accepts any [`AgentBase`](@api/python/strands.agent.base#AgentBase) implementation, not just native `Agent` instances. This enables integrating agents from other frameworks into Swarm orchestration alongside native Strands agents.
+
+```python
+from strands import Agent, AgentBase
+from strands.agent import AgentResult
+from strands.multiagent import Swarm
+
+class MyCustomAgent:
+    """Wrapper around an external agent framework."""
+
+    def __init__(self, name: str):
+        self.name = name
+
+    def __call__(self, prompt=None, **kwargs):
+        # Call your external agent here
+        response_text = my_external_framework.run(prompt)
+        return AgentResult(
+            message={"role": "assistant", "content": [{"text": response_text}]},
+            stop_reason="end_turn",
+            state={},
+            metrics=None,
+        )
+
+    async def invoke_async(self, prompt=None, **kwargs):
+        return self(prompt, **kwargs)
+
+    async def stream_async(self, prompt=None, **kwargs):
+        result = await self.invoke_async(prompt, **kwargs)
+        yield {"result": result}
+
+# Mix native and custom agents
+strands_agent = Agent(name="coordinator", system_prompt="You coordinate tasks...")
+custom_agent = MyCustomAgent(name="specialist")
+
+swarm = Swarm([strands_agent, custom_agent], entry_point=strands_agent)
+result = swarm("Analyze this dataset")
+```
+
+### Capability Differences
+
+Native `Agent` instances have full Swarm capabilities. Custom `AgentBase` implementations degrade gracefully:
+
+| Capability | Agent | AgentBase |
+|-----------|-------|-----------|
+| Receive handoffs | ✅ | ✅ |
+| Initiate handoffs | ✅ | ❌ |
+| Interrupt/resume | ✅ | ❌ |
+| State persistence | ✅ | ❌ |
+
+Custom `AgentBase` nodes can be handed *to* by native agents but cannot initiate handoffs themselves, since handoff tools require a `tool_registry` that only `Agent` provides. For full Swarm capabilities, use native `Agent` instances. `AgentBase` is intended for integrating existing agents from other frameworks that you want to use as handoff targets without rebuilding.
+
 ## Best Practices
 
 1. **Create specialized agents**: Define clear roles for each agent in your Swarm
