@@ -185,6 +185,44 @@ Find the tool in the `agent.tools` array and call its `invoke()` method. You nee
 </Tab>
 </Tabs>
 
+#### Streaming Direct Tool Calls
+
+<Tabs>
+<Tab label="Python">
+
+Direct tool calls support streaming, allowing you to observe execution events in real-time without recording to message history:
+
+```python
+from strands import Agent, tool
+
+@tool
+def analyze_data(query: str) -> str:
+    """Analyze data based on a query."""
+    return f"Analysis complete for: {query}"
+
+agent = Agent(tools=[analyze_data])
+
+# Async streaming
+async for event in agent.tool.analyze_data.stream_async(query="sales trends"):
+    if "data" in event:
+        print(event["data"], end="")
+
+# Sync streaming
+for event in agent.tool.analyze_data.stream(query="sales trends"):
+    if "data" in event:
+        print(event["data"], end="")
+```
+
+Streaming methods yield the same [tool events](../streaming/index.md#tool-events) as agent-level streaming.
+</Tab>
+<Tab label="TypeScript">
+
+```ts
+// Not supported in TypeScript
+```
+</Tab>
+</Tabs>
+
 
 ## Tool Executors
 
