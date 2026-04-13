@@ -165,8 +165,10 @@ skill = Skill.from_file("./skills/code-review")
 # Load all skills from a parent directory
 skills = Skill.from_directory("./skills/")
 
-# Load from a URL
-skill = Skill.from_url("https://github.com/org/my-skill@v1.0.0")
+# Load from a URL (must point to raw SKILL.md content)
+skill = Skill.from_url(
+    "https://raw.githubusercontent.com/org/repo/main/SKILL.md"
+)
 ```
 </Tab>
 <Tab label="TypeScript">
@@ -179,7 +181,7 @@ skill = Skill.from_url("https://github.com/org/my-skill@v1.0.0")
 
 ### Loading skills from URLs
 
-You can load skills directly from HTTPS URLs, which is useful for sharing skills across teams or referencing community skills hosted on GitHub without manual cloning.
+You can load skills directly from HTTPS URLs, which is useful for sharing skills across teams or referencing community skills without manual cloning. The URL must point directly to the raw SKILL.md content.
 
 <Tabs>
 <Tab label="Python">
@@ -192,17 +194,9 @@ skill = Skill.from_url(
     "https://raw.githubusercontent.com/org/repo/main/skills/my-skill/SKILL.md"
 )
 
-# GitHub web URLs are auto-resolved to raw content
-skill = Skill.from_url(
-    "https://github.com/org/repo/tree/main/skills/my-skill"
-)
-
-# Pin a specific version with @ref
-skill = Skill.from_url("https://github.com/org/my-skill@v1.0.0")
-
 # Use URLs directly in the plugin (mixed with local paths)
 plugin = AgentSkills(skills=[
-    "https://github.com/org/skill-repo/tree/main/skills/brainstorming",
+    "https://raw.githubusercontent.com/org/repo/main/skills/brainstorming/SKILL.md",
     "./local-skills/my-skill",
 ])
 agent = Agent(plugins=[plugin])
@@ -216,7 +210,7 @@ agent = Agent(plugins=[plugin])
 </Tab>
 </Tabs>
 
-GitHub web URLs (`github.com/owner/repo/tree/...`) are automatically converted to `raw.githubusercontent.com` URLs. For non-GitHub hosts, provide a direct link to the raw SKILL.md file.
+For GitHub-hosted skills, use `raw.githubusercontent.com` URLs to access the raw file content. For example, `https://github.com/org/repo/blob/main/SKILL.md` becomes `https://raw.githubusercontent.com/org/repo/main/SKILL.md`.
 
 :::note[URL-loaded skills]
 Skills loaded from URLs use `Skill.from_content()` internally, so they don't have a filesystem path. This means resource directories (`scripts/`, `references/`, `assets/`) are not available for URL-loaded skills. If your skill requires resource files, load it from the filesystem instead.
