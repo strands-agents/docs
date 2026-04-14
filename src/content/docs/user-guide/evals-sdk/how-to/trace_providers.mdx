@@ -10,6 +10,7 @@ Trace providers fetch agent execution data from observability backends and conve
 |----------|---------|------|
 | `CloudWatchProvider` | AWS CloudWatch Logs (Bedrock AgentCore runtime logs) | AWS credentials (boto3) |
 | `LangfuseProvider` | Langfuse | API keys |
+| `OpenSearchProvider` | OpenSearch (self-hosted or Amazon OpenSearch Service) | Basic auth or SigV4 |
 
 ## Installation
 
@@ -23,6 +24,12 @@ For the Langfuse provider, install the optional `langfuse` extra:
 
 ```bash
 pip install strands-agents-evals[langfuse]
+```
+
+For the OpenSearch provider, install the optional `opensearch` extra:
+
+```bash
+pip install strands-agents-evals[opensearch]
 ```
 
 ## CloudWatch Provider
@@ -86,6 +93,43 @@ provider = LangfuseProvider(
 | `secret_key` | `LANGFUSE_SECRET_KEY` env var | Langfuse secret API key |
 | `host` | `LANGFUSE_HOST` env var or `https://us.cloud.langfuse.com` | Langfuse API host URL |
 | `timeout` | `120` | Request timeout in seconds |
+
+## OpenSearch Provider
+
+The `OpenSearchProvider` retrieves agent traces from OpenSearch using [opensearch-genai-observability-sdk-py](https://github.com/opensearch-project/genai-observability-sdk-py). It works with both self-hosted OpenSearch clusters and Amazon OpenSearch Service.
+
+### Setup
+
+```python
+from strands_evals.providers import OpenSearchProvider
+
+# Basic auth (self-hosted)
+provider = OpenSearchProvider(
+    host="https://localhost:9200",
+    auth=("admin", "password"),
+    verify_certs=False,
+)
+
+# SigV4 auth (Amazon OpenSearch Service)
+from opensearchpy import RequestsAWSV4SignerAuth
+import boto3
+
+credentials = boto3.Session().get_credentials()
+auth = RequestsAWSV4SignerAuth(credentials, "us-east-1", "es")
+provider = OpenSearchProvider(
+    host="https://my-domain.us-east-1.es.amazonaws.com",
+    auth=auth,
+)
+```
+
+### Configuration
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `host` | `https://localhost:9200` | OpenSearch endpoint URL |
+| `index` | `otel-v1-apm-span-*` | Index pattern for span documents |
+| `auth` | `None` | `(username, password)` tuple for basic auth, or `RequestsAWSV4SignerAuth` for SigV4 |
+| `verify_certs` | `True` | Whether to verify TLS certificates |
 
 ## Running Evaluations on Remote Traces
 
