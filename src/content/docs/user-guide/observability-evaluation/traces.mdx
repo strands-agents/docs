@@ -529,3 +529,9 @@ There are several ways to send traces, metrics, and logs to CloudWatch. Please v
 1. [AWS Distro for OpenTelemetry Collector](https://aws-otel.github.io/docs/getting-started/x-ray#configuring-the-aws-x-ray-exporter)
 2. [AWS CloudWatch OpenTelemetry User Guide](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-OpenTelemetry-Sections.html)
   - Please ensure Transaction Search is enabled in CloudWatch.
+
+## Sending traces to OpenSearch
+
+[OpenSearch](https://opensearch.org/) can store and visualize OpenTelemetry traces sent via OTLP. For setup instructions covering self-managed and managed deployments, see the [OpenSearch Observability — Send Data](https://observability.opensearch.org/docs/send-data/) guide or jump straight to [Ingest Your First Traces](https://observability.opensearch.org/docs/get-started/quickstart/first-traces/).
+
+Once traces are stored, you can retrieve them for evaluation using the `OpenSearchProvider`. See [Evaluating Remote Traces — OpenSearch Provider](../evals-sdk/how-to/trace_providers/#opensearch-provider) for setup and configuration.
