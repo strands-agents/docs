@@ -426,7 +426,7 @@ model = BidiNovaSonicModel()
 agent = BidiAgent(
     model=model,
     tools=[stop],
-    system_prompt="You are a helpful assistant. When the user says 'stop', use the stop tool."
+    system_prompt="You are a helpful assistant. When the user says 'stop conversation', use the stop tool."
 )
 
 audio_io = BidiAudioIO()
@@ -436,7 +436,7 @@ async def main():
         inputs=[audio_io.input()],
         outputs=[audio_io.output()]
     )
-    # Conversation ends when user says "stop"
+    # Conversation ends when user says "stop conversation"
 
 asyncio.run(main())
 ```
@@ -454,9 +454,6 @@ def end_session(request_state: dict) -> str:
 
 The agent will gracefully close the connection when any tool sets `request_state["stop_event_loop"] = True`.
 
-:::note[Deprecated: stop_conversation]
-The legacy `stop_conversation` tool from `strands.experimental.bidi.tools` is deprecated and will be removed in a future version. Migrate to `strands_tools.stop` or use `request_state["stop_event_loop"]` in custom tools.
-:::
 
 ## Debug Logs
 
