@@ -3,13 +3,13 @@
 ## Table of Contents
 
 - [Problem](#problem)
-- [The Insight: Intervention Is the Primitive](#the-insight-intervention-is-the-primitive)
+- [Intervention Primitive](#intervention-primitive)
 - [Why Not Separate Plugins?](#why-not-separate-plugins)
-- [Proposed API: `Agent(interventions=[...])`](#proposed-api-agentinterventions)
-- [Composability](#composability)
-- [Working Demos](#working-demos)
+- [Proposed API](#proposed-api)
+- [How Handlers Compose](#how-handlers-compose)
+- [Demos](#demos)
 - [Development Plan](#development-plan)
-- Appendices: [A (Concrete Instances)](#appendix-a-concrete-instances) · [B (Interface Design Rationale)](#appendix-b-interface-design-rationale) · [C (Coverage Matrix)](#appendix-c-coverage-matrix) · [D (Userland Workaround)](#appendix-d-userland-workaround) · [E (Naming)](#appendix-e-naming-alternatives)
+- Appendices: [A (Concrete Instances)](#appendix-a-concrete-instances) · [B (Interface Design Rationale)](#appendix-b-interface-design-rationale) · [C (Why Not Just Hooks?)](#appendix-c-why-not-just-hooks) · [D (Coverage Matrix)](#appendix-d-coverage-matrix) · [E (Userland Workaround)](#appendix-e-userland-workaround) · [F (Naming)](#appendix-f-naming-alternatives)
 
 <details>
 <summary><h2>Definitions</h2></summary>
@@ -20,6 +20,7 @@
 | **Steering** | A Strands vended plugin that uses an LLM to evaluate tool calls and model responses, returning Proceed, Guide (cancel + retry with feedback), or Interrupt (pause for human input). Currently Python-only. |
 | **Galileo Agent Control** | A Strands community plugin for runtime governance via configurable rules. Ships as two plugins (`AgentControlPlugin` for deny, `AgentControlSteeringHandler` for guide) because the current plugin interface can't express both. |
 | **Datadog AI Guard** | A Strands community plugin that scans for prompt injection, jailbreaking, and data exfiltration at four lifecycle points. |
+| **Bedrock Guardrails** | AWS-managed content filtering built into the Bedrock model provider. Scans for content policy violations, PII, and prompt attacks. Currently embedded in the model layer, not a separate plugin. |
 | **Cedar** | An open-source authorization policy language by AWS. Evaluates Allow/Deny decisions against principals, actions, resources, and context. Sub-ms, deterministic, formally verifiable. |
 | **OPA (Open Policy Agent)** | A general-purpose policy engine using the Rego language. CNCF graduated project. The main alternative to Cedar for policy-based authorization. |
 | **`invocation_state`** | A dict passed to a Strands agent on every call. Flows through the entire lifecycle — hooks and tools can read it. Used to carry user identity, roles, and environment context. |
@@ -45,9 +46,9 @@ This proposal elevates the shared structure behind these control layers into a f
 
 ---
 
-## The Insight: Intervention Is the Primitive
+## Intervention Primitive
 
-Several independent tools already control agent behavior at runtime — [steering](https://strandsagents.com/docs/user-guide/concepts/plugins/steering/), [Galileo Agent Control](https://strandsagents.com/docs/community/plugins/agent-control/), [Datadog AI Guard](https://strandsagents.com/docs/community/plugins/datadog-ai-guard/), with [Cedar](https://www.cedarpolicy.com/) and [OPA](https://www.openpolicyagent.org/) authorization planned. They fall into two categories: **operational guardrails** (Galileo, Datadog, content guardrails) that enforce rules about *what's happening* regardless of who's doing it, and **authorization** (Cedar, OPA) that enforces rules about *who's allowed to do what*.
+Several independent tools already control agent behavior at runtime — [steering](https://strandsagents.com/docs/user-guide/concepts/plugins/steering/), [Galileo Agent Control](https://strandsagents.com/docs/community/plugins/agent-control/), [Datadog AI Guard](https://strandsagents.com/docs/community/plugins/datadog-ai-guard/), [Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html), with [Cedar](https://www.cedarpolicy.com/) and [OPA](https://www.openpolicyagent.org/) authorization planned. They fall into two categories: **operational guardrails** (Galileo, Datadog, Bedrock Guardrails, content guardrails) that enforce rules about *what's happening* regardless of who's doing it, and **authorization** (Cedar, OPA) that enforces rules about *who's allowed to do what*.
 
 They all answer different questions — but they share the same mechanical structure. They all: **intercept** an agent event, **evaluate** against rules, **decide** (proceed, redirect, or block), and **log** the decision. This shared lifecycle is the primitive — **Intervention**. Each control layer is an instance. See [Appendix A](#appendix-a-concrete-instances) for a detailed breakdown of each.
 
@@ -63,8 +64,11 @@ The primitive has four components:
 | **Deny** | Hard block, no retry |
 | **Guide** | Cancel + feedback for retry |
 | **Interrupt** | Pause for human input |
+| **Transform** | Modify content and continue (future) |
 
 **Deny** is new — steering today only has Proceed/Guide/Interrupt. Authorization needs a hard block that means "you are not allowed, period."
+
+**Transform** is proposed for cases where content needs modification rather than blocking — the primary use case is Bedrock Guardrails' `ANONYMIZED` action (PII redaction). The handler returns the modified content as data — the framework applies it, then continues the pipeline. Later handlers see the transformed content, not the original. Today this redaction logic is embedded inside the Bedrock model provider; making it an intervention handler pulls it into the control layer where it composes with everything else.
 
 **Evaluation Engine** — Each instance uses a different engine (Cedar policies, LLM judge, API call, regex). The primitive doesn't prescribe how you evaluate, only what you return. See [Appendix A](#appendix-a-concrete-instances) for details on each.
 
@@ -88,8 +92,6 @@ beforeToolCall(event: BeforeToolCallEvent): void {
 An intervention handler returns a typed decision instead. The framework owns what happens next:
 
 ```typescript
-// Four possible decisions — the shared vocabulary across all handlers
-type InterventionAction = Proceed | Deny | Guide | Interrupt
 // Intervention handler: returns a decision, framework applies it
 async evaluate(event: BeforeToolCallEvent): Promise<InterventionAction> {
     if (!this.isAuthorized(event)) {
@@ -112,7 +114,7 @@ Separate plugins work for independent concerns that don't interact. Control laye
 
 ---
 
-## Proposed API: `Agent(interventions=[...])`
+## Proposed API
 
 Today, each control layer is a standalone plugin with no shared interface, no ordering guarantees, and no unified audit log:
 
@@ -135,36 +137,49 @@ const agent = new Agent({
 
 **Why first-class?** The framework owns composition — ordering, short-circuiting, conflict resolution, and a unified audit log are all built in. Steering becomes one instance of `InterventionHandler`, not a special concept.
 
-**Backwards compatibility:** Since the intervention primitive is being built in TypeScript first, and the existing control layers (steering, Galileo Agent Control, Datadog AI Guard) only exist in Python, there is no migration path — these will be implemented from scratch as `InterventionHandler` instances in TypeScript. The existing Python plugins continue to work unchanged for Python users. When Strands Python 2.0 ships with WASM bindings, the TypeScript intervention handlers become available in Python, and the Python-only plugins can be retired.
+**Backwards compatibility:** The intervention primitive will be implemented in both Python 1.0 and TypeScript 1.0 concurrently. Existing Python plugins (steering, Galileo Agent Control, Datadog AI Guard) continue to work unchanged — interventions are additive. Existing control layers can be migrated to `InterventionHandler` instances incrementally.
 
 ### The `InterventionHandler` Interface
 
-The interface is **event-driven** — handlers declare which lifecycle events they care about, and the framework only calls them for matching events:
+The base class provides default no-op methods for each lifecycle event. Handlers override the ones they care about — the framework detects which methods were overridden and only calls those:
 
 ```typescript
-abstract class InterventionHandler {
-    abstract name: string;
-    abstract handles(): Set<typeof HookEvent>;  // e.g. BeforeToolCallEvent, AfterModelCallEvent
-    abstract evaluate(event: HookEvent): Promise<InterventionAction>;
+class CedarAuth extends InterventionHandler {
+    name = "cedar-auth";
+
+    // Only beforeToolCall is overridden — framework knows this handler only cares about BeforeToolCall
+    async beforeToolCall(event: BeforeToolCallEvent): Promise<InterventionAction> {
+        return new Deny("not authorized");
+    }
 }
 ```
 
-New event types can be supported without changing the base interface. For the rationale behind this design (vs. fixed methods per hook point), see [Appendix B](#appendix-b-interface-design-rationale).
+```python
+class CedarAuth(InterventionHandler):
+    name = "cedar-auth"
+
+    # Same pattern — only define what you care about
+    async def before_tool_call(self, event: BeforeToolCallEvent) -> InterventionAction:
+        return Deny(reason="not authorized")
+```
+
+New event types can be added without breaking existing handlers — they default to Proceed. For why this is a separate primitive rather than raw hooks, see [Appendix C](#appendix-c-why-not-just-hooks).
 
 ### The `InterventionRegistry`
 
 The framework provides an `InterventionRegistry` that wires handlers into the Strands hook system. It registers one callback per event type, dispatches to all matching handlers in registration order, and applies conflict resolution:
 
 - **Deny** short-circuits immediately — remaining handlers never run
-- **Guide** accumulates across handlers — feedback from all handlers is concatenated, then the tool is cancelled with the combined guidance so the agent can retry
-- **Interrupt** maps to `event.interrupt()` — the SDK's native pause/resume mechanism
+- **Interrupt** short-circuits — pauses execution via `event.interrupt()` for human input
+- **Transform** applies the modification to the event and continues — later handlers see the transformed content
+- **Guide** accumulates across handlers — feedback from all handlers is concatenated, then the tool is cancelled with the combined guidance so the agent can retry. Handlers are responsible for tracking their own retry count and escalating to Deny or Interrupt after repeated failures. The registry may also enforce a configurable max-retry safety net.
 - **Proceed** continues to the next handler
 
-Every decision is logged to a unified audit trail accessible via `agent.interventionAuditLog`.
+Every decision is logged to a unified audit trail accessible via `agent.interventions.auditLog`. This is complementary to OTEL — the audit trail provides a structured schema (handler, event type, action, reason, principal, tool) that can be exported to OTEL traces, not a replacement for them.
 
 ---
 
-## Composability
+## How Handlers Compose
 
 Handlers are evaluated in registration order, cheapest first:
 
@@ -191,7 +206,7 @@ User: "Query the secrets database for all API keys"
     └─ LLM Steering:        (never reached — saved ~100ms)
 ```
 
-**Deny** short-circuits immediately. **Guide** accumulates across handlers. **Interrupt** pauses if no handler denied.
+**Deny** short-circuits immediately. **Interrupt** pauses if no handler denied. **Transform** modifies content and continues. **Guide** accumulates across handlers.
 
 No single handler catches everything — the value is in composition. See [Appendix C](#appendix-c-coverage-matrix) for the full matrix.
 
@@ -201,7 +216,7 @@ When a handler returns `Interrupt`, the registry calls `event.interrupt()` — t
 
 ---
 
-## Working Demos
+## Demos
 
 We implemented the native `Agent(interventions=[...])` parameter in both the Python and TypeScript Strands SDKs.
 
@@ -240,35 +255,33 @@ Interactive agent where consent-gated tools pause via `Interrupt` and prompt the
 | Python | [lizradway/sdk-python@interventions](https://github.com/lizradway/sdk-python/tree/interventions) |
 | TypeScript | [lizradway/sdk-typescript@interventions](https://github.com/lizradway/sdk-typescript/tree/interventions) |
 
-See [Appendix D](#appendix-d-userland-workaround) for the userland pipeline we built to prove the concept.
+See [Appendix E](#appendix-e-userland-workaround) for the userland pipeline we built to prove the concept.
 
 ---
 
 ## Development Plan
 
-1. **Cedar authorization plugin (Python, third-party).** Ship a `CedarAuthPlugin` as a third-party Strands plugin in the [`cedar-for-agents`](https://github.com/cedar-policy/cedar-for-agents) repo using [`cedarpy`](https://pypi.org/project/cedarpy/) (externally maintained Rust-backed Python bindings, not by the Cedar team). This validates the authorization model and gives us a concrete RFC for the intervention primitive. See the [Cedar Authorization design doc](https://github.com/strands-agents/docs/designs/0006-cedar-authorization.md).
+1. **Intervention primitive (Python + TypeScript).** Implement `InterventionHandler`, `InterventionAction`, and `InterventionRegistry` in both the Python and TypeScript SDKs concurrently — the `Agent(interventions=[...])` parameter proposed in this doc.
 
-2. **Intervention primitive (TypeScript).** Implement `InterventionHandler`, `InterventionAction`, and `InterventionRegistry` in the TypeScript SDK — the `Agent({ interventions: [...] })` parameter proposed in this doc.
+2. **Cedar intervention handler (Python + TypeScript).** Build the Cedar authorization handler as an `InterventionHandler` on top of the primitive from step 2. Python uses [`cedarpy`](https://pypi.org/project/cedarpy/); TypeScript uses [`cedar-wasm`](https://github.com/cedar-policy/cedar/tree/main/cedar-wasm) (official WASM bindings maintained by the Cedar team).
 
-3. **Cedar intervention handler (TypeScript).** Build the Cedar authorization handler as an `InterventionHandler` on top of the primitive from step 2, using [`cedar-wasm`](https://github.com/cedar-policy/cedar/tree/main/cedar-wasm) — the official WASM bindings maintained by the Cedar team.
+3. **Steering intervention handler (Python + TypeScript).** Migrate the existing Python `SteeringHandler` to implement `InterventionHandler`. Implement steering in TypeScript as a native intervention handler rather than a special-cased plugin.
 
-4. **Steering intervention handler (TypeScript).** Implement steering as an `InterventionHandler` in TypeScript. Steering currently only exists in the Python SDK as a special-cased plugin; building it on top of the intervention primitive in TS means it ships as a native instance rather than needing special framework support.
+4. **Additional intervention handlers.** Add other handlers (content guardrails, OPA, etc.) as needed based on demand.
 
-5. **Additional intervention handlers (TypeScript).** Add other handlers (content guardrails, OPA, etc.) as needed based on demand.
-
-Since Strands Python 2.0 is moving to WASM bindings, the intervention primitive and all TypeScript handlers — including Cedar via the official `cedar-wasm` — will be available in Python 2.0 without separate Python implementations. At that point, the third-party `cedarpy` dependency from step 1 is replaced by the official Cedar WASM bindings.
+When Strands Python 2.0 moves to WASM bindings, the TypeScript `cedar-wasm` handler becomes available in Python, replacing the `cedarpy` dependency with official Cedar WASM bindings.
 
 ---
 
 <details>
 <summary><strong>Appendix A: Concrete Instances</strong></summary>
 
-| | Cedar Auth | OPA Auth | LLM Steering | Datadog AI Guard | Galileo Agent Control |
-|---|---|---|---|---|---|
-| **Question** | *Is this principal allowed?* | *Is this principal allowed?* | *Is this the right thing to do?* | *Is this content safe?* | *Does this violate a rule?* |
-| **Engine** | Cedar policies (native/WASM) | OPA/Rego (WASM) | LLM judge | Datadog API | Centralized rule server |
-| **Hook points** | `BeforeToolCall` | `BeforeToolCall` | `BeforeToolCall`, `AfterModelCall` | 4 events | 7 events |
-| **Latency** | Sub-ms | Sub-ms | 100ms+ | ms | ms |
+| | Cedar Auth | OPA Auth | LLM Steering | Datadog AI Guard | Bedrock Guardrails | Galileo Agent Control |
+|---|---|---|---|---|---|---|
+| **Question** | *Is this principal allowed?* | *Is this principal allowed?* | *Is this the right thing to do?* | *Is this content safe?* | *Is this content safe?* | *Does this violate a rule?* |
+| **Engine** | Cedar policies (native/WASM) | OPA/Rego (WASM) | LLM judge | Datadog API | Bedrock API | Centralized rule server |
+| **Hook points** | `BeforeToolCall` | `BeforeToolCall` | `BeforeToolCall`, `AfterModelCall` | 4 events | `BeforeModelCall`, `AfterModelCall` | 7 events |
+| **Latency** | Sub-ms | Sub-ms | 100ms+ | ms | ms | ms |
 
 ### 1. Cedar Authorization
 
@@ -385,57 +398,96 @@ guide = AgentControlSteeringHandler(agent_name="my-agent")
 agent = Agent(tools=[search, send_email], plugins=[blocker, guide])
 ```
 
+### 7. Bedrock Guardrails (Strands built-in)
+
+```
+Engine:      AWS Bedrock Guardrails API (content filtering, PII detection, topic blocking)
+Actions:     Proceed | Deny | Transform
+Posture:     Default-proceed (content scanning approach)
+Strength:    AWS-managed, covers content policy + PII + grounding checks in one service
+Hook points: BeforeModelCall, AfterModelCall
+```
+
+Currently embedded inside the Bedrock model provider as config (`guardrail_id`, `guardrail_redact_input`, etc.) rather than a separate plugin. As an intervention handler, it moves from the model layer to the control layer — composable with Cedar, steering, and everything else. The `ANONYMIZED` action (PII redaction) is the primary use case for the `Transform` intervention action.
+
+```typescript
+class BedrockGuardrailHandler extends InterventionHandler {
+    name = "bedrock-guardrails";
+
+    async beforeModelCall(event: BeforeModelCallEvent): Promise<InterventionAction> {
+        const assessment = await this.evaluate(event.prompt);
+        if (assessment.action === "BLOCKED") return new Deny("Blocked by guardrail");
+        if (assessment.action === "ANONYMIZED") return new Transform(assessment.redactedContent, "PII redacted");
+        return new Proceed();
+    }
+}
+```
+
 </details>
 
 <details>
 <summary><strong>Appendix B: Interface Design Rationale</strong></summary>
 
-### Why Not a Fixed Method Per Hook Point?
+We considered three approaches for how handlers declare which events they care about:
 
-The obvious alternative is one method per lifecycle event:
+1. **`handles()` + `evaluate()`** — one generic evaluate method, handler declares event types via a `handles()` set. Clean but couples interventions to the hook type system.
 
-```typescript
-abstract class InterventionHandler {
-    abstract evaluateToolCall(ctx: ToolCallContext): Promise<InterventionAction>;
-    abstract evaluateModelInput(ctx: ModelInputContext): Promise<InterventionAction>;
-    abstract evaluateModelOutput(ctx: ModelOutputContext): Promise<InterventionAction>;
-    abstract evaluateToolResult(ctx: ToolResultContext): Promise<InterventionAction>;
-}
-```
+2. **Fixed abstract methods per event** — `evaluateToolCall()`, `evaluateModelInput()`, etc. Explicit but brittle: adding a new event type means adding a new abstract method, breaking every existing handler.
 
-**Today, Strands has 7+ lifecycle events.** That's 7 methods on the base class, most of which any handler ignores (Cedar uses 1, Datadog uses 4). When Strands adds new events, every handler needs updating — even if they don't care.
+3. **Fixed methods with default no-ops** — same as #2 but methods default to Proceed. Handlers override what they care about, ignore the rest. New events don't break existing handlers.
 
-The event-driven approach (`handles()` + `evaluate()`) is stable — handlers opt into new event types by adding them to their `handles()` set. The base interface never changes.
+We chose option 3 for both languages — default no-op methods that handlers override for the events they care about. The framework detects which methods were overridden and only calls those. Same pattern in Python and TypeScript.
 
 </details>
 
 <details>
-<summary><strong>Appendix C: Coverage Matrix</strong></summary>
+<summary><strong>Appendix C: Why Not Just Hooks?</strong></summary>
+
+You can build all of this with vanilla hooks today — and that's exactly what every existing control layer does. The question is whether the pattern is common and error-prone enough to justify a framework primitive.
+
+The things you'd have to build yourself with raw hooks:
+
+1. **Short-circuiting.** Each hook would need to check `event.cancelTool` before doing its work, and every plugin author needs to remember to do this. If one forgets, it runs anyway (e.g., an LLM steering call for a tool that's already been denied).
+
+2. **Distinguishing deny from guide.** Both set `event.cancelTool` to a string. The only difference is what the string says. Whether the agent retries or gives up depends on the model interpreting natural language, not on a typed decision the framework can act on.
+
+3. **Ordered evaluation.** You'd need to carefully control plugin registration order and hope it doesn't change between SDK versions.
+
+4. **Audit logging.** Each hook would need to log its own decisions, in its own format, to its own destination. Correlating them after the fact is manual.
+
+None of these are impossible — they're just the same boilerplate that every team with multiple control layers ends up writing. The intervention primitive is the framework absorbing that boilerplate so individual handlers don't have to.
+
+</details>
+
+<details>
+<summary><strong>Appendix D: Coverage Matrix</strong></summary>
 
 | Threat | Caught By | Missed By |
 |--------|-----------|-----------|
-| Unauthorized access (wrong role) | Cedar, OPA | Guardrails, Steering, Agent Control |
-| PII in tool input | Guardrails, Datadog AI Guard | Cedar, OPA, Steering |
-| SQL injection | Guardrails, Datadog AI Guard | Cedar, OPA |
-| Prompt injection in user input | Datadog AI Guard | Cedar, OPA, Guardrails, Steering |
-| Jailbreak / data exfiltration | Datadog AI Guard | Cedar, OPA, Guardrails |
-| Off-task/low-quality tool use | LLM Steering | Cedar, OPA, Guardrails |
-| Argument-level scoping (wrong DB) | Cedar, OPA | Guardrails, Steering |
-| Operational policy violation | Agent Control | Cedar, OPA, Steering |
-| Corrective behavioral guidance | Agent Control, LLM Steering | Cedar, OPA, Guardrails |
-| Human consent for high-stakes tools | Cedar (Interrupt) | OPA, Guardrails, Agent Control |
+| Unauthorized access (wrong role) | Cedar, OPA | Guardrails, Steering, Agent Control, Bedrock Guardrails |
+| PII in tool input | Guardrails, Datadog AI Guard, Bedrock Guardrails (Transform) | Cedar, OPA, Steering |
+| SQL injection | Guardrails, Datadog AI Guard | Cedar, OPA, Bedrock Guardrails |
+| Prompt injection in user input | Datadog AI Guard, Bedrock Guardrails | Cedar, OPA, Guardrails, Steering |
+| Jailbreak / data exfiltration | Datadog AI Guard, Bedrock Guardrails | Cedar, OPA, Guardrails |
+| Off-task/low-quality tool use | LLM Steering | Cedar, OPA, Guardrails, Bedrock Guardrails |
+| Argument-level scoping (wrong DB) | Cedar, OPA | Guardrails, Steering, Bedrock Guardrails |
+| Operational policy violation | Agent Control | Cedar, OPA, Steering, Bedrock Guardrails |
+| Corrective behavioral guidance | Agent Control, LLM Steering | Cedar, OPA, Guardrails, Bedrock Guardrails |
+| Human consent for high-stakes tools | Cedar (Interrupt) | OPA, Guardrails, Agent Control, Bedrock Guardrails |
+| Content policy (hate, violence, etc.) | Bedrock Guardrails, Datadog AI Guard | Cedar, OPA, Steering |
+| PII redaction (Transform) | Bedrock Guardrails | All others (block but don't redact) |
 
 </details>
 
 <details>
-<summary><strong>Appendix D: Userland Workaround</strong></summary>
+<summary><strong>Appendix E: Userland Workaround</strong></summary>
 
 We built a userland `InterventionPipeline` ([`pipeline.py`](../python/strands-cedar-auth/demos/intervention/pipeline.py), [`pipeline.ts`](../js/strands-cedar-auth/demos/intervention/pipeline.ts)) that wraps multiple handlers into a single Strands `Plugin`. It works — ordered evaluation, short-circuiting, unified audit log, all without SDK changes. But composition, ordering, and interrupt propagation are framework-level concerns. Every team building a production agent with multiple control layers would end up writing the same wrapper. The SDK should own this once.
 
 </details>
 
 <details>
-<summary><strong>Appendix E: Naming Alternatives</strong></summary>
+<summary><strong>Appendix F: Naming Alternatives</strong></summary>
 
 "Intervention" is the working name, but it carries a connotation of something going wrong (medical intervention, addiction intervention). Authorization isn't corrective — it's a gate. Alternatives worth considering:
 
