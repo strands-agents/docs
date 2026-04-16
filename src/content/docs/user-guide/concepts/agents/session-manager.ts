@@ -1,4 +1,4 @@
-import { Agent, SessionManager, FileStorage } from '@strands-agents/sdk'
+import { Agent, SessionManager, FileStorage, Graph, Swarm } from '@strands-agents/sdk'
 import { S3Storage } from '@strands-agents/sdk/session/s3-storage'
 import type {
   SnapshotStorage,
@@ -24,19 +24,6 @@ async function basicFileStorageExample() {
   // Use the agent - all messages and state are automatically persisted
   await agent.invoke('Hello!') // This conversation is persisted
   // --8<-- [end:basic_file_storage]
-}
-
-async function sessionAsPluginExample() {
-  // --8<-- [start:session_as_plugin]
-  const session = new SessionManager({
-    sessionId: 'test-session',
-    storage: { snapshot: new FileStorage('./sessions') },
-  })
-
-  // Equivalent to passing via sessionManager field
-  const agent = new Agent({ plugins: [session] })
-  await agent.invoke('Hello!')
-  // --8<-- [end:session_as_plugin]
 }
 
 // =====================
@@ -83,6 +70,60 @@ async function s3StorageExample() {
 }
 
 // =====================
+// Multi-Agent Sessions
+// =====================
+
+async function multiAgentGraphSessionExample() {
+  // --8<-- [start:multi_agent_graph_session]
+  const session = new SessionManager({
+    sessionId: 'graph-session',
+    storage: { snapshot: new FileStorage('./sessions') },
+  })
+
+  const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
+  const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+
+  const graph = new Graph({
+    nodes: [researcher, writer],
+    edges: [['researcher', 'writer']],
+    sessionManager: session,
+  })
+
+  // Orchestrator state is automatically persisted after each node completes
+  const result = await graph.invoke('Research and write about AI')
+  // --8<-- [end:multi_agent_graph_session]
+}
+
+async function multiAgentSwarmSessionExample() {
+  // --8<-- [start:multi_agent_swarm_session]
+  const session = new SessionManager({
+    sessionId: 'swarm-session',
+    storage: { snapshot: new FileStorage('./sessions') },
+  })
+
+  const researcher = new Agent({
+    id: 'researcher',
+    description: 'Researches a topic and gathers key facts.',
+    systemPrompt: 'Research the answer, then hand off to the writer.',
+  })
+
+  const writer = new Agent({
+    id: 'writer',
+    description: 'Writes a polished final answer.',
+    systemPrompt: 'Write the final answer. Do not hand off.',
+  })
+
+  const swarm = new Swarm({
+    nodes: [researcher, writer],
+    start: 'researcher',
+    sessionManager: session,
+  })
+
+  const result = await swarm.invoke('Explain quantum computing')
+  // --8<-- [end:multi_agent_swarm_session]
+}
+
+// =====================
 // SaveLatestStrategy
 // =====================
 
@@ -94,6 +135,19 @@ async function saveLatestStrategyExample() {
     saveLatestOn: 'invocation', // default — also: 'message' | 'trigger'
   })
   // --8<-- [end:save_latest_strategy]
+}
+
+async function multiAgentSaveLatestStrategyExample() {
+  // --8<-- [start:multi_agent_save_latest_strategy]
+  const session = new SessionManager({
+    sessionId: 'my-session',
+    storage: { snapshot: new FileStorage('./sessions') },
+    // Save orchestrator state after each node completes (default)
+    multiAgentSaveLatestOn: 'node',
+    // Or save only after the full orchestrator invocation completes:
+    // multiAgentSaveLatestOn: 'invocation',
+  })
+  // --8<-- [end:multi_agent_save_latest_strategy]
 }
 
 // =====================

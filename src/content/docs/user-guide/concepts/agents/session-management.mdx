@@ -15,7 +15,7 @@ A session represents all of stateful information that is needed by agents and mu
 - Agent state (key-value storage)
 - Other stateful information (like [Conversation Manager](./state.md#conversation-manager))
 
-**Multi-Agent Sessions** *(Python only)*:
+**Multi-Agent Sessions**:
 
 - Orchestrator state and configuration
 - Individual agent states and result within the orchestrator
@@ -28,6 +28,10 @@ Beyond the built-in options, [third-party session managers](#third-party-session
 
 :::caution
 You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
+:::
+
+:::note[TypeScript]
+`SessionManager` implements both [Plugin](../plugins/index.mdx) (for agents) and `MultiAgentPlugin` (for orchestrators). The `sessionManager` field on `Agent`, `Graph`, and `Swarm` is a convenience shorthand for passing it in the `plugins` array.
 :::
 
 ## Basic Usage
@@ -67,9 +71,12 @@ agent("Hello!")  # This conversation is persisted
 
 The conversation, and associated state, is persisted to the underlying storage backend.
 
-### Multi-Agent Sessions *(Python only)*
+### Multi-Agent Sessions
 
 Multi-agent systems (Graph/Swarm) can also use session management to persist their state:
+
+<Tabs>
+<Tab label="Python">
 
 ```python
 from strands.multiagent import GraphBuilder
@@ -91,6 +98,22 @@ graph = Graph(
 # Use the graph - all orchestrator state is persisted
 result = graph("Research and write about AI")
 ```
+
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/agents/session-manager.ts:multi_agent_graph_session"
+```
+
+Swarm works the same way:
+
+```typescript
+--8<-- "user-guide/concepts/agents/session-manager.ts:multi_agent_swarm_session"
+```
+
+</Tab>
+</Tabs>
 
 ## Built-in Session Managers
 
@@ -189,13 +212,17 @@ graph = Graph(
 <baseDir>/
 └── <sessionId>/
     └── scopes/
-        └── agent/
-            └── <agentId>/
+        ├── agent/
+        │   └── <agentId>/
+        │       └── snapshots/
+        │           ├── snapshot_latest.json        # Latest mutable snapshot
+        │           └── immutable_history/
+        │               ├── snapshot_<uuid7>.json   # Immutable checkpoint
+        │               └── snapshot_<uuid7>.json
+        └── multiAgent/
+            └── <orchestratorId>/
                 └── snapshots/
-                    ├── snapshot_latest.json        # Latest mutable snapshot
-                    └── immutable_history/
-                        ├── snapshot_<uuid7>.json   # Immutable checkpoint
-                        └── snapshot_<uuid7>.json
+                    └── snapshot_latest.json
 ```
 
 </Tab>
@@ -278,13 +305,16 @@ result = swarm("Coordinate the task across agents")
 ```
 [<prefix>/]<sessionId>/
 └── scopes/
-    └── agent/
-        └── <agentId>/
+    ├── agent/
+    │   └── <agentId>/
+    │       └── snapshots/
+    │           ├── snapshot_latest.json
+    │           └── immutable_history/
+    │               └── snapshot_<uuid7>.json
+    └── multiAgent/
+        └── <orchestratorId>/
             └── snapshots/
-                ├── snapshot_latest.json
-                └── immutable_history/
-                    ├── snapshot_<uuid7>.json
-                    └── snapshot_<uuid7>.json
+                └── snapshot_latest.json
 ```
 
 </Tab>
@@ -352,11 +382,28 @@ See [Basic Usage](#basic-usage) for configuration examples.
 </Tab>
 </Tabs>
 
-**Multi-Agent Events** *(Python only)*:
+**Multi-Agent Events**:
+
+<Tabs>
+<Tab label="Python">
 
 - **Multi-Agent Initialization**: Restores orchestrator state from the session.
 - **Node Execution**: Synchronizes orchestrator state after node transitions.
 - **Multi-Agent Invocation**: Captures final orchestrator state after execution.
+
+</Tab>
+<Tab label="TypeScript">
+
+- **Before Multi-Agent Invocation**: Restores orchestrator state from `snapshot_latest` on first invocation.
+- **After Node Call** (`multiAgentSaveLatestOn: 'node'`, default): Saves after each node completes, enabling resume from the last completed node after a crash.
+- **After Multi-Agent Invocation** (`multiAgentSaveLatestOn: 'invocation'`): Saves after the full orchestrator invocation completes (lower I/O, but only captures state at invocation boundaries).
+
+```typescript
+--8<-- "user-guide/concepts/agents/session-manager.ts:multi_agent_save_latest_strategy"
+```
+
+</Tab>
+</Tabs>
 
 :::note[Direct Message Modifications Not Persisted]
 After initializing the agent, direct modifications to `agent.messages` will not be persisted. Utilize the [Conversation Manager](./conversation-management.md) to help manage context of the agent in a way that can be persisted.
