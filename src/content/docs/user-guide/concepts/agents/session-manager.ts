@@ -80,8 +80,14 @@ async function multiAgentGraphSessionExample() {
     storage: { snapshot: new FileStorage('./sessions') },
   })
 
-  const researcher = new Agent({ id: 'researcher', systemPrompt: 'You are a research specialist.' })
-  const writer = new Agent({ id: 'writer', systemPrompt: 'You are a writing specialist.' })
+  const researcher = new Agent({
+    id: 'researcher',
+    systemPrompt: 'You are a research specialist.',
+  })
+  const writer = new Agent({
+    id: 'writer',
+    systemPrompt: 'You are a writing specialist.',
+  })
 
   const graph = new Graph({
     nodes: [researcher, writer],

@@ -27,7 +27,7 @@ Strands provides built-in session persistence capabilities that automatically ca
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
 
 :::caution
-You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
+You cannot use a single agent with a session manager inside a multi-agent system. In Python, this will throw an exception. In TypeScript, the orchestrator snapshots and restores each agent node's state on every execution, so an agent-level session manager would conflict with the orchestrator's persistence. Each agent in a multi-agent system must be created without a session manager — only the orchestrator should have one. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 :::
 
 :::note[TypeScript]
@@ -222,7 +222,7 @@ graph = Graph(
         └── multiAgent/
             └── <orchestratorId>/
                 └── snapshots/
-                    └── snapshot_latest.json
+                    └── snapshot_latest.json   # Multi-agent only saves latest (no immutable history)
 ```
 
 </Tab>
@@ -314,7 +314,7 @@ result = swarm("Coordinate the task across agents")
     └── multiAgent/
         └── <orchestratorId>/
             └── snapshots/
-                └── snapshot_latest.json
+                └── snapshot_latest.json   # Multi-agent only saves latest (no immutable history)
 ```
 
 </Tab>
