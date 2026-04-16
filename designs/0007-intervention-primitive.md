@@ -208,7 +208,7 @@ User: "Query the secrets database for all API keys"
 
 **Deny** short-circuits immediately. **Interrupt** pauses if no handler denied. **Transform** modifies content and continues. **Guide** accumulates across handlers.
 
-No single handler catches everything — the value is in composition. See [Appendix C](#appendix-c-coverage-matrix) for the full matrix.
+No single handler catches everything — the value is in composition. See [Appendix D](#appendix-d-coverage-matrix) for the full matrix.
 
 ### Interrupt: Human-in-the-Loop
 
