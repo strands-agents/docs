@@ -64,6 +64,7 @@ Initialize the AgentSkills plugin.
     -   A `str` or `Path` to a skill directory (containing SKILL.md)
     -   A `str` or `Path` to a parent directory (containing skill subdirectories)
     -   A `Skill` dataclass instance
+    -   An `https://` URL pointing directly to raw SKILL.md content
 -   `state_key` - Key used to store plugin state in `agent.state`.
     
 -   `max_resource_files` - Maximum number of resource files to list in skill responses.
@@ -77,7 +78,7 @@ Initialize the AgentSkills plugin.
 def init_agent(agent: Agent) -> None
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:99](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L99)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:100](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L100)
 
 Initialize the plugin with an agent instance.
 
@@ -94,7 +95,7 @@ Decorated hooks and tools are auto-registered by the plugin registry.
 def skills(skill_name: str, tool_context: ToolContext) -> str
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:112](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L112)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:113](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L113)
 
 Activate a skill to load its full instructions.
 
@@ -110,7 +111,7 @@ Use this tool to load the complete instructions for a skill listed in the availa
 def get_available_skills() -> list[Skill]
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:167](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L167)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:168](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L168)
 
 Get the list of available skills.
 
@@ -124,11 +125,11 @@ A copy of the current skills list.
 def set_available_skills(skills: SkillSources) -> None
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:175](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L175)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:176](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L176)
 
 Set the available skills, replacing any existing ones.
 
-Each element can be a `Skill` instance, a `str` or `Path` to a skill directory (containing SKILL.md), or a `str` or `Path` to a parent directory containing skill subdirectories.
+Each element can be a `Skill` instance, a `str` or `Path` to a skill directory (containing SKILL.md), a `str` or `Path` to a parent directory containing skill subdirectories, or an `https://` URL pointing directly to raw SKILL.md content.
 
 Note: this does not persist state or deactivate skills on any agent. Active skill state is managed per-agent and will be reconciled on the next tool call or invocation.
 
@@ -142,7 +143,7 @@ Note: this does not persist state or deactivate skills on any agent. Active skil
 def get_activated_skills(agent: Agent) -> list[str]
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:378](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L378)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:389](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L389)
 
 Get the list of skills activated by this agent.
 

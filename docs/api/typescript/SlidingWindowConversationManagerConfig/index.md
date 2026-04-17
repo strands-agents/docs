@@ -5,7 +5,7 @@ type SlidingWindowConversationManagerConfig = {
 };
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L17)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/sliding-window-conversation-manager.ts#L17)
 
 Configuration for the sliding window conversation manager.
 
@@ -17,7 +17,7 @@ Configuration for the sliding window conversation manager.
 optional windowSize?: number;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:22](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L22)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:22](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/sliding-window-conversation-manager.ts#L22)
 
 Maximum number of messages to keep in the conversation history. Defaults to 40 messages.
 
@@ -29,6 +29,6 @@ Maximum number of messages to keep in the conversation history. Defaults to 40 m
 optional shouldTruncateResults?: boolean;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/sliding-window-conversation-manager.ts#L28)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/sliding-window-conversation-manager.ts#L28)
 
 Whether to truncate tool results when a message is too large for the model’s context window. Defaults to true.

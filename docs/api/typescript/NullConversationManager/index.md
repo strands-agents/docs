@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/null-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/null-conversation-manager.ts#L17)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/null-conversation-manager.ts#L17)
 
 A no-op conversation manager that does not modify the conversation history.
 
@@ -32,7 +32,7 @@ new NullConversationManager(): NullConversationManager;
 readonly name: "strands:null-conversation-manager" = 'strands:null-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/null-conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/null-conversation-manager.ts#L21)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/null-conversation-manager.ts#L21)
 
 Unique identifier for this conversation manager.
 
@@ -48,7 +48,7 @@ Unique identifier for this conversation manager.
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/conversation-manager.ts#L100)
 
 Initialize the conversation manager with the agent instance.
 
@@ -78,7 +78,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 reduce(_args): boolean;
 ```
 
-Defined in: [src/conversation-manager/null-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/conversation-manager/null-conversation-manager.ts#L28)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/conversation-manager/null-conversation-manager.ts#L28)
 
 No-op reduction — never modifies the conversation history.
 

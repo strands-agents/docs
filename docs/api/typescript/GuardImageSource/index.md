@@ -4,7 +4,7 @@ type GuardImageSource = {
 };
 ```
 
-Defined in: [src/types/messages.ts:727](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L727)
+Defined in: [src/types/messages.ts:758](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L758)
 
 Source for guard content image. Only supports raw bytes.
 
@@ -16,4 +16,4 @@ Source for guard content image. Only supports raw bytes.
 bytes: Uint8Array;
 ```
 
-Defined in: [src/types/messages.ts:727](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L727)
+Defined in: [src/types/messages.ts:758](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L758)

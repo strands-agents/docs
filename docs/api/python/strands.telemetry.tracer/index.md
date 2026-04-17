@@ -44,7 +44,7 @@ This class provides a simple interface for creating and managing traces, with su
 
 When the OTEL\_EXPORTER\_OTLP\_ENDPOINT environment variable is set, traces are sent to the OTLP endpoint.
 
-Both attributes are controlled by including “gen\_ai\_latest\_experimental” or “gen\_ai\_tool\_definitions”, respectively, in the OTEL\_SEMCONV\_STABILITY\_OPT\_IN environment variable.
+Both attributes are controlled by including “gen\_ai\_latest\_experimental”, “gen\_ai\_tool\_definitions”, or “gen\_ai\_use\_latest\_invocation\_tokens”, respectively, in the OTEL\_SEMCONV\_STABILITY\_OPT\_IN environment variable.
 
 #### \_\_init\_\_
 
@@ -63,7 +63,7 @@ Initialize the tracer.
 def is_langfuse() -> bool
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:114](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L114)
+Defined in: [src/strands/telemetry/tracer.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L115)
 
 Check if Langfuse is configured as the OTLP endpoint.
 
@@ -79,7 +79,7 @@ def end_span_with_error(span: Span,
                         exception: Exception | None = None) -> None
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:227](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L227)
+Defined in: [src/strands/telemetry/tracer.py:222](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L222)
 
 End a span with error status.
 
@@ -103,7 +103,7 @@ def start_model_invoke_span(messages: Messages,
                             **kwargs: Any) -> Span
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:285](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L285)
+Defined in: [src/strands/telemetry/tracer.py:280](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L280)
 
 Start a new span for a model invocation.
 
@@ -128,7 +128,7 @@ def end_model_invoke_span(span: Span, message: Message, usage: Usage,
                           metrics: Metrics, stop_reason: StopReason) -> None
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:326](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L326)
+Defined in: [src/strands/telemetry/tracer.py:321](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L321)
 
 End a model invocation span with results and metrics.
 
@@ -150,7 +150,7 @@ def start_tool_call_span(tool: ToolUse,
                          **kwargs: Any) -> Span
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:383](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L383)
+Defined in: [src/strands/telemetry/tracer.py:378](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L378)
 
 Start a new span for a tool call.
 
@@ -173,7 +173,7 @@ def end_tool_call_span(span: Span,
                        error: Exception | None = None) -> None
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:453](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L453)
+Defined in: [src/strands/telemetry/tracer.py:448](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L448)
 
 End a tool call span with results.
 
@@ -194,7 +194,7 @@ def start_event_loop_cycle_span(
         **kwargs: Any) -> Span
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:506](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L506)
+Defined in: [src/strands/telemetry/tracer.py:501](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L501)
 
 Start a new span for an event loop cycle.
 
@@ -219,7 +219,7 @@ def end_event_loop_cycle_span(
         tool_result_message: Message | None = None) -> None
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:548](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L548)
+Defined in: [src/strands/telemetry/tracer.py:542](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L542)
 
 End an event loop cycle span with results.
 
@@ -242,7 +242,7 @@ def start_agent_span(messages: Messages,
                      **kwargs: Any) -> Span
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:590](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L590)
+Defined in: [src/strands/telemetry/tracer.py:584](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L584)
 
 Start a new span for an agent invocation.
 
@@ -268,7 +268,7 @@ def end_agent_span(span: Span,
                    error: Exception | None = None) -> None
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:649](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L649)
+Defined in: [src/strands/telemetry/tracer.py:643](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L643)
 
 End an agent span with results and metrics.
 
@@ -288,7 +288,7 @@ def start_multiagent_span(
 ) -> Span
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:719](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L719)
+Defined in: [src/strands/telemetry/tracer.py:723](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L723)
 
 Start a new span for swarm invocation.
 
@@ -298,7 +298,7 @@ Start a new span for swarm invocation.
 def end_swarm_span(span: Span, result: str | None = None) -> None
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:760](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L760)
+Defined in: [src/strands/telemetry/tracer.py:764](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L764)
 
 End a swarm span with results.
 
@@ -308,7 +308,7 @@ End a swarm span with results.
 def get_tracer() -> Tracer
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:935](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L935)
+Defined in: [src/strands/telemetry/tracer.py:939](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L939)
 
 Get or create the global tracer.
 
@@ -322,7 +322,7 @@ The global tracer instance.
 def serialize(obj: Any) -> str
 ```
 
-Defined in: [src/strands/telemetry/tracer.py:949](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L949)
+Defined in: [src/strands/telemetry/tracer.py:953](https://github.com/strands-agents/sdk-python/blob/main/src/strands/telemetry/tracer.py#L953)
 
 Serialize an object to JSON with consistent settings.
 

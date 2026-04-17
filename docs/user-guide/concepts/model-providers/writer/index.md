@@ -279,7 +279,7 @@ Ensure your Writer API key is valid and has the necessary permissions. You can g
 
 ## References
 
--   [API Reference](/docs/api/python/strands.models.model)
+-   [Python API Reference](/docs/api/python/strands.models.model)
 -   [Writer Documentation](https://dev.writer.com/)
 -   [Writer Models Guide](https://dev.writer.com/home/models)
 -   [Writer API Reference](https://dev.writer.com/api-reference)

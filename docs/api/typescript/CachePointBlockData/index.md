@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:505](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L505)
+Defined in: [src/types/messages.ts:536](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L536)
 
 Data for a cache point block.
 
@@ -10,6 +10,6 @@ Data for a cache point block.
 cacheType: "default";
 ```
 
-Defined in: [src/types/messages.ts:509](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L509)
+Defined in: [src/types/messages.ts:540](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L540)
 
 The cache type. Currently only ‘default’ is supported.

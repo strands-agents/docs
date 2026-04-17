@@ -1193,7 +1193,7 @@ const agent = new Agent({
 ```
 (( /tab "TypeScript" ))
 
-!!! note ""
+Default Inference Model
 
 Strands uses a default Claude 4 Sonnet inference model from the region of your credentials when no model is provided. So if you did not pass in any model id and are getting the above error, it’s very likely due to the `region` from the credentials not supporting inference profiles.
 

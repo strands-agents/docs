@@ -22,6 +22,7 @@ Plugins extend agent behavior by hooking into lifecycle events. Use these to add
 | --- | --- | --- | --- |
 | [Agent Control](/docs/community/plugins/agent-control/index.md) | Runtime policy enforcement for agents | ✅ | ❌ |
 | [Datadog AI Guard](/docs/community/plugins/datadog-ai-guard/index.md) | Real-time AI security with Datadog AI Guard | ✅ | ❌ |
+| [S3 Vectors Memory](/docs/community/plugins/s3-vectors-memory/index.md) | Long-term semantic memory for Strands Agents backed by Amazon S3 Vectors | ✅ | ❌ |
 
 ## Model providers
 
@@ -59,6 +60,7 @@ Tools extend your agents with capabilities for specific services and platforms. 
 | [google](/docs/community/tools/strands-google/index.md) | Google API integration | ✅ | ❌ |
 | [hubspot](/docs/community/tools/strands-hubspot/index.md) | HubSpot CRM integration | ✅ | ❌ |
 | [perplexity](/docs/community/tools/strands-perplexity/index.md) | Perplexity web search | ✅ | ❌ |
+| [strands-sql](/docs/community/tools/strands-sql/index.md) | General-purpose SQL tool for Strands Agents — PostgreSQL, MySQL, and SQLite via SQLAlchemy. | ✅ | ❌ |
 | [teams](/docs/community/tools/strands-teams/index.md) | Microsoft Teams | ✅ | ❌ |
 | [telegram](/docs/community/tools/strands-telegram/index.md) | Telegram bot | ✅ | ❌ |
 | [telegram-listener](/docs/community/tools/strands-telegram-listener/index.md) | Telegram listener | ✅ | ❌ |

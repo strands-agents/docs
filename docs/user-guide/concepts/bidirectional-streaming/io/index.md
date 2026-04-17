@@ -23,7 +23,7 @@ Implementation of these protocols will look as follows:
 
 ```python
 from strands.experimental.bidi import BidiAgent
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 from strands.experimental.bidi.types.events import BidiOutputEvent
 from strands.experimental.bidi.types.io import BidiInput, BidiOutput
 
@@ -62,12 +62,12 @@ To connect your I/O channels into the agent loop, you can pass them as arguments
 import asyncio
 
 from strands.experimental.bidi import BidiAgent
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 
 async def main():
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(tools=[stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(tools=[stop])
     await agent.run(inputs=[MyBidiInput()], outputs=[MyBidiOutput()])
 
 
@@ -93,12 +93,12 @@ import asyncio
 
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 
 async def main():
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(tools=[stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(tools=[stop])
     audio_io = BidiAudioIO(input_device_index=1)
 
     await agent.run(
@@ -148,12 +148,12 @@ import asyncio
 
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiTextIO
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 
 async def main():
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(tools=[stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(tools=[stop])
     text_io = BidiTextIO(input_prompt="> You: ")
 
     await agent.run(

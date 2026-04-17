@@ -33,7 +33,7 @@ import asyncio
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO, BidiTextIO
 from strands.experimental.bidi.models import BidiGeminiLiveModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 from strands_tools import calculator
 
@@ -48,8 +48,8 @@ async def main() -> None:
         },
         client_config={"api_key": "<GOOGLE_AI_API_KEY>"},
     )
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(model=model, tools=[calculator, stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(model=model, tools=[calculator, stop])
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
@@ -93,4 +93,4 @@ Make sure your Google AI API key is properly set in `client_config` or as the `G
 
 -   [Gemini Live API](https://ai.google.dev/gemini-api/docs/live)
 -   [Gemini API Reference](https://googleapis.github.io/python-genai/genai.html#)
--   [Provider API Reference](/docs/api/python/strands.experimental.bidi.models.gemini_live#BidiGeminiLiveModel)
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.models.gemini_live#BidiGeminiLiveModel)

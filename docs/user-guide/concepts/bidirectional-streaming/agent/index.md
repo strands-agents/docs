@@ -159,7 +159,7 @@ Tools execute concurrently without blocking the conversation. When a tool is inv
 3.  Tool use and result messages are added atomically to conversation history
 4.  Results are automatically sent back to the model
 
-The special `stop_conversation` tool triggers agent shutdown instead of sending results back to the model.
+The agent loop checks for `request_state["stop_event_loop"]` to trigger graceful shutdown instead of sending tool results back to the model. Any tool can set this flag to stop the conversation. The built-in `strands_tools.stop` tool uses this mechanism.
 
 ### Connection Lifecycle
 
@@ -436,4 +436,4 @@ The agent automatically cleans up background tasks, model connections, I/O chann
 -   [I/O Channels](/docs/user-guide/concepts/bidirectional-streaming/io/index.md) - Building custom input/output channels
 -   [Model Providers](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) - Provider-specific configuration
 -   [Quickstart](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) - Getting started guide
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation

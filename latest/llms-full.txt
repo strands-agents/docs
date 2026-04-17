@@ -36,6 +36,7 @@ Plugins extend agent behavior by hooking into lifecycle events. Use these to add
 | --- | --- | --- | --- |
 | [Agent Control](/docs/community/plugins/agent-control/index.md) | Runtime policy enforcement for agents | ✅ | ❌ |
 | [Datadog AI Guard](/docs/community/plugins/datadog-ai-guard/index.md) | Real-time AI security with Datadog AI Guard | ✅ | ❌ |
+| [S3 Vectors Memory](/docs/community/plugins/s3-vectors-memory/index.md) | Long-term semantic memory for Strands Agents backed by Amazon S3 Vectors | ✅ | ❌ |
 
 ## Model providers
 
@@ -73,6 +74,7 @@ Tools extend your agents with capabilities for specific services and platforms. 
 | [google](/docs/community/tools/strands-google/index.md) | Google API integration | ✅ | ❌ |
 | [hubspot](/docs/community/tools/strands-hubspot/index.md) | HubSpot CRM integration | ✅ | ❌ |
 | [perplexity](/docs/community/tools/strands-perplexity/index.md) | Perplexity web search | ✅ | ❌ |
+| [strands-sql](/docs/community/tools/strands-sql/index.md) | General-purpose SQL tool for Strands Agents — PostgreSQL, MySQL, and SQLite via SQLAlchemy. | ✅ | ❌ |
 | [teams](/docs/community/tools/strands-teams/index.md) | Microsoft Teams | ✅ | ❌ |
 | [telegram](/docs/community/tools/strands-telegram/index.md) | Telegram bot | ✅ | ❌ |
 | [telegram-listener](/docs/community/tools/strands-telegram-listener/index.md) | Telegram listener | ✅ | ❌ |
@@ -101,6 +103,7 @@ We feature **reusable packages** that extend Strands Agents capabilities:
 -   **Model Providers** — integrations with LLM services (OpenAI-compatible endpoints, custom APIs, etc.)
 -   **Tools** — packaged tools that solve common problems (API integrations, utilities, etc.)
 -   **Session Managers** — custom session/memory implementations
+-   **Plugins** — extend or modify agent behavior during lifecycle events
 -   **Integrations** — protocol implementations, framework bridges, etc.
 
 We’re not looking for example agents or one-off projects — the focus is on packages published to PyPI that others can `pip install` or `npm install` and use in their own agents. See [Community Packages](/docs/community/community-packages/index.md) for guidance on creating and publishing your package.
@@ -113,7 +116,8 @@ The [extension template](https://github.com/strands-agents/extension-template-py
 
 1.  **Create a PR** to [strands-agents/docs](https://github.com/strands-agents/docs)
 2.  **Add your doc file** in the appropriate `community/` subdirectory
-3.  **Update `src/config/navigation.yml`** to include your new page in the nav
+3.  **Include the required frontmatter** so your page appears in the [community catalog](/docs/community/community-packages/index.md)
+4.  **Update `src/config/navigation.yml`** to include your new page in the nav
 
 ## Directory Structure
 
@@ -121,11 +125,11 @@ Place your documentation in the right spot:
 
 | Type | Directory | Example |
 | --- | --- | --- |
-| Model Providers | `community/model-providers/` | `cohere.md` |
-| Tools | `community/tools/` | `strands-deepgram.md` |
-| Session Managers | `community/session-managers/` | `agentcore-memory.md` |
-| Plugins | `community/plugins/` | `my-plugin.md` |
-| Integrations | `community/integrations/` | `ag-ui.md` |
+| Model Providers | `community/model-providers/` | `cohere.mdx` |
+| Tools | `community/tools/` | `strands-deepgram.mdx` |
+| Session Managers | `community/session-managers/` | `agentcore-memory.mdx` |
+| Plugins | `community/plugins/` | `my-plugin.mdx` |
+| Integrations | `community/integrations/` | `ag-ui.mdx` |
 
 ## Document Layout
 
@@ -135,7 +139,6 @@ Follow this structure (see existing docs for reference):
 
 ```markdown
 # Package Name
-
 
 Brief intro explaining what your package does and why it's useful.
 
@@ -160,21 +163,39 @@ Common issues and how to fix them.
 Links to your repo, PyPI, official docs, etc.
 ```
 
-### For Tools
+### Frontmatter
 
-Add frontmatter with project metadata:
+Every community page needs frontmatter with catalog fields so it appears in the [community catalog](/docs/community/community-packages/index.md). Without `community: true`, `integrationType`, `description`, and `languages`, your page won’t show up in the catalog tables.
+
+Here’s the full frontmatter for a **Tool** (adapt `integrationType` for your package type — `tool`, `model-provider`, `session-manager`, `plugin`, or `integration`):
 
 ```yaml
 ---
+title: your-package-name
+community: true
+integrationType: tool
+description: Short description of what the tool does
+languages: Python
+sidebar:
+  label: "display-name"
 project:
   pypi: https://pypi.org/project/your-package/
   github: https://github.com/your-org/your-repo
   maintainer: your-github-username
 service:
-  name: service-name
+  name: Service Name
   link: https://service-website.com/
 ---
 ```
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `community` | ✅ | Must be `true` |
+| `integrationType` | ✅ | `tool`, `model-provider`, `session-manager`, `plugin`, or `integration` |
+| `description` | ✅ | Shown in the catalog table |
+| `languages` | ✅ | `Python`, `TypeScript`, or omit for both |
+| `project` | Recommended | PyPI/npm link, GitHub repo, maintainer |
+| `service` | Optional | External service metadata |
 
 ## Update navigation.yml
 
@@ -195,8 +216,12 @@ Add your page to `src/config/navigation.yml` under the Community section:
 
 ## Examples to Follow
 
--   **Model Provider**: [fireworksai.md](https://github.com/strands-agents/docs/blob/main/docs/community/model-providers/fireworksai.md)
--   **Tool**: [strands-deepgram.md](https://github.com/strands-agents/docs/blob/main/docs/community/tools/strands-deepgram.md)
+Look at existing community pages for reference:
+
+-   **Tool**: [strands-deepgram.mdx](https://github.com/strands-agents/docs/blob/main/src/content/docs/community/tools/strands-deepgram.mdx)
+-   **Model Provider**: [nvidia-nim.mdx](https://github.com/strands-agents/docs/blob/main/src/content/docs/community/model-providers/nvidia-nim.mdx)
+-   **Session Manager**: [agentcore-memory.mdx](https://github.com/strands-agents/docs/blob/main/src/content/docs/community/session-managers/agentcore-memory.mdx)
+-   **Integration**: [ag-ui.mdx](https://github.com/strands-agents/docs/blob/main/src/content/docs/community/integrations/ag-ui.mdx)
 
 ## Questions?
 
@@ -2039,6 +2064,161 @@ Source: https://strandsagents.com/docs/community/plugins/datadog-ai-guard/index.
 
 ---
 
+## S3 Vectors Memory Plugin
+
+The [S3 Vectors Memory Plugin](https://github.com/aws-samples/data-for-saas-patterns/tree/main/samples/multi-tenant-strands-s3-vectors-memory) gives any Strands Agent long-term semantic memory backed by [Amazon S3 Vectors](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html). At the end of a conversation, the plugin summarizes the exchange using the agent’s own model and stores the summary as a searchable vector. On subsequent conversations, relevant summaries are retrieved and injected into the system prompt — the agent remembers without bloating the context window.
+
+Available in two modes:
+
+-   **Single-tenant** — one shared index, ambient AWS credentials
+-   **Multi-tenant** — one index per tenant, IAM credentials scoped per tenant via the [Token Vending Machine (TVM)](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/implement-saas-tenant-isolation-for-amazon-s3-by-using-an-aws-lambda-token-vending-machine.html) pattern
+
+## Requirements
+
+-   Python 3.10+
+-   `strands-agents >= 1.0.0`
+-   `boto3 >= 1.34.0`
+-   `cachetools >= 5.3.0`
+-   AWS account with [Amazon S3 Vectors](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html) access
+-   Amazon Bedrock access for:
+    -   An embedding model — `amazon.nova-2-multimodal-embeddings-v1:0` (default)
+    -   A chat model — e.g. `us.anthropic.claude-sonnet-4-5-20250929-v1:0`
+
+## Installation
+
+```bash
+pip install strands-s3-vectors-memory
+```
+
+## AWS Setup
+
+**1\. Create an S3 Vectors bucket:**
+
+```bash
+aws s3vectors create-vector-bucket --vector-bucket-name my-vector-memory
+```
+
+**2\. Create the index:**
+
+```bash
+aws s3vectors create-index \
+  --vector-bucket-name my-vector-memory \
+  --index-name memory \
+  --data-type float32 --dimension 1024 --distance-metric cosine \
+  --metadata-configuration '{"nonFilterableMetadataKeys":["content","stored_at","conversation_id","type"]}'
+```
+
+**3\. For multi-tenant, create the TVM IAM role** using the [setup script](https://github.com/aws-samples/data-for-saas-patterns/blob/main/samples/multi-tenant-strands-s3-vectors-memory/scripts/setup_tvm_role.sh) provided in the repository:
+
+```bash
+bash setup_tvm_role.sh my-vector-memory
+export S3_VECTOR_TVM_ROLE_ARN=<printed-arn>
+```
+
+## Usage
+
+### Single-tenant
+
+```python
+import os
+from strands import Agent
+from strands.models import BedrockModel
+from strands_s3_vectors_memory import S3VectorMemory, S3VectorMemoryPlugin
+
+BASE_PROMPT = """You are a helpful assistant.
+
+{memory_context}
+
+Use prior context naturally in your responses."""
+
+store  = S3VectorMemory(bucket_name=os.environ["S3_VECTOR_BUCKET_NAME"])
+plugin = S3VectorMemoryPlugin(store=store, base_prompt=BASE_PROMPT)
+
+agent = Agent(
+    model         = BedrockModel(),
+    name          = "assistant",        # required — used as memory namespace key
+    plugins       = [plugin],
+    system_prompt = BASE_PROMPT,
+)
+
+# Turn 1 — agent responds; memory not yet stored
+agent("My favourite framework is Strands Agents.", invocation_state={
+    "user_id": "user-001", "conversation_id": "conv-001", "end_session": False,
+})
+
+# Turn 2 — end_session=True triggers background summarization and vector store
+agent("Thanks, bye.", invocation_state={
+    "user_id": "user-001", "conversation_id": "conv-001", "end_session": True,
+})
+
+# Next session — plugin retrieves the stored summary and injects it into the prompt
+agent("What do you know about my preferences?", invocation_state={
+    "user_id": "user-001", "conversation_id": "conv-002", "end_session": False,
+})
+```
+
+`BASE_PROMPT` must contain a `{memory_context}` placeholder. The plugin fills it with retrieved summaries on the first turn of each conversation, or replaces it with an empty string when no relevant memories are found.
+
+### Multi-tenant
+
+```python
+import os
+from strands import Agent
+from strands.models import BedrockModel
+from strands_s3_vectors_memory import MultiTenantS3VectorMemory, S3VectorMemoryPlugin
+
+store  = MultiTenantS3VectorMemory(
+    bucket_name  = os.environ["S3_VECTOR_BUCKET_NAME"],
+    tvm_role_arn = os.environ["S3_VECTOR_TVM_ROLE_ARN"],
+)
+plugin = S3VectorMemoryPlugin(store=store, base_prompt=BASE_PROMPT)
+
+agent = Agent(
+    model         = BedrockModel(),
+    name          = "assistant",
+    plugins       = [plugin],
+    system_prompt = BASE_PROMPT,
+)
+
+agent("Our Q4 budget is $2M.", invocation_state={
+    "tenant_context":  {"tenantId": "tenant-001"},
+    "user_id":         "user-456",
+    "conversation_id": "conv-001",
+    "end_session":     True,
+})
+```
+
+## Configuration
+
+### Environment variables
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `S3_VECTOR_BUCKET_NAME` | Yes | S3 Vectors bucket name |
+| `AWS_REGION` | No (default: `us-east-1`) | AWS region |
+| `S3_VECTOR_TVM_ROLE_ARN` | Multi-tenant only | TVM IAM role ARN |
+
+### `invocation_state` keys
+
+| Key | Required | Description |
+| --- | --- | --- |
+| `user_id` | Yes | Scopes vector filter to this user |
+| `conversation_id` | Yes | Scopes buffer and summary key |
+| `end_session` | No (default `False`) | If `True`, summarizes and stores the conversation after the response (non-blocking) |
+| `tenant_context` | Multi-tenant only | Dict with `tenantId` key |
+
+## References
+
+-   [GitHub](https://github.com/aws-samples/data-for-saas-patterns/tree/main/samples/multi-tenant-strands-s3-vectors-memory)
+-   [PyPI](https://pypi.org/project/strands-s3-vectors-memory/)
+-   [Plugin reference](https://github.com/aws-samples/data-for-saas-patterns/blob/main/samples/multi-tenant-strands-s3-vectors-memory/docs/strands-s3-vector-memory-plugin.md)
+-   [Amazon S3 Vectors](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html)
+-   [Token Vending Machine pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/implement-saas-tenant-isolation-for-amazon-s3-by-using-an-aws-lambda-token-vending-machine.html)
+
+Source: https://strandsagents.com/docs/community/plugins/s3-vectors-memory/index.md
+
+---
+
 ## AgentCore Memory Session Manager
 
 The [AgentCore Memory Session Manager](https://github.com/aws/bedrock-agentcore-sdk-python/tree/main/src/bedrock_agentcore/memory/integrations/strands) leverages Amazon Bedrock AgentCore Memory to provide advanced memory capabilities with intelligent retrieval for Strands Agents. It supports both short-term memory (STM) for conversation persistence and long-term memory (LTM) with multiple strategies for learning user preferences, facts, and session summaries.
@@ -2699,6 +2879,86 @@ Get your API key at: [Perplexity API Settings](https://perplexity.ai/account/api
 -   [Perplexity Search Best Practices](https://docs.perplexity.ai/guides/search-best-practices)
 
 Source: https://strandsagents.com/docs/community/tools/strands-perplexity/index.md
+
+---
+
+## strands-sql
+
+[strands-sql](https://github.com/NithiN-1808/strands-sql) is a general-purpose SQL tool for Strands Agents — supports PostgreSQL, MySQL, and SQLite via SQLAlchemy with built-in safety controls.
+
+## Installation
+
+```bash
+# SQLite (no extra driver needed)
+pip install strands-sql
+
+# PostgreSQL
+pip install "strands-sql[postgres]"
+
+# MySQL
+pip install "strands-sql[mysql]"
+```
+
+## Usage
+
+```python
+from strands import Agent
+from strands_sql import sql_database
+
+agent = Agent(tools=[sql_database])
+
+# Discover the schema
+agent.tool.sql_database(action="schema_summary")
+
+# Run a query
+agent.tool.sql_database(
+    action="query",
+    sql="SELECT * FROM orders WHERE amount > 100 LIMIT 20",
+)
+
+# Describe a table
+agent.tool.sql_database(action="describe_table", table="users")
+```
+
+## Key Features
+
+-   **Multi-dialect support**: PostgreSQL, MySQL, and SQLite via SQLAlchemy
+-   **Safe by default**: read-only mode, row limits, query timeouts
+-   **Access control**: table allowlist and blocklist
+-   **LLM-friendly output**: Markdown and CSV result formats
+-   **Schema discovery**: `list_tables`, `describe_table`, `schema_summary`
+-   **Query execution**: `query`, `execute`, `explain`
+
+## Configuration
+
+Set your database connection via environment variable:
+
+```bash
+export DATABASE_URL="postgresql://user:password@localhost:5432/mydb"
+```
+
+Or pass it directly per call:
+
+```python
+agent.tool.sql_database(
+    action="list_tables",
+    connection_string="sqlite:///./local.db",
+)
+```
+
+## Troubleshooting
+
+-   **No connection string found** — make sure `DATABASE_URL` is set or pass `connection_string` explicitly.
+-   **Write query blocked** — write operations require `read_only=False` explicitly.
+-   **Timeout errors** — increase `query_timeout` (default: 30s).
+
+## Resources
+
+-   [PyPI Package](https://pypi.org/project/strands-sql/)
+-   [GitHub Repository](https://github.com/NithiN-1808/strands-sql)
+-   [SQLAlchemy Docs](https://docs.sqlalchemy.org/)
+
+Source: https://strandsagents.com/docs/community/tools/strands-sql/index.md
 
 ---
 
@@ -9098,7 +9358,7 @@ const response = await agent.invoke([
 ```
 (( /tab "TypeScript" ))
 
-For a complete list of supported content types, please refer to the [API Reference](/docs/api/python/strands.types.content#ContentBlock).
+For a complete list of supported content types, refer to the API Reference: [Python](/docs/api/python/strands.types.content#ContentBlock) | [TypeScript](/docs/api/typescript/ContentBlock/index.md).
 
 ### Direct Tool Calls
 
@@ -9307,7 +9567,7 @@ A session represents all of stateful information that is needed by agents and mu
 -   Agent state (key-value storage)
 -   Other stateful information (like [Conversation Manager](/docs/user-guide/concepts/agents/state/index.md#conversation-manager))
 
-**Multi-Agent Sessions** *(Python only)*:
+**Multi-Agent Sessions**:
 
 -   Orchestrator state and configuration
 -   Individual agent states and result within the orchestrator
@@ -9317,10 +9577,6 @@ A session represents all of stateful information that is needed by agents and mu
 Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents to seamlessly continue conversations where they left off.
 
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
-
-Caution
-
-You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 
 ## Basic Usage
 
@@ -9345,6 +9601,8 @@ agent("Hello!")  # This conversation is persisted
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+`SessionManager` implements both [Plugin](/docs/user-guide/concepts/plugins/index.md) (for agents) and `MultiAgentPlugin` (for orchestrators). The `sessionManager` constructor field is a convenience shorthand — you can also pass it directly in the `plugins` array:
+
 ```typescript
 const session = new SessionManager({
   sessionId: 'test-session',
@@ -9357,19 +9615,31 @@ const agent = new Agent({ sessionManager: session })
 await agent.invoke('Hello!') // This conversation is persisted
 ```
 
-Note
+```typescript
+const session = new SessionManager({
+  sessionId: 'test-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+})
 
-`SessionManager` is a [Plugin](/docs/user-guide/concepts/plugins/index.md). The `sessionManager` field on `AgentConfig` is a convenience shorthand for passing it in the `plugins` array.
+// Equivalent to passing via sessionManager field
+const agent = new Agent({ plugins: [session] })
+await agent.invoke('Hello!')
+```
 (( /tab "TypeScript" ))
 
 The conversation, and associated state, is persisted to the underlying storage backend.
 
-### Multi-Agent Sessions *(Python only)*
+### Multi-Agent Sessions
 
-Multi-agent systems (Graph/Swarm) can also use session management to persist their state:
+Multi-agent systems (Graph/Swarm) can also use session management to persist their state.
+
+(( tab "Python" ))
+Caution
+
+Agents inside a multi-agent system must not have their own session manager — only the orchestrator should have one. Python will raise a `ValueError` if an agent with a session manager is added to a Graph or Swarm.
 
 ```python
-from strands.multiagent import Graph
+from strands.multiagent import GraphBuilder
 from strands.session.file_session_manager import FileSessionManager
 
 # Create agents
@@ -9388,6 +9658,69 @@ graph = Graph(
 # Use the graph - all orchestrator state is persisted
 result = graph("Research and write about AI")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Caution
+
+Agents inside a multi-agent system must not have their own session manager — only the orchestrator should have one. The orchestrator snapshots and restores each agent node’s state on every execution, so an agent-level session manager would conflict with the orchestrator’s persistence.
+
+```typescript
+const session = new SessionManager({
+  sessionId: 'graph-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+})
+
+const researcher = new Agent({
+  id: 'researcher',
+  systemPrompt: 'You are a research specialist.',
+})
+const writer = new Agent({
+  id: 'writer',
+  systemPrompt: 'You are a writing specialist.',
+})
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+  sessionManager: session,
+})
+
+// Orchestrator state is automatically persisted after each node completes
+const result = await graph.invoke('Research and write about AI')
+```
+
+Swarm works the same way:
+
+```typescript
+const session = new SessionManager({
+  sessionId: 'swarm-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+})
+
+const researcher = new Agent({
+  id: 'researcher',
+  description: 'Researches a topic and gathers key facts.',
+  systemPrompt: 'Research the answer, then hand off to the writer.',
+})
+
+const writer = new Agent({
+  id: 'writer',
+  description: 'Writes a polished final answer.',
+  systemPrompt: 'Write the final answer. Do not hand off.',
+})
+
+const swarm = new Swarm({
+  nodes: [researcher, writer],
+  start: 'researcher',
+  sessionManager: session,
+})
+
+const result = await swarm.invoke('Explain quantum computing')
+```
+(( /tab "TypeScript" ))
+
+Multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 
 ## Built-in Session Managers
 
@@ -9478,13 +9811,17 @@ When using [`FileSessionManager`](/docs/api/python/strands.session.file_session_
 <baseDir>/
 └── <sessionId>/
     └── scopes/
-        └── agent/
-            └── <agentId>/
+        ├── agent/
+        │   └── <agentId>/
+        │       └── snapshots/
+        │           ├── snapshot_latest.json        # Latest mutable snapshot
+        │           └── immutable_history/
+        │               ├── snapshot_<uuid7>.json   # Immutable checkpoint
+        │               └── snapshot_<uuid7>.json
+        └── multiAgent/
+            └── <orchestratorId>/
                 └── snapshots/
-                    ├── snapshot_latest.json        # Latest mutable snapshot
-                    └── immutable_history/
-                        ├── snapshot_<uuid7>.json   # Immutable checkpoint
-                        └── snapshot_<uuid7>.json
+                    └── snapshot_latest.json   # Multi-agent only saves latest (no immutable history)
 ```
 (( /tab "TypeScript" ))
 
@@ -9574,13 +9911,16 @@ await agent.invoke('Tell me about AWS S3')
 ```plaintext
 [<prefix>/]<sessionId>/
 └── scopes/
-    └── agent/
-        └── <agentId>/
+    ├── agent/
+    │   └── <agentId>/
+    │       └── snapshots/
+    │           ├── snapshot_latest.json
+    │           └── immutable_history/
+    │               └── snapshot_<uuid7>.json
+    └── multiAgent/
+        └── <orchestratorId>/
             └── snapshots/
-                ├── snapshot_latest.json
-                └── immutable_history/
-                    ├── snapshot_<uuid7>.json
-                    └── snapshot_<uuid7>.json
+                └── snapshot_latest.json   # Multi-agent only saves latest (no immutable history)
 ```
 (( /tab "TypeScript" ))
 
@@ -9641,11 +9981,30 @@ Session persistence is automatically triggered by lifecycle events in the agent:
 See [Basic Usage](#basic-usage) for configuration examples.
 (( /tab "TypeScript" ))
 
-**Multi-Agent Events** *(Python only)*:
+**Multi-Agent Events**:
 
+(( tab "Python" ))
 -   **Multi-Agent Initialization**: Restores orchestrator state from the session.
 -   **Node Execution**: Synchronizes orchestrator state after node transitions.
 -   **Multi-Agent Invocation**: Captures final orchestrator state after execution.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   **Before Multi-Agent Invocation**: Restores orchestrator state from `snapshot_latest` on first invocation.
+-   **After Node Call** (`multiAgentSaveLatestOn: 'node'`, default): Saves after each node completes, enabling resume from the last completed node after a crash.
+-   **After Multi-Agent Invocation** (`multiAgentSaveLatestOn: 'invocation'`): Saves after the full orchestrator invocation completes (lower I/O, but only captures state at invocation boundaries).
+
+```typescript
+const session = new SessionManager({
+  sessionId: 'my-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+  // Save orchestrator state after each node completes (default)
+  multiAgentSaveLatestOn: 'node',
+  // Or save only after the full orchestrator invocation completes:
+  // multiAgentSaveLatestOn: 'invocation',
+})
+```
+(( /tab "TypeScript" ))
 
 Direct Message Modifications Not Persisted
 
@@ -11094,7 +11453,7 @@ Tools execute concurrently without blocking the conversation. When a tool is inv
 3.  Tool use and result messages are added atomically to conversation history
 4.  Results are automatically sent back to the model
 
-The special `stop_conversation` tool triggers agent shutdown instead of sending results back to the model.
+The agent loop checks for `request_state["stop_event_loop"]` to trigger graceful shutdown instead of sending tool results back to the model. Any tool can set this flag to stop the conversation. The built-in `strands_tools.stop` tool uses this mechanism.
 
 ### Connection Lifecycle
 
@@ -11371,7 +11730,7 @@ The agent automatically cleans up background tasks, model connections, I/O chann
 -   [I/O Channels](/docs/user-guide/concepts/bidirectional-streaming/io/index.md) - Building custom input/output channels
 -   [Model Providers](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) - Provider-specific configuration
 -   [Quickstart](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) - Getting started guide
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/agent/index.md
 
@@ -11540,7 +11899,7 @@ Emitted when the streaming connection is closed.
     -   `"timeout"`: Connection timed out
     -   `"error"`: Error occurred
     -   `"complete"`: Conversation completed normally
-    -   `"user_request"`: User requested closure (via `stop_conversation` tool)
+    -   `"user_request"`: User requested closure (via `strands_tools.stop` or any tool that sets `request_state["stop_event_loop"]`)
 
 ### Response Lifecycle Events
 
@@ -12311,7 +12670,7 @@ For additional best practices on performance considerations, error handling, com
 -   [Agent](/docs/user-guide/concepts/bidirectional-streaming/agent/index.md) - Learn about BidiAgent configuration and lifecycle
 -   [Session Management](/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md) - Persist conversations across sessions
 -   [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) - Complete guide to bidirectional streaming events
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/hooks/index.md
 
@@ -12529,7 +12888,7 @@ Implementation of these protocols will look as follows:
 
 ```python
 from strands.experimental.bidi import BidiAgent
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 from strands.experimental.bidi.types.events import BidiOutputEvent
 from strands.experimental.bidi.types.io import BidiInput, BidiOutput
 
@@ -12568,12 +12927,12 @@ To connect your I/O channels into the agent loop, you can pass them as arguments
 import asyncio
 
 from strands.experimental.bidi import BidiAgent
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 
 async def main():
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(tools=[stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(tools=[stop])
     await agent.run(inputs=[MyBidiInput()], outputs=[MyBidiOutput()])
 
 
@@ -12599,12 +12958,12 @@ import asyncio
 
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 
 async def main():
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(tools=[stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(tools=[stop])
     audio_io = BidiAudioIO(input_device_index=1)
 
     await agent.run(
@@ -12654,12 +13013,12 @@ import asyncio
 
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiTextIO
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 
 async def main():
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(tools=[stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(tools=[stop])
     text_io = BidiTextIO(input_prompt="> You: ")
 
     await agent.run(
@@ -12779,7 +13138,7 @@ import asyncio
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO, BidiTextIO
 from strands.experimental.bidi.models import BidiGeminiLiveModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 from strands_tools import calculator
 
@@ -12794,8 +13153,8 @@ async def main() -> None:
         },
         client_config={"api_key": "<GOOGLE_AI_API_KEY>"},
     )
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(model=model, tools=[calculator, stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(model=model, tools=[calculator, stop])
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
@@ -12839,7 +13198,7 @@ Make sure your Google AI API key is properly set in `client_config` or as the `G
 
 -   [Gemini Live API](https://ai.google.dev/gemini-api/docs/live)
 -   [Gemini API Reference](https://googleapis.github.io/python-genai/genai.html#)
--   [Provider API Reference](/docs/api/python/strands.experimental.bidi.models.gemini_live#BidiGeminiLiveModel)
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.models.gemini_live#BidiGeminiLiveModel)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md
 
@@ -12886,7 +13245,7 @@ import asyncio
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO, BidiTextIO
 from strands.experimental.bidi.models import BidiNovaSonicModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 from strands_tools import calculator
 
@@ -12901,8 +13260,8 @@ async def main() -> None:
         },
         client_config={"region": "us-east-1"},  # only available in us-east-1, eu-north-1, and ap-northeast-1
     )
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(model=model, tools=[calculator, stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(model=model, tools=[calculator, stop])
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
@@ -12983,7 +13342,7 @@ As a reminder, Nova Sonic is only available in us-east-1, eu-north-1, and ap-nor
 
 -   [Nova Sonic](https://docs.aws.amazon.com/nova/latest/userguide/speech.html)
 -   [Experimental Bedrock Client](https://github.com/awslabs/aws-sdk-python/tree/develop/clients/aws-sdk-bedrock-runtime)
--   [Provider API Reference](/docs/api/python/strands.experimental.bidi.models.nova_sonic#BidiNovaSonicModel)
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.models.nova_sonic#BidiNovaSonicModel)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md
 
@@ -13025,7 +13384,7 @@ import asyncio
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO, BidiTextIO
 from strands.experimental.bidi.models import BidiOpenAIRealtimeModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 from strands_tools import calculator
 
@@ -13040,8 +13399,8 @@ async def main() -> None:
         },
         client_config={"api_key": "<OPENAI_API_KEY>"},
     )
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(model=model, tools=[calculator, stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(model=model, tools=[calculator, stop])
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
@@ -13086,7 +13445,7 @@ Ensure your OpenAI API key is properly configured. Set the `OPENAI_API_KEY` envi
 
 -   [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime)
 -   [OpenAI API Reference](https://platform.openai.com/docs/api-reference/realtime)
--   [Provider API Reference](/docs/api/python/strands.experimental.bidi.models.openai_realtime#BidiOpenAIRealtimeModel)
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.models.openai_realtime#BidiOpenAIRealtimeModel)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md
 
@@ -13494,19 +13853,19 @@ See [Controlling Conversation Lifecycle](#controlling-conversation-lifecycle) fo
 
 ## Graceful Shutdown
 
-Use the experimental `stop_conversation` tool to allow users to end conversations naturally:
+Use the `stop` tool from `strands_tools` to allow users to end conversations naturally. The `stop` tool sets `request_state["stop_event_loop"]`, which the agent loop checks to trigger a graceful shutdown:
 
 ```python
 import asyncio
 from strands.experimental.bidi import BidiAgent, BidiAudioIO
 from strands.experimental.bidi.models import BidiNovaSonicModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 model = BidiNovaSonicModel()
 agent = BidiAgent(
     model=model,
-    tools=[stop_conversation],
-    system_prompt="You are a helpful assistant. When the user says 'stop conversation', use the stop_conversation tool."
+    tools=[stop],
+    system_prompt="You are a helpful assistant. When the user says 'stop conversation', use the stop tool."
 )
 
 audio_io = BidiAudioIO()
@@ -13521,7 +13880,18 @@ async def main():
 asyncio.run(main())
 ```
 
-The agent will gracefully close the connection when the user explicitly requests it.
+You can also create custom stop tools using the `request_state["stop_event_loop"]` flag:
+
+```python
+from strands import tool
+
+@tool
+def end_session(request_state: dict) -> str:
+    request_state["stop_event_loop"] = True
+    return "Goodbye!"
+```
+
+The agent will gracefully close the connection when any tool sets `request_state["stop_event_loop"] = True`.
 
 ## Debug Logs
 
@@ -13621,7 +13991,7 @@ Ready to learn more? Check out these resources:
     -   [Nova Sonic](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) - Amazon Bedrock’s bidirectional streaming model
     -   [OpenAI Realtime](/docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md) - OpenAI’s Realtime API
     -   [Gemini Live](/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md) - Google’s Gemini Live API
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md
 
@@ -13840,7 +14210,7 @@ For best practices on session ID management, session cleanup, error handling, st
 -   [Agent](/docs/user-guide/concepts/bidirectional-streaming/agent/index.md) - Learn about BidiAgent configuration and lifecycle
 -   [Hooks](/docs/user-guide/concepts/bidirectional-streaming/hooks/index.md) - Extend agent functionality with hooks
 -   [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) - Complete guide to bidirectional streaming events
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
 
 Source: https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md
 
@@ -14114,7 +14484,7 @@ Interrupts in Strands are comprised of the following components:
 -   `event.cancel_tool` - Cancel tool execution based on interrupt response
     -   You can either set `cancel_tool` to `True` or provide a custom cancellation message.
 
-For additional details on each of these components, please refer to the [API Reference](/docs/api/python/strands.types.interrupt) pages.
+For additional details on each of these components, refer to the [Python API Reference](/docs/api/python/strands.types.interrupt).
 
 ### Rules
 
@@ -15798,7 +16168,7 @@ const agent = new Agent({
 ```
 (( /tab "TypeScript" ))
 
-!!! note ""
+Default Inference Model
 
 Strands uses a default Claude 4 Sonnet inference model from the region of your credentials when no model is provided. So if you did not pass in any model id and are getting the above error, it’s very likely due to the `region` from the credentials not supporting inference profiles.
 
@@ -16005,7 +16375,7 @@ print(f"Rating: {result.rating}")
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [Anthropic](https://docs.anthropic.com/en/home)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/anthropic/index.md
@@ -17368,7 +17738,7 @@ const result = await agent.invoke([
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [Google Gemini](https://ai.google.dev/api)
 -   [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 -   [Google AI Studio](https://aistudio.google.com/)
@@ -17554,7 +17924,7 @@ print(f"Rating: {result.rating}")
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [LiteLLM](https://docs.litellm.ai/docs/)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/litellm/index.md
@@ -17667,7 +18037,7 @@ print(f"Rating: {result.rating}")
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [LlamaAPI](https://llama.developer.meta.com/docs/)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/llamaapi/index.md
@@ -17885,7 +18255,7 @@ response = agent([image_message])
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [llama.cpp](https://github.com/ggml-org/llama.cpp)
 -   [llama.cpp Server Documentation](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)
 -   [GGUF Models on Hugging Face](https://huggingface.co/models?search=gguf)
@@ -17981,7 +18351,7 @@ If you encounter the error `ModuleNotFoundError: No module named 'mistralai'`, t
 
 ## References
 
--   [API Reference](/docs/api/python/strands.models.model)
+-   [Python API Reference](/docs/api/python/strands.models.model)
 -   [Mistral AI Documentation](https://docs.mistral.ai/)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/mistral/index.md
@@ -18514,7 +18884,7 @@ if __name__ == "__main__":
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [OpenAI](https://platform.openai.com/docs/overview)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/openai/index.md
@@ -18712,7 +19082,7 @@ response = agent("What is my name?")
 
 ## References
 
--   [API](/docs/api/python/strands.models.openai_responses)
+-   [Python API](/docs/api/python/strands.models.openai_responses)
 -   [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
 -   [Amazon Bedrock Mantle](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)
 -   [OpenAI Chat Completions](/docs/user-guide/concepts/model-providers/openai/index.md) (alternative provider using the Chat Completions API)
@@ -18821,7 +19191,7 @@ Ensure your deployed model supports OpenAI-compatible chat completion APIs and v
 
 ## References
 
--   [API Reference](/docs/api/python/strands.models.model)
+-   [Python API Reference](/docs/api/python/strands.models.model)
 -   [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)
 -   [SageMaker Runtime API](https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html)
 
@@ -19308,7 +19678,7 @@ Ensure your Writer API key is valid and has the necessary permissions. You can g
 
 ## References
 
--   [API Reference](/docs/api/python/strands.models.model)
+-   [Python API Reference](/docs/api/python/strands.models.model)
 -   [Writer Documentation](https://dev.writer.com/)
 -   [Writer Models Guide](https://dev.writer.com/home/models)
 -   [Writer API Reference](https://dev.writer.com/api-reference)
@@ -21811,7 +22181,7 @@ const result = await swarm.invoke(contentBlocks)
 ## Swarm Coordination
 
 (( tab "Python" ))
-### Handoff Tool
+**Handoff Tool**
 
 When you create a Swarm in Python, each agent is automatically equipped with special tools for coordination. Agents can transfer control to another agent when they need specialized help:
 
@@ -21824,7 +22194,7 @@ handoff_to_agent(
 )
 ```
 
-### Shared Context
+**Shared Context**
 
 The Swarm maintains a shared context that all agents can access. This includes:
 
@@ -21856,7 +22226,7 @@ You have access to swarm coordination tools if you need help from other agents.
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-### Structured Output Routing
+**Structured Output Routing**
 
 Agents use structured output to decide the next step. Each agent’s response includes:
 
@@ -23660,7 +24030,7 @@ console.log('\nDone!')
 
 -   Learn about [Async Iterators](/docs/user-guide/concepts/streaming/async-iterators/index.md) for asynchronous streaming
 -   Explore [Callback Handlers](/docs/user-guide/concepts/streaming/callback-handlers/index.md) for synchronous event processing
--   See the [Agent API Reference](/docs/api/python/strands.agent.agent) for complete method documentation
+-   See the Agent API Reference for complete method documentation: [Python](/docs/api/python/strands.agent.agent) | [TypeScript](/docs/api/typescript/Agent/index.md)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/streaming/index.md
 
@@ -23702,7 +24072,7 @@ asyncio.run(process_streaming_response())
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-TypeScript uses the [`stream`](/docs/api/python/strands.agent.agent) method for streaming, which is async by default. This is ideal for frameworks like Express.js or NestJS.
+TypeScript uses the [`stream`](/docs/api/typescript/Agent/index.md) method for streaming, which is async by default. This is ideal for frameworks like Express.js or NestJS.
 
 ```typescript
 // Initialize our agent without a printer
@@ -42121,6 +42491,316 @@ Source: https://strandsagents.com/blog/introducing-strands-labs/index.md
 
 ---
 
+## Building intelligent physical AI: From edge to cloud with Strands Agents, Bedrock AgentCore, Claude 4.5, NVIDIA GR00T, and Hugging Face LeRobot
+
+Date: 2025-12-12T00:00:00.000Z
+Tags: Physical AI, Robotics, Edge Computing, Best Practices
+
+Agentic AI systems are rapidly expanding beyond the digital world and into the physical, where AI agents perceive, reason, and act in real environments. As AI systems increasingly interact with the physical world through robotics, autonomous vehicles, and smart infrastructure, a fundamental question emerges: how do we build agents that leverage massive cloud compute for complex reasoning while maintaining millisecond-level responsiveness for physical sensing and actuation?
+
+This year has been transformative for agentic AI at AWS. We [launched Strands Agents in May 2025](/blog/introducing-strands-agents/index.md), bringing a simple developer experience and [model-driven approach](/blog/strands-agents-model-driven-approach/index.md) to agent development. In July, [we released version 1.0](https://aws.amazon.com/blogs/opensource/introducing-strands-agents-1-0-production-ready-multi-agent-orchestration-made-simple/) with multi-agent orchestration capabilities and [introduced Amazon Bedrock AgentCore](https://aws.amazon.com/blogs/aws/introducing-amazon-bedrock-agentcore-securely-deploy-and-operate-ai-agents-at-any-scale/) to accelerate AI agents to production at scale. At re:Invent 2025, we expanded Strands with the [TypeScript SDK](https://github.com/strands-agents/sdk-typescript), [evaluations](https://github.com/strands-agents/evals), [bidirectional streaming for voice agents](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md), and [steering for guiding agents within boundaries](/docs/user-guide/concepts/plugins/steering/index.md). Today, we’re exploring how these capabilities extend to the edge and physical AI, where agents don’t just process information but work alongside us in the physical world.
+
+![Robot demonstration](/_astro/edge-ai-1.BDgOpmB6_1So6J0.webp)
+
+Full code for the demonstrations can be found at:
+
+-   [Strands + NVIDIA GR00T + SO-101](https://github.com/aaronsu11/Dum-E)
+-   [Strands + Boston Dynamics Spot](https://github.com/strands-agents/samples/tree/main/python/08-edge/strands-spot-agent)
+
+In these demonstrations, physical AI agents control two very different robots through a unified Strands Agents interface that connects AI agents to physical sensors and hardware. A 3D printed SO-101 [robotic arm](https://github.com/TheRobotStudio/SO-ARM100) handles manipulation with the [NVIDIA GR00T](https://github.com/NVIDIA/Isaac-GR00T) vision-language-action model (VLA) – “pick up the fruit and place it in the basket” causes it to identify the apple, grasp it, and complete the task. A [Boston Dynamics Spot](https://github.com/strands-agents/samples/tree/main/python/08-edge/strands-spot-agent) quadruped handles mobility and whole-body control – “inspect your sensors” makes Spot reason that sensors are on its underside, then autonomously sit and roll onto its side for access. Both demonstrations run on [NVIDIA Jetson](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) edge hardware, showcasing how sophisticated AI capabilities can execute directly on embedded systems.
+
+## The edge-cloud continuum
+
+Physical AI applications reveal a tension that shapes how we architect intelligent systems. Consider a robotic arm catching a ball. The moment between seeing the ball and adjusting the gripper position must happen in milliseconds. Network latency to a cloud service, even with the fastest connections, makes this impossible. The inference must happen at the edge, on the device itself, with the near-instantaneous response times that physical reality demands. Yet that same robotic system benefits immensely from cloud capabilities. Planning a multi-step assembly task, coordinating with other robots, or learning from the collective experience of thousands of similar robots requires the computational scale that only the cloud provides. Models like [Anthropic’s Claude Sonnet 4.5](https://aws.amazon.com/blogs/aws/introducing-claude-sonnet-4-5-in-amazon-bedrock-anthropics-most-intelligent-model-best-for-coding-and-complex-agents/) bring reasoning capabilities that transform how robots understand and execute complex tasks, but they’re too large to run on edge hardware. This mirrors Daniel Kahneman’s [System 1 and System 2 thinking](https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow) – the edge provides fast, instinctual responses while the cloud enables deliberate reasoning, long horizon planning, and continuous learning. The most capable physical AI systems use both, working together seamlessly.
+
+![Edge-cloud continuum diagram](/_astro/image-9-3.9Ii_1eow_Z1VVWpU.webp)
+
+The cloud enables additional capabilities that are infeasible at the edge. [AgentCore Memory](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html) can maintain spatial and temporal context spanning hours or days, remembering not just what happened but where and when. Learnings can be gathered and applied across entire fleets instead of siloing to individual devices – when one robot discovers a better approach, that knowledge becomes available to all robots through shared memory. [Distributed observability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability.html) across entire fleets provides the ability to understand what AI agents and robots are doing when deployed at scale, offering insights that no single device could generate. [Amazon SageMaker](https://aws.amazon.com/sagemaker/) enables massive parallel simulation and training of models, allowing organizations to apply learnings from real-world and simulated deployments back into improved models that benefit the entire fleet.
+
+![Cloud capabilities diagram](/_astro/image-10-4.Dh3R_FIn_OVDe0.webp)
+
+This hybrid architecture enables entirely new categories of intelligent systems. Humanoid robots use cloud-based reasoning to plan multi-step tasks while executing precise physical movements with edge-based vision-language-action models. The cloud agent might plan “prepare breakfast,” breaking it into steps and remembering what you prefer to eat, while the edge VLA model handles the millisecond-level control of grasping a strawberry without crushing it. Autonomous vehicles leverage cloud intelligence for route optimization and traffic prediction while maintaining real-time obstacle avoidance at the edge. The vehicle can’t wait for a cloud response to avoid a pedestrian, but it benefits from cloud-based analysis of traffic patterns across the entire city.
+
+## A progressive journey through code
+
+Building edge and physical AI systems doesn’t require starting with the full complexity of edge-cloud orchestration. The path forward is progressive iteration, starting simple and adding sophistication as your needs grow.
+
+### Starting on the edge
+
+First we will install the Strands Agents Python SDK with [Ollama](https://ollama.com/) on our edge device and pull the [Qwen3-VL](https://github.com/QwenLM/Qwen3-VL) model. [Install Ollama](https://ollama.com/download), then run these commands:
+
+```bash
+ollama pull qwen3-vl:2b
+pip install 'strands-agents[ollama]'
+```
+
+A simple starting point is running models locally on edge devices. With Strands’ [Ollama provider](/docs/user-guide/concepts/model-providers/ollama/index.md), you can run open-source models like Qwen3-VL directly on edge hardware. Strands also supports [llama.cpp](/docs/user-guide/concepts/model-providers/llamacpp/index.md) for high-performance inference with quantized models, and [MLX](https://github.com/cagataycali/strands-mlx) for running models on Apple Silicon:
+
+```python
+from strands import Agent
+from strands.models.ollama import OllamaModel
+
+edge_model = OllamaModel(
+    host="http://localhost:11434",
+    model_id="qwen3-vl:2b"
+)
+
+agent = Agent(
+    model=edge_model,
+    system_prompt="You are a helpful assistant running on edge hardware."
+)
+result = agent("Hello!")
+```
+
+Physical AI often requires understanding the physical world, not just processing text. Adding visual understanding through camera input is straightforward – the same agent that processes text can now process images, enabling it to see its physical environment:
+
+```python
+def get_camera_frame() -> bytes:
+    # Example function that returns the current camera frame
+    with open("camera_frame.jpg", "rb") as f:
+        return f.read()
+
+result = agent([
+    {"text": "What objects do you see?"},
+    {"image": {"source": {"bytes": get_camera_frame()}}}
+])
+```
+
+Beyond vision, agents can access other sensors to understand their state. By wrapping sensor readings as tools, the agent can dynamically call them when needed to make informed decisions. Reading battery level helps the agent decide whether to continue a task or return to charge:
+
+```python
+@tool
+def get_battery_level() -> str:
+    """Get current battery level percentage and remaining duration."""
+    # Example function that returns battery metrics
+    percentage = robot.get_battery_percentage()
+    duration = robot.get_battery_duration_minutes()
+    return f"Battery level: {percentage}%, approximately {duration} minutes remaining"
+
+agent = Agent(
+    model=edge_model,
+    tools=[get_battery_level],
+    system_prompt="You are a robot assistant. Use available tools to answer questions."
+)
+result = agent("How long until you need to recharge?")
+```
+
+### Acting in the physical world
+
+Physical AI systems follow a continuous cycle: sensing the environment, reasoning about what to do, and acting to change the world to achieve a goal. We’ve covered sensing through cameras and sensors. Now let’s explore how agents translate decisions into physical actions.
+
+Acting in the physical world means controlling hardware – motors that rotate robot joints, grippers that open and close, wheels that drive mobile platforms. A robotic arm might have six joints, each controlled by a motor that can rotate to specific angles. To pick up an object, the robot must coordinate all six joints simultaneously, moving from its current position to reach the object, adjusting the gripper angle, closing the gripper, and lifting. This coordination happens through sending target joint positions to the motors, which then move the robot’s physical structure. We can approach this in two ways: using vision-language-action models that directly output robot actions, or using traditional robot SDKs with AI providing high-level commands.
+
+**Vision-Language-Action Models** like [NVIDIA GR00T](https://developer.nvidia.com/isaac/gr00t) combine visual perception, language understanding, and action prediction in a single model. They take camera images, robot joint positions, and language instructions as input and directly output new target joint positions.
+
+Consider the instruction “pick up the fruit that is the same color as you and place it in the basket.” The VLA model’s vision-language backbone first reasons about the instruction and what it sees in the camera image – identifying which object is the apple and which is the basket. By including the robot’s current state (its joint positions), the model generates a sequence of new joint positions that will move the robot to the apple, close the gripper around it, move to the basket, and release. The model executes this as action chunks – small sequences of joint movements that the robot executes while continuously observing the scene. If someone moves the apple mid-task, the VLA model sees this in the next camera frame and generates corrected joint movements to reach the apple’s new position.
+
+Hugging Face’s [LeRobot](https://github.com/huggingface/lerobot) provides data and hardware interfaces that make working with robotics hardware accessible. You record demonstrations using teleoperation or simulation, train the model on your data, and deploy it back to the robot. By combining hardware abstractions like LeRobot with VLA models like NVIDIA GR00T, we create edge AI applications that perceive, reason, and act in the physical world:
+
+```python
+@tool
+def execute_manipulation(instruction: str) -> str:
+    """Execute a manipulation task using your robotics hardware."""
+    # Example function that runs inference on a VLA model and actuates a robot
+    while not task_complete:
+        observation = robot.get_observation() # Camera + joint positions
+        action = vla.get_action(observation, instruction) # Inference from the VLA model
+        robot.apply_action(action) # Execute joint movements
+    return f"Completed: {instruction}"
+
+robot_agent = Agent(
+    model=edge_model,
+    tools=[execute_manipulation],
+    system_prompt="You control a robotic arm. Use the manipulation tool to complete physical tasks."
+)
+
+result = robot_agent("place the apple in the basket.")
+```
+
+This creates a natural division of labor – Strands handles high-level task decomposition while GR00T handles millisecond-level sensorimotor control with real-time self-correction.
+
+![VLA model architecture diagram](/_astro/image-11-3.3OgJcttA_ZPADpN.webp)
+
+To make this easier for builders, we’ve released an [experimental robotics class](https://github.com/strands-labs/robots) with a simple interface for connecting hardware with VLA models like NVIDIA GR00T.
+
+```python
+from strands import Agent
+from strands_robots import Robot
+
+# Create robot with cameras
+robot = Robot(
+    tool_name="my_arm",
+    robot="so101_follower",
+    cameras={
+        "front": {"type": "opencv", "index_or_path": "/dev/video0", "fps": 30},
+        "wrist": {"type": "opencv", "index_or_path": "/dev/video2", "fps": 30}
+    },
+    port="/dev/ttyACM0",
+    data_config="so100_dualcam"
+)
+
+# Create agent with robot tool
+agent = Agent(tools=[robot])
+
+agent("place the apple in the basket")
+```
+
+**SDK-Based Control** works well when the robot manufacturer provides robust motion primitives and you want to leverage their tested control systems. With [Boston Dynamics Spot](https://bostondynamics.com/products/spot/), we wrap SDK commands as Strands tools:
+
+```python
+from bosdyn.client.robot_command import RobotCommandBuilder, blocking_command, blocking_stand, blocking_sit
+
+@tool
+def stand() -> str:
+    """Command the robot to stand up."""
+    blocking_stand(command_client, timeout_sec=10)
+    return "Robot is now standing"
+
+@tool
+def sit() -> str:
+    """Command the robot to sit down."""
+    blocking_sit(command_client, timeout_sec=10)
+    return "Robot is now sitting"
+
+@tool
+def battery_change_pose(direction: str = "right") -> str:
+    """Position robot for battery access by rolling onto its side."""
+    cmd = RobotCommandBuilder.battery_change_pose_command(
+        dir_hint=1 if direction == "right" else 2
+    )
+    blocking_command(command_client, cmd, timeout_sec=20)
+    return f"Robot positioned for battery access"
+
+spot_agent = Agent(
+    model=edge_model,
+    tools=[stand, sit, battery_change_pose],
+    system_prompt="You control a Boston Dynamics Spot robot."
+)
+
+result = spot_agent("I need to inspect your sensors")
+```
+
+When asked “I need to inspect your sensors”, the agent reasons that sensors are on the robot’s underside, then commands Spot to execute the sit and battery change pose. The SDK handles the complex balance and motor control needed to safely roll the robot onto its side.
+
+![Boston Dynamics Spot diagram](/_astro/image-12-3.GAwzpm1x_2iBiuI.webp)
+
+### Bridging edge and cloud
+
+Edge agents can delegate complex reasoning to the cloud when needed. VLA models provide millisecond-level control for physical actions, but when the system encounters situations requiring deeper reasoning – like planning multi-step tasks or making decisions based on historical patterns – it can consult more powerful cloud-based agents using the [agents-as-tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) pattern:
+
+```python
+from strands import Agent, tool
+from strands.models import BedrockModel
+from strands.models.ollama import OllamaModel
+
+# Cloud agent with powerful reasoning
+cloud_agent = Agent(
+    model=BedrockModel(model_id="global.anthropic.claude-sonnet-4-5-20250929-v1:0"),
+    system_prompt="Plan tasks step-by-step for edge robots."
+)
+
+# Expose cloud agent as a tool so that it can be delegated to
+# using the agents-as-tools pattern
+@tool
+def plan_task(task: str) -> str:
+    """Delegate complex planning to cloud-based reasoning."""
+    return str(cloud_agent(task))
+
+# Edge agent with local model
+edge_agent = Agent(
+    model=OllamaModel(
+        host="http://localhost:11434",
+        model_id="qwen3-vl:2b"
+    ),
+    tools=[plan_task],
+    system_prompt="Complete tasks. Consult cloud for complex planning."
+)
+
+result = edge_agent("Fetch me a drink")
+```
+
+The inverse pattern is equally powerful. A cloud-based orchestrator can coordinate multiple edge devices, each handling its own real-time control while the cloud agent manages the overall workflow:
+
+```python
+@tool
+def control_robot_arm(command: str) -> str:
+    """Control robotic arm for manipulation tasks."""
+    # Example function that invokes a remote robot arm agent
+    return str(robot_arm_agent(command))
+
+@tool
+def control_mobile_robot(command: str) -> str:
+    """Control mobile robot for navigation and transport."""
+    # Example function that invokes a remote mobile agent
+    return str(mobile_robot_agent(command))
+
+warehouse_orchestrator = Agent(
+    model=BedrockModel(model_id="global.anthropic.claude-sonnet-4-5-20250929-v1:0"),
+    tools=[control_robot_arm, control_mobile_robot],
+    system_prompt="You coordinate multiple robots in a warehouse environment."
+)
+
+result = warehouse_orchestrator(
+    "Coordinate inventory check: scan shelves, retrieve items, and sort"
+)
+```
+
+In a warehouse, this might mean coordinating robotic arms, mobile robots, and inspection drones to complete a complex inventory task. Each device maintains its own edge intelligence for immediate responses, but they work together under cloud orchestration.
+
+## Learning and improving across fleets
+
+While we’ve seen how cloud agents can orchestrate multiple edge devices, physical AI systems become even more capable when they can learn from collective experience and continuously improve through observation and feedback.
+
+![Fleet learning diagram](/_astro/image-13-4.DMDkUwn5_EO46f.webp)
+
+Consider a warehouse with dozens of mobile robots. When multiple robots encounter the same problem, patterns emerge that no single robot could detect. [AgentCore Memory](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/memory.html) enables this collective intelligence – each robot stores observations to shared memory as it operates:
+
+```python
+from bedrock_agentcore.memory import MemoryClient
+
+memory_client = MemoryClient(region_name="us-east-1")
+
+# Robot stores observation after navigation issue
+memory_client.create_event(
+    memory_id=FLEET_MEMORY_ID,
+    actor_id=robot_id,
+    session_id=f"robot-{robot_id}",
+    messages=[
+        ("Navigation failure in north corridor - low confidence in visual localization. "
+         "Location: north_corridor, light_level: high_contrast", "ASSISTANT")
+    ]
+)
+```
+
+A fleet coordinator can query this shared memory to discover that 87% of navigation failures in the north corridor occur between 2-4pm when afternoon sunlight through skylights confuses vision systems. This insight leads to immediate operational changes and informs model improvements.
+
+[AgentCore Observability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability.html) provides the foundation for continuous improvement through a complete feedback loop: inference → simulate/act → observe → evaluate → optimize. The GenAI Observability dashboard in CloudWatch captures end-to-end traces from edge devices, revealing agent execution paths, memory retrieval operations, and latency breakdowns across the entire system. This observability data becomes training signal for reinforcement learning – successful behaviors are reinforced while failures inform corrections.
+
+[Amazon SageMaker](https://aws.amazon.com/sagemaker/) enables massive parallel simulation and training to apply these learnings. Physical simulators like [NVIDIA Isaac Sim](https://developer.nvidia.com/isaac/sim) and [MuJoCo](https://mujoco.org/) provide realistic physics environments where robots can practice millions of scenarios safely before deployment. Digital simulators, including LLM-based user simulators, generate diverse interaction patterns that help agents handle edge cases. The cycle repeats: deploy to real robots, observe behaviors, simulate improvements at scale, train updated models, and deploy back to the fleet. Each iteration makes the entire fleet more capable. For a detailed walkthrough of setting up a scalable robot learning pipeline with Isaac GR00T fine-tuning on AWS, see our [embodied AI blog post series](https://aws.amazon.com/blogs/spatial/embodied-ai-blog-series-part-1/) on getting started with robot learning on AWS Batch.
+
+## Building tomorrow’s intelligent systems
+
+What makes this moment interesting is the convergence we’re seeing across several areas. Powerful multimodal reasoning models can understand and plan physical tasks, edge hardware enables VLA models to run locally with the low latency that physical systems demand, and open source robotics hardware is making physical AI development accessible to a broader community of builders. VLA models have emerged that enable robots to sense and act in dynamic environments with millisecond-level control, and the continuous learning loop – where agents improve through both simulation and real physical deployments – has become practical at scale on the cloud.
+
+One of our goals at AWS is to make AI agent development accessible. This work extends that goal into the physical world. As David Silver and Richard S. Sutton describe in [Welcome to the Era of Experience](https://storage.googleapis.com/deepmind-media/Era-of-Experience%20/The%20Era%20of%20Experience%20Paper.pdf), AI agents are increasingly learning from experience in their environment – improving through model training, tuning, long-term memories, and context optimization. As these systems develop the ability to reason deeper about the physical world, they can begin to simulate future world states before taking action, predict the consequences of their decisions, and coordinate reliably as part of larger systems.
+
+We’re looking forward to seeing what you build over the coming months in this rapidly growing space.
+
+Get started today:
+
+-   [Strands Agents](/index.md)
+-   [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
+-   [Amazon SageMaker](https://aws.amazon.com/sagemaker/)
+-   [NVIDIA Isaac GR00T](https://github.com/NVIDIA/Isaac-GR00T)
+-   [Hugging Face LeRobot](https://github.com/huggingface/lerobot)
+-   [SO-101 robot arm](https://github.com/TheRobotStudio/SO-ARM100)
+-   [Boston Dynamics Spot](https://github.com/boston-dynamics/spot-sdk/)
+-   [Experimental Strands Robot Class](https://github.com/strands-labs/robots)
+
+Source: https://strandsagents.com/blog/strands-physical-ai/index.md
+
+---
+
 ## Introducing Strands Agent SOPs – Natural Language Workflows for AI Agents
 
 Date: 2025-11-20T00:00:00.000Z
@@ -42576,6 +43256,643 @@ The model-driven approach represents a fundamental shift in how we think about A
 Ready to try it? Check out the [Strands Agents documentation](/index.md) and [examples](/docs/examples/index.md) to start building your own model-driven agents.
 
 Source: https://strandsagents.com/blog/strands-agents-model-driven-approach/index.md
+
+---
+
+## Introducing Strands Agents 1.0: Production-Ready Multi-Agent Orchestration Made Simple
+
+Date: 2025-07-15T00:00:00.000Z
+Tags: Release, Multi-Agent, A2A, Production
+
+Today we are excited to announce version 1.0 of the [Strands Agents SDK](https://github.com/strands-agents/sdk-python), marking a significant milestone in our journey to make building AI agents simple, reliable, and production-ready. Strands Agents is an open source SDK that takes a model-driven approach to building and running AI agents in just a few lines of code. Strands scales from simple to complex agent use cases, and from local development to deployment in production.
+
+Since launching as a preview in May 2025, we’ve seen over 2,000 stars on GitHub and over 150K downloads on PyPI. Strands 1.0 brings the same level of simplicity to multi-agent applications that Strands has provided for single agents, with the addition of four new primitives and support for the Agent to Agent (A2A) protocol. To take multi-agent architectures into production, 1.0 also includes a new session manager for retrieving agent state from a remote datastore, and improved async support throughout the SDK. For flexibility to build your agents with any model, support for five additional model provider APIs were contributed by partners like [Anthropic](https://www.anthropic.com/), [Meta](https://www.llama.com/), [OpenAI](https://openai.com/), [Cohere](https://cohere.com/), [Mistral](https://mistral.ai/), [Stability](https://stability.ai/), [Writer](https://writer.com/), and [Baseten](https://www.baseten.co/) (see the [pull request](https://github.com/strands-agents/sdk-python/pull/389)). Let’s get into these updates in detail. Complete code samples are available on [strandsagents.com](https://strandsagents.com/).
+
+## Simplifying multi-agent patterns
+
+Multi-agent patterns enable specialized AI agents to work together—delegating tasks, sharing knowledge, and coordinating actions—to solve complex problems that single agents cannot handle alone. Strands 1.0 introduces four intuitive primitives that make orchestrating multiple agents a simple extension of the model/tool/prompt combination that you use to create single agents.
+
+### Agents-as-Tools: Hierarchical Delegation Made Simple
+
+The [agents-as-tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) pattern transforms specialized agents into intelligent tools that other agents can call, enabling hierarchical delegation where agents acting as the orchestrator dynamically consult domain experts without giving up control of the request. This mirrors how human teams work—a project manager doesn’t need to know everything, they just need to know which specialist to consult for each task.
+
+```python
+from strands import Agent, tool
+from strands_tools import calculator, file_write, python_repl, journal
+
+@tool
+def web_search(query: str) -> str:
+    return "Dummy web search results here!"
+
+# Create specialized agents
+research_analyst_agent = Agent(
+    system_prompt="You are a research specialist who gathers and analyzes information about local startup markets",
+    tools=[web_search, calculator, file_write, python_repl]
+)
+
+travel_advisor_agent = Agent(
+    system_prompt="You are a travel expert who helps with trip planning and destination advice",
+    tools=[web_search, journal]
+)
+
+# Convert the agents into tools
+@tool
+def research_analyst(query: str) -> str:
+    response = research_analyst_agent(query)
+    return str(response)
+
+@tool
+def travel_advisor(query: str) -> str:
+    response = travel_advisor_agent(query)
+    return str(response)
+
+# Orchestrator naturally delegates to specialists
+executive_assistant = Agent(
+    tools=[research_analyst, travel_advisor]
+)
+
+result = executive_assistant(
+    "I have a business meeting in Portland next week. "
+    "Suggest a nice place to stay near the local startup scene, "
+    "and suggest a few startups to visit"
+)
+```
+
+In this abridged example, we define travel and research agents who have specialized prompts and tools for their areas of focus, which the executive assistant agent can call upon for input on the user’s request. The executive assistant agent is responsible for synthesizing input from other agents into the response back to the user. Learn more about [Agents-as-Tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) in the Strands documentation.
+
+### Handoffs: Explicit transfer of control
+
+Handoffs enable agents to explicitly pass responsibility to humans when they encounter tasks outside their expertise, preserving full conversation context during the transfer. Strands provides a built-in `handoff_to_user` tool that agents can use to seamlessly transfer control while maintaining conversation history and context—like a customer service representative asking the customer for more information about their case.
+
+```python
+from strands import Agent
+from strands_tools import handoff_to_user
+
+SYSTEM_PROMPT = """
+Answer the user's support query. Ask them questions with the handoff_to_user
+tool when you need more information
+"""
+
+# Include the handoff_to_user tool in our agent's tool list
+agent = Agent(
+    system_prompt=SYSTEM_PROMPT,
+    tools=[handoff_to_user]
+)
+
+# The agent calls the handoff_to_user tool which includes the question for the customer
+agent("I have a question about my order.")
+```
+
+Agents can also ask questions directly to humans when prompted to do so.
+
+```python
+from strands import Agent
+
+SYSTEM_PROMPT = """
+Answer the user's support query. Ask them questions when you need more information
+"""
+
+agent = Agent(
+    system_prompt=SYSTEM_PROMPT,
+)
+
+# The agent asks questions by streaming them back as text
+agent("I have a question about my order.")
+```
+
+### Swarms: Self-Organizing Collaborative Teams
+
+A [Swarm](/docs/user-guide/concepts/multi-agent/swarm/index.md) creates autonomous agent teams that dynamically coordinate through shared memory, allowing multiple specialists to collaborate on complex tasks. Think of it as a brainstorming session where experts build on each other’s ideas, with the team self-organizing to deliver the best collective result.
+
+```python
+import logging
+from strands import Agent
+from strands.multiagent import Swarm
+from strands_tools import memory, calculator, file_write
+
+# Enables Strands debug logs level, and prints to stderr
+logging.getLogger("strands.multiagent").setLevel(logging.DEBUG)
+logging.basicConfig(
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+
+researcher = Agent(
+    name="researcher",
+    system_prompt="You research topics thoroughly using your memory and built-in knowledge",
+    tools=[memory]
+)
+
+analyst = Agent(
+    name="analyst",
+    system_prompt="You analyze data and create insights",
+    tools=[calculator, memory]
+)
+
+writer = Agent(
+    name="writer",
+    system_prompt="You write comprehensive reports based on research and analysis",
+    tools=[file_write, memory]
+)
+
+# Swarm automatically coordinates agents
+market_research_team = Swarm([researcher, analyst, writer])
+
+result = market_research_team(
+    "What is the history of AI since 1950? Create a comprehensive report"
+)
+```
+
+Learn more about [Swarms](/docs/user-guide/concepts/multi-agent/swarm/index.md) in the Strands documentation.
+
+### Graphs: Deterministic Workflow Control
+
+[Graphs](/docs/user-guide/concepts/multi-agent/graph/index.md) let you define explicit agent workflows with conditional routing and decision points, helpful for processes that require specific steps, approvals, or quality gates. Like a well-designed assembly line or approval chain, graphs ensure agents work through predefined business rules in the correct order every time.
+
+```python
+from strands import Agent
+from strands.multiagent import GraphBuilder
+
+analyzer_agent = Agent(
+    name="analyzer",
+    system_prompt="Analyze customer requests and categorize them",
+    tools=[text_classifier, sentiment_analyzer]
+)
+
+normal_processor = Agent(
+    name="normal_processor",
+    system_prompt="Handle routine requests automatically",
+    tools=[knowledge_base, auto_responder]
+)
+
+critical_processor = Agent(
+    name="critical_processor",
+    system_prompt="Handle critical requests quickly",
+    tools=[knowledge_base, escalate_to_support_agent]
+)
+
+# Build deterministic workflow
+builder = GraphBuilder()
+builder.add_node(analyzer_agent, "analyze")
+builder.add_node(normal_processor, "normal_processor")
+builder.add_node(critical_processor, "critical_processor")
+
+# Define conditional routing
+def is_approved(state):
+    return True
+
+def is_critical(state):
+    return False
+
+builder.add_edge("analyze", "normal_processor", condition=is_approved)
+builder.add_edge("analyze", "critical_processor", condition=is_critical)
+builder.set_entry_point("analyze")
+customer_support_graph = builder.build()
+
+# Execute the graph with user input
+results = customer_support_graph("I need help with my order!")
+```
+
+Learn more about [Graphs](/docs/user-guide/concepts/multi-agent/graph/index.md) in the Strands documentation.
+
+These multi-agent patterns are designed to be gradually adopted and freely combined—start with single agents, add specialists as tools, evolve to swarms, and orchestrate with graphs as your needs grow. Mix and match patterns to create sophisticated systems: swarms can contain graphs, graphs can orchestrate swarms, and any pattern can use agents equipped with other agents as tools.
+
+```python
+from strands import Agent, tool
+from strands.multiagent import GraphBuilder, Swarm
+from strands_tools import memory, calculator, python_repl, file_write
+
+# Start simple with a single agent
+agent = Agent(tools=[memory])
+
+# Create specialist agents that a lead orchestrator agent can consult
+data_analyst = Agent(name="analyst", tools=[calculator, python_repl])
+
+@tool
+def data_analyst_tool(query: str) -> str:
+    return str(data_analyst(query))
+
+analyst_orchestrator = Agent(tools=[memory, data_analyst_tool]) # Agents-as-tools
+
+# Compose patterns together - a graph that uses a swarm
+researcher = Agent(name="researcher", tools=[memory])
+writer = Agent(name="writer", tools=[file_write])
+research_swarm = Swarm([researcher, analyst_orchestrator, writer])
+review_agent = Agent(system_prompt="Review the research quality and suggest improvements")
+builder = GraphBuilder()
+builder.add_node(research_swarm, "research") # Swarm as graph node
+builder.add_node(review_agent, "review")
+builder.add_edge("research", "review")
+graph = builder.build()
+
+# The patterns nest naturally - swarms in graphs, agents as tools everywhere
+result = graph("How has green energy evolved over the last few years?")
+```
+
+## Multi-Agent Systems with A2A
+
+Strands 1.0 includes support for the [Agent-to-Agent (A2A) protocol](https://a2aproject.github.io/A2A/latest/), an open standard that enables agents from different platforms to communicate seamlessly. Any Strands agent can be wrapped with A2A capabilities to become network accessible and adhere to the A2A protocol. A2A agents from external organizations can also be used directly within all Strands multi-agent patterns.
+
+```python
+from strands import Agent
+from strands.multiagent.a2a import A2AServer
+from strands_tools.a2a_client import A2AClientToolProvider
+
+# Serve your agent via A2A protocol
+local_agent = Agent(name="analyzer", tools=[web_search, data_analysis])
+a2a_agent = A2AServer(agent=local_agent, port=9000)
+a2a_agent.serve()  # AgentCard available at http://localhost:9000/.well-known/agent.json
+
+# Use remote A2A agents
+partner_agent_url = "https://partner.com"
+cloud_agent_url = "https://cloud.ai"
+
+# Connect to remote A2A enabled agents
+a2a_tool_provider = A2AClientToolProvider(
+    known_agent_urls=[partner_agent_url, cloud_agent_url]
+)
+
+# Orchestrate remote agents
+orchestrator = Agent(tools=a2a_tool_provider.tools)
+```
+
+Because A2A provides features like the agent card, a standardized description of agent capabilities, A2A-enabled multi-agent systems can easily discover and connect to agents created by other teams or other organizations. Strands auto-generates the agent card based on the tools you’ve given the agent. To see complete working examples and get started with the A2A integration, check out our [samples repository](https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a-native) and the [Strands A2A documentation](/docs/user-guide/concepts/multi-agent/agent-to-agent/index.md).
+
+## Production-Ready
+
+While Strands has been used in production by Amazon teams like Amazon Q Developer and AWS Glue long before its public release, we’ve been working backwards with hundreds of customers worldwide to extend Strands to support your production needs. These updates include a session management abstraction to support persisting data to and recovering from external data stores, structured output, improved async support, and much more ([releases changelog](https://github.com/strands-agents/sdk-python/releases)).
+
+**Durable Session Management**: We’ve added `SessionManager`, a session management abstraction that enables automatic persistence and restoration of agent conversations and state. This allows agents to save their complete history to a storage backend like Amazon Simple Storage Service (Amazon S3) and seamlessly resume conversations even after compute restarts. Here’s an example using basic file-based persistence.
+
+```python
+from strands import Agent
+from strands.session.file_session_manager import FileSessionManager
+
+# Create a session manager with file-based storage
+session_manager = FileSessionManager(
+    session_id="customer_support",
+    base_dir="./agent_sessions"
+)
+
+# Agent automatically persists all conversations
+agent = Agent(
+    id="support_bot_1",
+    session_manager=session_manager,
+    tools=[knowledge_base, ticket_system]
+)
+
+# Messages are automatically saved as the conversation progresses
+agent("Help me reset my password")
+agent("I can't access my email")
+
+# Later, even after a restart, restore the full conversation
+restored_session_manager = FileSessionManager(
+    session_id="customer_support",
+    base_dir="./agent_sessions"
+)
+
+restored_agent = Agent(
+    id="support_bot_1",
+    session_manager=restored_session_manager,
+    tools=[knowledge_base, ticket_system]
+)
+
+# Agent remembers entire conversation history and can continue seamlessly
+```
+
+You can extend this abstraction with your own storage backend implementation through a Data Access Object (DAO) pattern, and Strands includes local filesystem and Amazon S3 backends by default. Each agent gets a unique ID for tracking, and the system handles concurrent agents within the same session for multi-agent scenarios, ensuring your agents maintain context across deployments, scaling events, and system restarts. Learn more about [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) in the documentation.
+
+**Native Async Support and Improved Performance**: Production workloads demand reliability and responsive performance. For 1.0, we’ve improved the Strands event loop architecture to support async operations throughout the entire stack. Tools and model providers can now run asynchronously without blocking, enabling true concurrent execution. The new `stream_async` method streams all agent events—text, tool usage, reasoning steps—in real-time, with built-in cancellation support for when users navigate away.
+
+```python
+import asyncio
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+from strands import Agent
+from strands_tools import calculator
+
+app = FastAPI()
+
+@app.post("/chat")
+async def chat_endpoint(message: str):
+    async def stream_response():
+        agent = Agent(tools=[web_search, calculator])
+        # Stream agent responses in real-time
+        async for event in agent.stream_async(message):
+            if "data" in event:
+                yield f"data: {event['data']}\n\n"
+            elif "current_tool_use" in event:
+                yield f"event: tool\ndata: Using {event['current_tool_use']['name']}\n\n"
+    return StreamingResponse(stream_response(), media_type="text/event-stream")
+
+# Concurrent agent evaluation
+async def evaluate_models_concurrently(prompt: str):
+    async def stream(agent: Agent):
+        print(f"STARTING: {agent.name}")
+        async for event in agent.stream_async(prompt):
+            # handle events
+            pass
+        print(f"ENDING: {agent.name}")
+        return event["result"]  # last event is the agent result
+
+    agents = [
+        Agent(name="claude", model="us.anthropic.claude-3-7-sonnet-20250219-v1:0"),
+        Agent(name="deepseek", model="us.deepseek.r1-v1:0"),
+        Agent(name="nova", model="us.amazon.nova-pro-v1:0")
+    ]
+
+    # Execute all agents concurrently
+    responses = await asyncio.gather(*[stream(agent) for agent in agents])
+
+    return responses
+```
+
+Learn more about [Native Async Support](/docs/user-guide/concepts/streaming/async-iterators/index.md) in the documentation.
+
+**Expanded Model Provider Support**: Customers told us they needed flexibility to use different models for different tasks. To deliver this, Strands Agents has received strong support from the model provider community. Model providers like [Anthropic](https://www.anthropic.com/), [Meta](https://www.llama.com/), [OpenAI](https://openai.com/), [Cohere](https://cohere.com/), [Mistral](https://mistral.ai/), [Stability](https://stability.ai/), and [Writer](https://writer.com/) have made contributions which enable their own model API to be used by a Strands Agent with code. Accessing Strands Agents through a provider’s API infrastructure allows developers to focus on building AI-powered solutions, without managing infrastructure. These additions complement preview launch support for any model on Amazon Bedrock, OpenAI, and any OpenAI-compatible endpoint through LiteLLM. Strands lets you use different models for each agent, or switch models and model providers without modifying your tools or logic.
+
+```python
+from strands import Agent
+from strands.models import BedrockModel
+from strands.models.openai import OpenAIModel
+from strands.models.anthropic import AnthropicModel
+
+# Configure different model providers
+bedrock_model = BedrockModel(
+    model_id="us.amazon.nova-pro-v1:0",
+    temperature=0.3,
+    top_p=0.8,
+    region_name="us-west-2"
+)
+
+openai_model = OpenAIModel(
+    client_args={
+        "api_key": "your-api-key",
+    },
+    model_id="gpt-4o",
+    params={
+        "max_tokens": 1000,
+        "temperature": 0.7,
+    }
+)
+
+anthropic_model = AnthropicModel(
+    client_args={
+        "api_key": "your-api-key",
+    },
+    max_tokens=1028,
+    model_id="claude-3-7-sonnet-20250219",
+    params={
+        "temperature": 0.5,
+    }
+)
+
+# Swap models or use different models for different agents in the same system
+researcher = Agent(
+    name="researcher",
+    model=anthropic_model,
+    tools=[web_search]
+)
+
+writer = Agent(
+    name="writer",
+    model=openai_model,
+    tools=[document_formatter]
+)
+
+analyzer = Agent(
+    name="analyzer",
+    model=bedrock_model,
+    tools=[data_processor]
+)
+```
+
+## Get started
+
+The Strands community has been a critical voice in shaping all of these updates, through usage, feedback and direct code contributions. Of the over 150 PRs merged into Strands between 0.1.0 and 1.0, 22% were contributed by community members who fixed bugs, added model providers, wrote docs, added features, and refactored classes to improve performance. We’re deeply grateful to [each of you](https://github.com/strands-agents/sdk-python/graphs/contributors) for helping make Strands the simplest way to take an agent from prototype to production.
+
+The future of AI is multi-agent, and with Strands 1.0, that future is ready for production. Start building today at [strandsagents.com](https://strandsagents.com/).
+
+Source: https://strandsagents.com/blog/strands-agents-1-0/index.md
+
+---
+
+## Using Strands Agents with Claude 4 Interleaved Thinking
+
+Date: 2025-06-13T00:00:00.000Z
+Tags: Amazon Bedrock, Model-Driven, Technical How-to
+
+When we [introduced](https://aws.amazon.com/blogs/opensource/introducing-strands-agents-an-open-source-ai-agents-sdk/) the Strands Agents SDK, our goal was to make agentic development simple and flexible by embracing a model-driven approach. Today, we’re excited to highlight how you can use Claude 4’s interleaved thinking beta feature with Strands to further simplify how you write AI agents to solve complex tasks with tools. With a model-driven approach, developers no longer need to define a rigid workflow to call tools and parse model responses at each step to complete a task. With [Strands Agents](https://github.com/strands-agents/sdk-python), you equip a model with tools and a prompt, letting it plan, chain thoughts, call tools, and reflect. Strands manages an event loop around model calls until it considers the task completed, returning a response to the client. Let’s consider how it works with this simple example (assuming you have completed the [quickstart](/docs/user-guide/quickstart/index.md)):
+
+```python
+from strands import Agent
+from strands_tools import http_request, python_repl
+
+agent = Agent(
+    model="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    tools=[http_request, python_repl]
+)
+
+prompt="""
+Which of the following cities is closest to the ISS?
+Portland, Vancouver, Seattle, or New York?
+
+Include the current altitude of the ISS, and the distance and vector from the closest city to the ISS.
+"""
+
+agent(prompt)
+```
+
+Strands has everything it needs to provide an answer, equipped with Claude 4 Sonnet, its prompt, and tools to generate Python code and make HTTP requests. Here’s how the event loop works.
+
+First, Strands structures your prompt and any previous conversation history into a format the language model (like Claude) can understand. Then, Strands automatically loads available tools—these can be MCP Server tools or custom Python functions decorated with @tool. Your Python docstrings become tool descriptions, and type hints define the parameter schemas. In this example, we use two built-in tools from the [strands-agents-tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) package. The SDK manages errors (like rate limiting or context overflows), performs retries when needed, and emits detailed traces and metrics for observability.
+
+With this setup complete, Strands manages an event loop that invokes the model, handles tool calling, and manages the conversation until the model provides a final answer.
+
+1.  **Model invocation and reasoning**: The event loop calls the language model with the current conversation state, prompt, and tools. The model streams its responses, including step-by-step reasoning that you can observe as it “thinks out loud.”
+2.  **Tool use detection and execution**: If the model decides it needs to call a tool (to fetch data, perform a calculation, etc.), the event loop detects this request, validates it, and executes the corresponding Python function or MCP Server tool with the parameters provided by the model.
+3.  **Context update**: The result of the tool execution is appended to the ongoing conversation, allowing the model to incorporate the new information into its next iteration.
+
+You will see this loop in action when running the ISS example with Python. The model makes a plan to use its tools, including API calls for real-time data about the ISS and using its Python REPL (Read evaluate print loop) to calculate distances and vectors. The agent will respond with an answer to the question, including a statement like “The ISS is currently positioned over the western Pacific Ocean, making the western North American cities (Vancouver, Seattle, Portland) much closer than New York. Vancouver’s slightly more northern latitude gives it the advantage over Seattle and Portland.”
+
+The model makes a plan to use its tools, involving API calls for real-time data about the ISS and using its Python REPL to calculate distances and vectors. It then generates an answer and shows its work. The following is example output from this agent running locally.
+
+```text
+To answer this question, I need to:
+1. Get the current position of the ISS (International Space Station)
+2. Get the coordinates of the four cities: Portland, Vancouver, Seattle, and New York
+3. Calculate the distance from each city to the ISS
+4. Determine which is closest and provide the requested information
+First, I need to find an API that provides the current ISS position. There are several free APIs available for this, such as:
+- http://api.open-notify.org/iss-now.json (provides current ISS position)
+- Others that might provide more detailed information
+Let me start by getting the current ISS position.I'll help you find which city is closest to the ISS by getting the current position of the International Space Station and calculating distances. Let me start by fetching the current ISS location.
+Tool #1: http_request
+Great! I got the current ISS position:
+- Latitude: -24.4214°
+- Longitude: 14.4347°
+- Timestamp: 1749832513
+Now I need to get the altitude of the ISS. The basic API doesn't provide altitude, but I know the ISS orbits at approximately 400-420 km altitude. Let me try to find a more detailed API or use a known average.
+Actually, let me try another API that might give more details about the ISS:Now let me get more detailed information about the ISS including its altitude:
+Tool #2: http_request
+Perfect! Now I have more detailed ISS information:
+- Name: ISS
+- Latitude: -24.844251408166°
+- Longitude: 14.692696204258°
+- Altitude: 422.41885597014 km
+- Velocity: 27570.247286017 km/h
+- Timestamp: 1749832520
+Now I need to calculate the distances from each city to the ISS. For this, I'll need the coordinates of each city and then calculate 3D distances considering the ISS altitude.
+The cities I need coordinates for:
+1. Portland (I'll assume Portland, Oregon)
+2. Vancouver (I'll assume Vancouver, BC, Canada)
+3. Seattle, Washington
+4. New York, New York
+Let me use Python to calculate these distances. Perfect! Now I have the current ISS data. Let me calculate the distances from each city to the ISS using Python:
+Tool #3: python_repl
+Current ISS Position:
+Latitude: -24.844251408166°
+Longitude: 14.692696204258°
+Altitude: 422.42 km
+Portland:
+  Coordinates: 45.5152°, -122.6784°
+  3D Distance to ISS: 15588.43 km
+  Surface Distance: 15582.71 km
+Vancouver:
+  Coordinates: 49.2827°, -123.1207°
+  3D Distance to ISS: 15484.80 km
+  Surface Distance: 15479.03 km
+Seattle:
+  Coordinates: 47.6062°, -122.3321°
+  3D Distance to ISS: 15493.28 km
+  Surface Distance: 15487.52 km
+New York:
+  Coordinates: 40.7128°, -74.006°
+  3D Distance to ISS: 11680.55 km
+  Surface Distance: 11672.91 km
+CLOSEST CITY: New York
+Distance: 11680.55 km
+Great! Now I have all the distances calculated. New York is the closest city to the ISS. Now I need to calculate the vector from New York to the ISS. A vector would include both the direction and magnitude. I should calculate:
+1. The bearing (direction) from New York to the ISS
+2. The elevation angle
+3. The distance (which I already have)
+Let me calculate these additional details.Now let me calculate the vector (direction and elevation) from New York to the ISS:
+Tool #4: python_repl
+==================================================
+FINAL RESULTS
+==================================================
+International Space Station Current Status:
+• Altitude: 422.42 km above Earth
+• Position: -24.8443°, 14.6927°
+• Location: Over the South Atlantic Ocean
+Distance Analysis:
+• Portland, OR: 15588.43 km
+• Vancouver, BC: 15484.80 km
+• Seattle, WA: 15493.28 km
+• New York, NY: 11680.55 km
+CLOSEST CITY: NEW YORK
+• Distance: 11680.55 km
+• Bearing: 110.1° (ESE)
+• Elevation angle: 2.1° above horizon
+Vector from New York to ISS:
+• Direction: 110.1° bearing (ESE)
+• Elevation: 2.1° above horizontal
+• Distance: 11680.55 km
+Perfect! I now have all the information requested. Let me summarize the key findings:
+1. **Current ISS altitude**: 422.42 km above Earth
+2. **Closest city**: New York is closest to the ISS
+3. **Distance and vector**:
+   - Distance: 11,680.55 km
+   - Direction: 110.1° bearing (East-Southeast)
+   - Elevation: 2.1° above horizon
+The ISS is currently positioned over the South Atlantic Ocean at coordinates -24.8443°, 14.6927°. Among the four cities, New York is significantly closer than the other three cities (which are all on the US/Canadian west coast and much farther from the ISS's current position).## Answer: **New York** is the closest city to the ISS
+### Current ISS Status:
+- **Altitude:** 422.42 km above Earth
+- **Position:** 24.84°S, 14.69°E (over the South Atlantic Ocean)
+### Distance Comparison:
+- **New York, NY:** 11,680.55 km ✅ **CLOSEST**
+- **Vancouver, BC:** 15,484.80 km
+- **Seattle, WA:** 15,493.28 km
+- **Portland, OR:** 15,588.43 km
+### Vector from New York to ISS:
+- **Distance:** 11,680.55 km
+- **Direction:** 110.1° bearing (East-Southeast)
+- **Elevation:** 2.1° above the horizon
+The ISS is currently positioned over the South Atlantic Ocean, making New York significantly closer than the three Pacific Northwest cities. New York is about 4,800 km closer to the ISS than the nearest west coast city (Vancouver).
+```
+
+## Supercharging the Strands event loop with Claude 4’s interleaved thinking
+
+Claude 4 introduces a beta feature called “interleaved thinking” which fits perfectly with Strands’ model-driven approach. This enables Claude to reflect after a tool call and adjust its plan dynamically without needing to complete the current event loop iteration. Interleaved thinking expands on the model’s ability to self-reflect, correct errors, and orchestrate a workflow of reasoning and tool use.
+
+If you’re using Amazon Bedrock as your Strands model provider, you can turn on interleaved thinking by specifying the additional request fields parameter to Bedrock:
+
+```python
+from strands import Agent
+from strands_tools import http_request, python_repl
+from strands.models import BedrockModel
+
+model = BedrockModel(
+    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    additional_request_fields={
+        "anthropic_beta": ["interleaved-thinking-2025-05-14"],
+        "thinking": {"type": "enabled", "budget_tokens": 8000},
+    },
+)
+
+agent = Agent(
+    model=model,
+    tools=[http_request, python_repl]
+)
+```
+
+If you enable [tracing with Strands](/docs/user-guide/observability-evaluation/traces/index.md), you’ll see additional blocks of “reasoningContent” in your trace, like in the following image, including reasoning when Claude 4 decides to interleave thinking after tool calls.
+
+![Reasoning content example showing model invocation with interleaved thinking](/_astro/model-invoke-reasoning.DLL5TRBq_ZnNPQR.webp)
+
+For example, in this response there is an erroneous calculation from a tool call, which Claude could identify and fix immediately, before continuing to the next iteration of the event loop.
+
+```text
+City Rankings (closest to farthest):
+1       Vancouver: 12027.19 km
+2       Seattle: 12144.49 km
+3       Portland: 12195.86 km
+4       New York: 15432.29 km
+The calculation for longitude difference looks wrong - it's showing 243.6443° which is more than 180°. This happens because we're dealing with the international date line. Let me correct this calculation to show the actual shortest path. Let me correct the longitude calculation to show the actual shortest path:
+Tool #6: python_repl
+CORRECTED VECTOR CALCULATION:
+ニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニニ
+ISS Current Altitude: 418.15 km above Earth's surface
+Closest City: Vancouver, BC
+Distance to ISS: 12027.19 km
+Vector from Vancouver to ISS:
+- **Distance:** 12027.19 km
+- **Direction:** 110.1° bearing (East-Southeast)
+- **Elevation:** 2.1° above the horizon
+```
+
+Compared to the traditional ReAct method, the interleaved thinking approach is faster and more fluid. You can think of ReAct like a detective taking notes and making deductions step by step, whereas interleaved thinking is more like a domain expert mentally juggling facts while explaining a concept. In other words, thought and action happen in one thinking block, not another complete loop.
+
+Here’s another example where Claude was able to reduce the number of tool calls by noticing it could calculate the answer from the information retrieved in its first API call, which otherwise would have only been determined in a second iteration of the event loop.
+
+```text
+Let me start by getting the ISS position. I'll help you find which city is closest to the ISS by getting the current ISS position and calculating distances. Let me start by fetching the current ISS location.
+Tool #1: http_request
+Great! I got the ISS position. Now I need to get the altitude of the ISS. The Open Notify API doesn't provide altitude in the basic position endpoint, but I know the ISS typically orbits at around 400-420 km altitude. Let me check if there's another endpoint that provides more detailed information.
+Actually, let me use Python to calculate the distances between the ISS and each city. I'll need to: Define the coordinates of each city, Calculate the distance from each city to the ISS position, Account for the ISS altitude in the calculation
+The ISS position shows:
+⁃       Latitude: 44.7381°
+⁃       Longitude: 169.1833°
+This puts the ISS somewhere over the Pacific Ocean, likely between Russia and Alaska.
+```
+
+These examples only scratch the surface of what you can build with Strands and Claude 4 using interleaved thinking. We’ve published additional [agent samples](https://github.com/strands-agents/samples/tree/main) tackling more complex problems and equipped with numerous tools, like [this one](https://github.com/strands-agents/samples/blob/main/python/01-learn/10-agents-as-tools/agents-as-tools-interleaved.ipynb) demonstrating interleaved thinking. Using these examples, you’ll see more dynamic reasoning from Claude, like learning from a failed tool call and retrying with refined parameters, or coming up with new strategies on the fly instead of looping the same strategy across multiple tool calls.
+
+We built Strands Agents to simplify agent development by embracing models like Claude 4 that do a great job of breaking down problems into tool workflows that achieve results. We can’t wait to see what you build with Strands. Join the discussion at [https://github.com/strands-agents/sdk-python](https://github.com/strands-agents/sdk-python).
+
+*Jawhny Cooke, Vadim Omeltchenko, and Mark Roy contributed to this post.*
+
+Source: https://strandsagents.com/blog/interleaved-thinking-claude-4/index.md
 
 ---
 

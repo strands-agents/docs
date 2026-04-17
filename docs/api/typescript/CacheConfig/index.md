@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:50](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L50)
+Defined in: [src/models/model.ts:51](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L51)
 
 Configuration for prompt caching.
 
@@ -10,7 +10,7 @@ Configuration for prompt caching.
 strategy: "auto" | "anthropic";
 ```
 
-Defined in: [src/models/model.ts:57](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L57)
+Defined in: [src/models/model.ts:58](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L58)
 
 Caching strategy to use.
 

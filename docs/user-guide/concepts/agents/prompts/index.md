@@ -90,7 +90,7 @@ const response = await agent.invoke([
 ```
 (( /tab "TypeScript" ))
 
-For a complete list of supported content types, please refer to the [API Reference](/docs/api/python/strands.types.content#ContentBlock).
+For a complete list of supported content types, refer to the API Reference: [Python](/docs/api/python/strands.types.content#ContentBlock) | [TypeScript](/docs/api/typescript/ContentBlock/index.md).
 
 ### Direct Tool Calls
 

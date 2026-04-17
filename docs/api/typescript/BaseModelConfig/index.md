@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:67](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L67)
+Defined in: [src/models/model.ts:68](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L68)
 
 Base configuration interface for all model providers.
 
@@ -16,7 +16,7 @@ This interface defines the common configuration properties that all model provid
 optional modelId?: string;
 ```
 
-Defined in: [src/models/model.ts:72](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L72)
+Defined in: [src/models/model.ts:73](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L73)
 
 The model identifier. This typically specifies which model to use from the provider’s catalog.
 
@@ -28,7 +28,7 @@ The model identifier. This typically specifies which model to use from the provi
 optional maxTokens?: number;
 ```
 
-Defined in: [src/models/model.ts:79](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L79)
+Defined in: [src/models/model.ts:80](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L80)
 
 Maximum number of tokens to generate in the response.
 
@@ -44,7 +44,7 @@ Provider-specific documentation for exact behavior
 optional temperature?: number;
 ```
 
-Defined in: [src/models/model.ts:86](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L86)
+Defined in: [src/models/model.ts:87](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L87)
 
 Controls randomness in generation.
 
@@ -60,7 +60,7 @@ Provider-specific documentation for valid range
 optional topP?: number;
 ```
 
-Defined in: [src/models/model.ts:93](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/models/model.ts#L93)
+Defined in: [src/models/model.ts:94](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/model.ts#L94)
 
 Controls diversity via nucleus sampling.
 

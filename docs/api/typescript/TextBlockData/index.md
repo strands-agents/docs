@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:137](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L137)
+Defined in: [src/types/messages.ts:168](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L168)
 
 Data for a text block.
 
@@ -10,6 +10,6 @@ Data for a text block.
 text: string;
 ```
 
-Defined in: [src/types/messages.ts:141](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L141)
+Defined in: [src/types/messages.ts:172](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L172)
 
 Plain text content.

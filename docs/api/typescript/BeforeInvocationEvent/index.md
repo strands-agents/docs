@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:107](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L107)
+Defined in: [src/hooks/events.ts:107](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L107)
 
 Event triggered at the beginning of a new agent request. Fired before any model inference or tool execution occurs.
 
@@ -14,7 +14,7 @@ Event triggered at the beginning of a new agent request. Fired before any model 
 new BeforeInvocationEvent(data): BeforeInvocationEvent;
 ```
 
-Defined in: [src/hooks/events.ts:111](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L111)
+Defined in: [src/hooks/events.ts:111](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L111)
 
 #### Parameters
 
@@ -39,7 +39,7 @@ Defined in: [src/hooks/events.ts:111](https://github.com/strands-agents/sdk-type
 readonly type: "beforeInvocationEvent";
 ```
 
-Defined in: [src/hooks/events.ts:108](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L108)
+Defined in: [src/hooks/events.ts:108](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L108)
 
 ---
 
@@ -49,7 +49,7 @@ Defined in: [src/hooks/events.ts:108](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:109](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L109)
+Defined in: [src/hooks/events.ts:109](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L109)
 
 ## Methods
 
@@ -59,7 +59,7 @@ Defined in: [src/hooks/events.ts:109](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<BeforeInvocationEvent, "type">;
 ```
 
-Defined in: [src/hooks/events.ts:120](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L120)
+Defined in: [src/hooks/events.ts:120](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L120)
 
 Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
 

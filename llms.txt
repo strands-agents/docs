@@ -149,6 +149,7 @@
 - Plugins
   - [agent-control](https://strandsagents.com/docs/community/plugins/agent-control/index.md)
   - [datadog-ai-guard](https://strandsagents.com/docs/community/plugins/datadog-ai-guard/index.md)
+  - [s3-vectors-memory](https://strandsagents.com/docs/community/plugins/s3-vectors-memory/index.md)
 - Model Providers
   - [cohere](https://strandsagents.com/docs/community/model-providers/cohere/index.md)
   - [clova-studio](https://strandsagents.com/docs/community/model-providers/clova-studio/index.md)
@@ -171,6 +172,7 @@
   - [strands-teams](https://strandsagents.com/docs/community/tools/strands-teams/index.md)
   - [strands-telegram](https://strandsagents.com/docs/community/tools/strands-telegram/index.md)
   - [strands-telegram-listener](https://strandsagents.com/docs/community/tools/strands-telegram-listener/index.md)
+  - [strands-sql](https://strandsagents.com/docs/community/tools/strands-sql/index.md)
 
 ## Api Python
 
@@ -458,6 +460,9 @@
 - [How Steering Hooks Achieved 100% Agent Accuracy Where Prompts and Workflows Failed](https://strandsagents.com/blog/steering-accuracy-beats-prompts-workflows/index.md)
 - [Runtime Guardrails for Strands Agents with Agent Control](https://strandsagents.com/blog/strands-agents-with-agent-control/index.md)
 - [Introducing Strands Labs: Get hands-on today with state-of-the-art, experimental approaches to agentic development](https://strandsagents.com/blog/introducing-strands-labs/index.md)
+- [Building intelligent physical AI: From edge to cloud with Strands Agents, Bedrock AgentCore, Claude 4.5, NVIDIA GR00T, and Hugging Face LeRobot](https://strandsagents.com/blog/strands-physical-ai/index.md)
 - [Introducing Strands Agent SOPs – Natural Language Workflows for AI Agents](https://strandsagents.com/blog/introducing-strands-agent-sops/index.md)
 - [Strands Agents and the Model-Driven Approach](https://strandsagents.com/blog/strands-agents-model-driven-approach/index.md)
+- [Introducing Strands Agents 1.0: Production-Ready Multi-Agent Orchestration Made Simple](https://strandsagents.com/blog/strands-agents-1-0/index.md)
+- [Using Strands Agents with Claude 4 Interleaved Thinking](https://strandsagents.com/blog/interleaved-thinking-claude-4/index.md)
 - [Introducing Strands Agents, an Open Source AI Agents SDK](https://strandsagents.com/blog/introducing-strands-agents/index.md)

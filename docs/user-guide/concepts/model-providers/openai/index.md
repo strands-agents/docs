@@ -228,5 +228,5 @@ if __name__ == "__main__":
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [OpenAI](https://platform.openai.com/docs/overview)

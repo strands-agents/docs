@@ -398,19 +398,19 @@ See [Controlling Conversation Lifecycle](#controlling-conversation-lifecycle) fo
 
 ## Graceful Shutdown
 
-Use the experimental `stop_conversation` tool to allow users to end conversations naturally:
+Use the `stop` tool from `strands_tools` to allow users to end conversations naturally. The `stop` tool sets `request_state["stop_event_loop"]`, which the agent loop checks to trigger a graceful shutdown:
 
 ```python
 import asyncio
 from strands.experimental.bidi import BidiAgent, BidiAudioIO
 from strands.experimental.bidi.models import BidiNovaSonicModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 model = BidiNovaSonicModel()
 agent = BidiAgent(
     model=model,
-    tools=[stop_conversation],
-    system_prompt="You are a helpful assistant. When the user says 'stop conversation', use the stop_conversation tool."
+    tools=[stop],
+    system_prompt="You are a helpful assistant. When the user says 'stop conversation', use the stop tool."
 )
 
 audio_io = BidiAudioIO()
@@ -425,7 +425,18 @@ async def main():
 asyncio.run(main())
 ```
 
-The agent will gracefully close the connection when the user explicitly requests it.
+You can also create custom stop tools using the `request_state["stop_event_loop"]` flag:
+
+```python
+from strands import tool
+
+@tool
+def end_session(request_state: dict) -> str:
+    request_state["stop_event_loop"] = True
+    return "Goodbye!"
+```
+
+The agent will gracefully close the connection when any tool sets `request_state["stop_event_loop"] = True`.
 
 ## Debug Logs
 
@@ -525,4 +536,4 @@ Ready to learn more? Check out these resources:
     -   [Nova Sonic](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) - Amazon Bedrock’s bidirectional streaming model
     -   [OpenAI Realtime](/docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md) - OpenAI’s Realtime API
     -   [Gemini Live](/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md) - Google’s Gemini Live API
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation

@@ -10,7 +10,7 @@ A session represents all of stateful information that is needed by agents and mu
 -   Agent state (key-value storage)
 -   Other stateful information (like [Conversation Manager](/docs/user-guide/concepts/agents/state/index.md#conversation-manager))
 
-**Multi-Agent Sessions** *(Python only)*:
+**Multi-Agent Sessions**:
 
 -   Orchestrator state and configuration
 -   Individual agent states and result within the orchestrator
@@ -20,10 +20,6 @@ A session represents all of stateful information that is needed by agents and mu
 Strands provides built-in session persistence capabilities that automatically capture and restore this information, allowing agents to seamlessly continue conversations where they left off.
 
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
-
-Caution
-
-You cannot use a single agent with session manager in a multi-agent system. This will throw an exception. Each agent in a multi-agent system must be created without a session manager, and only the orchestrator should have the session manager. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 
 ## Basic Usage
 
@@ -48,6 +44,8 @@ agent("Hello!")  # This conversation is persisted
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+`SessionManager` implements both [Plugin](/docs/user-guide/concepts/plugins/index.md) (for agents) and `MultiAgentPlugin` (for orchestrators). The `sessionManager` constructor field is a convenience shorthand — you can also pass it directly in the `plugins` array:
+
 ```typescript
 const session = new SessionManager({
   sessionId: 'test-session',
@@ -60,19 +58,31 @@ const agent = new Agent({ sessionManager: session })
 await agent.invoke('Hello!') // This conversation is persisted
 ```
 
-Note
+```typescript
+const session = new SessionManager({
+  sessionId: 'test-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+})
 
-`SessionManager` is a [Plugin](/docs/user-guide/concepts/plugins/index.md). The `sessionManager` field on `AgentConfig` is a convenience shorthand for passing it in the `plugins` array.
+// Equivalent to passing via sessionManager field
+const agent = new Agent({ plugins: [session] })
+await agent.invoke('Hello!')
+```
 (( /tab "TypeScript" ))
 
 The conversation, and associated state, is persisted to the underlying storage backend.
 
-### Multi-Agent Sessions *(Python only)*
+### Multi-Agent Sessions
 
-Multi-agent systems (Graph/Swarm) can also use session management to persist their state:
+Multi-agent systems (Graph/Swarm) can also use session management to persist their state.
+
+(( tab "Python" ))
+Caution
+
+Agents inside a multi-agent system must not have their own session manager — only the orchestrator should have one. Python will raise a `ValueError` if an agent with a session manager is added to a Graph or Swarm.
 
 ```python
-from strands.multiagent import Graph
+from strands.multiagent import GraphBuilder
 from strands.session.file_session_manager import FileSessionManager
 
 # Create agents
@@ -91,6 +101,69 @@ graph = Graph(
 # Use the graph - all orchestrator state is persisted
 result = graph("Research and write about AI")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Caution
+
+Agents inside a multi-agent system must not have their own session manager — only the orchestrator should have one. The orchestrator snapshots and restores each agent node’s state on every execution, so an agent-level session manager would conflict with the orchestrator’s persistence.
+
+```typescript
+const session = new SessionManager({
+  sessionId: 'graph-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+})
+
+const researcher = new Agent({
+  id: 'researcher',
+  systemPrompt: 'You are a research specialist.',
+})
+const writer = new Agent({
+  id: 'writer',
+  systemPrompt: 'You are a writing specialist.',
+})
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+  sessionManager: session,
+})
+
+// Orchestrator state is automatically persisted after each node completes
+const result = await graph.invoke('Research and write about AI')
+```
+
+Swarm works the same way:
+
+```typescript
+const session = new SessionManager({
+  sessionId: 'swarm-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+})
+
+const researcher = new Agent({
+  id: 'researcher',
+  description: 'Researches a topic and gathers key facts.',
+  systemPrompt: 'Research the answer, then hand off to the writer.',
+})
+
+const writer = new Agent({
+  id: 'writer',
+  description: 'Writes a polished final answer.',
+  systemPrompt: 'Write the final answer. Do not hand off.',
+})
+
+const swarm = new Swarm({
+  nodes: [researcher, writer],
+  start: 'researcher',
+  sessionManager: session,
+})
+
+const result = await swarm.invoke('Explain quantum computing')
+```
+(( /tab "TypeScript" ))
+
+Multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 
 ## Built-in Session Managers
 
@@ -181,13 +254,17 @@ When using [`FileSessionManager`](/docs/api/python/strands.session.file_session_
 <baseDir>/
 └── <sessionId>/
     └── scopes/
-        └── agent/
-            └── <agentId>/
+        ├── agent/
+        │   └── <agentId>/
+        │       └── snapshots/
+        │           ├── snapshot_latest.json        # Latest mutable snapshot
+        │           └── immutable_history/
+        │               ├── snapshot_<uuid7>.json   # Immutable checkpoint
+        │               └── snapshot_<uuid7>.json
+        └── multiAgent/
+            └── <orchestratorId>/
                 └── snapshots/
-                    ├── snapshot_latest.json        # Latest mutable snapshot
-                    └── immutable_history/
-                        ├── snapshot_<uuid7>.json   # Immutable checkpoint
-                        └── snapshot_<uuid7>.json
+                    └── snapshot_latest.json   # Multi-agent only saves latest (no immutable history)
 ```
 (( /tab "TypeScript" ))
 
@@ -277,13 +354,16 @@ await agent.invoke('Tell me about AWS S3')
 ```plaintext
 [<prefix>/]<sessionId>/
 └── scopes/
-    └── agent/
-        └── <agentId>/
+    ├── agent/
+    │   └── <agentId>/
+    │       └── snapshots/
+    │           ├── snapshot_latest.json
+    │           └── immutable_history/
+    │               └── snapshot_<uuid7>.json
+    └── multiAgent/
+        └── <orchestratorId>/
             └── snapshots/
-                ├── snapshot_latest.json
-                └── immutable_history/
-                    ├── snapshot_<uuid7>.json
-                    └── snapshot_<uuid7>.json
+                └── snapshot_latest.json   # Multi-agent only saves latest (no immutable history)
 ```
 (( /tab "TypeScript" ))
 
@@ -344,11 +424,30 @@ Session persistence is automatically triggered by lifecycle events in the agent:
 See [Basic Usage](#basic-usage) for configuration examples.
 (( /tab "TypeScript" ))
 
-**Multi-Agent Events** *(Python only)*:
+**Multi-Agent Events**:
 
+(( tab "Python" ))
 -   **Multi-Agent Initialization**: Restores orchestrator state from the session.
 -   **Node Execution**: Synchronizes orchestrator state after node transitions.
 -   **Multi-Agent Invocation**: Captures final orchestrator state after execution.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   **Before Multi-Agent Invocation**: Restores orchestrator state from `snapshot_latest` on first invocation.
+-   **After Node Call** (`multiAgentSaveLatestOn: 'node'`, default): Saves after each node completes, enabling resume from the last completed node after a crash.
+-   **After Multi-Agent Invocation** (`multiAgentSaveLatestOn: 'invocation'`): Saves after the full orchestrator invocation completes (lower I/O, but only captures state at invocation boundaries).
+
+```typescript
+const session = new SessionManager({
+  sessionId: 'my-session',
+  storage: { snapshot: new FileStorage('./sessions') },
+  // Save orchestrator state after each node completes (default)
+  multiAgentSaveLatestOn: 'node',
+  // Or save only after the full orchestrator invocation completes:
+  // multiAgentSaveLatestOn: 'invocation',
+})
+```
+(( /tab "TypeScript" ))
 
 Direct Message Modifications Not Persisted
 

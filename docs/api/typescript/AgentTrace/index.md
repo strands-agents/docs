@@ -1,4 +1,4 @@
-Defined in: [src/telemetry/tracer.ts:73](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L73)
+Defined in: [src/telemetry/tracer.ts:73](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L73)
 
 Execution trace for performance analysis. Tracks timing and hierarchy of operations within the agent loop. Fields default to null for JSON serialization compatibility.
 
@@ -14,7 +14,7 @@ Execution trace for performance analysis. Tracks timing and hierarchy of operati
 new AgentTrace(name, options?): AgentTrace;
 ```
 
-Defined in: [src/telemetry/tracer.ts:97](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L97)
+Defined in: [src/telemetry/tracer.ts:97](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L97)
 
 #### Parameters
 
@@ -37,7 +37,7 @@ Defined in: [src/telemetry/tracer.ts:97](https://github.com/strands-agents/sdk-t
 readonly id: string;
 ```
 
-Defined in: [src/telemetry/tracer.ts:75](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L75)
+Defined in: [src/telemetry/tracer.ts:75](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L75)
 
 Unique identifier (UUID) for this trace.
 
@@ -49,7 +49,7 @@ Unique identifier (UUID) for this trace.
 readonly name: string;
 ```
 
-Defined in: [src/telemetry/tracer.ts:77](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L77)
+Defined in: [src/telemetry/tracer.ts:77](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L77)
 
 Human-readable display name (e.g., “Cycle 1”, “Tool: calc”, “stream\_messages”).
 
@@ -61,7 +61,7 @@ Human-readable display name (e.g., “Cycle 1”, “Tool: calc”, “stream\_m
 readonly parentId: string;
 ```
 
-Defined in: [src/telemetry/tracer.ts:79](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L79)
+Defined in: [src/telemetry/tracer.ts:79](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L79)
 
 ID of the parent trace, if this trace is nested. Null for root traces.
 
@@ -73,7 +73,7 @@ ID of the parent trace, if this trace is nested. Null for root traces.
 readonly startTime: number;
 ```
 
-Defined in: [src/telemetry/tracer.ts:81](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L81)
+Defined in: [src/telemetry/tracer.ts:81](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L81)
 
 Start time in milliseconds since epoch.
 
@@ -85,7 +85,7 @@ Start time in milliseconds since epoch.
 endTime: number = null;
 ```
 
-Defined in: [src/telemetry/tracer.ts:83](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L83)
+Defined in: [src/telemetry/tracer.ts:83](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L83)
 
 End time in milliseconds since epoch. Null until trace is ended.
 
@@ -97,7 +97,7 @@ End time in milliseconds since epoch. Null until trace is ended.
 duration: number = 0;
 ```
 
-Defined in: [src/telemetry/tracer.ts:85](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L85)
+Defined in: [src/telemetry/tracer.ts:85](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L85)
 
 Duration in milliseconds (endTime - startTime).
 
@@ -109,7 +109,7 @@ Duration in milliseconds (endTime - startTime).
 readonly children: AgentTrace[] = [];
 ```
 
-Defined in: [src/telemetry/tracer.ts:87](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L87)
+Defined in: [src/telemetry/tracer.ts:87](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L87)
 
 Child traces nested under this trace.
 
@@ -121,7 +121,7 @@ Child traces nested under this trace.
 readonly metadata: Record<string, string> = {};
 ```
 
-Defined in: [src/telemetry/tracer.ts:89](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L89)
+Defined in: [src/telemetry/tracer.ts:89](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L89)
 
 Additional metadata for this trace (e.g., cycleId, toolUseId, toolName).
 
@@ -133,7 +133,7 @@ Additional metadata for this trace (e.g., cycleId, toolUseId, toolName).
 message: Message = null;
 ```
 
-Defined in: [src/telemetry/tracer.ts:91](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L91)
+Defined in: [src/telemetry/tracer.ts:91](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L91)
 
 Message associated with this trace (e.g., model output). Null if not applicable.
 
@@ -145,7 +145,7 @@ Message associated with this trace (e.g., model output). Null if not applicable.
 end(endTime?): void;
 ```
 
-Defined in: [src/telemetry/tracer.ts:111](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L111)
+Defined in: [src/telemetry/tracer.ts:111](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L111)
 
 #### Parameters
 
@@ -165,7 +165,7 @@ Defined in: [src/telemetry/tracer.ts:111](https://github.com/strands-agents/sdk-
 toJSON(): AgentTraceData;
 ```
 
-Defined in: [src/telemetry/tracer.ts:116](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/telemetry/tracer.ts#L116)
+Defined in: [src/telemetry/tracer.ts:116](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/telemetry/tracer.ts#L116)
 
 #### Returns
 

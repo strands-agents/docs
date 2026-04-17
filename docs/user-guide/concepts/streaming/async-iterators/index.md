@@ -32,7 +32,7 @@ asyncio.run(process_streaming_response())
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-TypeScript uses the [`stream`](/docs/api/python/strands.agent.agent) method for streaming, which is async by default. This is ideal for frameworks like Express.js or NestJS.
+TypeScript uses the [`stream`](/docs/api/typescript/Agent/index.md) method for streaming, which is async by default. This is ideal for frameworks like Express.js or NestJS.
 
 ```typescript
 // Initialize our agent without a printer

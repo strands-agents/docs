@@ -2,7 +2,7 @@
 type SystemPrompt = string | SystemContentBlock[];
 ```
 
-Defined in: [src/types/messages.ts:642](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L642)
+Defined in: [src/types/messages.ts:673](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L673)
 
 System prompt for guiding model behavior. Can be a simple string or an array of content blocks for advanced caching.
 

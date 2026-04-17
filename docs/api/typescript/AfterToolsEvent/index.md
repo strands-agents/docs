@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:579](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L579)
+Defined in: [src/hooks/events.ts:579](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L579)
 
 Event triggered after all tools complete execution. Fired after tool results are collected and ready to be added to conversation. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -14,7 +14,7 @@ Event triggered after all tools complete execution. Fired after tool results are
 new AfterToolsEvent(data): AfterToolsEvent;
 ```
 
-Defined in: [src/hooks/events.ts:584](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L584)
+Defined in: [src/hooks/events.ts:584](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L584)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:584](https://github.com/strands-agents/sdk-type
 readonly type: "afterToolsEvent";
 ```
 
-Defined in: [src/hooks/events.ts:580](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L580)
+Defined in: [src/hooks/events.ts:580](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L580)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:580](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:581](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L581)
+Defined in: [src/hooks/events.ts:581](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L581)
 
 ---
 
@@ -60,7 +60,7 @@ Defined in: [src/hooks/events.ts:581](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:582](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L582)
+Defined in: [src/hooks/events.ts:582](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L582)
 
 ## Methods
 
@@ -70,7 +70,7 @@ Defined in: [src/hooks/events.ts:582](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<AfterToolsEvent, "type" | "message">;
 ```
 
-Defined in: [src/hooks/events.ts:598](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/hooks/events.ts#L598)
+Defined in: [src/hooks/events.ts:598](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L598)
 
 Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
 

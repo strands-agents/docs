@@ -10,7 +10,7 @@ A2AAgent can be used to get the Agent Card and interact with the agent.
 class A2AAgent(AgentBase)
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:31](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L31)
+Defined in: [src/strands/agent/a2a\_agent.py:33](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L33)
 
 Client wrapper for remote A2A agents.
 
@@ -22,10 +22,11 @@ def __init__(endpoint: str,
              name: str | None = None,
              description: str | None = None,
              timeout: int = _DEFAULT_TIMEOUT,
+             client_config: ClientConfig | None = None,
              a2a_client_factory: ClientFactory | None = None)
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:34](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L34)
+Defined in: [src/strands/agent/a2a\_agent.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L36)
 
 Initialize A2A agent.
 
@@ -35,8 +36,12 @@ Initialize A2A agent.
 -   `name` - Agent name. If not provided, will be populated from agent card.
 -   `description` - Agent description. If not provided, will be populated from agent card.
 -   `timeout` - Timeout for HTTP operations in seconds (defaults to 300).
--   `a2a_client_factory` - Optional pre-configured A2A ClientFactory. If provided, it will be used to create the A2A client after discovering the agent card.
--   `Note` - When providing a custom factory, you are responsible for managing the lifecycle of any httpx client it uses.
+-   `client_config` - A2A `ClientConfig` for authentication and transport settings. The `httpx_client` configured here is used for both card discovery and message sending, enabling authenticated endpoints (SigV4, OAuth, bearer tokens). When providing an `httpx_client`, you are responsible for configuring its timeout.
+-   `a2a_client_factory` - Deprecated. Use `client_config` instead.
+
+**Raises**:
+
+-   `ValueError` - If both `client_config` and `a2a_client_factory` are provided.
 
 #### \_\_call\_\_
 
@@ -44,7 +49,7 @@ Initialize A2A agent.
 def __call__(prompt: AgentInput = None, **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:62](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L62)
+Defined in: [src/strands/agent/a2a\_agent.py:84](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L84)
 
 Synchronously invoke the remote A2A agent.
 
@@ -69,7 +74,7 @@ async def invoke_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:82](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L82)
+Defined in: [src/strands/agent/a2a\_agent.py:104](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L104)
 
 Asynchronously invoke the remote A2A agent.
 
@@ -94,7 +99,7 @@ async def stream_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AsyncIterator[Any]
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:110](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L110)
+Defined in: [src/strands/agent/a2a\_agent.py:132](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L132)
 
 Stream remote agent execution asynchronously.
 
@@ -132,11 +137,13 @@ async for event in a2a_agent.stream_async("Hello"):
 async def get_agent_card() -> AgentCard
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:160](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L160)
+Defined in: [src/strands/agent/a2a\_agent.py:182](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L182)
 
 Fetch and return the remote agent’s card.
 
-This method eagerly fetches the agent card from the remote endpoint, populating name and description if not already set. The card is cached after the first fetch.
+Eagerly fetches the agent card from the remote endpoint, populating name and description if not already set. The card is cached after the first fetch.
+
+When `client_config` is provided with an `httpx_client`, that client is used for card resolution, enabling authenticated card discovery (e.g., SigV4, OAuth, bearer tokens).
 
 **Returns**:
 

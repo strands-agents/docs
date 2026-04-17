@@ -207,7 +207,7 @@ response = agent([image_message])
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [llama.cpp](https://github.com/ggml-org/llama.cpp)
 -   [llama.cpp Server Documentation](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)
 -   [GGUF Models on Hugging Face](https://huggingface.co/models?search=gguf)

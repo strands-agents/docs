@@ -1,4 +1,4 @@
-Defined in: [src/session/session-manager.ts:81](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L81)
+Defined in: [src/session/session-manager.ts:90](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L90)
 
 Manages session persistence for agents, enabling conversation state to be saved and restored across invocations using pluggable storage backends.
 
@@ -29,7 +29,7 @@ const agent = new Agent({ sessionManager: session })
 new SessionManager(config): SessionManager;
 ```
 
-Defined in: [src/session/session-manager.ts:96](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L96)
+Defined in: [src/session/session-manager.ts:105](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L105)
 
 #### Parameters
 
@@ -51,7 +51,7 @@ Defined in: [src/session/session-manager.ts:96](https://github.com/strands-agent
 get name(): string;
 ```
 
-Defined in: [src/session/session-manager.ts:92](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L92)
+Defined in: [src/session/session-manager.ts:101](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L101)
 
 Unique identifier for this plugin.
 
@@ -75,7 +75,7 @@ For strands-vended plugins, names should be prefixed with `strands:`.
 initAgent(agent): void;
 ```
 
-Defined in: [src/session/session-manager.ts:105](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L105)
+Defined in: [src/session/session-manager.ts:114](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L114)
 
 Initializes the plugin by registering lifecycle hook callbacks.
 
@@ -103,7 +103,7 @@ Initializes the plugin by registering lifecycle hook callbacks.
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/session-manager.ts:129](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L129)
+Defined in: [src/session/session-manager.ts:138](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L138)
 
 Saves a snapshot of the target’s current state.
 
@@ -125,7 +125,7 @@ Saves a snapshot of the target’s current state.
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/session-manager.ts:130](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L130)
+Defined in: [src/session/session-manager.ts:139](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L139)
 
 Saves a snapshot of the target’s current state.
 
@@ -150,7 +150,7 @@ Saves a snapshot of the target’s current state.
 deleteSession(): Promise<void>;
 ```
 
-Defined in: [src/session/session-manager.ts:148](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L148)
+Defined in: [src/session/session-manager.ts:157](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L157)
 
 Deletes all snapshots and manifests for this session from storage.
 
@@ -168,7 +168,7 @@ Deletes all snapshots and manifests for this session from storage.
 restoreSnapshot(params): Promise<boolean>;
 ```
 
-Defined in: [src/session/session-manager.ts:153](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L153)
+Defined in: [src/session/session-manager.ts:162](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L162)
 
 Loads a snapshot from storage and restores it into the target. Returns false if no snapshot exists.
 
@@ -190,7 +190,7 @@ Loads a snapshot from storage and restores it into the target. Returns false if 
 restoreSnapshot(params): Promise<boolean>;
 ```
 
-Defined in: [src/session/session-manager.ts:154](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L154)
+Defined in: [src/session/session-manager.ts:163](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L163)
 
 Loads a snapshot from storage and restores it into the target. Returns false if no snapshot exists.
 
@@ -215,7 +215,7 @@ Loads a snapshot from storage and restores it into the target. Returns false if 
 initMultiAgent(orchestrator): void;
 ```
 
-Defined in: [src/session/session-manager.ts:241](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/session/session-manager.ts#L241)
+Defined in: [src/session/session-manager.ts:250](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/session/session-manager.ts#L250)
 
 Initializes the multi-agent plugin by registering orchestrator lifecycle hooks.
 

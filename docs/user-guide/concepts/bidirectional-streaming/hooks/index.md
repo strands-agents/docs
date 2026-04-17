@@ -343,4 +343,4 @@ For additional best practices on performance considerations, error handling, com
 -   [Agent](/docs/user-guide/concepts/bidirectional-streaming/agent/index.md) - Learn about BidiAgent configuration and lifecycle
 -   [Session Management](/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md) - Persist conversations across sessions
 -   [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) - Complete guide to bidirectional streaming events
--   [API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation

@@ -37,7 +37,7 @@ import asyncio
 from strands.experimental.bidi import BidiAgent
 from strands.experimental.bidi.io import BidiAudioIO, BidiTextIO
 from strands.experimental.bidi.models import BidiNovaSonicModel
-from strands.experimental.bidi.tools import stop_conversation
+from strands_tools import stop
 
 from strands_tools import calculator
 
@@ -52,8 +52,8 @@ async def main() -> None:
         },
         client_config={"region": "us-east-1"},  # only available in us-east-1, eu-north-1, and ap-northeast-1
     )
-    # stop_conversation tool allows user to verbally stop agent execution.
-    agent = BidiAgent(model=model, tools=[calculator, stop_conversation])
+    # stop tool allows user to verbally stop agent execution.
+    agent = BidiAgent(model=model, tools=[calculator, stop])
 
     audio_io = BidiAudioIO()
     text_io = BidiTextIO()
@@ -134,4 +134,4 @@ As a reminder, Nova Sonic is only available in us-east-1, eu-north-1, and ap-nor
 
 -   [Nova Sonic](https://docs.aws.amazon.com/nova/latest/userguide/speech.html)
 -   [Experimental Bedrock Client](https://github.com/awslabs/aws-sdk-python/tree/develop/clients/aws-sdk-bedrock-runtime)
--   [Provider API Reference](/docs/api/python/strands.experimental.bidi.models.nova_sonic#BidiNovaSonicModel)
+-   [Python API Reference](/docs/api/python/strands.experimental.bidi.models.nova_sonic#BidiNovaSonicModel)

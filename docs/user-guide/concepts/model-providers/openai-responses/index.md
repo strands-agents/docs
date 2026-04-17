@@ -187,7 +187,7 @@ response = agent("What is my name?")
 
 ## References
 
--   [API](/docs/api/python/strands.models.openai_responses)
+-   [Python API](/docs/api/python/strands.models.openai_responses)
 -   [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
 -   [Amazon Bedrock Mantle](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)
 -   [OpenAI Chat Completions](/docs/user-guide/concepts/model-providers/openai/index.md) (alternative provider using the Chat Completions API)

@@ -105,5 +105,5 @@ print(f"Rating: {result.rating}")
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [Anthropic](https://docs.anthropic.com/en/home)

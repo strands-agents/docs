@@ -213,7 +213,7 @@ const result = await swarm.invoke(contentBlocks)
 ## Swarm Coordination
 
 (( tab "Python" ))
-### Handoff Tool
+**Handoff Tool**
 
 When you create a Swarm in Python, each agent is automatically equipped with special tools for coordination. Agents can transfer control to another agent when they need specialized help:
 
@@ -226,7 +226,7 @@ handoff_to_agent(
 )
 ```
 
-### Shared Context
+**Shared Context**
 
 The Swarm maintains a shared context that all agents can access. This includes:
 
@@ -258,7 +258,7 @@ You have access to swarm coordination tools if you need help from other agents.
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-### Structured Output Routing
+**Structured Output Routing**
 
 Agents use structured output to decide the next step. Each agent’s response includes:
 

@@ -451,7 +451,7 @@ const result = await agent.invoke([
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [Google Gemini](https://ai.google.dev/api)
 -   [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 -   [Google AI Studio](https://aistudio.google.com/)

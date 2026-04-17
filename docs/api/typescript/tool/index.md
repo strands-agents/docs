@@ -39,7 +39,7 @@ Tool configuration
 function tool<TInput, TReturn>(config): InvokableTool<output<TInput>, TReturn>;
 ```
 
-Defined in: [src/tools/tool-factory.ts:26](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/tool-factory.ts#L26)
+Defined in: [src/tools/tool-factory.ts:26](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/tools/tool-factory.ts#L26)
 
 Creates an InvokableTool from a Zod schema and callback function.
 
@@ -68,7 +68,7 @@ An InvokableTool with typed input and output
 function tool(config): InvokableTool<unknown, JSONValue>;
 ```
 
-Defined in: [src/tools/tool-factory.ts:36](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/tools/tool-factory.ts#L36)
+Defined in: [src/tools/tool-factory.ts:36](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/tools/tool-factory.ts#L36)
 
 Creates an InvokableTool from a JSON schema and callback function.
 

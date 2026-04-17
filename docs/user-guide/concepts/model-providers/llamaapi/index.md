@@ -102,5 +102,5 @@ print(f"Rating: {result.rating}")
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [LlamaAPI](https://llama.developer.meta.com/docs/)

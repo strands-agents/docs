@@ -1,6 +1,6 @@
 Skill data model and loading utilities for AgentSkills.io skills.
 
-This module defines the Skill dataclass and provides classmethods for discovering, parsing, and loading skills from the filesystem or raw content. Skills are directories containing a SKILL.md file with YAML frontmatter metadata and markdown instructions.
+This module defines the Skill dataclass and provides classmethods for discovering, parsing, and loading skills from the filesystem, raw content, or HTTPS URLs. Skills are directories containing a SKILL.md file with YAML frontmatter metadata and markdown instructions.
 
 ## Skill
 
@@ -9,7 +9,7 @@ This module defines the Skill dataclass and provides classmethods for discoverin
 class Skill()
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/skill.py:206](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L206)
+Defined in: [src/strands/vended\_plugins/skills/skill.py:208](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L208)
 
 Represents an agent skill with metadata and instructions.
 
@@ -27,7 +27,11 @@ skill = Skill.from\_content(”---\\nname: my-skill\\n…”)
 
 # Load all skills from a parent directory
 
-skills = Skill.from\_directory(”./skills/”)
+skills = Skill.from\_directory(”./skills/“)
+
+# From an HTTPS URL
+
+skill = Skill.from\_url(“[https://example.com/SKILL.md](https://example.com/SKILL.md)”)
 
 **Attributes**:
 
@@ -47,7 +51,7 @@ skills = Skill.from\_directory(”./skills/”)
 def from_file(cls, skill_path: str | Path, *, strict: bool = False) -> Skill
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/skill.py:246](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L246)
+Defined in: [src/strands/vended\_plugins/skills/skill.py:251](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L251)
 
 Load a single skill from a directory containing SKILL.md.
 
@@ -74,7 +78,7 @@ A Skill instance populated from the SKILL.md file.
 def from_content(cls, content: str, *, strict: bool = False) -> Skill
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/skill.py:294](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L294)
+Defined in: [src/strands/vended\_plugins/skills/skill.py:299](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L299)
 
 Parse SKILL.md content into a Skill instance.
 
@@ -101,6 +105,37 @@ A Skill instance populated from the parsed content.
 
 -   `ValueError` - If the content is missing required fields or has invalid frontmatter.
 
+#### from\_url
+
+```python
+@classmethod
+def from_url(cls, url: str, *, strict: bool = False) -> Skill
+```
+
+Defined in: [src/strands/vended\_plugins/skills/skill.py:342](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L342)
+
+Load a skill by fetching its SKILL.md content from an HTTPS URL.
+
+Fetches the raw SKILL.md content over HTTPS and parses it using :meth:`from_content`. The URL must point directly to the raw file content (not an HTML page).
+
+Example::
+
+skill = Skill.from\_url( “[https://raw.githubusercontent.com/org/repo/main/SKILL.md](https://raw.githubusercontent.com/org/repo/main/SKILL.md)” )
+
+**Arguments**:
+
+-   `url` - An `https://` URL pointing directly to raw SKILL.md content.
+-   `strict` - If True, raise on any validation issue. If False (default), warn and load anyway.
+
+**Returns**:
+
+A Skill instance populated from the fetched SKILL.md content.
+
+**Raises**:
+
+-   `ValueError` - If `url` is not an `https://` URL.
+-   `RuntimeError` - If the SKILL.md content cannot be fetched.
+
 #### from\_directory
 
 ```python
@@ -111,7 +146,7 @@ def from_directory(cls,
                    strict: bool = False) -> list[Skill]
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/skill.py:337](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L337)
+Defined in: [src/strands/vended\_plugins/skills/skill.py:384](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/skill.py#L384)
 
 Load all skills from a parent directory containing skill subdirectories.
 

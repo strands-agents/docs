@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:184](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L184)
+Defined in: [src/types/messages.ts:215](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L215)
 
 Data for a tool use block.
 
@@ -10,7 +10,7 @@ Data for a tool use block.
 name: string;
 ```
 
-Defined in: [src/types/messages.ts:188](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L188)
+Defined in: [src/types/messages.ts:219](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L219)
 
 The name of the tool to execute.
 
@@ -22,7 +22,7 @@ The name of the tool to execute.
 toolUseId: string;
 ```
 
-Defined in: [src/types/messages.ts:193](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L193)
+Defined in: [src/types/messages.ts:224](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L224)
 
 Unique identifier for this tool use instance.
 
@@ -34,7 +34,7 @@ Unique identifier for this tool use instance.
 input: JSONValue;
 ```
 
-Defined in: [src/types/messages.ts:199](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L199)
+Defined in: [src/types/messages.ts:230](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L230)
 
 The input parameters for the tool. This can be any JSON-serializable value.
 
@@ -46,6 +46,6 @@ The input parameters for the tool. This can be any JSON-serializable value.
 optional reasoningSignature?: string;
 ```
 
-Defined in: [src/types/messages.ts:205](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/messages.ts#L205)
+Defined in: [src/types/messages.ts:236](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/messages.ts#L236)
 
 Reasoning signature from thinking models (e.g., Gemini). Must be preserved and sent back to the model for multi-turn tool use.

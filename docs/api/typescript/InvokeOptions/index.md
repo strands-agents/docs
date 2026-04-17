@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:41](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L41)
+Defined in: [src/types/agent.ts:41](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/agent.ts#L41)
 
 Options for a single agent invocation.
 
@@ -10,7 +10,7 @@ Options for a single agent invocation.
 optional structuredOutputSchema?: ZodType;
 ```
 
-Defined in: [src/types/agent.ts:45](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L45)
+Defined in: [src/types/agent.ts:45](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/agent.ts#L45)
 
 Zod schema for structured output validation, overriding the constructor-provided schema for this invocation only.
 
@@ -22,7 +22,7 @@ Zod schema for structured output validation, overriding the constructor-provided
 optional cancelSignal?: AbortSignal;
 ```
 
-Defined in: [src/types/agent.ts:75](https://github.com/strands-agents/sdk-typescript/blob/afb3912898c4484cef17005cbe425002b1bfe648/src/types/agent.ts#L75)
+Defined in: [src/types/agent.ts:75](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/types/agent.ts#L75)
 
 External AbortSignal for cancelling the agent invocation.
 

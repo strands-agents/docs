@@ -109,13 +109,23 @@ Defined in: [src/strands/types/exceptions.py:74](https://github.com/strands-agen
 
 Exception raised when session operations fail.
 
+## SnapshotException
+
+```python
+class SnapshotException(Exception)
+```
+
+Defined in: [src/strands/types/exceptions.py:80](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L80)
+
+Exception raised when snapshot operations fail (e.g., unsupported schema version).
+
 ## ToolProviderException
 
 ```python
 class ToolProviderException(Exception)
 ```
 
-Defined in: [src/strands/types/exceptions.py:80](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L80)
+Defined in: [src/strands/types/exceptions.py:86](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L86)
 
 Exception raised when a tool provider fails to load or cleanup tools.
 
@@ -125,7 +135,7 @@ Exception raised when a tool provider fails to load or cleanup tools.
 class StructuredOutputException(Exception)
 ```
 
-Defined in: [src/strands/types/exceptions.py:86](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L86)
+Defined in: [src/strands/types/exceptions.py:92](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L92)
 
 Exception raised when structured output validation fails after maximum retry attempts.
 
@@ -135,7 +145,7 @@ Exception raised when structured output validation fails after maximum retry att
 def __init__(message: str)
 ```
 
-Defined in: [src/strands/types/exceptions.py:89](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L89)
+Defined in: [src/strands/types/exceptions.py:95](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L95)
 
 Initialize the exception with details about the failure.
 
@@ -149,7 +159,7 @@ Initialize the exception with details about the failure.
 class ConcurrencyException(Exception)
 ```
 
-Defined in: [src/strands/types/exceptions.py:99](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L99)
+Defined in: [src/strands/types/exceptions.py:105](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L105)
 
 Exception raised when concurrent invocations are attempted on an agent instance.
 
