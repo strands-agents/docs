@@ -26,14 +26,6 @@ Strands provides built-in session persistence capabilities that automatically ca
 
 Beyond the built-in options, [third-party session managers](#third-party-session-managers) provide additional storage and memory capabilities.
 
-:::caution
-You cannot use a single agent with a session manager inside a multi-agent system. In Python, this will throw an exception. In TypeScript, the orchestrator snapshots and restores each agent node's state on every execution, so an agent-level session manager would conflict with the orchestrator's persistence. Each agent in a multi-agent system must be created without a session manager — only the orchestrator should have one. Additionally, multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
-:::
-
-:::note[TypeScript]
-`SessionManager` implements both [Plugin](../plugins/index.mdx) (for agents) and `MultiAgentPlugin` (for orchestrators). The `sessionManager` field on `Agent`, `Graph`, and `Swarm` is a convenience shorthand for passing it in the `plugins` array.
-:::
-
 ## Basic Usage
 
 ### Single Agent Sessions
@@ -59,13 +51,16 @@ agent("Hello!")  # This conversation is persisted
 </Tab>
 <Tab label="TypeScript">
 
+`SessionManager` implements both [Plugin](../plugins/index.mdx) (for agents) and `MultiAgentPlugin` (for orchestrators). The `sessionManager` constructor field is a convenience shorthand — you can also pass it directly in the `plugins` array:
+
 ```typescript
 --8<-- "user-guide/concepts/agents/session-manager.ts:basic_file_storage"
 ```
 
-:::note
-`SessionManager` is a [Plugin](../plugins/index.mdx). The `sessionManager` field on `AgentConfig` is a convenience shorthand for passing it in the `plugins` array.
-:::
+```typescript
+--8<-- "user-guide/concepts/agents/session-manager.ts:session_as_plugin"
+```
+
 </Tab>
 </Tabs>
 
@@ -73,10 +68,14 @@ The conversation, and associated state, is persisted to the underlying storage b
 
 ### Multi-Agent Sessions
 
-Multi-agent systems (Graph/Swarm) can also use session management to persist their state:
+Multi-agent systems (Graph/Swarm) can also use session management to persist their state.
 
 <Tabs>
 <Tab label="Python">
+
+:::caution
+Agents inside a multi-agent system must not have their own session manager — only the orchestrator should have one. Python will raise a `ValueError` if an agent with a session manager is added to a Graph or Swarm.
+:::
 
 ```python
 from strands.multiagent import GraphBuilder
@@ -102,6 +101,10 @@ result = graph("Research and write about AI")
 </Tab>
 <Tab label="TypeScript">
 
+:::caution
+Agents inside a multi-agent system must not have their own session manager — only the orchestrator should have one. The orchestrator snapshots and restores each agent node's state on every execution, so an agent-level session manager would conflict with the orchestrator's persistence.
+:::
+
 ```typescript
 --8<-- "user-guide/concepts/agents/session-manager.ts:multi_agent_graph_session"
 ```
@@ -114,6 +117,8 @@ Swarm works the same way:
 
 </Tab>
 </Tabs>
+
+Multi-agent session managers only track the current state of the Graph/Swarm execution and do not persist individual agent conversation histories.
 
 ## Built-in Session Managers
 
