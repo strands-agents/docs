@@ -56,7 +56,11 @@ sidebar:
               - docs/user-guide/concepts/agents/session-management
               - docs/user-guide/concepts/agents/prompts
               - docs/user-guide/concepts/agents/retry-strategies
-              - docs/user-guide/concepts/agents/hooks
+              - label: Hooks
+                items:
+                  - docs/user-guide/concepts/agents/hooks
+                  - docs/user-guide/concepts/agents/hooks/usage
+                  - docs/user-guide/concepts/agents/hooks/cookbook
               - docs/user-guide/concepts/agents/structured-output
               - docs/user-guide/concepts/agents/conversation-management
           - label: Tools
