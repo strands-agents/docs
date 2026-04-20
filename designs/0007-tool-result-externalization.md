@@ -27,62 +27,11 @@ This has two problems.
 
 2. **Reactive timing.** The replacement only happens after the model has already rejected the request. The oversized result consumes context space, triggers an overflow, wastes a round-trip, and only then gets truncated.
 
-This design proposes intercepting large tool results at execution time, before they enter the conversation. The full output is persisted to disk, and the conversation receives a truncated preview with a reference to the artifact file.
+This design proposes intercepting large tool results at execution time, before they enter the conversation. The full output is persisted to a pluggable storage backend, and the conversation receives a truncated preview with a reference to the stored artifact.
 
 ## Decision
 
 We implement tool result externalization as a `Plugin` that hooks `AfterToolCallEvent`. If a tool result exceeds a configurable size threshold, the plugin externalizes the full output and replaces the conversation content according to a configurable strategy.
-
-```typescript
-export interface ToolResultExternalizationConfig {
-  /**
-   * Character count threshold for externalizing tool results.
-   * Results larger than this are externalized.
-   * @default 10000
-   */
-  sizeThreshold?: number
-
-  /**
-   * Strategy that controls how externalized results are stored and
-   * what replaces them in the conversation. Defaults to
-   * FileExternalizationStrategy.
-   */
-  strategy?: ExternalizationStrategy
-}
-
-export interface ExternalizationStrategy {
-  externalize(content: string, toolName: string): Promise<string> | string
-}
-
-export class FileExternalizationStrategy implements ExternalizationStrategy {
-  constructor(config?: FileExternalizationStrategyConfig) {}
-  externalize(content: string, toolName: string): string { /* ... */ }
-}
-
-export interface FileExternalizationStrategyConfig {
-  /** Directory to write artifact files to. @default './artifacts' */
-  artifactDir?: string
-  /** Number of leading characters to keep as a preview. @default 4000 */
-  previewSize?: number
-}
-```
-
-The `ExternalizationStrategy` interface is the extension point. The default `FileExternalizationStrategy` writes to disk and produces a text preview with an artifact path. Future strategies can implement structured aliasing ([#1678](https://github.com/strands-agents/sdk-python/issues/1678)), remote storage, or any other approach without changing the plugin itself.
-
-When a tool result exceeds `sizeThreshold`, the hook passes the content to the strategy. The default strategy:
-
-1. Writes the full result to an artifact file in `artifactDir`.
-2. Returns a truncated preview plus a reference to the artifact path.
-
-The replacement content looks like:
-
-```
-[Output truncated: 125,432 chars | Full output: artifacts/shell_20250416_143022.log]
-
-<first 4,000 characters as preview>
-```
-
-This operates at tool execution time, before the result enters the conversation history. It prevents a single large result from consuming a disproportionate share of the context window. The full output is preserved on disk for debugging, auditing, or later retrieval. If the agent has a file-reading tool, the model can retrieve the full output when the preview is insufficient.
 
 The following diagram shows where externalization fits in the agent loop:
 
@@ -98,23 +47,77 @@ sequenceDiagram
     Agent->>Tool: execute tool
     Tool-->>Agent: tool result (potentially large)
     Agent->>Plugin: AfterToolCallEvent
-    Note over Plugin: if result > sizeThreshold:<br/>persist full output to artifact file<br/>replace content with preview + reference
+    Note over Plugin: if result > sizeThreshold:<br/>persist full output to storage backend<br/>replace content with preview + reference
     Agent->>Agent: append tool result message
     Note over Agent: go to next cycle
 ```
+
+The plugin accepts a `sizeThreshold` (default 10,000 characters) and a pluggable `ExternalizationStrategy` that controls where the full output is stored:
+
+```typescript
+export interface ExternalizationStrategy {
+  externalize(content: string, toolName: string): Promise<string> | string
+}
+```
+
+The SDK ships three built-in strategies:
+
+| Strategy | Behavior | Use case |
+|----------|----------|----------|
+| `InMemoryExternalizationStrategy` | Stores content in memory. Zero config, no filesystem side effects. | Default. Context window optimization without persistence. |
+| `FileExternalizationStrategy` | Writes to a local directory. | Debugging, auditing, offline retrieval. |
+| `S3ExternalizationStrategy` | Writes to an S3 bucket. Follows the `S3SessionManager` pattern. | Production workloads, shared storage. |
+
+The default is `InMemoryExternalizationStrategy` because the primary value of externalization is context window optimization, not artifact persistence. Long-running agents are exactly the use case where context pressure matters most, and they do not benefit from writing artifacts to disk. Users who need persistence can opt into `FileExternalizationStrategy` or `S3ExternalizationStrategy`.
+
+When a tool result exceeds `sizeThreshold`, the hook passes the content to the strategy. The strategy stores the full output and returns a reference. The plugin then replaces the original content with a truncated preview plus that reference.
+
+The replacement content looks like:
+
+```
+[Externalized: 125,432 chars | ref: mem://abc123]
+
+<first 4,000 characters as preview>
+
+[Full output stored externally: mem://abc123]
+```
+
+### Content Type Handling
+
+Tool results can contain multiple content block types. The plugin handles each type as follows:
+
+| Type | Behavior |
+|------|----------|
+| Text | Externalized: stored in the backend, replaced with a truncated preview. |
+| JSON | Serialized via `JSON.stringify` (or `json.dumps` in Python), then externalized alongside text. |
+| Image | Replaced with a `[image: format, N bytes]` placeholder. Follows the `SlidingWindowConversationManager` pattern. |
+| Document | Replaced with a `[document: format, name, N bytes]` placeholder. |
+
+The plugin measures the combined character count of all text and JSON blocks. If the total exceeds `sizeThreshold`, it externalizes the text content and replaces image and document blocks with lightweight placeholders.
+
+### Retrieval Tool
+
+The plugin vends a built-in retrieval tool that the agent can call to fetch externalized content by reference. This avoids requiring the user to separately configure a file-reading or S3 tool, and keeps the storage backend opaque to the model. The retrieval tool also supports the aliasing use case ([#1678](https://github.com/strands-agents/sdk-python/issues/1678)) because the model never needs to know where or how the content is stored.
+
+This operates at tool execution time, before the result enters the conversation history. It prevents a single large result from consuming a disproportionate share of the context window. The full output is preserved in the configured storage backend for later retrieval by the agent or the user.
 
 ### SDK Changes Required
 
 **New file: `plugins/tool-result-externalization.ts`.** Contains the `ToolResultExternalizationPlugin` class and its config interface.
 
-Artifact filenames include the tool name and a timestamp for traceability. The artifact directory is created on first write. Cleanup of artifact files is the user's responsibility.
+Artifact filenames include the tool name and a timestamp for traceability. When using file or S3 storage, the artifact directory or prefix is created on first write. Cleanup of stored artifacts is the user's responsibility.
 
 ## Developer Experience
 
 ```typescript
-import { Agent, ToolResultExternalizationPlugin, FileExternalizationStrategy } from '@strands-agents/sdk'
+import {
+  Agent,
+  ToolResultExternalizationPlugin,
+  FileExternalizationStrategy,
+  S3ExternalizationStrategy,
+} from '@strands-agents/sdk'
 
-// Default strategy with defaults
+// In-memory (default): zero config, context reduction only
 const agent = new Agent({
   tools: [dataAnalysis, apiClient, fileProcessor],
   plugins: [
@@ -124,13 +127,27 @@ const agent = new Agent({
   ],
 })
 
-// Custom artifact directory
+// File storage: persists artifacts to disk
 const agent = new Agent({
   tools: [dataAnalysis, apiClient, fileProcessor],
   plugins: [
     new ToolResultExternalizationPlugin({
       sizeThreshold: 10_000,
       strategy: new FileExternalizationStrategy({ artifactDir: './my-artifacts' }),
+    }),
+  ],
+})
+
+// S3 storage: persists artifacts to a bucket
+const agent = new Agent({
+  tools: [dataAnalysis, apiClient, fileProcessor],
+  plugins: [
+    new ToolResultExternalizationPlugin({
+      sizeThreshold: 10_000,
+      strategy: new S3ExternalizationStrategy({
+        bucket: 'my-agent-artifacts',
+        prefix: 'tool-results/',
+      }),
     }),
   ],
 })
@@ -152,11 +169,11 @@ Instead of a plugin, externalization could be a per-tool config or an agent-leve
 
 ### What Becomes Easier
 
-Large tool results no longer blow up the context window or get silently discarded. The full output is preserved on disk while the conversation receives a compact preview. Agents with file-reading tools can retrieve the full output on demand.
+Large tool results no longer blow up the context window or get silently discarded. The full output is preserved in the configured storage backend while the conversation receives a compact preview. The built-in retrieval tool allows the agent to fetch the full output on demand without requiring the user to configure a separate file or S3 tool.
 
 ### What Becomes Harder or Requires Attention
 
-Externalization writes to disk, which introduces a file system dependency. Artifact files accumulate and require cleanup. The preview may not contain the information the model needs, leading to follow-up tool calls to read the artifact. The `sizeThreshold` is character-based, not token-based, which is a rough proxy. Non-text tool results (images, binary data) are not handled by this design.
+When using file or S3 storage, artifacts accumulate and require cleanup. The preview may not contain the information the model needs, leading to follow-up retrieval tool calls. The `sizeThreshold` is character-based, not token-based, which is a rough proxy.
 
 ### Migration
 
