@@ -9,6 +9,7 @@ import { bedrock } from '@ai-sdk/amazon-bedrock'
 import { openai } from '@ai-sdk/openai'
 import { anthropic } from '@ai-sdk/anthropic'
 import { google } from '@ai-sdk/google'
+import { ollama } from 'ai-sdk-ollama'
 
 // Basic usage with OpenAI
 async function basicUsageOpenAI() {
@@ -74,6 +75,22 @@ async function basicUsageGoogle() {
   const result = await agent.invoke('Hello!')
   console.log(result)
   // --8<-- [end:basic_usage_google]
+}
+
+// Basic usage with Ollama
+async function basicUsageOllama() {
+  // --8<-- [start:basic_usage_ollama]
+  import { Agent } from '@strands-agents/sdk'
+  import { VercelModel } from '@strands-agents/sdk/models/vercel'
+  import { ollama } from 'ai-sdk-ollama'
+
+  const agent = new Agent({
+    model: new VercelModel({ provider: ollama('llama3.1') }),
+  })
+
+  const result = await agent.invoke('Hello!')
+  console.log(result)
+  // --8<-- [end:basic_usage_ollama]
 }
 
 // Configuration example
