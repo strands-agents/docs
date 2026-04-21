@@ -34,5 +34,5 @@
     "removeComments": false,
   },
   "include": [".astro/types.d.ts", "src/**/*", ".astro/**/*"],
-  "exclude": ["docs/**/*.ts", "src/content/docs/**/*.ts", "node_modules", "dist"],
+  "exclude": ["docs/**/*.ts", "src/content/docs/**/*.ts", "src/content/blog/**/*.ts", "node_modules", "dist"]
 }
