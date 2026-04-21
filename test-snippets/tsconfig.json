@@ -18,7 +18,7 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["../src/content/docs/**/*.ts", "../src/content/blog/**/*.ts"],
+  "include": ["../src/content/docs/**/*.ts"],
   "exclude": [
     "node_modules",
     "../src/content/docs/examples/cdk/**",
