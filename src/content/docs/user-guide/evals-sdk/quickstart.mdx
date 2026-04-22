@@ -9,9 +9,11 @@ Strands Evaluation is a framework for evaluating AI agents and LLM applications.
 ## What Strands Evaluation Provides
 
 - **Multiple Evaluation Types**: Output evaluation, trajectory analysis, tool usage assessment, and interaction evaluation
-- **Dynamic Simulators**: Multi-turn conversation simulation with realistic user behavior and goal-oriented interactions
+- **Dynamic Simulators**: Multi-turn conversation simulation with realistic user behavior, goal-oriented interactions, and LLM-powered tool simulation
 - **LLM-as-a-Judge**: Built-in evaluators using language models for sophisticated assessment with structured scoring
+- **Deterministic Evaluators**: Fast, code-based checks (Equals, Contains, ToolCalled, StateEquals) for CI/CD pipelines
 - **Trace-based Evaluation**: Analyze agent behavior through OpenTelemetry execution traces
+- **Remote Trace Providers**: Evaluate traces from CloudWatch, Langfuse, and other observability backends
 - **Automated Experiment Generation**: Generate comprehensive test suites from context descriptions
 - **Custom Evaluators**: Extensible framework for domain-specific evaluation logic
 - **Experiment Management**: Save, load, and version your evaluation experiments with JSON serialization
@@ -516,6 +518,10 @@ Ready to dive deeper? Explore these resources:
 - [Output Evaluator](evaluators/output_evaluator.md) - Detailed guide to LLM-based output evaluation
 - [Trajectory Evaluator](evaluators/trajectory_evaluator.md) - Comprehensive tool usage and sequence evaluation
 - [Helpfulness Evaluator](evaluators/helpfulness_evaluator.md) - Seven-level helpfulness assessment
+- [Correctness Evaluator](evaluators/correctness_evaluator.md) - Factual correctness with optional reference comparison
+- [Deterministic Evaluators](evaluators/deterministic_evaluators.md) - Fast, code-based checks (Equals, Contains, ToolCalled)
 - [Custom Evaluators](evaluators/custom_evaluator.md) - Build domain-specific evaluation logic
+- [Tool Simulation](simulators/tool_simulation.md) - Test tool-using agents without real infrastructure
 - [Experiment Generator](experiment_generator.md) - Automatically generate comprehensive test suites
+- [Remote Trace Providers](how-to/trace_providers.md) - Evaluate traces from production backends
 - [Serialization](how-to/serialization.md) - Save, load, and version your evaluation experiments

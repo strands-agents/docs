@@ -70,6 +70,36 @@ Evaluators operate at different levels of granularity:
 - **Purpose**: Assess factual accuracy and groundedness
 - **Use Case**: Verify responses are truthful and well-supported
 
+**[CorrectnessEvaluator](correctness_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Evaluate factual correctness with optional reference comparison
+- **Use Case**: Verify agent answers are correct, with or without ground truth
+
+**[CoherenceEvaluator](coherence_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Assess logical consistency and reasoning quality
+- **Use Case**: Detect contradictions, logical gaps, and disorganized responses
+
+**[ConcisenessEvaluator](conciseness_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Evaluate response brevity and efficiency
+- **Use Case**: Ensure agents communicate without unnecessary verbosity
+
+**[ResponseRelevanceEvaluator](response_relevance_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Evaluate relevance of responses to user questions
+- **Use Case**: Detect off-topic or tangential responses
+
+**[HarmfulnessEvaluator](harmfulness_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Binary evaluation for harmful content detection
+- **Use Case**: Screen responses for dangerous or offensive content
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](tool_selection_evaluator.md)**
@@ -105,6 +135,15 @@ Evaluators operate at different levels of granularity:
 - **Level**: SESSION_LEVEL
 - **Purpose**: Determine if user goals were successfully achieved
 - **Use Case**: Measure end-to-end task completion success
+
+### Deterministic Evaluators
+
+**[Deterministic Evaluators](deterministic_evaluators.md)**
+
+- **Level**: OUTPUT_LEVEL / SESSION_LEVEL
+- **Purpose**: Fast, code-based evaluation without LLM judges
+- **Use Case**: Regression testing, CI/CD pipelines, exact match checks
+- **Includes**: `Equals`, `Contains`, `StartsWith`, `ToolCalled`, `StateEquals`
 
 ## Custom Evaluators
 

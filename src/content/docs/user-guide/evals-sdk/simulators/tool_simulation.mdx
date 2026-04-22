@@ -1,0 +1,136 @@
+---
+title: Tool Simulation
+sidebar:
+  label: "Tool Simulation"
+---
+
+## Overview
+
+The `ToolSimulator` lets you test tool-using agents without real infrastructure. It replaces actual tool execution with LLM-generated responses that follow Pydantic output schemas, enabling controlled and reproducible evaluation of agents that depend on APIs, databases, or external services.
+
+## Key Features
+
+- **No Real Infrastructure**: Test tool-using agents without live APIs or services
+- **Schema-Validated Responses**: Pydantic output schemas ensure structured, consistent tool responses
+- **Shared State**: Related tools share state via `share_state_id` for coherent multi-tool behavior
+- **Stateful Context**: Call history and initial state are passed to the LLM for consistent multi-call sequences
+- **Drop-in Replacement**: Simulated tools plug directly into Strands `Agent` via `get_tool()`
+
+## When to Use
+
+Use the `ToolSimulator` when you need to:
+
+- Test agents that call external APIs without making real requests
+- Evaluate tool selection and parameter accuracy in isolation
+- Create reproducible test scenarios with controlled tool responses
+- Simulate complex multi-tool workflows with shared state
+
+## Basic Usage
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+tool_simulator = ToolSimulator()
+
+# Define output schema
+class WeatherResponse(BaseModel):
+    temperature: float = Field(description="Temperature in Fahrenheit")
+    conditions: str = Field(description="Weather conditions")
+
+# Register tool — the function body is never called
+@tool_simulator.tool(output_schema=WeatherResponse)
+def get_weather(location: str) -> dict[str, Any]:
+    """Get current weather for a location."""
+    pass
+
+def task_function(case: Case) -> dict:
+    weather_tool = tool_simulator.get_tool("get_weather")
+    agent = Agent(tools=[weather_tool], callback_handler=None)
+    response = agent(case.input)
+    return {"output": str(response)}
+
+cases = [Case(name="weather", input="What's the weather in Seattle?")]
+experiment = Experiment(cases=cases, evaluators=[GoalSuccessRateEvaluator()])
+reports = experiment.run_evaluations(task_function)
+```
+
+## Shared State
+
+Related tools can share state so that one tool's output affects another's behavior. Use `share_state_id` to group tools and `initial_state_description` to set the starting context:
+
+```python
+from enum import Enum
+from pydantic import BaseModel, Field
+
+class HVACMode(str, Enum):
+    HEAT = "heat"
+    COOL = "cool"
+    OFF = "off"
+
+class HVACResponse(BaseModel):
+    temperature: float = Field(description="Target temperature")
+    mode: HVACMode = Field(description="HVAC mode")
+    status: str = Field(default="success")
+
+class SensorResponse(BaseModel):
+    temperature: float = Field(description="Current room temperature")
+    humidity: float = Field(description="Current humidity percentage")
+
+@tool_simulator.tool(
+    share_state_id="room_environment",
+    initial_state_description="Room: 68°F, humidity 45%, HVAC off",
+    output_schema=HVACResponse,
+)
+def hvac_controller(temperature: float, mode: str) -> dict[str, Any]:
+    """Control heating/cooling system."""
+    pass
+
+@tool_simulator.tool(
+    share_state_id="room_environment",
+    output_schema=SensorResponse,
+)
+def room_sensor() -> dict[str, Any]:
+    """Read current room temperature and humidity."""
+    pass
+```
+
+Both tools share the `"room_environment"` state. When the agent calls `hvac_controller` to set the temperature to 72°F, a subsequent call to `room_sensor` will reflect the updated state.
+
+## Configuration
+
+### `ToolSimulator` Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `model` | `Union[Model, str, None]` | `None` | Model used to generate tool responses |
+| `max_tool_call_cache_size` | `int` | `20` | Max tool calls stored per state key |
+
+### `@tool_simulator.tool()` Decorator Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `output_schema` | `type[BaseModel]` | `DefaultToolResponse` | Pydantic model for response structure |
+| `share_state_id` | `str \| None` | `None` | Groups tools that share state |
+| `initial_state_description` | `str \| None` | `None` | Description of initial state context |
+
+## How It Works
+
+1. You register tools with `@tool_simulator.tool()` — the function body is never executed
+2. When the agent calls a simulated tool, the simulator builds a prompt containing:
+   - The tool's docstring and parameters
+   - The output schema
+   - Previous call history (for stateful context)
+   - Initial state description (if provided)
+3. An LLM generates a response conforming to the output schema
+4. The response is validated against the Pydantic model and returned to the agent
+
+## Related Documentation
+
+- [**Simulators Overview**](../simulators/index.md): Overview of all simulation capabilities
+- [**User Simulation**](../simulators/user_simulation.md): Multi-turn conversation simulation
+- [**GoalSuccessRateEvaluator**](../evaluators/goal_success_rate_evaluator.md): Evaluate goal completion with simulated tools
