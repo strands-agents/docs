@@ -15,7 +15,7 @@ Writer API model provider implementation.
 ## WriterConfig
 
 ```python
-class WriterConfig(TypedDict)
+class WriterConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/writer.py:32](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/writer.py#L32)

@@ -49,7 +49,7 @@ OpenAI Responses API model provider implementation.
 ## OpenAIResponsesConfig
 
 ```python
-class OpenAIResponsesConfig(TypedDict)
+class OpenAIResponsesConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/openai\_responses.py:125](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L125)

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:389](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L389)
+Defined in: [src/hooks/events.ts:389](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L389)
 
 Event triggered for each streaming event from the model. Wraps a [ModelStreamEvent](/docs/api/typescript/ModelStreamEvent/index.md) (transient streaming delta) during model inference. Completed content blocks are handled separately by [ContentBlockEvent](/docs/api/typescript/ContentBlockEvent/index.md) because they represent different granularities: partial deltas vs fully assembled results.
 
@@ -14,7 +14,7 @@ Event triggered for each streaming event from the model. Wraps a [ModelStreamEve
 new ModelStreamUpdateEvent(data): ModelStreamUpdateEvent;
 ```
 
-Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L394)
+Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L394)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-type
 readonly type: "modelStreamUpdateEvent";
 ```
 
-Defined in: [src/hooks/events.ts:390](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L390)
+Defined in: [src/hooks/events.ts:390](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L390)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:390](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:391](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L391)
+Defined in: [src/hooks/events.ts:391](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L391)
 
 ---
 
@@ -60,7 +60,7 @@ Defined in: [src/hooks/events.ts:391](https://github.com/strands-agents/sdk-type
 readonly event: ModelStreamEvent;
 ```
 
-Defined in: [src/hooks/events.ts:392](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L392)
+Defined in: [src/hooks/events.ts:392](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L392)
 
 ## Methods
 
@@ -70,7 +70,7 @@ Defined in: [src/hooks/events.ts:392](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ModelStreamUpdateEvent, "type" | "event">;
 ```
 
-Defined in: [src/hooks/events.ts:404](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L404)
+Defined in: [src/hooks/events.ts:404](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L404)
 
 Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
 

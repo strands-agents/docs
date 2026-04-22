@@ -15,7 +15,7 @@ Llama API model provider implementation.
 ## LlamaConfig
 
 ```python
-class LlamaConfig(TypedDict)
+class LlamaConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/llamaapi.py:34](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamaapi.py#L34)

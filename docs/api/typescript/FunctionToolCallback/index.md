@@ -5,7 +5,7 @@ type FunctionToolCallback = (input, toolContext) =>
   | JSONValue;
 ```
 
-Defined in: [src/tools/function-tool.ts:51](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/tools/function-tool.ts#L51)
+Defined in: [src/tools/function-tool.ts:51](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/function-tool.ts#L51)
 
 Callback function for FunctionTool implementations. The callback can return values in multiple ways, and FunctionTool handles the conversion to ToolResultBlock.
 

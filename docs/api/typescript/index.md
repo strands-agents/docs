@@ -153,6 +153,7 @@
     -   [JSONValue](/docs/api/typescript/JSONValue/index.md)
     -   [McpClientConfig](/docs/api/typescript/McpClientConfig/index.md)
     -   [ModelStreamEvent](/docs/api/typescript/ModelStreamEvent/index.md)
+    -   [MultiAgentSaveLatestStrategy](/docs/api/typescript/MultiAgentSaveLatestStrategy/index.md)
     -   [Role](/docs/api/typescript/Role/index.md)
     -   [SaveLatestStrategy](/docs/api/typescript/SaveLatestStrategy/index.md)
     -   [Scope](/docs/api/typescript/Scope/index.md)

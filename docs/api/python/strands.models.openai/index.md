@@ -36,7 +36,7 @@ OpenAI model provider implementation.
 ## OpenAIConfig
 
 ```python
-class OpenAIConfig(TypedDict)
+class OpenAIConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/openai.py:56](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L56)

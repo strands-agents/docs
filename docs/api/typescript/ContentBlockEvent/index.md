@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:419](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L419)
+Defined in: [src/hooks/events.ts:419](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L419)
 
 Event triggered when a content block completes during model inference. Wraps completed content blocks (TextBlock, ToolUseBlock, ReasoningBlock) from model streaming. This is intentionally separate from [ModelStreamUpdateEvent](/docs/api/typescript/ModelStreamUpdateEvent/index.md). The model’s `streamAggregated()` yields two kinds of output: [ModelStreamEvent](/docs/api/typescript/ModelStreamEvent/index.md) (transient streaming deltas — partial data arriving while the model generates) and [ContentBlock](/docs/api/typescript/ContentBlock/index.md) (fully assembled results after all deltas accumulate). These represent different granularities with different semantics, so they are wrapped in distinct event classes rather than combined into a single event.
 
@@ -14,7 +14,7 @@ Event triggered when a content block completes during model inference. Wraps com
 new ContentBlockEvent(data): ContentBlockEvent;
 ```
 
-Defined in: [src/hooks/events.ts:424](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L424)
+Defined in: [src/hooks/events.ts:424](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L424)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:424](https://github.com/strands-agents/sdk-type
 readonly type: "contentBlockEvent";
 ```
 
-Defined in: [src/hooks/events.ts:420](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L420)
+Defined in: [src/hooks/events.ts:420](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L420)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:420](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:421](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L421)
+Defined in: [src/hooks/events.ts:421](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L421)
 
 ---
 
@@ -60,7 +60,7 @@ Defined in: [src/hooks/events.ts:421](https://github.com/strands-agents/sdk-type
 readonly contentBlock: ContentBlock;
 ```
 
-Defined in: [src/hooks/events.ts:422](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L422)
+Defined in: [src/hooks/events.ts:422](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L422)
 
 ## Methods
 
@@ -70,7 +70,7 @@ Defined in: [src/hooks/events.ts:422](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ContentBlockEvent, "type" | "contentBlock">;
 ```
 
-Defined in: [src/hooks/events.ts:434](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L434)
+Defined in: [src/hooks/events.ts:434](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L434)
 
 Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
 

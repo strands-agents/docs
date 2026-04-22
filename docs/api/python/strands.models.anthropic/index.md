@@ -15,7 +15,7 @@ Anthropic model provider implementation.
 ## AnthropicConfig
 
 ```python
-class AnthropicConfig(TypedDict)
+class AnthropicConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/anthropic.py:49](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L49)

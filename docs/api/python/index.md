@@ -124,5 +124,7 @@
             -   [Events](/docs/api/python/strands.experimental.bidi.types.events)
             -   [Io](/docs/api/python/strands.experimental.bidi.types.io)
             -   [Model](/docs/api/python/strands.experimental.bidi.types.model)
+    -   **Checkpoint**
+        -   [Checkpoint](/docs/api/python/strands.experimental.checkpoint.checkpoint)
     -   **Hooks**
         -   [Events](/docs/api/python/strands.experimental.hooks.events)

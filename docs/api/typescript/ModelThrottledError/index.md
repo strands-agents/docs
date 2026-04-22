@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:122](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/errors.ts#L122)
+Defined in: [src/errors.ts:122](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/errors.ts#L122)
 
 Error thrown when a model provider returns a throttling or rate limit error.
 
@@ -16,7 +16,7 @@ This error indicates that the model API has rate limited the request. Users can 
 new ModelThrottledError(message, options?): ModelThrottledError;
 ```
 
-Defined in: [src/errors.ts:129](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/errors.ts#L129)
+Defined in: [src/errors.ts:129](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/errors.ts#L129)
 
 Creates a new ModelThrottledError.
 

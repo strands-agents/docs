@@ -8,17 +8,17 @@ LiteLLM model provider.
 class LiteLLMModel(OpenAIModel)
 ```
 
-Defined in: [src/strands/models/litellm.py:35](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L35)
+Defined in: [src/strands/models/litellm.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L36)
 
 LiteLLM model provider implementation.
 
 ## LiteLLMConfig
 
 ```python
-class LiteLLMConfig(TypedDict)
+class LiteLLMConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/litellm.py:38](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L38)
+Defined in: [src/strands/models/litellm.py:39](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L39)
 
 Configuration options for LiteLLM models.
 
@@ -34,7 +34,7 @@ def __init__(client_args: dict[str, Any] | None = None,
              **model_config: Unpack[LiteLLMConfig]) -> None
 ```
 
-Defined in: [src/strands/models/litellm.py:52](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L52)
+Defined in: [src/strands/models/litellm.py:53](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L53)
 
 Initialize provider instance.
 
@@ -50,7 +50,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[LiteLLMConfig]) -> None
 ```
 
-Defined in: [src/strands/models/litellm.py:69](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L69)
+Defined in: [src/strands/models/litellm.py:70](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L70)
 
 Update the LiteLLM model configuration with the provided arguments.
 
@@ -65,7 +65,7 @@ Update the LiteLLM model configuration with the provided arguments.
 def get_config() -> LiteLLMConfig
 ```
 
-Defined in: [src/strands/models/litellm.py:80](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L80)
+Defined in: [src/strands/models/litellm.py:81](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L81)
 
 Get the LiteLLM model configuration.
 
@@ -82,7 +82,7 @@ def format_request_message_content(cls, content: ContentBlock,
                                    **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/litellm.py:90](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L90)
+Defined in: [src/strands/models/litellm.py:91](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L91)
 
 Format a LiteLLM content block.
 
@@ -108,7 +108,7 @@ def format_request_message_tool_call(cls, tool_use: ToolUse,
                                      **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/litellm.py:123](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L123)
+Defined in: [src/strands/models/litellm.py:124](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L124)
 
 Format a LiteLLM compatible tool call, encoding thought signatures into the tool call ID.
 
@@ -137,7 +137,7 @@ def format_request_messages(cls,
                             **kwargs: Any) -> list[dict[str, Any]]
 ```
 
-Defined in: [src/strands/models/litellm.py:234](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L234)
+Defined in: [src/strands/models/litellm.py:235](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L235)
 
 Format a LiteLLM compatible messages array with cache point support.
 
@@ -159,7 +159,7 @@ A LiteLLM compatible messages array.
 def format_chunk(event: dict[str, Any], **kwargs: Any) -> StreamEvent
 ```
 
-Defined in: [src/strands/models/litellm.py:259](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L259)
+Defined in: [src/strands/models/litellm.py:260](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L260)
 
 Format a LiteLLM response event into a standardized message chunk.
 
@@ -194,7 +194,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/litellm.py:315](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L315)
+Defined in: [src/strands/models/litellm.py:316](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L316)
 
 Stream conversation with the LiteLLM model.
 
@@ -222,7 +222,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/litellm.py:369](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L369)
+Defined in: [src/strands/models/litellm.py:370](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L370)
 
 Get structured output from the model.
 

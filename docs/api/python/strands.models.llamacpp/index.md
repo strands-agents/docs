@@ -12,7 +12,7 @@ Provides integration with llama.cpp servers running in OpenAI-compatible mode, w
 class LlamaCppModel(Model)
 ```
 
-Defined in: [src/strands/models/llamacpp.py:41](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L41)
+Defined in: [src/strands/models/llamacpp.py:40](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L40)
 
 llama.cpp model provider implementation.
 
@@ -47,10 +47,10 @@ Multimodal usage (requires multimodal model like Qwen2.5-Omni):
 ## LlamaCppConfig
 
 ```python
-class LlamaCppConfig(TypedDict)
+class LlamaCppConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/llamacpp.py:89](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L89)
+Defined in: [src/strands/models/llamacpp.py:88](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L88)
 
 Configuration options for llama.cpp models.
 
@@ -103,7 +103,7 @@ def __init__(base_url: str = "http://localhost:8080",
              **model_config: Unpack[LlamaCppConfig]) -> None
 ```
 
-Defined in: [src/strands/models/llamacpp.py:134](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L134)
+Defined in: [src/strands/models/llamacpp.py:133](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L133)
 
 Initialize llama.cpp provider instance.
 
@@ -120,7 +120,7 @@ Initialize llama.cpp provider instance.
 def update_config(**model_config: Unpack[LlamaCppConfig]) -> None
 ```
 
-Defined in: [src/strands/models/llamacpp.py:177](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L177)
+Defined in: [src/strands/models/llamacpp.py:176](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L176)
 
 Update the llama.cpp model configuration with provided arguments.
 
@@ -135,7 +135,7 @@ Update the llama.cpp model configuration with provided arguments.
 def get_config() -> LlamaCppConfig
 ```
 
-Defined in: [src/strands/models/llamacpp.py:187](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L187)
+Defined in: [src/strands/models/llamacpp.py:186](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L186)
 
 Get the llama.cpp model configuration.
 
@@ -155,7 +155,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:513](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L513)
+Defined in: [src/strands/models/llamacpp.py:512](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L512)
 
 Stream conversation with the llama.cpp model.
 
@@ -187,7 +187,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:709](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L709)
+Defined in: [src/strands/models/llamacpp.py:708](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L708)
 
 Get structured output using llama.cpp’s native JSON schema support.
 

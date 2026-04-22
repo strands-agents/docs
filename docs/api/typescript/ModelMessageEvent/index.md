@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:443](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L443)
+Defined in: [src/hooks/events.ts:443](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L443)
 
 Event triggered when the model completes a full message. Wraps the assembled message and stop reason after model streaming finishes.
 
@@ -14,7 +14,7 @@ Event triggered when the model completes a full message. Wraps the assembled mes
 new ModelMessageEvent(data): ModelMessageEvent;
 ```
 
-Defined in: [src/hooks/events.ts:449](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L449)
+Defined in: [src/hooks/events.ts:449](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L449)
 
 #### Parameters
 
@@ -41,7 +41,7 @@ Defined in: [src/hooks/events.ts:449](https://github.com/strands-agents/sdk-type
 readonly type: "modelMessageEvent";
 ```
 
-Defined in: [src/hooks/events.ts:444](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L444)
+Defined in: [src/hooks/events.ts:444](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L444)
 
 ---
 
@@ -51,7 +51,7 @@ Defined in: [src/hooks/events.ts:444](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:445](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L445)
+Defined in: [src/hooks/events.ts:445](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L445)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [src/hooks/events.ts:445](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:446](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L446)
+Defined in: [src/hooks/events.ts:446](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L446)
 
 ---
 
@@ -71,7 +71,7 @@ Defined in: [src/hooks/events.ts:446](https://github.com/strands-agents/sdk-type
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/hooks/events.ts:447](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L447)
+Defined in: [src/hooks/events.ts:447](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L447)
 
 ## Methods
 
@@ -81,7 +81,7 @@ Defined in: [src/hooks/events.ts:447](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ModelMessageEvent, "type" | "message" | "stopReason">;
 ```
 
-Defined in: [src/hooks/events.ts:460](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/hooks/events.ts#L460)
+Defined in: [src/hooks/events.ts:460](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L460)
 
 Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
 

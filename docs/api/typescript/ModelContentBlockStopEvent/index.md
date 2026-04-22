@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:172](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/streaming.ts#L172)
+Defined in: [src/models/streaming.ts:172](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L172)
 
 Event emitted when a content block completes.
 
@@ -14,7 +14,7 @@ Event emitted when a content block completes.
 new ModelContentBlockStopEvent(_data): ModelContentBlockStopEvent;
 ```
 
-Defined in: [src/models/streaming.ts:178](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/streaming.ts#L178)
+Defined in: [src/models/streaming.ts:178](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L178)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/models/streaming.ts:178](https://github.com/strands-agents/sdk-
 readonly type: "modelContentBlockStopEvent";
 ```
 
-Defined in: [src/models/streaming.ts:176](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/streaming.ts#L176)
+Defined in: [src/models/streaming.ts:176](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L176)
 
 Discriminator for content block stop events.
 

@@ -22,6 +22,12 @@ npm install @strands-agents/sdk @ai-sdk/google
 
 The `@ai-sdk/provider` package (which defines the `LanguageModelV3` interface) is listed as an optional peer dependency of `@strands-agents/sdk` and will be installed automatically with any `@ai-sdk/*` provider.
 
+For community providers like Ollama, install the community package directly:
+
+```bash
+npm install @strands-agents/sdk ai-sdk-ollama
+```
+
 ## Usage
 
 Create a `LanguageModelV3` instance from any Vercel provider and wrap it with `VercelModel`:
@@ -88,6 +94,27 @@ const result = await agent.invoke('Hello!')
 console.log(result)
 ```
 
+### Ollama
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { VercelModel } from '@strands-agents/sdk/models/vercel'
+import { ollama } from 'ai-sdk-ollama'
+
+const agent = new Agent({
+  model: new VercelModel({ provider: ollama('llama3.1') }),
+})
+
+const result = await agent.invoke('Hello!')
+console.log(result)
+```
+
+Note
+
+Ollama must be [installed](https://ollama.com/download) and running locally with your desired model pulled (e.g., `ollama pull llama3.1`).
+
+The [Vercel AI SDK recommends two community Ollama providers](https://ai-sdk.dev/providers/community-providers/ollama): `ollama-ai-provider-v2` as a basic option for simple text generation, and `ai-sdk-ollama` as a more advanced option with reliable tool calling and guaranteed complete responses. We choose `ai-sdk-ollama` to ensure Strands agents can fully leverage tool calling and operate without limitations.
+
 ## Configuration
 
 `VercelModel` accepts configuration directly alongside the `provider` option. These include all [LanguageModelV3CallOptions](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3) settings (temperature, topP, topK, penalties, stop sequences, seed, etc.) plus the base Strands model config fields.
@@ -150,7 +177,9 @@ The `VercelModel` adapter handles:
 
 ## Compatible providers
 
-Any package that implements the `LanguageModelV3` interface works with `VercelModel`. This includes all [official Vercel AI SDK providers](https://sdk.vercel.ai/docs/foundations/providers-and-models) and community providers:
+Any package that implements the `LanguageModelV3` interface works with `VercelModel`. This includes both official Vercel AI SDK providers and community providers.
+
+### [Official providers](https://sdk.vercel.ai/docs/foundations/providers-and-models)
 
 | Provider | Package |
 | --- | --- |
@@ -166,7 +195,11 @@ Any package that implements the `LanguageModelV3` interface works with `VercelMo
 | DeepSeek | `@ai-sdk/deepseek` |
 | Groq | `@ai-sdk/groq` |
 
-See the [Vercel AI SDK providers page](https://sdk.vercel.ai/docs/foundations/providers-and-models) for the full list.
+### [Community providers](https://ai-sdk.dev/providers/community-providers)
+
+| Provider | Package |
+| --- | --- |
+| Ollama | `ai-sdk-ollama` |
 
 ## Troubleshooting
 

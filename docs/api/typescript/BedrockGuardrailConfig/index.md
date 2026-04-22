@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:137](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L137)
+Defined in: [src/models/bedrock.ts:137](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L137)
 
 Configuration for Bedrock guardrails.
 
@@ -16,7 +16,7 @@ For production use with sensitive content, consider `SessionManager` with `saveL
 guardrailIdentifier: string;
 ```
 
-Defined in: [src/models/bedrock.ts:139](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L139)
+Defined in: [src/models/bedrock.ts:139](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L139)
 
 Guardrail identifier
 
@@ -28,7 +28,7 @@ Guardrail identifier
 guardrailVersion: string;
 ```
 
-Defined in: [src/models/bedrock.ts:142](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L142)
+Defined in: [src/models/bedrock.ts:142](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L142)
 
 Guardrail version (e.g., “1”, “DRAFT”)
 
@@ -40,7 +40,7 @@ Guardrail version (e.g., “1”, “DRAFT”)
 optional trace?: "enabled" | "disabled" | "enabled_full";
 ```
 
-Defined in: [src/models/bedrock.ts:145](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L145)
+Defined in: [src/models/bedrock.ts:145](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L145)
 
 Trace mode for evaluation.
 
@@ -58,7 +58,7 @@ Trace mode for evaluation.
 optional streamProcessingMode?: "sync" | "async";
 ```
 
-Defined in: [src/models/bedrock.ts:148](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L148)
+Defined in: [src/models/bedrock.ts:148](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L148)
 
 Stream processing mode
 
@@ -70,7 +70,7 @@ Stream processing mode
 optional redaction?: BedrockGuardrailRedactionConfig;
 ```
 
-Defined in: [src/models/bedrock.ts:151](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L151)
+Defined in: [src/models/bedrock.ts:151](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L151)
 
 Redaction behavior when content is blocked
 
@@ -82,7 +82,7 @@ Redaction behavior when content is blocked
 optional guardLatestUserMessage?: boolean;
 ```
 
-Defined in: [src/models/bedrock.ts:165](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L165)
+Defined in: [src/models/bedrock.ts:165](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L165)
 
 Only evaluate the latest user message with guardrails. When true, wraps the latest user message’s text/image content in guardContent blocks. This can improve performance and reduce costs in multi-turn conversations.
 

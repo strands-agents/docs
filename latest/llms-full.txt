@@ -19225,6 +19225,12 @@ npm install @strands-agents/sdk @ai-sdk/google
 
 The `@ai-sdk/provider` package (which defines the `LanguageModelV3` interface) is listed as an optional peer dependency of `@strands-agents/sdk` and will be installed automatically with any `@ai-sdk/*` provider.
 
+For community providers like Ollama, install the community package directly:
+
+```bash
+npm install @strands-agents/sdk ai-sdk-ollama
+```
+
 ## Usage
 
 Create a `LanguageModelV3` instance from any Vercel provider and wrap it with `VercelModel`:
@@ -19291,6 +19297,27 @@ const result = await agent.invoke('Hello!')
 console.log(result)
 ```
 
+### Ollama
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { VercelModel } from '@strands-agents/sdk/models/vercel'
+import { ollama } from 'ai-sdk-ollama'
+
+const agent = new Agent({
+  model: new VercelModel({ provider: ollama('llama3.1') }),
+})
+
+const result = await agent.invoke('Hello!')
+console.log(result)
+```
+
+Note
+
+Ollama must be [installed](https://ollama.com/download) and running locally with your desired model pulled (e.g., `ollama pull llama3.1`).
+
+The [Vercel AI SDK recommends two community Ollama providers](https://ai-sdk.dev/providers/community-providers/ollama): `ollama-ai-provider-v2` as a basic option for simple text generation, and `ai-sdk-ollama` as a more advanced option with reliable tool calling and guaranteed complete responses. We choose `ai-sdk-ollama` to ensure Strands agents can fully leverage tool calling and operate without limitations.
+
 ## Configuration
 
 `VercelModel` accepts configuration directly alongside the `provider` option. These include all [LanguageModelV3CallOptions](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3) settings (temperature, topP, topK, penalties, stop sequences, seed, etc.) plus the base Strands model config fields.
@@ -19353,7 +19380,9 @@ The `VercelModel` adapter handles:
 
 ## Compatible providers
 
-Any package that implements the `LanguageModelV3` interface works with `VercelModel`. This includes all [official Vercel AI SDK providers](https://sdk.vercel.ai/docs/foundations/providers-and-models) and community providers:
+Any package that implements the `LanguageModelV3` interface works with `VercelModel`. This includes both official Vercel AI SDK providers and community providers.
+
+### [Official providers](https://sdk.vercel.ai/docs/foundations/providers-and-models)
 
 | Provider | Package |
 | --- | --- |
@@ -19369,7 +19398,11 @@ Any package that implements the `LanguageModelV3` interface works with `VercelMo
 | DeepSeek | `@ai-sdk/deepseek` |
 | Groq | `@ai-sdk/groq` |
 
-See the [Vercel AI SDK providers page](https://sdk.vercel.ai/docs/foundations/providers-and-models) for the full list.
+### [Community providers](https://ai-sdk.dev/providers/community-providers)
+
+| Provider | Package |
+| --- | --- |
+| Ollama | `ai-sdk-ollama` |
 
 ## Troubleshooting
 
@@ -37312,7 +37345,7 @@ Source: https://strandsagents.com/docs/user-guide/evals-sdk/quickstart/index.md
 
 ## Overview
 
-Simulators enable dynamic, multi-turn evaluation of conversational agents by generating realistic interaction patterns. Unlike static evaluators that assess single outputs, simulators actively participate in conversations, adapting their behavior based on agent responses to create authentic evaluation scenarios.
+Simulators dynamically evaluate agents by generating realistic interaction patterns, going beyond static methods that only assess single outputs. They actively drive multi-turn conversations and produce authentic tool responses, creating evaluation scenarios that closely mirror real-world use.
 
 ## Why Simulators?
 
@@ -37332,6 +37365,7 @@ Traditional evaluation approaches have limitations when assessing conversational
 -   Test goal completion in realistic scenarios
 -   Evaluate conversation flow and context maintenance
 -   Enable testing without predefined scripts
+-   Simulate tool behavior without live infrastructure
 
 ## When to Use Simulators
 
@@ -37343,6 +37377,7 @@ Use simulators when you need to:
 -   **Generate Diverse Interactions**: Create varied conversation patterns automatically
 -   **Evaluate Without Scripts**: Test agents without predefined conversation paths
 -   **Simulate Real Users**: Generate realistic user behavior patterns
+-   **Test Tool Usage Without Infrastructure**: Evaluate agent tool-use behavior without live APIs, databases, or services
 
 ## ActorSimulator
 
@@ -37365,21 +37400,58 @@ While user simulation is the primary use case, `ActorSimulator` can simulate oth
 -   **Adversarial Actors**: Test robustness and edge cases
 -   **Internal Staff**: Evaluate internal tooling workflows
 
+## ToolSimulator
+
+The `ToolSimulator` enables LLM-powered simulation of tool behavior for controlled agent evaluation. Instead of calling real tools, registered tools are executed by an LLM that generates realistic, schema-validated responses while maintaining state across calls.
+
+This is useful when real tools require live infrastructure, when you need controllable behavior for evaluation, or when tools are still under development.
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+tool_simulator = ToolSimulator()
+
+class WeatherResponse(BaseModel):
+    temperature: float = Field(..., description="Temperature in Fahrenheit")
+    conditions: str = Field(..., description="Weather conditions")
+
+@tool_simulator.tool(output_schema=WeatherResponse)
+def get_weather(city: str) -> dict[str, Any]:
+    """Get current weather for a city."""
+    pass
+
+weather_tool = tool_simulator.get_tool("get_weather")
+agent = Agent(tools=[weather_tool], callback_handler=None)
+response = agent("What's the weather in Seattle?")
+```
+
+Key capabilities:
+
+-   **Decorator-based registration** with automatic metadata extraction from function signatures
+-   **Schema-validated responses** via Pydantic output models
+-   **Shared state** across related tools via `share_state_id` (e.g., sensor + controller operating on the same environment)
+-   **Stateful context** with initial state descriptions and bounded call history cache
+
+[Complete Tool Simulation Guide →](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md)
+
 ## Extensibility
 
-The simulator framework is designed to be extensible. While `ActorSimulator` provides a general-purpose foundation, additional specialized simulators can be built for specific evaluation patterns as needs emerge.
+The simulator framework is designed to be extensible. `ActorSimulator` and `ToolSimulator` provide general-purpose foundations, and additional specialized simulators can be built for specific evaluation patterns as needs emerge.
 
 ## Simulators vs Evaluators
 
 Understanding when to use simulators versus evaluators:
 
-| Aspect | Evaluators | Simulators |
-| --- | --- | --- |
-| **Interaction** | Passive assessment | Active participation |
-| **Turns** | Single turn | Multi-turn |
-| **Adaptation** | Static criteria | Dynamic responses |
-| **Use Case** | Output quality | Conversation flow |
-| **Goal** | Score responses | Drive interactions |
+| Aspect | Evaluators | ActorSimulator | ToolSimulator |
+| --- | --- | --- | --- |
+| **Role** | Passive assessment | Active conversation participant | Simulated tool execution |
+| **Turns** | Single turn | Multi-turn | Per tool call |
+| **Adaptation** | Static criteria | Dynamic responses | Stateful responses |
+| **Use Case** | Output quality | Conversation flow | Tool-use behavior |
+| **Goal** | Score responses | Drive interactions | Replace infrastructure |
 
 **Use Together:** Simulators and evaluators complement each other. Use simulators to generate multi-turn conversations, then use evaluators to assess the quality of those interactions.
 
@@ -37575,7 +37647,8 @@ def compare_agent_configurations(case: Case, configs: list) -> dict:
 
 ## Next Steps
 
--   [User Simulator Guide](/docs/user-guide/evals-sdk/simulators/user_simulation/index.md): Learn about user simulation
+-   [User Simulation Guide](/docs/user-guide/evals-sdk/simulators/user_simulation/index.md): Simulate multi-turn user conversations
+-   [Tool Simulation Guide](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md): Simulate tool behavior with LLM-powered responses
 -   [Evaluators](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Combine with evaluators
 
 ## Related Documentation
@@ -37585,6 +37658,420 @@ def compare_agent_configurations(case: Case, configs: list) -> dict:
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate test cases automatically
 
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/simulators/index.md
+
+---
+
+## Tool Simulation
+
+## Overview
+
+Tool simulation enables controlled agent evaluation by replacing real tool execution with LLM-powered responses. Using the `ToolSimulator` class, you register tools with a decorator, define output schemas, and optionally share state across related tools. When the agent calls a simulated tool, an LLM generates a realistic, schema-validated response instead of executing the real function.
+
+This is useful when:
+
+-   Real tools require live infrastructure (APIs, databases, hardware)
+-   You need controllable tool behavior for evaluation
+-   You want to test agent tool-use patterns without side effects
+-   Tools are still under development or unavailable in the test environment
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+tool_simulator = ToolSimulator()
+
+class WeatherResponse(BaseModel):
+    temperature: float = Field(..., description="Temperature in Fahrenheit")
+    conditions: str = Field(..., description="Weather conditions")
+
+@tool_simulator.tool(output_schema=WeatherResponse)
+def get_weather(city: str) -> dict[str, Any]:
+    """Get current weather for a city."""
+    pass
+
+weather_tool = tool_simulator.get_tool("get_weather")
+agent = Agent(tools=[weather_tool], callback_handler=None)
+response = agent("What's the weather in Seattle?")
+```
+
+## How It Works
+
+1.  **Tool Registration**: The `@tool_simulator.tool()` decorator captures function metadata (name, docstring, type hints) via Strands’ `FunctionToolMetadata`. The function body is never executed.
+2.  **Simulation Wrapper**: When retrieved via `get_tool()`, the real function is replaced with an LLM-backed wrapper that can be passed to a Strands `Agent`.
+3.  **LLM Invocation**: On each call, the wrapper builds a prompt containing the tool’s input schema, output schema, user parameters, and current state context, then invokes an Agent to generate a response.
+4.  **State Tracking**: A `StateRegistry` records call history and shared state across tools, providing the LLM with context for consistent responses.
+
+## Basic Usage
+
+### Registering a Tool
+
+Define a function with type hints and a docstring, then decorate it with `@tool_simulator.tool()`. Provide an `output_schema` to control the response structure, and the tool can be retrived and passed to a Strands agent.
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+tool_simulator = ToolSimulator()
+
+class OrderStatus(BaseModel):
+    order_id: str = Field(..., description="Order identifier")
+    status: str = Field(..., description="Current order status")
+    estimated_delivery: str = Field(..., description="Estimated delivery date")
+
+@tool_simulator.tool(output_schema=OrderStatus)
+def check_order(order_id: str) -> dict[str, Any]:
+    """Check the current status of a customer order."""
+    pass
+
+order_tool = tool_simulator.get_tool("check_order")
+agent = Agent(
+    system_prompt="You are a customer service assistant.",
+    tools=[order_tool],
+    callback_handler=None,
+)
+response = agent("Where is my order #12345?")
+```
+
+### Custom Tool Names
+
+Override the default function name:
+
+```python
+@tool_simulator.tool(name="lookup_order", output_schema=OrderStatus)
+def check_order(order_id: str) -> dict[str, Any]:
+    """Check the current status of a customer order."""
+    pass
+
+# Retrieved by custom name
+tool = tool_simulator.get_tool("lookup_order")
+```
+
+## Shared State
+
+Tools that operate on the same environment can share state via `share_state_id`. When multiple tools share a state key, the LLM sees call history from all of them, enabling consistent behavior across related tools.
+
+```python
+from enum import Enum
+from pydantic import BaseModel, Field
+
+tool_simulator = ToolSimulator()
+
+class HVACMode(str, Enum):
+    HEAT = "heat"
+    COOL = "cool"
+    AUTO = "auto"
+    OFF = "off"
+
+class HVACResponse(BaseModel):
+    temperature: float = Field(..., description="Target temperature in Fahrenheit")
+    mode: HVACMode = Field(..., description="HVAC mode")
+    status: str = Field(default="success", description="Operation status")
+
+class SensorResponse(BaseModel):
+    temperature: float = Field(..., description="Current temperature in Fahrenheit")
+    humidity: float = Field(..., description="Current humidity percentage")
+
+@tool_simulator.tool(
+    share_state_id="room_environment",
+    initial_state_description="Room environment: temperature 68F, humidity 45%, HVAC off",
+    output_schema=HVACResponse,
+)
+def hvac_controller(temperature: float, mode: str) -> dict:
+    """Control heating/cooling system that affects room temperature and humidity."""
+    pass
+
+@tool_simulator.tool(
+    share_state_id="room_environment",
+    output_schema=SensorResponse,
+)
+def room_sensor() -> dict:
+    """Read current room temperature and humidity."""
+    pass
+
+# Both tools share the "room_environment" state
+hvac_tool = tool_simulator.get_tool("hvac_controller")
+sensor_tool = tool_simulator.get_tool("room_sensor")
+agent = Agent(tools=[hvac_tool, sensor_tool], callback_handler=None)
+```
+
+### Initial State Description
+
+The `initial_state_description` parameter provides the LLM with baseline context about the environment. This is included in every prompt so the LLM can generate responses consistent with the starting conditions:
+
+```python
+@tool_simulator.tool(
+    initial_state_description="Database contains users: alice (admin), bob (viewer). No pending invitations.",
+    output_schema=UserLookupResponse,
+)
+def lookup_user(username: str) -> dict:
+    """Look up a user in the system."""
+    pass
+```
+
+## Integration with Experiments
+
+Use ToolSimulator within an Experiment to evaluate agent tool-use behavior end-to-end:
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+from strands_evals.simulation.tool_simulator import ToolSimulator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+
+# Setup telemetry
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+memory_exporter = telemetry.in_memory_exporter
+tool_simulator = ToolSimulator()
+
+class HVACResponse(BaseModel):
+    temperature: float = Field(..., description="Target temperature in Fahrenheit")
+    mode: str = Field(..., description="HVAC mode")
+    status: str = Field(default="success", description="Operation status")
+
+@tool_simulator.tool(
+    share_state_id="room_environment",
+    initial_state_description="Room: 68F, humidity 45%, HVAC off",
+    output_schema=HVACResponse,
+)
+def hvac_controller(temperature: float, mode: str) -> dict:
+    """Control heating/cooling system."""
+    pass
+
+def task_function(case: Case) -> dict:
+    hvac_tool = tool_simulator.get_tool("hvac_controller")
+    agent = Agent(
+        trace_attributes={
+            "gen_ai.conversation.id": case.session_id,
+            "session.id": case.session_id,
+        },
+        system_prompt="You are an HVAC control assistant.",
+        tools=[hvac_tool],
+        callback_handler=None,
+    )
+    response = agent(case.input)
+
+    spans = memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+
+    return {"output": str(response), "trajectory": session}
+
+test_cases = [
+    Case(name="heat_control", input="Turn on the heat to 72 degrees"),
+    Case(name="cool_down", input="It's too hot, cool the room to 65 degrees"),
+]
+
+evaluators = [GoalSuccessRateEvaluator()]
+experiment = Experiment(cases=test_cases, evaluators=evaluators)
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+## API Reference
+
+### ToolSimulator
+
+| Method | Description |
+| --- | --- |
+| `tool(output_schema, name, share_state_id, initial_state_description)` | Decorator to register a simulated tool |
+| `get_tool(tool_name)` | Retrieve a simulation-wrapped tool by name |
+| `get_state(state_key)` | Get current state for a tool or shared state group |
+| `list_tools()` | List all registered tool names |
+| `clear_tools()` | Clear all registered tools |
+
+### StateRegistry
+
+| Method | Description |
+| --- | --- |
+| `initialize_state_via_description(description, state_key)` | Pre-seed state with context |
+| `get_state(state_key)` | Retrieve state dict for a tool or shared group |
+| `cache_tool_call(tool_name, state_key, response_data, parameters)` | Record a tool call |
+| `clear_state(state_key)` | Clear state for a specific key |
+
+### Data Models
+
+**RegisteredTool:**
+
+```python
+class RegisteredTool(BaseModel):
+    name: str                                    # Tool name
+    function: Callable | None                    # Underlying DecoratedFunctionTool
+    output_schema: type[BaseModel] | None        # Pydantic output schema
+    initial_state_description: str | None         # Initial state context
+    share_state_id: str | None                   # Shared state key
+```
+
+**DefaultToolResponse:**
+
+```python
+class DefaultToolResponse(BaseModel):
+    response: str  # Default response when no output_schema is provided
+```
+
+## Advanced Usage and Configurations
+
+### Inspecting State
+
+Use `get_state()` to examine call history and initial state for debugging:
+
+```python
+# Before agent invocation
+initial_state = tool_simulator.get_state("room_environment")
+print(f"Initial state: {initial_state.get('initial_state')}")
+print(f"Previous calls: {initial_state.get('previous_calls', [])}")
+
+# After agent invocation
+final_state = tool_simulator.get_state("room_environment")
+for call in final_state["previous_calls"]:
+    print(f"  {call['tool_name']}: {call['parameters']} -> {call['response']}")
+```
+
+Each call record contains:
+
+-   `tool_name`: Name of the tool that was called
+-   `parameters`: The parameters passed to the tool
+-   `response`: The LLM-generated response
+-   `timestamp`: When the call was made
+
+### Configuration
+
+#### Custom Model
+
+Specify a different model for simulation inference:
+
+```python
+# Via model ID string (Bedrock)
+tool_simulator = ToolSimulator(model="anthropic.claude-3-5-sonnet-20241022-v2:0")
+
+# Via Strands Model provider
+from strands.models import BedrockModel
+
+model = BedrockModel(model_id="anthropic.claude-3-5-sonnet-20241022-v2:0")
+tool_simulator = ToolSimulator(model=model)
+```
+
+#### Cache Size
+
+Control how many tool calls are retained per state key:
+
+```python
+# Default: 20 calls per state key
+tool_simulator = ToolSimulator(max_tool_call_cache_size=20)
+
+# Increase for long-running evaluations
+tool_simulator = ToolSimulator(max_tool_call_cache_size=50)
+```
+
+When the cache is full, the oldest calls are evicted (FIFO).
+
+#### Custom State Registry
+
+Provide your own `StateRegistry` for advanced state management:
+
+```python
+from strands_evals.simulation.tool_simulator import StateRegistry, ToolSimulator
+
+registry = StateRegistry(max_tool_call_cache_size=100)
+tool_simulator = ToolSimulator(state_registry=registry)
+```
+
+### Running Independent Simulator Instances
+
+You can create multiple `ToolSimulator` instances side by side. Each instance maintains its own tool registry and state, so you can run parallel experiment configurations in the same codebase:
+
+```python
+simulator_a = ToolSimulator()
+simulator_b = ToolSimulator()
+
+# Each instance has an independent tool registry and state --
+# ideal for comparing agent behavior across different tool setups.
+```
+
+This is useful when you want to A/B test different tool configurations, output schemas, or initial state descriptions against the same agent.
+
+### Seeding State from Real Data
+
+Because `initial_state_description` accepts natural language, you can get creative with how you seed context. For tools that interact with tabular data, use a `DataFrame.describe()` call to generate statistical summaries and pass those statistics directly as the state description. `ToolSimulator` will generate responses that reflect realistic data distributions, without ever accessing the actual data:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("sales_data.csv")
+stats_summary = df.describe().to_string()
+
+@tool_simulator.tool(
+    initial_state_description=f"Sales database statistics:\n{stats_summary}",
+    output_schema=SalesQueryResponse,
+)
+def query_sales(region: str, quarter: str) -> dict:
+    """Query sales data by region and quarter."""
+    pass
+```
+
+This approach lets you ground simulated responses in real data characteristics while keeping the actual data out of the evaluation loop.
+
+## Troubleshooting
+
+### Issue: Tool Not Found
+
+`get_tool()` returns `None` if the tool name doesn’t match:
+
+```python
+tool = tool_simulator.get_tool("my_tool")
+if tool is None:
+    print(f"Available tools: {tool_simulator.list_tools()}")
+```
+
+### Issue: Inconsistent Responses Across Calls
+
+Ensure related tools share state and that initial state is set:
+
+```python
+# Without shared state, each tool has independent context
+@tool_simulator.tool(share_state_id="shared_env", initial_state_description="...", output_schema=...)
+def tool_a(...): ...
+
+@tool_simulator.tool(share_state_id="shared_env", output_schema=...)
+def tool_b(...): ...
+```
+
+### Issue: State Re-initialization Warning
+
+If you see a warning about state already being initialized, it means two tools with the same `share_state_id` both provide `initial_state_description`. Only the first one takes effect:
+
+```python
+# First tool initializes state
+@tool_simulator.tool(
+    share_state_id="env",
+    initial_state_description="Starting state",  # This takes effect
+    output_schema=...,
+)
+def tool_a(...): ...
+
+# Second tool's initial_state_description is ignored with a warning
+@tool_simulator.tool(
+    share_state_id="env",
+    initial_state_description="Different state",  # Ignored
+    output_schema=...,
+)
+def tool_b(...): ...
+```
+
+## Related Documentation
+
+-   [Simulators Overview](/docs/user-guide/evals-sdk/simulators/index.md): Overview of the simulator framework
+-   [User Simulation](/docs/user-guide/evals-sdk/simulators/user_simulation/index.md): Simulate multi-turn user conversations
+-   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with Strands Evals
+-   [Goal Success Rate Evaluator](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Assess goal completion
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md
 
 ---
 
@@ -39905,20 +40392,19 @@ import {
 } from '@opentelemetry/sdk-trace-base'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 
-const provider = new NodeTracerProvider()
-
-// Configure OTLP endpoint programmatically
-provider.addSpanProcessor(
-  new BatchSpanProcessor(
-    new OTLPTraceExporter({
-      url: 'http://collector.example.com:4318/v1/traces',
-      headers: { key1: 'value1', key2: 'value2' },
-    })
-  )
-)
-
-// Add console exporter for debugging
-provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()))
+const provider = new NodeTracerProvider({
+  spanProcessors: [
+    // Configure OTLP endpoint programmatically
+    new BatchSpanProcessor(
+      new OTLPTraceExporter({
+        url: 'http://collector.example.com:4318/v1/traces',
+        headers: { key1: 'value1', key2: 'value2' },
+      })
+    ),
+    // Add console exporter for debugging
+    new SimpleSpanProcessor(new ConsoleSpanExporter()),
+  ],
+})
 
 // Register the provider with Strands
 setupTracer({ provider })

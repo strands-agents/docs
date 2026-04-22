@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:115](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L115)
+Defined in: [src/models/bedrock.ts:115](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L115)
 
 Redaction configuration for Bedrock guardrails. Controls whether and how blocked content is replaced.
 
@@ -10,7 +10,7 @@ Redaction configuration for Bedrock guardrails. Controls whether and how blocked
 optional input?: boolean;
 ```
 
-Defined in: [src/models/bedrock.ts:117](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L117)
+Defined in: [src/models/bedrock.ts:117](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L117)
 
 Redact input when blocked.
 
@@ -28,7 +28,7 @@ true
 optional inputMessage?: string;
 ```
 
-Defined in: [src/models/bedrock.ts:120](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L120)
+Defined in: [src/models/bedrock.ts:120](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L120)
 
 Replacement message for redacted input.
 
@@ -46,7 +46,7 @@ Replacement message for redacted input.
 optional output?: boolean;
 ```
 
-Defined in: [src/models/bedrock.ts:123](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L123)
+Defined in: [src/models/bedrock.ts:123](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L123)
 
 Redact output when blocked.
 
@@ -64,7 +64,7 @@ false
 optional outputMessage?: string;
 ```
 
-Defined in: [src/models/bedrock.ts:126](https://github.com/strands-agents/sdk-typescript/blob/010da7709951578da6245c3411cec933e3c1f082/src/models/bedrock.ts#L126)
+Defined in: [src/models/bedrock.ts:126](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/bedrock.ts#L126)
 
 Replacement message for redacted output.
 

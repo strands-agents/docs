@@ -17,7 +17,7 @@ Google Gemini model provider implementation.
 ## GeminiConfig
 
 ```python
-class GeminiConfig(TypedDict)
+class GeminiConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/gemini.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L36)

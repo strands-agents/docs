@@ -7,7 +7,7 @@ Amazon SageMaker model provider.
 class UsageMetadata()
 ```
 
-Defined in: [src/strands/models/sagemaker.py:28](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L28)
+Defined in: [src/strands/models/sagemaker.py:29](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L29)
 
 Usage metadata for the model.
 
@@ -25,7 +25,7 @@ Usage metadata for the model.
 class FunctionCall()
 ```
 
-Defined in: [src/strands/models/sagemaker.py:45](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L45)
+Defined in: [src/strands/models/sagemaker.py:46](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L46)
 
 Function call for the model.
 
@@ -40,7 +40,7 @@ Function call for the model.
 def __init__(**kwargs: dict[str, str])
 ```
 
-Defined in: [src/strands/models/sagemaker.py:56](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L56)
+Defined in: [src/strands/models/sagemaker.py:57](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L57)
 
 Initialize function call.
 
@@ -55,7 +55,7 @@ Initialize function call.
 class ToolCall()
 ```
 
-Defined in: [src/strands/models/sagemaker.py:67](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L67)
+Defined in: [src/strands/models/sagemaker.py:68](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L68)
 
 Tool call for the model object.
 
@@ -71,7 +71,7 @@ Tool call for the model object.
 def __init__(**kwargs: dict)
 ```
 
-Defined in: [src/strands/models/sagemaker.py:80](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L80)
+Defined in: [src/strands/models/sagemaker.py:81](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L81)
 
 Initialize tool call object.
 
@@ -85,7 +85,7 @@ Initialize tool call object.
 class SageMakerAIModel(OpenAIModel)
 ```
 
-Defined in: [src/strands/models/sagemaker.py:91](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L91)
+Defined in: [src/strands/models/sagemaker.py:92](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L92)
 
 Amazon SageMaker model provider implementation.
 
@@ -99,7 +99,7 @@ type: ignore\[assignment\]
 class SageMakerAIPayloadSchema(TypedDict)
 ```
 
-Defined in: [src/strands/models/sagemaker.py:96](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L96)
+Defined in: [src/strands/models/sagemaker.py:97](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L97)
 
 Payload schema for the Amazon SageMaker AI model.
 
@@ -117,10 +117,10 @@ Payload schema for the Amazon SageMaker AI model.
 ## SageMakerAIEndpointConfig
 
 ```python
-class SageMakerAIEndpointConfig(TypedDict)
+class SageMakerAIEndpointConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/sagemaker.py:119](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L119)
+Defined in: [src/strands/models/sagemaker.py:120](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L120)
 
 Configuration options for SageMaker models.
 
@@ -142,7 +142,7 @@ def __init__(endpoint_config: SageMakerAIEndpointConfig,
              boto_client_config: BotocoreConfig | None = None)
 ```
 
-Defined in: [src/strands/models/sagemaker.py:136](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L136)
+Defined in: [src/strands/models/sagemaker.py:137](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L137)
 
 Initialize provider instance.
 
@@ -161,7 +161,7 @@ def update_config(**endpoint_config: Unpack[SageMakerAIEndpointConfig]
                   ) -> None
 ```
 
-Defined in: [src/strands/models/sagemaker.py:181](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L181)
+Defined in: [src/strands/models/sagemaker.py:182](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L182)
 
 Update the Amazon SageMaker model configuration with the provided arguments.
 
@@ -176,7 +176,7 @@ Update the Amazon SageMaker model configuration with the provided arguments.
 def get_config() -> "SageMakerAIModel.SageMakerAIEndpointConfig"
 ```
 
-Defined in: [src/strands/models/sagemaker.py:191](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L191)
+Defined in: [src/strands/models/sagemaker.py:192](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L192)
 
 Get the Amazon SageMaker model configuration.
 
@@ -195,7 +195,7 @@ def format_request(messages: Messages,
                    **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/sagemaker.py:200](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L200)
+Defined in: [src/strands/models/sagemaker.py:201](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L201)
 
 Format an Amazon SageMaker chat streaming request.
 
@@ -223,7 +223,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/sagemaker.py:301](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L301)
+Defined in: [src/strands/models/sagemaker.py:302](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L302)
 
 Stream conversation with the SageMaker model.
 
@@ -248,7 +248,7 @@ def format_request_tool_message(cls, tool_result: ToolResult,
                                 **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/sagemaker.py:507](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L507)
+Defined in: [src/strands/models/sagemaker.py:508](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L508)
 
 Format a SageMaker compatible tool message.
 
@@ -270,7 +270,7 @@ def format_request_message_content(cls, content: ContentBlock,
                                    **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/sagemaker.py:538](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L538)
+Defined in: [src/strands/models/sagemaker.py:539](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L539)
 
 Format a content block.
 
@@ -298,7 +298,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/sagemaker.py:575](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L575)
+Defined in: [src/strands/models/sagemaker.py:576](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/sagemaker.py#L576)
 
 Get structured output from the model.
 

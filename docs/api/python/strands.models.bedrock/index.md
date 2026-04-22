@@ -23,7 +23,7 @@ The implementation handles Bedrock-specific features such as:
 ## BedrockConfig
 
 ```python
-class BedrockConfig(TypedDict)
+class BedrockConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/bedrock.py:72](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L72)

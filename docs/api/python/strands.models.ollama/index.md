@@ -21,7 +21,7 @@ The implementation handles Ollama-specific features such as:
 ## OllamaConfig
 
 ```python
-class OllamaConfig(TypedDict)
+class OllamaConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/ollama.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L36)

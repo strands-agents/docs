@@ -22,7 +22,7 @@ The implementation handles Mistral-specific features such as:
 ## MistralConfig
 
 ```python
-class MistralConfig(TypedDict)
+class MistralConfig(BaseModelConfig)
 ```
 
 Defined in: [src/strands/models/mistral.py:39](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/mistral.py#L39)
