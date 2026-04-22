@@ -95,17 +95,16 @@ Let's start with a simple output evaluation using the `OutputEvaluator`. Create 
 
 ```python
 from strands import Agent
-from strands_evals import Case, Experiment
+from strands_evals import eval_task, Case, Experiment
 from strands_evals.evaluators import OutputEvaluator
 
-# Define your task function
-def get_response(case: Case) -> str:
-    agent = Agent(
+# The @eval_task decorator handles boilerplate — just return an Agent
+@eval_task()
+def get_response():
+    return Agent(
         system_prompt="You are a helpful assistant that provides accurate information.",
-        callback_handler=None  # Disable console output for cleaner evaluation
+        callback_handler=None
     )
-    response = agent(case.input)
-    return str(response)
 
 # Create test cases
 test_cases = [
@@ -155,6 +154,11 @@ reports[0].run_display()
 # Save experiment for later analysis
 experiment.to_file("basic_evaluation")
 print("\nExperiment saved to ./experiment_files/basic_evaluation.json")
+```
+
+:::tip[The @eval_task decorator]
+The `@eval_task()` decorator eliminates boilerplate. Your function can return an `Agent` (auto-invoked with `case.input`), a `str`, or a `dict`. For trace-based evaluators, use `@eval_task(TracedHandler())` to automatically collect spans. See the [Task Decorator guide](how-to/eval_task.md) for details.
+:::
 ```
 
 ## Tool Usage Evaluation
@@ -250,39 +254,17 @@ For more advanced evaluation, let's assess agent helpfulness using execution tra
 When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
 :::
 
+The `TracedHandler` handles all of this automatically:
+
 ```python
 from strands import Agent
-from strands_evals import Case, Experiment
+from strands_evals import eval_task, TracedHandler, Case, Experiment
 from strands_evals.evaluators import HelpfulnessEvaluator
-from strands_evals.telemetry import StrandsEvalsTelemetry
-from strands_evals.mappers import StrandsInMemorySessionMapper
 from strands_tools import calculator
 
-# Setup telemetry for trace capture
-telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
-
-def user_task_function(case: Case) -> dict:
-    # Clear previous traces
-    telemetry.in_memory_exporter.clear()
-    
-    agent = Agent(
-        tools=[calculator],
-        # IMPORTANT: trace_attributes with session IDs are required when using StrandsInMemorySessionMapper
-        # to prevent spans from different test cases from being mixed together in the memory exporter
-        trace_attributes={
-            "gen_ai.conversation.id": case.session_id,
-            "session.id": case.session_id
-        },
-        callback_handler=None
-    )
-    response = agent(case.input)
-    
-    # Map spans to session for evaluation
-    finished_spans = telemetry.in_memory_exporter.get_finished_spans()
-    mapper = StrandsInMemorySessionMapper()
-    session = mapper.map_to_session(finished_spans, session_id=case.session_id)
-    
-    return {"output": str(response), "trajectory": session}
+@eval_task(TracedHandler())
+def user_task_function():
+    return Agent(tools=[calculator], callback_handler=None)
 
 # Create test cases for helpfulness evaluation
 test_cases = [
@@ -307,6 +289,41 @@ reports = experiment.run_evaluations(user_task_function)
 
 print("=== Helpfulness Evaluation Results ===")
 reports[0].run_display()
+```
+
+If you need more control (e.g., custom session mapping or per-case agent configuration), you can still write the task function manually:
+
+<details>
+<summary>Manual task function (without decorator)</summary>
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import HelpfulnessEvaluator
+from strands_evals.telemetry import StrandsEvalsTelemetry
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_tools import calculator
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def user_task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        tools=[calculator],
+        trace_attributes={
+            "gen_ai.conversation.id": case.session_id,
+            "session.id": case.session_id
+        },
+        callback_handler=None
+    )
+    response = agent(case.input)
+    finished_spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(finished_spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+```
+
+</details>
 ```
 
 ## Running Evaluations
@@ -515,13 +532,15 @@ experiment = Experiment[str, str](cases=test_cases, evaluators=[safety_evaluator
 
 Ready to dive deeper? Explore these resources:
 
-- [Output Evaluator](evaluators/output_evaluator.md) - Detailed guide to LLM-based output evaluation
-- [Trajectory Evaluator](evaluators/trajectory_evaluator.md) - Comprehensive tool usage and sequence evaluation
+- [Task Decorator](how-to/eval_task.md) - Simplify task functions with `@eval_task`
+- [Output Evaluator](evaluators/output_evaluator.md) - LLM-based output evaluation with custom rubrics
+- [Trajectory Evaluator](evaluators/trajectory_evaluator.md) - Tool usage and sequence evaluation
 - [Helpfulness Evaluator](evaluators/helpfulness_evaluator.md) - Seven-level helpfulness assessment
 - [Correctness Evaluator](evaluators/correctness_evaluator.md) - Factual correctness with optional reference comparison
 - [Deterministic Evaluators](evaluators/deterministic_evaluators.md) - Fast, code-based checks (Equals, Contains, ToolCalled)
 - [Custom Evaluators](evaluators/custom_evaluator.md) - Build domain-specific evaluation logic
 - [Tool Simulation](simulators/tool_simulation.md) - Test tool-using agents without real infrastructure
-- [Experiment Generator](experiment_generator.md) - Automatically generate comprehensive test suites
+- [Result Caching](how-to/result_caching.md) - Cache task results to iterate on evaluators without re-running agents
 - [Remote Trace Providers](how-to/trace_providers.md) - Evaluate traces from production backends
+- [Experiment Generator](experiment_generator.md) - Automatically generate comprehensive test suites
 - [Serialization](how-to/serialization.md) - Save, load, and version your evaluation experiments

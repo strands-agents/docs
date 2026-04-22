@@ -166,6 +166,8 @@ sidebar:
               - docs/user-guide/evals-sdk/how-to/trace_providers
           - label: How-To Guides
             items:
+              - docs/user-guide/evals-sdk/how-to/eval_task
+              - docs/user-guide/evals-sdk/how-to/result_caching
               - docs/user-guide/evals-sdk/how-to/experiment_management
               - docs/user-guide/evals-sdk/how-to/serialization
       - label: Deploy
