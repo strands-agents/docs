@@ -194,4 +194,6 @@ Public APIs should express parameters in the units that LLMs operate on, rather 
 
 LLMs think in tokens — they consume tokens, produce tokens, and their context windows are measured in tokens. Our APIs should reflect the language of the models they orchestrate, not the language of general-purpose string processing. This makes APIs more accurate, since the parameters directly map to the resource being managed, and more intuitive for users building on top of LLMs.
 
-Characters are the clearest example: they are a poor proxy for model context cost, since structured content like JSON and non-text payloads tokenizes very differently than prose. But the principle extends beyond size — wherever there is an LLM-native concept, our APIs should prefer it over a traditional developer abstraction.
+Tokens are also a unified unit across modalities — text, images, JSON, video, and other content types all tokenize into the same currency. Characters only apply to text, forcing different heuristics for different content types. Token-based parameters provide a single, consistent metric regardless of what the model is processing.
+
+But the principle extends beyond size — wherever there is an LLM-native concept, our APIs should prefer it over a traditional developer abstraction.
