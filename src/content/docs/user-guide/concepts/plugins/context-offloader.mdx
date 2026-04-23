@@ -85,7 +85,7 @@ Choose a storage backend based on your needs:
 
 | Backend | Persistence | Best for |
 |---------|-------------|----------|
-| `InMemoryStorage` | Process lifetime only | Development, testing, reducing context without side effects |
+| `InMemoryStorage` | Process lifetime only (call `clear()` to free manually) | Development, testing, reducing context without side effects |
 | `FileStorage` | Disk | Local development, debugging, inspecting stored artifacts |
 | `S3Storage` | Amazon S3 | Production workloads, shared or durable artifact retention |
 
