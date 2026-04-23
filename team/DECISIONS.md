@@ -180,3 +180,18 @@ Overloaded terms create ambiguity for users and contributors. When a single word
 For example, the Python SDK uses `structured_output_model` because Pydantic calls its schemas "models." The TypeScript SDK chose `structuredOutputSchema` instead. Zod (the TypeScript validation library) uses "schema" as its core term — `z.object()` returns a `ZodSchema` — and "model" in the Strands SDK already refers to the LLM provider (`BedrockModel`, `model` config parameter, etc.). Reusing it for a validation shape would force readers to disambiguate from context every time they encounter the word.
 
 Similarly, the SDK documentation uses "agent loop" rather than "event loop" to describe the core execution cycle. "Event loop" is an overloaded term in programming — in Python it refers to `asyncio`'s concurrency primitive, and in JavaScript/Node.js it's the runtime's fundamental execution model. Calling the agent's tool-use cycle an "event loop" would conflate an SDK concept with a well-established language runtime concept, making it harder to discuss both in the same context. "Agent loop" is unambiguous and describes exactly what it is.
+
+
+## Use LLM-Native Units in Public APIs
+
+**Date**: Apr 23, 2026
+
+### Decision
+
+Public APIs should express parameters in the units that LLMs operate on, rather than units familiar to traditional software development. For example, size-based thresholds should use token counts rather than character counts, and parameters should be named accordingly (e.g., `max_tokens` over `max_chars`).
+
+### Rationale
+
+LLMs think in tokens — they consume tokens, produce tokens, and their context windows are measured in tokens. Our APIs should reflect the language of the models they orchestrate, not the language of general-purpose string processing. This makes APIs more accurate, since the parameters directly map to the resource being managed, and more intuitive for users building on top of LLMs.
+
+Characters are the clearest example: they are a poor proxy for model context cost, since structured content like JSON and non-text payloads tokenizes very differently than prose. But the principle extends beyond size — wherever there is an LLM-native concept, our APIs should prefer it over a traditional developer abstraction.
