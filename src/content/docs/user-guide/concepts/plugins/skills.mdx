@@ -164,6 +164,11 @@ skill = Skill.from_file("./skills/code-review")
 
 # Load all skills from a parent directory
 skills = Skill.from_directory("./skills/")
+
+# Load from a URL (must point to raw SKILL.md content)
+skill = Skill.from_url(
+    "https://raw.githubusercontent.com/org/repo/main/SKILL.md"
+)
 ```
 </Tab>
 <Tab label="TypeScript">
@@ -173,6 +178,43 @@ skills = Skill.from_directory("./skills/")
 ```
 </Tab>
 </Tabs>
+
+### Loading skills from URLs
+
+You can load skills directly from HTTPS URLs, which is useful for sharing skills across teams or referencing community skills without manual cloning. The URL must point directly to the raw SKILL.md content.
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent, AgentSkills, Skill
+
+# Load from a raw SKILL.md URL
+skill = Skill.from_url(
+    "https://raw.githubusercontent.com/org/repo/main/skills/my-skill/SKILL.md"
+)
+
+# Use URLs directly in the plugin (mixed with local paths)
+plugin = AgentSkills(skills=[
+    "https://raw.githubusercontent.com/org/repo/main/skills/brainstorming/SKILL.md",
+    "./local-skills/my-skill",
+])
+agent = Agent(plugins=[plugin])
+```
+</Tab>
+<Tab label="TypeScript">
+
+```ts
+// Skills are not yet available in TypeScript SDK
+```
+</Tab>
+</Tabs>
+
+For GitHub-hosted skills, use `raw.githubusercontent.com` URLs to access the raw file content. For example, `https://github.com/org/repo/blob/main/SKILL.md` becomes `https://raw.githubusercontent.com/org/repo/main/SKILL.md`.
+
+:::note[URL-loaded skills]
+Skills loaded from URLs use `Skill.from_content()` internally, so they don't have a filesystem path. This means resource directories (`scripts/`, `references/`, `assets/`) are not available for URL-loaded skills. If your skill requires resource files, load it from the filesystem instead.
+:::
 
 ### Managing skills at runtime
 
@@ -278,7 +320,7 @@ The `AgentSkills` constructor accepts the following parameters.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `skills` | `SkillSources` | Required | One or more skill sources (paths, `Skill` instances, or a mix). |
+| `skills` | `SkillSources` | Required | One or more skill sources (paths, `https://` URLs, `Skill` instances, or a mix). |
 | `state_key` | `str` | `"agent_skills"` | Key for storing plugin state in `agent.state`. |
 | `max_resource_files` | `int` | `20` | Maximum number of resource files listed in skill activation responses. |
 | `strict` | `bool` | `False` | If `True`, raise exceptions on validation issues instead of logging warnings. |
