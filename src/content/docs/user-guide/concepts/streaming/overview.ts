@@ -136,7 +136,9 @@ async function eventSerializationExample() {
           event.event.type === 'modelContentBlockDeltaEvent' &&
           event.event.delta.type === 'textDelta'
         ) {
-          console.log(`data: ${JSON.stringify({ type: 'text', text: event.event.delta.text })}`)
+          console.log(
+            `data: ${JSON.stringify({ type: 'text', text: event.event.delta.text })}`
+          )
         }
         break
 
