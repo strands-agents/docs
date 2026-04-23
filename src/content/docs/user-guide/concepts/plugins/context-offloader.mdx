@@ -19,10 +19,12 @@ The default [`SlidingWindowConversationManager`](../agents/conversation-manageme
 
 ## How It Works
 
-After each tool call, the plugin checks the result size against the `max_result_chars` threshold (default: 10,000 characters). If the result exceeds it, the plugin:
+After each tool call, the plugin estimates the result's token count using the agent's `model.count_tokens()` method and compares it against the `max_result_tokens` threshold (default: 2,500 tokens). If the result exceeds it, the plugin:
 
 1. Stores each content block individually in the configured storage backend, preserving its content type
-2. Replaces the in-context result with the first `preview_chars` characters (default: 4,000) plus per-block storage references
+2. Replaces the in-context result with the first `preview_tokens` tokens (default: 1,000) plus per-block storage references
+
+Token estimation uses tiktoken when available for accurate counts, falling back to a chars/4 heuristic. Preview slicing also uses tiktoken for exact token-level cuts when available.
 
 Results under the threshold pass through unchanged.
 
@@ -32,7 +34,7 @@ For a tool that returns 150KB of JSON, the agent would see something like:
 
 ```
 {"users": [{"id": 1, "name": "Alice", ...}, {"id": 2, "name": "Bob", ...},
-... (first 4,000 characters of the result) ...
+... (first ~1,000 tokens of the result) ...
 
 [Full content offloaded to storage - reference: a1b2c3d4]
 ```
@@ -41,7 +43,7 @@ For non-text content, the plugin replaces the result with a descriptive placehol
 
 | Content Type | What the agent sees |
 |-------------|----------|
-| Text / JSON | First `preview_chars` characters + storage reference |
+| Text / JSON | First `preview_tokens` tokens + storage reference |
 | Image | `[image: format, N bytes]` placeholder + storage reference |
 | Document | `[document: format, name, N bytes]` placeholder + storage reference |
 
@@ -67,14 +69,14 @@ agent = Agent(plugins=[
 ])
 ```
 
-To customize the size thresholds:
+To customize the token thresholds:
 
 ```python
 agent = Agent(plugins=[
     ContextOffloader(
         storage=InMemoryStorage(),
-        max_result_chars=20_000,
-        preview_chars=8_000,
+        max_result_tokens=5_000,
+        preview_tokens=2_000,
     )
 ])
 ```
@@ -129,11 +131,11 @@ agent = Agent(plugins=[
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `storage` | *(required)* | Storage backend instance |
-| `max_result_chars` | `10_000` | Results exceeding this character count are offloaded |
-| `preview_chars` | `4_000` | Number of characters to keep as an in-context preview |
+| `max_result_tokens` | `2_500` | Results whose estimated token count exceeds this are offloaded |
+| `preview_tokens` | `1_000` | Number of tokens to keep as an in-context preview |
 
 ## Tradeoffs
 
-- **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_chars` to balance context usage against information loss for your use case. The built-in retrieval tool lets the agent fetch the full content when needed, but each retrieval is an extra tool call.
+- **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_tokens` to balance context usage against information loss for your use case. The built-in retrieval tool lets the agent fetch the full content when needed, but each retrieval is an extra tool call.
 - **Storage costs**: `S3Storage` incurs S3 PUT/GET and storage charges. `FileStorage` writes to disk on every large result.
 - **Not a replacement for conversation management**: This plugin handles individual large results. You still need a conversation manager like `SlidingWindowConversationManager` to handle overall context growth across many turns.
