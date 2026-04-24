@@ -65,6 +65,7 @@ sidebar:
               - docs/user-guide/concepts/tools/custom-tools
               - docs/user-guide/concepts/tools/mcp-tools
               - docs/user-guide/concepts/tools/executors
+              - docs/user-guide/concepts/tools/handling-large-outputs
               - docs/user-guide/concepts/tools/community-tools-package
               - docs/user-guide/concepts/tools/vended-tools
           - label: Plugins
