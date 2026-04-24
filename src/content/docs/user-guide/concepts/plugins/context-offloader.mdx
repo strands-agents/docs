@@ -7,7 +7,7 @@ sidebar:
     variant: tip
 ---
 
-The `ContextOffloader` plugin prevents large tool results from consuming your agent's context window. When a tool returns a result that exceeds a configurable size threshold, the plugin stores each content block individually in an external storage backend and replaces it in the conversation with a truncated preview plus per-block references. The agent keeps working with a useful summary, and can retrieve the full content on demand using the built-in `retrieve_offloaded_content` tool.
+The `ContextOffloader` plugin prevents large tool results from consuming your agent's context window. When a tool returns a result that exceeds a configurable token threshold, the plugin stores each content block individually in an external storage backend and replaces it in the conversation with a truncated preview plus per-block references. Each offloaded result includes inline guidance telling the agent to use its available tools to selectively access the data it needs.
 
 ## The Problem
 
@@ -47,11 +47,20 @@ For non-text content, the plugin replaces the result with a descriptive placehol
 | Image | `[image: format, N bytes]` placeholder + storage reference |
 | Document | `[document: format, name, N bytes]` placeholder + storage reference |
 
-### Built-in retrieval
+### Retrieval tool (opt-in)
 
-The plugin automatically provides a `retrieve_offloaded_content` tool and injects system prompt guidance telling the agent to prefer the preview when possible, and only retrieve the full content when the preview is insufficient. When the agent does retrieve, content is returned in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks.
+The plugin includes an optional `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. Enable it with `include_retrieval_tool=True`:
 
-No additional configuration is needed. The retrieval tool, system prompt guidance, and storage are all handled by the plugin.
+```python
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=InMemoryStorage(),
+        include_retrieval_tool=True,
+    )
+])
+```
+
+The retrieval tool is disabled by default. The inline guidance in offloaded results always tells the agent to use its available tools to selectively access the data it needs. When the retrieval tool is enabled, the guidance additionally mentions `retrieve_offloaded_content`.
 
 ## Getting Started
 
@@ -122,6 +131,7 @@ agent = Agent(plugins=[
             bucket="my-agent-artifacts",
             prefix="tool-results/",
         ),
+        include_retrieval_tool=True,
     )
 ])
 ```
@@ -133,9 +143,10 @@ agent = Agent(plugins=[
 | `storage` | *(required)* | Storage backend instance |
 | `max_result_tokens` | `2_500` | Results whose estimated token count exceeds this are offloaded |
 | `preview_tokens` | `1_000` | Number of tokens to keep as an in-context preview |
+| `include_retrieval_tool` | `False` | When `True`, registers a `retrieve_offloaded_content` tool the agent can use to fetch full content by reference |
 
 ## Tradeoffs
 
-- **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_tokens` to balance context usage against information loss for your use case. The built-in retrieval tool lets the agent fetch the full content when needed, but each retrieval is an extra tool call.
+- **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_tokens` to balance context usage against information loss for your use case. Enable `include_retrieval_tool=True` if the agent needs to fetch full offloaded content and doesn't have other tools (file readers, shell, etc.) that can access the storage backend directly.
 - **Storage costs**: `S3Storage` incurs S3 PUT/GET and storage charges. `FileStorage` writes to disk on every large result.
 - **Not a replacement for conversation management**: This plugin handles individual large results. You still need a conversation manager like `SlidingWindowConversationManager` to handle overall context growth across many turns.
