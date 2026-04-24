@@ -33,7 +33,7 @@ jobs:
         run: npm run typecheck
 
       - name: Build TypeScript SDK
-        run: npm install --ignore-scripts && npm run build
+        run: npm install --ignore-scripts && npm run build && rm -rf node_modules
         working-directory: .build/sdk-typescript
 
       - name: Re-link SDK types
