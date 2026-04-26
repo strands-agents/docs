@@ -35,6 +35,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/sanitize-html": "^2.16.0",
     "@types/turndown": "^5.0.6",
+    "astro-expressive-code": "^0.41.7",
     "astro-og-canvas": "^0.10.1",
     "express": "^5.1.0",
     "fast-glob": "^3.3.3",
