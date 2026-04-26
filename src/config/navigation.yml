@@ -182,6 +182,7 @@ sidebar:
               - docs/user-guide/deploy/deploy_to_docker/typescript
           - docs/user-guide/deploy/deploy_to_kubernetes
           - docs/user-guide/deploy/deploy_to_terraform
+          - docs/user-guide/deploy/deploy_with_nx_plugin_for_aws
       - docs/user-guide/versioning-and-support
 
   - label: Examples
