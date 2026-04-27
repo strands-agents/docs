@@ -171,3 +171,95 @@ The output will show the sequence of events:
 6. Finally, the invocation completes (`afterInvocationEvent`)
 </Tab>
 </Tabs>
+
+## Retrieving Tool Results
+
+When tools are executed during streaming, you can access their results as they complete. This is useful for tracking tool execution, logging results, or building UIs that show tool progress.
+
+<Tabs>
+<Tab label="Python">
+
+In Python, tool results appear in the `result` event at the end of streaming. The [`ToolResult`](@api/python/strands.types.tools#ToolResult) contains the status and content from each tool execution.
+
+```python
+import asyncio
+from strands import Agent
+from strands_tools import calculator
+
+async def process_tool_results():
+    agent = Agent(
+        tools=[calculator],
+        callback_handler=None
+    )
+
+    async for event in agent.stream_async(
+        "Calculate 15 * 23 and then add 100"
+    ):
+        # Track when tools are being used
+        if "current_tool_use" in event:
+            tool_name = event["current_tool_use"].get("name")
+            if tool_name:
+                print(f"🔧 Using tool: {tool_name}")
+
+        # Access the final agent result
+        if "result" in event:
+            result = event["result"]
+
+            for message in result.messages:
+                for content in message.content:
+                    if hasattr(content, "toolResult"):
+                        tool_result = content.toolResult
+                        print(
+                            f"Tool status: {tool_result.status}"
+                        )
+                        for item in tool_result.content:
+                            if "text" in item:
+                                print(f"Result: {item['text']}")
+
+asyncio.run(process_tool_results())
+```
+
+### Error Handling
+
+Tool results also provide error information when tools fail:
+
+```python
+async def handle_tool_errors():
+    agent = Agent(
+        tools=[calculator],
+        callback_handler=None
+    )
+
+    async for event in agent.stream_async(
+        "Calculate the square root of -1"
+    ):
+        if "result" in event:
+            result = event["result"]
+
+            for message in result.messages:
+                for content in message.content:
+                    if hasattr(content, "toolResult"):
+                        tool_result = content.toolResult
+
+                        if tool_result.status == "error":
+                            print(f"❌ Tool failed")
+                            for item in tool_result.content:
+                                if "text" in item:
+                                    print(
+                                        f"Error: {item['text']}"
+                                    )
+                        else:
+                            print(f"✅ Tool succeeded")
+
+asyncio.run(handle_tool_errors())
+```
+</Tab>
+<Tab label="TypeScript">
+
+In TypeScript, tool results are available through dedicated stream events. Use `afterToolCallEvent` to access results as each tool completes, or `toolResultEvent` for the tool result content.
+
+```typescript
+--8<-- "user-guide/concepts/streaming/async-iterators.ts:tool_results"
+```
+</Tab>
+</Tabs>
