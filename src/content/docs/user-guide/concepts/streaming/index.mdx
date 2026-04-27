@@ -36,10 +36,12 @@ All streaming methods yield the same set of events:
 Each event emitted from the TypeScript agent is a class with a `type` attribute that has a unique value. When determining an event, you can use `instanceof` on the class, or an equality check on the `event.type` value. All events extend `HookableEvent`, making them both streamable and subscribable via hook callbacks.
 
 - **`BeforeInvocationEvent`**: Start of agent loop (before any iterations)
+    - **`cancel`**: Set by hook callbacks to cancel the invocation (`boolean | string`)
 - **`AfterInvocationEvent`**: End of agent loop (after all iterations complete)
     - **`error?`**: Optional error if loop terminated due to exception
 - **`BeforeModelCallEvent`**: Before model invocation
     - **`messages`**: Array of messages being sent to model
+    - **`cancel`**: Set by hook callbacks to cancel the model call (`boolean | string`)
 - **`AfterModelCallEvent`**: After model invocation
     - **`message`**: Assistant message returned by model
     - **`stopReason`**: Why generation stopped
