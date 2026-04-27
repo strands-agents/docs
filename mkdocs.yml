@@ -163,6 +163,7 @@ nav:
         - Fireworks AI: community/model-providers/fireworksai.md
       - Session Managers:
           - Amazon AgentCore Memory: community/session-managers/agentcore-memory.md
+          - Redis: community/session-managers/redis-session-manager.md
 
   - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
