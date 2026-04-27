@@ -425,3 +425,135 @@ void orchestratorCallbackExample
 void conditionalNodeExecutionExample
 void orchestratorAgnosticDesignExample
 void layeredHooksExample
+
+// =====================
+// Cookbook: Retry Examples
+// =====================
+
+async function retryOnServiceUnavailableExample() {
+  // --8<-- [start:retry_on_service_unavailable_class]
+  class RetryOnServiceUnavailable implements Plugin {
+    readonly name = 'retry-on-service-unavailable'
+    private readonly maxRetries: number
+    private retryCount = 0
+
+    constructor(maxRetries = 3) {
+      this.maxRetries = maxRetries
+    }
+
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(BeforeInvocationEvent, () => {
+        this.retryCount = 0
+      })
+      agent.addHook(AfterModelCallEvent, (event) => this.handleRetry(event))
+    }
+
+    private async handleRetry(event: AfterModelCallEvent): Promise<void> {
+      if (event.error) {
+        if (
+          String(event.error).includes('ServiceUnavailable') &&
+          this.retryCount < this.maxRetries
+        ) {
+          this.retryCount++
+          await new Promise((resolve) =>
+            setTimeout(resolve, 2 ** this.retryCount * 1000),
+          )
+          event.retry = true
+        }
+      } else {
+        this.retryCount = 0
+      }
+    }
+  }
+  // --8<-- [end:retry_on_service_unavailable_class]
+
+  // --8<-- [start:retry_on_service_unavailable_usage]
+  const retryPlugin = new RetryOnServiceUnavailable(3)
+  const agent = new Agent({ plugins: [retryPlugin] })
+
+  const result = await agent.invoke('What is the capital of France?')
+  // --8<-- [end:retry_on_service_unavailable_usage]
+  void result
+}
+
+async function propagateUnexpectedExceptionsExample() {
+  // --8<-- [start:propagate_unexpected_exceptions_class]
+  class PropagateUnexpectedExceptions implements Plugin {
+    readonly name = 'propagate-unexpected-exceptions'
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private readonly allowedExceptions: Array<new (...args: any[]) => Error>
+
+    constructor(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      allowedExceptions: Array<new (...args: any[]) => Error> = [],
+    ) {
+      this.allowedExceptions = allowedExceptions
+    }
+
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(AfterToolCallEvent, (event) => this.checkException(event))
+    }
+
+    private checkException(event: AfterToolCallEvent): void {
+      if (!event.error) return // Tool succeeded
+      // Let model retry allowed exception types
+      if (this.allowedExceptions.some((Exc) => event.error instanceof Exc)) return
+      throw event.error // Propagate unexpected errors immediately
+    }
+  }
+  // --8<-- [end:propagate_unexpected_exceptions_class]
+
+  // --8<-- [start:propagate_unexpected_exceptions_usage]
+  const agent = new Agent({
+    tools: [myTool],
+    plugins: [new PropagateUnexpectedExceptions([TypeError])],
+  })
+  // --8<-- [end:propagate_unexpected_exceptions_usage]
+  void agent
+}
+
+async function retryOnToolErrorExample() {
+  // --8<-- [start:retry_on_tool_error_class]
+  class RetryOnToolError implements Plugin {
+    readonly name = 'retry-on-tool-error'
+    private readonly maxRetries: number
+    private readonly attemptCounts = new Map<string, number>()
+
+    constructor(maxRetries = 1) {
+      this.maxRetries = maxRetries
+    }
+
+    initAgent(agent: LocalAgent): void {
+      agent.addHook(AfterToolCallEvent, (event) => this.handleRetry(event))
+    }
+
+    private handleRetry(event: AfterToolCallEvent): void {
+      const toolUseId = event.toolUse.toolUseId
+      const toolName = event.toolUse.name
+      const attempt = (this.attemptCounts.get(toolUseId) ?? 0) + 1
+      this.attemptCounts.set(toolUseId, attempt)
+
+      if (event.result.status === 'error' && attempt <= this.maxRetries) {
+        console.log(
+          `Retrying tool '${toolName}' (attempt ${attempt}/${this.maxRetries})`,
+        )
+        event.retry = true
+      } else if (event.result.status !== 'error') {
+        this.attemptCounts.delete(toolUseId)
+      }
+    }
+  }
+  // --8<-- [end:retry_on_tool_error_class]
+
+  // --8<-- [start:retry_on_tool_error_usage]
+  const retryPlugin = new RetryOnToolError(1)
+  const agent = new Agent({ tools: [calculator], plugins: [retryPlugin] })
+
+  const result = await agent.invoke('Look up the weather')
+  // --8<-- [end:retry_on_tool_error_usage]
+  void result
+}
+
+void retryOnServiceUnavailableExample
+void propagateUnexpectedExceptionsExample
+void retryOnToolErrorExample
