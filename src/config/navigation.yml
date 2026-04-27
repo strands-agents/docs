@@ -122,6 +122,7 @@ sidebar:
           - label: Experimental
             items:
               - docs/user-guide/concepts/experimental/agent-config
+              - docs/user-guide/concepts/experimental/checkpointing
       - label: Safety & Security
         items:
           - docs/user-guide/safety-security/responsible-ai
