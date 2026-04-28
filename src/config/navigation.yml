@@ -119,6 +119,7 @@ sidebar:
               - docs/user-guide/concepts/bidirectional-streaming/interruption
               - docs/user-guide/concepts/bidirectional-streaming/hooks
               - docs/user-guide/concepts/bidirectional-streaming/session-management
+          - docs/user-guide/concepts/local-development
           - label: Experimental
             items:
               - docs/user-guide/concepts/experimental/agent-config
