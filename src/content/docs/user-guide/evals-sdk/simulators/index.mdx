@@ -6,7 +6,7 @@ sidebar:
 
 ## Overview
 
-Simulators enable dynamic, multi-turn evaluation of conversational agents by generating realistic interaction patterns. Unlike static evaluators that assess single outputs, simulators actively participate in conversations, adapting their behavior based on agent responses to create authentic evaluation scenarios.
+Simulators dynamically evaluate agents by generating realistic interaction patterns, going beyond static methods that only assess single outputs. They actively drive multi-turn conversations and produce authentic tool responses, creating evaluation scenarios that closely mirror real-world use.
 
 ## Why Simulators?
 
@@ -26,6 +26,7 @@ Traditional evaluation approaches have limitations when assessing conversational
 - Test goal completion in realistic scenarios
 - Evaluate conversation flow and context maintenance
 - Enable testing without predefined scripts
+- Simulate tool behavior without live infrastructure
 
 ## When to Use Simulators
 
@@ -37,6 +38,7 @@ Use simulators when you need to:
 - **Generate Diverse Interactions**: Create varied conversation patterns automatically
 - **Evaluate Without Scripts**: Test agents without predefined conversation paths
 - **Simulate Real Users**: Generate realistic user behavior patterns
+- **Test Tool Usage Without Infrastructure**: Evaluate agent tool-use behavior without live APIs, databases, or services
 
 ## ActorSimulator
 
@@ -59,9 +61,45 @@ While user simulation is the primary use case, `ActorSimulator` can simulate oth
 - **Adversarial Actors**: Test robustness and edge cases
 - **Internal Staff**: Evaluate internal tooling workflows
 
+## ToolSimulator
+
+The `ToolSimulator` enables LLM-powered simulation of tool behavior for controlled agent evaluation. Instead of calling real tools, registered tools are executed by an LLM that generates realistic, schema-validated responses while maintaining state across calls.
+
+This is useful when real tools require live infrastructure, when you need controllable behavior for evaluation, or when tools are still under development.
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+tool_simulator = ToolSimulator()
+
+class WeatherResponse(BaseModel):
+    temperature: float = Field(..., description="Temperature in Fahrenheit")
+    conditions: str = Field(..., description="Weather conditions")
+
+@tool_simulator.tool(output_schema=WeatherResponse)
+def get_weather(city: str) -> dict[str, Any]:
+    """Get current weather for a city."""
+    pass
+
+weather_tool = tool_simulator.get_tool("get_weather")
+agent = Agent(tools=[weather_tool], callback_handler=None)
+response = agent("What's the weather in Seattle?")
+```
+
+Key capabilities:
+- **Decorator-based registration** with automatic metadata extraction from function signatures
+- **Schema-validated responses** via Pydantic output models
+- **Shared state** across related tools via `share_state_id` (e.g., sensor + controller operating on the same environment)
+- **Stateful context** with initial state descriptions and bounded call history cache
+
+[Complete Tool Simulation Guide →](tool_simulation.md)
+
 ## Extensibility
 
-The simulator framework is designed to be extensible. While `ActorSimulator` provides a general-purpose foundation, additional specialized simulators can be built for specific evaluation patterns as needs emerge.
+The simulator framework is designed to be extensible. `ActorSimulator` and `ToolSimulator` provide general-purpose foundations, and additional specialized simulators can be built for specific evaluation patterns as needs emerge.
 
 ## ToolSimulator
 
@@ -73,13 +111,13 @@ The `ToolSimulator` replaces real tool execution with LLM-generated responses, e
 
 Understanding when to use simulators versus evaluators:
 
-| Aspect | Evaluators | Simulators |
-|--------|-----------|-----------|
-| **Interaction** | Passive assessment | Active participation |
-| **Turns** | Single turn | Multi-turn |
-| **Adaptation** | Static criteria | Dynamic responses |
-| **Use Case** | Output quality | Conversation flow |
-| **Goal** | Score responses | Drive interactions |
+| Aspect | Evaluators | ActorSimulator | ToolSimulator |
+|--------|-----------|----------------|---------------|
+| **Role** | Passive assessment | Active conversation participant | Simulated tool execution |
+| **Turns** | Single turn | Multi-turn | Per tool call |
+| **Adaptation** | Static criteria | Dynamic responses | Stateful responses |
+| **Use Case** | Output quality | Conversation flow | Tool-use behavior |
+| **Goal** | Score responses | Drive interactions | Replace infrastructure |
 
 **Use Together:**
 Simulators and evaluators complement each other. Use simulators to generate multi-turn conversations, then use evaluators to assess the quality of those interactions.
@@ -276,7 +314,8 @@ def compare_agent_configurations(case: Case, configs: list) -> dict:
 
 ## Next Steps
 
-- [User Simulator Guide](./user_simulation.md): Learn about user simulation
+- [User Simulation Guide](./user_simulation.md): Simulate multi-turn user conversations
+- [Tool Simulation Guide](./tool_simulation.md): Simulate tool behavior with LLM-powered responses
 - [Evaluators](../evaluators/output_evaluator.md): Combine with evaluators
 
 ## Related Documentation

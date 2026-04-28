@@ -74,20 +74,19 @@ function customAttributes() {
 
 function configuringExporters() {
   // --8<-- [start:configuring_exporters]
-  const provider = new NodeTracerProvider()
-
-  // Configure OTLP endpoint programmatically
-  provider.addSpanProcessor(
-    new BatchSpanProcessor(
-      new OTLPTraceExporter({
-        url: 'http://collector.example.com:4318/v1/traces',
-        headers: { key1: 'value1', key2: 'value2' },
-      })
-    )
-  )
-
-  // Add console exporter for debugging
-  provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()))
+  const provider = new NodeTracerProvider({
+    spanProcessors: [
+      // Configure OTLP endpoint programmatically
+      new BatchSpanProcessor(
+        new OTLPTraceExporter({
+          url: 'http://collector.example.com:4318/v1/traces',
+          headers: { key1: 'value1', key2: 'value2' },
+        })
+      ),
+      // Add console exporter for debugging
+      new SimpleSpanProcessor(new ConsoleSpanExporter()),
+    ],
+  })
 
   // Register the provider with Strands
   setupTracer({ provider })

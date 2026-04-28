@@ -61,11 +61,11 @@ The injected system prompt metadata looks like this:
 </available_skills>
 ```
 
-This XML block is refreshed before each invocation, so changes to available skills (through `set_available_skills`) take effect immediately. Activated skills are tracked in [agent state](../agents/state.mdx) for session persistence.
+This XML block is refreshed before each invocation, so changes to available skills (through `set_available_skills` / `setAvailableSkills`) take effect immediately. Activated skills are tracked in [agent state](../agents/state.mdx) for session persistence.
 
 ## Usage
 
-The `AgentSkills` plugin accepts skill sources in several forms — filesystem paths, parent directories, or programmatic `Skill` instances. You can pass a single source or a list.
+The `AgentSkills` plugin accepts skill sources in several forms — filesystem paths, parent directories, HTTPS URLs, or programmatic `Skill` instances. In Python you can pass a single source or a list; in TypeScript the `skills` parameter is always an array.
 
 <Tabs>
 <Tab label="Python">
@@ -95,8 +95,10 @@ agent = Agent(plugins=[plugin])
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/skills_imports.ts:usage"
+
+--8<-- "user-guide/concepts/plugins/skills.ts:usage"
 ```
 </Tab>
 </Tabs>
@@ -107,10 +109,10 @@ The `AgentSkills` plugin handles only skill discovery and activation. It does no
 
 When a skill is activated, the tool response includes a listing of available resource files (from `scripts/`, `references/`, and `assets/` subdirectories), but to actually read those files or run scripts, you provide your own tools. This gives you full control over what the agent can access.
 
-For filesystem-based skills, `file_read` and `shell` from `strands-agents-tools` are the easiest way to get started:
-
 <Tabs>
 <Tab label="Python">
+
+For filesystem-based skills, `file_read` and `shell` from `strands-agents-tools` are the easiest way to get started:
 
 ```python
 from strands import Agent, AgentSkills
@@ -126,17 +128,21 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Skills are not yet available in TypeScript SDK
+For filesystem-based skills, the vended `bash` and `fileEditor` tools are the easiest way to get started:
+
+```typescript
+--8<-- "user-guide/concepts/plugins/skills_imports.ts:tools"
+
+--8<-- "user-guide/concepts/plugins/skills.ts:tools"
 ```
 </Tab>
 </Tabs>
 
-You can also use other tools depending on your environment. For example, `http_request` for skills with remote resources, or the AgentCore code interpreter tool for executing scripts in a sandboxed environment. Choose tools that match your skill's resource access patterns and your security requirements.
+You can also use other tools depending on your environment. For example, an HTTP request tool for skills with remote resources, or a code interpreter tool for executing scripts in a sandboxed environment. Choose tools that match your skill's resource access patterns and your security requirements.
 
 ### Programmatic skill creation
 
-Use the `Skill` dataclass to create skills in code without filesystem directories:
+Use the `Skill` class to create skills in code without filesystem directories:
 
 <Tabs>
 <Tab label="Python">
@@ -168,8 +174,10 @@ skills = Skill.from_directory("./skills/")
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/skills_imports.ts:programmatic"
+
+--8<-- "user-guide/concepts/plugins/skills.ts:programmatic"
 ```
 </Tab>
 </Tabs>
@@ -211,8 +219,10 @@ print(f"Activated skills: {activated}")
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/skills_imports.ts:runtime"
+
+--8<-- "user-guide/concepts/plugins/skills.ts:runtime"
 ```
 </Tab>
 </Tabs>
@@ -252,7 +262,7 @@ The `allowed-tools` field is currently informational. When a skill is activated,
 :::
 
 :::note[Name validation]
-Skill names must match the parent directory name. By default, validation issues produce warnings rather than errors. Pass `strict=True` to raise exceptions instead.
+Skill names must match the parent directory name. By default, validation issues produce warnings rather than errors. Pass `strict=True` (Python) or `strict: true` (TypeScript) to raise exceptions instead.
 :::
 
 ### Resource directories
@@ -276,14 +286,30 @@ When the agent activates a skill, the tool response includes a listing of all re
 
 The `AgentSkills` constructor accepts the following parameters.
 
+<Tabs>
+<Tab label="Python">
+
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `skills` | `SkillSources` | Required | One or more skill sources (paths, `Skill` instances, or a mix). |
+| `skills` | `SkillSources` | Required | One or more skill sources (paths, HTTPS URLs, `Skill` instances, or a mix). Accepts a single value or a list. |
 | `state_key` | `str` | `"agent_skills"` | Key for storing plugin state in `agent.state`. |
 | `max_resource_files` | `int` | `20` | Maximum number of resource files listed in skill activation responses. |
 | `strict` | `bool` | `False` | If `True`, raise exceptions on validation issues instead of logging warnings. |
 
-Activated skills are tracked in [agent state](../agents/state.mdx) under the configured `state_key`. This means activated skills persist across invocations within the same session and can be serialized for [session management](../agents/session-management.mdx).
+</Tab>
+<Tab label="TypeScript">
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `skills` | `SkillSource[]` | Required | Array of skill sources (paths, `Skill` instances, or HTTPS URLs). |
+| `stateKey` | `string` | `'agent_skills'` | Key for storing plugin state in `agent.appState`. |
+| `maxResourceFiles` | `number` | `20` | Maximum number of resource files listed in skill activation responses. |
+| `strict` | `boolean` | `false` | If `true`, throw on validation issues instead of logging warnings. |
+
+</Tab>
+</Tabs>
+
+Activated skills are tracked in [agent state](../agents/state.mdx) under the configured state key. This means activated skills persist across invocations within the same session and can be serialized for [session management](../agents/session-management.mdx).
 
 ## Comparison with other approaches
 

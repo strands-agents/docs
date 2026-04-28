@@ -72,6 +72,7 @@ sidebar:
               - docs/user-guide/concepts/plugins
               - docs/user-guide/concepts/plugins/skills
               - docs/user-guide/concepts/plugins/steering
+              - docs/user-guide/concepts/plugins/context-offloader
           - label: Model Providers
             items:
               - docs/user-guide/concepts/model-providers

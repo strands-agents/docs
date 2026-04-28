@@ -9,6 +9,7 @@ The Strands SDK provides built-in plugins that you can use out of the box:
 
 - **[Skills](./skills.mdx)** - On-demand, modular instructions that agents discover and activate at runtime following the [Agent Skills specification](https://agentskills.io/specification)
 - **[Steering](./steering)** - Modular prompting for complex agent tasks through context-aware guidance
+- **[Context Offloader](./context-offloader)** - Proactively offloads oversized tool results to storage, replacing them with previews and providing a built-in retrieval tool
 
 You can also build and distribute your own plugins to extend agent functionality. See [Get Featured](/docs/community/get-featured) to share your plugins with the community.
 
@@ -299,4 +300,5 @@ class AsyncConfigPlugin(Plugin):
 
 - [Hooks](../agents/hooks.mdx) - Learn about the underlying hook system
 - [Steering](./steering) - Explore the built-in steering plugin
+- [Context Offloader](./context-offloader) - Manage large tool results proactively
 - [Get Featured](/docs/community/get-featured) - Share your plugins with the community
