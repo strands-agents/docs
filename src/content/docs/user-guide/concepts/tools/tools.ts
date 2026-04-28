@@ -303,6 +303,7 @@ async function directInvocationExample() {
         input: { mode: 'read', name: 'default' },
       },
       agent: agent,
+      invocationState: {},
     }
   )
 
