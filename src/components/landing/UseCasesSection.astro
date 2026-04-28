@@ -31,6 +31,10 @@ agent("New lead: jane@acme.com at Acme Corp, US-West")`
 
 const assistantCode = `from strands import Agent, tool
 from strands.tools.mcp import MCPClient
+from strands.hooks import BeforeToolCallEvent
+from strands.agent.conversation_manager import (
+    SlidingWindowConversationManager,
+)
 from mcp import stdio_client, StdioServerParameters
 
 kb = MCPClient(lambda: stdio_client(
@@ -38,36 +42,57 @@ kb = MCPClient(lambda: stdio_client(
 ))
 
 @tool
-def escalate(reason: str, conversation_id: str) -> str:
-    """Hand off to a human agent with full context."""
-    return support_api.create_ticket(reason, conversation_id)
+def issue_refund(order_id: str, amount: float) -> str:
+    """Process a customer refund."""
+    return payments.refund(order_id, amount)
+
+def approve_refunds(event: BeforeToolCallEvent):
+    """Pause for human approval before processing refunds."""
+    if event.tool_use["name"] == "issue_refund":
+        response = event.interrupt(
+            "refund_approval", reason=event.tool_use["input"]
+        )
+        if response != "APPROVE":
+            event.cancel_tool = "Refund not approved."
 
 agent = Agent(
     system_prompt="You are a support assistant. Use the knowledge "
-    "base to answer questions. Escalate billing issues to a human.",
-    tools=[kb, escalate],
-)
+    "base to answer questions. Refunds require approval.",
+    tools=[kb, issue_refund],
+    hooks=[approve_refunds],
+    conversation_manager=SlidingWindowConversationManager(
+        window_size=20
+    ),
+)`
 
-agent("How do I upgrade my plan?")`
-
-const researchCode = `from strands import Agent, tool
+const researchCode = `from pydantic import BaseModel, Field
+from strands import Agent
 from strands_tools import http_request
 from pathlib import Path
 
-@tool
-def save_report(title: str, content: str) -> str:
-    """Save a research report to disk."""
-    Path(f"reports/{title}.md").write_text(content)
-    return f"Saved {title}.md"
+class Briefing(BaseModel):
+    headline: str = Field(description="One-line summary")
+    developments: list[str] = Field(description="Key developments")
+    sources: list[str] = Field(description="URLs consulted")
 
 agent = Agent(
     system_prompt="You are a research assistant. Search the web, "
-    "synthesize findings, and save a report with source citations.",
-    tools=[http_request, save_report],
+    "find developments from the last 24 hours, and produce a "
+    "briefing with source citations.",
+    tools=[http_request],
     max_turns=30,
 )
 
-agent("Research AI agent sandboxing and write a comparison report")`
+result = agent(
+    "What happened in AI agent frameworks yesterday?",
+    structured_output_model=Briefing,
+)
+
+briefing = result.structured_output
+Path("briefings/daily.md").write_text(
+    f"# {briefing.headline}\\n\\n"
+    + "\\n".join(f"- {d}" for d in briefing.developments)
+)`
 
 const useCases = [
   {
@@ -78,15 +103,15 @@ const useCases = [
   },
   {
     title: 'Build AI assistants',
-    description: 'Ground agents in your knowledge base via MCP. Escalate what they cannot answer. Session memory handles the rest.',
+    description: 'Ground agents in your knowledge base via MCP. Context management keeps long conversations in bounds. Interrupts pause for human approval before sensitive actions.',
     code: assistantCode,
     filename: 'support_agent.py',
   },
   {
     title: 'Build research agents',
-    description: 'Search, synthesize, and produce a report. One agent with the right tools, not a graph of specialists.',
+    description: 'Wake up to a briefing instead of a to-do list. Structured output keeps results typed and predictable.',
     code: researchCode,
-    filename: 'research_agent.py',
+    filename: 'daily_briefing.py',
   },
 ]
 ---
