@@ -27,6 +27,14 @@ navbar:
   - label: API Reference
     href: /docs/api/python/
     basePath: /docs/api/
+  - label: Blog
+    href: /blog/
+    basePath: /blog/
+    align: right
+  - label: Labs
+    href: https://github.com/strands-labs
+    external: true
+    align: right
 
 sidebar:
   - label: Docs

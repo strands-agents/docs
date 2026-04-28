@@ -28,6 +28,8 @@ export interface NavLink {
   additionalBasePaths?: string[]
   /** Set to true for external links (opens in new tab) */
   external?: boolean
+  /** Set to 'right' to push this link to the right side of the nav bar */
+  align?: 'right'
 }
 
 /**
