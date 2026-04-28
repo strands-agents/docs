@@ -98,8 +98,25 @@
 
 <script is:inline>
   (function () {
-    const STORAGE_KEY = 'starlight-synced-tabs__jarkqt';
-    const DEFAULT_LANG = 'Python';
+    var STORAGE_KEY = 'starlight-synced-tabs__jarkqt';
+    var DEFAULT_LANG = 'Python';
+
+    // Nav links whose href should swap based on language preference.
+    // Each entry: [navLinkLabel, pythonHref, typescriptHref]
+    var LANG_AWARE_LINKS = [
+      ['Docs', '/docs/user-guide/quickstart/python/', '/docs/user-guide/quickstart/typescript/'],
+      ['API Reference', '/docs/api/python/', '/docs/api/typescript/']
+    ];
+
+    // Path prefixes where /python/ <-> /typescript/ swapping is valid.
+    // If the current page is under one of these and the user toggles language,
+    // we navigate to the counterpart page.
+    var PAIRED_PATH_PREFIXES = [
+      '/docs/user-guide/quickstart/',
+      '/docs/api/',
+      '/docs/user-guide/deploy/deploy_to_bedrock_agentcore/',
+      '/docs/user-guide/deploy/deploy_to_docker/'
+    ];
 
     function getPreference() {
       try {
@@ -115,6 +132,66 @@
       } catch {}
     }
 
+    function langSlug(lang) {
+      return lang === 'Python' ? 'python' : 'typescript';
+    }
+
+    function otherLangSlug(lang) {
+      return lang === 'Python' ? 'typescript' : 'python';
+    }
+
+    /** Rewrite nav link hrefs to match the current language preference. */
+    function updateNavLinks(lang) {
+      var slug = langSlug(lang);
+      document.querySelectorAll('.nav-tab, .mobile-nav-link').forEach(function (link) {
+        var label = link.textContent.trim();
+        for (var i = 0; i < LANG_AWARE_LINKS.length; i++) {
+          if (label === LANG_AWARE_LINKS[i][0]) {
+            var href = lang === 'Python' ? LANG_AWARE_LINKS[i][1] : LANG_AWARE_LINKS[i][2];
+            // Preserve any base path prefix already on the link
+            var currentHref = link.getAttribute('href') || '';
+            var base = '';
+            for (var j = 0; j < LANG_AWARE_LINKS[i].length; j++) {
+              if (j === 0) continue;
+              var candidate = LANG_AWARE_LINKS[i][j];
+              var idx = currentHref.indexOf(candidate);
+              if (idx > 0) {
+                base = currentHref.substring(0, idx);
+                break;
+              }
+            }
+            link.setAttribute('href', base + href);
+            break;
+          }
+        }
+      });
+    }
+
+    /**
+     * If the current page is a paired page, return the counterpart URL
+     * for the given language. Returns null if no swap applies.
+     */
+    function getPairedUrl(lang) {
+      var path = window.location.pathname;
+      var target = langSlug(lang);
+      var other = otherLangSlug(lang);
+
+      for (var i = 0; i < PAIRED_PATH_PREFIXES.length; i++) {
+        var prefix = PAIRED_PATH_PREFIXES[i];
+        // Also match with a base path prefix (e.g., /latest/docs/...)
+        if (path.indexOf(prefix) !== -1) {
+          // Check if the current path contains the OTHER language slug
+          // e.g., we're on /quickstart/python/ and switching to TypeScript
+          var regex = new RegExp('/' + other + '(/|$)');
+          if (regex.test(path)) {
+            return path.replace('/' + other + '/', '/' + target + '/');
+          }
+          break;
+        }
+      }
+      return null;
+    }
+
     /** Sync all visible Starlight tab groups to match the selected language. */
     function syncStarlightTabs(lang) {
       document.querySelectorAll('starlight-tabs').forEach(function (tabGroup) {
@@ -122,7 +199,6 @@
         var tabs = tabGroup.querySelectorAll('[role="tab"]');
         tabs.forEach(function (tab, i) {
           if (tab.textContent.trim() === lang) {
-            // Simulate a click on the matching tab
             tab.setAttribute('aria-selected', 'true');
             tab.setAttribute('tabindex', '0');
             if (panels[i]) panels[i].hidden = false;
@@ -141,33 +217,41 @@
       });
     }
 
-    // Restore on page load (runs before paint because is:inline)
-    var current = getPreference();
-    // Defer DOM manipulation to after elements exist
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        updateToggle(current);
-      });
-    } else {
-      updateToggle(current);
+    /** Full UI sync: toggle state + nav links + inline tabs. */
+    function syncAll(lang) {
+      updateToggle(lang);
+      updateNavLinks(lang);
+      syncStarlightTabs(lang);
     }
 
-    // Handle clicks
+    // Restore on page load
+    var current = getPreference();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { syncAll(current); });
+    } else {
+      syncAll(current);
+    }
+
+    // Handle toggle clicks
     document.addEventListener('click', function (e) {
       var btn = e.target.closest('.lang-option');
       if (!btn) return;
       var lang = btn.dataset.lang;
       if (!lang) return;
       setPreference(lang);
-      updateToggle(lang);
-      syncStarlightTabs(lang);
+      syncAll(lang);
+
+      // Navigate to paired page if one exists
+      var paired = getPairedUrl(lang);
+      if (paired) {
+        window.location.href = paired;
+      }
     });
 
     // Listen for storage changes from other tabs/windows
     window.addEventListener('storage', function (e) {
       if (e.key === STORAGE_KEY && e.newValue) {
-        updateToggle(e.newValue);
-        syncStarlightTabs(e.newValue);
+        syncAll(e.newValue);
       }
     });
   })();
