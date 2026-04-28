@@ -179,6 +179,85 @@ Strands enforces the following rules for tool interrupts:
 - A single tool can raise multiple interrupts but only one at a time
     - In other words, within a single tool, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
 
+### Interrupt Cascade (Agent-as-tool)
+
+When using the Agent-as-tool pattern, a sub-agent may raise interrupts from hook callbacks (for example, `BeforeToolCallEvent`) while executing inside an orchestrator tool call. Interrupt cascade support allows those sub-agent interrupts to propagate to the orchestrator and then resume correctly at both levels.
+
+This provides a native and reusable way to model nested human-in-the-loop workflows without introducing parallel interrupt systems or custom state plumbing.
+
+### Components
+
+Cascade interrupts differ from tool interrupts in the methods used:
+
+- `tool_context.cascade_interrupts(list_of_interrupts)`: raises an interrupt containing a list of interrupts returned by the sub-agent.
+- `tool_context.get_cascaded_interrupt_responses()`: return the interrupt responses 
+
+**Note**: For scenarios where the sub-agent is an ephemeral agent (re-created on each tool invocation), it is necessary to use [Session Management](#session-management).
+
+#### Example
+
+```python
+from typing import Any
+
+from strands import Agent, tool
+from strands.hooks import BeforeToolCallEvent, HookProvider, HookRegistry
+from strands.types.tools import ToolContext
+
+
+class ApprovalHook(HookProvider):
+    def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
+        registry.add_callback(BeforeToolCallEvent, self.approve)
+
+    def approve(self, event: BeforeToolCallEvent) -> None:
+        approval = event.interrupt("subagent-approval", reason="Tool call requires approval")
+        if approval.lower() not in ["approved", "yes", "ok"]:
+            event.cancel_tool = "User canceled the tool execution"
+
+
+@tool(context=True)
+def run_sub_agent(query: str, tool_context: ToolContext) -> str:
+    sub_agent = Agent(
+        hooks=[ApprovalHook()],
+        session_manager=FileSessionManager(session_id="my-sub-agent", storage_dir="/path/to/storage")
+        tools=[],
+        callback_handler=None,
+    )
+
+    # Resume nested sub-agent interrupts when this tool is invoked with
+    # a cascaded interrupt response from the orchestrator.
+    cascaded_responses = tool_context.get_cascaded_interrupt_responses()
+    result = sub_agent(cascaded_responses if cascaded_responses else query)
+
+    if result.stop_reason == "interrupt":
+        # Bubble sub-agent interrupts to the orchestrator interrupt loop.
+        tool_context.cascade_interrupts(result.interrupts)
+
+    return str(result.message)
+
+
+orchestrator = Agent(
+    tools=[run_sub_agent],
+    callback_handler=None,
+)
+
+result = orchestrator("Run the delegated workflow")
+
+while result.stop_reason == "interrupt":
+    responses = []
+    for interrupt in result.interrupts:
+        user_input = input(f"Interrupt {interrupt.name}: ")
+        responses.append(
+            {
+                "interruptResponse": {
+                    "interruptId": interrupt.id,
+                    "response": user_input,
+                }
+            }
+        )
+
+    result = orchestrator(responses)
+```
+
 ## Session Management
 
 Users can session manage their interrupts and respond back at a later time under a new agent session. Additionally, users can session manage the responses to avoid repeated interrupts on subsequent tool calls.
