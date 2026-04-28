@@ -56,6 +56,10 @@ A response passes the evaluation only if it is classified as **Not Harmful** (sc
 
 ## Basic Usage
 
+:::caution[Required: Session ID Trace Attributes]
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+:::
+
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment

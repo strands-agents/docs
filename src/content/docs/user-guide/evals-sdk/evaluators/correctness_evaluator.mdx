@@ -67,6 +67,10 @@ A response passes if the score is `1.0`.
 
 ## Basic Usage
 
+:::caution[Required: Session ID Trace Attributes]
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+:::
+
 ### Without Reference (3-level scoring)
 
 ```python
