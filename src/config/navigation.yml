@@ -218,6 +218,7 @@ sidebar:
           - docs/community/model-providers/clova-studio
           - docs/community/model-providers/fireworksai
           - docs/community/model-providers/nebius-token-factory
+          - docs/community/model-providers/neuron
           - docs/community/model-providers/nvidia-nim
           - docs/community/model-providers/sglang
           - docs/community/model-providers/vllm
