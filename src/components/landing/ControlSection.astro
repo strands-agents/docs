@@ -3,21 +3,33 @@
  * "See what's happening" section — observability and hook-based visibility.
  * Bridges from "Build your way" (capability) to "Deliver high quality outcomes" (intervention).
  */
-import CodeBlock from './CodeBlock.astro'
+import LangCodeBlock from './LangCodeBlock.astro'
 
-const traceCode = `from strands import Agent
+const tracePy = `from strands import Agent
 from strands.hooks import AfterToolCallEvent
 
 def log_tool_calls(event: AfterToolCallEvent):
-    """Log every tool call with timing and token cost."""
+    """Log every tool call for visibility."""
     print(f"Tool: {event.tool_use['name']}")
-    print(f"Duration: {event.duration_ms}ms")
+    print(f"Result: {event.tool_result['status']}")
 
 agent = Agent(
     tools=[search_logs, query_database],
     hooks=[log_tool_calls],
     trace_attributes={"service": "ops-agent", "env": "production"},
 )`
+
+const traceTs = `import { Agent, AfterToolCallEvent } from '@strands-agents/sdk'
+
+const agent = new Agent({
+  tools: [searchLogs, queryDatabase],
+  traceAttributes: { service: 'ops-agent', env: 'production' },
+})
+
+agent.addHook(AfterToolCallEvent, (event) => {
+  console.log(\`Tool: \${event.toolUse.name}\`)
+  console.log(\`Status: \${event.result.status}\`)
+})`
 ---
 
 <section class="control-section">
@@ -27,7 +39,7 @@ agent = Agent(
       Strands traces every decision in the agent loop. Hooks intercept any step to log, validate, or redirect. Full visibility, zero setup.
     </p>
     <div class="control-code">
-      <CodeBlock code={traceCode} filename="observable_agent.py" />
+      <LangCodeBlock pythonCode={tracePy} pythonFilename="observable_agent.py" tsCode={traceTs} tsFilename="observable_agent.ts" />
     </div>
     <p class="section-annotation">
       Built-in traces. Intercept anything.

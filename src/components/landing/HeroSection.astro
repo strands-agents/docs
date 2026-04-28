@@ -2,7 +2,7 @@
 /**
  * Hero section: headline + subtext on left, code snippet on right.
  */
-import CodeBlock from './CodeBlock.astro'
+import LangCodeBlock from './LangCodeBlock.astro'
 import { getStarCount } from '../../util/github'
 
 interface Props {
@@ -17,7 +17,7 @@ const withBase = (path: string) => {
 
 const stars = await getStarCount()
 
-const heroCode = `from strands import Agent, tool
+const heroPython = `from strands import Agent, tool
 from strands.hooks import BeforeToolCallEvent
 from pathlib import Path
 
@@ -34,6 +34,35 @@ def require_sources(event: BeforeToolCallEvent):
 
 agent = Agent(tools=[save_report], hooks=[require_sources])
 agent("Research AI agent frameworks and write a comparison report")`
+
+const heroTs = `import { Agent, tool, BeforeToolCallEvent } from '@strands-agents/sdk'
+import z from 'zod'
+import { writeFileSync } from 'fs'
+
+const saveReport = tool({
+  name: 'save_report',
+  description: 'Save a research report to disk.',
+  inputSchema: z.object({
+    title: z.string(),
+    content: z.string(),
+  }),
+  callback: ({ title, content }) => {
+    writeFileSync(\`reports/\${title}.md\`, content)
+    return \`Saved \${title}.md\`
+  },
+})
+
+const agent = new Agent({ tools: [saveReport] })
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  if (event.toolUse.name === 'save_report') {
+    if (!String(event.toolUse.input).includes('[source]')) {
+      event.cancel = 'Add source citations before saving.'
+    }
+  }
+})
+
+await agent.invoke('Research AI agent frameworks and write a comparison report')`
 ---
 
 <section class="hero-section">
@@ -85,7 +114,12 @@ agent("Research AI agent frameworks and write a comparison report")`
       </p>
     </div>
     <div class="hero-code">
-      <CodeBlock code={heroCode} filename="research_agent.py" />
+      <LangCodeBlock
+        pythonCode={heroPython}
+        pythonFilename="research_agent.py"
+        tsCode={heroTs}
+        tsFilename="research_agent.ts"
+      />
     </div>
   </div>
 </section>
@@ -322,7 +356,7 @@ agent("Research AI agent frameworks and write a comparison report")`
         btn.classList.add('copied')
         setTimeout(() => btn.classList.remove('copied'), 2000)
 
-        // Easter egg: set global language preference to match the install command
+        // Set global language preference to match the install command
         if (lang) {
           try {
             const key = 'starlight-synced-tabs__jarkqt'
@@ -334,6 +368,8 @@ agent("Research AI agent frameworks and write a comparison report")`
           } catch (e) {
             if (typeof console !== 'undefined') console.debug('[HeroSection] localStorage error:', e);
           }
+          // Notify LangCodeBlock components
+          window.dispatchEvent(new CustomEvent('lang-preference-changed', { detail: { lang } }))
         }
       }
 

@@ -10,15 +10,17 @@ interface Props {
   code: string
   lang?: string
   filename?: string
+  badge?: string
 }
 
-const { code, lang = 'python', filename } = Astro.props
+const { code, lang = 'python', filename, badge } = Astro.props
 ---
 
 <div class="code-block" data-code={code}>
   {filename && (
     <div class="code-header">
       <span class="code-filename">{filename}</span>
+      {badge && <span class="code-badge">{badge}</span>}
       <button class="copy-button" aria-label="Copy code">
         <svg class="copy-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
@@ -102,6 +104,26 @@ const { code, lang = 'python', filename } = Astro.props
 
   :global([data-theme='light']) .code-filename {
     color: var(--sl-color-gray-2);
+  }
+
+  .code-badge {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sl-color-gray-5);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    padding: 0.1rem 0.35rem;
+    margin-left: 0.25rem;
+  }
+
+  :global([data-theme='light']) .code-badge {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+    color: var(--sl-color-gray-4);
   }
 
   /* Copy button */

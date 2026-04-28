@@ -4,7 +4,7 @@
  * Bridges from "See what's happening" (observability) to "100% Stat" (proof).
  * Two code blocks: hook (hard deny) → steering handler (corrective feedback).
  */
-import CodeBlock from './CodeBlock.astro'
+import LangCodeBlock from './LangCodeBlock.astro'
 
 const denyCode = `from strands import Agent
 from strands.hooks import BeforeToolCallEvent
@@ -47,13 +47,13 @@ agent = Agent(tools=[query_database], plugins=[QueryQualityPolicy()])`
       Agents make mistakes. Strands agents recover. Hard guardrails block what should never happen. Corrective feedback teaches the agent to do better.
     </p>
     <div class="outcomes-code">
-      <CodeBlock code={denyCode} filename="read_only_agent.py" />
+      <LangCodeBlock pythonCode={denyCode} pythonFilename="read_only_agent.py" />
     </div>
     <p class="section-annotation">
       Two policies, one agent. Block what shouldn't happen. Guide what should happen better.
     </p>
     <div class="outcomes-code">
-      <CodeBlock code={guideCode} filename="query_quality_policy.py" />
+      <LangCodeBlock pythonCode={guideCode} pythonFilename="query_quality_policy.py" />
     </div>
   </div>
 </section>

@@ -1,0 +1,83 @@
+---
+/**
+ * TEMPORARY: Floating language toggle for testing code block switching.
+ * Remove once PR #653 (LanguageToggle in navbar) is merged.
+ */
+---
+
+<div class="lang-test-toggle" id="lang-test-toggle">
+  <button class="lang-btn" data-lang="Python" aria-checked="true">Py</button>
+  <button class="lang-btn" data-lang="TypeScript" aria-checked="false">TS</button>
+</div>
+
+<style>
+  .lang-test-toggle {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+    display: flex;
+    gap: 0;
+    background: var(--sl-color-gray-6);
+    border-radius: 8px;
+    padding: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Figtree', sans-serif;
+  }
+
+  .lang-btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    transition: all 0.15s ease;
+  }
+
+  .lang-btn[aria-checked="true"] {
+    background: #00cc5f;
+    color: #0E0E0E;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'starlight-synced-tabs__jarkqt'
+
+  function getPreference(): string {
+    try {
+      return localStorage.getItem(STORAGE_KEY) || 'Python'
+    } catch {
+      return 'Python'
+    }
+  }
+
+  function setPreference(lang: string) {
+    try {
+      localStorage.setItem(STORAGE_KEY, lang)
+    } catch { /* incognito mode */ }
+    // Update button states
+    document.querySelectorAll<HTMLElement>('.lang-btn').forEach((btn) => {
+      btn.setAttribute('aria-checked', btn.dataset.lang === lang ? 'true' : 'false')
+    })
+    // Dispatch event for LangCodeBlock to pick up
+    window.dispatchEvent(new CustomEvent('lang-preference-changed', { detail: { lang } }))
+  }
+
+  // Init
+  const init = () => {
+    const pref = getPreference()
+    document.querySelectorAll<HTMLElement>('.lang-btn').forEach((btn) => {
+      btn.setAttribute('aria-checked', btn.dataset.lang === pref ? 'true' : 'false')
+      btn.addEventListener('click', () => setPreference(btn.dataset.lang || 'Python'))
+    })
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init)
+  } else {
+    init()
+  }
+</script>

@@ -3,7 +3,7 @@
  * Three use case sections: Automate Workflows, Build AI Assistants, Build Research Agents.
  * Each has a heading, description, and code sample.
  */
-import CodeBlock from './CodeBlock.astro'
+import LangCodeBlock from './LangCodeBlock.astro'
 
 const workflowCode = `from strands import Agent, tool
 
@@ -80,7 +80,6 @@ agent = Agent(
     "find developments from the last 24 hours, and produce a "
     "briefing with source citations.",
     tools=[http_request],
-    max_turns=30,
 )
 
 result = agent(
@@ -94,42 +93,140 @@ Path("briefings/daily.md").write_text(
     + "\\n".join(f"- {d}" for d in briefing.developments)
 )`
 
-const useCases = [
-  {
-    title: 'Automate workflows',
-    description: 'Classify, score, and route. One agent, one job. Replace brittle scripts with tools that adapt when your process changes.',
-    code: workflowCode,
-    filename: 'lead_router.py',
+const workflowTs = `import { Agent, tool } from '@strands-agents/sdk'
+import z from 'zod'
+
+const classifyLead = tool({
+  name: 'classify_lead',
+  description: 'Score and classify an inbound lead.',
+  inputSchema: z.object({
+    email: z.string(),
+    company: z.string(),
+  }),
+  callback: ({ email, company }) => {
+    const firmographics = crm.lookup(company)
+    return {
+      score: computeIcpScore(firmographics),
+      segment: firmographics.industry,
+    }
   },
-  {
-    title: 'Build AI assistants',
-    description: 'Ground agents in your knowledge base via MCP. Context management keeps long conversations in bounds. Interrupts pause for human approval before sensitive actions.',
-    code: assistantCode,
-    filename: 'support_agent.py',
+})
+
+const routeToRep = tool({
+  name: 'route_to_rep',
+  description: 'Assign a lead to the right sales rep.',
+  inputSchema: z.object({
+    leadId: z.string(),
+    region: z.string(),
+  }),
+  callback: ({ leadId, region }) => {
+    const rep = crm.getRepForRegion(region)
+    crm.assign(leadId, rep)
+    return \`Assigned to \${rep}\`
   },
-  {
-    title: 'Build research agents',
-    description: 'Wake up to a briefing instead of a to-do list. Structured output keeps results typed and predictable.',
-    code: researchCode,
-    filename: 'daily_briefing.py',
-  },
-]
+})
+
+const agent = new Agent({ tools: [classifyLead, routeToRep] })
+
+await agent.invoke('New lead: jane@acme.com at Acme Corp, US-West')`
+
+const assistantTs = `import { Agent, tool, McpClient, BeforeToolCallEvent } from '@strands-agents/sdk'
+import { SlidingWindowConversationManager } from '@strands-agents/sdk'
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
+import z from 'zod'
+
+const kb = new McpClient({
+  transport: new StdioClientTransport({ command: 'npx', args: ['kb-server'] }),
+})
+
+const issueRefund = tool({
+  name: 'issue_refund',
+  description: 'Process a customer refund.',
+  inputSchema: z.object({
+    orderId: z.string(),
+    amount: z.number(),
+  }),
+  callback: ({ orderId, amount }) => payments.refund(orderId, amount),
+})
+
+const agent = new Agent({
+  systemPrompt: 'You are a support assistant. Use the knowledge '
+    + 'base to answer questions. Refunds require approval.',
+  tools: [kb, issueRefund],
+  conversationManager: new SlidingWindowConversationManager({
+    windowSize: 20,
+  }),
+})
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  if (event.toolUse.name === 'issue_refund') {
+    event.cancel = 'Refund approval required. Contact support team.'
+  }
+})`
+
+const researchTs = `import { Agent } from '@strands-agents/sdk'
+import { httpRequest } from '@strands-agents/tools'
+import z from 'zod'
+import { writeFileSync } from 'fs'
+
+const BriefingSchema = z.object({
+  headline: z.string().describe('One-line summary'),
+  developments: z.array(z.string()).describe('Key developments'),
+  sources: z.array(z.string()).describe('URLs consulted'),
+})
+
+const agent = new Agent({
+  systemPrompt: 'You are a research assistant. Search the web, '
+    + 'find developments from the last 24 hours, and produce a '
+    + 'briefing with source citations.',
+  tools: [httpRequest],
+})
+
+const result = await agent.invoke(
+  'What happened in AI agent frameworks yesterday?',
+  { structuredOutputSchema: BriefingSchema },
+)
+
+const briefing = result.structuredOutput
+writeFileSync('briefings/daily.md',
+  \`# \${briefing.headline}\\n\\n\`
+  + briefing.developments.map((d: string) => \`- \${d}\`).join('\\n')
+)`
+
 ---
 
 <section class="use-cases-section">
   <div class="use-cases-inner">
-    {useCases.map((useCase, index) => (
-      <div class="use-case">
-        <div class="use-case-text">
-          <span class="use-case-label">Use case {index + 1}</span>
-          <h3 class="use-case-title">{useCase.title}</h3>
-          <p class="use-case-description">{useCase.description}</p>
-        </div>
-        <div class="use-case-code">
-          <CodeBlock code={useCase.code} filename={useCase.filename} />
-        </div>
+    <div class="use-case">
+      <div class="use-case-text">
+        <span class="use-case-label">Use case 1</span>
+        <h3 class="use-case-title">Automate workflows</h3>
+        <p class="use-case-description">Classify, score, and route. One agent, one job. Replace brittle scripts with tools that adapt when your process changes.</p>
       </div>
-    ))}
+      <div class="use-case-code">
+        <LangCodeBlock pythonCode={workflowCode} pythonFilename="lead_router.py" tsCode={workflowTs} tsFilename="lead_router.ts" />
+      </div>
+    </div>
+    <div class="use-case">
+      <div class="use-case-text">
+        <span class="use-case-label">Use case 2</span>
+        <h3 class="use-case-title">Build AI assistants</h3>
+        <p class="use-case-description">Ground agents in your knowledge base via MCP. Context management keeps long conversations in bounds. Interrupts pause for human approval before sensitive actions.</p>
+      </div>
+      <div class="use-case-code">
+        <LangCodeBlock pythonCode={assistantCode} pythonFilename="support_agent.py" tsCode={assistantTs} tsFilename="support_agent.ts" />
+      </div>
+    </div>
+    <div class="use-case">
+      <div class="use-case-text">
+        <span class="use-case-label">Use case 3</span>
+        <h3 class="use-case-title">Build research agents</h3>
+        <p class="use-case-description">Wake up to a briefing instead of a to-do list. Structured output keeps results typed and predictable.</p>
+      </div>
+      <div class="use-case-code">
+        <LangCodeBlock pythonCode={researchCode} pythonFilename="daily_briefing.py" tsCode={researchTs} tsFilename="daily_briefing.ts" />
+      </div>
+    </div>
   </div>
 </section>
 
