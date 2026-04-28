@@ -1,0 +1,92 @@
+---
+/**
+ * "See what's happening" section — observability and hook-based visibility.
+ * Bridges from "Build your way" (capability) to "Deliver high quality outcomes" (intervention).
+ */
+import CodeBlock from './CodeBlock.astro'
+
+const traceCode = `from strands import Agent
+from strands.hooks import AfterToolCallEvent
+
+def log_tool_calls(event: AfterToolCallEvent):
+    """Log every tool call with timing and token cost."""
+    print(f"Tool: {event.tool_use['name']}")
+    print(f"Duration: {event.duration_ms}ms")
+
+agent = Agent(
+    tools=[search_logs, query_database],
+    hooks=[log_tool_calls],
+    trace_attributes={"service": "ops-agent", "env": "production"},
+)`
+---
+
+<section class="control-section">
+  <div class="control-inner">
+    <h2 class="section-heading">See what's happening</h2>
+    <p class="section-description">
+      Strands traces every decision in the agent loop. Hooks intercept any step to log, validate, or redirect. Full visibility, zero setup.
+    </p>
+    <div class="control-code">
+      <CodeBlock code={traceCode} filename="observable_agent.py" />
+    </div>
+    <p class="section-annotation">
+      Built-in traces. Intercept anything.
+    </p>
+  </div>
+</section>
+
+<style>
+  .control-section {
+    padding: 5rem 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .control-inner {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .section-heading {
+    font-family: 'Figtree', sans-serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: var(--sl-color-white);
+    text-align: center;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .section-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--sl-color-gray-2);
+    text-align: center;
+    max-width: 640px;
+    margin: 0;
+  }
+
+  .control-code {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .section-annotation {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-4);
+    text-align: center;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .control-section {
+      padding: 3rem 1.5rem;
+    }
+  }
+</style>

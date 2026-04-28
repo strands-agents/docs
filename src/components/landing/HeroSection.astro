@@ -18,14 +18,22 @@ const withBase = (path: string) => {
 const stars = await getStarCount()
 
 const heroCode = `from strands import Agent, tool
+from strands.hooks import BeforeToolCallEvent
+from pathlib import Path
 
 @tool
-def weather(city: str) -> dict:
-    """Get current weather for a city."""
-    return fetch_weather(city)
+def save_report(title: str, content: str) -> str:
+    """Save a research report to disk."""
+    Path(f"reports/{title}.md").write_text(content)
+    return f"Saved {title}.md"
 
-agent = Agent(tools=[weather])
-agent("What's the weather in Seattle?")`
+def require_sources(event: BeforeToolCallEvent):
+    if event.tool_use["name"] == "save_report":
+        if "[source]" not in str(event.tool_use["input"]):
+            event.cancel_tool = "Add source citations before saving."
+
+agent = Agent(tools=[save_report], hooks=[require_sources])
+agent("Research AI agent frameworks and write a comparison report")`
 ---
 
 <section class="hero-section">
@@ -33,11 +41,11 @@ agent("What's the weather in Seattle?")`
   <div class="hero-inner">
     <div class="hero-text">
       <h1 class="hero-title">
-        Build AI agents<br />
-        <span class="hero-highlight">you can actually steer.</span>
+        The open source<br />
+        <span class="hero-highlight">agent harness SDK.</span>
       </h1>
       <p class="hero-subtitle">
-        Any model. Any cloud. Open source for Python and TypeScript.
+        Build an agent harness. Control it end-to-end.
       </p>
       <div class="hero-cta">
         <a href={withBase('/docs/user-guide/quickstart/overview/')} class="cta-button primary">Get Started</a>
@@ -69,12 +77,15 @@ agent("What's the weather in Seattle?")`
           </button>
         </div>
       </div>
+      <p class="hero-harness-link">
+        Agent harnesses go beyond frameworks… <a href={withBase('/docs/user-guide/concepts/what-is-an-agent-harness/')}>Learn what that means</a>
+      </p>
       <p class="hero-social-proof">
         {stars} GitHub stars · Built from production systems inside Amazon · Works with any model
       </p>
     </div>
     <div class="hero-code">
-      <CodeBlock code={heroCode} filename="agent.py" />
+      <CodeBlock code={heroCode} filename="research_agent.py" />
     </div>
   </div>
 </section>
@@ -240,6 +251,22 @@ agent("What's the weather in Seattle?")`
   .install-copy.copied .copy-icon { display: none; }
   .install-copy.copied .check-icon { display: block; }
   .install-copy.copied { color: var(--strands-green); }
+
+  .hero-harness-link {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.9rem;
+    color: var(--sl-color-gray-3);
+    margin: 0;
+  }
+
+  .hero-harness-link a {
+    color: var(--strands-green);
+    text-decoration: none;
+  }
+
+  .hero-harness-link a:hover {
+    text-decoration: underline;
+  }
 
   .hero-social-proof {
     font-family: 'Figtree', sans-serif;

@@ -1,0 +1,187 @@
+---
+/**
+ * Three use case sections: Automate Workflows, Build AI Assistants, Build Research Agents.
+ * Each has a heading, description, and code sample.
+ */
+import CodeBlock from './CodeBlock.astro'
+
+const workflowCode = `from strands import Agent, tool
+
+@tool
+def get_open_tickets(status: str) -> list:
+    """Fetch tickets from the issue tracker."""
+    return ticketing_api.search(status=status)
+
+@tool
+def assign_ticket(ticket_id: str, team: str) -> str:
+    """Route a ticket to the right team."""
+    return ticketing_api.assign(ticket_id, team)
+
+agent = Agent(
+    system_prompt="""You are an ops assistant. Triage open tickets,
+    classify by urgency, and route to the right team.""",
+    tools=[get_open_tickets, assign_ticket],
+)
+
+agent("Triage all P1 tickets from the last hour")`
+
+const assistantCode = `from strands import Agent
+from strands.tools.mcp import MCPClient
+from strands_tools import http_request
+
+# Connect your knowledge base via MCP
+kb = MCPClient(lambda: stdio_client(
+    StdioServerParameters(command="uvx", args=["kb-server"])
+))
+
+agent = Agent(
+    system_prompt="""You are a customer support assistant.
+    Answer questions using the knowledge base. Escalate
+    billing issues to the finance team.""",
+    tools=[*kb.tools(), http_request],
+)
+
+agent("How do I upgrade my plan?")`
+
+const researchCode = `from strands import Agent, tool
+from strands_tools import http_request
+from pathlib import Path
+
+@tool
+def save_report(title: str, content: str) -> str:
+    """Save a research report to disk."""
+    Path(f"reports/{title}.md").write_text(content)
+    return f"Saved {title}.md"
+
+agent = Agent(
+    system_prompt="""You are a research assistant. Search the web,
+    synthesize findings, and save a summary report.""",
+    tools=[http_request, save_report],
+)
+
+agent("Summarize recent advances in agent sandboxing")`
+
+const useCases = [
+  {
+    title: 'Automate workflows',
+    description: 'Connect your internal systems and let agents triage, classify, and route work. Replace brittle scripts with agents that adapt when processes change.',
+    code: workflowCode,
+    filename: 'workflow_agent.py',
+  },
+  {
+    title: 'Build AI assistants',
+    description: 'Ground agents in your knowledge base via MCP. Handle customer questions, escalate edge cases, and integrate with existing support tools.',
+    code: assistantCode,
+    filename: 'assistant_agent.py',
+  },
+  {
+    title: 'Build research agents',
+    description: 'Agents that search, synthesize, and produce structured outputs. Point them at a topic and get a report back.',
+    code: researchCode,
+    filename: 'research_agent.py',
+  },
+]
+---
+
+<section class="use-cases-section">
+  <div class="use-cases-inner">
+    {useCases.map((useCase, index) => (
+      <div class="use-case">
+        <div class="use-case-text">
+          <span class="use-case-label">Use case {index + 1}</span>
+          <h3 class="use-case-title">{useCase.title}</h3>
+          <p class="use-case-description">{useCase.description}</p>
+        </div>
+        <div class="use-case-code">
+          <CodeBlock code={useCase.code} filename={useCase.filename} />
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .use-cases-section {
+    padding: 3rem 2rem 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .use-cases-inner {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .use-case {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .use-case:nth-child(even) {
+    direction: rtl;
+  }
+
+  .use-case:nth-child(even) > * {
+    direction: ltr;
+  }
+
+  .use-case-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .use-case-label {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--strands-green);
+  }
+
+  .use-case-title {
+    font-family: 'Figtree', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+    color: var(--sl-color-white);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .use-case-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-3);
+    margin: 0;
+  }
+
+  .use-case-code {
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .use-cases-section {
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    .use-case {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .use-case:nth-child(even) {
+      direction: ltr;
+    }
+
+    .use-cases-inner {
+      gap: 3rem;
+    }
+  }
+</style>
