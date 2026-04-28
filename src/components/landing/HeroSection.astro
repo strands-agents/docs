@@ -287,10 +287,25 @@ agent("What's the weather in Seattle?")`
 
       const text = install.dataset.copy || ''
 
+      // Map install commands to language preference
+      const lang = text.startsWith('pip') ? 'Python' : text.startsWith('npm') ? 'TypeScript' : null
+
       const copy = async () => {
         await navigator.clipboard.writeText(text)
         btn.classList.add('copied')
         setTimeout(() => btn.classList.remove('copied'), 2000)
+
+        // Easter egg: set global language preference to match the install command
+        if (lang) {
+          try {
+            const key = 'starlight-synced-tabs__jarkqt'
+            localStorage.setItem(key, lang)
+            // Update header toggle if present
+            document.querySelectorAll<HTMLElement>('language-toggle .lang-option').forEach((opt) => {
+              opt.setAttribute('aria-checked', opt.dataset.lang === lang ? 'true' : 'false')
+            })
+          } catch {}
+        }
       }
 
       btn.addEventListener('click', copy)

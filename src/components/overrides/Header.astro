@@ -19,6 +19,7 @@ import { Icon } from '@astrojs/starlight/components';
 import { navLinks, githubSections, type NavLink } from '../../config/navbar';
 import type { GitHubSection } from '../../sidebar';
 import GitHubDropdown from '../GitHubDropdown.astro';
+import LanguageToggle from '../LanguageToggle.astro';
 import { findCurrentNavSection } from '../../route-middleware';
 import logoHeaderDark from '../../assets/logo-header-dark.svg';
 import logoHeaderLight from '../../assets/logo-header-light.svg';
@@ -87,6 +88,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     )}
     <div class="sl-hidden md:sl-flex print:hidden right-group">
       <GitHubDropdown />
+      <LanguageToggle />
       <ThemeSelect />
       <LanguageSelect />
     </div>
