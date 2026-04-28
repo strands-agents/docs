@@ -8,37 +8,44 @@ import CodeBlock from './CodeBlock.astro'
 const workflowCode = `from strands import Agent, tool
 
 @tool
-def get_open_tickets(status: str) -> list:
-    """Fetch tickets from the issue tracker."""
-    return ticketing_api.search(status=status)
+def classify_lead(email: str, company: str) -> dict:
+    """Score and classify an inbound lead."""
+    firmographics = crm.lookup(company)
+    return {
+        "score": compute_icp_score(firmographics),
+        "segment": firmographics["industry"],
+    }
 
 @tool
-def assign_ticket(ticket_id: str, team: str) -> str:
-    """Route a ticket to the right team."""
-    return ticketing_api.assign(ticket_id, team)
+def route_to_rep(lead_id: str, region: str) -> str:
+    """Assign a lead to the right sales rep."""
+    rep = crm.get_rep_for_region(region)
+    crm.assign(lead_id, rep)
+    return f"Assigned to {rep}"
 
 agent = Agent(
-    system_prompt="""You are an ops assistant. Triage open tickets,
-    classify by urgency, and route to the right team.""",
-    tools=[get_open_tickets, assign_ticket],
+    tools=[classify_lead, route_to_rep],
 )
 
-agent("Triage all P1 tickets from the last hour")`
+agent("New lead: jane@acme.com at Acme Corp, US-West")`
 
-const assistantCode = `from strands import Agent
+const assistantCode = `from strands import Agent, tool
 from strands.tools.mcp import MCPClient
-from strands_tools import http_request
+from mcp import stdio_client, StdioServerParameters
 
-# Connect your knowledge base via MCP
 kb = MCPClient(lambda: stdio_client(
     StdioServerParameters(command="uvx", args=["kb-server"])
 ))
 
+@tool
+def escalate(reason: str, conversation_id: str) -> str:
+    """Hand off to a human agent with full context."""
+    return support_api.create_ticket(reason, conversation_id)
+
 agent = Agent(
-    system_prompt="""You are a customer support assistant.
-    Answer questions using the knowledge base. Escalate
-    billing issues to the finance team.""",
-    tools=[*kb.tools(), http_request],
+    system_prompt="You are a support assistant. Use the knowledge "
+    "base to answer questions. Escalate billing issues to a human.",
+    tools=[kb, escalate],
 )
 
 agent("How do I upgrade my plan?")`
@@ -54,29 +61,30 @@ def save_report(title: str, content: str) -> str:
     return f"Saved {title}.md"
 
 agent = Agent(
-    system_prompt="""You are a research assistant. Search the web,
-    synthesize findings, and save a summary report.""",
+    system_prompt="You are a research assistant. Search the web, "
+    "synthesize findings, and save a report with source citations.",
     tools=[http_request, save_report],
+    max_turns=30,
 )
 
-agent("Summarize recent advances in agent sandboxing")`
+agent("Research AI agent sandboxing and write a comparison report")`
 
 const useCases = [
   {
     title: 'Automate workflows',
-    description: 'Connect your internal systems and let agents triage, classify, and route work. Replace brittle scripts with agents that adapt when processes change.',
+    description: 'Classify, score, and route. One agent, one job. Replace brittle scripts with tools that adapt when your process changes.',
     code: workflowCode,
-    filename: 'workflow_agent.py',
+    filename: 'lead_router.py',
   },
   {
     title: 'Build AI assistants',
-    description: 'Ground agents in your knowledge base via MCP. Handle customer questions, escalate edge cases, and integrate with existing support tools.',
+    description: 'Ground agents in your knowledge base via MCP. Escalate what they cannot answer. Session memory handles the rest.',
     code: assistantCode,
-    filename: 'assistant_agent.py',
+    filename: 'support_agent.py',
   },
   {
     title: 'Build research agents',
-    description: 'Agents that search, synthesize, and produce structured outputs. Point them at a topic and get a report back.',
+    description: 'Search, synthesize, and produce a report. One agent with the right tools, not a graph of specialists.',
     code: researchCode,
     filename: 'research_agent.py',
   },
