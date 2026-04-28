@@ -357,6 +357,12 @@ Most event properties are read-only to prevent unintended modifications. However
 </Tab>
 <Tab label="TypeScript">
 
+- `BeforeInvocationEvent`
+    - `cancel` - Cancel the agent invocation with a message.
+
+- `BeforeModelCallEvent`
+    - `cancel` - Cancel the model call with a message.
+
 - `BeforeToolsEvent`
     - `cancel` - Cancel all tool calls in a batch with a message. See [Limit Tool Counts](#limit-tool-counts).
 
