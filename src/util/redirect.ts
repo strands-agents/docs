@@ -34,6 +34,12 @@ const SLUG_RULES: SlugRule[] = [
     to: 'docs/examples/python/multi_agent_example/multi_agent_example',
   },
 
+  // Vanity URLs for community links
+  {
+    match: exactly('discord'),
+    to: 'https://discord.gg/strands',
+  },
+
   // CDK and deployment examples now live on GitHub
   {
     match: exactly('docs/examples/cdk/deploy_to_apprunner'),
