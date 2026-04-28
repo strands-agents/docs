@@ -98,19 +98,24 @@
 
 <script is:inline>
   (function () {
+    // This key must match the one Starlight generates for synced tabs.
+    // Derived from: AutoSyncTabs.astro hashes the tab labels "Python|TypeScript"
+    // using a djb2 hash, producing "jarkqt". Starlight stores the selected label
+    // at "starlight-synced-tabs__" + syncKey. If Starlight changes its key format
+    // or AutoSyncTabs changes its hash function, this will need updating.
     var STORAGE_KEY = 'starlight-synced-tabs__jarkqt';
     var DEFAULT_LANG = 'Python';
 
-    // Nav links whose href should swap based on language preference.
+    // IMPORTANT: Keep in sync with navigation.yml navbar entries.
+    // When adding new language-paired pages, update both lists below.
     // Each entry: [navLinkLabel, pythonHref, typescriptHref]
     var LANG_AWARE_LINKS = [
       ['Docs', '/docs/user-guide/quickstart/python/', '/docs/user-guide/quickstart/typescript/'],
       ['API Reference', '/docs/api/python/', '/docs/api/typescript/']
     ];
 
-    // Path prefixes where /python/ <-> /typescript/ swapping is valid.
-    // If the current page is under one of these and the user toggles language,
-    // we navigate to the counterpart page.
+    // IMPORTANT: Keep in sync with navigation.yml.
+    // Any URL prefix where /python/ and /typescript/ variants both exist.
     var PAIRED_PATH_PREFIXES = [
       '/docs/user-guide/quickstart/',
       '/docs/api/',
@@ -121,7 +126,8 @@
     function getPreference() {
       try {
         return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
-      } catch {
+      } catch (e) {
+        if (typeof console !== 'undefined') console.debug('[LanguageToggle] localStorage read error:', e);
         return DEFAULT_LANG;
       }
     }
@@ -129,7 +135,9 @@
     function setPreference(lang) {
       try {
         localStorage.setItem(STORAGE_KEY, lang);
-      } catch {}
+      } catch (e) {
+        if (typeof console !== 'undefined') console.debug('[LanguageToggle] localStorage write error:', e);
+      }
     }
 
     function langSlug(lang) {
