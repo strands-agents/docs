@@ -14,14 +14,16 @@ export interface NavLink {
   /** URL path or full URL for external links */
   href: string
   /**
-   * Base path used to determine active state (optional).
-   * If not provided, href is used. Useful when href points to a nested page
-   * but you want the tab to be active for the entire section.
-   * Example: href="/user-guide/quickstart/" but basePath="/user-guide/"
+   * Base path(s) used to determine active state and sidebar filtering (optional).
+   * If not provided, href is used. Can be a single string or an array of strings
+   * when a nav item encompasses multiple top-level sidebar sections.
+   * Example: basePath: ["/docs/community/", "/docs/labs/", "/docs/contribute/"]
    */
-  basePath?: string
+  basePath?: string | string[]
   /** Set to true for external links (opens in new tab) */
   external?: boolean
+  /** Set to 'right' to push this link to the right side of the nav bar */
+  align?: 'right'
 }
 
 /**
@@ -50,10 +52,11 @@ function withBase(path: string): string {
 function transformNavLinks(links: NavLink[]): NavLink[] {
   return links.map((link): NavLink => {
     if (link.external) return link
+    const bp = link.basePath
     return {
       ...link,
       href: withBase(link.href),
-      ...(link.basePath ? { basePath: withBase(link.basePath) } : {}),
+      ...(bp ? { basePath: Array.isArray(bp) ? bp.map(withBase) : withBase(bp) } : {}),
     }
   })
 }
