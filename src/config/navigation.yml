@@ -112,6 +112,7 @@ sidebar:
           - label: Experimental
             items:
               - docs/user-guide/concepts/experimental/agent-config
+              - docs/user-guide/concepts/experimental/checkpointing
       - label: Model Providers
         items:
           - docs/user-guide/concepts/model-providers
