@@ -32,7 +32,7 @@ agent("New lead: jane@acme.com, Acme Corp, US-West")`
 const assistantCode = `from strands import Agent, tool
 from strands.tools.mcp import MCPClient
 from strands.hooks import BeforeToolCallEvent
-from strands import SlidingWindowConversationManager
+from strands.agent import SlidingWindowConversationManager
 from mcp import stdio_client, StdioServerParameters
 
 kb = MCPClient(lambda: stdio_client(
