@@ -429,12 +429,12 @@ For more information on implementing MCP servers, see the [MCP documentation](ht
 
 ## Advanced Usage
 
-<Tabs>
-<Tab label="Python">
-
 ### Elicitation
 
 An MCP server can request additional information from the user by sending an elicitation request. Set up an elicitation callback to handle these requests:
+
+<Tabs>
+<Tab label="Python">
 
 ```python
 # server.py
@@ -492,9 +492,15 @@ For more information on elicitation, see the [MCP specification](https://modelco
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+```typescript
+--8<-- "user-guide/concepts/tools/mcp-tools-elicitation.ts:elicitation_server"
 ```
+
+```typescript
+--8<-- "user-guide/concepts/tools/mcp-tools-elicitation.ts:elicitation_client"
+```
+
+For more information on elicitation, see the [MCP specification](https://modelcontextprotocol.io/specification/draft/client/elicitation).
 </Tab>
 </Tabs>
 
