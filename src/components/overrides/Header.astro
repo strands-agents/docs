@@ -19,6 +19,7 @@ import { Icon } from '@astrojs/starlight/components';
 import { navLinks, githubSections, type NavLink } from '../../config/navbar';
 import type { GitHubSection } from '../../sidebar';
 import GitHubDropdown from '../GitHubDropdown.astro';
+import LanguageToggle from '../LanguageToggle.astro';
 import { findCurrentNavSection } from '../../route-middleware';
 import logoHeaderDark from '../../assets/logo-header-dark.svg';
 import logoHeaderLight from '../../assets/logo-header-light.svg';
@@ -87,6 +88,7 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     )}
     <div class="sl-hidden md:sl-flex print:hidden right-group">
       <GitHubDropdown />
+      <LanguageToggle />
       <ThemeSelect />
       <LanguageSelect />
     </div>
@@ -95,11 +97,11 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
   {/* Desktop nav tabs */}
   {navLinks.length > 0 && (
     <nav class="nav-tabs sl-hidden md:sl-flex" aria-label="Main navigation">
-      {navLinks.map((link: NavLink) => {
+      {navLinks.filter((l: NavLink) => l.align !== 'right').map((link: NavLink) => {
         const isActive = activeNav?.label === link.label;
         return (
-          <a 
-            href={link.href} 
+          <a
+            href={link.href}
             class:list={['nav-tab', { active: isActive }]}
             {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
           >
@@ -108,6 +110,24 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
           </a>
         );
       })}
+      {navLinks.some((l: NavLink) => l.align === 'right') && (
+        <Fragment>
+          <div class="nav-tabs-spacer"></div>
+          {navLinks.filter((l: NavLink) => l.align === 'right').map((link: NavLink) => {
+            const isActive = activeNav?.label === link.label;
+            return (
+              <a
+                href={link.href}
+                class:list={['nav-tab', 'nav-tab-secondary', { active: isActive }]}
+                {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                {link.label}
+                {link.external && <span class="external-icon" aria-hidden="true">↗</span>}
+              </a>
+            );
+          })}
+        </Fragment>
+      )}
     </nav>
   )}
 </div>
@@ -289,6 +309,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
       }
+    }
+
+    .nav-tabs-spacer {
+      flex: 1;
+    }
+
+    .nav-tab-secondary {
+      font-size: 0.875rem;
+      color: var(--sl-color-gray-3);
     }
 
     /* Hover state with Strands green highlight */

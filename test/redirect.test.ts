@@ -5,6 +5,8 @@ const redirectCases: Array<{ description: string; input: string; expected: strin
   // Renamed pages
   { description: 'python-tools renamed to custom-tools',   input: 'docs/user-guide/concepts/tools/python-tools',         expected: 'docs/user-guide/concepts/tools/custom-tools' },
   { description: 'multi_agent_example index -> main page', input: 'docs/examples/python/multi_agent_example',             expected: 'docs/examples/python/multi_agent_example/multi_agent_example' },
+  // Vanity URLs → external
+  { description: '/discord redirects to Discord invite', input: 'discord', expected: 'https://discord.gg/strands' },
   // No redirect
   { description: 'current page returns null',              input: 'docs/user-guide/concepts/agents/agent-loop',           expected: null },
   { description: 'unknown path returns null',              input: 'docs/some/unknown/path',                               expected: null },

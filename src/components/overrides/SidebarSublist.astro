@@ -46,7 +46,7 @@ function getFirstLink(entries: any[]): string | null {
               />
             )}
           </a>
-        ) : isTopLevel ? (
+        ) : isTopLevel && entry.collapsed !== true ? (
           /* Top-level groups: non-collapsible section headers */
           <div class="section-group">
             <span class="section-label">
@@ -64,7 +64,7 @@ function getFirstLink(entries: any[]): string | null {
           </div>
         ) : (
           /* Nested groups: link + collapsible caret */
-          <details open={hasCurrentChild(entry.entries) || !entry.collapsed}>
+          <details class:list={[{ 'top-level-collapsible': isTopLevel }]} open={hasCurrentChild(entry.entries) || !entry.collapsed}>
             <summary>
               {firstLink ? (
                 <a href={firstLink} class="group-link">
@@ -113,7 +113,12 @@ function getFirstLink(entries: any[]): string | null {
     /* Top-level section headers */
     .section-group { margin-bottom: 0.25rem; }
     .section-label { display: block; font-weight: 700; color: var(--sl-color-white); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.6875rem; padding: 0.5em var(--sl-sidebar-item-padding-inline); }
-    
+
+    /* Top-level collapsible groups: match section header styling */
+    .top-level-collapsible > summary { font-weight: 700; color: var(--sl-color-white); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.6875rem; padding: 0.5em var(--sl-sidebar-item-padding-inline); }
+    .top-level-collapsible > summary .group-link { font-weight: 700; color: var(--sl-color-white); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.6875rem; text-decoration: none; }
+    .top-level-collapsible > summary .group-link:hover { color: var(--sl-color-text-accent); }
+
     /* Collapsible group summary - styled like links */
     summary { 
       display: flex; 
