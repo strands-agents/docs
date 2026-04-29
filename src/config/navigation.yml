@@ -13,7 +13,7 @@ navbar:
   - label: Home
     href: /
   - label: Docs
-    href: /docs/user-guide/quickstart/python/
+    href: /docs/user-guide/quickstart/typescript/
     basePath: /docs/user-guide/
   - label: Examples
     href: /docs/examples/
@@ -25,7 +25,7 @@ navbar:
       - /docs/labs/
       - /docs/contribute/
   - label: API Reference
-    href: /docs/api/python/
+    href: /docs/api/typescript/
     basePath: /docs/api/
   - label: Blog
     href: /blog/
