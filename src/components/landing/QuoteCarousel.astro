@@ -52,7 +52,8 @@ const testimonials = await Promise.all(
 <style>
   .quote-carousel-section {
     padding: 2rem 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     position: relative;
   }
 
@@ -79,7 +80,8 @@ const testimonials = await Promise.all(
   }
 
   .carousel-track-wrapper {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     width: 100%;
   }
 
@@ -124,6 +126,10 @@ const testimonials = await Promise.all(
     gap: 1rem;
   }
 
+  .quote-card:hover {
+    z-index: 3;
+  }
+
   :global([data-theme='light']) .quote-card {
     background: rgba(0, 0, 0, 0.02);
     border-color: rgba(0, 0, 0, 0.08);
@@ -138,11 +144,19 @@ const testimonials = await Promise.all(
     padding: 0;
     border: none;
     font-style: italic;
-    /* Clamp to ~4 lines */
+    /* Clamp to ~4 lines by default */
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  /* Expanded state (toggled by JS on hover) */
+  .quote-text.expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
   }
 
   .quote-text :global(p) {
@@ -222,3 +236,12 @@ const testimonials = await Promise.all(
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.quote-card').forEach((card) => {
+    const text = card.querySelector<HTMLElement>('.quote-text')
+    if (!text) return
+    card.addEventListener('mouseenter', () => text.classList.add('expanded'))
+    card.addEventListener('mouseleave', () => text.classList.remove('expanded'))
+  })
+</script>
