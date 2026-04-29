@@ -6,7 +6,8 @@ The `GoalSuccessRateEvaluator` evaluates whether all user goals were successfull
 
 -   **Session-Level Evaluation**: Evaluates the entire conversation session
 -   **Goal-Oriented Assessment**: Focuses on whether user objectives were met
--   **Binary Scoring**: Simple Yes/No evaluation for clear success/failure determination
+-   **Dual Mode**: Basic (inferred goals) and assertion-based (explicit success criteria)
+-   **Binary Scoring**: Simple Yes/No or SUCCESS/FAILURE for clear determination
 -   **Structured Reasoning**: Provides step-by-step reasoning for the evaluation
 -   **Async Support**: Supports both synchronous and asynchronous evaluation
 -   **Holistic View**: Considers all interactions in the session
@@ -38,16 +39,51 @@ This evaluator operates at the **SESSION\_LEVEL**, meaning it evaluates the enti
 
 -   **Type**: `str | None`
 -   **Default**: `None` (uses built-in template)
--   **Description**: Custom system prompt to guide the judge model’s behavior.
+-   **Description**: Custom system prompt for basic mode evaluation.
+
+### `assertion_system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template)
+-   **Description**: Custom system prompt for assertion-based evaluation.
 
 ## Scoring System
 
-The evaluator uses a binary scoring system:
+### Basic Mode (no assertions)
+
+The evaluator infers user goals from the conversation and checks whether they were met:
 
 -   **Yes (1.0)**: All user goals were successfully achieved
 -   **No (0.0)**: User goals were not fully achieved
 
-A session passes the evaluation only if the score is 1.0 (all goals achieved).
+### Assertion Mode (with `expected_assertion`)
+
+When `expected_assertion` is set on the case, the evaluator judges against explicit success criteria instead of inferring goals:
+
+-   **SUCCESS (1.0)**: Agent behavior satisfies the specified assertions
+-   **FAILURE (0.0)**: Agent behavior does not satisfy the assertions
+
+A session passes the evaluation only if the score is 1.0.
+
+### Using Assertions
+
+```python
+cases = [
+    Case(
+        name="booking",
+        input="I need to book a flight to Paris for next Friday",
+        expected_assertion="""
+        1. Agent confirmed the destination (Paris)
+        2. Agent confirmed the travel date (next Friday)
+        3. Agent provided a booking confirmation or next steps
+        """
+    )
+]
+
+experiment = Experiment(cases=cases, evaluators=[GoalSuccessRateEvaluator()])
+```
+
+Assertions are human-authored statements describing expected agent actions, responses, or behaviors. They give you precise control over what “success” means for each test case.
 
 ## Basic Usage
 

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:469](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L469)
+Defined in: [src/hooks/events.ts:552](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L552)
 
 Event triggered when a tool execution completes. Wraps the tool result block after a tool finishes execution.
 
@@ -14,15 +14,16 @@ Event triggered when a tool execution completes. Wraps the tool result block aft
 new ToolResultEvent(data): ToolResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:474](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L474)
+Defined in: [src/hooks/events.ts:558](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L558)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: `LocalAgent`; `result`: [`ToolResultBlock`](/docs/api/typescript/ToolResultBlock/index.md); } |
+| `data` | { `agent`: `LocalAgent`; `result`: [`ToolResultBlock`](/docs/api/typescript/ToolResultBlock/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
 | `data.agent` | `LocalAgent` |
 | `data.result` | [`ToolResultBlock`](/docs/api/typescript/ToolResultBlock/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -40,7 +41,7 @@ Defined in: [src/hooks/events.ts:474](https://github.com/strands-agents/sdk-type
 readonly type: "toolResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:470](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L470)
+Defined in: [src/hooks/events.ts:553](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L553)
 
 ---
 
@@ -50,7 +51,7 @@ Defined in: [src/hooks/events.ts:470](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:471](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L471)
+Defined in: [src/hooks/events.ts:554](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L554)
 
 ---
 
@@ -60,7 +61,17 @@ Defined in: [src/hooks/events.ts:471](https://github.com/strands-agents/sdk-type
 readonly result: ToolResultBlock;
 ```
 
-Defined in: [src/hooks/events.ts:472](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L472)
+Defined in: [src/hooks/events.ts:555](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L555)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:556](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L556)
 
 ## Methods
 
@@ -70,9 +81,9 @@ Defined in: [src/hooks/events.ts:472](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ToolResultEvent, "type" | "result">;
 ```
 
-Defined in: [src/hooks/events.ts:484](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L484)
+Defined in: [src/hooks/events.ts:569](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L569)
 
-Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 
 #### Returns
 

@@ -45,6 +45,12 @@ Use the `OutputEvaluator` when you need to:
 -   **Default**: `True`
 -   **Description**: Whether to include the input prompt in the evaluation context. Set to `False` if you only want to evaluate the output in isolation.
 
+### `uses_environment_state` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `False`
+-   **Description**: Whether to include environment state in the evaluation prompt. When `True`, the evaluator includes `actual_environment_state` and `expected_environment_state` from the evaluation data, enabling assessment of agent side effects (e.g., database changes, file modifications) alongside or instead of output comparisons.
+
 ## Basic Usage
 
 ```python

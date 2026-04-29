@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:498](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L498)
+Defined in: [src/hooks/events.ts:583](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L583)
 
 Event triggered for each streaming progress event from a tool during execution. Wraps a [ToolStreamEvent](/docs/api/typescript/ToolStreamEvent/index.md) with agent context, keeping the tool authoring interface unchanged — tools construct `ToolStreamEvent` without knowledge of agents or hooks, and the agent layer wraps them at the boundary.
 
@@ -16,15 +16,16 @@ Consistent with [ModelStreamUpdateEvent](/docs/api/typescript/ModelStreamUpdateE
 new ToolStreamUpdateEvent(data): ToolStreamUpdateEvent;
 ```
 
-Defined in: [src/hooks/events.ts:503](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L503)
+Defined in: [src/hooks/events.ts:589](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L589)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: `LocalAgent`; `event`: [`ToolStreamEvent`](/docs/api/typescript/ToolStreamEvent/index.md); } |
+| `data` | { `agent`: `LocalAgent`; `event`: [`ToolStreamEvent`](/docs/api/typescript/ToolStreamEvent/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
 | `data.agent` | `LocalAgent` |
 | `data.event` | [`ToolStreamEvent`](/docs/api/typescript/ToolStreamEvent/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -42,7 +43,7 @@ Defined in: [src/hooks/events.ts:503](https://github.com/strands-agents/sdk-type
 readonly type: "toolStreamUpdateEvent";
 ```
 
-Defined in: [src/hooks/events.ts:499](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L499)
+Defined in: [src/hooks/events.ts:584](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L584)
 
 ---
 
@@ -52,7 +53,7 @@ Defined in: [src/hooks/events.ts:499](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:500](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L500)
+Defined in: [src/hooks/events.ts:585](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L585)
 
 ---
 
@@ -62,7 +63,17 @@ Defined in: [src/hooks/events.ts:500](https://github.com/strands-agents/sdk-type
 readonly event: ToolStreamEvent;
 ```
 
-Defined in: [src/hooks/events.ts:501](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L501)
+Defined in: [src/hooks/events.ts:586](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L586)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:587](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L587)
 
 ## Methods
 
@@ -72,9 +83,9 @@ Defined in: [src/hooks/events.ts:501](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ToolStreamUpdateEvent, "type" | "event">;
 ```
 
-Defined in: [src/hooks/events.ts:513](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L513)
+Defined in: [src/hooks/events.ts:600](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L600)
 
-Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 
 #### Returns
 

@@ -2,7 +2,7 @@
 function contentBlockFromData(data): ContentBlock;
 ```
 
-Defined in: [src/types/messages.ts:897](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/messages.ts#L897)
+Defined in: [src/types/messages.ts:897](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/messages.ts#L897)
 
 Converts ContentBlockData to a ContentBlock instance. Handles all content block types including text, tool use/result, reasoning, cache points, guard content, and media blocks.
 

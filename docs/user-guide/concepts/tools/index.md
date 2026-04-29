@@ -181,6 +181,7 @@ const result = await notebookTool.invoke(
       input: { mode: 'read', name: 'default' },
     },
     agent: agent,
+    invocationState: {},
   }
 )
 

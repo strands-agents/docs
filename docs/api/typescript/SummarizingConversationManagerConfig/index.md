@@ -7,7 +7,7 @@ type SummarizingConversationManagerConfig = {
 };
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:46](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L46)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:46](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L46)
 
 Configuration for the summarization conversation manager.
 
@@ -19,7 +19,7 @@ Configuration for the summarization conversation manager.
 optional model?: Model;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:52](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L52)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:52](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L52)
 
 Model to use for generating summaries. When provided, overrides the model attached to the agent. Useful when you want to use a different model than the one attached to the agent.
 
@@ -31,7 +31,7 @@ Model to use for generating summaries. When provided, overrides the model attach
 optional summaryRatio?: number;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:58](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L58)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:58](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L58)
 
 Ratio of messages to summarize when context overflow occurs. Value is clamped to \[0.1, 0.8\]. Defaults to 0.3 (summarize 30% of oldest messages).
 
@@ -43,7 +43,7 @@ Ratio of messages to summarize when context overflow occurs. Value is clamped to
 optional preserveRecentMessages?: number;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:64](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L64)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:64](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L64)
 
 Minimum number of recent messages to always keep. Defaults to 10.
 
@@ -55,6 +55,6 @@ Minimum number of recent messages to always keep. Defaults to 10.
 optional summarizationSystemPrompt?: string;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:70](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L70)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:70](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L70)
 
 Custom system prompt for summarization. If not provided, uses a default prompt that produces structured bullet-point summaries.

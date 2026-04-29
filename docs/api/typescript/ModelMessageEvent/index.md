@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:443](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L443)
+Defined in: [src/hooks/events.ts:524](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L524)
 
 Event triggered when the model completes a full message. Wraps the assembled message and stop reason after model streaming finishes.
 
@@ -14,16 +14,17 @@ Event triggered when the model completes a full message. Wraps the assembled mes
 new ModelMessageEvent(data): ModelMessageEvent;
 ```
 
-Defined in: [src/hooks/events.ts:449](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L449)
+Defined in: [src/hooks/events.ts:531](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L531)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: `LocalAgent`; `message`: [`Message`](/docs/api/typescript/Message/index.md); `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); } |
+| `data` | { `agent`: `LocalAgent`; `message`: [`Message`](/docs/api/typescript/Message/index.md); `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
 | `data.agent` | `LocalAgent` |
 | `data.message` | [`Message`](/docs/api/typescript/Message/index.md) |
 | `data.stopReason` | [`StopReason`](/docs/api/typescript/StopReason/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -41,7 +42,7 @@ Defined in: [src/hooks/events.ts:449](https://github.com/strands-agents/sdk-type
 readonly type: "modelMessageEvent";
 ```
 
-Defined in: [src/hooks/events.ts:444](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L444)
+Defined in: [src/hooks/events.ts:525](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L525)
 
 ---
 
@@ -51,7 +52,7 @@ Defined in: [src/hooks/events.ts:444](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:445](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L445)
+Defined in: [src/hooks/events.ts:526](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L526)
 
 ---
 
@@ -61,7 +62,7 @@ Defined in: [src/hooks/events.ts:445](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:446](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L446)
+Defined in: [src/hooks/events.ts:527](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L527)
 
 ---
 
@@ -71,7 +72,17 @@ Defined in: [src/hooks/events.ts:446](https://github.com/strands-agents/sdk-type
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/hooks/events.ts:447](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L447)
+Defined in: [src/hooks/events.ts:528](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L528)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:529](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L529)
 
 ## Methods
 
@@ -81,9 +92,9 @@ Defined in: [src/hooks/events.ts:447](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ModelMessageEvent, "type" | "message" | "stopReason">;
 ```
 
-Defined in: [src/hooks/events.ts:460](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L460)
+Defined in: [src/hooks/events.ts:543](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L543)
 
-Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 
 #### Returns
 

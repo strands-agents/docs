@@ -1,4 +1,4 @@
-Defined in: [src/tools/tool.ts:154](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L154)
+Defined in: [src/tools/tool.ts:165](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L165)
 
 Extended tool interface that supports direct invocation with type-safe input and output. This interface is useful for testing and standalone tool execution.
 
@@ -21,7 +21,7 @@ Extended tool interface that supports direct invocation with type-safe input and
 abstract name: string;
 ```
 
-Defined in: [src/tools/tool.ts:97](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L97)
+Defined in: [src/tools/tool.ts:108](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L108)
 
 The unique name of the tool. This MUST match the name in the toolSpec.
 
@@ -37,7 +37,7 @@ The unique name of the tool. This MUST match the name in the toolSpec.
 abstract description: string;
 ```
 
-Defined in: [src/tools/tool.ts:104](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L104)
+Defined in: [src/tools/tool.ts:115](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L115)
 
 Human-readable description of what the tool does. This helps the model understand when to use the tool.
 
@@ -55,7 +55,7 @@ This MUST match the description in the toolSpec.description.
 abstract toolSpec: ToolSpec;
 ```
 
-Defined in: [src/tools/tool.ts:109](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L109)
+Defined in: [src/tools/tool.ts:120](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L120)
 
 OpenAPI JSON specification for the tool. Defines the tool’s name, description, and input schema.
 
@@ -71,7 +71,7 @@ OpenAPI JSON specification for the tool. Defines the tool’s name, description,
 abstract stream(toolContext): ToolStreamGenerator;
 ```
 
-Defined in: [src/tools/tool.ts:144](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L144)
+Defined in: [src/tools/tool.ts:155](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L155)
 
 Executes the tool with streaming support. Yields zero or more ToolStreamEvents during execution, then returns exactly one ToolResultBlock as the final value.
 
@@ -125,7 +125,7 @@ console.log('Final result:', result.value.status)
 invoke(input, context?): Promise<TReturn>;
 ```
 
-Defined in: [src/tools/tool.ts:167](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L167)
+Defined in: [src/tools/tool.ts:178](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L178)
 
 Invokes the tool directly with type-safe input and returns the unwrapped result.
 

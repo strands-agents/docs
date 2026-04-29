@@ -122,6 +122,34 @@ Get the OpenAI Responses API model configuration.
 
 The OpenAI Responses API model configuration.
 
+#### count\_tokens
+
+```python
+@override
+async def count_tokens(
+        messages: Messages,
+        tool_specs: list[ToolSpec] | None = None,
+        system_prompt: str | None = None,
+        system_prompt_content: list[SystemContentBlock] | None = None) -> int
+```
+
+Defined in: [src/strands/models/openai\_responses.py:188](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L188)
+
+Count tokens using the OpenAI Responses API input\_tokens.count endpoint.
+
+Uses the same message format as the Responses API to get accurate token counts directly from the OpenAI service.
+
+**Arguments**:
+
+-   `messages` - List of message objects to count tokens for.
+-   `tool_specs` - List of tool specifications to include in the count.
+-   `system_prompt` - Plain string system prompt. Ignored if system\_prompt\_content is provided.
+-   `system_prompt_content` - Structured system prompt content blocks.
+
+**Returns**:
+
+Total input token count.
+
 #### stream
 
 ```python
@@ -135,7 +163,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:188](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L188)
+Defined in: [src/strands/models/openai\_responses.py:237](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L237)
 
 Stream conversation with the OpenAI Responses API model.
 
@@ -168,7 +196,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:383](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L383)
+Defined in: [src/strands/models/openai\_responses.py:432](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L432)
 
 Get structured output from the OpenAI Responses API model.
 

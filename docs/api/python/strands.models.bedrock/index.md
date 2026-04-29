@@ -8,7 +8,7 @@ AWS Bedrock model provider.
 class BedrockModel(Model)
 ```
 
-Defined in: [src/strands/models/bedrock.py:60](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L60)
+Defined in: [src/strands/models/bedrock.py:61](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L61)
 
 AWS Bedrock model provider implementation.
 
@@ -26,7 +26,7 @@ The implementation handles Bedrock-specific features such as:
 class BedrockConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/bedrock.py:72](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L72)
+Defined in: [src/strands/models/bedrock.py:73](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L73)
 
 Configuration options for Bedrock models.
 
@@ -48,7 +48,7 @@ Configuration options for Bedrock models.
 -   `guardrail_redact_output_message` - If a Bedrock Output guardrail triggers, replace output with this message.
 -   `guardrail_latest_message` - Flag to send only the lastest user message to guardrails. Defaults to False.
 -   `max_tokens` - Maximum number of tokens to generate in the response
--   `model_id` - The Bedrock model ID (e.g., “us.anthropic.claude-sonnet-4-20250514-v1:0”)
+-   `model_id` - The Bedrock model ID (e.g., “global.anthropic.claude-sonnet-4-6”)
 -   `include_tool_result_status` - Flag to include status field in tool results. True includes status, False removes status, “auto” determines based on model\_id. Defaults to “auto”.
 -   `service_tier` - Service tier for the request, controlling the trade-off between latency and cost. Valid values: “default” (standard), “priority” (faster, premium), “flex” (cheaper, slower). Please check [https://docs.aws.amazon.com/bedrock/latest/userguide/service-tiers-inference.html](https://docs.aws.amazon.com/bedrock/latest/userguide/service-tiers-inference.html) for supported service tiers, models, and regions
 -   `stop_sequences` - List of sequences that will stop generation when encountered
@@ -67,7 +67,7 @@ def __init__(*,
              **model_config: Unpack[BedrockConfig])
 ```
 
-Defined in: [src/strands/models/bedrock.py:130](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L130)
+Defined in: [src/strands/models/bedrock.py:131](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L131)
 
 Initialize provider instance.
 
@@ -86,7 +86,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[BedrockConfig]) -> None
 ```
 
-Defined in: [src/strands/models/bedrock.py:197](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L197)
+Defined in: [src/strands/models/bedrock.py:198](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L198)
 
 Update the Bedrock Model configuration with the provided arguments.
 
@@ -101,13 +101,41 @@ Update the Bedrock Model configuration with the provided arguments.
 def get_config() -> BedrockConfig
 ```
 
-Defined in: [src/strands/models/bedrock.py:207](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L207)
+Defined in: [src/strands/models/bedrock.py:208](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L208)
 
 Get the current Bedrock Model configuration.
 
 **Returns**:
 
 The Bedrock model configuration.
+
+#### count\_tokens
+
+```python
+@override
+async def count_tokens(
+        messages: Messages,
+        tool_specs: list[ToolSpec] | None = None,
+        system_prompt: str | None = None,
+        system_prompt_content: list[SystemContentBlock] | None = None) -> int
+```
+
+Defined in: [src/strands/models/bedrock.py:754](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L754)
+
+Count tokens using Bedrock’s native CountTokens API.
+
+Uses the same message format as the Converse API to get accurate token counts directly from the Bedrock service.
+
+**Arguments**:
+
+-   `messages` - List of message objects to count tokens for.
+-   `tool_specs` - List of tool specifications to include in the count.
+-   `system_prompt` - Plain string system prompt. Ignored if system\_prompt\_content is provided.
+-   `system_prompt_content` - Structured system prompt content blocks.
+
+**Returns**:
+
+Total input token count.
 
 #### stream
 
@@ -122,7 +150,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:749](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L749)
+Defined in: [src/strands/models/bedrock.py:809](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L809)
 
 Stream conversation with the Bedrock model.
 
@@ -157,7 +185,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:1035](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1035)
+Defined in: [src/strands/models/bedrock.py:1095](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1095)
 
 Get structured output from the model.
 

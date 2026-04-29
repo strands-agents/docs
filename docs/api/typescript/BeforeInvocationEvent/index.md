@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:107](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L107)
+Defined in: [src/hooks/events.ts:123](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L123)
 
 Event triggered at the beginning of a new agent request. Fired before any model inference or tool execution occurs.
 
@@ -14,14 +14,15 @@ Event triggered at the beginning of a new agent request. Fired before any model 
 new BeforeInvocationEvent(data): BeforeInvocationEvent;
 ```
 
-Defined in: [src/hooks/events.ts:111](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L111)
+Defined in: [src/hooks/events.ts:135](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L135)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: `LocalAgent`; } |
+| `data` | { `agent`: `LocalAgent`; `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
 | `data.agent` | `LocalAgent` |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -39,7 +40,7 @@ Defined in: [src/hooks/events.ts:111](https://github.com/strands-agents/sdk-type
 readonly type: "beforeInvocationEvent";
 ```
 
-Defined in: [src/hooks/events.ts:108](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L108)
+Defined in: [src/hooks/events.ts:124](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L124)
 
 ---
 
@@ -49,7 +50,29 @@ Defined in: [src/hooks/events.ts:108](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:109](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L109)
+Defined in: [src/hooks/events.ts:125](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L125)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:126](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L126)
+
+---
+
+### cancel
+
+```ts
+cancel: string | boolean = false;
+```
+
+Defined in: [src/hooks/events.ts:133](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L133)
+
+Set by hook callbacks to cancel this invocation. When set to `true`, a default cancel message is used. When set to a string, that string is used as the assistant response message.
 
 ## Methods
 
@@ -59,9 +82,9 @@ Defined in: [src/hooks/events.ts:109](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<BeforeInvocationEvent, "type">;
 ```
 
-Defined in: [src/hooks/events.ts:120](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/hooks/events.ts#L120)
+Defined in: [src/hooks/events.ts:145](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L145)
 
-Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 
 #### Returns
 

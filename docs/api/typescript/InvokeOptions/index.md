@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:41](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L41)
+Defined in: [src/types/agent.ts:63](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L63)
 
 Options for a single agent invocation.
 
@@ -10,9 +10,23 @@ Options for a single agent invocation.
 optional structuredOutputSchema?: ZodType;
 ```
 
-Defined in: [src/types/agent.ts:45](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L45)
+Defined in: [src/types/agent.ts:67](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L67)
 
 Zod schema for structured output validation, overriding the constructor-provided schema for this invocation only.
+
+---
+
+### invocationState?
+
+```ts
+optional invocationState?: InvocationState;
+```
+
+Defined in: [src/types/agent.ts:76](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L76)
+
+Per-invocation state. Passed to lifecycle hook events and tools, and returned on [AgentResult.invocationState](/docs/api/typescript/AgentResult/index.md#invocationstate). Mutable — hooks and tools may read and write. See [InvocationState](/docs/api/typescript/InvocationState/index.md) for details.
+
+Defaults to an empty object when omitted.
 
 ---
 
@@ -22,7 +36,7 @@ Zod schema for structured output validation, overriding the constructor-provided
 optional cancelSignal?: AbortSignal;
 ```
 
-Defined in: [src/types/agent.ts:75](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L75)
+Defined in: [src/types/agent.ts:106](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L106)
 
 External AbortSignal for cancelling the agent invocation.
 

@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:472](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L472)
+Defined in: [src/models/streaming.ts:472](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L472)
 
 Citations content delta within a content block. Represents a citations content block from the model.
 
@@ -10,7 +10,7 @@ Citations content delta within a content block. Represents a citations content b
 type: "citationsDelta";
 ```
 
-Defined in: [src/models/streaming.ts:476](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L476)
+Defined in: [src/models/streaming.ts:476](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L476)
 
 Discriminator for citations content delta.
 
@@ -22,7 +22,7 @@ Discriminator for citations content delta.
 citations: Citation[];
 ```
 
-Defined in: [src/models/streaming.ts:481](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L481)
+Defined in: [src/models/streaming.ts:481](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L481)
 
 Array of citations linking generated content to source locations.
 
@@ -34,6 +34,6 @@ Array of citations linking generated content to source locations.
 content: CitationGeneratedContent[];
 ```
 
-Defined in: [src/models/streaming.ts:486](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L486)
+Defined in: [src/models/streaming.ts:486](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L486)
 
 The generated content associated with these citations.

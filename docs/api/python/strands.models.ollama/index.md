@@ -8,7 +8,7 @@ Ollama model provider.
 class OllamaModel(Model)
 ```
 
-Defined in: [src/strands/models/ollama.py:26](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L26)
+Defined in: [src/strands/models/ollama.py:27](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L27)
 
 Ollama model provider implementation.
 
@@ -24,7 +24,7 @@ The implementation handles Ollama-specific features such as:
 class OllamaConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/ollama.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L36)
+Defined in: [src/strands/models/ollama.py:37](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L37)
 
 Configuration parameters for Ollama models.
 
@@ -48,7 +48,7 @@ def __init__(host: str | None,
              **model_config: Unpack[OllamaConfig]) -> None
 ```
 
-Defined in: [src/strands/models/ollama.py:59](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L59)
+Defined in: [src/strands/models/ollama.py:60](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L60)
 
 Initialize provider instance.
 
@@ -65,7 +65,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[OllamaConfig]) -> None
 ```
 
-Defined in: [src/strands/models/ollama.py:81](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L81)
+Defined in: [src/strands/models/ollama.py:82](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L82)
 
 Update the Ollama Model configuration with the provided arguments.
 
@@ -80,7 +80,7 @@ Update the Ollama Model configuration with the provided arguments.
 def get_config() -> OllamaConfig
 ```
 
-Defined in: [src/strands/models/ollama.py:91](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L91)
+Defined in: [src/strands/models/ollama.py:92](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L92)
 
 Get the Ollama model configuration.
 
@@ -96,7 +96,7 @@ def format_request(messages: Messages,
                    system_prompt: str | None = None) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/ollama.py:174](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L174)
+Defined in: [src/strands/models/ollama.py:175](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L175)
 
 Format an Ollama chat streaming request.
 
@@ -120,7 +120,7 @@ An Ollama chat streaming request.
 def format_chunk(event: dict[str, Any]) -> StreamEvent
 ```
 
-Defined in: [src/strands/models/ollama.py:227](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L227)
+Defined in: [src/strands/models/ollama.py:228](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L228)
 
 Format the Ollama response events into standardized message chunks.
 
@@ -148,7 +148,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/ollama.py:290](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L290)
+Defined in: [src/strands/models/ollama.py:292](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L292)
 
 Stream conversation with the Ollama model.
 
@@ -175,7 +175,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/ollama.py:346](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L346)
+Defined in: [src/strands/models/ollama.py:348](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/ollama.py#L348)
 
 Get structured output from the model.
 

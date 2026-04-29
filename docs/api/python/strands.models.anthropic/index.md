@@ -125,6 +125,34 @@ The formatted chunk.
 
 -   `RuntimeError` - If chunk\_type is not recognized. This error should never be encountered as we control chunk\_type in the stream method.
 
+#### count\_tokens
+
+```python
+@override
+async def count_tokens(
+        messages: Messages,
+        tool_specs: list[ToolSpec] | None = None,
+        system_prompt: str | None = None,
+        system_prompt_content: list[SystemContentBlock] | None = None) -> int
+```
+
+Defined in: [src/strands/models/anthropic.py:375](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L375)
+
+Count tokens using Anthropic’s native count\_tokens API.
+
+Uses the same message format as the Messages API to get accurate token counts directly from the Anthropic service.
+
+**Arguments**:
+
+-   `messages` - List of message objects to count tokens for.
+-   `tool_specs` - List of tool specifications to include in the count.
+-   `system_prompt` - Plain string system prompt. Ignored if system\_prompt\_content is provided.
+-   `system_prompt_content` - Structured system prompt content blocks.
+
+**Returns**:
+
+Total input token count.
+
 #### stream
 
 ```python
@@ -137,7 +165,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/anthropic.py:375](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L375)
+Defined in: [src/strands/models/anthropic.py:423](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L423)
 
 Stream conversation with the Anthropic model.
 
@@ -169,7 +197,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/anthropic.py:441](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L441)
+Defined in: [src/strands/models/anthropic.py:489](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py#L489)
 
 Get structured output from the model.
 

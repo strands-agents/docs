@@ -31,7 +31,7 @@ Initialize the sliding window conversation manager.
 
 **Arguments**:
 
--   `window_size` - Maximum number of messages to keep in the agent’s history. Defaults to 40 messages.
+-   `window_size` - Maximum number of messages to keep in the agent’s history. Use 0 to clear all messages on every reduction. Defaults to 40 messages.
     
 -   `should_truncate_results` - Truncate tool results when a message is too large for the model’s context window
     
@@ -46,7 +46,7 @@ Initialize the sliding window conversation manager.
 
 **Raises**:
 
--   `ValueError` - If per\_turn is 0 or a negative integer.
+-   `ValueError` - If window\_size is negative, or if per\_turn is 0 or a negative integer.
 
 #### register\_hooks
 
@@ -54,7 +54,7 @@ Initialize the sliding window conversation manager.
 def register_hooks(registry: "HookRegistry", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:71](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L71)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:73](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L73)
 
 Register hook callbacks for per-turn conversation management.
 
@@ -69,7 +69,7 @@ Register hook callbacks for per-turn conversation management.
 def get_state() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:113](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L113)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L115)
 
 Get the current state of the conversation manager.
 
@@ -83,7 +83,7 @@ Dictionary containing the manager’s state, including model call count for per-
 def restore_from_session(state: dict[str, Any]) -> list | None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:123](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L123)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:125](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L125)
 
 Restore the conversation manager’s state from a session.
 
@@ -101,7 +101,7 @@ Optional list of messages to prepend to the agent’s messages.
 def apply_management(agent: "Agent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:136](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L136)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:138](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L138)
 
 Apply the sliding window to the agent’s messages array to maintain a manageable history size.
 
@@ -120,7 +120,7 @@ def reduce_context(agent: "Agent",
                    **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:156](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L156)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:158](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L158)
 
 Trim the oldest messages to reduce the conversation context size.
 

@@ -197,6 +197,23 @@ Accepts either a string or list of SystemContentBlock objects. When set, both th
     -   list\[SystemContentBlock\]: Content blocks with features like caching
     -   None: Clear the system prompt
 
+#### system\_prompt\_content
+
+```python
+@property
+def system_prompt_content() -> list[SystemContentBlock] | None
+```
+
+Defined in: [src/strands/agent/agent.py:432](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L432)
+
+Get the system prompt as a list of content blocks.
+
+Returns the structured content block representation, preserving cache points and other non-text blocks. Returns None if no system prompt is set.
+
+**Returns**:
+
+The system prompt as a list of content blocks, or None if no system prompt is set.
+
 #### tool
 
 ```python
@@ -204,7 +221,7 @@ Accepts either a string or list of SystemContentBlock objects. When set, both th
 def tool() -> _ToolCaller
 ```
 
-Defined in: [src/strands/agent/agent.py:432](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L432)
+Defined in: [src/strands/agent/agent.py:444](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L444)
 
 Call tool as a function.
 
@@ -226,7 +243,7 @@ agent.tool.calculator(...)
 def tool_names() -> list[str]
 ```
 
-Defined in: [src/strands/agent/agent.py:447](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L447)
+Defined in: [src/strands/agent/agent.py:459](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L459)
 
 Get a list of all registered tool names.
 
@@ -245,7 +262,7 @@ def __call__(prompt: AgentInput = None,
              **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/agent.py:456](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L456)
+Defined in: [src/strands/agent/agent.py:468](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L468)
 
 Process a natural language prompt through the agent’s event loop.
 
@@ -289,7 +306,7 @@ async def invoke_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/agent.py:503](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L503)
+Defined in: [src/strands/agent/agent.py:515](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L515)
 
 Process a natural language prompt through the agent’s event loop.
 
@@ -327,7 +344,7 @@ This method implements the conversational interface with multiple input patterns
 def structured_output(output_model: type[T], prompt: AgentInput = None) -> T
 ```
 
-Defined in: [src/strands/agent/agent.py:551](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L551)
+Defined in: [src/strands/agent/agent.py:563](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L563)
 
 This method allows you to get structured output from the agent.
 
@@ -355,7 +372,7 @@ async def structured_output_async(output_model: type[T],
                                   prompt: AgentInput = None) -> T
 ```
 
-Defined in: [src/strands/agent/agent.py:582](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L582)
+Defined in: [src/strands/agent/agent.py:594](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L594)
 
 This method allows you to get structured output from the agent.
 
@@ -382,7 +399,7 @@ def as_tool(*,
             preserve_context: bool = False) -> AgentTool
 ```
 
-Defined in: [src/strands/agent/agent.py:653](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L653)
+Defined in: [src/strands/agent/agent.py:665](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L665)
 
 Convert this agent into a tool for use by another agent.
 
@@ -410,7 +427,7 @@ writer("Write about AI agents")
 def cleanup() -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:687](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L687)
+Defined in: [src/strands/agent/agent.py:699](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L699)
 
 Clean up resources used by the agent.
 
@@ -426,7 +443,7 @@ def add_hook(
         event_type: type[TEvent] | list[type[TEvent]] | None = None) -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:699](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L699)
+Defined in: [src/strands/agent/agent.py:711](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L711)
 
 Register a callback function for a specific event type.
 
@@ -482,7 +499,7 @@ Docs: [https://strandsagents.com/latest/documentation/docs/user-guide/concepts/a
 def __del__() -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:753](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L753)
+Defined in: [src/strands/agent/agent.py:765](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L765)
 
 Clean up resources when agent is garbage collected.
 
@@ -497,7 +514,7 @@ async def stream_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AsyncIterator[Any]
 ```
 
-Defined in: [src/strands/agent/agent.py:760](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L760)
+Defined in: [src/strands/agent/agent.py:772](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L772)
 
 Process a natural language prompt and yield events as an async iterator.
 
@@ -552,7 +569,7 @@ def take_snapshot(*,
                   app_data: dict[str, Any] | None = None) -> Snapshot
 ```
 
-Defined in: [src/strands/agent/agent.py:1114](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L1114)
+Defined in: [src/strands/agent/agent.py:1126](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L1126)
 
 Capture current agent state as an in-memory snapshot.
 
@@ -577,7 +594,7 @@ A Snapshot containing the captured agent state.
 def load_snapshot(snapshot: Snapshot) -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:1160](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L1160)
+Defined in: [src/strands/agent/agent.py:1172](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L1172)
 
 Restore agent state from a previously captured snapshot.
 

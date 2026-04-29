@@ -88,6 +88,9 @@
     -   [Streaming](/docs/api/python/strands.types.streaming)
     -   [Tools](/docs/api/python/strands.types.tools)
 -   **Vended Plugins**
+    -   **Context Offloader**
+        -   [Plugin](/docs/api/python/strands.vended_plugins.context_offloader.plugin)
+        -   [Storage](/docs/api/python/strands.vended_plugins.context_offloader.storage)
     -   **Skills**
         -   [Agent Skills](/docs/api/python/strands.vended_plugins.skills.agent_skills)
         -   [Skill](/docs/api/python/strands.vended_plugins.skills.skill)

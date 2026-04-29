@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:161](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/model.ts#L161)
+Defined in: [src/models/model.ts:186](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L186)
 
 Base abstract class for model providers. Defines the contract that all model provider implementations must follow.
 
@@ -36,13 +36,37 @@ new Model<T>(): Model<T>;
 get modelId(): string;
 ```
 
-Defined in: [src/models/model.ts:180](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/model.ts#L180)
+Defined in: [src/models/model.ts:205](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L205)
 
 The model ID from the current configuration, if configured.
 
 ##### Returns
 
 `string`
+
+---
+
+### stateful
+
+#### Get Signature
+
+```ts
+get stateful(): boolean;
+```
+
+Defined in: [src/models/model.ts:221](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L221)
+
+Whether this model manages conversation state server-side.
+
+When `true`, the server tracks conversation context across turns, so the SDK sends only the latest message instead of the full history. After each invocation, the agent’s local message history is cleared automatically.
+
+Model providers that support server-side state management should override this to return `true`.
+
+##### Returns
+
+`boolean`
+
+`false` by default
 
 ## Methods
 
@@ -52,7 +76,7 @@ The model ID from the current configuration, if configured.
 abstract updateConfig(modelConfig): void;
 ```
 
-Defined in: [src/models/model.ts:168](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/model.ts#L168)
+Defined in: [src/models/model.ts:193](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L193)
 
 Updates the model configuration. Merges the provided configuration with existing settings.
 
@@ -74,7 +98,7 @@ Updates the model configuration. Merges the provided configuration with existing
 abstract getConfig(): T;
 ```
 
-Defined in: [src/models/model.ts:175](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/model.ts#L175)
+Defined in: [src/models/model.ts:200](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L200)
 
 Retrieves the current model configuration.
 
@@ -92,7 +116,7 @@ The current configuration object
 abstract stream(messages, options?): AsyncIterable<ModelStreamEvent>;
 ```
 
-Defined in: [src/models/model.ts:192](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/model.ts#L192)
+Defined in: [src/models/model.ts:233](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L233)
 
 Streams a conversation with the model. Returns an async iterable that yields streaming events as they occur.
 
@@ -111,6 +135,35 @@ Async iterable of streaming events
 
 ---
 
+### countTokens()
+
+```ts
+countTokens(messages, options?): Promise<number>;
+```
+
+Defined in: [src/models/model.ts:249](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L249)
+
+Count tokens for the given input before sending to the model.
+
+Used for proactive context management (e.g., triggering compression at a threshold). The base implementation uses a character-based heuristic (chars/4 for text, chars/2 for JSON).
+
+Subclasses should override this method to use native token counting APIs (e.g., Bedrock CountTokens, Anthropic countTokens, Gemini countTokens) for improved accuracy, falling back to `super.countTokens()` on API failure.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `messages` | [`Message`](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages to count tokens for |
+| `options?` | [`CountTokensOptions`](/docs/api/typescript/CountTokensOptions/index.md) | Optional options containing system prompt and tool specs |
+
+#### Returns
+
+`Promise`<`number`\>
+
+Total input token count
+
+---
+
 ### streamAggregated()
 
 ```ts
@@ -119,7 +172,7 @@ streamAggregated(messages, options?): AsyncGenerator<
 | ModelStreamEvent, StreamAggregatedResult, undefined>;
 ```
 
-Defined in: [src/models/model.ts:248](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/model.ts#L248)
+Defined in: [src/models/model.ts:307](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L307)
 
 Streams a conversation with aggregated content blocks and messages. Returns an async generator that yields streaming events and content blocks, and returns the final message with stop reason and optional metadata.
 

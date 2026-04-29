@@ -143,6 +143,34 @@ Get the llama.cpp model configuration.
 
 The llama.cpp model configuration.
 
+#### count\_tokens
+
+```python
+@override
+async def count_tokens(
+        messages: Messages,
+        tool_specs: list[ToolSpec] | None = None,
+        system_prompt: str | None = None,
+        system_prompt_content: list[SystemContentBlock] | None = None) -> int
+```
+
+Defined in: [src/strands/models/llamacpp.py:512](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L512)
+
+Count tokens using llama.cpp’s native /tokenize endpoint.
+
+Sends the formatted prompt to the llama.cpp server’s tokenization endpoint to get an accurate token count. Requires a llama.cpp server version that supports chat-template-aware tokenization via the `messages` field in /tokenize requests. Older server versions that only accept `\{"content": "string"}` are not supported and will fall back to estimation.
+
+**Arguments**:
+
+-   `messages` - List of message objects to count tokens for.
+-   `tool_specs` - List of tool specifications to include in the count.
+-   `system_prompt` - Plain string system prompt. Ignored if system\_prompt\_content is provided.
+-   `system_prompt_content` - Structured system prompt content blocks.
+
+**Returns**:
+
+Total input token count.
+
 #### stream
 
 ```python
@@ -155,7 +183,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:512](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L512)
+Defined in: [src/strands/models/llamacpp.py:566](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L566)
 
 Stream conversation with the llama.cpp model.
 
@@ -187,7 +215,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:708](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L708)
+Defined in: [src/strands/models/llamacpp.py:762](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L762)
 
 Get structured output using llama.cpp’s native JSON schema support.
 

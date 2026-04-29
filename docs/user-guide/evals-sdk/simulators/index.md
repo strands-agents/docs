@@ -96,6 +96,12 @@ Key capabilities:
 
 The simulator framework is designed to be extensible. `ActorSimulator` and `ToolSimulator` provide general-purpose foundations, and additional specialized simulators can be built for specific evaluation patterns as needs emerge.
 
+## ToolSimulator
+
+The `ToolSimulator` replaces real tool execution with LLM-generated responses, enabling you to test tool-using agents without live infrastructure. It supports Pydantic output schemas and shared state between related tools.
+
+[Complete Tool Simulation Guide →](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md)
+
 ## Simulators vs Evaluators
 
 Understanding when to use simulators versus evaluators:

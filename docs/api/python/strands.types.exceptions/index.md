@@ -119,13 +119,25 @@ Defined in: [src/strands/types/exceptions.py:80](https://github.com/strands-agen
 
 Exception raised when snapshot operations fail (e.g., unsupported schema version).
 
+## ProviderTokenCountError
+
+```python
+class ProviderTokenCountError(Exception)
+```
+
+Defined in: [src/strands/types/exceptions.py:86](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L86)
+
+Thrown when a model provider’s native token counting API fails.
+
+This error is used as internal control flow within provider `count_tokens()` overrides. When caught, the provider falls back to the base class heuristic estimation.
+
 ## ToolProviderException
 
 ```python
 class ToolProviderException(Exception)
 ```
 
-Defined in: [src/strands/types/exceptions.py:86](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L86)
+Defined in: [src/strands/types/exceptions.py:96](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L96)
 
 Exception raised when a tool provider fails to load or cleanup tools.
 
@@ -135,7 +147,7 @@ Exception raised when a tool provider fails to load or cleanup tools.
 class StructuredOutputException(Exception)
 ```
 
-Defined in: [src/strands/types/exceptions.py:92](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L92)
+Defined in: [src/strands/types/exceptions.py:102](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L102)
 
 Exception raised when structured output validation fails after maximum retry attempts.
 
@@ -145,7 +157,7 @@ Exception raised when structured output validation fails after maximum retry att
 def __init__(message: str)
 ```
 
-Defined in: [src/strands/types/exceptions.py:95](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L95)
+Defined in: [src/strands/types/exceptions.py:105](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L105)
 
 Initialize the exception with details about the failure.
 
@@ -159,7 +171,7 @@ Initialize the exception with details about the failure.
 class ConcurrencyException(Exception)
 ```
 
-Defined in: [src/strands/types/exceptions.py:105](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L105)
+Defined in: [src/strands/types/exceptions.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/exceptions.py#L115)
 
 Exception raised when concurrent invocations are attempted on an agent instance.
 

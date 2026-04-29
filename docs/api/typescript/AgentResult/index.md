@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:212](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L212)
+Defined in: [src/types/agent.ts:250](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L250)
 
 Result returned by the agent loop.
 
@@ -10,15 +10,16 @@ Result returned by the agent loop.
 new AgentResult(data): AgentResult;
 ```
 
-Defined in: [src/types/agent.ts:243](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L243)
+Defined in: [src/types/agent.ts:289](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L289)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); `lastMessage`: [`Message`](/docs/api/typescript/Message/index.md); `traces?`: [`AgentTrace`](/docs/api/typescript/AgentTrace/index.md)\[\]; `metrics?`: [`AgentMetrics`](/docs/api/typescript/AgentMetrics/index.md); `structuredOutput?`: `unknown`; } |
+| `data` | { `stopReason`: [`StopReason`](/docs/api/typescript/StopReason/index.md); `lastMessage`: [`Message`](/docs/api/typescript/Message/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); `traces?`: [`AgentTrace`](/docs/api/typescript/AgentTrace/index.md)\[\]; `metrics?`: [`AgentMetrics`](/docs/api/typescript/AgentMetrics/index.md); `structuredOutput?`: `unknown`; } |
 | `data.stopReason` | [`StopReason`](/docs/api/typescript/StopReason/index.md) |
 | `data.lastMessage` | [`Message`](/docs/api/typescript/Message/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 | `data.traces?` | [`AgentTrace`](/docs/api/typescript/AgentTrace/index.md)\[\] |
 | `data.metrics?` | [`AgentMetrics`](/docs/api/typescript/AgentMetrics/index.md) |
 | `data.structuredOutput?` | `unknown` |
@@ -35,7 +36,7 @@ Defined in: [src/types/agent.ts:243](https://github.com/strands-agents/sdk-types
 readonly type: "agentResult";
 ```
 
-Defined in: [src/types/agent.ts:213](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L213)
+Defined in: [src/types/agent.ts:251](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L251)
 
 ---
 
@@ -45,7 +46,7 @@ Defined in: [src/types/agent.ts:213](https://github.com/strands-agents/sdk-types
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/types/agent.ts:218](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L218)
+Defined in: [src/types/agent.ts:256](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L256)
 
 The stop reason from the final model response.
 
@@ -57,7 +58,7 @@ The stop reason from the final model response.
 readonly lastMessage: Message;
 ```
 
-Defined in: [src/types/agent.ts:223](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L223)
+Defined in: [src/types/agent.ts:261](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L261)
 
 The last message added to the messages array.
 
@@ -69,7 +70,7 @@ The last message added to the messages array.
 readonly optional traces?: AgentTrace[];
 ```
 
-Defined in: [src/types/agent.ts:229](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L229)
+Defined in: [src/types/agent.ts:267](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L267)
 
 Local execution traces collected during the agent invocation. Contains timing and hierarchy of operations within the agent loop.
 
@@ -81,7 +82,7 @@ Local execution traces collected during the agent invocation. Contains timing an
 readonly optional structuredOutput?: unknown;
 ```
 
-Defined in: [src/types/agent.ts:235](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L235)
+Defined in: [src/types/agent.ts:273](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L273)
 
 The validated structured output from the LLM, if a schema was provided. Type represents any validated Zod schema output.
 
@@ -93,9 +94,21 @@ The validated structured output from the LLM, if a schema was provided. Type rep
 readonly optional metrics?: AgentMetrics;
 ```
 
-Defined in: [src/types/agent.ts:241](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L241)
+Defined in: [src/types/agent.ts:279](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L279)
 
 Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token usage, tool execution stats, and model latency.
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/types/agent.ts:287](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L287)
+
+Per-invocation state passed into the agent, threaded through hooks and tools, and surfaced here at the end of the invocation. See [InvocationState](/docs/api/typescript/InvocationState/index.md) for details. Always defined — defaults to `{}` when no `invocationState` was provided in [InvokeOptions](/docs/api/typescript/InvokeOptions/index.md).
 
 ## Accessors
 
@@ -107,9 +120,27 @@ Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token 
 get contextSize(): number;
 ```
 
-Defined in: [src/types/agent.ts:268](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L268)
+Defined in: [src/types/agent.ts:316](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L316)
 
 The most recent input token count from the last model invocation. Convenience accessor that delegates to `metrics.latestContextSize`. Returns `undefined` when no metrics or invocations are available.
+
+##### Returns
+
+`number`
+
+---
+
+### projectedContextSize
+
+#### Get Signature
+
+```ts
+get projectedContextSize(): number;
+```
+
+Defined in: [src/types/agent.ts:325](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L325)
+
+Projected context size for the next model call (inputTokens + outputTokens from the last call). Convenience accessor that delegates to `metrics.projectedContextSize`. Returns `undefined` when no metrics or invocations are available.
 
 ##### Returns
 
@@ -123,17 +154,17 @@ The most recent input token count from the last model invocation. Convenience ac
 toJSON(): object;
 ```
 
-Defined in: [src/types/agent.ts:282](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L282)
+Defined in: [src/types/agent.ts:339](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L339)
 
-Custom JSON serialization that excludes traces and metrics by default. This prevents accidentally sending large trace/metric data over the wire when serializing AgentResult for API responses.
+Custom JSON serialization that excludes traces, metrics, and invocationState. Traces and metrics are excluded to avoid sending large payloads over the wire in API responses; `invocationState` is excluded because its values are caller-owned and may not be serializable (see [InvocationState](/docs/api/typescript/InvocationState/index.md)).
 
-Traces and metrics remain accessible via their properties for debugging, but won’t be included in JSON.stringify() output.
+All three remain accessible via their properties for debugging.
 
 #### Returns
 
 `object`
 
-Object representation without traces/metrics for safe serialization
+Object representation for safe serialization
 
 ---
 
@@ -143,7 +174,7 @@ Object representation without traces/metrics for safe serialization
 toString(): string;
 ```
 
-Defined in: [src/types/agent.ts:297](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/types/agent.ts#L297)
+Defined in: [src/types/agent.ts:354](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L354)
 
 Extracts and concatenates all text content from the last message. Includes text from TextBlock and ReasoningBlock content blocks.
 

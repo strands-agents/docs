@@ -16,7 +16,7 @@ One or more skill sources.
 class AgentSkills(Plugin)
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:44](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L44)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:45](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L45)
 
 Plugin that integrates Agent Skills into a Strands agent.
 
@@ -53,7 +53,7 @@ def __init__(skills: SkillSources,
              strict: bool = False) -> None
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:74](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L74)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:75](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L75)
 
 Initialize the AgentSkills plugin.
 
@@ -78,7 +78,7 @@ Initialize the AgentSkills plugin.
 def init_agent(agent: Agent) -> None
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:100](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L100)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:101](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L101)
 
 Initialize the plugin with an agent instance.
 
@@ -95,7 +95,7 @@ Decorated hooks and tools are auto-registered by the plugin registry.
 def skills(skill_name: str, tool_context: ToolContext) -> str
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:113](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L113)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:114](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L114)
 
 Activate a skill to load its full instructions.
 
@@ -111,7 +111,7 @@ Use this tool to load the complete instructions for a skill listed in the availa
 def get_available_skills() -> list[Skill]
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:168](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L168)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:186](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L186)
 
 Get the list of available skills.
 
@@ -125,7 +125,7 @@ A copy of the current skills list.
 def set_available_skills(skills: SkillSources) -> None
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:176](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L176)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:194](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L194)
 
 Set the available skills, replacing any existing ones.
 
@@ -143,7 +143,7 @@ Note: this does not persist state or deactivate skills on any agent. Active skil
 def get_activated_skills(agent: Agent) -> list[str]
 ```
 
-Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:389](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L389)
+Defined in: [src/strands/vended\_plugins/skills/agent\_skills.py:407](https://github.com/strands-agents/sdk-python/blob/main/src/strands/vended_plugins/skills/agent_skills.py#L407)
 
 Get the list of skills activated by this agent.
 

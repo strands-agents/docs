@@ -72,6 +72,18 @@ combined = Experiment(
 )
 ```
 
+### Flattening Reports
+
+When running multiple evaluators, you get one report per evaluator. Use `EvaluationReport.flatten` to combine them into a single view:
+
+```python
+reports = experiment.run_evaluations(task_function)
+
+from strands_evals.types.evaluation_report import EvaluationReport
+combined = EvaluationReport.flatten(reports)
+combined.run_display()  # Shows all evaluators in one table
+```
+
 ## Modifying Experiments
 
 ### Adding Cases

@@ -1,4 +1,4 @@
-Defined in: [src/tools/zod-tool.ts:20](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/zod-tool.ts#L20)
+Defined in: [src/tools/zod-tool.ts:20](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/zod-tool.ts#L20)
 
 Configuration for creating a Zod-based tool.
 
@@ -17,7 +17,7 @@ Configuration for creating a Zod-based tool.
 name: string;
 ```
 
-Defined in: [src/tools/zod-tool.ts:22](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/zod-tool.ts#L22)
+Defined in: [src/tools/zod-tool.ts:22](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/zod-tool.ts#L22)
 
 The name of the tool
 
@@ -29,7 +29,7 @@ The name of the tool
 optional description?: string;
 ```
 
-Defined in: [src/tools/zod-tool.ts:25](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/zod-tool.ts#L25)
+Defined in: [src/tools/zod-tool.ts:25](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/zod-tool.ts#L25)
 
 A description of what the tool does (optional)
 
@@ -41,7 +41,7 @@ A description of what the tool does (optional)
 optional inputSchema?: TInput;
 ```
 
-Defined in: [src/tools/zod-tool.ts:31](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/zod-tool.ts#L31)
+Defined in: [src/tools/zod-tool.ts:31](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/zod-tool.ts#L31)
 
 Zod schema for input validation and JSON schema generation. If omitted or z.void(), the tool takes no input parameters.
 
@@ -56,7 +56,7 @@ callback: (input, context?) =>
 | Promise<TReturn>;
 ```
 
-Defined in: [src/tools/zod-tool.ts:40](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/zod-tool.ts#L40)
+Defined in: [src/tools/zod-tool.ts:40](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/zod-tool.ts#L40)
 
 Callback function that implements the tool’s functionality.
 

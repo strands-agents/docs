@@ -1,4 +1,4 @@
-Defined in: [src/agent/agent.ts:178](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L178)
+Defined in: [src/agent/agent.ts:206](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L206)
 
 Orchestrates the interaction between a model, a set of tools, and MCP clients. The Agent is responsible for managing the lifecycle of tools and clients and invoking the core decision-making loop.
 
@@ -14,7 +14,7 @@ Orchestrates the interaction between a model, a set of tools, and MCP clients. T
 new Agent(config?): Agent;
 ```
 
-Defined in: [src/agent/agent.ts:242](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L242)
+Defined in: [src/agent/agent.ts:278](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L278)
 
 Creates an instance of the Agent.
 
@@ -36,7 +36,7 @@ Creates an instance of the Agent.
 messages: Message[];
 ```
 
-Defined in: [src/agent/agent.ts:185](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L185)
+Defined in: [src/agent/agent.ts:213](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L213)
 
 The conversation history of messages between user and assistant.
 
@@ -54,7 +54,7 @@ LocalAgent.messages
 readonly appState: StateStore;
 ```
 
-Defined in: [src/agent/agent.ts:190](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L190)
+Defined in: [src/agent/agent.ts:218](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L218)
 
 App state storage accessible to tools and application logic. State is not passed to the model during inference.
 
@@ -66,13 +66,31 @@ LocalAgent.appState
 
 ---
 
+### modelState
+
+```ts
+readonly modelState: StateStore;
+```
+
+Defined in: [src/agent/agent.ts:224](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L224)
+
+Runtime state for the model provider. Used by stateful models to persist provider-specific data (e.g., response IDs for conversation chaining) across invocations.
+
+#### Implementation of
+
+```ts
+LocalAgent.modelState
+```
+
+---
+
 ### model
 
 ```ts
 model: Model;
 ```
 
-Defined in: [src/agent/agent.ts:196](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L196)
+Defined in: [src/agent/agent.ts:230](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L230)
 
 The model provider used by the agent for inference.
 
@@ -84,7 +102,7 @@ The model provider used by the agent for inference.
 optional systemPrompt?: SystemPrompt;
 ```
 
-Defined in: [src/agent/agent.ts:201](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L201)
+Defined in: [src/agent/agent.ts:235](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L235)
 
 The system prompt to pass to the model provider.
 
@@ -102,7 +120,7 @@ LocalAgent.systemPrompt
 readonly name: string;
 ```
 
-Defined in: [src/agent/agent.ts:206](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L206)
+Defined in: [src/agent/agent.ts:240](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L240)
 
 The name of the agent.
 
@@ -120,7 +138,7 @@ InvokableAgent.name
 readonly id: string;
 ```
 
-Defined in: [src/agent/agent.ts:211](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L211)
+Defined in: [src/agent/agent.ts:245](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L245)
 
 The unique identifier of the agent instance.
 
@@ -138,7 +156,7 @@ LocalAgent.id
 readonly optional description?: string;
 ```
 
-Defined in: [src/agent/agent.ts:216](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L216)
+Defined in: [src/agent/agent.ts:250](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L250)
 
 Optional description of what the agent does.
 
@@ -156,7 +174,7 @@ InvokableAgent.description
 readonly optional sessionManager?: SessionManager;
 ```
 
-Defined in: [src/agent/agent.ts:221](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L221)
+Defined in: [src/agent/agent.ts:255](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L255)
 
 The session manager for saving and restoring agent sessions, if configured.
 
@@ -170,7 +188,7 @@ The session manager for saving and restoring agent sessions, if configured.
 get tools(): Tool[];
 ```
 
-Defined in: [src/agent/agent.ts:369](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L369)
+Defined in: [src/agent/agent.ts:424](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L424)
 
 The tools this agent can use.
 
@@ -188,7 +206,7 @@ The tools this agent can use.
 get toolRegistry(): ToolRegistry;
 ```
 
-Defined in: [src/agent/agent.ts:376](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L376)
+Defined in: [src/agent/agent.ts:431](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L431)
 
 The tool registry for managing the agent’s tools.
 
@@ -212,7 +230,7 @@ LocalAgent.toolRegistry
 get cancelSignal(): AbortSignal;
 ```
 
-Defined in: [src/agent/agent.ts:386](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L386)
+Defined in: [src/agent/agent.ts:441](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L441)
 
 The cancellation signal for the current invocation.
 
@@ -236,7 +254,7 @@ LocalAgent.cancelSignal
 addHook<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/agent/agent.ts:313](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L313)
+Defined in: [src/agent/agent.ts:368](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L368)
 
 Register a hook callback for a specific event type.
 
@@ -286,7 +304,7 @@ LocalAgent.addHook
 initialize(): Promise<void>;
 ```
 
-Defined in: [src/agent/agent.ts:317](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L317)
+Defined in: [src/agent/agent.ts:372](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L372)
 
 #### Returns
 
@@ -300,7 +318,7 @@ Defined in: [src/agent/agent.ts:317](https://github.com/strands-agents/sdk-types
 cancel(): void;
 ```
 
-Defined in: [src/agent/agent.ts:418](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L418)
+Defined in: [src/agent/agent.ts:473](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L473)
 
 Cancels the current agent invocation cooperatively.
 
@@ -340,7 +358,7 @@ console.log(result.stopReason) // 'cancelled'
 invoke(args, options?): Promise<AgentResult>;
 ```
 
-Defined in: [src/agent/agent.ts:450](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L450)
+Defined in: [src/agent/agent.ts:505](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L505)
 
 Invokes the agent and returns the final result.
 
@@ -381,7 +399,7 @@ InvokableAgent.invoke
 stream(args, options?): AsyncGenerator<AgentStreamEvent, AgentResult, undefined>;
 ```
 
-Defined in: [src/agent/agent.ts:489](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L489)
+Defined in: [src/agent/agent.ts:544](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L544)
 
 Streams the agent execution, yielding events and returning the final result.
 
@@ -433,7 +451,7 @@ InvokableAgent.stream
 asTool(options?): Tool;
 ```
 
-Defined in: [src/agent/agent.ts:569](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/agent/agent.ts#L569)
+Defined in: [src/agent/agent.ts:626](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L626)
 
 Returns a [Tool](/docs/api/typescript/Tool/index.md) that wraps this agent, allowing it to be used as a tool by another agent.
 

@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:138](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L138)
+Defined in: [src/models/streaming.ts:138](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L138)
 
 Event emitted when there is new content in a content block.
 
@@ -14,7 +14,7 @@ Event emitted when there is new content in a content block.
 new ModelContentBlockDeltaEvent(data): ModelContentBlockDeltaEvent;
 ```
 
-Defined in: [src/models/streaming.ts:154](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L154)
+Defined in: [src/models/streaming.ts:154](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L154)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/models/streaming.ts:154](https://github.com/strands-agents/sdk-
 readonly type: "modelContentBlockDeltaEvent";
 ```
 
-Defined in: [src/models/streaming.ts:142](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L142)
+Defined in: [src/models/streaming.ts:142](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L142)
 
 Discriminator for content block delta events.
 
@@ -50,7 +50,7 @@ Discriminator for content block delta events.
 readonly optional contentBlockIndex?: number;
 ```
 
-Defined in: [src/models/streaming.ts:147](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L147)
+Defined in: [src/models/streaming.ts:147](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L147)
 
 Index of the content block being updated.
 
@@ -62,7 +62,7 @@ Index of the content block being updated.
 readonly delta: ContentBlockDelta;
 ```
 
-Defined in: [src/models/streaming.ts:152](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L152)
+Defined in: [src/models/streaming.ts:152](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L152)
 
 The incremental content update.
 

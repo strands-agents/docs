@@ -137,7 +137,7 @@ def format_request_messages(cls,
                             **kwargs: Any) -> list[dict[str, Any]]
 ```
 
-Defined in: [src/strands/models/litellm.py:235](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L235)
+Defined in: [src/strands/models/litellm.py:238](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L238)
 
 Format a LiteLLM compatible messages array with cache point support.
 
@@ -159,7 +159,7 @@ A LiteLLM compatible messages array.
 def format_chunk(event: dict[str, Any], **kwargs: Any) -> StreamEvent
 ```
 
-Defined in: [src/strands/models/litellm.py:260](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L260)
+Defined in: [src/strands/models/litellm.py:263](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L263)
 
 Format a LiteLLM response event into a standardized message chunk.
 
@@ -194,7 +194,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/litellm.py:316](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L316)
+Defined in: [src/strands/models/litellm.py:319](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L319)
 
 Stream conversation with the LiteLLM model.
 
@@ -222,7 +222,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/litellm.py:370](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L370)
+Defined in: [src/strands/models/litellm.py:373](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L373)
 
 Get structured output from the model.
 

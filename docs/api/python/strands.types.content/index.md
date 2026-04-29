@@ -76,6 +76,7 @@ A cache point configuration for optimizing conversation history.
 **Attributes**:
 
 -   `type` - The type of cache point, typically “default”.
+-   `ttl` - Optional cache TTL duration (e.g. “5m”, “1h”). Supported by providers that accept Anthropic-compatible cache\_control fields.
 
 ## ContentBlock
 
@@ -83,7 +84,7 @@ A cache point configuration for optimizing conversation history.
 class ContentBlock(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:75](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L75)
+Defined in: [src/strands/types/content.py:78](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L78)
 
 A block of content for a message that you pass to, or receive from, a model.
 
@@ -106,7 +107,7 @@ A block of content for a message that you pass to, or receive from, a model.
 class SystemContentBlock(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:103](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L103)
+Defined in: [src/strands/types/content.py:106](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L106)
 
 Contains configurations for instructions to provide the model for how to handle input.
 
@@ -121,7 +122,7 @@ Contains configurations for instructions to provide the model for how to handle 
 class DeltaContent(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L115)
+Defined in: [src/strands/types/content.py:118](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L118)
 
 A block of content in a streaming response.
 
@@ -136,7 +137,7 @@ A block of content in a streaming response.
 class ContentBlockStartToolUse(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:127](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L127)
+Defined in: [src/strands/types/content.py:130](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L130)
 
 The start of a tool use block.
 
@@ -152,7 +153,7 @@ The start of a tool use block.
 class ContentBlockStart(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:141](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L141)
+Defined in: [src/strands/types/content.py:144](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L144)
 
 Content block start information.
 
@@ -166,7 +167,7 @@ Content block start information.
 class ContentBlockDelta(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:151](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L151)
+Defined in: [src/strands/types/content.py:154](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L154)
 
 The content block delta event.
 
@@ -181,7 +182,7 @@ The content block delta event.
 class ContentBlockStop(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:163](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L163)
+Defined in: [src/strands/types/content.py:166](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L166)
 
 A content block stop event.
 
@@ -202,7 +203,7 @@ Role of a message sender.
 class MessageMetadata(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:181](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L181)
+Defined in: [src/strands/types/content.py:184](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L184)
 
 Optional metadata attached to a message.
 
@@ -220,7 +221,7 @@ Not sent to model providers — explicitly stripped before model calls. Persiste
 class Message(TypedDict)
 ```
 
-Defined in: [src/strands/types/content.py:198](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L198)
+Defined in: [src/strands/types/content.py:201](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L201)
 
 A message in a conversation with the agent.
 
@@ -240,7 +241,7 @@ A list of messages representing a conversation.
 def get_message_metadata(message: Message) -> MessageMetadata
 ```
 
-Defined in: [src/strands/types/content.py:216](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L216)
+Defined in: [src/strands/types/content.py:219](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/content.py#L219)
 
 Get metadata for a message, returning empty dict if not present.
 

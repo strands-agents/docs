@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:324](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L324)
+Defined in: [src/models/streaming.ts:324](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L324)
 
 Data for a redact event. Emitted when guardrails block content and redaction is enabled.
 
@@ -10,7 +10,7 @@ Data for a redact event. Emitted when guardrails block content and redaction is 
 type: "modelRedactionEvent";
 ```
 
-Defined in: [src/models/streaming.ts:328](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L328)
+Defined in: [src/models/streaming.ts:328](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L328)
 
 Discriminator for redact events.
 
@@ -22,7 +22,7 @@ Discriminator for redact events.
 optional inputRedaction?: RedactInputContent;
 ```
 
-Defined in: [src/models/streaming.ts:333](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L333)
+Defined in: [src/models/streaming.ts:333](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L333)
 
 Input redaction information (when input is blocked).
 
@@ -34,6 +34,6 @@ Input redaction information (when input is blocked).
 optional outputRedaction?: RedactOutputContent;
 ```
 
-Defined in: [src/models/streaming.ts:338](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/models/streaming.ts#L338)
+Defined in: [src/models/streaming.ts:338](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/streaming.ts#L338)
 
 Output redaction information (when output is blocked).

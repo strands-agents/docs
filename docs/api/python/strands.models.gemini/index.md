@@ -87,6 +87,34 @@ Get the Gemini model configuration.
 
 The Gemini model configuration.
 
+#### count\_tokens
+
+```python
+@override
+async def count_tokens(
+        messages: Messages,
+        tool_specs: list[ToolSpec] | None = None,
+        system_prompt: str | None = None,
+        system_prompt_content: list[SystemContentBlock] | None = None) -> int
+```
+
+Defined in: [src/strands/models/gemini.py:438](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L438)
+
+Count tokens using Gemini’s native count\_tokens API.
+
+Uses the Gemini count\_tokens API for message contents. The Gemini API does not support counting system\_instruction or tools, so those are estimated via the base class heuristic.
+
+**Arguments**:
+
+-   `messages` - List of message objects to count tokens for.
+-   `tool_specs` - List of tool specifications to include in the count.
+-   `system_prompt` - Plain string system prompt.
+-   `system_prompt_content` - Structured system prompt content blocks.
+
+**Returns**:
+
+Total input token count.
+
 #### stream
 
 ```python
@@ -97,7 +125,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/gemini.py:437](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L437)
+Defined in: [src/strands/models/gemini.py:496](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L496)
 
 Stream conversation with the Gemini model.
 
@@ -129,7 +157,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/gemini.py:535](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L535)
+Defined in: [src/strands/models/gemini.py:594](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L594)
 
 Get structured output from the model using Gemini’s native structured output.
 

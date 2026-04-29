@@ -54,11 +54,11 @@ The injected system prompt metadata looks like this:
 </available_skills>
 ```
 
-This XML block is refreshed before each invocation, so changes to available skills (through `set_available_skills`) take effect immediately. Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) for session persistence.
+This XML block is refreshed before each invocation, so changes to available skills (through `set_available_skills` / `setAvailableSkills`) take effect immediately. Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) for session persistence.
 
 ## Usage
 
-The `AgentSkills` plugin accepts skill sources in several forms — filesystem paths, parent directories, or programmatic `Skill` instances. You can pass a single source or a list.
+The `AgentSkills` plugin accepts skill sources in several forms — filesystem paths, parent directories, HTTPS URLs, or programmatic `Skill` instances. In Python you can pass a single source or a list; in TypeScript the `skills` parameter is always an array.
 
 (( tab "Python" ))
 ```python
@@ -86,8 +86,38 @@ agent = Agent(plugins=[plugin])
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AgentSkills, Skill } from '@strands-agents/sdk/vended-plugins/skills'
+
+// Single skill directory
+const plugin = new AgentSkills({
+  skills: ['./skills/pdf-processing'],
+})
+
+// Parent directory — loads all child directories
+// containing SKILL.md
+const pluginFromDir = new AgentSkills({
+  skills: ['./skills/'],
+})
+
+// Mixed sources
+const pluginMixed = new AgentSkills({
+  skills: [
+    './skills/pdf-processing',
+    './skills/',
+    new Skill({
+      name: 'custom-greeting',
+      description: 'Generate custom greetings',
+      instructions: 'Always greet the user by name with enthusiasm.',
+    }),
+  ],
+})
+
+const agent = new Agent({
+  model,
+  plugins: [pluginMixed],
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -97,9 +127,9 @@ The `AgentSkills` plugin handles only skill discovery and activation. It does no
 
 When a skill is activated, the tool response includes a listing of available resource files (from `scripts/`, `references/`, and `assets/` subdirectories), but to actually read those files or run scripts, you provide your own tools. This gives you full control over what the agent can access.
 
+(( tab "Python" ))
 For filesystem-based skills, `file_read` and `shell` from `strands-agents-tools` are the easiest way to get started:
 
-(( tab "Python" ))
 ```python
 from strands import Agent, AgentSkills
 from strands_tools import file_read, shell
@@ -114,16 +144,31 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+For filesystem-based skills, the vended `bash` and `fileEditor` tools are the easiest way to get started:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AgentSkills } from '@strands-agents/sdk/vended-plugins/skills'
+import { bash } from '@strands-agents/sdk/vended-tools/bash'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
+const plugin = new AgentSkills({
+  skills: ['./skills/'],
+})
+
+const agent = new Agent({
+  model,
+  plugins: [plugin],
+  tools: [bash, fileEditor],
+})
 ```
 (( /tab "TypeScript" ))
 
-You can also use other tools depending on your environment. For example, `http_request` for skills with remote resources, or the AgentCore code interpreter tool for executing scripts in a sandboxed environment. Choose tools that match your skill’s resource access patterns and your security requirements.
+You can also use other tools depending on your environment. For example, an HTTP request tool for skills with remote resources, or a code interpreter tool for executing scripts in a sandboxed environment. Choose tools that match your skill’s resource access patterns and your security requirements.
 
 ### Programmatic skill creation
 
-Use the `Skill` dataclass to create skills in code without filesystem directories:
+Use the `Skill` class to create skills in code without filesystem directories:
 
 (( tab "Python" ))
 ```python
@@ -153,8 +198,30 @@ skills = Skill.from_directory("./skills/")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+import { Skill } from '@strands-agents/sdk/vended-plugins/skills'
+
+// Create directly
+const skill = new Skill({
+  name: 'code-review',
+  description: 'Review code for best practices and bugs',
+  instructions: 'Review the provided code. Check for...',
+})
+
+// Parse from SKILL.md content
+const parsed = Skill.fromContent(
+  '---\n' +
+    'name: code-review\n' +
+    'description: Review code for best practices\n' +
+    '---\n' +
+    'Review the provided code. Check for...\n'
+)
+
+// Load from a specific directory
+const loaded = Skill.fromFile('./skills/code-review')
+
+// Load all skills from a parent directory
+const skills = Skill.fromDirectory('./skills/')
 ```
 (( /tab "TypeScript" ))
 
@@ -193,8 +260,35 @@ print(f"Activated skills: {activated}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AgentSkills, Skill } from '@strands-agents/sdk/vended-plugins/skills'
+
+const plugin = new AgentSkills({
+  skills: ['./skills/pdf-processing'],
+})
+const agent = new Agent({ model, plugins: [plugin] })
+
+// View available skills
+const available = await plugin.getAvailableSkills()
+for (const skill of available) {
+  console.log(`${skill.name}: ${skill.description}`)
+}
+
+// Add a new skill at runtime
+const newSkill = new Skill({
+  name: 'summarize',
+  description: 'Summarize long documents',
+  instructions: 'Read the document and produce a concise summary...',
+})
+plugin.setAvailableSkills([...available, newSkill])
+
+// Replace all skills
+plugin.setAvailableSkills(['./skills/new-set/'])
+
+// Check which skills the agent has activated
+const activated = plugin.getActivatedSkills(agent)
+console.log(`Activated skills: ${activated}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -234,7 +328,7 @@ The `allowed-tools` field is currently informational. When a skill is activated,
 
 Name validation
 
-Skill names must match the parent directory name. By default, validation issues produce warnings rather than errors. Pass `strict=True` to raise exceptions instead.
+Skill names must match the parent directory name. By default, validation issues produce warnings rather than errors. Pass `strict=True` (Python) or `strict: true` (TypeScript) to raise exceptions instead.
 
 ### Resource directories
 
@@ -257,14 +351,25 @@ When the agent activates a skill, the tool response includes a listing of all re
 
 The `AgentSkills` constructor accepts the following parameters.
 
+(( tab "Python" ))
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `skills` | `SkillSources` | Required | One or more skill sources (paths, `Skill` instances, or a mix). |
+| `skills` | `SkillSources` | Required | One or more skill sources (paths, HTTPS URLs, `Skill` instances, or a mix). Accepts a single value or a list. |
 | `state_key` | `str` | `"agent_skills"` | Key for storing plugin state in `agent.state`. |
 | `max_resource_files` | `int` | `20` | Maximum number of resource files listed in skill activation responses. |
 | `strict` | `bool` | `False` | If `True`, raise exceptions on validation issues instead of logging warnings. |
+(( /tab "Python" ))
 
-Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) under the configured `state_key`. This means activated skills persist across invocations within the same session and can be serialized for [session management](/docs/user-guide/concepts/agents/session-management/index.md).
+(( tab "TypeScript" ))
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `skills` | `SkillSource[]` | Required | Array of skill sources (paths, `Skill` instances, or HTTPS URLs). |
+| `stateKey` | `string` | `'agent_skills'` | Key for storing plugin state in `agent.appState`. |
+| `maxResourceFiles` | `number` | `20` | Maximum number of resource files listed in skill activation responses. |
+| `strict` | `boolean` | `false` | If `true`, throw on validation issues instead of logging warnings. |
+(( /tab "TypeScript" ))
+
+Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) under the configured state key. This means activated skills persist across invocations within the same session and can be serialized for [session management](/docs/user-guide/concepts/agents/session-management/index.md).
 
 ## Comparison with other approaches
 

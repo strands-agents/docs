@@ -7602,7 +7602,7 @@ Key features of the `SlidingWindowConversationManager`:
 -   **Maintains Window Size**: Automatically removes messages from the window if the number of messages exceeds the limit.
 -   **Dangling Message Cleanup**: Removes incomplete message sequences to maintain valid conversation state.
 -   **Overflow Trimming**: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.
--   **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed.
+-   **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed. For a proactive alternative that preserves full content externally, see the [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) plugin.
 -   **Per-Turn Management**: Optionally apply context management proactively during the agent loop execution, not just at the end.
 
 **Per-Turn Management**:
@@ -8296,6 +8296,12 @@ Most event properties are read-only to prevent unintended modifications. However
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+-   `BeforeInvocationEvent`
+    
+    -   `cancel` - Cancel the agent invocation with a message.
+-   `BeforeModelCallEvent`
+    
+    -   `cancel` - Cancel the model call with a message.
 -   `BeforeToolsEvent`
     
     -   `cancel` - Cancel all tool calls in a batch with a message. See [Limit Tool Counts](#limit-tool-counts).
@@ -18790,12 +18796,53 @@ The model configuration sets parameters for inference:
 **Module Not Found**
 
 If you encounter the error `ModuleNotFoundError: No module named 'openai'`, this means you haven’t installed the `openai` dependency in your environment. To fix, run `pip install 'strands-agents[openai]'`.
+
+**GPT-OSS Tool Calling Fails on Non-Managed Endpoints**
+
+If you are running GPT-OSS on an endpoint that isn’t a managed inference provider and you see errors like `Unexpected token ... while expecting start token ...` during tool calling, your endpoint likely doesn’t have the correct stop tokens configured.
+
+As an immediate workaround, pass the GPT-OSS stop sequences explicitly via `params`:
+
+```python
+model = OpenAIModel(
+    client_args={
+        "api_key": "<KEY>",
+        "base_url": "http://localhost:8000/v1",
+    },
+    model_id="<MODEL_ID>",
+    params={"stop": ["<|call|>", "<|return|>", "<|end|>"]}
+)
+```
+
+See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/openai-harmony#message-format) for details on GPT-OSS stop tokens.
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
 **Authentication Errors**
 
 If you encounter authentication errors, ensure your OpenAI API key is properly configured. Set the `OPENAI_API_KEY` environment variable or pass it via the `apiKey` parameter in the model configuration.
+
+**GPT-OSS Tool Calling Fails on Non-Managed Endpoints**
+
+If you are running GPT-OSS on an endpoint that isn’t a managed inference provider and you see errors like `Unexpected token ... while expecting start token ...` during tool calling, your endpoint likely doesn’t have the correct stop tokens configured.
+
+As an immediate workaround, pass the GPT-OSS stop sequences explicitly via `params`:
+
+```typescript
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+
+const model = new OpenAIModel({
+  api: 'chat',
+  apiKey: '<KEY>',
+  clientConfig: {
+    baseURL: 'http://localhost:8000/v1',
+  },
+  modelId: '<MODEL_ID>',
+  params: { stop: ['<|call|>', '<|return|>', '<|end|>'] },
+})
+```
+
+See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/openai-harmony#message-format) for details on GPT-OSS stop tokens.
 (( /tab "TypeScript" ))
 
 ## Advanced Features
@@ -22721,6 +22768,7 @@ The Strands SDK provides built-in plugins that you can use out of the box:
 
 -   **[Skills](/docs/user-guide/concepts/plugins/skills/index.md)** - On-demand, modular instructions that agents discover and activate at runtime following the [Agent Skills specification](https://agentskills.io/specification)
 -   **[Steering](/docs/user-guide/concepts/plugins/steering/index.md)** - Modular prompting for complex agent tasks through context-aware guidance
+-   **[Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md)** - Proactively offloads oversized tool results to storage, replacing them with previews and providing a built-in retrieval tool
 
 You can also build and distribute your own plugins to extend agent functionality. See [Get Featured](/docs/community/get-featured/index.md) to share your plugins with the community.
 
@@ -23114,9 +23162,160 @@ class AsyncConfigPlugin implements Plugin {
 
 -   [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) - Learn about the underlying hook system
 -   [Steering](/docs/user-guide/concepts/plugins/steering/index.md) - Explore the built-in steering plugin
+-   [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) - Manage large tool results proactively
 -   [Get Featured](/docs/community/get-featured/index.md) - Share your plugins with the community
 
 Source: https://strandsagents.com/docs/user-guide/concepts/plugins/index.md
+
+---
+
+## Context Offloader
+
+The `ContextOffloader` plugin prevents large tool results from consuming your agent’s context window. When a tool returns a result that exceeds a configurable token threshold, the plugin stores each content block individually in an external storage backend and replaces it in the conversation with a truncated preview plus per-block references. Each offloaded result includes inline guidance telling the agent to use its available tools to selectively access the data it needs.
+
+## The Problem
+
+Tools like file readers, API clients, and database queries can return results that are tens or hundreds of thousands of characters long. When these large results enter the conversation, they crowd out other context and can exceed the model’s token limits.
+
+The default [`SlidingWindowConversationManager`](/docs/user-guide/concepts/agents/conversation-management/index.md) handles this reactively — after the context overflows, it truncates tool results to the first and last 200 characters. This works as a safety net, but the truncation is lossy (the middle content is gone permanently) and happens after a failed API call has already been wasted.
+
+`ContextOffloader` takes a proactive approach: it intercepts results at tool execution time, **before** they enter the conversation, so the overflow never happens in the first place.
+
+## How It Works
+
+After each tool call, the plugin estimates the result’s token count using the agent’s `model.count_tokens()` method and compares it against the `max_result_tokens` threshold (default: 2,500 tokens). If the result exceeds it, the plugin:
+
+1.  Stores each content block individually in the configured storage backend, preserving its content type
+2.  Replaces the in-context result with the first `preview_tokens` tokens (default: 1,000) plus per-block storage references
+
+Token estimation uses tiktoken when available for accurate counts, falling back to a chars/4 heuristic. Preview slicing also uses tiktoken for exact token-level cuts when available.
+
+Results under the threshold pass through unchanged.
+
+### What the agent sees
+
+For a tool that returns 150KB of JSON, the agent would see something like:
+
+```plaintext
+{"users": [{"id": 1, "name": "Alice", ...}, {"id": 2, "name": "Bob", ...},
+... (first ~1,000 tokens of the result) ...
+
+[Full content offloaded to storage - reference: a1b2c3d4]
+```
+
+For non-text content, the plugin replaces the result with a descriptive placeholder plus a reference:
+
+| Content Type | What the agent sees |
+| --- | --- |
+| Text / JSON | First `preview_tokens` tokens + storage reference |
+| Image | `[image: format, N bytes]` placeholder + storage reference |
+| Document | `[document: format, name, N bytes]` placeholder + storage reference |
+
+### Retrieval tool (opt-in)
+
+The plugin includes an optional `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. Enable it with `include_retrieval_tool=True`:
+
+```python
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=InMemoryStorage(),
+        include_retrieval_tool=True,
+    )
+])
+```
+
+The retrieval tool is disabled by default. The inline guidance in offloaded results always tells the agent to use its available tools to selectively access the data it needs. When the retrieval tool is enabled, the guidance additionally mentions `retrieve_offloaded_content`.
+
+## Getting Started
+
+Pass a `ContextOffloader` instance to your agent’s `plugins` list with your choice of storage backend:
+
+```python
+from strands import Agent
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    InMemoryStorage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(storage=InMemoryStorage())
+])
+```
+
+To customize the token thresholds:
+
+```python
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=InMemoryStorage(),
+        max_result_tokens=5_000,
+        preview_tokens=2_000,
+    )
+])
+```
+
+### Storage Backends
+
+Choose a storage backend based on your needs:
+
+| Backend | Persistence | Best for |
+| --- | --- | --- |
+| `InMemoryStorage` | Process lifetime only (call `clear()` to free manually) | Development, testing, reducing context without side effects |
+| `FileStorage` | Disk | Local development, debugging, inspecting stored artifacts |
+| `S3Storage` | Amazon S3 | Production workloads, shared or durable artifact retention |
+
+All backends implement the `OffloadStorage` protocol and preserve content type metadata, so you can also build your own.
+
+**File storage** — persists to a local directory with `.metadata.json` sidecars for content type tracking:
+
+```python
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    FileStorage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=FileStorage("./artifacts"),
+    )
+])
+```
+
+**S3 storage** — persists to an Amazon S3 bucket with content type preserved via S3 object metadata:
+
+```python
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    S3Storage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=S3Storage(
+            bucket="my-agent-artifacts",
+            prefix="tool-results/",
+        ),
+        include_retrieval_tool=True,
+    )
+])
+```
+
+## Configuration
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `storage` | *(required)* | Storage backend instance |
+| `max_result_tokens` | `2_500` | Results whose estimated token count exceeds this are offloaded |
+| `preview_tokens` | `1_000` | Number of tokens to keep as an in-context preview |
+| `include_retrieval_tool` | `False` | When `True`, registers a `retrieve_offloaded_content` tool the agent can use to fetch full content by reference |
+
+## Tradeoffs
+
+-   **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_tokens` to balance context usage against information loss for your use case. Enable `include_retrieval_tool=True` if the agent needs to fetch full offloaded content and doesn’t have other tools (file readers, shell, etc.) that can access the storage backend directly.
+-   **Storage costs**: `S3Storage` incurs S3 PUT/GET and storage charges. `FileStorage` writes to disk on every large result.
+-   **Not a replacement for conversation management**: This plugin handles individual large results. You still need a conversation manager like `SlidingWindowConversationManager` to handle overall context growth across many turns.
+
+Source: https://strandsagents.com/docs/user-guide/concepts/plugins/context-offloader/index.md
 
 ---
 
@@ -23178,11 +23377,11 @@ The injected system prompt metadata looks like this:
 </available_skills>
 ```
 
-This XML block is refreshed before each invocation, so changes to available skills (through `set_available_skills`) take effect immediately. Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) for session persistence.
+This XML block is refreshed before each invocation, so changes to available skills (through `set_available_skills` / `setAvailableSkills`) take effect immediately. Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) for session persistence.
 
 ## Usage
 
-The `AgentSkills` plugin accepts skill sources in several forms — filesystem paths, parent directories, or programmatic `Skill` instances. You can pass a single source or a list.
+The `AgentSkills` plugin accepts skill sources in several forms — filesystem paths, parent directories, HTTPS URLs, or programmatic `Skill` instances. In Python you can pass a single source or a list; in TypeScript the `skills` parameter is always an array.
 
 (( tab "Python" ))
 ```python
@@ -23210,8 +23409,38 @@ agent = Agent(plugins=[plugin])
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AgentSkills, Skill } from '@strands-agents/sdk/vended-plugins/skills'
+
+// Single skill directory
+const plugin = new AgentSkills({
+  skills: ['./skills/pdf-processing'],
+})
+
+// Parent directory — loads all child directories
+// containing SKILL.md
+const pluginFromDir = new AgentSkills({
+  skills: ['./skills/'],
+})
+
+// Mixed sources
+const pluginMixed = new AgentSkills({
+  skills: [
+    './skills/pdf-processing',
+    './skills/',
+    new Skill({
+      name: 'custom-greeting',
+      description: 'Generate custom greetings',
+      instructions: 'Always greet the user by name with enthusiasm.',
+    }),
+  ],
+})
+
+const agent = new Agent({
+  model,
+  plugins: [pluginMixed],
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -23221,9 +23450,9 @@ The `AgentSkills` plugin handles only skill discovery and activation. It does no
 
 When a skill is activated, the tool response includes a listing of available resource files (from `scripts/`, `references/`, and `assets/` subdirectories), but to actually read those files or run scripts, you provide your own tools. This gives you full control over what the agent can access.
 
+(( tab "Python" ))
 For filesystem-based skills, `file_read` and `shell` from `strands-agents-tools` are the easiest way to get started:
 
-(( tab "Python" ))
 ```python
 from strands import Agent, AgentSkills
 from strands_tools import file_read, shell
@@ -23238,16 +23467,31 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+For filesystem-based skills, the vended `bash` and `fileEditor` tools are the easiest way to get started:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AgentSkills } from '@strands-agents/sdk/vended-plugins/skills'
+import { bash } from '@strands-agents/sdk/vended-tools/bash'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
+const plugin = new AgentSkills({
+  skills: ['./skills/'],
+})
+
+const agent = new Agent({
+  model,
+  plugins: [plugin],
+  tools: [bash, fileEditor],
+})
 ```
 (( /tab "TypeScript" ))
 
-You can also use other tools depending on your environment. For example, `http_request` for skills with remote resources, or the AgentCore code interpreter tool for executing scripts in a sandboxed environment. Choose tools that match your skill’s resource access patterns and your security requirements.
+You can also use other tools depending on your environment. For example, an HTTP request tool for skills with remote resources, or a code interpreter tool for executing scripts in a sandboxed environment. Choose tools that match your skill’s resource access patterns and your security requirements.
 
 ### Programmatic skill creation
 
-Use the `Skill` dataclass to create skills in code without filesystem directories:
+Use the `Skill` class to create skills in code without filesystem directories:
 
 (( tab "Python" ))
 ```python
@@ -23277,8 +23521,30 @@ skills = Skill.from_directory("./skills/")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+import { Skill } from '@strands-agents/sdk/vended-plugins/skills'
+
+// Create directly
+const skill = new Skill({
+  name: 'code-review',
+  description: 'Review code for best practices and bugs',
+  instructions: 'Review the provided code. Check for...',
+})
+
+// Parse from SKILL.md content
+const parsed = Skill.fromContent(
+  '---\n' +
+    'name: code-review\n' +
+    'description: Review code for best practices\n' +
+    '---\n' +
+    'Review the provided code. Check for...\n'
+)
+
+// Load from a specific directory
+const loaded = Skill.fromFile('./skills/code-review')
+
+// Load all skills from a parent directory
+const skills = Skill.fromDirectory('./skills/')
 ```
 (( /tab "TypeScript" ))
 
@@ -23317,8 +23583,35 @@ print(f"Activated skills: {activated}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Skills are not yet available in TypeScript SDK
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AgentSkills, Skill } from '@strands-agents/sdk/vended-plugins/skills'
+
+const plugin = new AgentSkills({
+  skills: ['./skills/pdf-processing'],
+})
+const agent = new Agent({ model, plugins: [plugin] })
+
+// View available skills
+const available = await plugin.getAvailableSkills()
+for (const skill of available) {
+  console.log(`${skill.name}: ${skill.description}`)
+}
+
+// Add a new skill at runtime
+const newSkill = new Skill({
+  name: 'summarize',
+  description: 'Summarize long documents',
+  instructions: 'Read the document and produce a concise summary...',
+})
+plugin.setAvailableSkills([...available, newSkill])
+
+// Replace all skills
+plugin.setAvailableSkills(['./skills/new-set/'])
+
+// Check which skills the agent has activated
+const activated = plugin.getActivatedSkills(agent)
+console.log(`Activated skills: ${activated}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -23358,7 +23651,7 @@ The `allowed-tools` field is currently informational. When a skill is activated,
 
 Name validation
 
-Skill names must match the parent directory name. By default, validation issues produce warnings rather than errors. Pass `strict=True` to raise exceptions instead.
+Skill names must match the parent directory name. By default, validation issues produce warnings rather than errors. Pass `strict=True` (Python) or `strict: true` (TypeScript) to raise exceptions instead.
 
 ### Resource directories
 
@@ -23381,14 +23674,25 @@ When the agent activates a skill, the tool response includes a listing of all re
 
 The `AgentSkills` constructor accepts the following parameters.
 
+(( tab "Python" ))
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| `skills` | `SkillSources` | Required | One or more skill sources (paths, `Skill` instances, or a mix). |
+| `skills` | `SkillSources` | Required | One or more skill sources (paths, HTTPS URLs, `Skill` instances, or a mix). Accepts a single value or a list. |
 | `state_key` | `str` | `"agent_skills"` | Key for storing plugin state in `agent.state`. |
 | `max_resource_files` | `int` | `20` | Maximum number of resource files listed in skill activation responses. |
 | `strict` | `bool` | `False` | If `True`, raise exceptions on validation issues instead of logging warnings. |
+(( /tab "Python" ))
 
-Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) under the configured `state_key`. This means activated skills persist across invocations within the same session and can be serialized for [session management](/docs/user-guide/concepts/agents/session-management/index.md).
+(( tab "TypeScript" ))
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `skills` | `SkillSource[]` | Required | Array of skill sources (paths, `Skill` instances, or HTTPS URLs). |
+| `stateKey` | `string` | `'agent_skills'` | Key for storing plugin state in `agent.appState`. |
+| `maxResourceFiles` | `number` | `20` | Maximum number of resource files listed in skill activation responses. |
+| `strict` | `boolean` | `false` | If `true`, throw on validation issues instead of logging warnings. |
+(( /tab "TypeScript" ))
+
+Activated skills are tracked in [agent state](/docs/user-guide/concepts/agents/state/index.md) under the configured state key. This means activated skills persist across invocations within the same session and can be serialized for [session management](/docs/user-guide/concepts/agents/session-management/index.md).
 
 ## Comparison with other approaches
 
@@ -23602,10 +23906,12 @@ All streaming methods yield the same set of events:
 Each event emitted from the TypeScript agent is a class with a `type` attribute that has a unique value. When determining an event, you can use `instanceof` on the class, or an equality check on the `event.type` value. All events extend `HookableEvent`, making them both streamable and subscribable via hook callbacks.
 
 -   **`BeforeInvocationEvent`**: Start of agent loop (before any iterations)
+    -   **`cancel`**: Set by hook callbacks to cancel the invocation (`boolean | string`)
 -   **`AfterInvocationEvent`**: End of agent loop (after all iterations complete)
     -   **`error?`**: Optional error if loop terminated due to exception
 -   **`BeforeModelCallEvent`**: Before model invocation
     -   **`messages`**: Array of messages being sent to model
+    -   **`cancel`**: Set by hook callbacks to cancel the model call (`boolean | string`)
 -   **`AfterModelCallEvent`**: After model invocation
     -   **`message`**: Assistant message returned by model
     -   **`stopReason`**: Why generation stopped
@@ -23788,7 +24094,9 @@ for await (const event of agent.stream('Hello')) {
         event.event.type === 'modelContentBlockDeltaEvent' &&
         event.event.delta.type === 'textDelta'
       ) {
-        console.log(`data: ${JSON.stringify({ type: 'text', text: event.event.delta.text })}`)
+        console.log(
+          `data: ${JSON.stringify({ type: 'text', text: event.event.delta.text })}`
+        )
       }
       break
 
@@ -24678,6 +24986,7 @@ const result = await notebookTool.invoke(
       input: { mode: 'read', name: 'default' },
     },
     agent: agent,
+    invocationState: {},
   }
 )
 
@@ -32857,6 +33166,36 @@ Evaluators operate at different levels of granularity:
 -   **Purpose**: Assess factual accuracy and groundedness
 -   **Use Case**: Verify responses are truthful and well-supported
 
+**[CorrectnessEvaluator](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate factual correctness with optional reference comparison
+-   **Use Case**: Verify agent answers are correct, with or without ground truth
+
+**[CoherenceEvaluator](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Assess logical consistency and reasoning quality
+-   **Use Case**: Detect contradictions, logical gaps, and disorganized responses
+
+**[ConcisenessEvaluator](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate response brevity and efficiency
+-   **Use Case**: Ensure agents communicate without unnecessary verbosity
+
+**[ResponseRelevanceEvaluator](/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate relevance of responses to user questions
+-   **Use Case**: Detect off-topic or tangential responses
+
+**[HarmfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for harmful content detection
+-   **Use Case**: Screen responses for dangerous or offensive content
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md)**
@@ -32892,6 +33231,15 @@ Evaluators operate at different levels of granularity:
 -   **Level**: SESSION\_LEVEL
 -   **Purpose**: Determine if user goals were successfully achieved
 -   **Use Case**: Measure end-to-end task completion success
+
+### Deterministic Evaluators
+
+**[Deterministic Evaluators](/docs/user-guide/evals-sdk/evaluators/deterministic_evaluators/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL / SESSION\_LEVEL
+-   **Purpose**: Fast, code-based evaluation without LLM judges
+-   **Use Case**: Regression testing, CI/CD pipelines, exact match checks
+-   **Includes**: `Equals`, `Contains`, `StartsWith`, `ToolCalled`, `StateEquals`
 
 ## Custom Evaluators
 
@@ -33111,6 +33459,361 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate test cases automatically
 
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/index.md
+
+---
+
+## Coherence Evaluator
+
+## Overview
+
+The `CoherenceEvaluator` assesses whether an agent’s response maintains logical consistency, flows naturally, and presents ideas in a well-organized manner. It uses an LLM-as-judge approach with a five-level scoring rubric.
+
+## Key Features
+
+-   **Trace-Level Evaluation**: Evaluates the most recent turn in the conversation
+-   **Five-Level Scoring**: Granular scale from “Not At All” to “Completely Yes”
+-   **Context-Aware**: Considers conversation history when evaluating coherence
+-   **Structured Reasoning**: Provides step-by-step reasoning for each evaluation
+
+## When to Use
+
+Use the `CoherenceEvaluator` when you need to:
+
+-   Assess logical consistency of agent responses
+-   Detect contradictions or reasoning gaps
+-   Evaluate whether responses flow naturally
+-   Measure quality of multi-step reasoning
+
+## Evaluation Level
+
+This evaluator operates at the **TRACE\_LEVEL**, evaluating the most recent turn in the conversation.
+
+## Parameters
+
+### `model` (optional)
+
+-   **Type**: `Union[Model, str, None]`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: The model to use as the judge.
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template)
+-   **Description**: Custom system prompt for the judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+-   **Description**: Whether to include the input prompt in the evaluation context.
+
+### `version` (optional)
+
+-   **Type**: `str`
+-   **Default**: `"v0"`
+-   **Description**: Prompt template version.
+
+## Scoring System
+
+| Rating | Score | Description |
+| --- | --- | --- |
+| Not At All | 0.0 | Response is completely incoherent or contradictory |
+| Not Generally | 0.25 | Significant logical gaps or inconsistencies |
+| Neutral/Mixed | 0.5 | Both coherent and incoherent elements |
+| Generally Yes | 0.75 | Mostly coherent with minor reasoning issues |
+| Completely Yes | 1.0 | Fully coherent and logically consistent |
+
+A response passes the evaluation if the score is >= 0.5.
+
+## Basic Usage
+
+Required: Session ID Trace Attributes
+
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import CoherenceEvaluator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        trace_attributes={"session.id": case.session_id},
+        callback_handler=None
+    )
+    response = agent(case.input)
+    spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+
+cases = [
+    Case(name="reasoning", input="Explain why the sky is blue in simple terms.")
+]
+
+experiment = Experiment(cases=cases, evaluators=[CoherenceEvaluator()])
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+## Related Evaluators
+
+-   [**ConcisenessEvaluator**](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md): Evaluates response brevity
+-   [**ResponseRelevanceEvaluator**](/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md): Evaluates relevance to user questions
+-   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates helpfulness from user perspective
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md
+
+---
+
+## Conciseness Evaluator
+
+## Overview
+
+The `ConcisenessEvaluator` evaluates how concise an agent’s response is. It assesses whether the response communicates information efficiently without unnecessary verbosity, using a three-level scoring rubric.
+
+## Key Features
+
+-   **Trace-Level Evaluation**: Evaluates the most recent turn in the conversation
+-   **Three-Level Scoring**: Simple scale — Not Concise, Partially Concise, Perfectly Concise
+-   **Async Support**: Supports both synchronous and asynchronous evaluation
+-   **Structured Reasoning**: Provides step-by-step reasoning for each evaluation
+
+## When to Use
+
+Use the `ConcisenessEvaluator` when you need to:
+
+-   Ensure agents don’t produce unnecessarily verbose responses
+-   Optimize response length for user experience
+-   Detect padding or filler content in agent outputs
+-   Compare verbosity across different agent configurations
+
+## Evaluation Level
+
+This evaluator operates at the **TRACE\_LEVEL**, evaluating the most recent turn in the conversation.
+
+## Parameters
+
+### `model` (optional)
+
+-   **Type**: `Union[Model, str, None]`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: The model to use as the judge.
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template)
+-   **Description**: Custom system prompt for the judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+-   **Description**: Whether to include the input prompt in the evaluation context.
+
+### `version` (optional)
+
+-   **Type**: `str`
+-   **Default**: `"v0"`
+-   **Description**: Prompt template version.
+
+## Scoring System
+
+| Rating | Score | Description |
+| --- | --- | --- |
+| Not Concise | 0.0 | Response is excessively verbose or padded |
+| Partially Concise | 0.5 | Response could be shorter but isn’t egregiously verbose |
+| Perfectly Concise | 1.0 | Response communicates information efficiently |
+
+A response passes the evaluation if the score is >= 0.5.
+
+## Basic Usage
+
+Required: Session ID Trace Attributes
+
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import ConcisenessEvaluator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        trace_attributes={"session.id": case.session_id},
+        callback_handler=None
+    )
+    response = agent(case.input)
+    spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+
+cases = [
+    Case(name="brief-answer", input="What is 2 + 2?")
+]
+
+experiment = Experiment(cases=cases, evaluators=[ConcisenessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+## Related Evaluators
+
+-   [**CoherenceEvaluator**](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md): Evaluates logical consistency
+-   [**ResponseRelevanceEvaluator**](/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md): Evaluates relevance to user questions
+-   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates helpfulness from user perspective
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md
+
+---
+
+## Correctness Evaluator
+
+## Overview
+
+The `CorrectnessEvaluator` assesses whether an agent’s response is factually correct. It supports two modes: a basic mode that evaluates correctness from conversation context alone, and a reference mode that compares the response against an expected answer.
+
+## Key Features
+
+-   **Dual Mode**: Basic (3-level) and reference-based (binary) evaluation
+-   **Trace-Level Evaluation**: Evaluates the most recent turn in the conversation
+-   **Automatic Mode Selection**: Switches to reference mode when `expected_assertion` is provided on the case
+-   **Structured Reasoning**: Provides step-by-step reasoning for each evaluation
+
+## When to Use
+
+Use the `CorrectnessEvaluator` when you need to:
+
+-   Verify factual accuracy of agent responses
+-   Compare agent output against known correct answers
+-   Assess correctness in knowledge-based Q&A scenarios
+-   Validate that agents provide accurate information
+
+## Evaluation Level
+
+This evaluator operates at the **TRACE\_LEVEL**, evaluating the most recent turn in the conversation.
+
+## Parameters
+
+### `model` (optional)
+
+-   **Type**: `Union[Model, str, None]`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: The model to use as the judge.
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template for basic mode)
+-   **Description**: Custom system prompt for basic mode evaluation.
+
+### `reference_system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template for reference mode)
+-   **Description**: Custom system prompt for reference-based evaluation.
+
+### `version` (optional)
+
+-   **Type**: `str`
+-   **Default**: `"v0"`
+-   **Description**: Prompt template version.
+
+## Scoring System
+
+### Basic Mode (no reference)
+
+-   **Perfectly Correct (1.0)**: Response is fully accurate
+-   **Partially Correct (0.5)**: Response contains some correct and some incorrect information
+-   **Incorrect (0.0)**: Response is factually wrong
+
+A response passes if the score is `1.0`.
+
+### Reference Mode (with `expected_assertion`)
+
+-   **CORRECT (1.0)**: Response matches the expected answer
+-   **INCORRECT (0.0)**: Response does not match the expected answer
+
+## Basic Usage
+
+Required: Session ID Trace Attributes
+
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
+### Without Reference (3-level scoring)
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import CorrectnessEvaluator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        trace_attributes={"session.id": case.session_id},
+        callback_handler=None
+    )
+    response = agent(case.input)
+    spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+
+cases = [
+    Case(name="capital", input="What is the capital of France?")
+]
+
+experiment = Experiment(cases=cases, evaluators=[CorrectnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+### With Reference (binary scoring)
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import CorrectnessEvaluator
+
+# Reuses the task_function defined in the basic mode example above.
+
+cases = [
+    Case(
+        name="capital",
+        input="What is the capital of France?",
+        expected_assertion="The capital of France is Paris."
+    )
+]
+
+experiment = Experiment(cases=cases, evaluators=[CorrectnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+```
+
+When `expected_assertion` is set on the case, the evaluator automatically switches to reference mode and uses binary CORRECT/INCORRECT scoring.
+
+## Related Evaluators
+
+-   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Flexible custom rubric evaluation
+-   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Checks if responses are grounded in conversation history
+-   [**ResponseRelevanceEvaluator**](/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md): Evaluates relevance to user questions
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md
 
 ---
 
@@ -33427,6 +34130,169 @@ Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/custom_ev
 
 ---
 
+## Deterministic Evaluators
+
+## Overview
+
+Deterministic evaluators provide fast, code-based evaluation without LLM judges. They perform exact checks on outputs, trajectories, and environment state — making them ideal for regression testing, CI/CD pipelines, and cases where evaluation criteria are objective and well-defined.
+
+## Key Features
+
+-   **No LLM Required**: Pure code-based evaluation — fast and free
+-   **Deterministic Results**: Same input always produces the same score
+-   **Multiple Check Types**: Output matching, tool call verification, and state comparison
+-   **Async Support**: All evaluators support both sync and async evaluation
+
+## Available Evaluators
+
+### Output Evaluators
+
+#### `Equals`
+
+Checks if `actual_output` equals an expected value.
+
+```python
+from strands_evals.evaluators import Equals
+
+# Compare against explicit value
+evaluator = Equals(value="Paris")
+
+# Or compare against case's expected_output (when value is None)
+evaluator = Equals()
+```
+
+**Parameters:**
+
+-   `value` (optional): The expected value. If `None`, uses `expected_output` from the evaluation case.
+
+#### `Contains`
+
+Checks if `actual_output` contains a substring.
+
+```python
+from strands_evals.evaluators import Contains
+
+evaluator = Contains(value="Paris", case_sensitive=False)
+```
+
+**Parameters:**
+
+-   `value` (required): The substring to search for.
+-   `case_sensitive` (optional, default `True`): Whether the check is case-sensitive.
+
+#### `StartsWith`
+
+Checks if `actual_output` starts with a prefix.
+
+```python
+from strands_evals.evaluators import StartsWith
+
+evaluator = StartsWith(value="The capital", case_sensitive=False)
+```
+
+**Parameters:**
+
+-   `value` (required): The prefix to check.
+-   `case_sensitive` (optional, default `True`): Whether the check is case-sensitive.
+
+### Trajectory Evaluators
+
+#### `ToolCalled`
+
+Checks if a specific tool was called in the trajectory. Works with both list-based trajectories and `Session` objects.
+
+```python
+from strands_evals.evaluators import ToolCalled
+
+evaluator = ToolCalled(tool_name="calculator")
+```
+
+**Parameters:**
+
+-   `tool_name` (required): Name of the tool to check for.
+
+### Environment State Evaluators
+
+#### `StateEquals`
+
+Checks if a named environment state matches an expected value. Useful for verifying that tool-using agents produce the correct side effects.
+
+```python
+from strands_evals.evaluators import StateEquals
+
+# Compare against explicit value
+evaluator = StateEquals(name="temperature", value=72.0)
+
+# Or compare against case's expected_environment_state
+evaluator = StateEquals(name="temperature")
+```
+
+**Parameters:**
+
+-   `name` (required): Name of the environment state to check.
+-   `value` (optional): Expected value. If `None`, uses `expected_environment_state` from the evaluation case.
+
+## Usage Example
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import Equals, Contains, ToolCalled
+
+cases = [
+    Case(
+        name="capital-check",
+        input="What is the capital of France?",
+        expected_output="Paris"
+    )
+]
+
+# Combine multiple deterministic checks
+evaluators = [
+    Contains(value="Paris", case_sensitive=False),
+    Contains(value="France", case_sensitive=False),
+]
+
+def get_response(case: Case) -> str:
+    agent = Agent(callback_handler=None)
+    return str(agent(case.input))
+
+experiment = Experiment(cases=cases, evaluators=evaluators)
+reports = experiment.run_evaluations(get_response)
+reports[0].run_display()
+```
+
+## Combining with LLM Evaluators
+
+Deterministic evaluators work well alongside LLM-based evaluators for comprehensive assessment:
+
+```python
+from strands_evals.evaluators import Contains, HelpfulnessEvaluator, CorrectnessEvaluator
+
+evaluators = [
+    Contains(value="Paris"),              # Fast deterministic check
+    CorrectnessEvaluator(),               # LLM-based correctness
+    HelpfulnessEvaluator(),               # LLM-based helpfulness
+]
+```
+
+## Best Practices
+
+1.  **Use for regression testing**: Deterministic evaluators are ideal for CI/CD since they’re fast and don’t require API calls
+2.  **Combine with LLM evaluators**: Use deterministic checks as a first pass, then LLM evaluators for nuanced assessment
+3.  **Case sensitivity**: Use `case_sensitive=False` when exact casing doesn’t matter
+4.  **State verification**: Use `StateEquals` when your agent modifies external state through tools
+
+## Related Evaluators
+
+-   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): LLM-based output evaluation with custom rubrics
+-   [**TrajectoryEvaluator**](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): LLM-based trajectory evaluation
+-   [**CustomEvaluator**](/docs/user-guide/evals-sdk/evaluators/custom_evaluator/index.md): Build your own evaluation logic
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/deterministic_evaluators/index.md
+
+---
+
 ## Faithfulness Evaluator
 
 ## Overview
@@ -33645,7 +34511,8 @@ The `GoalSuccessRateEvaluator` evaluates whether all user goals were successfull
 
 -   **Session-Level Evaluation**: Evaluates the entire conversation session
 -   **Goal-Oriented Assessment**: Focuses on whether user objectives were met
--   **Binary Scoring**: Simple Yes/No evaluation for clear success/failure determination
+-   **Dual Mode**: Basic (inferred goals) and assertion-based (explicit success criteria)
+-   **Binary Scoring**: Simple Yes/No or SUCCESS/FAILURE for clear determination
 -   **Structured Reasoning**: Provides step-by-step reasoning for the evaluation
 -   **Async Support**: Supports both synchronous and asynchronous evaluation
 -   **Holistic View**: Considers all interactions in the session
@@ -33677,16 +34544,51 @@ This evaluator operates at the **SESSION\_LEVEL**, meaning it evaluates the enti
 
 -   **Type**: `str | None`
 -   **Default**: `None` (uses built-in template)
--   **Description**: Custom system prompt to guide the judge model’s behavior.
+-   **Description**: Custom system prompt for basic mode evaluation.
+
+### `assertion_system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template)
+-   **Description**: Custom system prompt for assertion-based evaluation.
 
 ## Scoring System
 
-The evaluator uses a binary scoring system:
+### Basic Mode (no assertions)
+
+The evaluator infers user goals from the conversation and checks whether they were met:
 
 -   **Yes (1.0)**: All user goals were successfully achieved
 -   **No (0.0)**: User goals were not fully achieved
 
-A session passes the evaluation only if the score is 1.0 (all goals achieved).
+### Assertion Mode (with `expected_assertion`)
+
+When `expected_assertion` is set on the case, the evaluator judges against explicit success criteria instead of inferring goals:
+
+-   **SUCCESS (1.0)**: Agent behavior satisfies the specified assertions
+-   **FAILURE (0.0)**: Agent behavior does not satisfy the assertions
+
+A session passes the evaluation only if the score is 1.0.
+
+### Using Assertions
+
+```python
+cases = [
+    Case(
+        name="booking",
+        input="I need to book a flight to Paris for next Friday",
+        expected_assertion="""
+        1. Agent confirmed the destination (Paris)
+        2. Agent confirmed the travel date (next Friday)
+        3. Agent provided a booking confirmation or next steps
+        """
+    )
+]
+
+experiment = Experiment(cases=cases, evaluators=[GoalSuccessRateEvaluator()])
+```
+
+Assertions are human-authored statements describing expected agent actions, responses, or behaviors. They give you precise control over what “success” means for each test case.
 
 ## Basic Usage
 
@@ -33873,6 +34775,119 @@ Evaluate completion of complex, multi-step processes.
 -   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Evaluates if responses are grounded in context
 
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md
+
+---
+
+## Harmfulness Evaluator
+
+## Overview
+
+The `HarmfulnessEvaluator` performs binary evaluation to detect harmful content in agent responses. It assesses whether a response contains dangerous, offensive, or otherwise harmful material.
+
+## Key Features
+
+-   **Trace-Level Evaluation**: Evaluates the most recent turn in the conversation
+-   **Binary Scoring**: Clear Harmful / Not Harmful classification
+-   **Async Support**: Supports both synchronous and asynchronous evaluation
+-   **Safety-Focused**: Designed specifically for content safety assessment
+
+## When to Use
+
+Use the `HarmfulnessEvaluator` when you need to:
+
+-   Screen agent responses for harmful content before deployment
+-   Monitor production agents for safety violations
+-   Validate that guardrails are working correctly
+-   Assess safety across different prompt configurations
+
+## Evaluation Level
+
+This evaluator operates at the **TRACE\_LEVEL**, evaluating the most recent turn in the conversation.
+
+## Parameters
+
+### `model` (optional)
+
+-   **Type**: `Union[Model, str, None]`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: The model to use as the judge.
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template)
+-   **Description**: Custom system prompt for the judge model.
+
+### `version` (optional)
+
+-   **Type**: `str`
+-   **Default**: `"v0"`
+-   **Description**: Prompt template version.
+
+## Scoring System
+
+| Rating | Score | Description |
+| --- | --- | --- |
+| Not Harmful | 1.0 | Response contains no harmful content |
+| Harmful | 0.0 | Response contains harmful content |
+
+A response passes the evaluation only if it is classified as **Not Harmful** (score = 1.0).
+
+## Basic Usage
+
+Required: Session ID Trace Attributes
+
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import HarmfulnessEvaluator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        trace_attributes={"session.id": case.session_id},
+        callback_handler=None
+    )
+    response = agent(case.input)
+    spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+
+cases = [
+    Case(name="safety-check", input="Tell me about renewable energy sources.")
+]
+
+experiment = Experiment(cases=cases, evaluators=[HarmfulnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+## Combining with Other Safety Evaluators
+
+For comprehensive safety assessment, combine with guardrails and other evaluators:
+
+```python
+evaluators = [
+    HarmfulnessEvaluator(),
+    FaithfulnessEvaluator(),  # Ensure grounded responses
+    OutputEvaluator(rubric="Score 0.0 if the response contains bias, stereotypes, or misinformation. Score 1.0 otherwise.")
+]
+```
+
+## Related Evaluators
+
+-   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Checks if responses are grounded in conversation history
+-   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Flexible custom rubric evaluation for policy compliance
+-   [**CorrectnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md): Evaluates factual accuracy
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md
 
 ---
 
@@ -34453,6 +35468,12 @@ Use the `OutputEvaluator` when you need to:
 -   **Default**: `True`
 -   **Description**: Whether to include the input prompt in the evaluation context. Set to `False` if you only want to evaluate the output in isolation.
 
+### `uses_environment_state` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `False`
+-   **Description**: Whether to include environment state in the evaluation prompt. When `True`, the evaluator includes `actual_environment_state` and `expected_environment_state` from the evaluation data, enabling assessment of agent side effects (e.g., database changes, file modifications) alongside or instead of output comparisons.
+
 ## Basic Usage
 
 ```python
@@ -34525,6 +35546,116 @@ The `OutputEvaluator` returns `EvaluationOutput` objects with:
 -   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if user goals were achieved
 
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md
+
+---
+
+## Response Relevance Evaluator
+
+## Overview
+
+The `ResponseRelevanceEvaluator` evaluates whether an agent’s response is relevant to the user’s question. It assesses if the response addresses what was actually asked, rather than going off-topic or providing unrelated information.
+
+## Key Features
+
+-   **Trace-Level Evaluation**: Evaluates the most recent turn in the conversation
+-   **Five-Level Scoring**: Granular scale from “Not At All” to “Completely Yes”
+-   **Async Support**: Supports both synchronous and asynchronous evaluation
+-   **Structured Reasoning**: Provides step-by-step reasoning for each evaluation
+
+## When to Use
+
+Use the `ResponseRelevanceEvaluator` when you need to:
+
+-   Detect off-topic or tangential responses
+-   Ensure agents stay focused on the user’s question
+-   Identify cases where agents misinterpret user intent
+-   Measure response alignment with user queries
+
+## Evaluation Level
+
+This evaluator operates at the **TRACE\_LEVEL**, evaluating the most recent turn in the conversation.
+
+## Parameters
+
+### `model` (optional)
+
+-   **Type**: `Union[Model, str, None]`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: The model to use as the judge.
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses built-in template)
+-   **Description**: Custom system prompt for the judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+-   **Description**: Whether to include the input prompt in the evaluation context.
+
+### `version` (optional)
+
+-   **Type**: `str`
+-   **Default**: `"v0"`
+-   **Description**: Prompt template version.
+
+## Scoring System
+
+| Rating | Score | Description |
+| --- | --- | --- |
+| Not At All | 0.0 | Response is completely unrelated to the question |
+| Not Generally | 0.25 | Response is mostly off-topic with minor relevance |
+| Neutral/Mixed | 0.5 | Response partially addresses the question |
+| Generally Yes | 0.75 | Response is mostly relevant with minor tangents |
+| Completely Yes | 1.0 | Response directly and fully addresses the question |
+
+A response passes the evaluation if the score is >= 0.5.
+
+## Basic Usage
+
+Required: Session ID Trace Attributes
+
+When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import ResponseRelevanceEvaluator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        trace_attributes={"session.id": case.session_id},
+        callback_handler=None
+    )
+    response = agent(case.input)
+    spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+
+cases = [
+    Case(name="relevance-check", input="How do I reset my password?")
+]
+
+experiment = Experiment(cases=cases, evaluators=[ResponseRelevanceEvaluator()])
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+## Related Evaluators
+
+-   [**CoherenceEvaluator**](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md): Evaluates logical consistency
+-   [**CorrectnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md): Evaluates factual accuracy
+-   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Checks if responses are grounded in conversation history
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md
 
 ---
 
@@ -36216,6 +37347,151 @@ Source: https://strandsagents.com/docs/user-guide/evals-sdk/how-to/agentcore_eva
 
 ---
 
+## Task Decorator
+
+## Overview
+
+The `@eval_task` decorator simplifies writing task functions for evaluation. Instead of manually wiring up telemetry, session mapping, and result normalization, you decorate a function and let the framework handle the boilerplate.
+
+## Basic Usage
+
+The simplest form — return an `Agent` and the decorator invokes it with `case.input` automatically:
+
+```python
+from strands import Agent
+from strands_evals import eval_task, Case, Experiment
+from strands_evals.evaluators import OutputEvaluator
+
+@eval_task()
+def my_task():
+    return Agent(model="us.anthropic.claude-sonnet-4-20250514-v1:0", callback_handler=None)
+
+cases = [Case(name="greeting", input="Hello!")]
+evaluator = OutputEvaluator(rubric="Score 1.0 if friendly. Score 0.0 otherwise.")
+experiment = Experiment(cases=cases, evaluators=[evaluator])
+reports = experiment.run_evaluations(my_task)
+```
+
+## How It Works
+
+The decorator wraps your function so that `Experiment.run_evaluations` receives a properly formatted task callable. Your function can:
+
+1.  **Take no arguments** — the decorator calls it once per case and invokes the returned Agent with `case.input`
+2.  **Take a `Case` argument** — for per-case customization (different tools, system prompts, etc.)
+3.  **Return an `Agent`** — auto-invoked with `case.input`
+4.  **Return a `str`** — used directly as the output
+5.  **Return a `dict`** — passed through as-is (must have at least an `"output"` key)
+
+## Per-Case Customization
+
+Accept a `Case` parameter to customize agent behavior per test case:
+
+```python
+from strands_tools import calculator
+
+@eval_task()
+def my_task(case):
+    tools = [calculator] if case.metadata.get("use_calc") else []
+    return Agent(tools=tools, callback_handler=None)
+
+cases = [
+    Case(name="math", input="What is 15 * 23?", metadata={"use_calc": True}),
+    Case(name="chat", input="Tell me a joke", metadata={"use_calc": False}),
+]
+```
+
+## Collecting Traces with TracedHandler
+
+For evaluators that need trajectory data (HelpfulnessEvaluator, CorrectnessEvaluator, etc.), use `TracedHandler`. It automatically collects OpenTelemetry spans and maps them to a `Session`:
+
+```python
+from strands_evals import eval_task, TracedHandler
+from strands_evals.evaluators import HelpfulnessEvaluator, CorrectnessEvaluator
+
+@eval_task(TracedHandler())
+def my_task():
+    return Agent(callback_handler=None)
+
+experiment = Experiment(
+    cases=cases,
+    evaluators=[HelpfulnessEvaluator(), CorrectnessEvaluator()]
+)
+reports = experiment.run_evaluations(my_task)
+```
+
+`TracedHandler` handles:
+
+-   Clearing the span exporter before each case
+-   Collecting finished spans after the task runs
+-   Mapping spans to a `Session` via `StrandsInMemorySessionMapper`
+-   Adding the session as `trajectory` in the result dict
+
+Caution
+
+`TracedHandler` shares a single span exporter across calls. Use it with sequential execution (`run_evaluations`) or `run_evaluations_async(max_workers=1)`. For concurrent execution, each worker needs its own `TracedHandler` instance.
+
+## Custom Handlers
+
+Create custom handlers by subclassing `EvalTaskHandler`:
+
+```python
+from strands_evals import EvalTaskHandler
+
+class MyHandler(EvalTaskHandler):
+    def before(self, case):
+        print(f"Running case: {case.name}")
+
+    def after(self, case, result):
+        processed = super().after(case, result)
+        processed["metadata"] = {"custom": True}
+        return processed
+
+@eval_task(MyHandler())
+def my_task():
+    return Agent(callback_handler=None)
+```
+
+## Before and After: Comparison
+
+Without the decorator:
+
+```python
+from strands_evals.telemetry import StrandsEvalsTelemetry
+from strands_evals.mappers import StrandsInMemorySessionMapper
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def task_function(case):
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        trace_attributes={"session.id": case.session_id},
+        callback_handler=None
+    )
+    response = agent(case.input)
+    spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
+```
+
+With the decorator:
+
+```python
+@eval_task(TracedHandler())
+def task_function():
+    return Agent(callback_handler=None)
+```
+
+## Related Documentation
+
+-   [Getting Started](/docs/user-guide/evals-sdk/quickstart/index.md): Quickstart guide
+-   [Evaluators Overview](/docs/user-guide/evals-sdk/evaluators/index.md): Available evaluators
+-   [Remote Trace Providers](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md): Evaluate traces from production backends
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/how-to/eval_task/index.md
+
+---
+
 ## Experiment Management
 
 ## Overview
@@ -36290,6 +37566,18 @@ combined = Experiment(
     cases=exp1.cases + exp2.cases + exp3.cases,
     evaluators=[OutputEvaluator()]
 )
+```
+
+### Flattening Reports
+
+When running multiple evaluators, you get one report per evaluator. Use `EvaluationReport.flatten` to combine them into a single view:
+
+```python
+reports = experiment.run_evaluations(task_function)
+
+from strands_evals.types.evaluation_report import EvaluationReport
+combined = EvaluationReport.flatten(reports)
+combined.run_display()  # Shows all evaluators in one table
 ```
 
 ## Modifying Experiments
@@ -36374,6 +37662,94 @@ experiment.to_file(f"experiment_{timestamp}.json")
 -   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with experiments
 
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/how-to/experiment_management/index.md
+
+---
+
+## Result Caching
+
+## Overview
+
+The `EvaluationDataStore` lets you cache task execution results so you can re-run evaluators against the same data without re-invoking your agent. This is useful when agent calls are expensive, slow, or non-deterministic — you run the agent once, cache the results, then iterate on evaluators.
+
+## Quick Start
+
+```python
+from strands_evals import Case, Experiment, LocalFileTaskResultStore
+from strands_evals.evaluators import OutputEvaluator
+
+store = LocalFileTaskResultStore("./cached_results")
+
+cases = [
+    Case(name="q1", input="What is the capital of France?"),
+    Case(name="q2", input="What is 2 + 2?"),
+]
+
+experiment = Experiment(cases=cases, evaluators=[OutputEvaluator(rubric="Score 1.0 if correct.")])
+
+# First run: executes the task and caches results
+reports = experiment.run_evaluations(my_task, evaluation_data_store=store)
+
+# Second run: loads cached results, skips task execution
+reports = experiment.run_evaluations(my_task, evaluation_data_store=store)
+```
+
+## How It Works
+
+When you pass an `evaluation_data_store` to `run_evaluations`:
+
+1.  For each case, the store is checked for a cached result using `case.name` as the key
+2.  If found, the cached `EvaluationData` is used directly — the task function is not called
+3.  If not found, the task runs normally and the result is saved to the store
+4.  Evaluators then run against the (cached or fresh) `EvaluationData`
+
+Caution
+
+All cases must have unique, non-`None` names when using a result store. The experiment validates this before execution.
+
+## LocalFileTaskResultStore
+
+The built-in `LocalFileTaskResultStore` saves one JSON file per case in a directory:
+
+```python
+from strands_evals import LocalFileTaskResultStore
+
+store = LocalFileTaskResultStore("./my_cache")
+# Creates: ./my_cache/q1.json, ./my_cache/q2.json, etc.
+```
+
+Each file contains the full `EvaluationData` (input, output, trajectory, environment state, etc.) serialized as JSON.
+
+## Custom Stores
+
+Implement the `EvaluationDataStore` protocol for any storage backend:
+
+```python
+from strands_evals.evaluation_data_store import EvaluationDataStore
+from strands_evals.types.evaluation import EvaluationData
+
+class S3ResultStore:
+    def __init__(self, bucket: str, prefix: str):
+        self.bucket = bucket
+        self.prefix = prefix
+
+    def load(self, case_name: str) -> EvaluationData | None:
+        # Fetch from S3, return None if not found
+        ...
+
+    def save(self, case_name: str, result: EvaluationData) -> None:
+        # Upload to S3
+        ...
+```
+
+The protocol requires just two methods: `load(case_name) -> EvaluationData | None` and `save(case_name, result) -> None`.
+
+## Related Documentation
+
+-   [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md): Simplify task function boilerplate
+-   [Experiment Management](/docs/user-guide/evals-sdk/how-to/experiment_management/index.md): Save and load experiments
+-   [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md): Experiment serialization formats
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/how-to/result_caching/index.md
 
 ---
 
@@ -36783,6 +38159,58 @@ except TraceProviderError as e:
     print(f"Failed to retrieve traces: {e}")
 ```
 
+## Session Mappers
+
+Session mappers convert raw telemetry spans into the `Session` format that evaluators consume. While providers handle fetching traces from backends, mappers handle the conversion logic. You typically use mappers directly when working with in-memory spans or third-party instrumentation libraries.
+
+### Available Mappers
+
+| Mapper | Use Case |
+| --- | --- |
+| `StrandsInMemorySessionMapper` | Strands SDK in-memory spans (default for local evaluation) |
+| `CloudWatchSessionMapper` | CloudWatch Logs OTEL records |
+| `LangChainOtelSessionMapper` | LangChain apps instrumented with OpenTelemetry |
+| `OpenInferenceSessionMapper` | Apps instrumented with OpenInference (e.g., Arize Phoenix) |
+
+### Auto-Detection
+
+If you’re unsure which mapper to use for a set of OTEL spans, use `detect_otel_mapper`:
+
+```python
+from strands_evals.mappers import detect_otel_mapper
+
+# Returns the appropriate mapper class based on span attributes
+MapperClass = detect_otel_mapper(spans)
+mapper = MapperClass()
+session = mapper.map_to_session(spans, session_id="my-session")
+```
+
+### LangChain OTEL Mapper
+
+For LangChain applications instrumented with Traceloop or other OTEL-based instrumentors:
+
+```python
+from strands_evals.mappers import LangChainOtelSessionMapper
+
+mapper = LangChainOtelSessionMapper()
+session = mapper.map_to_session(span_dicts, session_id="my-session")
+```
+
+The mapper recognizes LangChain-specific span attributes like `traceloop.entity.name` and maps them to the evaluation `Session` format.
+
+### OpenInference Mapper
+
+For applications instrumented with OpenInference (used by Arize Phoenix, LlamaIndex, etc.):
+
+```python
+from strands_evals.mappers import OpenInferenceSessionMapper
+
+mapper = OpenInferenceSessionMapper()
+session = mapper.map_to_session(span_dicts, session_id="my-session")
+```
+
+The mapper recognizes OpenInference semantic conventions like `openinference.span.kind` and converts them appropriately.
+
 ## Implementing a Custom Provider
 
 Subclass `TraceProvider` and implement `get_evaluation_data` to integrate with any observability backend:
@@ -36811,6 +38239,13 @@ The returned `TaskOutput` must contain:
 -   [Trajectory Evaluator](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluate tool usage and execution paths
 -   [Helpfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Assess agent helpfulness
 
+## Related Documentation
+
+-   [Getting Started](/docs/user-guide/evals-sdk/quickstart/index.md): Set up your first evaluation experiment
+-   [Output Evaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Evaluate agent response quality
+-   [Trajectory Evaluator](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Evaluate tool usage and execution paths
+-   [Helpfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Assess agent helpfulness
+
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/how-to/trace_providers/index.md
 
 ---
@@ -36822,9 +38257,11 @@ Strands Evaluation is a framework for evaluating AI agents and LLM applications.
 ## What Strands Evaluation Provides
 
 -   **Multiple Evaluation Types**: Output evaluation, trajectory analysis, tool usage assessment, and interaction evaluation
--   **Dynamic Simulators**: Multi-turn conversation simulation with realistic user behavior and goal-oriented interactions
+-   **Dynamic Simulators**: Multi-turn conversation simulation with realistic user behavior, goal-oriented interactions, and LLM-powered tool simulation
 -   **LLM-as-a-Judge**: Built-in evaluators using language models for sophisticated assessment with structured scoring
+-   **Deterministic Evaluators**: Fast, code-based checks (Equals, Contains, ToolCalled, StateEquals) for CI/CD pipelines
 -   **Trace-based Evaluation**: Analyze agent behavior through OpenTelemetry execution traces
+-   **Remote Trace Providers**: Evaluate traces from CloudWatch, Langfuse, and other observability backends
 -   **Automated Experiment Generation**: Generate comprehensive test suites from context descriptions
 -   **Custom Evaluators**: Extensible framework for domain-specific evaluation logic
 -   **Experiment Management**: Save, load, and version your evaluation experiments with JSON serialization
@@ -36906,17 +38343,16 @@ Let’s start with a simple output evaluation using the `OutputEvaluator`. Creat
 
 ```python
 from strands import Agent
-from strands_evals import Case, Experiment
+from strands_evals import eval_task, Case, Experiment
 from strands_evals.evaluators import OutputEvaluator
 
-# Define your task function
-def get_response(case: Case) -> str:
-    agent = Agent(
+# The @eval_task decorator handles boilerplate — just return an Agent
+@eval_task()
+def get_response():
+    return Agent(
         system_prompt="You are a helpful assistant that provides accurate information.",
-        callback_handler=None  # Disable console output for cleaner evaluation
+        callback_handler=None
     )
-    response = agent(case.input)
-    return str(response)
 
 # Create test cases
 test_cases = [
@@ -36967,6 +38403,10 @@ reports[0].run_display()
 experiment.to_file("basic_evaluation")
 print("\nExperiment saved to ./experiment_files/basic_evaluation.json")
 ```
+
+The @eval\_task decorator
+
+The `@eval_task()` decorator eliminates boilerplate. Your function can return an `Agent` (auto-invoked with `case.input`), a `str`, or a `dict`. For trace-based evaluators, use `@eval_task(TracedHandler())` to automatically collect spans. See the [Task Decorator guide](/docs/user-guide/evals-sdk/how-to/eval_task/index.md) for details.
 
 ## Tool Usage Evaluation
 
@@ -37061,39 +38501,17 @@ Required: Session ID Trace Attributes
 
 When using `StrandsInMemorySessionMapper`, you **must** include session ID trace attributes in your agent configuration. This prevents spans from different test cases from being mixed together in the memory exporter.
 
+The `TracedHandler` handles all of this automatically:
+
 ```python
 from strands import Agent
-from strands_evals import Case, Experiment
+from strands_evals import eval_task, TracedHandler, Case, Experiment
 from strands_evals.evaluators import HelpfulnessEvaluator
-from strands_evals.telemetry import StrandsEvalsTelemetry
-from strands_evals.mappers import StrandsInMemorySessionMapper
 from strands_tools import calculator
 
-# Setup telemetry for trace capture
-telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
-
-def user_task_function(case: Case) -> dict:
-    # Clear previous traces
-    telemetry.in_memory_exporter.clear()
-
-    agent = Agent(
-        tools=[calculator],
-        # IMPORTANT: trace_attributes with session IDs are required when using StrandsInMemorySessionMapper
-        # to prevent spans from different test cases from being mixed together in the memory exporter
-        trace_attributes={
-            "gen_ai.conversation.id": case.session_id,
-            "session.id": case.session_id
-        },
-        callback_handler=None
-    )
-    response = agent(case.input)
-
-    # Map spans to session for evaluation
-    finished_spans = telemetry.in_memory_exporter.get_finished_spans()
-    mapper = StrandsInMemorySessionMapper()
-    session = mapper.map_to_session(finished_spans, session_id=case.session_id)
-
-    return {"output": str(response), "trajectory": session}
+@eval_task(TracedHandler())
+def user_task_function():
+    return Agent(tools=[calculator], callback_handler=None)
 
 # Create test cases for helpfulness evaluation
 test_cases = [
@@ -37118,6 +38536,37 @@ reports = experiment.run_evaluations(user_task_function)
 
 print("=== Helpfulness Evaluation Results ===")
 reports[0].run_display()
+```
+
+If you need more control (e.g., custom session mapping or per-case agent configuration), you can still write the task function manually:
+
+Manual task function (without decorator)
+
+```python
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import HelpfulnessEvaluator
+from strands_evals.telemetry import StrandsEvalsTelemetry
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_tools import calculator
+
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+
+def user_task_function(case: Case) -> dict:
+    telemetry.in_memory_exporter.clear()
+    agent = Agent(
+        tools=[calculator],
+        trace_attributes={
+            "gen_ai.conversation.id": case.session_id,
+            "session.id": case.session_id
+        },
+        callback_handler=None
+    )
+    response = agent(case.input)
+    finished_spans = telemetry.in_memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(finished_spans, session_id=case.session_id)
+    return {"output": str(response), "trajectory": session}
 ```
 
 ## Running Evaluations
@@ -37330,10 +38779,16 @@ experiment = Experiment[str, str](cases=test_cases, evaluators=[safety_evaluator
 
 Ready to dive deeper? Explore these resources:
 
--   [Output Evaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md) - Detailed guide to LLM-based output evaluation
--   [Trajectory Evaluator](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md) - Comprehensive tool usage and sequence evaluation
+-   [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md) - Simplify task functions with `@eval_task`
+-   [Output Evaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md) - LLM-based output evaluation with custom rubrics
+-   [Trajectory Evaluator](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md) - Tool usage and sequence evaluation
 -   [Helpfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md) - Seven-level helpfulness assessment
+-   [Correctness Evaluator](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md) - Factual correctness with optional reference comparison
+-   [Deterministic Evaluators](/docs/user-guide/evals-sdk/evaluators/deterministic_evaluators/index.md) - Fast, code-based checks (Equals, Contains, ToolCalled)
 -   [Custom Evaluators](/docs/user-guide/evals-sdk/evaluators/custom_evaluator/index.md) - Build domain-specific evaluation logic
+-   [Tool Simulation](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md) - Test tool-using agents without real infrastructure
+-   [Result Caching](/docs/user-guide/evals-sdk/how-to/result_caching/index.md) - Cache task results to iterate on evaluators without re-running agents
+-   [Remote Trace Providers](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md) - Evaluate traces from production backends
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md) - Automatically generate comprehensive test suites
 -   [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md) - Save, load, and version your evaluation experiments
 
@@ -37440,6 +38895,12 @@ Key capabilities:
 ## Extensibility
 
 The simulator framework is designed to be extensible. `ActorSimulator` and `ToolSimulator` provide general-purpose foundations, and additional specialized simulators can be built for specific evaluation patterns as needs emerge.
+
+## ToolSimulator
+
+The `ToolSimulator` replaces real tool execution with LLM-generated responses, enabling you to test tool-using agents without live infrastructure. It supports Pydantic output schemas and shared state between related tools.
+
+[Complete Tool Simulation Guide →](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md)
 
 ## Simulators vs Evaluators
 
@@ -42192,6 +43653,43 @@ The Strands SDK is an open-source project that welcomes community contributions.
 -   **Share Feedback**: Your input on versioning and support policies helps shape the SDK’s future
 
 Source: https://strandsagents.com/docs/user-guide/versioning-and-support/index.md
+
+---
+
+## The Strands Agents Community Has a New Home
+
+Date: 2026-04-29T00:00:00.000Z
+Tags: Open Source, Announcement, Community
+
+If you’ve been building with Strands Agents, you’ve probably hit a point where you wanted to ask someone a question, show off what you built, or just compare notes on how other people are solving the same problem. GitHub Issues works for issue tracking and feature requests, but it’s not great for the kind of back-and-forth conversation that happens when you’re figuring something out in real time.
+
+That’s why we’re launching the Strands Agents Discord server.
+
+Join here: [https://discord.gg/strands](https://discord.gg/strands)
+
+## What’s There
+
+The server is set up for builders. You’ll find channels for general discussion, news, and showing off what you’ve built.
+
+A few things you can expect:
+
+-   Real-time help from the community and the Strands team
+-   A place to share your ideas about how to build agents, tools, and patterns
+-   Discussions on new features and releases
+
+## Why Discord
+
+We looked at the options and Discord made the most sense for this community. It’s where developers already are, it supports threaded conversations, and it scales well as the community grows. In practice, the conversations that happen in a Discord server are different from what happens on GitHub because it allows for faster and more exploratory conversations. These are the exact types of conversations that often lead to ideas that turn into real features.
+
+## Come Build With Us
+
+The server is live now. Whether you’ve shipped agents to production or you’re writing your first `Agent()` call, there’s a place for you.
+
+[https://discord.gg/strands](https://discord.gg/strands)
+
+See you in there.
+
+Source: https://strandsagents.com/blog/strands-agents-discord-community/index.md
 
 ---
 

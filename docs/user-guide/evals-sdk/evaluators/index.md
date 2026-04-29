@@ -64,6 +64,36 @@ Evaluators operate at different levels of granularity:
 -   **Purpose**: Assess factual accuracy and groundedness
 -   **Use Case**: Verify responses are truthful and well-supported
 
+**[CorrectnessEvaluator](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate factual correctness with optional reference comparison
+-   **Use Case**: Verify agent answers are correct, with or without ground truth
+
+**[CoherenceEvaluator](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Assess logical consistency and reasoning quality
+-   **Use Case**: Detect contradictions, logical gaps, and disorganized responses
+
+**[ConcisenessEvaluator](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate response brevity and efficiency
+-   **Use Case**: Ensure agents communicate without unnecessary verbosity
+
+**[ResponseRelevanceEvaluator](/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate relevance of responses to user questions
+-   **Use Case**: Detect off-topic or tangential responses
+
+**[HarmfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for harmful content detection
+-   **Use Case**: Screen responses for dangerous or offensive content
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md)**
@@ -99,6 +129,15 @@ Evaluators operate at different levels of granularity:
 -   **Level**: SESSION\_LEVEL
 -   **Purpose**: Determine if user goals were successfully achieved
 -   **Use Case**: Measure end-to-end task completion success
+
+### Deterministic Evaluators
+
+**[Deterministic Evaluators](/docs/user-guide/evals-sdk/evaluators/deterministic_evaluators/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL / SESSION\_LEVEL
+-   **Purpose**: Fast, code-based evaluation without LLM judges
+-   **Use Case**: Regression testing, CI/CD pipelines, exact match checks
+-   **Includes**: `Equals`, `Contains`, `StartsWith`, `ToolCalled`, `StateEquals`
 
 ## Custom Evaluators
 

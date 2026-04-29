@@ -1,4 +1,4 @@
-Defined in: [src/tools/tool.ts:58](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L58)
+Defined in: [src/tools/tool.ts:69](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L69)
 
 Event yielded during tool execution to report streaming progress. Tools can yield zero or more of these events before returning the final ToolResult.
 
@@ -27,7 +27,7 @@ const streamEvent = new ToolStreamEvent({
 new ToolStreamEvent(eventData): ToolStreamEvent;
 ```
 
-Defined in: [src/tools/tool.ts:70](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L70)
+Defined in: [src/tools/tool.ts:81](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L81)
 
 #### Parameters
 
@@ -48,7 +48,7 @@ Defined in: [src/tools/tool.ts:70](https://github.com/strands-agents/sdk-typescr
 readonly type: "toolStreamEvent";
 ```
 
-Defined in: [src/tools/tool.ts:62](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L62)
+Defined in: [src/tools/tool.ts:73](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L73)
 
 Discriminator for tool stream events.
 
@@ -64,7 +64,7 @@ Discriminator for tool stream events.
 readonly optional data?: unknown;
 ```
 
-Defined in: [src/tools/tool.ts:68](https://github.com/strands-agents/sdk-typescript/blob/d33272f723f486a08f23e9d53a53e458e8b0a113/strands-ts/src/tools/tool.ts#L68)
+Defined in: [src/tools/tool.ts:79](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/tools/tool.ts#L79)
 
 Caller-provided data for the progress update. Can be any type of data the tool wants to report.
 
