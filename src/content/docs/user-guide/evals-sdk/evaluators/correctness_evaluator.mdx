@@ -83,13 +83,13 @@ from strands_evals.telemetry import StrandsEvalsTelemetry
 telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
 
 def task_function(case: Case) -> dict:
-    telemetry.memory_exporter.clear()
+    telemetry.in_memory_exporter.clear()
     agent = Agent(
         trace_attributes={"session.id": case.session_id},
         callback_handler=None
     )
     response = agent(case.input)
-    spans = telemetry.memory_exporter.get_finished_spans()
+    spans = telemetry.in_memory_exporter.get_finished_spans()
     mapper = StrandsInMemorySessionMapper()
     session = mapper.map_to_session(spans, session_id=case.session_id)
     return {"output": str(response), "trajectory": session}
@@ -108,6 +108,8 @@ reports[0].run_display()
 ```python
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import CorrectnessEvaluator
+
+# Reuses the task_function defined in the basic mode example above.
 
 cases = [
     Case(

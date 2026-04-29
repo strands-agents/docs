@@ -159,7 +159,6 @@ print("\nExperiment saved to ./experiment_files/basic_evaluation.json")
 :::tip[The @eval_task decorator]
 The `@eval_task()` decorator eliminates boilerplate. Your function can return an `Agent` (auto-invoked with `case.input`), a `str`, or a `dict`. For trace-based evaluators, use `@eval_task(TracedHandler())` to automatically collect spans. See the [Task Decorator guide](how-to/eval_task.md) for details.
 :::
-```
 
 ## Tool Usage Evaluation
 
@@ -324,7 +323,6 @@ def user_task_function(case: Case) -> dict:
 ```
 
 </details>
-```
 
 ## Running Evaluations
 
