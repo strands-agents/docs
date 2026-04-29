@@ -1,0 +1,61 @@
+---
+title: Asqav
+community: true
+description: AI agent governance with ML-DSA-65 signed audit trails
+integrationType: plugin
+languages: Python
+project:
+  pypi: https://pypi.org/project/asqav/
+  github: https://github.com/jagmarques/asqav-sdk
+  maintainer: jagmarques
+service:
+  name: Asqav
+  link: https://asqav.com/
+---
+
+[Asqav](https://github.com/jagmarques/asqav-sdk) provides AI agent governance with cryptographically signed audit trails. Every agent decision, tool call, and model output is recorded and signed with ML-DSA-65 (FIPS 204), so your audit log is tamper-evident and post-quantum secure. It integrates with Strands via the `AsqavPlugin`, which hooks into Strands lifecycle events to capture inputs and outputs without modifying your agent code.
+
+## Installation
+
+```bash
+pip install "asqav[strands]"
+```
+
+The SDK ships with the signing keys, audit storage, and verification CLI. See the [Asqav docs](https://asqav.com/docs) for configuration options including remote audit log shipping.
+
+## Usage
+
+### Basic setup with AsqavPlugin
+
+```python
+from asqav.integrations.strands import AsqavPlugin
+from strands import Agent
+from strands.models.openai import OpenAIModel
+
+asqav_plugin = AsqavPlugin(agent_name="my-agent")
+
+agent = Agent(
+    model=OpenAIModel(model_id="gpt-4o-mini"),
+    system_prompt="You are a helpful assistant.",
+    tools=[...],
+    plugins=[asqav_plugin],
+)
+
+result = await agent.invoke_async("Hello!")
+```
+
+The plugin signs each lifecycle event and writes it to the configured audit sink. Verify a log later with `asqav verify <path>`.
+
+## Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `ASQAV_AUDIT_SINK` | `./asqav-audit.jsonl` | Path or URL where signed events are written |
+| `ASQAV_SIGNING_KEY` | auto-generated | ML-DSA-65 private key (PEM) |
+| `ASQAV_API_KEY` | - | API key for hosted audit log shipping |
+
+## References
+
+- [GitHub](https://github.com/jagmarques/asqav-sdk)
+- [PyPI](https://pypi.org/project/asqav/)
+- [Documentation](https://asqav.com/docs)
