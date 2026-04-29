@@ -33,6 +33,7 @@ const testimonials = await Promise.all(
               <div class="author-details">
                 <span class="author-name">{testimonial.name}</span>
                 {testimonial.title && <span class="author-title">{testimonial.title}</span>}
+                {testimonial.link && <a href={testimonial.link} class="quote-read-more" target="_blank" rel="noopener">Read more &rarr;</a>}
               </div>
               {testimonial.logo && (
                 <div class="author-logo">
@@ -178,6 +179,19 @@ const testimonials = await Promise.all(
     font-family: 'Figtree', sans-serif;
     font-size: 0.75rem;
     color: var(--sl-color-gray-4);
+  }
+
+  .quote-read-more {
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.7rem;
+    color: var(--strands-green, #00cc5f);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+
+  .quote-read-more:hover {
+    opacity: 0.8;
   }
 
   .author-logo {

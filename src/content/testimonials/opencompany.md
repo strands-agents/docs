@@ -1,6 +1,7 @@
 ---
 name: Jacob Verhoeks
 title: AWS Community Builder / Field CTO Data & AI
+link: https://github.com/jverhoeks/opencompany
 order: 14
 ---
 

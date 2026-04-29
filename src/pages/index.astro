@@ -2,9 +2,9 @@
 /**
  * Homepage for Strands Agents SDK
  *
- * Sections: Hero → Quote Carousel → Build Your Way → Stay in Control →
- *           Deliver High Quality Outcomes → 100% Stat → Use Cases →
- *           Labs & Evals → Footer
+ * Sections: Hero → Build Your Way → See What's Happening →
+ *           Recover from Mistakes → 100% Stat → Quote Carousel →
+ *           Use Cases → Labs & Evals → Footer
  */
 import LandingLayout from '../layouts/LandingLayout.astro'
 import Copyright from '../components/Copyright.astro'
@@ -36,11 +36,11 @@ const base = import.meta.env.BASE_URL || '/'
 
   <div class="landing-page">
     <HeroSection baseUrl={base} />
-    <QuoteCarousel />
     <ModelDrivenSection />
     <ControlSection />
     <OutcomesSection />
     <StatsSection />
+    <QuoteCarousel />
     <UseCasesSection />
     <CredibilityStrip />
     <LabsEvalsSection />
