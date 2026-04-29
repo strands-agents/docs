@@ -91,8 +91,24 @@ const hasTs = !!tsCode
     }
   })
 
-  // Also listen for custom event (for same-page toggle changes)
+  // Listen for custom event (from HeroSection install buttons)
   window.addEventListener('lang-preference-changed', ((e: CustomEvent) => {
     applyLang(e.detail.lang)
   }) as EventListener)
+
+  // Watch for LanguageToggle changes (PR #653) via MutationObserver
+  // The toggle sets aria-checked on .lang-option buttons
+  const observer = new MutationObserver(() => {
+    applyLang(getPreference())
+  })
+  const watchToggle = () => {
+    document.querySelectorAll('language-toggle .lang-option').forEach((el) => {
+      observer.observe(el, { attributes: true, attributeFilter: ['aria-checked'] })
+    })
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', watchToggle)
+  } else {
+    watchToggle()
+  }
 </script>
