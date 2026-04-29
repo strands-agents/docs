@@ -18,11 +18,11 @@ const testimonials = await Promise.all(
 )
 ---
 
-<section class="quote-carousel-section">
-  <div class="carousel-track-wrapper">
+<section class="quote-carousel-section" aria-label="Developer and customer testimonials">
+  <div class="carousel-track-wrapper" role="region" aria-roledescription="carousel">
     <div class="carousel-track" id="quote-carousel-track">
       {/* Render cards twice for seamless infinite scroll */}
-      {[...testimonials, ...testimonials].map((testimonial, index) => {
+      {[...testimonials, ...testimonials].map((testimonial) => {
         const Content = testimonial.Content
         return (
           <div class="quote-card">
@@ -108,6 +108,11 @@ const testimonials = await Promise.all(
       width: 100%;
       justify-content: center;
       padding: 0 2rem;
+    }
+
+    /* Hide duplicated cards used for infinite scroll */
+    .quote-card:nth-child(n + 15) {
+      display: none;
     }
   }
 
@@ -243,5 +248,7 @@ const testimonials = await Promise.all(
     if (!text) return
     card.addEventListener('mouseenter', () => text.classList.add('expanded'))
     card.addEventListener('mouseleave', () => text.classList.remove('expanded'))
+    card.addEventListener('focusin', () => text.classList.add('expanded'))
+    card.addEventListener('focusout', () => text.classList.remove('expanded'))
   })
 </script>

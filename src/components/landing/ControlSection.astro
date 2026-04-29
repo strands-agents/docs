@@ -11,7 +11,7 @@ from strands.hooks import AfterToolCallEvent
 def log_tool_calls(event: AfterToolCallEvent):
     """Log every tool call."""
     print(f"Tool: {event.tool_use['name']}")
-    print(f"Result: {event.tool_result['status']}")
+    print(f"Result: {event.result['status']}")
 
 agent = Agent(
     tools=[search_logs, query_database],

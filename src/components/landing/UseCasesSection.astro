@@ -32,9 +32,7 @@ agent("New lead: jane@acme.com, Acme Corp, US-West")`
 const assistantCode = `from strands import Agent, tool
 from strands.tools.mcp import MCPClient
 from strands.hooks import BeforeToolCallEvent
-from strands.agent.conversation_manager import (
-    SlidingWindowConversationManager,
-)
+from strands import SlidingWindowConversationManager
 from mcp import stdio_client, StdioServerParameters
 
 kb = MCPClient(lambda: stdio_client(
@@ -175,6 +173,7 @@ const agent = new Agent({
     }),
 })
 
+// Cancel refunds (interrupt coming soon to TS)
 agent.addHook(BeforeToolCallEvent, (event) => {
   if (event.toolUse.name === 'issue_refund') {
     event.cancel = 'Refund approval required.'
@@ -281,15 +280,6 @@ writeFileSync('briefings/daily.md',
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-  }
-
-  .use-case-label {
-    font-family: 'Figtree', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--strands-green);
   }
 
   .use-case-title {
