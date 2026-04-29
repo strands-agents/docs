@@ -146,20 +146,29 @@ sidebar:
               - docs/user-guide/evals-sdk/evaluators/interactions_evaluator
               - docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator
               - docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator
+              - docs/user-guide/evals-sdk/evaluators/correctness_evaluator
+              - docs/user-guide/evals-sdk/evaluators/coherence_evaluator
+              - docs/user-guide/evals-sdk/evaluators/conciseness_evaluator
+              - docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator
+              - docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator
               - docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator
               - docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator
               - docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator
+              - docs/user-guide/evals-sdk/evaluators/deterministic_evaluators
               - docs/user-guide/evals-sdk/evaluators/custom_evaluator
           - docs/user-guide/evals-sdk/experiment_generator
           - label: Simulators
             items:
               - docs/user-guide/evals-sdk/simulators
               - docs/user-guide/evals-sdk/simulators/user_simulation
+              - docs/user-guide/evals-sdk/simulators/tool_simulation
           - label: Remote Trace Providers
             items:
               - docs/user-guide/evals-sdk/how-to/trace_providers
           - label: How-To Guides
             items:
+              - docs/user-guide/evals-sdk/how-to/eval_task
+              - docs/user-guide/evals-sdk/how-to/result_caching
               - docs/user-guide/evals-sdk/how-to/experiment_management
               - docs/user-guide/evals-sdk/how-to/serialization
       - label: Deploy
