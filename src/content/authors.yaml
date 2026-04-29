@@ -82,3 +82,8 @@
   name: Aaron Su
   role: "Solutions Architect, AWS"
   bio: Aaron Su is a Solutions Architect at Amazon Web Services, helping startups build and scale AI solutions from concept to production. He is passionate about physical AI and agentic systems.
+
+- id: pgrayy
+  name: Patrick Gray
+  role: "Software Engineer, AWS Agentic AI"
+  bio: Patrick is a Software Engineer at AWS Agentic AI working on the Strands Agents SDK.
