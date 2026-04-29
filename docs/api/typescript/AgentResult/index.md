@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:250](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L250)
+Defined in: [src/types/agent.ts:250](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L250)
 
 Result returned by the agent loop.
 
@@ -10,7 +10,7 @@ Result returned by the agent loop.
 new AgentResult(data): AgentResult;
 ```
 
-Defined in: [src/types/agent.ts:289](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L289)
+Defined in: [src/types/agent.ts:289](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L289)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [src/types/agent.ts:289](https://github.com/strands-agents/sdk-types
 readonly type: "agentResult";
 ```
 
-Defined in: [src/types/agent.ts:251](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L251)
+Defined in: [src/types/agent.ts:251](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L251)
 
 ---
 
@@ -46,7 +46,7 @@ Defined in: [src/types/agent.ts:251](https://github.com/strands-agents/sdk-types
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/types/agent.ts:256](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L256)
+Defined in: [src/types/agent.ts:256](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L256)
 
 The stop reason from the final model response.
 
@@ -58,7 +58,7 @@ The stop reason from the final model response.
 readonly lastMessage: Message;
 ```
 
-Defined in: [src/types/agent.ts:261](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L261)
+Defined in: [src/types/agent.ts:261](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L261)
 
 The last message added to the messages array.
 
@@ -70,7 +70,7 @@ The last message added to the messages array.
 readonly optional traces?: AgentTrace[];
 ```
 
-Defined in: [src/types/agent.ts:267](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L267)
+Defined in: [src/types/agent.ts:267](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L267)
 
 Local execution traces collected during the agent invocation. Contains timing and hierarchy of operations within the agent loop.
 
@@ -82,7 +82,7 @@ Local execution traces collected during the agent invocation. Contains timing an
 readonly optional structuredOutput?: unknown;
 ```
 
-Defined in: [src/types/agent.ts:273](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L273)
+Defined in: [src/types/agent.ts:273](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L273)
 
 The validated structured output from the LLM, if a schema was provided. Type represents any validated Zod schema output.
 
@@ -94,7 +94,7 @@ The validated structured output from the LLM, if a schema was provided. Type rep
 readonly optional metrics?: AgentMetrics;
 ```
 
-Defined in: [src/types/agent.ts:279](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L279)
+Defined in: [src/types/agent.ts:279](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L279)
 
 Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token usage, tool execution stats, and model latency.
 
@@ -106,7 +106,7 @@ Aggregated metrics for the agent’s loop execution. Tracks cycle counts, token 
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/types/agent.ts:287](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L287)
+Defined in: [src/types/agent.ts:287](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L287)
 
 Per-invocation state passed into the agent, threaded through hooks and tools, and surfaced here at the end of the invocation. See [InvocationState](/docs/api/typescript/InvocationState/index.md) for details. Always defined — defaults to `{}` when no `invocationState` was provided in [InvokeOptions](/docs/api/typescript/InvokeOptions/index.md).
 
@@ -120,7 +120,7 @@ Per-invocation state passed into the agent, threaded through hooks and tools, an
 get contextSize(): number;
 ```
 
-Defined in: [src/types/agent.ts:316](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L316)
+Defined in: [src/types/agent.ts:316](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L316)
 
 The most recent input token count from the last model invocation. Convenience accessor that delegates to `metrics.latestContextSize`. Returns `undefined` when no metrics or invocations are available.
 
@@ -138,7 +138,7 @@ The most recent input token count from the last model invocation. Convenience ac
 get projectedContextSize(): number;
 ```
 
-Defined in: [src/types/agent.ts:325](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L325)
+Defined in: [src/types/agent.ts:325](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L325)
 
 Projected context size for the next model call (inputTokens + outputTokens from the last call). Convenience accessor that delegates to `metrics.projectedContextSize`. Returns `undefined` when no metrics or invocations are available.
 
@@ -154,7 +154,7 @@ Projected context size for the next model call (inputTokens + outputTokens from 
 toJSON(): object;
 ```
 
-Defined in: [src/types/agent.ts:339](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L339)
+Defined in: [src/types/agent.ts:339](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L339)
 
 Custom JSON serialization that excludes traces, metrics, and invocationState. Traces and metrics are excluded to avoid sending large payloads over the wire in API responses; `invocationState` is excluded because its values are caller-owned and may not be serializable (see [InvocationState](/docs/api/typescript/InvocationState/index.md)).
 
@@ -174,7 +174,7 @@ Object representation for safe serialization
 toString(): string;
 ```
 
-Defined in: [src/types/agent.ts:354](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/agent.ts#L354)
+Defined in: [src/types/agent.ts:354](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/agent.ts#L354)
 
 Extracts and concatenates all text content from the last message. Includes text from TextBlock and ReasoningBlock content blocks.
 

@@ -406,9 +406,13 @@ For a complete list of available tools, see [Community Tools Package](/docs/user
 (( tab "TypeScript" ))
 **Vended Tools**
 
-TypeScript vended tools are included in the SDK at [`vended-tools/`](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools). The Community Tools Package (`strands-agents-tools`) is Python-only.
+TypeScript [vended tools](/docs/user-guide/concepts/tools/vended-tools/index.md) are included directly in the SDK. The Community Tools Package (`strands-agents-tools`) is Python-only.
 
 ```typescript
+import { Agent } from '@strands-agents/sdk'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
 const agent = new Agent({
   tools: [notebook, fileEditor],
 })

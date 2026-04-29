@@ -53,7 +53,7 @@ await agent.invoke('Replace "debug": false with "debug": true in /tmp/config.jso
 await agent.invoke('View lines 1-10 of /tmp/config.json')
 ```
 
-📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools/file-editor/README.md)
+📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/vended-tools/file-editor/README.md)
 
 ---
 
@@ -78,7 +78,7 @@ await agent.invoke('Get data from https://api.example.com/users')
 await agent.invoke('Post {"name": "John"} to https://api.example.com/users')
 ```
 
-📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools/http-request/README.md)
+📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/vended-tools/http-request/README.md)
 
 ---
 
@@ -129,7 +129,7 @@ const restoredAgent = new Agent({ tools: [notebook], sessionManager: session })
 await restoredAgent.invoke('Read the ideas notebook')
 ```
 
-📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools/notebook/README.md)
+📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/vended-tools/notebook/README.md)
 
 ---
 
@@ -177,7 +177,7 @@ await agent.invoke('Restart the bash session')
 await agent.invoke('Run: echo $MY_VAR') // Variable will be empty
 ```
 
-📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools/bash/README.md)
+📖 [Full API Reference](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/vended-tools/bash/README.md)
 
 ---
 

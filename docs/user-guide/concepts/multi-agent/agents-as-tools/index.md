@@ -433,5 +433,5 @@ The [Teacher’s Assistant](/docs/examples/python/multi_agent_example/multi_agen
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-The [Agents as Tools](https://github.com/strands-agents/sdk-typescript/tree/main/examples/agents-as-tools) example demonstrates an orchestrator agent that routes student queries to specialized tool agents for math, English, computer science, and general knowledge.
+The [Agents as Tools](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples/agents-as-tools) example demonstrates an orchestrator agent that routes student queries to specialized tool agents for math, English, computer science, and general knowledge.
 (( /tab "TypeScript" ))

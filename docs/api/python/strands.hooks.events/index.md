@@ -176,6 +176,7 @@ Note: This event is not fired for invocations to structured\_output.
 **Attributes**:
 
 -   `invocation_state` - State and configuration passed through the agent invocation. This can include shared context for multi-agent coordination, request tracking, and dynamic configuration.
+-   `projected_input_tokens` - Projected input token count for the upcoming model call. Computed by the agent loop from message metadata and token estimation. Available for hooks and plugins (e.g. conversation managers) to make proactive decisions about context management. None if estimation failed.
 
 ## AfterModelCallEvent
 
@@ -184,7 +185,7 @@ Note: This event is not fired for invocations to structured\_output.
 class AfterModelCallEvent(HookEvent)
 ```
 
-Defined in: [src/strands/hooks/events.py:245](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L245)
+Defined in: [src/strands/hooks/events.py:250](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L250)
 
 Event triggered after the model invocation completes.
 
@@ -213,7 +214,7 @@ Model Retrying: When `retry_model` is set to True by a hook callback, the agent 
 class ModelStopResponse()
 ```
 
-Defined in: [src/strands/hooks/events.py:281](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L281)
+Defined in: [src/strands/hooks/events.py:286](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L286)
 
 Model response data from successful invocation.
 
@@ -229,7 +230,7 @@ Model response data from successful invocation.
 def should_reverse_callbacks() -> bool
 ```
 
-Defined in: [src/strands/hooks/events.py:301](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L301)
+Defined in: [src/strands/hooks/events.py:306](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L306)
 
 True to invoke callbacks in reverse order.
 
@@ -240,7 +241,7 @@ True to invoke callbacks in reverse order.
 class MultiAgentInitializedEvent(BaseHookEvent)
 ```
 
-Defined in: [src/strands/hooks/events.py:308](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L308)
+Defined in: [src/strands/hooks/events.py:313](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L313)
 
 Event triggered when multi-agent orchestrator initialized.
 
@@ -256,7 +257,7 @@ Event triggered when multi-agent orchestrator initialized.
 class BeforeNodeCallEvent(BaseHookEvent, _Interruptible)
 ```
 
-Defined in: [src/strands/hooks/events.py:321](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L321)
+Defined in: [src/strands/hooks/events.py:326](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L326)
 
 Event triggered before individual node execution starts.
 
@@ -274,7 +275,7 @@ Event triggered before individual node execution starts.
 class AfterNodeCallEvent(BaseHookEvent)
 ```
 
-Defined in: [src/strands/hooks/events.py:357](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L357)
+Defined in: [src/strands/hooks/events.py:362](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L362)
 
 Event triggered after individual node execution completes.
 
@@ -291,7 +292,7 @@ Event triggered after individual node execution completes.
 def should_reverse_callbacks() -> bool
 ```
 
-Defined in: [src/strands/hooks/events.py:371](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L371)
+Defined in: [src/strands/hooks/events.py:376](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L376)
 
 True to invoke callbacks in reverse order.
 
@@ -302,7 +303,7 @@ True to invoke callbacks in reverse order.
 class BeforeMultiAgentInvocationEvent(BaseHookEvent)
 ```
 
-Defined in: [src/strands/hooks/events.py:377](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L377)
+Defined in: [src/strands/hooks/events.py:382](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L382)
 
 Event triggered before orchestrator execution starts.
 
@@ -318,7 +319,7 @@ Event triggered before orchestrator execution starts.
 class AfterMultiAgentInvocationEvent(BaseHookEvent)
 ```
 
-Defined in: [src/strands/hooks/events.py:390](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L390)
+Defined in: [src/strands/hooks/events.py:395](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L395)
 
 Event triggered after orchestrator execution completes.
 
@@ -334,6 +335,6 @@ Event triggered after orchestrator execution completes.
 def should_reverse_callbacks() -> bool
 ```
 
-Defined in: [src/strands/hooks/events.py:402](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L402)
+Defined in: [src/strands/hooks/events.py:407](https://github.com/strands-agents/sdk-python/blob/main/src/strands/hooks/events.py#L407)
 
 True to invoke callbacks in reverse order.

@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:524](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L524)
+Defined in: [src/hooks/events.ts:524](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L524)
 
 Event triggered when the model completes a full message. Wraps the assembled message and stop reason after model streaming finishes.
 
@@ -14,7 +14,7 @@ Event triggered when the model completes a full message. Wraps the assembled mes
 new ModelMessageEvent(data): ModelMessageEvent;
 ```
 
-Defined in: [src/hooks/events.ts:531](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L531)
+Defined in: [src/hooks/events.ts:531](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L531)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [src/hooks/events.ts:531](https://github.com/strands-agents/sdk-type
 readonly type: "modelMessageEvent";
 ```
 
-Defined in: [src/hooks/events.ts:525](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L525)
+Defined in: [src/hooks/events.ts:525](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L525)
 
 ---
 
@@ -52,7 +52,7 @@ Defined in: [src/hooks/events.ts:525](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:526](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L526)
+Defined in: [src/hooks/events.ts:526](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L526)
 
 ---
 
@@ -62,7 +62,7 @@ Defined in: [src/hooks/events.ts:526](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:527](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L527)
+Defined in: [src/hooks/events.ts:527](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L527)
 
 ---
 
@@ -72,7 +72,7 @@ Defined in: [src/hooks/events.ts:527](https://github.com/strands-agents/sdk-type
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/hooks/events.ts:528](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L528)
+Defined in: [src/hooks/events.ts:528](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L528)
 
 ---
 
@@ -82,7 +82,7 @@ Defined in: [src/hooks/events.ts:528](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:529](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L529)
+Defined in: [src/hooks/events.ts:529](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L529)
 
 ## Methods
 
@@ -92,7 +92,7 @@ Defined in: [src/hooks/events.ts:529](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<ModelMessageEvent, "type" | "message" | "stopReason">;
 ```
 
-Defined in: [src/hooks/events.ts:543](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L543)
+Defined in: [src/hooks/events.ts:543](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L543)
 
 Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 

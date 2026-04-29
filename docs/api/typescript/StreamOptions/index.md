@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:108](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L108)
+Defined in: [src/models/model.ts:108](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/model.ts#L108)
 
 Options interface for configuring streaming model invocation.
 
@@ -10,7 +10,7 @@ Options interface for configuring streaming model invocation.
 optional systemPrompt?: SystemPrompt;
 ```
 
-Defined in: [src/models/model.ts:113](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L113)
+Defined in: [src/models/model.ts:113](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/model.ts#L113)
 
 System prompt to guide the model’s behavior. Can be a simple string or an array of content blocks for advanced caching.
 
@@ -22,7 +22,7 @@ System prompt to guide the model’s behavior. Can be a simple string or an arra
 optional toolSpecs?: ToolSpec[];
 ```
 
-Defined in: [src/models/model.ts:118](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L118)
+Defined in: [src/models/model.ts:118](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/model.ts#L118)
 
 Array of tool specifications that the model can use.
 
@@ -34,7 +34,7 @@ Array of tool specifications that the model can use.
 optional toolChoice?: ToolChoice;
 ```
 
-Defined in: [src/models/model.ts:123](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L123)
+Defined in: [src/models/model.ts:123](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/model.ts#L123)
 
 Controls how the model selects tools to use.
 
@@ -46,6 +46,6 @@ Controls how the model selects tools to use.
 optional modelState?: StateStore;
 ```
 
-Defined in: [src/models/model.ts:131](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/models/model.ts#L131)
+Defined in: [src/models/model.ts:131](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/model.ts#L131)
 
 Runtime state for model providers that manage server-side conversation state. The model can read and write this state during streaming (e.g., to store a response ID for conversation chaining). Mutations via `set`/`delete` are visible to the caller after the stream completes.

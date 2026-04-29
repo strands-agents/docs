@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/events.ts#L86)
+Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/events.ts#L86)
 
 Base class for events that can be subscribed to via the hook system. Only events extending this class are dispatched to [HookRegistry](/docs/api/typescript/HookRegistry/index.md) callbacks. All current events extend this class. [StreamEvent](/docs/api/typescript/StreamEvent/index.md) exists as the base for potential future stream-only events that should not be hookable.
 

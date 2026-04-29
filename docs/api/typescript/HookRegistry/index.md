@@ -1,4 +1,4 @@
-Defined in: [src/hooks/registry.ts:30](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/registry.ts#L30)
+Defined in: [src/hooks/registry.ts:30](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/registry.ts#L30)
 
 Implementation of the hook registry for managing hook callbacks. Maintains mappings between event types and callback functions.
 
@@ -14,7 +14,7 @@ Implementation of the hook registry for managing hook callbacks. Maintains mappi
 new HookRegistry(): HookRegistryImplementation;
 ```
 
-Defined in: [src/hooks/registry.ts:33](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/registry.ts#L33)
+Defined in: [src/hooks/registry.ts:33](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/registry.ts#L33)
 
 #### Returns
 
@@ -28,7 +28,7 @@ Defined in: [src/hooks/registry.ts:33](https://github.com/strands-agents/sdk-typ
 addCallback<T>(eventType, callback): HookCleanup;
 ```
 
-Defined in: [src/hooks/registry.ts:44](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/registry.ts#L44)
+Defined in: [src/hooks/registry.ts:44](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/registry.ts#L44)
 
 Register a callback function for a specific event type.
 
@@ -65,7 +65,7 @@ HookRegistry.addCallback
 invokeCallbacks<T>(event): Promise<T>;
 ```
 
-Defined in: [src/hooks/registry.ts:67](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/hooks/registry.ts#L67)
+Defined in: [src/hooks/registry.ts:67](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/hooks/registry.ts#L67)
 
 Invoke all registered callbacks for the given event. Awaits each callback, supporting both sync and async.
 

@@ -2,27 +2,31 @@
 
 > Strands Agents is a simple yet powerful SDK that takes a model-driven approach to building and running AI agents. From simple conversational assistants to complex autonomous workflows, from local development to production deployment, Strands Agents scales with your needs.
 
-## User Guide
+## Docs
 
-- Quickstart
+- Get Started
   - [overview](https://strandsagents.com/docs/user-guide/quickstart/overview/index.md)
-  - [python](https://strandsagents.com/docs/user-guide/quickstart/python/index.md)
-  - [typescript](https://strandsagents.com/docs/user-guide/quickstart/typescript/index.md)
+  - [Quickstart: Python](https://strandsagents.com/docs/user-guide/quickstart/python/index.md)
+  - [Quickstart: TypeScript](https://strandsagents.com/docs/user-guide/quickstart/typescript/index.md)
 - [build-with-ai](https://strandsagents.com/docs/user-guide/build-with-ai/index.md)
+- Build
+  - [Adding Tools](https://strandsagents.com/docs/user-guide/concepts/tools/index.md)
+  - [Creating Custom Tools](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/index.md)
+  - [Using MCP Tools](https://strandsagents.com/docs/user-guide/concepts/tools/mcp-tools/index.md)
+  - [Multi-Agent Systems](https://strandsagents.com/docs/user-guide/concepts/multi-agent/multi-agent-patterns/index.md)
+  - [Structured Output](https://strandsagents.com/docs/user-guide/concepts/agents/structured-output/index.md)
+  - [Streaming Responses](https://strandsagents.com/docs/user-guide/concepts/streaming/index.md)
+  - [Voice & Realtime](https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md)
 - Concepts
-  - Agents
-    - [agent-loop](https://strandsagents.com/docs/user-guide/concepts/agents/agent-loop/index.md)
-    - [state](https://strandsagents.com/docs/user-guide/concepts/agents/state/index.md)
-    - [session-management](https://strandsagents.com/docs/user-guide/concepts/agents/session-management/index.md)
-    - [prompts](https://strandsagents.com/docs/user-guide/concepts/agents/prompts/index.md)
-    - [retry-strategies](https://strandsagents.com/docs/user-guide/concepts/agents/retry-strategies/index.md)
-    - [hooks](https://strandsagents.com/docs/user-guide/concepts/agents/hooks/index.md)
-    - [structured-output](https://strandsagents.com/docs/user-guide/concepts/agents/structured-output/index.md)
-    - [conversation-management](https://strandsagents.com/docs/user-guide/concepts/agents/conversation-management/index.md)
+  - [agent-loop](https://strandsagents.com/docs/user-guide/concepts/agents/agent-loop/index.md)
+  - [state](https://strandsagents.com/docs/user-guide/concepts/agents/state/index.md)
+  - [session-management](https://strandsagents.com/docs/user-guide/concepts/agents/session-management/index.md)
+  - [prompts](https://strandsagents.com/docs/user-guide/concepts/agents/prompts/index.md)
+  - [hooks](https://strandsagents.com/docs/user-guide/concepts/agents/hooks/index.md)
+  - [conversation-management](https://strandsagents.com/docs/user-guide/concepts/agents/conversation-management/index.md)
+  - [retry-strategies](https://strandsagents.com/docs/user-guide/concepts/agents/retry-strategies/index.md)
+  - [interrupts](https://strandsagents.com/docs/user-guide/concepts/interrupts/index.md)
   - Tools
-    - [tools](https://strandsagents.com/docs/user-guide/concepts/tools/index.md)
-    - [custom-tools](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/index.md)
-    - [mcp-tools](https://strandsagents.com/docs/user-guide/concepts/tools/mcp-tools/index.md)
     - [executors](https://strandsagents.com/docs/user-guide/concepts/tools/executors/index.md)
     - [community-tools-package](https://strandsagents.com/docs/user-guide/concepts/tools/community-tools-package/index.md)
     - [vended-tools](https://strandsagents.com/docs/user-guide/concepts/tools/vended-tools/index.md)
@@ -31,25 +35,7 @@
     - [skills](https://strandsagents.com/docs/user-guide/concepts/plugins/skills/index.md)
     - [steering](https://strandsagents.com/docs/user-guide/concepts/plugins/steering/index.md)
     - [context-offloader](https://strandsagents.com/docs/user-guide/concepts/plugins/context-offloader/index.md)
-  - Model Providers
-    - [model-providers](https://strandsagents.com/docs/user-guide/concepts/model-providers/index.md)
-    - [amazon-bedrock](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md)
-    - [amazon-nova](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-nova/index.md)
-    - [anthropic](https://strandsagents.com/docs/user-guide/concepts/model-providers/anthropic/index.md)
-    - [google](https://strandsagents.com/docs/user-guide/concepts/model-providers/google/index.md)
-    - [litellm](https://strandsagents.com/docs/user-guide/concepts/model-providers/litellm/index.md)
-    - [llamacpp](https://strandsagents.com/docs/user-guide/concepts/model-providers/llamacpp/index.md)
-    - [llamaapi](https://strandsagents.com/docs/user-guide/concepts/model-providers/llamaapi/index.md)
-    - [mistral](https://strandsagents.com/docs/user-guide/concepts/model-providers/mistral/index.md)
-    - [ollama](https://strandsagents.com/docs/user-guide/concepts/model-providers/ollama/index.md)
-    - [openai](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai/index.md)
-    - [openai-responses](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai-responses/index.md)
-    - [sagemaker](https://strandsagents.com/docs/user-guide/concepts/model-providers/sagemaker/index.md)
-    - [vercel](https://strandsagents.com/docs/user-guide/concepts/model-providers/vercel/index.md)
-    - [writer](https://strandsagents.com/docs/user-guide/concepts/model-providers/writer/index.md)
-    - [custom_model_provider](https://strandsagents.com/docs/user-guide/concepts/model-providers/custom_model_provider/index.md)
   - Streaming
-    - [streaming](https://strandsagents.com/docs/user-guide/concepts/streaming/index.md)
     - [async-iterators](https://strandsagents.com/docs/user-guide/concepts/streaming/async-iterators/index.md)
     - [callback-handlers](https://strandsagents.com/docs/user-guide/concepts/streaming/callback-handlers/index.md)
   - Multi-agent
@@ -58,10 +44,7 @@
     - [swarm](https://strandsagents.com/docs/user-guide/concepts/multi-agent/swarm/index.md)
     - [graph](https://strandsagents.com/docs/user-guide/concepts/multi-agent/graph/index.md)
     - [workflow](https://strandsagents.com/docs/user-guide/concepts/multi-agent/workflow/index.md)
-    - [multi-agent-patterns](https://strandsagents.com/docs/user-guide/concepts/multi-agent/multi-agent-patterns/index.md)
-  - [interrupts](https://strandsagents.com/docs/user-guide/concepts/interrupts/index.md)
   - Bidirectional Streaming
-    - [quickstart](https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md)
     - [agent](https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/agent/index.md)
     - Models
       - [nova_sonic](https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md)
@@ -74,6 +57,39 @@
     - [session-management](https://strandsagents.com/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md)
   - Experimental
     - [agent-config](https://strandsagents.com/docs/user-guide/concepts/experimental/agent-config/index.md)
+- Model Providers
+  - [model-providers](https://strandsagents.com/docs/user-guide/concepts/model-providers/index.md)
+  - [amazon-bedrock](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md)
+  - [amazon-nova](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-nova/index.md)
+  - [anthropic](https://strandsagents.com/docs/user-guide/concepts/model-providers/anthropic/index.md)
+  - [litellm](https://strandsagents.com/docs/user-guide/concepts/model-providers/litellm/index.md)
+  - [llamacpp](https://strandsagents.com/docs/user-guide/concepts/model-providers/llamacpp/index.md)
+  - [llamaapi](https://strandsagents.com/docs/user-guide/concepts/model-providers/llamaapi/index.md)
+  - [mistral](https://strandsagents.com/docs/user-guide/concepts/model-providers/mistral/index.md)
+  - [ollama](https://strandsagents.com/docs/user-guide/concepts/model-providers/ollama/index.md)
+  - [openai](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai/index.md)
+  - [openai-responses](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai-responses/index.md)
+  - [sagemaker](https://strandsagents.com/docs/user-guide/concepts/model-providers/sagemaker/index.md)
+  - [vercel](https://strandsagents.com/docs/user-guide/concepts/model-providers/vercel/index.md)
+  - [writer](https://strandsagents.com/docs/user-guide/concepts/model-providers/writer/index.md)
+  - [custom_model_provider](https://strandsagents.com/docs/user-guide/concepts/model-providers/custom_model_provider/index.md)
+- Deploy
+  - [operating-agents-in-production](https://strandsagents.com/docs/user-guide/deploy/operating-agents-in-production/index.md)
+  - Amazon Bedrock AgentCore
+    - [deploy_to_bedrock_agentcore](https://strandsagents.com/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md)
+    - [python](https://strandsagents.com/docs/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md)
+    - [typescript](https://strandsagents.com/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md)
+  - [deploy_to_aws_lambda](https://strandsagents.com/docs/user-guide/deploy/deploy_to_aws_lambda/index.md)
+  - [deploy_to_aws_fargate](https://strandsagents.com/docs/user-guide/deploy/deploy_to_aws_fargate/index.md)
+  - [deploy_to_aws_apprunner](https://strandsagents.com/docs/user-guide/deploy/deploy_to_aws_apprunner/index.md)
+  - [deploy_to_amazon_eks](https://strandsagents.com/docs/user-guide/deploy/deploy_to_amazon_eks/index.md)
+  - [deploy_to_amazon_ec2](https://strandsagents.com/docs/user-guide/deploy/deploy_to_amazon_ec2/index.md)
+  - Docker
+    - [deploy_to_docker](https://strandsagents.com/docs/user-guide/deploy/deploy_to_docker/index.md)
+    - [python](https://strandsagents.com/docs/user-guide/deploy/deploy_to_docker/python/index.md)
+    - [typescript](https://strandsagents.com/docs/user-guide/deploy/deploy_to_docker/typescript/index.md)
+  - [deploy_to_kubernetes](https://strandsagents.com/docs/user-guide/deploy/deploy_to_kubernetes/index.md)
+  - [deploy_to_terraform](https://strandsagents.com/docs/user-guide/deploy/deploy_to_terraform/index.md)
 - Safety & Security
   - [responsible-ai](https://strandsagents.com/docs/user-guide/safety-security/responsible-ai/index.md)
   - [guardrails](https://strandsagents.com/docs/user-guide/safety-security/guardrails/index.md)
@@ -116,23 +132,6 @@
     - [result_caching](https://strandsagents.com/docs/user-guide/evals-sdk/how-to/result_caching/index.md)
     - [experiment_management](https://strandsagents.com/docs/user-guide/evals-sdk/how-to/experiment_management/index.md)
     - [serialization](https://strandsagents.com/docs/user-guide/evals-sdk/how-to/serialization/index.md)
-- Deploy
-  - [operating-agents-in-production](https://strandsagents.com/docs/user-guide/deploy/operating-agents-in-production/index.md)
-  - Amazon Bedrock AgentCore
-    - [deploy_to_bedrock_agentcore](https://strandsagents.com/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md)
-    - [python](https://strandsagents.com/docs/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md)
-    - [typescript](https://strandsagents.com/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md)
-  - [deploy_to_aws_lambda](https://strandsagents.com/docs/user-guide/deploy/deploy_to_aws_lambda/index.md)
-  - [deploy_to_aws_fargate](https://strandsagents.com/docs/user-guide/deploy/deploy_to_aws_fargate/index.md)
-  - [deploy_to_aws_apprunner](https://strandsagents.com/docs/user-guide/deploy/deploy_to_aws_apprunner/index.md)
-  - [deploy_to_amazon_eks](https://strandsagents.com/docs/user-guide/deploy/deploy_to_amazon_eks/index.md)
-  - [deploy_to_amazon_ec2](https://strandsagents.com/docs/user-guide/deploy/deploy_to_amazon_ec2/index.md)
-  - Docker
-    - [deploy_to_docker](https://strandsagents.com/docs/user-guide/deploy/deploy_to_docker/index.md)
-    - [python](https://strandsagents.com/docs/user-guide/deploy/deploy_to_docker/python/index.md)
-    - [typescript](https://strandsagents.com/docs/user-guide/deploy/deploy_to_docker/typescript/index.md)
-  - [deploy_to_kubernetes](https://strandsagents.com/docs/user-guide/deploy/deploy_to_kubernetes/index.md)
-  - [deploy_to_terraform](https://strandsagents.com/docs/user-guide/deploy/deploy_to_terraform/index.md)
 - [versioning-and-support](https://strandsagents.com/docs/user-guide/versioning-and-support/index.md)
 
 ## Examples
@@ -154,6 +153,19 @@
 
 - [community-packages](https://strandsagents.com/docs/community/community-packages/index.md)
 - [get-featured](https://strandsagents.com/docs/community/get-featured/index.md)
+- Contribute
+  - [contribute](https://strandsagents.com/docs/contribute/index.md)
+  - Contribution Types
+    - [core-sdk](https://strandsagents.com/docs/contribute/contributing/core-sdk/index.md)
+    - [documentation](https://strandsagents.com/docs/contribute/contributing/documentation/index.md)
+    - [feature-proposals](https://strandsagents.com/docs/contribute/contributing/feature-proposals/index.md)
+    - [extensions](https://strandsagents.com/docs/contribute/contributing/extensions/index.md)
+- Labs
+  - [labs](https://strandsagents.com/docs/labs/index.md)
+  - Projects
+    - [robots](https://strandsagents.com/docs/labs/robots/index.md)
+    - [robots-sim](https://strandsagents.com/docs/labs/robots-sim/index.md)
+    - [ai-functions](https://strandsagents.com/docs/labs/ai-functions/index.md)
 - Integrations
   - [ag-ui](https://strandsagents.com/docs/community/integrations/ag-ui/index.md)
 - Plugins

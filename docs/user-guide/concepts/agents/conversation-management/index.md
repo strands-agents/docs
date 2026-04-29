@@ -340,7 +340,7 @@ See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-To create a custom conversation manager, extend the abstract [`ConversationManager`](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/conversation-manager.ts) base class and implement the `reduce` method:
+To create a custom conversation manager, extend the abstract [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md) base class and implement the `reduce` method:
 
 1.  **`reduce(options: ReduceOptions): boolean`**: Called automatically when a `ContextWindowOverflowError` occurs. Mutate `agent.messages` in place to reduce history, then return `true` if any reduction was made. Return `false` to let the error propagate out of the agent loop uncaught.
     
@@ -403,5 +403,5 @@ class MyManager extends ConversationManager {
 }
 ```
 
-See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
+See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
 (( /tab "TypeScript" ))

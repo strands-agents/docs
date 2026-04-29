@@ -1,6 +1,6 @@
 Python-Only Package
 
-The Community Tools Package (`strands-agents-tools`) is currently Python-only. TypeScript users should use [vended tools](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools) included in the TypeScript SDK or create custom tools using the `tool()` function.
+The Community Tools Package (`strands-agents-tools`) is currently Python-only. TypeScript users should use [vended tools](/docs/user-guide/concepts/tools/vended-tools/index.md) included in the TypeScript SDK or create custom tools using the `tool()` function.
 
 Strands offers an optional, community-supported tools package [`strands-agents-tools`](https://pypi.org/project/strands-agents-tools/) which includes pre-built tools to get started quickly experimenting with agents and tools during development. The package is also open source and available on [GitHub](https://github.com/strands-agents/tools).
 

@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:191](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/errors.ts#L191)
+Defined in: [src/errors.ts:191](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/errors.ts#L191)
 
 Thrown when a tool fails validation during registration.
 
@@ -14,7 +14,7 @@ Thrown when a tool fails validation during registration.
 new ToolValidationError(message): ToolValidationError;
 ```
 
-Defined in: [src/errors.ts:192](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/errors.ts#L192)
+Defined in: [src/errors.ts:192](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/errors.ts#L192)
 
 #### Parameters
 

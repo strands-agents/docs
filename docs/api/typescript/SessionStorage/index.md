@@ -4,7 +4,7 @@ type SessionStorage = {
 };
 ```
 
-Defined in: [src/session/storage.ts:26](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/session/storage.ts#L26)
+Defined in: [src/session/storage.ts:26](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/session/storage.ts#L26)
 
 SessionStorage configuration for pluggable storage backends. Allows users to configure snapshot and transcript storage independently.
 
@@ -24,4 +24,4 @@ const storage: SessionStorage = {
 snapshot: SnapshotStorage;
 ```
 
-Defined in: [src/session/storage.ts:27](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/session/storage.ts#L27)
+Defined in: [src/session/storage.ts:27](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/session/storage.ts#L27)

@@ -5,4 +5,4 @@ type SystemContentBlock =
   | GuardContentBlock;
 ```
 
-Defined in: [src/types/messages.ts:736](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/types/messages.ts#L736)
+Defined in: [src/types/messages.ts:736](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/types/messages.ts#L736)

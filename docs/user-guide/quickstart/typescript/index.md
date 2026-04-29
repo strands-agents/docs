@@ -244,7 +244,7 @@ See the [Async Iterators](/docs/user-guide/concepts/streaming/async-iterators/in
 
 Ready to learn more? Check out these resources:
 
--   [Examples](https://github.com/strands-agents/sdk-typescript/tree/main/examples) - Examples for many use cases
+-   [Examples](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples) - Examples for many use cases
 -   [TypeScript SDK Repository](https://github.com/strands-agents/sdk-typescript/blob/main) - Explore the TypeScript SDK source code and contribute
 -   [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) - Learn how Strands agents work under the hood
 -   [State](/docs/user-guide/concepts/agents/state/index.md) - Understand how agents maintain context and state across a conversation

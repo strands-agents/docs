@@ -2,7 +2,7 @@
 type ToolExecutorStrategy = "sequential" | "concurrent";
 ```
 
-Defined in: [src/agent/agent.ts:99](https://github.com/strands-agents/sdk-typescript/blob/b6077a7faf47f8e21e56113b26460dd279fd2aef/strands-ts/src/agent/agent.ts#L99)
+Defined in: [src/agent/agent.ts:99](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/agent/agent.ts#L99)
 
 Strategy for executing tool calls that the model emits in a single assistant turn.
 
