@@ -12,7 +12,7 @@
   <button
     class="lang-option"
     role="radio"
-    aria-checked="true"
+    aria-checked="false"
     data-lang="Python"
   >
     <svg class="lang-icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
@@ -185,20 +185,17 @@
       return null;
     }
 
-    /** Sync all visible Starlight tab groups to match the selected language. */
+    /**
+     * Sync all visible Starlight tab groups to match the selected language.
+     * Delegates to Starlight's own tab switching by clicking the matching tab,
+     * so we don't duplicate Starlight's internal aria/panel management.
+     */
     function syncStarlightTabs(lang) {
       document.querySelectorAll('starlight-tabs').forEach(function (tabGroup) {
-        var panels = tabGroup.querySelectorAll('[role="tabpanel"]');
         var tabs = tabGroup.querySelectorAll('[role="tab"]');
-        tabs.forEach(function (tab, i) {
-          if (tab.textContent.trim() === lang) {
-            tab.setAttribute('aria-selected', 'true');
-            tab.setAttribute('tabindex', '0');
-            if (panels[i]) panels[i].hidden = false;
-          } else {
-            tab.setAttribute('aria-selected', 'false');
-            tab.setAttribute('tabindex', '-1');
-            if (panels[i]) panels[i].hidden = true;
+        tabs.forEach(function (tab) {
+          if (tab.textContent.trim() === lang && tab.getAttribute('aria-selected') !== 'true') {
+            tab.click();
           }
         });
       });

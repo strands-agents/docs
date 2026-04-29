@@ -20,8 +20,8 @@ navbar:
     basePath: /docs/examples/
   - label: Community
     href: /docs/community/community-packages/
-    basePath: /docs/community/
-    additionalBasePaths:
+    basePath:
+      - /docs/community/
       - /docs/labs/
       - /docs/contribute/
   - label: API Reference

@@ -22,20 +22,13 @@ export function findCurrentNavSection(currentPath: string, links: NavLink[]): Na
 
   for (const link of links) {
     if (link.external) continue
-    const basePath = link.basePath || link.href
-    // Note: Home ("/") matches all paths but longest-match ensures specificity.
-    // This provides implicit fallback behavior when no other nav section matches.
-    if (currentPath.startsWith(basePath) && basePath.length > bestMatchLength) {
-      bestMatch = link
-      bestMatchLength = basePath.length
-    }
-    // Also check additionalBasePaths
-    if (link.additionalBasePaths) {
-      for (const additionalPath of link.additionalBasePaths) {
-        if (currentPath.startsWith(additionalPath) && additionalPath.length > bestMatchLength) {
-          bestMatch = link
-          bestMatchLength = additionalPath.length
-        }
+    const basePaths = link.basePath
+      ? (Array.isArray(link.basePath) ? link.basePath : [link.basePath])
+      : [link.href]
+    for (const bp of basePaths) {
+      if (currentPath.startsWith(bp) && bp.length > bestMatchLength) {
+        bestMatch = link
+        bestMatchLength = bp.length
       }
     }
   }
@@ -167,9 +160,9 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     return
   }
 
-  // Collect all base paths for this nav section (primary + additional)
-  const primaryBasePath = currentNav.basePath || currentNav.href
-  const allBasePaths = [primaryBasePath, ...(currentNav.additionalBasePaths || [])]
+  // Collect all base paths for this nav section
+  const bp = currentNav.basePath || currentNav.href
+  const allBasePaths = Array.isArray(bp) ? bp : [bp]
 
   // Otherwise filter it down to the major section that we're in
   const filteredSidebar = filterSidebarByBasePath(sidebar, allBasePaths)
