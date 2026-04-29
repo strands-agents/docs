@@ -25,7 +25,7 @@ npm install @strands-agents/sdk
 ```typescript
 import { Agent } from '@strands-agents/sdk'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:hello_world"
+--8<-- "../blog/strands-agents-typescript-v1.ts:hello_world"
 ```
 
 ## What's in the box
@@ -40,7 +40,7 @@ Amazon Bedrock is the default, with built-in support for OpenAI, Anthropic, Goog
 import { Agent } from '@strands-agents/sdk'
 import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:model_provider"
+--8<-- "../blog/strands-agents-typescript-v1.ts:model_provider"
 ```
 
 ### Tools
@@ -51,7 +51,7 @@ Define custom tools with a Zod schema and a callback. The SDK validates inputs a
 import { tool } from '@strands-agents/sdk'
 import { z } from 'zod'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:tool_definition"
+--8<-- "../blog/strands-agents-typescript-v1.ts:tool_definition"
 ```
 
 The SDK already ships with ready-made tools for running shell commands, editing files, making HTTP requests, and working with notebooks. And with native [Model Context Protocol](https://modelcontextprotocol.io/) support, you can connect to any MCP-compatible tool server:
@@ -60,7 +60,7 @@ The SDK already ships with ready-made tools for running shell commands, editing 
 import { Agent, McpClient } from '@strands-agents/sdk'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:mcp"
+--8<-- "../blog/strands-agents-typescript-v1.ts:mcp"
 ```
 
 ### Streaming
@@ -70,7 +70,7 @@ Stream responses as they're generated for responsive UIs and real-time feedback:
 ```typescript
 import { Agent } from '@strands-agents/sdk'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:streaming"
+--8<-- "../blog/strands-agents-typescript-v1.ts:streaming"
 ```
 
 ### Plugins
@@ -81,7 +81,7 @@ Strands is extensible by design. Simply hook in with the `Plugin` interface to c
 import { Agent, BeforeToolCallEvent, AfterToolCallEvent } from '@strands-agents/sdk'
 import type { Plugin, LocalAgent } from '@strands-agents/sdk'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:plugins"
+--8<-- "../blog/strands-agents-typescript-v1.ts:plugins"
 ```
 
 The SDK vends its own plugins as well. [Agent Skills](https://strandsagents.com/docs/user-guide/concepts/plugins/skills/), for instance, lets your agent discover and activate instructions on demand rather than loading everything upfront.
@@ -93,7 +93,7 @@ Single agents are powerful on their own, but some workflows call for coordinatio
 ```typescript
 import { Agent } from '@strands-agents/sdk'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:agent_as_tool"
+--8<-- "../blog/strands-agents-typescript-v1.ts:agent_as_tool"
 ```
 
 When you need more control over execution order, Graph lets you define explicit dependencies between agents:
@@ -102,7 +102,7 @@ When you need more control over execution order, Graph lets you define explicit 
 import { Agent } from '@strands-agents/sdk'
 import { Graph } from '@strands-agents/sdk/multiagent'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:graph"
+--8<-- "../blog/strands-agents-typescript-v1.ts:graph"
 ```
 
 For fully dynamic routing, Swarm enables model-driven handoffs where agents decide at runtime which agent takes over next:
@@ -111,7 +111,7 @@ For fully dynamic routing, Swarm enables model-driven handoffs where agents deci
 import { Agent } from '@strands-agents/sdk'
 import { Swarm } from '@strands-agents/sdk/multiagent'
 
---8<-- "../blog/strands-agents-typescript-sdk-v1.ts:swarm"
+--8<-- "../blog/strands-agents-typescript-v1.ts:swarm"
 ```
 
 ### And more
