@@ -22,32 +22,40 @@ import z from 'zod'
 
 const searchLogs = tool({
   name: 'search_logs',
-  description: 'Search application logs by keyword.',
+  description: 'Search logs by keyword.',
   inputSchema: z.object({
     query: z.string(),
     hours: z.number().default(24),
   }),
-  callback: ({ query, hours }) => logApi.search(query, hours),
+  callback: ({ query, hours }) =>
+    logApi.search(query, hours),
 })
 
 const agent = new Agent({ tools: [searchLogs] })
 
-await agent.invoke('Find all timeout errors from the last 6 hours')`
+await agent.invoke(
+  'Find all timeout errors from the last 6 hours'
+)`
 
-const swapPy = `from strands.agent.conversation_manager import SummarizingConversationManager
+const swapPy = `from strands.agent.conversation_manager import (
+    SummarizingConversationManager,
+)
 
-# Same agent, now with summarization for long sessions.
+# Same agent, now with summarization.
 agent = Agent(
     tools=[search_logs],
     conversation_manager=SummarizingConversationManager(),
 )`
 
-const swapTs = `import { SummarizingConversationManager } from '@strands-agents/sdk'
+const swapTs = `import {
+  SummarizingConversationManager,
+} from '@strands-agents/sdk'
 
-// Same agent, now with summarization for long sessions.
+// Same agent, now with summarization.
 const agent = new Agent({
   tools: [searchLogs],
-  conversationManager: new SummarizingConversationManager(),
+  conversationManager:
+    new SummarizingConversationManager(),
 })`
 ---
 

@@ -9,35 +9,43 @@ import LangCodeBlock from './LangCodeBlock.astro'
 const denyCode = `from strands import Agent
 from strands.hooks import BeforeToolCallEvent
 
-def read_only_guard(event: BeforeToolCallEvent):
-    """Block all write operations. This agent is read-only."""
-    if event.tool_use["name"] == "query_database":
-        sql = str(event.tool_use["input"].get("query", "")).upper()
-        if any(kw in sql for kw in ["INSERT", "UPDATE", "DELETE", "DROP"]):
-            event.cancel_tool = "This agent has read-only access."
+WRITE_OPS = ["INSERT", "UPDATE", "DELETE", "DROP"]
 
-agent = Agent(tools=[query_database], hooks=[read_only_guard])`
+def read_only_guard(event: BeforeToolCallEvent):
+    """Block writes. This agent is read-only."""
+    if event.tool_use["name"] == "query_database":
+        sql = event.tool_use["input"].get("query", "")
+        if any(kw in sql.upper() for kw in WRITE_OPS):
+            event.cancel_tool = "Read-only access."
+
+agent = Agent(
+    tools=[query_database],
+    hooks=[read_only_guard],
+)`
 
 const guideCode = `from strands.vended_plugins.steering import (
     SteeringHandler, Guide, Proceed,
 )
 
 class QueryQualityPolicy(SteeringHandler):
-    async def steer_before_tool(self, *, agent, tool_use, **kwargs):
-        sql = str(tool_use["input"].get("query", "")).upper()
+    async def steer_before_tool(
+        self, *, agent, tool_use, **kwargs
+    ):
+        sql = tool_use["input"].get("query", "").upper()
         if "SELECT" in sql and "WHERE" not in sql:
             return Guide(
-                reason="Query selects all rows. Add a WHERE clause "
-                "to scope results, and LIMIT to cap response size."
+                reason="Add a WHERE clause and LIMIT."
             )
-        if sql.count("JOIN") > 3:
+        if sql.upper().count("JOIN") > 3:
             return Guide(
-                reason="Query has 4+ joins. Simplify by breaking "
-                "into smaller queries or checking the schema."
+                reason="4+ joins. Break into smaller queries."
             )
         return Proceed(reason="Query looks good.")
 
-agent = Agent(tools=[query_database], plugins=[QueryQualityPolicy()])`
+agent = Agent(
+    tools=[query_database],
+    plugins=[QueryQualityPolicy()],
+)`
 ---
 
 <section class="outcomes-section">

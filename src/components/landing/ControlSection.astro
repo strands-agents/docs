@@ -9,21 +9,29 @@ const tracePy = `from strands import Agent
 from strands.hooks import AfterToolCallEvent
 
 def log_tool_calls(event: AfterToolCallEvent):
-    """Log every tool call for visibility."""
+    """Log every tool call."""
     print(f"Tool: {event.tool_use['name']}")
     print(f"Result: {event.tool_result['status']}")
 
 agent = Agent(
     tools=[search_logs, query_database],
     hooks=[log_tool_calls],
-    trace_attributes={"service": "ops-agent", "env": "production"},
+    trace_attributes={
+        "service": "ops-agent",
+        "env": "production",
+    },
 )`
 
-const traceTs = `import { Agent, AfterToolCallEvent } from '@strands-agents/sdk'
+const traceTs = `import {
+  Agent, AfterToolCallEvent,
+} from '@strands-agents/sdk'
 
 const agent = new Agent({
   tools: [searchLogs, queryDatabase],
-  traceAttributes: { service: 'ops-agent', env: 'production' },
+  traceAttributes: {
+    service: 'ops-agent',
+    env: 'production',
+  },
 })
 
 agent.addHook(AfterToolCallEvent, (event) => {

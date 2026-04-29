@@ -27,7 +27,7 @@ agent = Agent(
     tools=[classify_lead, route_to_rep],
 )
 
-agent("New lead: jane@acme.com at Acme Corp, US-West")`
+agent("New lead: jane@acme.com, Acme Corp, US-West")`
 
 const assistantCode = `from strands import Agent, tool
 from strands.tools.mcp import MCPClient
@@ -56,8 +56,8 @@ def approve_refunds(event: BeforeToolCallEvent):
             event.cancel_tool = "Refund not approved."
 
 agent = Agent(
-    system_prompt="You are a support assistant. Use the knowledge "
-    "base to answer questions. Refunds require approval.",
+    system_prompt="Support assistant. Use the KB. "
+    "Refunds require approval.",
     tools=[kb, issue_refund],
     hooks=[approve_refunds],
     conversation_manager=SlidingWindowConversationManager(
@@ -72,13 +72,17 @@ from pathlib import Path
 
 class Briefing(BaseModel):
     headline: str = Field(description="One-line summary")
-    developments: list[str] = Field(description="Key developments")
-    sources: list[str] = Field(description="URLs consulted")
+    developments: list[str] = Field(
+        description="Key developments"
+    )
+    sources: list[str] = Field(
+        description="URLs consulted"
+    )
 
 agent = Agent(
-    system_prompt="You are a research assistant. Search the web, "
-    "find developments from the last 24 hours, and produce a "
-    "briefing with source citations.",
+    system_prompt="Research assistant. Search the web, "
+    "find developments from the last 24 hours, "
+    "and produce a briefing with citations.",
     tools=[http_request],
 )
 
@@ -98,23 +102,23 @@ import z from 'zod'
 
 const classifyLead = tool({
   name: 'classify_lead',
-  description: 'Score and classify an inbound lead.',
+  description: 'Score and classify a lead.',
   inputSchema: z.object({
     email: z.string(),
     company: z.string(),
   }),
   callback: ({ email, company }) => {
-    const firmographics = crm.lookup(company)
+    const data = crm.lookup(company)
     return {
-      score: computeIcpScore(firmographics),
-      segment: firmographics.industry,
+      score: computeIcpScore(data),
+      segment: data.industry,
     }
   },
 })
 
 const routeToRep = tool({
   name: 'route_to_rep',
-  description: 'Assign a lead to the right sales rep.',
+  description: 'Assign a lead to a rep.',
   inputSchema: z.object({
     leadId: z.string(),
     region: z.string(),
@@ -126,41 +130,54 @@ const routeToRep = tool({
   },
 })
 
-const agent = new Agent({ tools: [classifyLead, routeToRep] })
+const agent = new Agent({
+  tools: [classifyLead, routeToRep],
+})
 
-await agent.invoke('New lead: jane@acme.com at Acme Corp, US-West')`
+await agent.invoke(
+  'New lead: jane@acme.com, Acme Corp, US-West'
+)`
 
-const assistantTs = `import { Agent, tool, McpClient, BeforeToolCallEvent } from '@strands-agents/sdk'
-import { SlidingWindowConversationManager } from '@strands-agents/sdk'
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
+const assistantTs = `import {
+  Agent, tool, McpClient,
+  BeforeToolCallEvent,
+  SlidingWindowConversationManager,
+} from '@strands-agents/sdk'
+import { StdioClientTransport } from
+  '@modelcontextprotocol/sdk/client/stdio.js'
 import z from 'zod'
 
 const kb = new McpClient({
-  transport: new StdioClientTransport({ command: 'npx', args: ['kb-server'] }),
+  transport: new StdioClientTransport({
+    command: 'npx',
+    args: ['kb-server'],
+  }),
 })
 
 const issueRefund = tool({
   name: 'issue_refund',
-  description: 'Process a customer refund.',
+  description: 'Process a refund.',
   inputSchema: z.object({
     orderId: z.string(),
     amount: z.number(),
   }),
-  callback: ({ orderId, amount }) => payments.refund(orderId, amount),
+  callback: ({ orderId, amount }) =>
+    payments.refund(orderId, amount),
 })
 
 const agent = new Agent({
-  systemPrompt: 'You are a support assistant. Use the knowledge '
-    + 'base to answer questions. Refunds require approval.',
+  systemPrompt: 'Support assistant. '
+    + 'Use KB. Refunds require approval.',
   tools: [kb, issueRefund],
-  conversationManager: new SlidingWindowConversationManager({
-    windowSize: 20,
-  }),
+  conversationManager:
+    new SlidingWindowConversationManager({
+      windowSize: 20,
+    }),
 })
 
 agent.addHook(BeforeToolCallEvent, (event) => {
   if (event.toolUse.name === 'issue_refund') {
-    event.cancel = 'Refund approval required. Contact support team.'
+    event.cancel = 'Refund approval required.'
   }
 })`
 
@@ -170,27 +187,30 @@ import z from 'zod'
 import { writeFileSync } from 'fs'
 
 const BriefingSchema = z.object({
-  headline: z.string().describe('One-line summary'),
-  developments: z.array(z.string()).describe('Key developments'),
-  sources: z.array(z.string()).describe('URLs consulted'),
+  headline: z.string().describe('Summary'),
+  developments: z.array(z.string())
+    .describe('Key developments'),
+  sources: z.array(z.string())
+    .describe('URLs consulted'),
 })
 
 const agent = new Agent({
-  systemPrompt: 'You are a research assistant. Search the web, '
-    + 'find developments from the last 24 hours, and produce a '
-    + 'briefing with source citations.',
+  systemPrompt: 'Research assistant. '
+    + 'Search the web. Cite sources.',
   tools: [httpRequest],
 })
 
 const result = await agent.invoke(
-  'What happened in AI agent frameworks yesterday?',
+  'AI agent frameworks: what happened yesterday?',
   { structuredOutputSchema: BriefingSchema },
 )
 
 const briefing = result.structuredOutput
 writeFileSync('briefings/daily.md',
   \`# \${briefing.headline}\\n\\n\`
-  + briefing.developments.map((d: string) => \`- \${d}\`).join('\\n')
+  + briefing.developments
+    .map((d: string) => \`- \${d}\`)
+    .join('\\n')
 )`
 
 ---

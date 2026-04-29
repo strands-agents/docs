@@ -24,24 +24,31 @@ from pathlib import Path
 @tool
 def save_report(title: str, content: str) -> str:
     """Save a research report to disk."""
-    Path(f"reports/{title}.md").write_text(content)
-    return f"Saved {title}.md"
+    path = f"reports/{title}.md"
+    Path(path).write_text(content)
+    return f"Saved {path}"
 
 def require_sources(event: BeforeToolCallEvent):
-    if event.tool_use["name"] == "save_report":
-        if "[source]" not in str(event.tool_use["input"]):
-            event.cancel_tool = "Add source citations before saving."
+    name = event.tool_use["name"]
+    inp = str(event.tool_use["input"])
+    if name == "save_report" and "[source]" not in inp:
+        event.cancel_tool = "Add source citations."
 
-agent = Agent(tools=[save_report], hooks=[require_sources])
-agent("Research AI agent frameworks and write a comparison report")`
+agent = Agent(
+    tools=[save_report],
+    hooks=[require_sources],
+)
+agent("Research AI agent frameworks")`
 
-const heroTs = `import { Agent, tool, BeforeToolCallEvent } from '@strands-agents/sdk'
+const heroTs = `import {
+  Agent, tool, BeforeToolCallEvent
+} from '@strands-agents/sdk'
 import z from 'zod'
 import { writeFileSync } from 'fs'
 
 const saveReport = tool({
   name: 'save_report',
-  description: 'Save a research report to disk.',
+  description: 'Save a research report.',
   inputSchema: z.object({
     title: z.string(),
     content: z.string(),
@@ -55,14 +62,15 @@ const saveReport = tool({
 const agent = new Agent({ tools: [saveReport] })
 
 agent.addHook(BeforeToolCallEvent, (event) => {
+  const inp = String(event.toolUse.input)
   if (event.toolUse.name === 'save_report') {
-    if (!String(event.toolUse.input).includes('[source]')) {
-      event.cancel = 'Add source citations before saving.'
+    if (!inp.includes('[source]')) {
+      event.cancel = 'Add source citations.'
     }
   }
 })
 
-await agent.invoke('Research AI agent frameworks and write a comparison report')`
+await agent.invoke('Research AI agent frameworks')`
 ---
 
 <section class="hero-section">
