@@ -13,6 +13,7 @@ interface NavConfigItem {
   label?: string
   items?: NavConfigItem[]
   slug?: string  // For labeled leaf items (e.g., { label: "Adding Tools", slug: "docs/user-guide/concepts/tools" })
+  collapsed?: boolean  // Explicit collapse state for groups (overrides auto-collapse)
 }
 type NavConfigEntry = string | NavConfigItem
 

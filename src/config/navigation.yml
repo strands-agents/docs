@@ -130,11 +130,6 @@ sidebar:
           - docs/user-guide/concepts/model-providers/vercel
           - docs/user-guide/concepts/model-providers/writer
           - docs/user-guide/concepts/model-providers/custom_model_provider
-          - docs/user-guide/concepts/model-providers/cohere
-          - docs/user-guide/concepts/model-providers/clova-studio
-          - docs/user-guide/concepts/model-providers/fireworksai
-          - docs/user-guide/concepts/model-providers/nebius-token-factory
-          - docs/user-guide/concepts/model-providers/xai
       - label: Deploy
         items:
           - docs/user-guide/deploy/operating-agents-in-production
@@ -217,6 +212,23 @@ sidebar:
     items:
       - docs/community/community-packages
       - docs/community/get-featured
+      - label: Contribute
+        items:
+          - docs/contribute
+          - label: Contribution Types
+            items:
+              - docs/contribute/contributing/core-sdk
+              - docs/contribute/contributing/documentation
+              - docs/contribute/contributing/feature-proposals
+              - docs/contribute/contributing/extensions
+      - label: Labs
+        items:
+          - docs/labs
+          - label: Projects
+            items:
+              - docs/labs/robots
+              - docs/labs/robots-sim
+              - docs/labs/ai-functions
       - label: Integrations
         items:
           - docs/community/integrations/ag-ui
@@ -252,23 +264,6 @@ sidebar:
           - docs/community/tools/strands-telegram
           - docs/community/tools/strands-telegram-listener
           - docs/community/tools/strands-sql
-      - label: Labs
-        items:
-          - docs/labs
-          - label: Projects
-            items:
-              - docs/labs/robots
-              - docs/labs/robots-sim
-              - docs/labs/ai-functions
-      - label: Contribute
-        items:
-          - docs/contribute
-          - label: Contribution Types
-            items:
-              - docs/contribute/contributing/core-sdk
-              - docs/contribute/contributing/documentation
-              - docs/contribute/contributing/feature-proposals
-              - docs/contribute/contributing/extensions
 
 github:
   sections:
