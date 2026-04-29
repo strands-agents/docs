@@ -1,5 +1,5 @@
 ---
-title: "Strands Agents TypeScript SDK: Build Production Agents in TypeScript"
+title: "Strands Agents TypeScript SDK: Build AI Agents in TypeScript"
 date: 2026-04-06
 description: "The Strands Agents TypeScript SDK brings the model-driven approach to the TypeScript ecosystem. Build type-safe AI agents that run in Node.js and the browser."
 authors:
@@ -11,9 +11,7 @@ tags:
 draft: false
 ---
 
-We're excited to announce version 1.0 of the [Strands Agents TypeScript SDK](https://strandsagents.com/docs/user-guide/quickstart/typescript/). The SDK brings the Strands model-driven approach to the TypeScript and JavaScript ecosystem. If you've been following Strands Agents, you know the Python SDK has been powering production agents across AWS and the broader community since May 2025, with over 25 million downloads and counting. Now, TypeScript developers can enjoy the same experience, with full type safety, custom tools, and the ability to run agents in both Node.js and the browser.
-
-## Quick start
+We're excited to announce the release candidate of the [Strands Agents TypeScript SDK](https://github.com/strands-agents/sdk-typescript). The SDK brings the model-driven approach to building AI agents to the TypeScript and JavaScript ecosystem. If you've been following Strands Agents, you know the Python SDK has been powering production agents across AWS and the broader community since May 2025. Now, TypeScript developers get the same simple, powerful primitives with full type safety, custom tools, and the ability to run agents in both Node.js and the browser.
 
 Getting started takes just a few lines of code:
 
@@ -27,39 +25,32 @@ import { Agent } from '@strands-agents/sdk'
 --8<-- "../blog/strands-agents-typescript-sdk.ts:hello_world"
 ```
 
+That's it. An agent with a model, a prompt, and a conversation. The model drives the reasoning and orchestration, while you shape its behavior to fit your use case.
+
 ## What's in the box
 
-The SDK ships with everything you need to go from prototype to production.
+The TypeScript SDK ships with the core features you need to build agents that range from quick prototypes to production systems. Here's a quick tour. For the full details, head over to the [TypeScript quickstart guide](/docs/user-guide/quickstart/typescript/).
 
 ### Model providers
 
-Amazon Bedrock is the default, with built-in support for OpenAI, Anthropic, Google, and any provider compatible with the Vercel AI SDK:
+The SDK supports multiple model providers out of the box. Amazon Bedrock is the default, with first-class support for OpenAI, Anthropic, Google Gemini, and Vercel AI SDK providers:
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 
 --8<-- "../blog/strands-agents-typescript-sdk.ts:model_provider"
 ```
 
 ### Tools
 
-Define custom tools with a Zod schema and a callback. The SDK validates inputs at runtime and gives you full type inference at compile time:
+Define a tool with a Zod schema and a callback. The SDK handles the rest:
 
 ```typescript
 import { tool } from '@strands-agents/sdk'
 import { z } from 'zod'
 
 --8<-- "../blog/strands-agents-typescript-sdk.ts:tool_definition"
-```
-
-The SDK already ships with ready-made tools for running shell commands, editing files, making HTTP requests, and working with notebooks. And with native [Model Context Protocol](https://modelcontextprotocol.io/) support, you can connect to any MCP-compatible tool server:
-
-```typescript
-import { Agent, McpClient } from '@strands-agents/sdk'
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
-
---8<-- "../blog/strands-agents-typescript-sdk.ts:mcp"
 ```
 
 ### Streaming
@@ -72,58 +63,41 @@ import { Agent } from '@strands-agents/sdk'
 --8<-- "../blog/strands-agents-typescript-sdk.ts:streaming"
 ```
 
-### Plugins
+### MCP integration
 
-Strands is extensible by design. Simply hook in with the `Plugin` interface to customize behavior across 15+ lifecycle events spanning invocation, model calls, tool execution, and more:
+Connect to any [Model Context Protocol](https://modelcontextprotocol.io/) server and use its tools directly:
 
 ```typescript
-import { Agent, BeforeToolCallEvent, AfterToolCallEvent } from '@strands-agents/sdk'
-import type { Plugin, LocalAgent } from '@strands-agents/sdk'
+import { Agent, McpClient } from '@strands-agents/sdk'
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
---8<-- "../blog/strands-agents-typescript-sdk.ts:plugins"
+--8<-- "../blog/strands-agents-typescript-sdk.ts:mcp"
 ```
-
-The SDK vends its own plugins as well. [Agent Skills](https://strandsagents.com/docs/user-guide/concepts/plugins/skills/), for instance, lets your agent discover and activate instructions on demand rather than loading everything upfront.
 
 ### Multi-agent orchestration
 
-Single agents are powerful on their own, but some workflows call for coordination. Strands offers three patterns to choose from. The most direct approach is agent-as-tool, where one agent is assigned as a tool on another agent:
-
-```typescript
-import { Agent } from '@strands-agents/sdk'
-
---8<-- "../blog/strands-agents-typescript-sdk.ts:agent_as_tool"
-```
-
-When you need more control over execution order, Graph lets you define explicit dependencies between agents:
+Coordinate multiple agents using Graph (deterministic DAG execution) or Swarm (dynamic, model-driven handoffs) patterns:
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
 import { Graph } from '@strands-agents/sdk/multiagent'
 
---8<-- "../blog/strands-agents-typescript-sdk.ts:graph"
-```
-
-For fully dynamic routing, Swarm enables model-driven handoffs where agents decide at runtime which agent takes over next:
-
-```typescript
-import { Agent } from '@strands-agents/sdk'
-import { Swarm } from '@strands-agents/sdk/multiagent'
-
---8<-- "../blog/strands-agents-typescript-sdk.ts:swarm"
+--8<-- "../blog/strands-agents-typescript-sdk.ts:multi_agent"
 ```
 
 ### And more
 
-The SDK also includes structured output with Zod schema validation, conversation management (sliding window and summarization strategies), session persistence with pluggable storage (file and S3), cooperative cancellation via AbortSignal, token usage tracking and execution metrics, OpenTelemetry integration, and Agent-to-Agent (A2A) protocol support. Check the [docs](https://strandsagents.com) for the full rundown.
+The SDK also includes structured output with Zod schema validation, conversation management (sliding window, summarization), lifecycle hooks, session persistence (including S3 storage), OpenTelemetry-based observability, Agent-to-Agent (A2A) protocol support, and vended tools like notebook, file editor, HTTP request, and bash. Check the [docs](https://strandsagents.com) for the full rundown.
 
-## See it in action
+## Agents in the browser
 
-To show what's possible, we built a [browser agent demo](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples/browser-agent). Chat with an agent to build and modify a live canvas in real time. Just describe what you want, and let the agent handle all the HTML, CSS, and JavaScript.
+What makes the TypeScript SDK unique is that it runs natively in the browser. No server required. This opens up a whole category of interactive, client-side agent experiences.
+
+To show what's possible, we built a [browser agent example](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples/browser-agent) where an AI agent manipulates a live canvas element through natural language. You chat with the agent, and it uses a custom `update_canvas` tool to change HTML, CSS, or run JavaScript in an iframe, all streaming in real time.
 
 ![Browser agent demo](./resources/browser-agent-demo.gif)
 
-Clone the repo and try it yourself:
+Clone the repo and try it out:
 
 ```bash
 git clone https://github.com/strands-agents/sdk-typescript.git
@@ -131,17 +105,17 @@ cd sdk-typescript/strands-ts/examples/browser-agent
 npm install && npm run dev
 ```
 
-The SDK runs natively in the browser with no server required. This opens up a whole category of client-side agent experiences: interactive assistants, in-app copilots, local-first tools.
+## Get started
 
-## Start building
+The TypeScript SDK is available now on npm:
 
 ```bash
 npm install @strands-agents/sdk
 ```
 
-- [TypeScript quickstart guide](https://strandsagents.com/docs/user-guide/quickstart/typescript/)
-- [GitHub repo](https://github.com/strands-agents/sdk-typescript)
-- [API documentation](https://strandsagents.com/docs/api/typescript/)
-- [Examples](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples)
+Here's where to go next:
+
+- [Getting started](/docs/user-guide/quickstart/typescript/) to build your first agent
+- [GitHub](https://github.com/strands-agents/sdk-typescript) for source code and examples
 
 We're building this in the open and contributions are welcome. Whether it's a bug fix, a new feature, or a cool example, we'd love to see what you build. Join us [on GitHub](https://github.com/strands-agents/sdk-typescript) and let us know what you think.
