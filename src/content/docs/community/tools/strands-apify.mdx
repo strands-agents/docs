@@ -1,0 +1,173 @@
+---
+project:
+  pypi: https://pypi.org/project/strands-agents-tools/
+  github: https://github.com/strands-agents/tools
+  maintainer: apify
+service:
+  name: Apify
+  link: https://apify.com/
+title: strands-apify
+community: false
+description: Apify web scraping and automation
+integrationType: tool
+languages: Python
+sidebar:
+  label: "apify"
+---
+
+The [Apify tools](https://github.com/strands-agents/tools) give your Strands agent web scraping, data extraction, automation, search, crawling, and social media scraping capabilities through the [Apify platform](https://apify.com/). You can run any of the 4,000+ Actors in Apify Store, execute saved tasks, fetch dataset results, scrape individual URLs to markdown, perform Google/YouTube/e-commerce searches, crawl entire websites, and scrape popular social media platforms with simplified interfaces.
+
+## Installation
+
+```bash
+pip install strands-agents-tools[apify]
+```
+
+## Usage
+
+### Core agent
+
+`APIFY_CORE_TOOLS` includes general-purpose tools for running Actors, executing saved tasks, fetching dataset results, and scraping URLs to markdown.
+
+```python
+from strands import Agent
+from strands_tools.apify import APIFY_CORE_TOOLS
+
+agent = Agent(tools=APIFY_CORE_TOOLS)
+
+# Scrape a single URL and get markdown content
+agent("Scrape https://docs.apify.com and summarize the page")
+
+# Run an Actor and fetch the results in one step
+agent("Use the website-content-crawler Actor to crawl https://example.com and return the results")
+
+# Run a saved task
+agent("Run my Apify task user/my-daily-scrape and show the dataset results")
+```
+
+### Search & crawling agent
+
+`APIFY_SEARCH_TOOLS` provides specialized tools for Google search, Google Maps, YouTube, website crawling, and e-commerce scraping.
+
+```python
+from strands import Agent
+from strands_tools.apify import APIFY_SEARCH_TOOLS
+
+agent = Agent(tools=APIFY_SEARCH_TOOLS)
+
+# Search Google for structured results
+agent("Search Google for 'best AI frameworks' and return the top 10 results")
+
+# Find businesses on Google Maps
+agent("Find the top-rated Italian restaurants in Prague with reviews")
+
+# Scrape YouTube videos
+agent("Search YouTube for 'python tutorial' and return the top 5 results")
+
+# Crawl an entire website
+agent("Crawl https://docs.example.com up to 10 pages and extract the content")
+
+# Scrape product data from e-commerce sites
+agent("Scrape the product details from this Amazon listing: https://amazon.com/dp/B0EXAMPLE")
+```
+
+### Social media agent
+
+`APIFY_SOCIAL_TOOLS` provides ready-made scrapers for Instagram, LinkedIn, Twitter/X, TikTok, and Facebook.
+
+```python
+from strands import Agent
+from strands_tools.apify import APIFY_SOCIAL_TOOLS
+
+agent = Agent(tools=APIFY_SOCIAL_TOOLS)
+
+# Scrape Instagram profiles or hashtags
+agent("Scrape the top 10 posts for the hashtag #apify on Instagram")
+
+# Get posts from a LinkedIn profile
+agent("Get the last 5 posts from https://www.linkedin.com/in/johndoe")
+
+# Search for LinkedIn profiles
+agent("Find LinkedIn profiles for 'software engineer San Francisco'")
+
+# Scrape tweets by search query
+agent("Find the latest 20 tweets mentioning #AI from:NASA")
+
+# Scrape TikTok videos or profiles
+agent("Scrape the top 10 TikTok videos for the hashtag #webdev")
+
+# Scrape posts from a Facebook page
+agent("Get the latest posts from https://www.facebook.com/apify")
+```
+
+### Custom agent
+
+Pick individual tools from any preset to build an agent tailored to your use case:
+
+```python
+from strands import Agent
+from strands_tools.apify import (
+    apify_scrape_url,
+    apify_run_actor,
+    apify_google_search_scraper,
+    apify_instagram_scraper,
+)
+
+agent = Agent(tools=[apify_scrape_url, apify_run_actor, apify_google_search_scraper, apify_instagram_scraper])
+
+agent("Search Google for 'example topic', scrape the top result, and find related Instagram posts")
+```
+
+:::tip
+Keep the tool set small and focused. `APIFY_ALL_TOOLS` is available as a convenience export that bundles every tool, but registering that many tools at once can overwhelm the model, leading to degraded reasoning or incorrect tool selection.
+:::
+
+## Available tools
+
+### Web scraping and automation
+
+Imported from `strands_tools.apify` or via `APIFY_CORE_TOOLS`.
+
+- **apify_run_actor** - Run any Apify Actor with custom input and return run metadata.
+- **apify_get_dataset_items** - Fetch items from an Apify dataset with pagination (limit/offset).
+- **apify_run_actor_and_get_dataset** - Run an Actor and fetch its dataset results in one call.
+- **apify_run_task** - Run a saved Actor task with optional input overrides.
+- **apify_run_task_and_get_dataset** - Run a task and fetch its dataset results in one call.
+- **apify_scrape_url** - Scrape a single URL using the Website Content Crawler and return markdown. Supports three crawler engines: `cheerio` (fastest, no JS), `playwright:adaptive` (renders JS if needed), and `playwright:firefox` (best at avoiding blocking).
+
+### Search & crawling
+
+Imported from `strands_tools.apify` or via `APIFY_SEARCH_TOOLS`.
+
+- **apify_google_search_scraper** - Search Google and return structured results including organic results, ads, and People Also Ask data. Supports advanced Google operators like `site:example.com` and localized results by country/language.
+- **apify_google_places_scraper** - Search Google Maps for businesses and places with structured data including name, address, rating, phone, and website. Optionally includes user reviews.
+- **apify_youtube_scraper** - Scrape YouTube videos, channels, or search results. Accepts a search query, specific video/channel URLs, or both.
+- **apify_website_content_crawler** - Crawl a website starting from a URL and extract content from multiple pages as markdown. Configurable crawl depth and page limit.
+- **apify_ecommerce_scraper** - Scrape product data from e-commerce websites including Amazon, eBay, Walmart, and others. Supports both product detail pages and category/listing pages.
+
+### Social media scraping
+
+Imported from `strands_tools.apify` or via `APIFY_SOCIAL_TOOLS`.
+
+- **apify_instagram_scraper** - Scrape Instagram profiles, posts, reels, or hashtags by search query or direct URL. Supports `user`, `hashtag`, and `place` search types.
+- **apify_linkedin_profile_posts** - Scrape the most recent posts from a LinkedIn profile by URL or username.
+- **apify_linkedin_profile_search** - Search for LinkedIn profiles by keywords such as job titles, skills, or company names.
+- **apify_linkedin_profile_detail** - Get detailed information from a LinkedIn profile, including work experience, education, and skills.
+- **apify_twitter_scraper** - Scrape tweets by search query or specific Twitter/X URLs. Supports Twitter advanced search syntax (e.g. `from:NASA`, `#AI min_faves:100`).
+- **apify_tiktok_scraper** - Scrape TikTok videos, profiles, or hashtags by search query or direct post URLs.
+- **apify_facebook_posts_scraper** - Scrape posts from a Facebook page or profile by URL.
+
+## Configuration
+
+```bash
+APIFY_API_TOKEN=your_api_token_here    # Required
+```
+
+Get your API token at: [Apify Console > Settings > API & Integrations](https://console.apify.com/account/integrations)
+
+## Resources
+
+- [PyPI Package](https://pypi.org/project/strands-agents-tools/)
+- [GitHub Repository](https://github.com/strands-agents/tools)
+- [Apify Store](https://apify.com/store)
+- [Apify API Reference](https://docs.apify.com/api/v2)

@@ -53,6 +53,11 @@ pip install 'strands-agents-tools[rss]'
 pip install 'strands-agents-tools[use_computer]'
 ```
 
+- [apify](/docs/community/tools/strands-apify/)
+```python
+pip install 'strands-agents-tools[apify]'
+```
+
 ## Available Tools
 
 #### RAG & Memory
@@ -113,6 +118,16 @@ pip install 'strands-agents-tools[use_computer]'
 - [`workflow`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/workflow.py): Orchestrate sequenced workflows
 - [`batch`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/batch.py): Call multiple tools from a single model request
 - [`a2a_client`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/a2a_client.py): Enable agent-to-agent communication
+
+#### Apify
+- [`apify_run_actor`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/apify/apify_run_actor.py): Run any Apify Actor with custom input
+- [`apify_scrape_url`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/apify/apify_scrape_url.py): Scrape a single URL and return markdown
+- [`apify_google_search_scraper`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/apify/apify_google_search_scraper.py): Search Google and return structured results
+- [`apify_website_content_crawler`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/apify/apify_website_content_crawler.py): Crawl a website and extract content from multiple pages
+- [`apify_instagram_scraper`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/apify/apify_instagram_scraper.py): Scrape Instagram profiles, posts, reels, or hashtags
+- [`apify_twitter_scraper`](https://github.com/strands-agents/tools/blob/main/src/strands_tools/apify/apify_twitter_scraper.py): Scrape tweets by search query or specific URLs
+- ...and 12 more tools for datasets, tasks, Google Maps, YouTube, e-commerce, LinkedIn, TikTok, and Facebook
+
 
 ## Tool Consent and Bypassing
 
