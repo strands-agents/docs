@@ -6,7 +6,7 @@ import { loadSidebarFromConfig, type StarlightSidebarItem } from '../sidebar'
 import path from 'node:path'
 
 // Sections to pull from sidebar (with their nav labels)
-const SIDEBAR_SECTIONS = ['User Guide', 'Examples', 'Community']
+const SIDEBAR_SECTIONS = ['Docs', 'Examples', 'Community']
 
 /**
  * Recursively extract links from sidebar items
