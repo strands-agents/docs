@@ -50,6 +50,7 @@ export const collections = {
       title: z.string().optional(),
       logo: image().optional(),
       dark_logo: image().optional(),
+      link: z.string().url().optional(),
       order: z.number().default(0),
     }),
   }),

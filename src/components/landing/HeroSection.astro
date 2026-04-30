@@ -2,7 +2,7 @@
 /**
  * Hero section: headline + subtext on left, code snippet on right.
  */
-import CodeBlock from './CodeBlock.astro'
+import LangCodeBlock from './LangCodeBlock.astro'
 import { getStarCount } from '../../util/github'
 
 interface Props {
@@ -17,15 +17,60 @@ const withBase = (path: string) => {
 
 const stars = await getStarCount()
 
-const heroCode = `from strands import Agent, tool
+const heroPython = `from strands import Agent, tool
+from strands.hooks import BeforeToolCallEvent
+from pathlib import Path
 
 @tool
-def weather(city: str) -> dict:
-    """Get current weather for a city."""
-    return fetch_weather(city)
+def save_report(title: str, content: str) -> str:
+    """Save a research report to disk."""
+    path = f"reports/{title}.md"
+    Path(path).write_text(content)
+    return f"Saved {path}"
 
-agent = Agent(tools=[weather])
-agent("What's the weather in Seattle?")`
+def require_sources(event: BeforeToolCallEvent):
+    name = event.tool_use["name"]
+    inp = str(event.tool_use["input"])
+    if name == "save_report" and "[source]" not in inp:
+        event.cancel_tool = "Add source citations."
+
+agent = Agent(
+    tools=[save_report],
+    hooks=[require_sources],
+)
+agent("Research AI agent frameworks")`
+
+const heroTs = `import {
+  Agent, tool, BeforeToolCallEvent
+} from '@strands-agents/sdk'
+import z from 'zod'
+import { writeFileSync } from 'fs'
+
+const saveReport = tool({
+  name: 'save_report',
+  description: 'Save a research report.',
+  inputSchema: z.object({
+    title: z.string(),
+    content: z.string(),
+  }),
+  callback: ({ title, content }) => {
+    writeFileSync(\`reports/\${title}.md\`, content)
+    return \`Saved \${title}.md\`
+  },
+})
+
+const agent = new Agent({ tools: [saveReport] })
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  const inp = String(event.toolUse.input)
+  if (event.toolUse.name === 'save_report') {
+    if (!inp.includes('[source]')) {
+      event.cancel = 'Add source citations.'
+    }
+  }
+})
+
+await agent.invoke('Research AI agent frameworks')`
 ---
 
 <section class="hero-section">
@@ -33,11 +78,11 @@ agent("What's the weather in Seattle?")`
   <div class="hero-inner">
     <div class="hero-text">
       <h1 class="hero-title">
-        Build AI agents<br />
-        <span class="hero-highlight">you can actually steer.</span>
+        The open source<br />
+        <span class="hero-highlight">agent harness SDK.</span>
       </h1>
       <p class="hero-subtitle">
-        Any model. Any cloud. Open source for Python and TypeScript.
+        Build an agent harness. Control it end-to-end.
       </p>
       <div class="hero-cta">
         <a href={withBase('/docs/user-guide/quickstart/overview/')} class="cta-button primary">Get Started</a>
@@ -69,12 +114,18 @@ agent("What's the weather in Seattle?")`
           </button>
         </div>
       </div>
+      <!-- TODO: Restore harness concept link once /docs/user-guide/concepts/what-is-an-agent-harness/ ships -->
       <p class="hero-social-proof">
-        {stars} GitHub stars · Built from production systems inside Amazon · Works with any model
+        {stars} GitHub stars · Built from production systems inside Amazon
       </p>
     </div>
     <div class="hero-code">
-      <CodeBlock code={heroCode} filename="agent.py" />
+      <LangCodeBlock
+        pythonCode={heroPython}
+        pythonFilename="research_agent.py"
+        tsCode={heroTs}
+        tsFilename="research_agent.ts"
+      />
     </div>
   </div>
 </section>
@@ -295,7 +346,7 @@ agent("What's the weather in Seattle?")`
         btn.classList.add('copied')
         setTimeout(() => btn.classList.remove('copied'), 2000)
 
-        // Easter egg: set global language preference to match the install command
+        // Set global language preference to match the install command
         if (lang) {
           try {
             const key = 'starlight-synced-tabs__jarkqt'
@@ -307,6 +358,8 @@ agent("What's the weather in Seattle?")`
           } catch (e) {
             if (typeof console !== 'undefined') console.debug('[HeroSection] localStorage error:', e);
           }
+          // Notify LangCodeBlock components
+          window.dispatchEvent(new CustomEvent('lang-preference-changed', { detail: { lang } }))
         }
       }
 

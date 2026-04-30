@@ -1,41 +1,77 @@
 ---
 /**
- * "Model-driven by design" section with explanatory text and a large code example.
+ * "Build your way" section — progressive complexity from working defaults.
  */
-import CodeBlock from './CodeBlock.astro'
+import LangCodeBlock from './LangCodeBlock.astro'
 
-const researchCode = `from strands import Agent, tool
-from strands_tools import http_request
-from pathlib import Path
+const agentPy = `from strands import Agent, tool
 
 @tool
-def save_report(title: str, content: str) -> str:
-    """Save a research report to disk."""
-    Path(f"reports/{title}.md").write_text(content)
-    return f"Saved {title}.md"
+def search_logs(query: str, hours: int = 24) -> list:
+    """Search application logs by keyword."""
+    return log_api.search(query, hours)
 
-# The model decides how to classify, research, and draft
 agent = Agent(
-    system_prompt="""You are a research assistant. Classify the topic,
-    research it using the web, then save a summary report.""",
-    tools=[http_request, save_report],
+    tools=[search_logs],
 )
 
-agent("Summarize recent AI agent papers")`
+agent("Find all timeout errors from the last 6 hours")`
+
+const agentTs = `import { Agent, tool } from '@strands-agents/sdk'
+import z from 'zod'
+
+const searchLogs = tool({
+  name: 'search_logs',
+  description: 'Search logs by keyword.',
+  inputSchema: z.object({
+    query: z.string(),
+    hours: z.number().default(24),
+  }),
+  callback: ({ query, hours }) =>
+    logApi.search(query, hours),
+})
+
+const agent = new Agent({ tools: [searchLogs] })
+
+await agent.invoke(
+  'Find all timeout errors from the last 6 hours'
+)`
+
+const swapPy = `from strands.agent import SummarizingConversationManager
+
+# Same agent, now with summarization.
+agent = Agent(
+    tools=[search_logs],
+    conversation_manager=SummarizingConversationManager(),
+)`
+
+const swapTs = `import {
+  SummarizingConversationManager,
+} from '@strands-agents/sdk'
+
+// Same agent, now with summarization.
+const agent = new Agent({
+  tools: [searchLogs],
+  conversationManager:
+    new SummarizingConversationManager(),
+})`
 ---
 
 <section class="model-driven-section">
   <div class="model-driven-inner">
-    <h2 class="section-heading">Write code, not pipelines</h2>
+    <h2 class="section-heading">Build your way</h2>
     <p class="section-description">
-      Early agent frameworks wrapped models in orchestration logic because models couldn't reason reliably. Now they can. Strands gives you back control: define your tools as functions, write a system prompt, and the agent loop handles execution. No step definitions, no workflow graphs. Just code.
+      Any model, any cloud. You get context management, execution limits, and observability before you write a line of config. Swap backends when you scale. Your code stays the same.
     </p>
     <div class="model-driven-code">
-      <CodeBlock code={researchCode} filename="research_agent.py" />
+      <LangCodeBlock pythonCode={agentPy} pythonFilename="agent.py" tsCode={agentTs} tsFilename="agent.ts" />
     </div>
     <p class="section-annotation">
-      The model handles orchestration. When it makes a mistake, a plugin handles recovery. Your agent code stays the same.
+      Progressive complexity. Zero lock-in.
     </p>
+    <div class="model-driven-code">
+      <LangCodeBlock pythonCode={swapPy} pythonFilename="agent_with_context.py" tsCode={swapTs} tsFilename="agent_with_context.ts" />
+    </div>
   </div>
 </section>
 
