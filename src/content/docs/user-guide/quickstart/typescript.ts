@@ -64,13 +64,13 @@ const quietAgent = new Agent({
 // Check the model configuration
 const myAgent = new Agent()
 console.log(myAgent['model'].getConfig().modelId)
-// Output: { modelId: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0' }
+// Output: { modelId: 'global.anthropic.claude-sonnet-4-6' }
 // --8<-- [end:model-config]
 
 // --8<-- [start:model-string]
 // Create an agent with a specific model by passing the model ID string
 const specificAgent = new Agent({
-  model: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  model: 'global.anthropic.claude-opus-4-6-v1',
 })
 // --8<-- [end:model-string]
 
@@ -79,7 +79,7 @@ import { BedrockModel } from '@strands-agents/sdk'
 
 // Create a BedrockModel with custom configuration
 const bedrockModel = new BedrockModel({
-  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  modelId: 'global.anthropic.claude-opus-4-6-v1',
   region: 'us-west-2',
   temperature: 0.3,
 })
