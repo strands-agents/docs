@@ -191,7 +191,7 @@ response = agent("Tell me about Amazon Bedrock.")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-The [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4.5](https://aws.amazon.com/blogs/aws/introducing-claude-sonnet-4-5-in-amazon-bedrock-anthropics-most-intelligent-model-best-for-coding-and-complex-agents/) model by default. This basic example creates an agent using this default setup:
+The [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md) provider is used by default when creating a basic Agent, and uses [Claude Sonnet 4.6](https://www.anthropic.com/claude/sonnet) by default. This basic example creates an agent using this default setup:
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
@@ -784,7 +784,7 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 (( tab "TypeScript" ))
 ```typescript
 const bedrockModel = new BedrockModel({
-  modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+  modelId: 'us.anthropic.claude-sonnet-4-6',
   cacheConfig: { strategy: 'auto' },
 })
 

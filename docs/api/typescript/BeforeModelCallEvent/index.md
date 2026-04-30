@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:323](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L323)
+Defined in: [src/hooks/events.ts:361](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L361)
 
 Event triggered just before the model is invoked. Fired before sending messages to the model for inference.
 
@@ -14,7 +14,7 @@ Event triggered just before the model is invoked. Fired before sending messages 
 new BeforeModelCallEvent(data): BeforeModelCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:344](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L344)
+Defined in: [src/hooks/events.ts:382](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L382)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [src/hooks/events.ts:344](https://github.com/strands-agents/sdk-type
 readonly type: "beforeModelCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:324](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L324)
+Defined in: [src/hooks/events.ts:362](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L362)
 
 ---
 
@@ -52,7 +52,7 @@ Defined in: [src/hooks/events.ts:324](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L325)
+Defined in: [src/hooks/events.ts:363](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L363)
 
 ---
 
@@ -62,7 +62,7 @@ Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-type
 readonly model: Model;
 ```
 
-Defined in: [src/hooks/events.ts:326](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L326)
+Defined in: [src/hooks/events.ts:364](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L364)
 
 ---
 
@@ -72,7 +72,7 @@ Defined in: [src/hooks/events.ts:326](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:327](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L327)
+Defined in: [src/hooks/events.ts:365](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L365)
 
 ---
 
@@ -82,7 +82,7 @@ Defined in: [src/hooks/events.ts:327](https://github.com/strands-agents/sdk-type
 cancel: string | boolean = false;
 ```
 
-Defined in: [src/hooks/events.ts:334](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L334)
+Defined in: [src/hooks/events.ts:372](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L372)
 
 Set by hook callbacks to cancel this model call. When set to `true`, a default cancel message is used. When set to a string, that string is used as the assistant response message.
 
@@ -94,7 +94,7 @@ Set by hook callbacks to cancel this model call. When set to `true`, a default c
 readonly optional projectedInputTokens?: number;
 ```
 
-Defined in: [src/hooks/events.ts:342](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L342)
+Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L380)
 
 Projected input token count for the upcoming model call. Computed by the agent loop from message metadata and token estimation. Available for hooks and plugins (e.g. conversation managers) to make proactive decisions about context management.
 
@@ -106,7 +106,7 @@ Projected input token count for the upcoming model call. Computed by the agent l
 toJSON(): Pick<BeforeModelCallEvent, "type" | "projectedInputTokens">;
 ```
 
-Defined in: [src/hooks/events.ts:363](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L363)
+Defined in: [src/hooks/events.ts:401](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L401)
 
 Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 

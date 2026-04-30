@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:292](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L292)
+Defined in: [src/types/media.ts:292](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L292)
 
 Video content block.
 
@@ -15,7 +15,7 @@ Video content block.
 new VideoBlock(data): VideoBlock;
 ```
 
-Defined in: [src/types/media.ts:308](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L308)
+Defined in: [src/types/media.ts:308](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L308)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:308](https://github.com/strands-agents/sdk-types
 readonly type: "videoBlock";
 ```
 
-Defined in: [src/types/media.ts:296](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L296)
+Defined in: [src/types/media.ts:296](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L296)
 
 Discriminator for video content.
 
@@ -47,7 +47,7 @@ Discriminator for video content.
 readonly format: VideoFormat;
 ```
 
-Defined in: [src/types/media.ts:301](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L301)
+Defined in: [src/types/media.ts:301](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L301)
 
 Video format.
 
@@ -63,7 +63,7 @@ Video format.
 readonly source: VideoSource;
 ```
 
-Defined in: [src/types/media.ts:306](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L306)
+Defined in: [src/types/media.ts:306](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L306)
 
 Video source.
 
@@ -93,7 +93,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/media.ts:331](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L331)
+Defined in: [src/types/media.ts:331](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L331)
 
 Serializes the VideoBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array bytes are encoded as base64 string.
 
@@ -119,9 +119,9 @@ Serializes the VideoBlock to a JSON-compatible ContentBlockData object. Called a
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `video` | { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; } | \- | [src/types/media.ts:331](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L331) |
-| `video.format` | [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md) | Video format. | [src/types/media.ts:281](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L281) |
-| `video.source` | | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Video source. | [src/types/media.ts:286](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L286) |
+| `video` | { `format`: [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md); `source`: | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; }; } | \- | [src/types/media.ts:331](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L331) |
+| `video.format` | [`VideoFormat`](/docs/api/typescript/VideoFormat/index.md) | Video format. | [src/types/media.ts:281](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L281) |
+| `video.source` | | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | Video source. | [src/types/media.ts:286](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L286) |
 
 #### Implementation of
 
@@ -137,7 +137,7 @@ JSONSerializable.toJSON
 static fromJSON(data): VideoBlock;
 ```
 
-Defined in: [src/types/media.ts:353](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L353)
+Defined in: [src/types/media.ts:353](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L353)
 
 Creates a VideoBlock instance from its wrapped data format. Base64-encoded bytes are decoded back to Uint8Array.
 

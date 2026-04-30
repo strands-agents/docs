@@ -474,6 +474,7 @@
 - [ToolUse](https://strandsagents.com/docs/api/typescript/ToolUse/index.md)
 - [ToolUseBlock](https://strandsagents.com/docs/api/typescript/ToolUseBlock/index.md)
 - [ToolUseBlockData](https://strandsagents.com/docs/api/typescript/ToolUseBlockData/index.md)
+- [ToolUseData](https://strandsagents.com/docs/api/typescript/ToolUseData/index.md)
 - [ToolUseInputDelta](https://strandsagents.com/docs/api/typescript/ToolUseInputDelta/index.md)
 - [ToolUseStart](https://strandsagents.com/docs/api/typescript/ToolUseStart/index.md)
 - [ToolValidationError](https://strandsagents.com/docs/api/typescript/ToolValidationError/index.md)

@@ -31,20 +31,20 @@ import { bash } from '@strands-agents/sdk/vended-tools/bash'
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with Claude Sonnet 4.6.
 
-To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
+To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke Claude Sonnet 4.6. You can set up your credentials in several ways:
 
 1.  **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2.  **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3.  **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4.  **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke Claude Sonnet 4.6.
 
 ## Project Setup
 
-Now we’ll continuing building out the nodejs project by adding TypeScript to the project where our agent will reside. We’ll use this directory structure:
+Now we’ll continue building out the nodejs project by adding TypeScript to the project where our agent will reside. We’ll use this directory structure:
 
 ```plaintext
 my-agent/
@@ -172,13 +172,13 @@ const quietAgent = new Agent({
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing `model.config`:
+Strands defaults to the Bedrock model provider using Claude Sonnet 4.6. The model your agent is using can be retrieved by accessing `model.config`:
 
 ```typescript
 // Check the model configuration
 const myAgent = new Agent()
 console.log(myAgent['model'].getConfig().modelId)
-// Output: { modelId: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0' }
+// Output: { modelId: 'global.anthropic.claude-sonnet-4-6' }
 ```
 
 You can specify a different model by creating a model provider instance with specific configurations
@@ -192,7 +192,7 @@ import { BedrockModel } from '@strands-agents/sdk'
 
 // Create a BedrockModel with custom configuration
 const bedrockModel = new BedrockModel({
-  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  modelId: 'global.anthropic.claude-opus-4-6-v1',
   region: 'us-west-2',
   temperature: 0.3,
 })

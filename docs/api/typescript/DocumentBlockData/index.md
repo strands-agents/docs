@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:398](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L398)
+Defined in: [src/types/media.ts:398](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L398)
 
 Data for a document block.
 
@@ -10,7 +10,7 @@ Data for a document block.
 name: string;
 ```
 
-Defined in: [src/types/media.ts:402](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L402)
+Defined in: [src/types/media.ts:402](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L402)
 
 Document name.
 
@@ -22,7 +22,7 @@ Document name.
 format: DocumentFormat;
 ```
 
-Defined in: [src/types/media.ts:407](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L407)
+Defined in: [src/types/media.ts:407](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L407)
 
 Document format.
 
@@ -34,7 +34,7 @@ Document format.
 source: DocumentSourceData;
 ```
 
-Defined in: [src/types/media.ts:412](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L412)
+Defined in: [src/types/media.ts:412](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L412)
 
 Document source.
 
@@ -48,7 +48,7 @@ optional citations?: {
 };
 ```
 
-Defined in: [src/types/media.ts:417](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L417)
+Defined in: [src/types/media.ts:417](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L417)
 
 Citation configuration.
 
@@ -66,6 +66,6 @@ enabled: boolean;
 optional context?: string;
 ```
 
-Defined in: [src/types/media.ts:422](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/types/media.ts#L422)
+Defined in: [src/types/media.ts:422](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/types/media.ts#L422)
 
 Context information for the document.

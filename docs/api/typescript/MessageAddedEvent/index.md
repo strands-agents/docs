@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:184](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L184)
+Defined in: [src/hooks/events.ts:209](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L209)
 
 Event triggered when the framework adds a message to the conversation history. Fired during the agent loop execution for framework-generated messages. Does not fire for initial messages from AgentConfig or user input messages.
 
@@ -14,7 +14,7 @@ Event triggered when the framework adds a message to the conversation history. F
 new MessageAddedEvent(data): MessageAddedEvent;
 ```
 
-Defined in: [src/hooks/events.ts:190](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L190)
+Defined in: [src/hooks/events.ts:215](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L215)
 
 #### Parameters
 
@@ -41,7 +41,7 @@ Defined in: [src/hooks/events.ts:190](https://github.com/strands-agents/sdk-type
 readonly type: "messageAddedEvent";
 ```
 
-Defined in: [src/hooks/events.ts:185](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L185)
+Defined in: [src/hooks/events.ts:210](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L210)
 
 ---
 
@@ -51,7 +51,7 @@ Defined in: [src/hooks/events.ts:185](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:186](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L186)
+Defined in: [src/hooks/events.ts:211](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L211)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [src/hooks/events.ts:186](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:187](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L187)
+Defined in: [src/hooks/events.ts:212](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L212)
 
 ---
 
@@ -71,7 +71,7 @@ Defined in: [src/hooks/events.ts:187](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:188](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L188)
+Defined in: [src/hooks/events.ts:213](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L213)
 
 ## Methods
 
@@ -81,7 +81,7 @@ Defined in: [src/hooks/events.ts:188](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<MessageAddedEvent, "type" | "message">;
 ```
 
-Defined in: [src/hooks/events.ts:201](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/hooks/events.ts#L201)
+Defined in: [src/hooks/events.ts:226](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L226)
 
 Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 

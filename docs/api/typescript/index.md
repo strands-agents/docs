@@ -120,6 +120,7 @@
     -   [ToolStreamEventData](/docs/api/typescript/ToolStreamEventData/index.md)
     -   [ToolUse](/docs/api/typescript/ToolUse/index.md)
     -   [ToolUseBlockData](/docs/api/typescript/ToolUseBlockData/index.md)
+    -   [ToolUseData](/docs/api/typescript/ToolUseData/index.md)
     -   [ToolUseInputDelta](/docs/api/typescript/ToolUseInputDelta/index.md)
     -   [ToolUseStart](/docs/api/typescript/ToolUseStart/index.md)
     -   [Usage](/docs/api/typescript/Usage/index.md)

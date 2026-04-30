@@ -1,4 +1,4 @@
-Defined in: [src/session/storage.ts:47](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L47)
+Defined in: [src/session/storage.ts:47](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L47)
 
 Interface for snapshot persistence. Implementations provide storage backends (S3, filesystem, etc.).
 
@@ -23,7 +23,7 @@ sessions/<session_id>/
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/storage.ts:51](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L51)
+Defined in: [src/session/storage.ts:51](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L51)
 
 Persists a snapshot to storage.
 
@@ -49,7 +49,7 @@ Persists a snapshot to storage.
 loadSnapshot(params): Promise<Snapshot>;
 ```
 
-Defined in: [src/session/storage.ts:61](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L61)
+Defined in: [src/session/storage.ts:61](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L61)
 
 Loads a snapshot from storage.
 
@@ -73,7 +73,7 @@ Loads a snapshot from storage.
 listSnapshotIds(params): Promise<string[]>;
 ```
 
-Defined in: [src/session/storage.ts:77](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L77)
+Defined in: [src/session/storage.ts:77](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L77)
 
 Lists all available immutable snapshot IDs for a session scope, sorted chronologically. Snapshot IDs are UUID v7 strings vended by the SDK — callers should treat them as opaque handles and never construct them manually.
 
@@ -107,7 +107,7 @@ const page2 = await storage.listSnapshotIds({ location, startAfter: page1.at(-1)
 deleteSession(params): Promise<void>;
 ```
 
-Defined in: [src/session/storage.ts:82](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L82)
+Defined in: [src/session/storage.ts:82](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L82)
 
 Deletes all snapshots and directories belonging to the session ID.
 
@@ -130,7 +130,7 @@ Deletes all snapshots and directories belonging to the session ID.
 loadManifest(params): Promise<SnapshotManifest>;
 ```
 
-Defined in: [src/session/storage.ts:87](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L87)
+Defined in: [src/session/storage.ts:87](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L87)
 
 Loads the snapshot manifest.
 
@@ -153,7 +153,7 @@ Loads the snapshot manifest.
 saveManifest(params): Promise<void>;
 ```
 
-Defined in: [src/session/storage.ts:92](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/session/storage.ts#L92)
+Defined in: [src/session/storage.ts:92](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/session/storage.ts#L92)
 
 Saves the snapshot manifest.
 

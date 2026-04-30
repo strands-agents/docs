@@ -3351,7 +3351,7 @@ You can also run individual checks.
 
 ```bash
 npm test                    # Run unit tests
-npm run typecheck           # TypeScript type checking
+npm run type-check          # TypeScript type checking
 npm run format              # Format code with Prettier
 ```
 
@@ -15172,7 +15172,7 @@ response = agent("Tell me about Amazon Bedrock.")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-The [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4.5](https://aws.amazon.com/blogs/aws/introducing-claude-sonnet-4-5-in-amazon-bedrock-anthropics-most-intelligent-model-best-for-coding-and-complex-agents/) model by default. This basic example creates an agent using this default setup:
+The [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md) provider is used by default when creating a basic Agent, and uses [Claude Sonnet 4.6](https://www.anthropic.com/claude/sonnet) by default. This basic example creates an agent using this default setup:
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
@@ -15765,7 +15765,7 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 (( tab "TypeScript" ))
 ```typescript
 const bedrockModel = new BedrockModel({
-  modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+  modelId: 'us.anthropic.claude-sonnet-4-6',
   cacheConfig: { strategy: 'auto' },
 })
 
@@ -38013,6 +38013,7 @@ Trace providers fetch agent execution data from observability backends and conve
 | --- | --- | --- |
 | `CloudWatchProvider` | AWS CloudWatch Logs (Bedrock AgentCore runtime logs) | AWS credentials (boto3) |
 | `LangfuseProvider` | Langfuse | API keys |
+| `OpenSearchProvider` | OpenSearch (self-hosted or Amazon OpenSearch Service) | Basic auth or SigV4 |
 
 ## Installation
 
@@ -38026,6 +38027,12 @@ For the Langfuse provider, install the optional `langfuse` extra:
 
 ```bash
 pip install strands-agents-evals[langfuse]
+```
+
+For the OpenSearch provider, install the optional `opensearch` extra:
+
+```bash
+pip install strands-agents-evals[opensearch]
 ```
 
 ## CloudWatch Provider
@@ -38090,6 +38097,47 @@ provider = LangfuseProvider(
 | `host` | `LANGFUSE_HOST` env var or `https://us.cloud.langfuse.com` | Langfuse API host URL |
 | `timeout` | `120` | Request timeout in seconds |
 
+## OpenSearch Provider
+
+The `OpenSearchProvider` retrieves agent traces from OpenSearch using [opensearch-genai-observability-sdk-py](https://github.com/opensearch-project/genai-observability-sdk-py). It works with both self-hosted OpenSearch clusters and Amazon OpenSearch Service.
+
+### Setup
+
+```python
+from strands_evals.providers import OpenSearchProvider
+
+# Basic auth (self-hosted)
+provider = OpenSearchProvider(
+    host="https://localhost:9200",
+    auth=("admin", "password"),
+    verify_certs=False,
+)
+
+# SigV4 auth (Amazon OpenSearch Service)
+from opensearchpy import RequestsAWSV4SignerAuth
+import boto3
+
+credentials = boto3.Session().get_credentials()
+auth = RequestsAWSV4SignerAuth(credentials, "us-east-1", "es")
+provider = OpenSearchProvider(
+    host="https://my-domain.us-east-1.es.amazonaws.com",
+    auth=auth,
+)
+```
+
+Sending traces to OpenSearch
+
+[OpenSearch](https://opensearch.org/) can store and visualize OpenTelemetry traces sent via OTLP. For setup instructions covering self-managed and managed deployments, see the [OpenSearch Observability — Send Data](https://observability.opensearch.org/docs/send-data/) guide or jump straight to [Ingest Your First Traces](https://observability.opensearch.org/docs/get-started/quickstart/first-traces/).
+
+### Configuration
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `host` | `https://localhost:9200` | OpenSearch endpoint URL |
+| `index` | `otel-v1-apm-span-*` | Index pattern for span documents |
+| `auth` | `None` | `(username, password)` tuple for basic auth, or `RequestsAWSV4SignerAuth` for SigV4 |
+| `verify_certs` | `True` | Whether to verify TLS certificates |
+
 ## Running Evaluations on Remote Traces
 
 All providers implement the same `TraceProvider` interface with a single method:
@@ -38134,7 +38182,7 @@ for report in reports:
     print(f"{report.overall_score:.2f} - {report.reasons}")
 ```
 
-The same pattern works with `LangfuseProvider` — just swap the provider initialization.
+The same pattern works with `LangfuseProvider` or `OpenSearchProvider` — just swap the provider initialization.
 
 ## Error Handling
 
@@ -42087,16 +42135,16 @@ See the [MCP server documentation](https://github.com/strands-agents/mcp-server)
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model. To modify the default model, refer to [the Model Providers section](#model-providers)
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with Claude Sonnet 4. To modify the default model, refer to [the Model Providers section](#model-providers)
 
-To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
+To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke Claude Sonnet 4. You can set up your credentials in several ways:
 
 1.  **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2.  **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3.  **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4.  **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke Claude Sonnet 4.
 
 ## Project Setup
 
@@ -42406,7 +42454,7 @@ See the [Logs documentation](/docs/user-guide/observability-evaluation/logs/inde
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](/docs/api/python/strands.models.model#Model.get_config):
+Strands defaults to the Bedrock model provider using Claude Sonnet 4. The model your agent is using can be retrieved by accessing [`model.config`](/docs/api/python/strands.models.model#Model.get_config):
 
 ```python
 from strands import Agent
@@ -42614,20 +42662,20 @@ import { bash } from '@strands-agents/sdk/vended-tools/bash'
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with Claude Sonnet 4.6.
 
-To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
+To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke Claude Sonnet 4.6. You can set up your credentials in several ways:
 
 1.  **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2.  **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3.  **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4.  **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke Claude Sonnet 4.6.
 
 ## Project Setup
 
-Now we’ll continuing building out the nodejs project by adding TypeScript to the project where our agent will reside. We’ll use this directory structure:
+Now we’ll continue building out the nodejs project by adding TypeScript to the project where our agent will reside. We’ll use this directory structure:
 
 ```plaintext
 my-agent/
@@ -42755,13 +42803,13 @@ const quietAgent = new Agent({
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing `model.config`:
+Strands defaults to the Bedrock model provider using Claude Sonnet 4.6. The model your agent is using can be retrieved by accessing `model.config`:
 
 ```typescript
 // Check the model configuration
 const myAgent = new Agent()
 console.log(myAgent['model'].getConfig().modelId)
-// Output: { modelId: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0' }
+// Output: { modelId: 'global.anthropic.claude-sonnet-4-6' }
 ```
 
 You can specify a different model by creating a model provider instance with specific configurations
@@ -42775,7 +42823,7 @@ import { BedrockModel } from '@strands-agents/sdk'
 
 // Create a BedrockModel with custom configuration
 const bedrockModel = new BedrockModel({
-  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  modelId: 'global.anthropic.claude-opus-4-6-v1',
   region: 'us-west-2',
   temperature: 0.3,
 })

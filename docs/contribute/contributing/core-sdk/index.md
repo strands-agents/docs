@@ -106,7 +106,7 @@ You can also run individual checks.
 
 ```bash
 npm test                    # Run unit tests
-npm run typecheck           # TypeScript type checking
+npm run type-check          # TypeScript type checking
 npm run format              # Format code with Prettier
 ```
 

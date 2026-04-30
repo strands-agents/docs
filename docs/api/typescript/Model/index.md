@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:186](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L186)
+Defined in: [src/models/model.ts:186](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L186)
 
 Base abstract class for model providers. Defines the contract that all model provider implementations must follow.
 
@@ -36,7 +36,7 @@ new Model<T>(): Model<T>;
 get modelId(): string;
 ```
 
-Defined in: [src/models/model.ts:205](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L205)
+Defined in: [src/models/model.ts:205](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L205)
 
 The model ID from the current configuration, if configured.
 
@@ -54,7 +54,7 @@ The model ID from the current configuration, if configured.
 get stateful(): boolean;
 ```
 
-Defined in: [src/models/model.ts:221](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L221)
+Defined in: [src/models/model.ts:221](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L221)
 
 Whether this model manages conversation state server-side.
 
@@ -76,7 +76,7 @@ Model providers that support server-side state management should override this t
 abstract updateConfig(modelConfig): void;
 ```
 
-Defined in: [src/models/model.ts:193](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L193)
+Defined in: [src/models/model.ts:193](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L193)
 
 Updates the model configuration. Merges the provided configuration with existing settings.
 
@@ -98,7 +98,7 @@ Updates the model configuration. Merges the provided configuration with existing
 abstract getConfig(): T;
 ```
 
-Defined in: [src/models/model.ts:200](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L200)
+Defined in: [src/models/model.ts:200](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L200)
 
 Retrieves the current model configuration.
 
@@ -116,7 +116,7 @@ The current configuration object
 abstract stream(messages, options?): AsyncIterable<ModelStreamEvent>;
 ```
 
-Defined in: [src/models/model.ts:233](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L233)
+Defined in: [src/models/model.ts:233](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L233)
 
 Streams a conversation with the model. Returns an async iterable that yields streaming events as they occur.
 
@@ -141,7 +141,7 @@ Async iterable of streaming events
 countTokens(messages, options?): Promise<number>;
 ```
 
-Defined in: [src/models/model.ts:249](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L249)
+Defined in: [src/models/model.ts:249](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L249)
 
 Count tokens for the given input before sending to the model.
 
@@ -172,7 +172,7 @@ streamAggregated(messages, options?): AsyncGenerator<
 | ModelStreamEvent, StreamAggregatedResult, undefined>;
 ```
 
-Defined in: [src/models/model.ts:307](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/model.ts#L307)
+Defined in: [src/models/model.ts:307](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L307)
 
 Streams a conversation with aggregated content blocks and messages. Returns an async generator that yields streaming events and content blocks, and returns the final message with stop reason and optional metadata.
 
