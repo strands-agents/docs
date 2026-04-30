@@ -188,7 +188,7 @@ Find the tool in the `agent.tools` array and call its `invoke()` method. You nee
 
 ## Tool Executors
 
-When models return multiple tool requests, you can control whether they execute concurrently or sequentially.
+When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Both SDKs default to concurrent execution.
 
 <Tabs>
 <Tab label="Python">
@@ -215,9 +215,13 @@ For more details, see [Tool Executors](executors.md).
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+```typescript
+--8<-- "user-guide/concepts/tools/tools_imports.ts:tool_executors_imports"
+
+--8<-- "user-guide/concepts/tools/tools.ts:tool_executors"
 ```
+
+For more details, see [Tool Executors](executors.md).
 </Tab>
 </Tabs>
 

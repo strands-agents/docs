@@ -464,3 +464,20 @@ Notes:
   })
   // --8<-- [end:search_database]
 }
+
+// Tool executor example
+async function toolExecutorExample() {
+  // --8<-- [start:tool_executors]
+  // Concurrent execution (default)
+  const agent = new Agent({
+    tools: [notebook, fileEditor],
+    toolExecutor: 'concurrent',
+  })
+
+  // Sequential execution for order-dependent tools
+  const sequentialAgent = new Agent({
+    tools: [notebook, fileEditor],
+    toolExecutor: 'sequential',
+  })
+  // --8<-- [end:tool_executors]
+}
