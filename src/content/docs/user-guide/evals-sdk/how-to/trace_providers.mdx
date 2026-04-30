@@ -98,10 +98,6 @@ provider = LangfuseProvider(
 
 The `OpenSearchProvider` retrieves agent traces from OpenSearch using [opensearch-genai-observability-sdk-py](https://github.com/opensearch-project/genai-observability-sdk-py). It works with both self-hosted OpenSearch clusters and Amazon OpenSearch Service.
 
-:::note[Sending traces to OpenSearch]
-[OpenSearch](https://opensearch.org/) can store and visualize OpenTelemetry traces sent via OTLP. For setup instructions covering self-managed and managed deployments, see the [OpenSearch Observability — Send Data](https://observability.opensearch.org/docs/send-data/) guide or jump straight to [Ingest Your First Traces](https://observability.opensearch.org/docs/get-started/quickstart/first-traces/).
-:::
-
 ### Setup
 
 ```python
@@ -125,6 +121,10 @@ provider = OpenSearchProvider(
     auth=auth,
 )
 ```
+
+:::note[Sending traces to OpenSearch]
+[OpenSearch](https://opensearch.org/) can store and visualize OpenTelemetry traces sent via OTLP. For setup instructions covering self-managed and managed deployments, see the [OpenSearch Observability — Send Data](https://observability.opensearch.org/docs/send-data/) guide or jump straight to [Ingest Your First Traces](https://observability.opensearch.org/docs/get-started/quickstart/first-traces/).
+:::
 
 ### Configuration
 
