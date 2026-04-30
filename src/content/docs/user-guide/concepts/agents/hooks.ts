@@ -78,8 +78,32 @@ async function individualCallbackExample() {
 // Advanced Usage Examples
 // =====================
 
-// Note: Invocation state feature is not yet available in TypeScript SDK
-// This example is preserved for when the feature is implemented
+async function invocationStateInHooksExample() {
+  // --8<-- [start:invocation_state_in_hooks]
+  const agent = new Agent()
+
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    // Read caller-provided context
+    const userId = event.invocationState.userId as string | undefined
+    const sessionId = event.invocationState.sessionId as string | undefined
+
+    console.log(
+      `User ${userId} (session ${sessionId}) ` + `invoking tool: ${event.toolUse.name}`
+    )
+  })
+
+  // Pass invocation state when invoking the agent
+  const result = await agent.invoke('Process the data', {
+    invocationState: {
+      userId: 'user123',
+      sessionId: 'sess456',
+    },
+  })
+
+  // The same object is returned on the result
+  console.log(result.invocationState.userId) // 'user123'
+  // --8<-- [end:invocation_state_in_hooks]
+}
 
 async function toolInterceptionExample() {
   // --8<-- [start:tool_interception]
@@ -420,6 +444,7 @@ async function layeredHooksExample() {
 }
 
 // Suppress unused function warnings
+void invocationStateInHooksExample
 void limitToolCountsExample
 void orchestratorCallbackExample
 void conditionalNodeExecutionExample

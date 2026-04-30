@@ -311,18 +311,20 @@ print(result.state)
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+```typescript
+--8<-- "user-guide/concepts/agents/state.ts:invocation_state"
 ```
 </Tab>
 </Tabs>
 
-The request state:
+Invocation state (`invocationState` in TypeScript, `invocation_state` / `request_state` in Python):
 
-- Is initialized at the beginning of each agent call
-- Persists through recursive event loop cycles
-- Can be modified by callback handlers
-- Is returned in the AgentResult object
+- Is initialized at the beginning of each agent invocation (defaults to `{}` when omitted)
+- Persists through recursive event loop cycles within a single invocation
+- Is shared by reference across all hook events and tools
+- Mutations by hooks or tools are visible to subsequent hooks, tools, and the final result
+- Is returned on the `AgentResult` (Python: `result.state`, TypeScript: `result.invocationState`)
+- Is **not** included in the agent's model context
 
 ## Persisting State Across Sessions
 
