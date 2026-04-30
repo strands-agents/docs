@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:203](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/errors.ts#L203)
+Defined in: [src/errors.ts:203](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/errors.ts#L203)
 
 Thrown when the model fails to produce structured output. This occurs when the LLM refuses to use the structured output tool even after being forced via toolChoice.
 
@@ -14,7 +14,7 @@ Thrown when the model fails to produce structured output. This occurs when the L
 new StructuredOutputError(message): StructuredOutputError;
 ```
 
-Defined in: [src/errors.ts:204](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/errors.ts#L204)
+Defined in: [src/errors.ts:204](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/errors.ts#L204)
 
 #### Parameters
 

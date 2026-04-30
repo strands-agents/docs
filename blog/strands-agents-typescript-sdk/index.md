@@ -137,7 +137,7 @@ The SDK also includes structured output with Zod schema validation, conversation
 
 What makes the TypeScript SDK unique is that it runs natively in the browser. No server required. This opens up a whole category of interactive, client-side agent experiences.
 
-To show what’s possible, we built a [browser agent example](https://github.com/strands-agents/sdk-typescript/tree/main/examples/browser-agent) where an AI agent manipulates a live canvas element through natural language. You chat with the agent, and it uses a custom `update_canvas` tool to change HTML, CSS, or run JavaScript in an iframe, all streaming in real time.
+To show what’s possible, we built a [browser agent example](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples/browser-agent) where an AI agent manipulates a live canvas element through natural language. You chat with the agent, and it uses a custom `update_canvas` tool to change HTML, CSS, or run JavaScript in an iframe, all streaming in real time.
 
 ![Browser agent demo](/_astro/browser-agent-demo.CscPr-OG_CKuwx.webp)
 
@@ -145,7 +145,7 @@ Clone the repo and try it out:
 
 ```bash
 git clone https://github.com/strands-agents/sdk-typescript.git
-cd sdk-typescript/examples/browser-agent
+cd sdk-typescript/strands-ts/examples/browser-agent
 npm install && npm run dev
 ```
 

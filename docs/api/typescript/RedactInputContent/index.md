@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:296](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/streaming.ts#L296)
+Defined in: [src/models/streaming.ts:296](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/streaming.ts#L296)
 
 Information about input content redaction. Does not include redactedContent since the original input is already available in the messages array from BeforeModelCallEvent.
 
@@ -10,6 +10,6 @@ Information about input content redaction. Does not include redactedContent sinc
 replaceContent: string;
 ```
 
-Defined in: [src/models/streaming.ts:300](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/models/streaming.ts#L300)
+Defined in: [src/models/streaming.ts:300](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/models/streaming.ts#L300)
 
 The content to replace the redacted input with.

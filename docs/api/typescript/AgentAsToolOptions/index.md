@@ -1,4 +1,4 @@
-Defined in: [src/agent/agent-as-tool.ts:21](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/agent/agent-as-tool.ts#L21)
+Defined in: [src/agent/agent-as-tool.ts:21](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/agent/agent-as-tool.ts#L21)
 
 Options for creating an agent tool via [Agent.asTool](/docs/api/typescript/Agent/index.md#astool).
 
@@ -10,7 +10,7 @@ Options for creating an agent tool via [Agent.asTool](/docs/api/typescript/Agent
 optional name?: string;
 ```
 
-Defined in: [src/agent/agent-as-tool.ts:29](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/agent/agent-as-tool.ts#L29)
+Defined in: [src/agent/agent-as-tool.ts:29](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/agent/agent-as-tool.ts#L29)
 
 Tool name exposed to the parent agent’s model. Must match the pattern `[a-zA-Z0-9_-]{1,64}`.
 
@@ -24,7 +24,7 @@ Defaults to the agent’s name. Throws if the resolved name is not a valid tool 
 optional description?: string;
 ```
 
-Defined in: [src/agent/agent-as-tool.ts:38](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/agent/agent-as-tool.ts#L38)
+Defined in: [src/agent/agent-as-tool.ts:38](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/agent/agent-as-tool.ts#L38)
 
 Tool description exposed to the parent agent’s model. Helps the model understand when to use this tool.
 
@@ -38,7 +38,7 @@ Defaults to the agent’s description, or a generic description if the agent has
 optional preserveContext?: boolean;
 ```
 
-Defined in: [src/agent/agent-as-tool.ts:52](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/agent/agent-as-tool.ts#L52)
+Defined in: [src/agent/agent-as-tool.ts:52](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/agent/agent-as-tool.ts#L52)
 
 Whether to preserve the agent’s conversation history across invocations.
 

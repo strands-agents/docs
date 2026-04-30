@@ -1,4 +1,4 @@
-Defined in: [src/tools/tool.ts:12](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/tools/tool.ts#L12)
+Defined in: [src/tools/tool.ts:12](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/tools/tool.ts#L12)
 
 Context provided to tool implementations during execution. Contains framework-level state and information from the agent invocation.
 
@@ -10,7 +10,7 @@ Context provided to tool implementations during execution. Contains framework-le
 toolUse: ToolUse;
 ```
 
-Defined in: [src/tools/tool.ts:17](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/tools/tool.ts#L17)
+Defined in: [src/tools/tool.ts:17](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/tools/tool.ts#L17)
 
 The tool use request that triggered this tool execution. Contains the tool name, toolUseId, and input parameters.
 
@@ -22,7 +22,7 @@ The tool use request that triggered this tool execution. Contains the tool name,
 agent: LocalAgent;
 ```
 
-Defined in: [src/tools/tool.ts:23](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/tools/tool.ts#L23)
+Defined in: [src/tools/tool.ts:23](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/tools/tool.ts#L23)
 
 The agent instance that is executing this tool. Provides access to agent state, conversation history, and cancellation state.
 
@@ -34,7 +34,7 @@ The agent instance that is executing this tool. Provides access to agent state, 
 invocationState: InvocationState;
 ```
 
-Defined in: [src/tools/tool.ts:34](https://github.com/strands-agents/sdk-typescript/blob/3d7e0c60ad33bbd13d6e3f5d06afcc7699a85638/strands-ts/src/tools/tool.ts#L34)
+Defined in: [src/tools/tool.ts:34](https://github.com/strands-agents/sdk-typescript/blob/714aa5fa654cfa8ea39cf6fea0813dd27b2f39e9/strands-ts/src/tools/tool.ts#L34)
 
 Per-invocation state shared across hooks and tools for the current agent invocation. Mutable — read and write freely; changes are visible to subsequent hooks, tools, and on [AgentResult.invocationState](/docs/api/typescript/AgentResult/index.md#invocationstate).
 

@@ -488,6 +488,7 @@
 
 ## Blog
 
+- [Introducing Strands Agents TypeScript 1.0: Build Production Agents in TypeScript](https://strandsagents.com/blog/strands-agents-typescript-v1/index.md)
 - [The Strands Agents Community Has a New Home](https://strandsagents.com/blog/strands-agents-discord-community/index.md)
 - [Strands Agents TypeScript SDK: Build AI Agents in TypeScript](https://strandsagents.com/blog/strands-agents-typescript-sdk/index.md)
 - [How Steering Hooks Achieved 100% Agent Accuracy Where Prompts and Workflows Failed](https://strandsagents.com/blog/steering-accuracy-beats-prompts-workflows/index.md)
