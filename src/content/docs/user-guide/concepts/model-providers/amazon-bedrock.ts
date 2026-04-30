@@ -301,7 +301,7 @@ async function toolCachingFull() {
 async function automaticCacheStrategy() {
   // --8<-- [start:automatic_cache_strategy]
   const bedrockModel = new BedrockModel({
-    modelId: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    modelId: 'us.anthropic.claude-sonnet-4-6',
     cacheConfig: { strategy: 'auto' },
   })
 
