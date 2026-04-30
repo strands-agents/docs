@@ -2,32 +2,25 @@
 /**
  * Homepage for Strands Agents SDK
  *
- * Sections: Hero → Model-Driven → Steering → Feature Cards → Tabbed Examples → Testimonials → Footer
+ * Sections: Hero → Build Your Way → See What's Happening →
+ *           Recover from Mistakes → 100% Stat → Quote Carousel →
+ *           Use Cases → Labs & Evals → Footer
  */
-import { getCollection, render } from 'astro:content'
-import { Image } from 'astro:assets'
 import LandingLayout from '../layouts/LandingLayout.astro'
 import Copyright from '../components/Copyright.astro'
 import HeroSection from '../components/landing/HeroSection.astro'
+import QuoteCarousel from '../components/landing/QuoteCarousel.astro'
 import ModelDrivenSection from '../components/landing/ModelDrivenSection.astro'
-import SteeringSection from '../components/landing/SteeringSection.astro'
-import FeatureCards from '../components/landing/FeatureCards.astro'
+import ControlSection from '../components/landing/ControlSection.astro'
+import OutcomesSection from '../components/landing/OutcomesSection.astro'
+import StatsSection from '../components/landing/StatsSection.astro'
+import UseCasesSection from '../components/landing/UseCasesSection.astro'
 import CredibilityStrip from '../components/landing/CredibilityStrip.astro'
+import LabsEvalsSection from '../components/landing/LabsEvalsSection.astro'
 import curvePrimary from '../assets/curve-primary.svg'
 import curveSecondary from '../assets/curve-secondary.svg'
 
 const base = import.meta.env.BASE_URL || '/'
-
-// Testimonials from content collection
-const testimonialEntries = await getCollection('testimonials')
-const testimonials = await Promise.all(
-  testimonialEntries
-    .sort((a, b) => a.data.order - b.data.order)
-    .map(async (entry) => {
-      const { Content } = await render(entry)
-      return { ...entry.data, Content }
-    })
-)
 ---
 
 <LandingLayout
@@ -43,40 +36,13 @@ const testimonials = await Promise.all(
   <div class="landing-page">
     <HeroSection baseUrl={base} />
     <ModelDrivenSection />
-    <SteeringSection />
-    <FeatureCards />
+    <ControlSection />
+    <OutcomesSection />
+    <StatsSection />
+    <QuoteCarousel />
+    <UseCasesSection />
     <CredibilityStrip />
-
-    <!-- Testimonials Section -->
-    <section class="testimonials-section">
-      <div class="slider-dots" id="slider-dots"></div>
-      <div class="testimonials-container">
-        <div class="testimonials-slider" id="testimonials-slider">
-          {testimonials.map((testimonial, index) => {
-            const Content = testimonial.Content
-            return (
-            <div class={`testimonial-slide ${index === 0 ? 'active' : ''}`}>
-              <blockquote class="testimonial-quote">
-                <Content />
-              </blockquote>
-              <div class="testimonial-author">
-                <div class="author-info">
-                  <span class="author-name">{testimonial.name}</span>
-                  {testimonial.title && <span class="author-title">{testimonial.title}</span>}
-                </div>
-                {testimonial.logo && (
-                  <div class="author-logo">
-                    <Image src={testimonial.logo} alt={testimonial.name} height={32} class="logo-light" />
-                    <Image src={testimonial.dark_logo ?? testimonial.logo} alt={testimonial.name} height={32} class="logo-dark" />
-                  </div>
-                )}
-              </div>
-            </div>
-            )
-          })}
-        </div>
-      </div>
-    </section>
+    <LabsEvalsSection />
   </div>
 
   <footer class="landing-footer">
@@ -167,130 +133,6 @@ const testimonials = await Promise.all(
     background: transparent;
   }
 
-  /* ========== Testimonials ========== */
-  .testimonials-section {
-    padding: 3rem 2rem 5rem;
-    background: transparent;
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .testimonials-container {
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 1.5rem 2rem 2rem;
-  }
-
-  :global([data-theme='light']) .testimonials-container {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-
-  .testimonials-slider {
-    position: relative;
-    transition: height 0.5s ease-in-out;
-  }
-
-  .testimonial-slide {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem 0;
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    pointer-events: none;
-  }
-  .testimonial-slide.active {
-    opacity: 1;
-    visibility: visible;
-    position: relative;
-    pointer-events: auto;
-  }
-
-  .testimonial-quote {
-    font-family: 'Figtree', sans-serif;
-    font-size: clamp(1rem, 2.5vw, 1.35rem);
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--sl-color-white);
-    margin: 0 0 2rem 0;
-    padding: 0;
-    border: none;
-    font-style: italic;
-    text-align: center;
-  }
-  .testimonial-quote::before,
-  .testimonial-quote::after { content: none; }
-  .testimonial-quote :global(p:first-of-type)::before { content: '\201C'; }
-  .testimonial-quote :global(p:last-of-type)::after { content: '\201D'; }
-
-  .testimonial-author {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-  }
-  .author-logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .author-logo img {
-    height: 32px;
-    width: auto;
-    max-width: 120px;
-    object-fit: contain;
-  }
-  .author-logo .logo-dark { display: none; }
-  :global([data-theme='dark']) .author-logo .logo-light { display: none; }
-  :global([data-theme='dark']) .author-logo .logo-dark { display: block; }
-  .author-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .author-name {
-    font-family: 'Figtree', sans-serif;
-    font-weight: 600;
-    color: var(--sl-color-white);
-    font-size: 1rem;
-  }
-  .author-title {
-    font-family: 'Figtree', sans-serif;
-    color: var(--sl-color-gray-3);
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-  }
-
-  .slider-dots { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 1.5rem; }
-  :global(.slider-dot) {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(183, 183, 183, 0.3);
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  :global(.slider-dot.active) { background: var(--strands-green); }
-  :global(.slider-dot:hover) { background: var(--strands-green-hover); }
-
   /* ========== Footer ========== */
   .landing-footer {
     padding: 1.5rem 2rem;
@@ -305,71 +147,8 @@ const testimonials = await Promise.all(
   }
 
   @media (max-width: 768px) {
-    .testimonials-section { padding: 2rem 1.5rem 3rem; }
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const slider = document.querySelector<HTMLElement>('.testimonials-slider')
-    const slides = document.querySelectorAll<HTMLElement>('.testimonial-slide')
-    const dotsContainer = document.getElementById('slider-dots')
-
-    if (!slides.length || !dotsContainer || !slider) return
-
-    let currentIndex = 0
-    let autoplayInterval: number | undefined
-
-    requestAnimationFrame(() => {
-      const activeSlide = slides[0]
-      if (activeSlide && slider) {
-        slider.style.height = `${activeSlide.offsetHeight}px`
-      }
-    })
-
-    slides.forEach((_, index) => {
-      const dot = document.createElement('button')
-      dot.className = `slider-dot ${index === 0 ? 'active' : ''}`
-      dot.setAttribute('aria-label', `Go to testimonial ${index + 1}`)
-      dot.addEventListener('click', () => goToSlide(index))
-      dotsContainer.appendChild(dot)
-    })
-
-    const dots = dotsContainer.querySelectorAll<HTMLButtonElement>('.slider-dot')
-
-    function goToSlide(index: number) {
-      const oldSlide = slides[currentIndex]
-      const newIndex = (index + slides.length) % slides.length
-      const newSlide = slides[newIndex]
-
-      if (oldSlide) oldSlide.classList.remove('active')
-      dots[currentIndex]?.classList.remove('active')
-
-      currentIndex = newIndex
-
-      if (newSlide && slider) {
-        newSlide.classList.add('active')
-        requestAnimationFrame(() => {
-          slider.style.height = `${newSlide.offsetHeight}px`
-        })
-      }
-      dots[currentIndex]?.classList.add('active')
-
-      if (autoplayInterval) clearInterval(autoplayInterval)
-      startAutoplay()
-    }
-
-    function startAutoplay() {
-      autoplayInterval = window.setInterval(() => goToSlide(currentIndex + 1), 6000)
-    }
-
-    startAutoplay()
-
-    const container = document.querySelector('.testimonials-container')
-    container?.addEventListener('mouseenter', () => { if (autoplayInterval) clearInterval(autoplayInterval) })
-    container?.addEventListener('mouseleave', startAutoplay)
-  })
-</script>
 
 <script>
   // Scroll-responsive strands background animation

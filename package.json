@@ -72,6 +72,9 @@
     "unist-util-visit": "^5.1.0",
     "vitest": "^4.0.18"
   },
+  "overrides": {
+    "zod": "4.3.6"
+  },
   "prettier": {
     "semi": false,
     "singleQuote": true,

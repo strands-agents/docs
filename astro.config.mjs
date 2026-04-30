@@ -53,6 +53,7 @@ export default defineConfig({
     }),
     mdx(),
     starlight({
+      social: [],
       head: [
         { tag: 'meta', attrs: { property: 'og:image', content: 'https://strandsagents.com/og-image.png' } },
         { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://strandsagents.com/og-image.png' } },
