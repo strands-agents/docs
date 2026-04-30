@@ -39,16 +39,16 @@ import { bash } from '@strands-agents/sdk/vended-tools/bash'
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude Sonnet 4.6 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with Claude Sonnet 4.6.
 
-To use the examples in this guide, you'll need to configure your environment with AWS credentials that have permissions to invoke the Claude Sonnet 4.6 model. You can set up your credentials in several ways:
+To use the examples in this guide, you'll need to configure your environment with AWS credentials that have permissions to invoke Claude Sonnet 4.6. You can set up your credentials in several ways:
 
 1. **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2. **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3. **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4. **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude Sonnet 4.6 model.
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke Claude Sonnet 4.6.
 
 ## Project Setup
 
