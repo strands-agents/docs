@@ -63,23 +63,9 @@ print(response)
 <Tab label="TypeScript">
 
 ```typescript
-import { Agent } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:basic_usage_imports"
 
-const model = new GoogleModel({
-  apiKey: '<KEY>',
-  modelId: 'gemini-2.5-flash',
-  params: {
-    temperature: 0.7,
-    maxOutputTokens: 2048,
-    topP: 0.9,
-    topK: 40,
-  },
-})
-
-const agent = new Agent({ model })
-const response = await agent.invoke('What is 2+2')
-console.log(response)
+--8<-- "user-guide/concepts/model-providers/google.ts:basic_usage"
 ```
 </Tab>
 </Tabs>
@@ -163,14 +149,7 @@ params = {
 **Example:**
 
 ```typescript
-const params = {
-  temperature: 0.8,
-  maxOutputTokens: 4096,
-  topP: 0.95,
-  topK: 40,
-  candidateCount: 1,
-  stopSequences: ['STOP!'],
-}
+--8<-- "user-guide/concepts/model-providers/google.ts:params_example"
 ```
 </Tab>
 </Tabs>
@@ -217,20 +196,7 @@ print(response)
 Google's built-in tools (Google Search, Code Execution, URL Context) can be passed via the `builtInTools` config option. These are appended alongside any function tools registered on the agent.
 
 ```typescript
-import { Agent } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
-
-const model = new GoogleModel({
-  apiKey: '<KEY>',
-  modelId: 'gemini-2.5-flash',
-  builtInTools: [{ googleSearch: {} }],
-})
-
-const agent = new Agent({ model })
-const response = await agent.invoke(
-  'What are the latest AI news today?'
-)
-console.log(response)
+--8<-- "user-guide/concepts/model-providers/google.ts:builtin_tools"
 ```
 </Tab>
 </Tabs>
@@ -280,12 +246,7 @@ except ModelThrottledException as e:
 <Tab label="TypeScript">
 
 ```typescript
-try {
-  const response = await agent.invoke('Your query here')
-} catch (error) {
-  console.error('Error:', error)
-  // Implement backoff strategy
-}
+--8<-- "user-guide/concepts/model-providers/google.ts:error_handling"
 ```
 </Tab>
 </Tabs>
@@ -383,26 +344,9 @@ print(response)
 <Tab label="TypeScript">
 
 ```typescript
-import { GoogleGenAI } from '@google/genai'
-import { Agent } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:custom_client_imports"
 
-const client = new GoogleGenAI({ apiKey: '<KEY>' })
-
-const model = new GoogleModel({
-  client,
-  modelId: 'gemini-2.5-flash',
-  params: {
-    temperature: 0.7,
-    maxOutputTokens: 2048,
-    topP: 0.9,
-    topK: 40,
-  },
-})
-
-const agent = new Agent({ model })
-const response = await agent.invoke('What is 2+2')
-console.log(response)
+--8<-- "user-guide/concepts/model-providers/google.ts:custom_client"
 ```
 </Tab>
 </Tabs>
@@ -447,24 +391,9 @@ response = agent([
 <Tab label="TypeScript">
 
 ```typescript
-import { Agent, ImageBlock, TextBlock } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:image_imports"
 
-const model = new GoogleModel({
-  apiKey: '<KEY>',
-  modelId: 'gemini-2.5-flash',
-})
-
-const agent = new Agent({ model })
-
-// Process image with text
-const result = await agent.invoke([
-  new TextBlock('What do you see in this image?'),
-  new ImageBlock({
-    format: 'png',
-    source: { bytes: imageBytes },
-  }),
-])
+--8<-- "user-guide/concepts/model-providers/google.ts:image_input"
 ```
 </Tab>
 </Tabs>
@@ -489,16 +418,9 @@ response = agent([
 <Tab label="TypeScript">
 
 ```typescript
-import { DocumentBlock, TextBlock } from '@strands-agents/sdk'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:document_imports"
 
-const result = await agent.invoke([
-  new TextBlock('Summarize this document'),
-  new DocumentBlock({
-    name: 'my-document',
-    format: 'pdf',
-    source: { bytes: pdfBytes },
-  }),
-])
+--8<-- "user-guide/concepts/model-providers/google.ts:document_input"
 ```
 </Tab>
 </Tabs>
@@ -523,15 +445,9 @@ response = agent([
 <Tab label="TypeScript">
 
 ```typescript
-import { VideoBlock, TextBlock } from '@strands-agents/sdk'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:video_imports"
 
-const result = await agent.invoke([
-  new TextBlock('Describe what happens in this video'),
-  new VideoBlock({
-    format: 'mp4',
-    source: { bytes: videoBytes },
-  }),
-])
+--8<-- "user-guide/concepts/model-providers/google.ts:video_input"
 ```
 </Tab>
 </Tabs>
