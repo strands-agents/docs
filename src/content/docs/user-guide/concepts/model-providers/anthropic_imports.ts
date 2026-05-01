@@ -4,3 +4,9 @@
 import { Agent } from '@strands-agents/sdk'
 import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
 // --8<-- [end:basic_usage_imports]
+
+// --8<-- [start:custom_client_imports]
+import Anthropic from '@anthropic-ai/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+// --8<-- [end:custom_client_imports]

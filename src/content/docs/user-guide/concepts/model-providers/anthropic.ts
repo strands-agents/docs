@@ -2,8 +2,8 @@
  * TypeScript examples for Anthropic model provider documentation.
  * These examples demonstrate common usage patterns for the AnthropicModel.
  */
-// @ts-nocheck
 
+import Anthropic from '@anthropic-ai/sdk'
 import { Agent } from '@strands-agents/sdk'
 import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
 
@@ -28,10 +28,6 @@ async function basicUsage() {
 // Custom client
 async function customClient() {
   // --8<-- [start:custom_client]
-  import Anthropic from '@anthropic-ai/sdk'
-  import { Agent } from '@strands-agents/sdk'
-  import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
-
   const client = new Anthropic({ apiKey: '<KEY>' })
 
   const model = new AnthropicModel({
