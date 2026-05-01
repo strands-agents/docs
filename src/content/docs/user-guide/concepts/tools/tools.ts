@@ -229,21 +229,19 @@ async function toolContextInvocationStateExample() {
     name: 'api_call',
     description: 'Make an API call with user context',
     inputSchema: z.object({
-      query: z.string().describe('The search query to send to the API'),
+      query: z.string().describe('The search query'),
     }),
     callback: async (input, context) => {
       if (!context) {
         throw new Error('Context is required')
       }
 
-      // Access state via context.agent.appState
-      const userId = context.agent.appState.get('userId') as string | undefined
+      // Access per-invocation state via context.invocationState
+      const userId = context.invocationState.userId as string | undefined
 
       const response = await fetch('https://api.example.com/search', {
         method: 'GET',
-        headers: {
-          'X-User-ID': userId || '',
-        },
+        headers: { 'X-User-ID': userId || '' },
       })
 
       return response.json()
@@ -252,10 +250,10 @@ async function toolContextInvocationStateExample() {
 
   const agent = new Agent({ tools: [apiCallTool] })
 
-  // Set state before invoking
-  agent.appState.set('userId', 'user123')
-
-  const result = await agent.invoke('Get my profile data')
+  // Pass invocation state when invoking
+  const result = await agent.invoke('Get my profile data', {
+    invocationState: { userId: 'user123' },
+  })
   // --8<-- [end:tool_context_invocation_state]
 }
 
@@ -463,4 +461,22 @@ Notes:
     },
   })
   // --8<-- [end:search_database]
+}
+
+// Tool executor example
+async function toolExecutorExample() {
+  // --8<-- [start:tool_executors]
+  // Concurrent execution (default)
+  const agent = new Agent({
+    tools: [notebook, fileEditor],
+  })
+  await agent.invoke('List the notebooks and edit a file')
+
+  // Sequential execution for order-dependent tools
+  const sequentialAgent = new Agent({
+    tools: [notebook, fileEditor],
+    toolExecutor: 'sequential',
+  })
+  await sequentialAgent.invoke('Create a notebook entry, then edit a file based on it')
+  // --8<-- [end:tool_executors]
 }

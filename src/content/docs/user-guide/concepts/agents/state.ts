@@ -153,3 +153,20 @@ async function stateInToolsExample() {
   console.log(`Last action: ${agent.appState.get('last_action')}`)
   // --8<-- [end:state_in_tools]
 }
+
+// Invocation state example
+async function invocationStateExample() {
+  // --8<-- [start:invocation_state]
+  const agent = new Agent()
+
+  // Pass per-invocation state when invoking
+  const result = await agent.invoke('Hi there!', {
+    invocationState: { requestId: 'r-42', userId: 'u-1' },
+  })
+
+  // Hooks and tools can read and mutate invocationState during
+  // the invocation. The same object is returned on the result.
+  console.log(result.invocationState)
+  // { requestId: 'r-42', userId: 'u-1', ... }
+  // --8<-- [end:invocation_state]
+}
