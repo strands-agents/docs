@@ -469,13 +469,14 @@ async function toolExecutorExample() {
   // Concurrent execution (default)
   const agent = new Agent({
     tools: [notebook, fileEditor],
-    toolExecutor: 'concurrent',
   })
+  await agent.invoke('List the notebooks and edit a file')
 
   // Sequential execution for order-dependent tools
   const sequentialAgent = new Agent({
     tools: [notebook, fileEditor],
     toolExecutor: 'sequential',
   })
+  await sequentialAgent.invoke('Create a notebook entry, then edit a file based on it')
   // --8<-- [end:tool_executors]
 }

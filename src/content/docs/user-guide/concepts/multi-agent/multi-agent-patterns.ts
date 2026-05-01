@@ -1,7 +1,7 @@
 import { Agent } from '@strands-agents/sdk'
 import { BeforeModelCallEvent } from '@strands-agents/sdk'
 import { tool } from '@strands-agents/sdk'
-import { Graph } from '@strands-agents/sdk/multiagent'
+import { Graph, BeforeNodeCallEvent } from '@strands-agents/sdk/multiagent'
 import { z } from 'zod'
 
 async function invocationStateGraphExample() {
@@ -49,5 +49,33 @@ async function invocationStateToolExample() {
   // --8<-- [end:invocation_state_tool]
 }
 
+async function multiAgentStateExample() {
+  const researcher = new Agent({ id: 'researcher' })
+  const writer = new Agent({ id: 'writer' })
+
+  // --8<-- [start:multi_agent_state]
+  const graph = new Graph({
+    nodes: [researcher, writer],
+    edges: [['researcher', 'writer']],
+  })
+
+  graph.addHook(BeforeNodeCallEvent, (event) => {
+    // Read execution progress
+    console.log(`Step ${event.state.steps}, node ${event.nodeId} starting`)
+
+    // Check a previous node's status
+    const researcherState = event.state.node('researcher')
+    if (researcherState) {
+      console.log(`Researcher status: ${researcherState.status}`)
+    }
+
+    // Read/write custom shared state
+    event.state.app.set('requestId', 'req-123')
+    const requestId = event.state.app.get('requestId')
+  })
+  // --8<-- [end:multi_agent_state]
+}
+
 void invocationStateGraphExample
 void invocationStateToolExample
+void multiAgentStateExample

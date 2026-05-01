@@ -1,7 +1,6 @@
 /**
  * TypeScript examples for OpenAI Responses API documentation.
  */
-// @ts-nocheck
 
 import { Agent } from '@strands-agents/sdk'
 import { OpenAIModel } from '@strands-agents/sdk/models/openai'
@@ -116,7 +115,7 @@ import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 
   const agent = new Agent({ model })
   const response = await agent.invoke(
-    'Using deepwiki, what language is the ' + 'strands-agents/sdk-python repo written in?'
+    'Using deepwiki, what language is the strands-agents/sdk-typescript repo written in?'
   )
   // --8<-- [end:remote_mcp]
 }
@@ -139,7 +138,7 @@ import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 
   const agent = new Agent({ model })
   const response = await agent.invoke(
-    'Use the shell to compute the md5sum ' + "of the string 'hello world'."
+    'Use the shell to compute the md5sum of the string "hello world".'
   )
   // --8<-- [end:shell]
 }

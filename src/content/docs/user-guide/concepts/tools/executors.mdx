@@ -91,8 +91,6 @@ Per-tool event order: `BeforeToolCallEvent` → `ToolStreamEvent*` → `AfterToo
 
 Per-tool event order: `BeforeToolCallEvent` → `ToolStreamUpdateEvent*` → `AfterToolCallEvent` → `ToolResultEvent`.
 
-`BeforeToolsEvent` and `AfterToolsEvent` bracket the entire batch. `AfterToolsEvent.message` contains results in the original tool-use-block source order regardless of completion order.
-
 </Tab>
 </Tabs>
 
@@ -117,8 +115,4 @@ Cancellation works identically in both modes. Call `agent.cancel()` to request c
 
 ## Custom Executors
 
-:::note[Python SDK Only]
-Custom tool executors are currently only supported in Python.
-:::
-
-In Python, you can create custom executors by subclassing `ToolExecutor`. You can track progress on this feature at [GitHub Issue #762](https://github.com/strands-agents/sdk-python/issues/762).
+Custom tool executors are not currently supported but are planned for a future release. You can track progress on this feature at [GitHub Issue #762](https://github.com/strands-agents/sdk-python/issues/762).

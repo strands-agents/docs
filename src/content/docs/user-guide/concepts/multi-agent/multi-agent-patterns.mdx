@@ -158,6 +158,10 @@ In addition to `invocationState`, the orchestrator's `MultiAgentState` is shared
 - `nodes` — per-node state (status, results) accessible via `state.node(id)`
 - `steps` — number of node executions so far
 - `app` — a `StateStore` key-value store for custom data shared across hooks, edge handlers, and custom nodes
+
+```typescript
+--8<-- "user-guide/concepts/multi-agent/multi-agent-patterns.ts:multi_agent_state"
+```
 </Tab>
 </Tabs>
 

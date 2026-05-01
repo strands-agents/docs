@@ -8,7 +8,7 @@ Strands Agents state is maintained in several forms:
 
 1. **Conversation History:** The sequence of messages between the user and the agent.
 2. **Agent State**: Stateful information outside of conversation context, maintained across multiple requests.
-3. **Request State**: Contextual information maintained within a single request.
+3. **Invocation State**: Contextual information maintained within a single invocation.
 
 Understanding how state works in Strands is essential for building agents that can maintain context across multi-turn interactions and workflows.
 
@@ -282,9 +282,9 @@ print(f"Last action: {agent.state.get('last_action')}")
 </Tab>
 </Tabs>
 
-## Request State
+## Invocation State
 
-Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is **not** included in the agent's context:
+Each agent interaction maintains an invocation state dictionary that persists throughout the event loop cycles and is **not** included in the agent's context:
 
 <Tabs>
 <Tab label="Python">

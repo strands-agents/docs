@@ -5,10 +5,6 @@ integrationType: model-provider
 
 The [Responses API](https://platform.openai.com/docs/api-reference/responses) is OpenAI's interface for generating model responses and building agents. It is a superset of the [Chat Completions](./openai) API, with additional support for [built-in tools](#built-in-tools), server-side conversation state management, and multi-modal inputs.
 
-:::note
-Python requires `openai>=2.0.0`. Install or upgrade with `pip install -U openai`.
-:::
-
 ## Installation
 
 <Tabs>
@@ -17,6 +13,8 @@ Python requires `openai>=2.0.0`. Install or upgrade with `pip install -U openai`
 ```bash
 pip install 'strands-agents[openai]' strands-agents-tools
 ```
+
+Requires `openai>=2.0.0`. Install or upgrade with `pip install -U openai`.
 </Tab>
 <Tab label="TypeScript">
 
@@ -318,7 +316,7 @@ response = agent("What is my name?")
 </Tab>
 </Tabs>
 
-When using a stateful model, the agent automatically uses a null conversation manager and throws an error if a conversation manager is also supplied. In TypeScript, the agent's `modelState` property stores provider-specific data (such as the response ID) and is included in snapshots for session persistence.
+When using a stateful model, the agent automatically uses a null conversation manager and throws an error if a conversation manager is also supplied.
 
 ## References
 
