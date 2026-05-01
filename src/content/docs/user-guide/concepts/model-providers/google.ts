@@ -66,6 +66,7 @@ async function builtInTools() {
 
 // Error handling
 async function errorHandling() {
+  const agent = new Agent({ model: new GoogleModel({ apiKey: '<KEY>' }) })
   // --8<-- [start:error_handling]
   try {
     const response = await agent.invoke('Your query here')
@@ -122,6 +123,7 @@ async function imageInput() {
 
 // Document input
 async function documentInput() {
+  const agent = new Agent({ model: new GoogleModel({ apiKey: '<KEY>' }) })
   const pdfBytes = new Uint8Array()
   // --8<-- [start:document_input]
   const result = await agent.invoke([
@@ -137,6 +139,7 @@ async function documentInput() {
 
 // Video input
 async function videoInput() {
+  const agent = new Agent({ model: new GoogleModel({ apiKey: '<KEY>' }) })
   const videoBytes = new Uint8Array()
   // --8<-- [start:video_input]
   const result = await agent.invoke([
