@@ -62,6 +62,7 @@
   - [amazon-bedrock](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md)
   - [amazon-nova](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-nova/index.md)
   - [anthropic](https://strandsagents.com/docs/user-guide/concepts/model-providers/anthropic/index.md)
+  - [google](https://strandsagents.com/docs/user-guide/concepts/model-providers/google/index.md)
   - [litellm](https://strandsagents.com/docs/user-guide/concepts/model-providers/litellm/index.md)
   - [llamacpp](https://strandsagents.com/docs/user-guide/concepts/model-providers/llamacpp/index.md)
   - [llamaapi](https://strandsagents.com/docs/user-guide/concepts/model-providers/llamaapi/index.md)

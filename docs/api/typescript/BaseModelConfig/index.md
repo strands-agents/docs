@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:69](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L69)
+Defined in: [src/models/model.ts:86](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L86)
 
 Base configuration interface for all model providers.
 
@@ -16,7 +16,7 @@ This interface defines the common configuration properties that all model provid
 optional modelId?: string;
 ```
 
-Defined in: [src/models/model.ts:74](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L74)
+Defined in: [src/models/model.ts:91](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L91)
 
 The model identifier. This typically specifies which model to use from the provider’s catalog.
 
@@ -28,7 +28,7 @@ The model identifier. This typically specifies which model to use from the provi
 optional maxTokens?: number;
 ```
 
-Defined in: [src/models/model.ts:81](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L81)
+Defined in: [src/models/model.ts:98](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L98)
 
 Maximum number of tokens to generate in the response.
 
@@ -44,7 +44,7 @@ Provider-specific documentation for exact behavior
 optional temperature?: number;
 ```
 
-Defined in: [src/models/model.ts:88](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L88)
+Defined in: [src/models/model.ts:105](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L105)
 
 Controls randomness in generation.
 
@@ -60,7 +60,7 @@ Provider-specific documentation for valid range
 optional topP?: number;
 ```
 
-Defined in: [src/models/model.ts:95](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L95)
+Defined in: [src/models/model.ts:112](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L112)
 
 Controls diversity via nucleus sampling.
 
@@ -76,8 +76,10 @@ Provider-specific documentation for details
 optional contextWindowLimit?: number;
 ```
 
-Defined in: [src/models/model.ts:102](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L102)
+Defined in: [src/models/model.ts:124](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L124)
 
 Maximum context window size in tokens for the model.
 
-This value represents the total token capacity shared between input and output.
+This value represents the total token capacity shared between input and output. When not provided, it is automatically resolved from a built-in lookup table based on the configured model ID. An explicit value always takes precedence.
+
+When `modelId` is changed via `updateConfig()`, this value is automatically re-resolved if it was initially auto-populated. Explicitly set values are preserved.

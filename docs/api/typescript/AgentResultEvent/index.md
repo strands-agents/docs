@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:647](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L647)
+Defined in: [src/hooks/events.ts:647](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L647)
 
 Event triggered as the final event in the agent stream. Wraps the agent result containing the stop reason and last message.
 
@@ -14,7 +14,7 @@ Event triggered as the final event in the agent stream. Wraps the agent result c
 new AgentResultEvent(data): AgentResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:653](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L653)
+Defined in: [src/hooks/events.ts:653](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L653)
 
 #### Parameters
 
@@ -41,7 +41,7 @@ Defined in: [src/hooks/events.ts:653](https://github.com/strands-agents/sdk-type
 readonly type: "agentResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:648](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L648)
+Defined in: [src/hooks/events.ts:648](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L648)
 
 ---
 
@@ -51,7 +51,7 @@ Defined in: [src/hooks/events.ts:648](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:649](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L649)
+Defined in: [src/hooks/events.ts:649](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L649)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [src/hooks/events.ts:649](https://github.com/strands-agents/sdk-type
 readonly result: AgentResult;
 ```
 
-Defined in: [src/hooks/events.ts:650](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L650)
+Defined in: [src/hooks/events.ts:650](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L650)
 
 ---
 
@@ -71,7 +71,7 @@ Defined in: [src/hooks/events.ts:650](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:651](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L651)
+Defined in: [src/hooks/events.ts:651](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L651)
 
 ## Methods
 
@@ -81,7 +81,7 @@ Defined in: [src/hooks/events.ts:651](https://github.com/strands-agents/sdk-type
 toJSON(): Pick<AgentResultEvent, "type" | "result">;
 ```
 
-Defined in: [src/hooks/events.ts:664](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L664)
+Defined in: [src/hooks/events.ts:664](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L664)
 
 Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
 

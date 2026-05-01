@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:197](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L197)
+Defined in: [src/models/bedrock.ts:198](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L198)
 
 Configuration interface for AWS Bedrock model provider.
 
@@ -31,7 +31,7 @@ const config: BedrockModelConfig = {
 optional maxTokens?: number;
 ```
 
-Defined in: [src/models/bedrock.ts:203](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L203)
+Defined in: [src/models/bedrock.ts:204](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L204)
 
 Maximum number of tokens to generate in the response.
 
@@ -51,7 +51,7 @@ Maximum number of tokens to generate in the response.
 optional temperature?: number;
 ```
 
-Defined in: [src/models/bedrock.ts:210](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L210)
+Defined in: [src/models/bedrock.ts:211](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L211)
 
 Controls randomness in generation.
 
@@ -71,7 +71,7 @@ Controls randomness in generation.
 optional topP?: number;
 ```
 
-Defined in: [src/models/bedrock.ts:217](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L217)
+Defined in: [src/models/bedrock.ts:218](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L218)
 
 Controls diversity via nucleus sampling.
 
@@ -91,7 +91,7 @@ Controls diversity via nucleus sampling.
 optional stopSequences?: string[];
 ```
 
-Defined in: [src/models/bedrock.ts:222](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L222)
+Defined in: [src/models/bedrock.ts:223](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L223)
 
 Array of sequences that will stop generation when encountered.
 
@@ -103,7 +103,7 @@ Array of sequences that will stop generation when encountered.
 optional cacheConfig?: CacheConfig;
 ```
 
-Defined in: [src/models/bedrock.ts:229](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L229)
+Defined in: [src/models/bedrock.ts:230](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L230)
 
 Configuration for prompt caching.
 
@@ -119,7 +119,7 @@ Configuration for prompt caching.
 optional additionalRequestFields?: JSONValue;
 ```
 
-Defined in: [src/models/bedrock.ts:234](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L234)
+Defined in: [src/models/bedrock.ts:235](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L235)
 
 Additional fields to include in the Bedrock request.
 
@@ -131,7 +131,7 @@ Additional fields to include in the Bedrock request.
 optional additionalResponseFieldPaths?: string[];
 ```
 
-Defined in: [src/models/bedrock.ts:239](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L239)
+Defined in: [src/models/bedrock.ts:240](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L240)
 
 Additional response field paths to extract from the Bedrock response.
 
@@ -143,7 +143,7 @@ Additional response field paths to extract from the Bedrock response.
 optional additionalArgs?: JSONValue;
 ```
 
-Defined in: [src/models/bedrock.ts:245](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L245)
+Defined in: [src/models/bedrock.ts:246](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L246)
 
 Additional arguments to pass through to the Bedrock Converse API.
 
@@ -159,7 +159,7 @@ Additional arguments to pass through to the Bedrock Converse API.
 optional stream?: boolean;
 ```
 
-Defined in: [src/models/bedrock.ts:255](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L255)
+Defined in: [src/models/bedrock.ts:256](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L256)
 
 Whether or not to stream responses from the model.
 
@@ -178,7 +178,7 @@ This will use the ConverseStream API instead of the Converse API.
 optional includeToolResultStatus?: boolean | "auto";
 ```
 
-Defined in: [src/models/bedrock.ts:263](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L263)
+Defined in: [src/models/bedrock.ts:264](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L264)
 
 Flag to include status field in tool results.
 
@@ -194,7 +194,7 @@ Flag to include status field in tool results.
 optional guardrailConfig?: BedrockGuardrailConfig;
 ```
 
-Defined in: [src/models/bedrock.ts:269](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/bedrock.ts#L269)
+Defined in: [src/models/bedrock.ts:270](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/bedrock.ts#L270)
 
 Guardrail configuration for content filtering and safety controls.
 
@@ -210,7 +210,7 @@ Guardrail configuration for content filtering and safety controls.
 optional modelId?: string;
 ```
 
-Defined in: [src/models/model.ts:74](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L74)
+Defined in: [src/models/model.ts:91](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L91)
 
 The model identifier. This typically specifies which model to use from the provider’s catalog.
 
@@ -226,11 +226,13 @@ The model identifier. This typically specifies which model to use from the provi
 optional contextWindowLimit?: number;
 ```
 
-Defined in: [src/models/model.ts:102](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/models/model.ts#L102)
+Defined in: [src/models/model.ts:124](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/model.ts#L124)
 
 Maximum context window size in tokens for the model.
 
-This value represents the total token capacity shared between input and output.
+This value represents the total token capacity shared between input and output. When not provided, it is automatically resolved from a built-in lookup table based on the configured model ID. An explicit value always takes precedence.
+
+When `modelId` is changed via `updateConfig()`, this value is automatically re-resolved if it was initially auto-populated. Explicitly set values are preserved.
 
 #### Inherited from
 

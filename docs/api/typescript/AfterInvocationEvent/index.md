@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:168](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L168)
+Defined in: [src/hooks/events.ts:168](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L168)
 
 Event triggered at the end of an agent request. Fired after all processing completes, regardless of success or error. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -14,7 +14,7 @@ Event triggered at the end of an agent request. Fired after all processing compl
 new AfterInvocationEvent(data): AfterInvocationEvent;
 ```
 
-Defined in: [src/hooks/events.ts:184](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L184)
+Defined in: [src/hooks/events.ts:184](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L184)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/hooks/events.ts:184](https://github.com/strands-agents/sdk-type
 readonly type: "afterInvocationEvent";
 ```
 
-Defined in: [src/hooks/events.ts:169](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L169)
+Defined in: [src/hooks/events.ts:169](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L169)
 
 ---
 
@@ -50,7 +50,7 @@ Defined in: [src/hooks/events.ts:169](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:170](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L170)
+Defined in: [src/hooks/events.ts:170](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L170)
 
 ---
 
@@ -60,7 +60,7 @@ Defined in: [src/hooks/events.ts:170](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:171](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L171)
+Defined in: [src/hooks/events.ts:171](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L171)
 
 ---
 
@@ -70,7 +70,7 @@ Defined in: [src/hooks/events.ts:171](https://github.com/strands-agents/sdk-type
 resume: InvokeArgs = undefined;
 ```
 
-Defined in: [src/hooks/events.ts:182](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L182)
+Defined in: [src/hooks/events.ts:182](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L182)
 
 Set by hook callbacks to trigger a follow-up agent invocation with new input. When set, after this event’s callbacks complete the agent re-enters its loop with these args as new input, under the same invocation lock. A fresh [BeforeInvocationEvent](/docs/api/typescript/BeforeInvocationEvent/index.md)/AfterInvocationEvent pair fires for the resumed run. Ignored if the invocation ended with an error.
 
@@ -84,7 +84,7 @@ If multiple callbacks set `resume`, the last callback to run wins.
 toJSON(): Pick<AfterInvocationEvent, "type">;
 ```
 
-Defined in: [src/hooks/events.ts:199](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/hooks/events.ts#L199)
+Defined in: [src/hooks/events.ts:199](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/hooks/events.ts#L199)
 
 Serializes for wire transport, excluding the agent reference, invocationState, and mutable resume field. Called automatically by JSON.stringify().
 

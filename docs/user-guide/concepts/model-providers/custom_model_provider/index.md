@@ -26,35 +26,6 @@ const response = await agent.invoke('Hello, how can you help me today?')
 
 This invokes the underlying model provided to the agent.
 
-### Structured Output
-
-A specialized mode that returns type-safe, validated responses using validated data models instead of raw text. This enables reliable data extraction and processing:
-
-(( tab "Python" ))
-```python
-from pydantic import BaseModel
-
-class PersonInfo(BaseModel):
-    name: str
-    age: int
-    occupation: str
-
-result = agent.structured_output(
-    PersonInfo,
-    "Extract info: John Smith is a 30-year-old software engineer"
-)
-# Returns a validated PersonInfo object
-```
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```ts
-// Structured output is not available for custom model providers in TypeScript
-```
-(( /tab "TypeScript" ))
-
-Both modes work through the same underlying model provider interface, with structured output using tool calling capabilities to ensure schema compliance.
-
 ## Model Provider Architecture
 
 Strands Agents uses an abstract `Model` class that defines the standard interface all model providers must implement:
@@ -691,75 +662,7 @@ const metadata: ModelMetadataEventData = {
 ```
 (( /tab "TypeScript" ))
 
-### 4\. Structured Output Support
-
-(( tab "Python" ))
-To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model and yields a JSON output. This method leverages the unified `stream` interface with tool specifications.
-
-```python
-T = TypeVar('T', bound=BaseModel)
-
-@override
-async def structured_output(
-    self,
-    output_model: Type[T],
-    prompt: Messages,
-    system_prompt: Optional[str] = None,
-    **kwargs: Any
-) -> Generator[dict[str, Union[T, Any]], None, None]:
-    """Get structured output using tool calling.
-
-    Args:
-        output_model: The output model to use for the agent.
-        prompt: The prompt messages to use for the agent.
-        system_prompt: The system prompt to use for the agent.
-        **kwargs: Additional keyword arguments for future extensibility.
-    """
-
-    # Convert Pydantic model to tool specification
-    tool_spec = convert_pydantic_to_tool_spec(output_model)
-
-    # Use the stream method with tool specification
-    response = await self.stream(messages=prompt, tool_specs=[tool_spec], system_prompt=system_prompt, **kwargs)
-
-    # Process streaming response
-    async for event in process_stream(response, prompt):
-        yield event  # Passed to callback handler configured in Agent instance
-
-    stop_reason, messages, _, _ = event["stop"]
-
-    # Validate tool use response
-    if stop_reason != "tool_use":
-        raise ValueError("No valid tool use found in the model response.")
-
-    # Extract tool use output
-    content = messages["content"]
-    for block in content:
-        if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
-            yield {"output": output_model(**block["toolUse"]["input"])}
-            return
-
-    raise ValueError("No valid tool use input found in the response.")
-```
-
-**Implementation Suggestions:**
-
-1.  **Tool Integration**: Use the `stream()` method with tool specifications to invoke your model
-2.  **Response Validation**: Use `output_model(**data)` to validate the response
-3.  **Error Handling**: Provide clear error messages for parsing and validation failures
-
-For detailed structured output usage patterns, see the [Structured Output documentation](/docs/user-guide/concepts/agents/structured-output/index.md).
-
-> Note, similar to the `stream` method, `structured_output` must be implemented async. If your client does not support async invocation, you may consider wrapping the relevant calls in a thread so as not to block the async event loop. Again, for an example on how to achieve this, you can check out the [BedrockModel](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py) provider implementation.
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```ts
-// Structured output is not available for custom model providers in TypeScript
-```
-(( /tab "TypeScript" ))
-
-### 5\. Use Your Custom Model Provider
+### 4\. Use Your Custom Model Provider
 
 Once implemented, you can use your custom model provider in your applications for regular agent invocation:
 
@@ -801,37 +704,6 @@ async function usageExample() {
   // Use the agent as usual
   const response = await agent.invoke('Hello, how are you today?')
 }
-```
-(( /tab "TypeScript" ))
-
-Or you can use the `structured_output` feature to generate structured output:
-
-(( tab "Python" ))
-```python
-from strands import Agent
-from your_org.models.custom_model import CustomModel
-from pydantic import BaseModel, Field
-
-class PersonInfo(BaseModel):
-    name: str = Field(description="Full name")
-    age: int = Field(description="Age in years")
-    occupation: str = Field(description="Job title")
-
-model = CustomModel(api_key="key", model_id="model")
-
-agent = Agent(model=model)
-
-result = agent.structured_output(PersonInfo, "John Smith is a 30-year-old engineer.")
-
-print(f"Name: {result.name}")
-print(f"Age: {result.age}")
-print(f"Occupation: {result.occupation}")
-```
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```ts
-// Structured output is not available for custom model providers in TypeScript
 ```
 (( /tab "TypeScript" ))
 

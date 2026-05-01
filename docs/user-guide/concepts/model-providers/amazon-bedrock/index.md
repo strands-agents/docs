@@ -288,6 +288,7 @@ Common configuration parameters include:
 -   `stream` - Enable/disable streaming mode
 -   `cacheConfig` - Enable prompt caching with `{ strategy: 'auto' }` or `{ strategy: 'anthropic' }`
 -   `region` - AWS region to use
+-   `apiKey` - Bedrock API key for bearer token authentication (alternative to SigV4 signing)
 -   `clientConfig` - AWS SDK client configuration
 -   `additionalArgs` - Additional model-specific parameters
 (( /tab "TypeScript" ))

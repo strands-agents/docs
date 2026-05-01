@@ -14851,7 +14851,7 @@ The following table shows all model providers supported by Strands Agents SDK an
 | --- | --- | --- |
 | [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) | ✅ | ✅ |
 | [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) | ✅ | ❌ |
-| [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ❌ |
+| [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ✅ |
 | [Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) | ✅ | ✅ |
 | [Google](/docs/user-guide/concepts/model-providers/google/index.md) | ✅ | ✅ |
 | [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) | ✅ | ❌ |
@@ -14971,7 +14971,7 @@ response = await agent.invoke('What can you help me with?')
 -   **[OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md)** - GPT models with streaming support
 -   **[Google](/docs/user-guide/concepts/model-providers/google/index.md)** - Google’s Gemini models with tool calling support
 -   **[Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md)** - Build your own model integration
--   **[Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md)** - Direct Claude API access (Python only)
+-   **[Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md)** - Direct Claude API access
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/index.md
 
@@ -15269,6 +15269,7 @@ Common configuration parameters include:
 -   `stream` - Enable/disable streaming mode
 -   `cacheConfig` - Enable prompt caching with `{ strategy: 'auto' }` or `{ strategy: 'anthropic' }`
 -   `region` - AWS region to use
+-   `apiKey` - Bedrock API key for bearer token authentication (alternative to SigV4 signing)
 -   `clientConfig` - AWS SDK client configuration
 -   `additionalArgs` - Additional model-specific parameters
 (( /tab "TypeScript" ))
@@ -16278,16 +16279,25 @@ Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/amazo
 
 ## Installation
 
-Anthropic is configured as an optional dependency in Strands. To install, run:
+Anthropic is configured as an optional dependency in Strands Agents. To install, run:
 
+(( tab "Python" ))
 ```bash
 pip install 'strands-agents[anthropic]' strands-agents-tools
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```bash
+npm install @strands-agents/sdk @anthropic-ai/sdk
+```
+(( /tab "TypeScript" ))
 
 ## Usage
 
-After installing `anthropic`, you can import and initialize Strands’ Anthropic provider as follows:
+After installing dependencies, you can import and initialize the Strands Agents’ Anthropic provider as follows:
 
+(( tab "Python" ))
 ```python
 from strands import Agent
 from strands.models.anthropic import AnthropicModel
@@ -16299,7 +16309,7 @@ model = AnthropicModel(
     },
     # **model_config
     max_tokens=1028,
-    model_id="claude-sonnet-4-20250514",
+    model_id="claude-sonnet-4-6",
     params={
         "temperature": 0.7,
     }
@@ -16309,80 +16319,109 @@ agent = Agent(model=model, tools=[calculator])
 response = agent("What is 2+2")
 print(response)
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+
+const model = new AnthropicModel({
+  apiKey: process.env.ANTHROPIC_API_KEY || '<KEY>',
+  modelId: 'claude-sonnet-4-6',
+  maxTokens: 1028,
+  params: {
+    temperature: 0.7,
+  },
+})
+
+const agent = new Agent({ model })
+const response = await agent.invoke('What is 2+2')
+console.log(response)
+```
+(( /tab "TypeScript" ))
 
 ## Configuration
 
 ### Client Configuration
 
-The `client_args` configure the underlying Anthropic client. For a complete list of available arguments, please refer to the Anthropic [docs](https://docs.anthropic.com/en/api/client-sdks).
+(( tab "Python" ))
+The `client_args` configure the underlying Anthropic client. For a complete list of available arguments, please refer to the [Anthropic Python SDK docs](https://platform.claude.com/docs/en/api/sdks/python).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The `clientConfig` configures the underlying Anthropic client. You can also pass a pre-configured `client` instance directly (see [Custom Client](#custom-client)). For a complete list of available options, please refer to the [Anthropic TypeScript SDK docs](https://platform.claude.com/docs/en/api/sdks/typescript).
+(( /tab "TypeScript" ))
 
 ### Model Configuration
 
+(( tab "Python" ))
 The `model_config` configures the underlying model selected for inference. The supported configurations are:
 
 | Parameter | Description | Example | Options |
 | --- | --- | --- | --- |
-| `max_tokens` | Maximum number of tokens to generate before stopping | `1028` | [reference](https://docs.anthropic.com/en/api/messages#body-max-tokens) |
-| `model_id` | ID of a model to use | `claude-sonnet-4-20250514` | [reference](https://docs.anthropic.com/en/api/messages#body-model) |
-| `params` | Model specific parameters | `{"max_tokens": 1000, "temperature": 0.7}` | [reference](https://docs.anthropic.com/en/api/messages) |
+| `max_tokens` | Maximum number of tokens to generate before stopping | `1028` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.max_tokens) |
+| `model_id` | ID of a model to use | `claude-sonnet-4-6` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.model) |
+| `params` | Additional pass-through parameters | `{"metadata": {"user_id": "u1"}}` | [reference](https://platform.claude.com/docs/en/api/messages/create) |
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+| Parameter | Description | Example | Options |
+| --- | --- | --- | --- |
+| `modelId` | ID of a model to use | `'claude-sonnet-4-6'` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.model) |
+| `maxTokens` | Maximum tokens to generate | `1028` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.max_tokens) |
+| `stopSequences` | Sequences that stop generation | `['END']` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.stop_sequences) |
+| `params` | Additional pass-through parameters | `{ metadata: { user_id: 'u1' } }` | [reference](https://platform.claude.com/docs/en/api/messages/create) |
+(( /tab "TypeScript" ))
 
 ## Troubleshooting
 
+(( tab "Python" ))
 ### Module Not Found
 
 If you encounter the error `ModuleNotFoundError: No module named 'anthropic'`, this means you haven’t installed the `anthropic` dependency in your environment. To fix, run `pip install 'strands-agents[anthropic]'`.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+### Import Errors
+
+If you encounter import errors for `@anthropic-ai/sdk`, ensure the package is installed: `npm install @anthropic-ai/sdk`.
+(( /tab "TypeScript" ))
 
 ## Advanced Features
 
-### Structured Output
+### Custom Client
 
-Anthropic’s Claude models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to Anthropic’s tool specification format.
+You can pass a pre-configured Anthropic client directly to `AnthropicModel`. You are responsible for managing the client’s lifecycle.
 
-```python
-from pydantic import BaseModel, Field
-from strands import Agent
-from strands.models.anthropic import AnthropicModel
+(( tab "Python" ))
+The Python SDK does not currently support passing a pre-configured client. Use `client_args` to configure the client at initialization.
+(( /tab "Python" ))
 
-class BookAnalysis(BaseModel):
-    """Analyze a book's key information."""
-    title: str = Field(description="The book's title")
-    author: str = Field(description="The book's author")
-    genre: str = Field(description="Primary genre or category")
-    summary: str = Field(description="Brief summary of the book")
-    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+(( tab "TypeScript" ))
+```typescript
+import Anthropic from '@anthropic-ai/sdk'
+import { Agent } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
 
-model = AnthropicModel(
-    client_args={
-        "api_key": "<KEY>",
-    },
-    max_tokens=1028,
-    model_id="claude-sonnet-4-20250514",
-    params={
-        "temperature": 0.7,
-    }
-)
+const client = new Anthropic({ apiKey: '<KEY>' })
 
-agent = Agent(model=model)
+const model = new AnthropicModel({
+  client,
+  modelId: 'claude-sonnet-4-6',
+  maxTokens: 1028,
+})
 
-result = agent.structured_output(
-    BookAnalysis,
-    """
-    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
-    It's a science fiction comedy about Arthur Dent's adventures through space
-    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
-    """
-)
-
-print(f"Title: {result.title}")
-print(f"Author: {result.author}")
-print(f"Genre: {result.genre}")
-print(f"Rating: {result.rating}")
+const agent = new Agent({ model })
+const response = await agent.invoke('What is 2+2')
+console.log(response)
 ```
+(( /tab "TypeScript" ))
 
 ## References
 
 -   [Python API](/docs/api/python/strands.models.model)
--   [Anthropic](https://docs.anthropic.com/en/home)
+-   [Anthropic](https://platform.claude.com/docs/en/home)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/anthropic/index.md
 
@@ -16417,35 +16456,6 @@ const response = await agent.invoke('Hello, how can you help me today?')
 (( /tab "TypeScript" ))
 
 This invokes the underlying model provided to the agent.
-
-### Structured Output
-
-A specialized mode that returns type-safe, validated responses using validated data models instead of raw text. This enables reliable data extraction and processing:
-
-(( tab "Python" ))
-```python
-from pydantic import BaseModel
-
-class PersonInfo(BaseModel):
-    name: str
-    age: int
-    occupation: str
-
-result = agent.structured_output(
-    PersonInfo,
-    "Extract info: John Smith is a 30-year-old software engineer"
-)
-# Returns a validated PersonInfo object
-```
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```ts
-// Structured output is not available for custom model providers in TypeScript
-```
-(( /tab "TypeScript" ))
-
-Both modes work through the same underlying model provider interface, with structured output using tool calling capabilities to ensure schema compliance.
 
 ## Model Provider Architecture
 
@@ -17083,75 +17093,7 @@ const metadata: ModelMetadataEventData = {
 ```
 (( /tab "TypeScript" ))
 
-### 4\. Structured Output Support
-
-(( tab "Python" ))
-To support structured output in your custom model provider, you need to implement a `structured_output()` method that invokes your model and yields a JSON output. This method leverages the unified `stream` interface with tool specifications.
-
-```python
-T = TypeVar('T', bound=BaseModel)
-
-@override
-async def structured_output(
-    self,
-    output_model: Type[T],
-    prompt: Messages,
-    system_prompt: Optional[str] = None,
-    **kwargs: Any
-) -> Generator[dict[str, Union[T, Any]], None, None]:
-    """Get structured output using tool calling.
-
-    Args:
-        output_model: The output model to use for the agent.
-        prompt: The prompt messages to use for the agent.
-        system_prompt: The system prompt to use for the agent.
-        **kwargs: Additional keyword arguments for future extensibility.
-    """
-
-    # Convert Pydantic model to tool specification
-    tool_spec = convert_pydantic_to_tool_spec(output_model)
-
-    # Use the stream method with tool specification
-    response = await self.stream(messages=prompt, tool_specs=[tool_spec], system_prompt=system_prompt, **kwargs)
-
-    # Process streaming response
-    async for event in process_stream(response, prompt):
-        yield event  # Passed to callback handler configured in Agent instance
-
-    stop_reason, messages, _, _ = event["stop"]
-
-    # Validate tool use response
-    if stop_reason != "tool_use":
-        raise ValueError("No valid tool use found in the model response.")
-
-    # Extract tool use output
-    content = messages["content"]
-    for block in content:
-        if block.get("toolUse") and block["toolUse"]["name"] == tool_spec["name"]:
-            yield {"output": output_model(**block["toolUse"]["input"])}
-            return
-
-    raise ValueError("No valid tool use input found in the response.")
-```
-
-**Implementation Suggestions:**
-
-1.  **Tool Integration**: Use the `stream()` method with tool specifications to invoke your model
-2.  **Response Validation**: Use `output_model(**data)` to validate the response
-3.  **Error Handling**: Provide clear error messages for parsing and validation failures
-
-For detailed structured output usage patterns, see the [Structured Output documentation](/docs/user-guide/concepts/agents/structured-output/index.md).
-
-> Note, similar to the `stream` method, `structured_output` must be implemented async. If your client does not support async invocation, you may consider wrapping the relevant calls in a thread so as not to block the async event loop. Again, for an example on how to achieve this, you can check out the [BedrockModel](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py) provider implementation.
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```ts
-// Structured output is not available for custom model providers in TypeScript
-```
-(( /tab "TypeScript" ))
-
-### 5\. Use Your Custom Model Provider
+### 4\. Use Your Custom Model Provider
 
 Once implemented, you can use your custom model provider in your applications for regular agent invocation:
 
@@ -17193,37 +17135,6 @@ async function usageExample() {
   // Use the agent as usual
   const response = await agent.invoke('Hello, how are you today?')
 }
-```
-(( /tab "TypeScript" ))
-
-Or you can use the `structured_output` feature to generate structured output:
-
-(( tab "Python" ))
-```python
-from strands import Agent
-from your_org.models.custom_model import CustomModel
-from pydantic import BaseModel, Field
-
-class PersonInfo(BaseModel):
-    name: str = Field(description="Full name")
-    age: int = Field(description="Age in years")
-    occupation: str = Field(description="Job title")
-
-model = CustomModel(api_key="key", model_id="model")
-
-agent = Agent(model=model)
-
-result = agent.structured_output(PersonInfo, "John Smith is a 30-year-old engineer.")
-
-print(f"Name: {result.name}")
-print(f"Age: {result.age}")
-print(f"Occupation: {result.occupation}")
-```
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```ts
-// Structured output is not available for custom model providers in TypeScript
 ```
 (( /tab "TypeScript" ))
 
@@ -17457,6 +17368,50 @@ For a complete list of supported models, see the [Gemini API documentation](http
 -   `gemini-2.5-flash-lite` - Most cost-efficient option
 -   `gemini-2.0-flash` - Next-gen features with improved speed
 -   `gemini-2.0-flash-lite` - Cost-optimized version of 2.0
+
+### Built-in Tools
+
+(( tab "Python" ))
+Google’s built-in tools (Google Search, Code Execution, URL Context) can be passed via the `gemini_tools` config option. These are appended alongside any function tools registered on the agent.
+
+```python
+from google import genai
+from strands import Agent
+from strands.models.gemini import GeminiModel
+
+model = GeminiModel(
+    client_args={"api_key": "<KEY>"},
+    model_id="gemini-2.5-flash",
+    gemini_tools=[
+        genai.types.Tool(google_search=genai.types.GoogleSearch()),
+    ],
+)
+
+agent = Agent(model=model)
+response = agent("What are the latest AI news today?")
+print(response)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Google’s built-in tools (Google Search, Code Execution, URL Context) can be passed via the `builtInTools` config option. These are appended alongside any function tools registered on the agent.
+
+```typescript
+const model = new GoogleModel({
+  apiKey: '<KEY>',
+  modelId: 'gemini-2.5-flash',
+  builtInTools: [{ googleSearch: {} }],
+})
+
+const agent = new Agent({ model })
+const response = await agent.invoke(
+  'What are the latest AI news today?'
+)
+console.log(response)
+```
+(( /tab "TypeScript" ))
+
+For available built-in tools, see the [Gemini tools documentation](https://ai.google.dev/gemini-api/docs/tools).
 
 ## Troubleshooting
 
@@ -17748,6 +17703,7 @@ const result = await agent.invoke([
 -   [Google Gemini](https://ai.google.dev/api)
 -   [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 -   [Google AI Studio](https://aistudio.google.com/)
+-   [@google/genai TypeScript SDK](https://github.com/googleapis/js-genai)
 
 Source: https://strandsagents.com/docs/user-guide/concepts/model-providers/google/index.md
 

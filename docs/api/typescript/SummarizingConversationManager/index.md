@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:80](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L80)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:80](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L80)
 
 Implements a summarization strategy for managing conversation history.
 
@@ -16,7 +16,7 @@ When a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowEr
 new SummarizingConversationManager(config?): SummarizingConversationManager;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L88)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L88)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](ht
 readonly name: "strands:summarizing-conversation-manager" = 'strands:summarizing-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:81](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L81)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:81](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L81)
 
 A stable string identifier for this conversation manager.
 
@@ -56,7 +56,7 @@ A stable string identifier for this conversation manager.
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L100)
 
 Initialize the conversation manager with the agent instance.
 
@@ -86,7 +86,7 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 reduce(options): Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/e168b50d42e78b142b537bae45eced396d5f272b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L103)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L103)
 
 Reduce the conversation history by summarizing older messages.
 

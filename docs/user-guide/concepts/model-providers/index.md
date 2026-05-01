@@ -10,7 +10,7 @@ The following table shows all model providers supported by Strands Agents SDK an
 | --- | --- | --- |
 | [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) | ✅ | ✅ |
 | [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) | ✅ | ❌ |
-| [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ❌ |
+| [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ✅ |
 | [Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) | ✅ | ✅ |
 | [Google](/docs/user-guide/concepts/model-providers/google/index.md) | ✅ | ✅ |
 | [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) | ✅ | ❌ |
@@ -130,4 +130,4 @@ response = await agent.invoke('What can you help me with?')
 -   **[OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md)** - GPT models with streaming support
 -   **[Google](/docs/user-guide/concepts/model-providers/google/index.md)** - Google’s Gemini models with tool calling support
 -   **[Custom Providers](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md)** - Build your own model integration
--   **[Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md)** - Direct Claude API access (Python only)
+-   **[Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md)** - Direct Claude API access
