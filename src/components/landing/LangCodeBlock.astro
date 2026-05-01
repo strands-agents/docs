@@ -39,12 +39,12 @@ const hasTs = !!tsCode
     width: 100%;
   }
 
-  /* Default: show Python, hide TypeScript */
-  [data-lang-code="TypeScript"] {
+  /* Default: show TypeScript, hide Python (matches LanguageToggle default) */
+  [data-has-ts="true"] > [data-lang-code="Python"] {
     display: none;
   }
 
-  [data-lang-code="Python"] {
+  [data-has-ts="true"] > [data-lang-code="TypeScript"] {
     display: block;
   }
 
@@ -70,9 +70,9 @@ const hasTs = !!tsCode
 
   function getPreference(): string {
     try {
-      return localStorage.getItem(STORAGE_KEY) || 'Python'
+      return localStorage.getItem(STORAGE_KEY) || 'TypeScript'
     } catch {
-      return 'Python'
+      return 'TypeScript'
     }
   }
 
