@@ -185,6 +185,56 @@ For a complete list of supported models, see the [Gemini API documentation](http
 - `gemini-2.0-flash` - Next-gen features with improved speed
 - `gemini-2.0-flash-lite` - Cost-optimized version of 2.0
 
+### Built-in Tools
+
+<Tabs>
+<Tab label="Python">
+
+Google's built-in tools (Google Search, Code Execution, URL Context) can be passed via the `gemini_tools` config option. These are appended alongside any function tools registered on the agent.
+
+```python
+from google import genai
+from strands import Agent
+from strands.models.gemini import GeminiModel
+
+model = GeminiModel(
+    client_args={"api_key": "<KEY>"},
+    model_id="gemini-2.5-flash",
+    gemini_tools=[
+        genai.types.Tool(google_search=genai.types.GoogleSearch()),
+    ],
+)
+
+agent = Agent(model=model)
+response = agent("What are the latest AI news today?")
+print(response)
+```
+</Tab>
+<Tab label="TypeScript">
+
+Google's built-in tools (Google Search, Code Execution, URL Context) can be passed via the `builtInTools` config option. These are appended alongside any function tools registered on the agent.
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
+
+const model = new GoogleModel({
+  apiKey: '<KEY>',
+  modelId: 'gemini-2.5-flash',
+  builtInTools: [{ googleSearch: {} }],
+})
+
+const agent = new Agent({ model })
+const response = await agent.invoke(
+  'What are the latest AI news today?'
+)
+console.log(response)
+```
+</Tab>
+</Tabs>
+
+For available built-in tools, see the [Gemini tools documentation](https://ai.google.dev/gemini-api/docs/tools).
+
 ## Troubleshooting
 
 ### Module Not Found
@@ -496,3 +546,4 @@ const result = await agent.invoke([
 - [Google Gemini](https://ai.google.dev/api)
 - [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 - [Google AI Studio](https://aistudio.google.com/)
+- [@google/genai TypeScript SDK](https://github.com/googleapis/js-genai)
