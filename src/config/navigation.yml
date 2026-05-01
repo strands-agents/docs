@@ -118,7 +118,7 @@ sidebar:
           - docs/user-guide/concepts/model-providers/amazon-bedrock
           - docs/user-guide/concepts/model-providers/amazon-nova
           - docs/user-guide/concepts/model-providers/anthropic
-          - docs/user-guide/concepts/model-providers/gemini
+          - docs/user-guide/concepts/model-providers/google
           - docs/user-guide/concepts/model-providers/litellm
           - docs/user-guide/concepts/model-providers/llamacpp
           - docs/user-guide/concepts/model-providers/llamaapi

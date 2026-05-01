@@ -1,6 +1,5 @@
 ---
 title: Anthropic
-languages: Python
 integrationType: model-provider
 ---
 
@@ -8,15 +7,29 @@ integrationType: model-provider
 
 ## Installation
 
-Anthropic is configured as an optional dependency in Strands. To install, run:
+Anthropic is configured as an optional dependency in Strands Agents. To install, run:
+
+<Tabs>
+<Tab label="Python">
 
 ```bash
 pip install 'strands-agents[anthropic]' strands-agents-tools
 ```
+</Tab>
+<Tab label="TypeScript">
+
+```bash
+npm install @strands-agents/sdk @anthropic-ai/sdk
+```
+</Tab>
+</Tabs>
 
 ## Usage
 
-After installing `anthropic`, you can import and initialize Strands' Anthropic provider as follows:
+After installing dependencies, you can import and initialize the Strands Agents' Anthropic provider as follows:
+
+<Tabs>
+<Tab label="Python">
 
 ```python
 from strands import Agent
@@ -29,7 +42,7 @@ model = AnthropicModel(
     },
     # **model_config
     max_tokens=1028,
-    model_id="claude-sonnet-4-20250514",
+    model_id="claude-sonnet-4-6",
     params={
         "temperature": 0.7,
     }
@@ -39,78 +52,95 @@ agent = Agent(model=model, tools=[calculator])
 response = agent("What is 2+2")
 print(response)
 ```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/anthropic_imports.ts:basic_usage_imports"
+
+--8<-- "user-guide/concepts/model-providers/anthropic.ts:basic_usage"
+```
+</Tab>
+</Tabs>
 
 ## Configuration
 
 ### Client Configuration
 
-The `client_args` configure the underlying Anthropic client. For a complete list of available arguments, please refer to the Anthropic [docs](https://docs.anthropic.com/en/api/client-sdks).
+<Tabs>
+<Tab label="Python">
+
+The `client_args` configure the underlying Anthropic client. For a complete list of available arguments, please refer to the [Anthropic Python SDK docs](https://platform.claude.com/docs/en/api/sdks/python).
+</Tab>
+<Tab label="TypeScript">
+
+The `clientConfig` configures the underlying Anthropic client. You can also pass a pre-configured `client` instance directly (see [Custom Client](#custom-client)). For a complete list of available options, please refer to the [Anthropic TypeScript SDK docs](https://platform.claude.com/docs/en/api/sdks/typescript).
+</Tab>
+</Tabs>
 
 ### Model Configuration
+
+<Tabs>
+<Tab label="Python">
 
 The `model_config` configures the underlying model selected for inference. The supported configurations are:
 
 |  Parameter | Description | Example | Options |
 |------------|-------------|---------|---------|
-| `max_tokens` | Maximum number of tokens to generate before stopping | `1028` | [reference](https://docs.anthropic.com/en/api/messages#body-max-tokens)
-| `model_id` | ID of a model to use | `claude-sonnet-4-20250514` | [reference](https://docs.anthropic.com/en/api/messages#body-model)
-| `params` | Model specific parameters | `{"max_tokens": 1000, "temperature": 0.7}` | [reference](https://docs.anthropic.com/en/api/messages)
+| `max_tokens` | Maximum number of tokens to generate before stopping | `1028` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.max_tokens)
+| `model_id` | ID of a model to use | `claude-sonnet-4-6` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.model)
+| `params` | Additional pass-through parameters | `{"metadata": {"user_id": "u1"}}` | [reference](https://platform.claude.com/docs/en/api/messages/create)
+</Tab>
+<Tab label="TypeScript">
+
+|  Parameter | Description | Example | Options |
+|------------|-------------|---------|---------|
+| `modelId` | ID of a model to use | `'claude-sonnet-4-6'` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.model) |
+| `maxTokens` | Maximum tokens to generate | `1028` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.max_tokens) |
+| `stopSequences` | Sequences that stop generation | `['END']` | [reference](https://platform.claude.com/docs/en/api/messages/create#create.stop_sequences) |
+| `params` | Additional pass-through parameters | `{ metadata: { user_id: 'u1' } }` | [reference](https://platform.claude.com/docs/en/api/messages/create) |
+</Tab>
+</Tabs>
 
 ## Troubleshooting
+
+<Tabs>
+<Tab label="Python">
 
 ### Module Not Found
 
 If you encounter the error `ModuleNotFoundError: No module named 'anthropic'`, this means you haven't installed the `anthropic` dependency in your environment. To fix, run `pip install 'strands-agents[anthropic]'`.
+</Tab>
+<Tab label="TypeScript">
+
+### Import Errors
+
+If you encounter import errors for `@anthropic-ai/sdk`, ensure the package is installed: `npm install @anthropic-ai/sdk`.
+</Tab>
+</Tabs>
 
 ## Advanced Features
 
-### Structured Output
+### Custom Client
 
-Anthropic's Claude models support structured output through their tool calling capabilities. When you use [`Agent.structured_output()`](@api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to Anthropic's tool specification format.
+You can pass a pre-configured Anthropic client directly to `AnthropicModel`. You are responsible for managing the client's lifecycle.
 
-```python
-from pydantic import BaseModel, Field
-from strands import Agent
-from strands.models.anthropic import AnthropicModel
+<Tabs>
+<Tab label="Python">
 
-class BookAnalysis(BaseModel):
-    """Analyze a book's key information."""
-    title: str = Field(description="The book's title")
-    author: str = Field(description="The book's author")
-    genre: str = Field(description="Primary genre or category")
-    summary: str = Field(description="Brief summary of the book")
-    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+The Python SDK does not currently support passing a pre-configured client. Use `client_args` to configure the client at initialization.
+</Tab>
+<Tab label="TypeScript">
 
-model = AnthropicModel(
-    client_args={
-        "api_key": "<KEY>",
-    },
-    max_tokens=1028,
-    model_id="claude-sonnet-4-20250514",
-    params={
-        "temperature": 0.7,
-    }
-)
+```typescript
+--8<-- "user-guide/concepts/model-providers/anthropic_imports.ts:custom_client_imports"
 
-agent = Agent(model=model)
-
-result = agent.structured_output(
-    BookAnalysis,
-    """
-    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
-    It's a science fiction comedy about Arthur Dent's adventures through space
-    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
-    """
-)
-
-print(f"Title: {result.title}")
-print(f"Author: {result.author}")
-print(f"Genre: {result.genre}")
-print(f"Rating: {result.rating}")
+--8<-- "user-guide/concepts/model-providers/anthropic.ts:custom_client"
 ```
+</Tab>
+</Tabs>
 
 ## References
 
 - [Python API](@api/python/strands.models.model)
-- [Anthropic](https://docs.anthropic.com/en/home)
-
+- [Anthropic](https://platform.claude.com/docs/en/home)

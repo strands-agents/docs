@@ -1,6 +1,8 @@
 ---
 title: Google
 integrationType: model-provider
+redirectFrom:
+  - docs/user-guide/concepts/model-providers/gemini
 ---
 
 [Google Gemini](https://ai.google.dev/api) is Google's family of multimodal large language models designed for advanced reasoning, code generation, and creative tasks. The Strands Agents SDK implements a Google/Gemini provider, allowing you to run agents against the Gemini models available through Google's AI API.
@@ -61,23 +63,9 @@ print(response)
 <Tab label="TypeScript">
 
 ```typescript
-import { Agent } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:basic_usage_imports"
 
-const model = new GoogleModel({
-  apiKey: '<KEY>',
-  modelId: 'gemini-2.5-flash',
-  params: {
-    temperature: 0.7,
-    maxOutputTokens: 2048,
-    topP: 0.9,
-    topK: 40,
-  },
-})
-
-const agent = new Agent({ model })
-const response = await agent.invoke('What is 2+2')
-console.log(response)
+--8<-- "user-guide/concepts/model-providers/google.ts:basic_usage"
 ```
 </Tab>
 </Tabs>
@@ -161,14 +149,7 @@ params = {
 **Example:**
 
 ```typescript
-const params = {
-  temperature: 0.8,
-  maxOutputTokens: 4096,
-  topP: 0.95,
-  topK: 40,
-  candidateCount: 1,
-  stopSequences: ['STOP!'],
-}
+--8<-- "user-guide/concepts/model-providers/google.ts:params_example"
 ```
 </Tab>
 </Tabs>
@@ -184,6 +165,43 @@ For a complete list of supported models, see the [Gemini API documentation](http
 - `gemini-2.5-flash-lite` - Most cost-efficient option
 - `gemini-2.0-flash` - Next-gen features with improved speed
 - `gemini-2.0-flash-lite` - Cost-optimized version of 2.0
+
+### Built-in Tools
+
+<Tabs>
+<Tab label="Python">
+
+Google's built-in tools (Google Search, Code Execution, URL Context) can be passed via the `gemini_tools` config option. These are appended alongside any function tools registered on the agent.
+
+```python
+from google import genai
+from strands import Agent
+from strands.models.gemini import GeminiModel
+
+model = GeminiModel(
+    client_args={"api_key": "<KEY>"},
+    model_id="gemini-2.5-flash",
+    gemini_tools=[
+        genai.types.Tool(google_search=genai.types.GoogleSearch()),
+    ],
+)
+
+agent = Agent(model=model)
+response = agent("What are the latest AI news today?")
+print(response)
+```
+</Tab>
+<Tab label="TypeScript">
+
+Google's built-in tools (Google Search, Code Execution, URL Context) can be passed via the `builtInTools` config option. These are appended alongside any function tools registered on the agent.
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/google.ts:builtin_tools"
+```
+</Tab>
+</Tabs>
+
+For available built-in tools, see the [Gemini tools documentation](https://ai.google.dev/gemini-api/docs/tools).
 
 ## Troubleshooting
 
@@ -228,12 +246,7 @@ except ModelThrottledException as e:
 <Tab label="TypeScript">
 
 ```typescript
-try {
-  const response = await agent.invoke('Your query here')
-} catch (error) {
-  console.error('Error:', error)
-  // Implement backoff strategy
-}
+--8<-- "user-guide/concepts/model-providers/google.ts:error_handling"
 ```
 </Tab>
 </Tabs>
@@ -331,26 +344,9 @@ print(response)
 <Tab label="TypeScript">
 
 ```typescript
-import { GoogleGenAI } from '@google/genai'
-import { Agent } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:custom_client_imports"
 
-const client = new GoogleGenAI({ apiKey: '<KEY>' })
-
-const model = new GoogleModel({
-  client,
-  modelId: 'gemini-2.5-flash',
-  params: {
-    temperature: 0.7,
-    maxOutputTokens: 2048,
-    topP: 0.9,
-    topK: 40,
-  },
-})
-
-const agent = new Agent({ model })
-const response = await agent.invoke('What is 2+2')
-console.log(response)
+--8<-- "user-guide/concepts/model-providers/google.ts:custom_client"
 ```
 </Tab>
 </Tabs>
@@ -395,24 +391,9 @@ response = agent([
 <Tab label="TypeScript">
 
 ```typescript
-import { Agent, ImageBlock, TextBlock } from '@strands-agents/sdk'
-import { GoogleModel } from '@strands-agents/sdk/models/google'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:image_imports"
 
-const model = new GoogleModel({
-  apiKey: '<KEY>',
-  modelId: 'gemini-2.5-flash',
-})
-
-const agent = new Agent({ model })
-
-// Process image with text
-const result = await agent.invoke([
-  new TextBlock('What do you see in this image?'),
-  new ImageBlock({
-    format: 'png',
-    source: { bytes: imageBytes },
-  }),
-])
+--8<-- "user-guide/concepts/model-providers/google.ts:image_input"
 ```
 </Tab>
 </Tabs>
@@ -437,16 +418,9 @@ response = agent([
 <Tab label="TypeScript">
 
 ```typescript
-import { DocumentBlock, TextBlock } from '@strands-agents/sdk'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:document_imports"
 
-const result = await agent.invoke([
-  new TextBlock('Summarize this document'),
-  new DocumentBlock({
-    name: 'my-document',
-    format: 'pdf',
-    source: { bytes: pdfBytes },
-  }),
-])
+--8<-- "user-guide/concepts/model-providers/google.ts:document_input"
 ```
 </Tab>
 </Tabs>
@@ -471,15 +445,9 @@ response = agent([
 <Tab label="TypeScript">
 
 ```typescript
-import { VideoBlock, TextBlock } from '@strands-agents/sdk'
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:video_imports"
 
-const result = await agent.invoke([
-  new TextBlock('Describe what happens in this video'),
-  new VideoBlock({
-    format: 'mp4',
-    source: { bytes: videoBytes },
-  }),
-])
+--8<-- "user-guide/concepts/model-providers/google.ts:video_input"
 ```
 </Tab>
 </Tabs>
@@ -496,3 +464,4 @@ const result = await agent.invoke([
 - [Google Gemini](https://ai.google.dev/api)
 - [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 - [Google AI Studio](https://aistudio.google.com/)
+- [@google/genai TypeScript SDK](https://github.com/googleapis/js-genai)
