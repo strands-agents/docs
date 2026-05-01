@@ -434,28 +434,26 @@ It’s important to understand how invocation state compares to other approaches
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-In TypeScript, tools access **agent state** through `context.agent.appState`. The state provides key-value storage that persists across tool invocations but is not passed to the model:
+In TypeScript, tools access **invocation state** through `context.invocationState`. This per-invocation `Record<string, unknown>` is passed in via `InvokeOptions` and shared by reference across hooks and tools for the duration of one invocation:
 
 ```typescript
 const apiCallTool = tool({
   name: 'api_call',
   description: 'Make an API call with user context',
   inputSchema: z.object({
-    query: z.string().describe('The search query to send to the API'),
+    query: z.string().describe('The search query'),
   }),
   callback: async (input, context) => {
     if (!context) {
       throw new Error('Context is required')
     }
 
-    // Access state via context.agent.appState
-    const userId = context.agent.appState.get('userId') as string | undefined
+    // Access per-invocation state via context.invocationState
+    const userId = context.invocationState.userId as string | undefined
 
     const response = await fetch('https://api.example.com/search', {
       method: 'GET',
-      headers: {
-        'X-User-ID': userId || '',
-      },
+      headers: { 'X-User-ID': userId || '' },
     })
 
     return response.json()
@@ -464,17 +462,27 @@ const apiCallTool = tool({
 
 const agent = new Agent({ tools: [apiCallTool] })
 
-// Set state before invoking
-agent.appState.set('userId', 'user123')
-
-const result = await agent.invoke('Get my profile data')
+// Pass invocation state when invoking
+const result = await agent.invoke('Get my profile data', {
+  invocationState: { userId: 'user123' },
+})
 ```
 
-Agent state is useful for:
+Invocation state is useful for:
 
-1.  **Request Context**: Access session IDs, user information, or request-specific data
-2.  **Multi-Agent Shared State**: In multi-agent patterns, access state shared across all agents
-3.  **Tool State Persistence**: Maintain state between tool invocations within the same agent session
+1.  **Request Context**: Access session IDs, user information, or request-specific data without polluting model context
+2.  **Multi-Agent Shared State**: In [Graph](/docs/user-guide/concepts/multi-agent/graph/index.md) and [Swarm](/docs/user-guide/concepts/multi-agent/swarm/index.md) patterns, access state shared across all agents
+3.  **Cross-Hook Counters**: Track tool call counts, model calls, or custom metrics across hooks and tools within a single invocation
+
+**Invocation State Compared To Other Approaches**
+
+-   **Tool Parameters**: Data the LLM should reason about — search queries, file paths, user requests.
+    
+-   **Invocation State** (`context.invocationState`): Request-scoped context that should not appear in prompts but affects tool behavior. Ephemeral — scoped to one invocation and accepts arbitrary values.
+    
+-   **Agent State** (`context.agent.appState`): Durable key-value storage that persists across invocations. JSON-serializable and deep-copied on read/write. Use for configuration that doesn’t change between requests.
+    
+-   **[Class-based tools](#class-based-tools)**: Instance-level configuration that requires initialization. Use for API keys, database connections, or shared resources.
 (( /tab "TypeScript" ))
 
 ### Tool Streaming

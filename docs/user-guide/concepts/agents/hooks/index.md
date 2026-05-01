@@ -452,8 +452,29 @@ result = agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const agent = new Agent()
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  // Read caller-provided context
+  const userId = event.invocationState.userId as string | undefined
+  const sessionId = event.invocationState.sessionId as string | undefined
+
+  console.log(
+    `User ${userId} (session ${sessionId}) ` + `invoking tool: ${event.toolUse.name}`
+  )
+})
+
+// Pass invocation state when invoking the agent
+const result = await agent.invoke('Process the data', {
+  invocationState: {
+    userId: 'user123',
+    sessionId: 'sess456',
+  },
+})
+
+// The same object is returned on the result
+console.log(result.invocationState.userId) // 'user123'
 ```
 (( /tab "TypeScript" ))
 

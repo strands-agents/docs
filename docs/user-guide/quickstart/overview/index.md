@@ -21,6 +21,7 @@ The table below compares feature availability between the Python and TypeScript 
 |  | [Structured output](/docs/user-guide/concepts/agents/structured-output/index.md) | ✅ | ✅ |
 | **Model providers** | [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) | ✅ | ✅ |
 |  | [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) | ✅ | ✅ |
+|  | [OpenAI Responses API](/docs/user-guide/concepts/model-providers/openai-responses/index.md) | ✅ | ✅ |
 |  | [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) | ✅ | ✅ |
 |  | [Google](/docs/user-guide/concepts/model-providers/google/index.md) | ✅ | ✅ |
 |  | [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) | ✅ | ❌ |

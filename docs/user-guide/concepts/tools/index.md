@@ -191,7 +191,7 @@ console.log(result)
 
 ## Tool Executors
 
-When models return multiple tool requests, you can control whether they execute concurrently or sequentially.
+When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Both SDKs default to concurrent execution.
 
 (( tab "Python" ))
 Agents use concurrent execution by default, but you can specify sequential execution for cases where order matters:
@@ -216,9 +216,26 @@ For more details, see [Tool Executors](/docs/user-guide/concepts/tools/executors
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
+// Concurrent execution (default)
+const agent = new Agent({
+  tools: [notebook, fileEditor],
+})
+await agent.invoke('List the notebooks and edit a file')
+
+// Sequential execution for order-dependent tools
+const sequentialAgent = new Agent({
+  tools: [notebook, fileEditor],
+  toolExecutor: 'sequential',
+})
+await sequentialAgent.invoke('Create a notebook entry, then edit a file based on it')
 ```
+
+For more details, see [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md).
 (( /tab "TypeScript" ))
 
 ## Building & Loading Tools

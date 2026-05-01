@@ -8,7 +8,7 @@ OpenAI model provider.
 class Client(Protocol)
 ```
 
-Defined in: [src/strands/models/openai.py:41](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L41)
+Defined in: [src/strands/models/openai.py:42](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L42)
 
 Protocol defining the OpenAI-compatible interface for the underlying provider client.
 
@@ -19,7 +19,7 @@ Protocol defining the OpenAI-compatible interface for the underlying provider cl
 def chat() -> Any
 ```
 
-Defined in: [src/strands/models/openai.py:46](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L46)
+Defined in: [src/strands/models/openai.py:47](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L47)
 
 Chat completions interface.
 
@@ -29,7 +29,7 @@ Chat completions interface.
 class OpenAIModel(Model)
 ```
 
-Defined in: [src/strands/models/openai.py:51](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L51)
+Defined in: [src/strands/models/openai.py:52](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L52)
 
 OpenAI model provider implementation.
 
@@ -39,7 +39,7 @@ OpenAI model provider implementation.
 class OpenAIConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/openai.py:56](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L56)
+Defined in: [src/strands/models/openai.py:57](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L57)
 
 Configuration options for OpenAI models.
 
@@ -53,10 +53,11 @@ Configuration options for OpenAI models.
 ```python
 def __init__(client: Client | None = None,
              client_args: dict[str, Any] | None = None,
+             bedrock_mantle_config: BedrockMantleConfig | None = None,
              **model_config: Unpack[OpenAIConfig]) -> None
 ```
 
-Defined in: [src/strands/models/openai.py:70](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L70)
+Defined in: [src/strands/models/openai.py:71](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L71)
 
 Initialize provider instance.
 
@@ -68,12 +69,13 @@ Initialize provider instance.
     -   Centralizing observability, retries, and networking policy
     -   Pointing to custom model gateways
 -   `Note` - The client should not be shared across different asyncio event loops.
--   `client_args` - Arguments for the OpenAI client (legacy approach). For a complete list of supported arguments, see [https://pypi.org/project/openai/](https://pypi.org/project/openai/).
+-   `client_args` - Arguments for the OpenAI client (legacy approach). For a complete list of supported arguments, see [https://pypi.org/project/openai/](https://pypi.org/project/openai/). May be combined with `bedrock_mantle_config`; when both are set, `bedrock_mantle_config` derives `base_url` and `api_key` (which must not appear in `client_args`).
+-   `bedrock_mantle_config` - Route requests through Amazon Bedrock’s Mantle (OpenAI-compatible) endpoint. See :class:`BedrockMantleConfig` for accepted keys. When set, a fresh bearer token is minted on every request. Cannot be combined with a pre-built `client`.
 -   `**model_config` - Configuration options for the OpenAI model.
 
 **Raises**:
 
--   `ValueError` - If both `client` and `client_args` are provided.
+-   `ValueError` - If `client` is combined with `client_args` or `bedrock_mantle_config`.
 
 #### update\_config
 
@@ -82,7 +84,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[OpenAIConfig]) -> None
 ```
 
-Defined in: [src/strands/models/openai.py:108](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L108)
+Defined in: [src/strands/models/openai.py:137](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L137)
 
 Update the OpenAI model configuration with the provided arguments.
 
@@ -97,7 +99,7 @@ Update the OpenAI model configuration with the provided arguments.
 def get_config() -> OpenAIConfig
 ```
 
-Defined in: [src/strands/models/openai.py:118](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L118)
+Defined in: [src/strands/models/openai.py:147](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L147)
 
 Get the OpenAI model configuration.
 
@@ -113,7 +115,7 @@ def format_request_message_content(cls, content: ContentBlock,
                                    **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/openai.py:127](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L127)
+Defined in: [src/strands/models/openai.py:156](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L156)
 
 Format an OpenAI compatible content block.
 
@@ -138,7 +140,7 @@ def format_request_message_tool_call(cls, tool_use: ToolUse,
                                      **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/openai.py:170](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L170)
+Defined in: [src/strands/models/openai.py:199](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L199)
 
 Format an OpenAI compatible tool call.
 
@@ -159,7 +161,7 @@ def format_request_tool_message(cls, tool_result: ToolResult,
                                 **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/openai.py:190](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L190)
+Defined in: [src/strands/models/openai.py:219](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L219)
 
 Format an OpenAI compatible tool message.
 
@@ -185,7 +187,7 @@ def format_request_messages(cls,
                             **kwargs: Any) -> list[dict[str, Any]]
 ```
 
-Defined in: [src/strands/models/openai.py:420](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L420)
+Defined in: [src/strands/models/openai.py:449](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L449)
 
 Format an OpenAI compatible messages array.
 
@@ -213,7 +215,7 @@ def format_request(messages: Messages,
                    **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/openai.py:444](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L444)
+Defined in: [src/strands/models/openai.py:473](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L473)
 
 Format an OpenAI compatible chat streaming request.
 
@@ -240,7 +242,7 @@ An OpenAI compatible chat streaming request.
 def format_chunk(event: dict[str, Any], **kwargs: Any) -> StreamEvent
 ```
 
-Defined in: [src/strands/models/openai.py:493](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L493)
+Defined in: [src/strands/models/openai.py:522](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L522)
 
 Format an OpenAI response event into a standardized message chunk.
 
@@ -269,7 +271,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/openai.py:601](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L601)
+Defined in: [src/strands/models/openai.py:629](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L629)
 
 Stream conversation with the OpenAI model.
 
@@ -301,7 +303,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/openai.py:741](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L741)
+Defined in: [src/strands/models/openai.py:769](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai.py#L769)
 
 Get structured output from the model.
 

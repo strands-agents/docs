@@ -1,13 +1,10 @@
-Python SDK Only
-
-Tool executors are currently only exposed in the Python SDK.
-
-Tool executors allow users to customize the execution strategy of tools executed by the agent (e.g., concurrent vs sequential). Currently, Strands is packaged with 2 executors.
+Tool executors control whether tools from a single assistant turn run concurrently or sequentially. Both SDKs default to concurrent execution.
 
 ## Concurrent Executor
 
-Use `ConcurrentToolExecutor` (the default) to execute tools concurrently:
+Concurrent execution runs all tool calls from a single turn in parallel. This is the default in both SDKs — you get it without any extra configuration.
 
+(( tab "Python" ))
 ```python
 from strands import Agent
 from strands.tools.executors import ConcurrentToolExecutor
@@ -20,8 +17,23 @@ agent = Agent(
 
 agent("What is the weather and time in New York?")
 ```
+(( /tab "Python" ))
 
-Assuming the model returns `weather_tool` and `time_tool` use requests, the `ConcurrentToolExecutor` will execute both concurrently.
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({
+  tools: [weatherTool, timeTool],
+  toolExecutor: 'concurrent',
+})
+// or simply: new Agent({ tools: [weatherTool, timeTool] })
+
+await agent.invoke('What is the weather and time in New York?')
+```
+(( /tab "TypeScript" ))
+
+Assuming the model returns `weather_tool` and `time_tool` use requests, the concurrent executor runs both at the same time. End-to-end latency scales with the slowest tool rather than their sum.
 
 ### Sequential Behavior
 
@@ -29,8 +41,9 @@ On certain prompts, the model may decide to return one tool use request at a tim
 
 ## Sequential Executor
 
-Use `SequentialToolExecutor` to execute tools sequentially:
+Use sequential execution when tool order matters — for example, when a later tool depends on a side effect of an earlier one:
 
+(( tab "Python" ))
 ```python
 from strands import Agent
 from strands.tools.executors import SequentialToolExecutor
@@ -42,9 +55,49 @@ agent = Agent(
 
 agent("Please take a screenshot and then email the screenshot to my friend")
 ```
+(( /tab "Python" ))
 
-Assuming the model returns `screenshot_tool` and `email_tool` use requests, the `SequentialToolExecutor` will execute both sequentially in the order given.
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
 
-## Custom Executor
+const agent = new Agent({
+  tools: [screenshotTool, emailTool],
+  toolExecutor: 'sequential',
+})
+
+await agent.invoke('Take a screenshot and email it to my friend')
+```
+(( /tab "TypeScript" ))
+
+Assuming the model returns `screenshot_tool` and `email_tool` use requests, the sequential executor runs both in the order given.
+
+## Event Ordering
+
+Both modes preserve per-tool event order. In concurrent mode, events from different tools may interleave across that per-tool sequence.
+
+(( tab "Python" ))
+Per-tool event order: `BeforeToolCallEvent` → `ToolStreamEvent*` → `AfterToolCallEvent` → `ToolResultEvent`.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Per-tool event order: `BeforeToolCallEvent` → `ToolStreamUpdateEvent*` → `AfterToolCallEvent` → `ToolResultEvent`.
+(( /tab "TypeScript" ))
+
+## Cancellation
+
+Cancellation works identically in both modes. Call `agent.cancel()` to request cooperative cancellation. In TypeScript, this flips `agent.cancelSignal`.
+
+(( tab "Python" ))
+-   **Pre-launch cancel**: set `BeforeToolCallEvent.cancel_tool` on a per-tool hook to produce an error result for that tool.
+-   **Mid-flight cancel** in sequential mode short-circuits not-yet-started tools. In concurrent mode, all tools have already launched, so each in-flight tool must cooperatively check for cancellation to stop early.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   **Pre-launch cancel**: set `BeforeToolsEvent.cancel` on the batch-level hook, or call `agent.cancel()` before tools start, to produce error results for every tool in the batch.
+-   **Mid-flight cancel** in sequential mode short-circuits not-yet-started tools. In concurrent mode, all tools have already launched, so each in-flight tool must cooperatively observe `agent.cancelSignal` to stop early.
+(( /tab "TypeScript" ))
+
+## Custom Executors
 
 Custom tool executors are not currently supported but are planned for a future release. You can track progress on this feature at [GitHub Issue #762](https://github.com/strands-agents/sdk-python/issues/762).

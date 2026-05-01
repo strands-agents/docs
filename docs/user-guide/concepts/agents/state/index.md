@@ -2,7 +2,7 @@ Strands Agents state is maintained in several forms:
 
 1.  **Conversation History:** The sequence of messages between the user and the agent.
 2.  **Agent State**: Stateful information outside of conversation context, maintained across multiple requests.
-3.  **Request State**: Contextual information maintained within a single request.
+3.  **Invocation State**: Contextual information maintained within a single invocation.
 
 Understanding how state works in Strands is essential for building agents that can maintain context across multi-turn interactions and workflows.
 
@@ -356,9 +356,9 @@ console.log(`Last action: ${agent.appState.get('last_action')}`)
 ```
 (( /tab "TypeScript" ))
 
-## Request State
+## Invocation State
 
-Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is **not** included in the agent’s context:
+Each agent interaction maintains an invocation state dictionary that persists throughout the event loop cycles and is **not** included in the agent’s context:
 
 (( tab "Python" ))
 ```python
@@ -383,17 +383,29 @@ print(result.state)
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+```typescript
+const agent = new Agent()
+
+// Pass per-invocation state when invoking
+const result = await agent.invoke('Hi there!', {
+  invocationState: { requestId: 'r-42', userId: 'u-1' },
+})
+
+// Hooks and tools can read and mutate invocationState during
+// the invocation. The same object is returned on the result.
+console.log(result.invocationState)
+// { requestId: 'r-42', userId: 'u-1', ... }
 ```
 (( /tab "TypeScript" ))
 
-The request state:
+Invocation state (`invocationState` in TypeScript, `invocation_state` / `request_state` in Python):
 
--   Is initialized at the beginning of each agent call
--   Persists through recursive event loop cycles
--   Can be modified by callback handlers
--   Is returned in the AgentResult object
+-   Is initialized at the beginning of each agent invocation (defaults to `{}` when omitted)
+-   Persists through recursive event loop cycles within a single invocation
+-   Is shared by reference across all hook events and tools
+-   Mutations by hooks or tools are visible to subsequent hooks, tools, and the final result
+-   Is returned on the `AgentResult` (Python: `result.state`, TypeScript: `result.invocationState`)
+-   Is **not** included in the agent’s model context
 
 ## Persisting State Across Sessions
 

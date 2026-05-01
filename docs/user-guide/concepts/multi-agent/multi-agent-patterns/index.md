@@ -128,7 +128,64 @@ def query_data(query: str, tool_context: ToolContext) -> str:
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-`MultiAgentState` is shared across all nodes in the orchestration and provides access to execution progress, node results, and custom application state. Key fields include:
+Both Graph and Swarm support passing per-invocation state to all nodes through the `invocationState` option. This is a mutable `Record<string, unknown>` shared by reference — one node’s hooks/tools can read state written by a previous node.
+
+### How Invocation State Works
+
+Pass `invocationState` as the second argument to `invoke()` or `stream()`:
+
+```typescript
+const researcher = new Agent({
+  id: 'researcher',
+  systemPrompt: 'You are a research specialist.',
+})
+const writer = new Agent({
+  id: 'writer',
+  systemPrompt: 'You are a writing specialist.',
+})
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+})
+
+// Pass invocation state to the orchestrator
+await graph.invoke('Analyze customer data', {
+  invocationState: {
+    userId: 'user123',
+    sessionId: 'sess456',
+    debugMode: true,
+  },
+})
+```
+
+The `invocationState` is automatically forwarded to:
+
+-   Each node’s child agent (via `InvokeOptions.invocationState`)
+-   Tools via `context.invocationState` in the tool callback
+-   All hook events on both the orchestrator and individual agents
+
+### Accessing Invocation State in Tools
+
+```typescript
+const queryDataTool = tool({
+  name: 'query_data',
+  description: 'Query data with user context',
+  inputSchema: z.object({
+    query: z.string(),
+  }),
+  callback: (input, context) => {
+    const userId = context?.invocationState.userId
+    const debugMode = context?.invocationState.debugMode
+    // Use context for personalized queries...
+    return `Results for ${userId}`
+  },
+})
+```
+
+### MultiAgentState
+
+In addition to `invocationState`, the orchestrator’s `MultiAgentState` is shared across all nodes and provides access to execution progress, node results, and custom application state:
 
 -   `results` — all `NodeResult` entries in completion order
 -   `nodes` — per-node state (status, results) accessible via `state.node(id)`
@@ -136,8 +193,6 @@ def query_data(query: str, tool_context: ToolContext) -> str:
 -   `app` — a `StateStore` key-value store for custom data shared across hooks, edge handlers, and custom nodes
 
 ```typescript
-import { Graph, BeforeNodeCallEvent } from '@strands-agents/sdk'
-
 const graph = new Graph({
   nodes: [researcher, writer],
   edges: [['researcher', 'writer']],

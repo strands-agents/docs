@@ -21,7 +21,7 @@ Docs: [https://platform.openai.com/docs/api-reference/responses](https://platfor
 class Client(Protocol)
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:109](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L109)
+Defined in: [src/strands/models/openai\_responses.py:110](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L110)
 
 Protocol defining the OpenAI Responses API interface for the underlying provider client.
 
@@ -32,7 +32,7 @@ Protocol defining the OpenAI Responses API interface for the underlying provider
 def responses() -> Any
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:114](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L114)
+Defined in: [src/strands/models/openai\_responses.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L115)
 
 Responses interface.
 
@@ -42,7 +42,7 @@ Responses interface.
 class OpenAIResponsesModel(Model)
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:119](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L119)
+Defined in: [src/strands/models/openai\_responses.py:120](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L120)
 
 OpenAI Responses API model provider implementation.
 
@@ -52,7 +52,7 @@ OpenAI Responses API model provider implementation.
 class OpenAIResponsesConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:125](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L125)
+Defined in: [src/strands/models/openai\_responses.py:126](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L126)
 
 Configuration options for OpenAI Responses API models.
 
@@ -66,16 +66,18 @@ Configuration options for OpenAI Responses API models.
 
 ```python
 def __init__(client_args: dict[str, Any] | None = None,
+             bedrock_mantle_config: BedrockMantleConfig | None = None,
              **model_config: Unpack[OpenAIResponsesConfig]) -> None
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:143](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L143)
+Defined in: [src/strands/models/openai\_responses.py:144](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L144)
 
 Initialize provider instance.
 
 **Arguments**:
 
--   `client_args` - Arguments for the OpenAI client. For a complete list of supported arguments, see [https://pypi.org/project/openai/](https://pypi.org/project/openai/).
+-   `client_args` - Arguments for the OpenAI client. For a complete list of supported arguments, see [https://pypi.org/project/openai/](https://pypi.org/project/openai/). May be combined with `bedrock_mantle_config`; when both are set, the config derives `base_url` and `api_key` (which must not appear in `client_args`).
+-   `bedrock_mantle_config` - Route requests through Amazon Bedrock’s Mantle (OpenAI-compatible) endpoint. See :class:`BedrockMantleConfig` for accepted keys. When set, a fresh bearer token is minted on every request.
 -   `**model_config` - Configuration options for the OpenAI Responses API model.
 
 #### stateful
@@ -86,7 +88,7 @@ Initialize provider instance.
 def stateful() -> bool
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:161](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L161)
+Defined in: [src/strands/models/openai\_responses.py:189](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L189)
 
 Whether server-side conversation storage is enabled.
 
@@ -99,7 +101,7 @@ Derived from the `stateful` configuration option.
 def update_config(**model_config: Unpack[OpenAIResponsesConfig]) -> None
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:169](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L169)
+Defined in: [src/strands/models/openai\_responses.py:197](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L197)
 
 Update the OpenAI Responses API model configuration with the provided arguments.
 
@@ -114,7 +116,7 @@ Update the OpenAI Responses API model configuration with the provided arguments.
 def get_config() -> OpenAIResponsesConfig
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:179](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L179)
+Defined in: [src/strands/models/openai\_responses.py:207](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L207)
 
 Get the OpenAI Responses API model configuration.
 
@@ -133,7 +135,7 @@ async def count_tokens(
         system_prompt_content: list[SystemContentBlock] | None = None) -> int
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:188](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L188)
+Defined in: [src/strands/models/openai\_responses.py:216](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L216)
 
 Count tokens using the OpenAI Responses API input\_tokens.count endpoint.
 
@@ -163,7 +165,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:237](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L237)
+Defined in: [src/strands/models/openai\_responses.py:265](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L265)
 
 Stream conversation with the OpenAI Responses API model.
 
@@ -196,7 +198,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/openai\_responses.py:432](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L432)
+Defined in: [src/strands/models/openai\_responses.py:460](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/openai_responses.py#L460)
 
 Get structured output from the OpenAI Responses API model.
 
