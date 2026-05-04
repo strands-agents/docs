@@ -197,13 +197,14 @@ factual_agent = Agent(model=factual_model)
 
 ### Structured Output
 
-Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output_model()`](@api/python/strands.agent.agent#Agent.structured_output_model), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
+Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](@api/python/strands.agent.agent#Agent.structured_output) and pass `structured_output_model` parameter to the agent invocation, the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
 
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
 from strands.models.ollama import OllamaModel
 
+# 1) Define the Pydantic model
 class BookAnalysis(BaseModel):
     """Analyze a book's key information."""
     title: str = Field(description="The book's title")
@@ -212,26 +213,28 @@ class BookAnalysis(BaseModel):
     summary: str = Field(description="Brief summary of the book")
     rating: int = Field(description="Rating from 1-10", ge=1, le=10)
 
+# 2) Define Ollama Model and Prompt
 ollama_model = OllamaModel(
     host="http://localhost:11434",
     model_id="llama3.1",
 )
 
-agent = Agent(model=ollama_model)
-
-result = agent.structured_output_model(
-    BookAnalysis,
-    """
+prompt = """
     Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
     It's a science fiction comedy about Arthur Dent's adventures through space
-    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi with good ratings.
     """
-)
 
-print(f"Title: {result.title}")
-print(f"Author: {result.author}")
-print(f"Genre: {result.genre}")
-print(f"Rating: {result.rating}")
+# 3) Pass the model to the agent
+agent = Agent(model=ollama_model)
+result = agent(prompt, structured_output_model=BookAnalysis)
+
+# 4) Access the `structured_output` from the result
+result_info: BookAnalysis = result.structured_output
+print(f"Title: {result_info.title}")
+print(f"Author: {result_info.author}")
+print(f"Genre: {result_info.genre}")
+print(f"Rating: {result_info.rating}")
 ```
 
 ## Tool Support
