@@ -216,6 +216,7 @@
 
     // Restore on page load
     var current = getPreference();
+    setPreference(current);
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function () { syncAll(current); });
     } else {
