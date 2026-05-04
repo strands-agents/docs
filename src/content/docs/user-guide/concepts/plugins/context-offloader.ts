@@ -6,7 +6,6 @@ import {
   S3Storage,
 } from '@strands-agents/sdk/vended-plugins/context-offloader'
 
-declare const model: any
 
 // =====================
 // Disable Retrieval Tool
