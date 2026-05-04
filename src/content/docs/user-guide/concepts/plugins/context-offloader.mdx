@@ -67,14 +67,9 @@ agent = Agent(plugins=[
 <Tab label="TypeScript">
 
 ```typescript
-const agent = new Agent({
-  plugins: [
-    new ContextOffloader({
-      storage: new FileStorage('./artifacts'),
-      includeRetrievalTool: false,
-    }),
-  ],
-})
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:disable_retrieval_tool"
+
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:disable_retrieval_tool"
 ```
 </Tab>
 </Tabs>
@@ -101,12 +96,9 @@ agent = Agent(plugins=[
 <Tab label="TypeScript">
 
 ```typescript
-import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:getting_started"
 
-const agent = new Agent({
-  plugins: [new ContextOffloader({ storage: new InMemoryStorage() })],
-})
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:getting_started"
 ```
 </Tab>
 </Tabs>
@@ -129,15 +121,9 @@ agent = Agent(plugins=[
 <Tab label="TypeScript">
 
 ```typescript
-const agent = new Agent({
-  plugins: [
-    new ContextOffloader({
-      storage: new InMemoryStorage(),
-      maxResultTokens: 5_000,
-      previewTokens: 2_000,
-    }),
-  ],
-})
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:custom_thresholds"
+
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:custom_thresholds"
 ```
 </Tab>
 </Tabs>
@@ -175,15 +161,9 @@ agent = Agent(plugins=[
 <Tab label="TypeScript">
 
 ```typescript
-import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:in_memory_storage"
 
-const agent = new Agent({
-  plugins: [
-    new ContextOffloader({
-      storage: new InMemoryStorage(),
-    }),
-  ],
-})
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:in_memory_storage"
 ```
 </Tab>
 </Tabs>
@@ -209,15 +189,9 @@ agent = Agent(plugins=[
 <Tab label="TypeScript">
 
 ```typescript
-import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:file_storage"
 
-const agent = new Agent({
-  plugins: [
-    new ContextOffloader({
-      storage: new FileStorage('./artifacts'),
-    }),
-  ],
-})
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:file_storage"
 ```
 </Tab>
 </Tabs>
@@ -246,17 +220,9 @@ agent = Agent(plugins=[
 <Tab label="TypeScript">
 
 ```typescript
-import { ContextOffloader, S3Storage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:s3_storage"
 
-const agent = new Agent({
-  plugins: [
-    new ContextOffloader({
-      storage: new S3Storage('my-agent-artifacts', {
-        prefix: 'tool-results/',
-      }),
-    }),
-  ],
-})
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:s3_storage"
 ```
 </Tab>
 </Tabs>
