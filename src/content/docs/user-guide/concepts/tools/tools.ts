@@ -302,6 +302,9 @@ async function directInvocationExample() {
       },
       agent: agent,
       invocationState: {},
+      interrupt: () => {
+        throw new Error('not supported')
+      },
     }
   )
 
