@@ -100,6 +100,24 @@ Evaluators operate at different levels of granularity:
 - **Purpose**: Binary evaluation for harmful content detection
 - **Use Case**: Screen responses for dangerous or offensive content
 
+**[RefusalEvaluator](refusal_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Binary evaluation for refusal detection
+- **Use Case**: Detect when agents inappropriately refuse to address valid requests
+
+**[StereotypingEvaluator](stereotyping_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Binary evaluation for bias and stereotyping detection
+- **Use Case**: Screen responses for biased or stereotypical content against groups
+
+**[InstructionFollowingEvaluator](instruction_following_evaluator.md)**
+
+- **Level**: TRACE_LEVEL
+- **Purpose**: Binary evaluation for instruction compliance
+- **Use Case**: Verify that agents follow explicit format, length, style, and content constraints
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](tool_selection_evaluator.md)**
@@ -356,9 +374,11 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 - [OutputEvaluator](output_evaluator.md): Start with flexible custom evaluation
 - [HelpfulnessEvaluator](helpfulness_evaluator.md): Assess response helpfulness
 - [CustomEvaluator](custom_evaluator.md): Create domain-specific evaluators
+- [Detectors](../detectors/index.md): Understand _why_ cases fail with automatic failure detection and root cause analysis
 
 ## Related Documentation
 
 - [Quickstart Guide](../quickstart.md): Get started with Strands Evals
 - [Simulators Overview](../simulators/index.md): Learn about simulators
+- [Detectors Overview](../detectors/index.md): Automatic failure diagnosis for agent traces
 - [Experiment Generator](../experiment_generator.md): Generate test cases automatically
