@@ -151,7 +151,7 @@ const model = new BedrockModel({
 
 **Message metadata ([#2125](https://github.com/strands-agents/sdk-python/pull/2125), [#815](https://github.com/strands-agents/sdk-typescript/pull/815)).** The token counting strategy reads `inputTokens` and `outputTokens` from the last assistant message's metadata. This is merged in both the Python SDK ([#2125](https://github.com/strands-agents/sdk-python/pull/2125)) and the TypeScript SDK ([#815](https://github.com/strands-agents/sdk-typescript/pull/815)).
 
-**Token estimation.** The `Model` base class exposes an `estimateTokens(messages: Message[])` method. Each model provider should implement this using its native token counting API (for example, Anthropic's `count_tokens()` or OpenAI's `tiktoken`). All TypeScript SDK providers have access to native counting APIs, so provider-level implementations are the expected default. The base class provides a heuristic fallback (`chars / 4` for text, `chars / 2` for JSON) for providers that do not implement native counting. Users can also pass a custom estimator via the `tokenEstimator` config option to override any provider's implementation:
+**Token estimation.** The `Model` base class exposes an `estimateTokens(messages: Message[])` method. Each model provider should implement this using its native token counting API (for example, Anthropic's `count_tokens()` or Bedrock's `CountTokens`). All TypeScript SDK providers have access to native counting APIs, so provider-level implementations are the expected default. The base class provides a heuristic fallback (`chars / 4` for text, `chars / 2` for JSON) for providers that do not implement native counting or when the native API fails (e.g., cross-region inference profiles on Bedrock). Users can also pass a custom estimator via the `tokenEstimator` config option to override any provider's implementation:
 
 ```typescript
 const model = new BedrockModel({
@@ -210,7 +210,7 @@ However, `ConversationManager` is the established primitive for context manageme
 
 ### 2. Token Estimation via Tokenizer Only
 
-We considered using a tokenizer library as the only estimation method. However, the estimation only applies to new messages added since the last model call (the delta). The known baseline from `inputTokens + outputTokens` handles the bulk of the count. Provider-native APIs are the preferred estimation method in TypeScript since all providers have access to counting APIs. The heuristic fallback (`chars / 4` for text, `chars / 2` for JSON) exists for providers that do not implement native counting and for the `tokenEstimator` escape hatch. Users who need different behavior can override via `tokenEstimator`.
+We considered using a tokenizer library (e.g., tiktoken) as the only estimation method. However, tokenizer libraries introduce network dependencies (encoding file downloads) that cause hangs in isolated VPC environments. The estimation only applies to new messages added since the last model call (the delta). The known baseline from `inputTokens + outputTokens` handles the bulk of the count. Provider-native APIs are the preferred estimation method since all providers have access to counting APIs. The heuristic fallback (`chars / 4` for text, `chars / 2` for JSON) exists for providers that do not implement native counting or when native APIs fail, and for the `tokenEstimator` escape hatch. Users who need different behavior can override via `tokenEstimator`.
 
 ## Consequences
 
