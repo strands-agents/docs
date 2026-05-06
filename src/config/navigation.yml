@@ -208,6 +208,7 @@ sidebar:
               - docs/user-guide/evals-sdk/how-to/result_caching
               - docs/user-guide/evals-sdk/how-to/experiment_management
               - docs/user-guide/evals-sdk/how-to/serialization
+              - docs/user-guide/evals-sdk/how-to/agentcore-code-evaluators
       - docs/user-guide/versioning-and-support
 
   - label: Examples
