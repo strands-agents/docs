@@ -179,11 +179,20 @@ sidebar:
               - docs/user-guide/evals-sdk/evaluators/conciseness_evaluator
               - docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator
               - docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator
+              - docs/user-guide/evals-sdk/evaluators/refusal_evaluator
+              - docs/user-guide/evals-sdk/evaluators/stereotyping_evaluator
+              - docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator
               - docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator
               - docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator
               - docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator
               - docs/user-guide/evals-sdk/evaluators/deterministic_evaluators
               - docs/user-guide/evals-sdk/evaluators/custom_evaluator
+          - label: Detectors
+            items:
+              - docs/user-guide/evals-sdk/detectors
+              - docs/user-guide/evals-sdk/detectors/failure_detection
+              - docs/user-guide/evals-sdk/detectors/root_cause_analysis
+              - docs/user-guide/evals-sdk/detectors/diagnosis
           - docs/user-guide/evals-sdk/experiment_generator
           - label: Simulators
             items:
