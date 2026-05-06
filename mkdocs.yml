@@ -186,6 +186,7 @@ nav:
       - How-To Guides:
         - Experiment Management: user-guide/evals-sdk/how-to/experiment_management.md
         - Serialization: user-guide/evals-sdk/how-to/serialization.md
+        - Deploy to AgentCore Evaluators: user-guide/evals-sdk/how-to/agentcore-code-evaluators.md
     - Deploy:
       - Operating Agents in Production: user-guide/deploy/operating-agents-in-production.md
       - Amazon Bedrock AgentCore:
