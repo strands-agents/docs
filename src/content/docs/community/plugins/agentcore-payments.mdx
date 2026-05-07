@@ -13,7 +13,7 @@ service:
   link: https://docs.aws.amazon.com/bedrock/latest/userguide/agentcore.html
 ---
 
-The [AgentCore payments plugin](https://github.com/aws/bedrock-agentcore-sdk-python/tree/main/src/bedrock_agentcore/payments/integrations/strands) leverages Amazon Bedrock AgentCore payments to provide automated payment processing capabilities for Strands Agents. It supports the [x402 Payment Required](https://www.x402.org/)  protocol, enabling agents to automatically handle HTTP 402 responses by processing microtransaction payments to access paid APIs, MCP servers, and contents.
+The [AgentCore payments plugin](https://github.com/aws/bedrock-agentcore-sdk-python/tree/main/src/bedrock_agentcore/payments/integrations/strands) leverages Amazon Bedrock AgentCore payments to provide automated payment processing capabilities for Strands Agents. It supports the [x402 Payment Required](https://www.x402.org/) protocol, enabling agents to automatically handle HTTP 402 responses by processing microtransaction payments to access paid APIs, MCP servers, and contents.
 
 - **Automatic x402 Payment Handling** — intercepts HTTP 402 responses from tools, processes payment requirements, and retries requests with payment headers
 - **Payment Query Tools** — built-in tools for agents to query payment instruments and sessions at runtime
