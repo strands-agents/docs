@@ -276,6 +276,12 @@ response = agent("What's the square root of 144 plus the current time?")
     - If you encounter the error `ModuleNotFoundError: No module named 'ollama'`, this means you haven't installed the `ollama` dependency in your python environment
     - To fix, run `pip install 'strands-agents[ollama]'`
 
+## Token Counting
+
+Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+
+The Ollama provider does not have a native token counting API. It uses a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
 ## Related Resources
 
 - [Ollama Documentation](https://github.com/ollama/ollama/blob/main/README.md)
