@@ -379,7 +379,33 @@ Most event properties are read-only to prevent unintended modifications. However
 
 ### Callback Ordering
 
-Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
+<Tabs>
+<Tab label="Python">
+
+After event callbacks run in reverse registration order for cleanup symmetry:
+
+- **Before**: A, B, C (registration order)
+- **After**: C, B, A (reverse registration order)
+
+</Tab>
+<Tab label="TypeScript">
+
+By default, After event callbacks run in reverse registration order for cleanup symmetry. You can override this with explicit priority using the `order` option — lower values run first.
+
+The SDK exports named constants for common priorities:
+
+- `HookOrder.FIRST` (-100) — runs before all other hooks
+- `HookOrder.DEFAULT` (0) — implicit when no order is specified
+- `HookOrder.LAST` (100) — runs after all other hooks
+
+```typescript
+--8<-- "user-guide/concepts/agents/hooks.ts:hook_ordering"
+```
+
+Within the same order group, Before events preserve registration order and After events reverse it.
+
+</Tab>
+</Tabs>
 
 ## Advanced Usage
 
