@@ -96,6 +96,7 @@ Key features of the `SlidingWindowConversationManager`:
 - **Overflow Trimming**: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.
 - **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed. For a proactive alternative that preserves full content externally, see the [Context Offloader](../plugins/context-offloader) plugin.
 - **Per-Turn Management**: Optionally apply context management proactively during the agent loop execution, not just at the end.
+- **Proactive Compression** (TypeScript): Pass `proactiveCompression: true` or `proactiveCompression: { compressionThreshold: 0.7 }` to trigger context reduction before the model call when projected input tokens exceed a configurable threshold. See [Proactive Context Compression](#proactive-context-compression).
 
 **Per-Turn Management**:
 
@@ -160,6 +161,7 @@ Configuration parameters:
 - **`summaryRatio`** (number, default: 0.3): Ratio of messages to summarize when reducing context (clamped between 0.1 and 0.8)
 - **`preserveRecentMessages`** (number, default: 10): Minimum number of recent messages to always keep
 - **`summarizationSystemPrompt`** (string, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format.
+- **`proactiveCompression`** (`boolean | { compressionThreshold: number }`, optional): Enable proactive context compression before the model call. Pass `true` for the default 0.7 threshold, or an object with a custom threshold. See [Proactive Context Compression](#proactive-context-compression).
 
 </Tab>
 </Tabs>
@@ -310,6 +312,83 @@ agent = Agent(
 - **Flexible Configuration**: Customize summarization behavior through various parameters
 - **Fallback Safety**: Handles summarization failures gracefully
 
+## Proactive Context Compression
+
+By default, conversation managers are **reactive** — they only reduce context after the model rejects a request with a context window overflow error. This means the agent operates at maximum context capacity until it fails, then retries after trimming. This wastes a round-trip and can cause **output token starvation**, where the model has so little remaining capacity that it cannot generate a meaningful response even if it doesn't overflow.
+
+Proactive compression solves this by triggering context reduction **before** the model call when projected input tokens exceed a configurable threshold of the model's context window.
+
+### Enabling Proactive Compression
+
+Pass `proactiveCompression` to any built-in conversation manager. Use `true` for the default 0.7 threshold, or pass an object with a custom `compressionThreshold` ratio between 0 and 1 — for example, `0.7` means "compress when 70% of the context window is used":
+
+**With SlidingWindowConversationManager:**
+
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:proactive_sliding_window_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:proactive_sliding_window"
+```
+
+**With SummarizingConversationManager:**
+
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:proactive_summarizing_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:proactive_summarizing"
+```
+
+Without `proactiveCompression`, behavior is unchanged — only reactive overflow recovery is used.
+
+### How It Works
+
+Before each model call, the agent estimates the projected input token count and attaches it to the `BeforeModelCallEvent`. When `proactiveCompression` is configured, the conversation manager compares this estimate against the model's `contextWindowLimit`:
+
+```
+if projectedInputTokens / contextWindowLimit >= compressionThreshold:
+    reduce()  // proactively compress context (called without error)
+```
+
+Because `BeforeModelCallEvent` fires before **every** model call — including calls within a tool-use cycle — this provides automatic in-loop compression. If an agent makes five tool calls in a single invocation and context grows past the threshold between calls three and four, compression triggers before call four.
+
+Proactive compression is **best-effort**: if `reduce()` throws or returns `false`, the error is swallowed and the model call proceeds normally. This ensures proactive compression never breaks an otherwise-working agent.
+
+When triggered proactively, each built-in manager uses the same reduction logic as reactive overflow recovery:
+- **SlidingWindowConversationManager**: Trims the oldest messages down to `windowSize`, same as overflow recovery.
+- **SummarizingConversationManager**: Summarizes the oldest portion of the conversation using the configured `summaryRatio` and `preserveRecentMessages`, same as overflow recovery.
+
+### Context Window Limit
+
+The threshold check requires knowing the model's context window size. The SDK auto-populates `contextWindowLimit` from built-in lookup tables for known models (Anthropic, Bedrock, OpenAI, Google Gemini). You can override it manually for models not in the lookup table:
+
+```typescript
+const model = new BedrockModel({
+  modelId: 'my-custom-model',
+  contextWindowLimit: 128_000,
+})
+```
+
+### Token Estimation
+
+The agent estimates input tokens using a hybrid strategy that minimizes estimation overhead:
+
+1. **Known baseline**: Reads `inputTokens + outputTokens` from the last assistant message's metadata (exact values reported by the model provider after the previous call)
+2. **Delta estimation**: Only estimates tokens for new messages added since that assistant message (typically tool results), using the model's `countTokens()` method
+3. **Cold start fallback**: When no prior usage metadata exists (first call or after session restore without metadata), estimates all messages via `countTokens()`
+
+The `countTokens()` implementation varies by model provider — some use native token counting APIs for exact counts, while others use a character-based heuristic. See the [Token Counting](#token-counting) section on each provider's page for details:
+
+- [Amazon Bedrock](../model-providers/amazon-bedrock/#token-counting) — native API with fallback caching
+- [Anthropic](../model-providers/anthropic/#token-counting) — native API
+- [Google Gemini](../model-providers/google/#token-counting) — native API (messages only)
+- [OpenAI Responses](../model-providers/openai-responses/#token-counting) — native API (Python only)
+- [OpenAI Chat](../model-providers/openai/#token-counting) — heuristic
+- [llama.cpp](../model-providers/llamacpp/#token-counting) — native server tokenization (Python only)
+
+All providers fall back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) when native counting is unavailable.
+
+If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of 200,000 tokens and emits a warning.
+
 ## Creating a ConversationManager
 
 <Tabs>
@@ -331,9 +410,9 @@ See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk
 
 To create a custom conversation manager, extend the abstract [`ConversationManager`](@api/typescript/ConversationManager) base class and implement the `reduce` method:
 
-1. **`reduce(options: ReduceOptions): boolean`**: Called automatically when a `ContextWindowOverflowError` occurs. Mutate `agent.messages` in place to reduce history, then return `true` if any reduction was made. Return `false` to let the error propagate out of the agent loop uncaught.
+1. **`reduce(options: ReduceOptions): boolean`**: Called in two scenarios: reactively when a `ContextWindowOverflowError` occurs (`options.error` is set), and proactively before model calls that exceed the compression threshold (`options.error` is `undefined`). Mutate `agent.messages` in place to reduce history, then return `true` if any reduction was made. When `error` is set, returning `false` lets the error propagate out of the agent loop uncaught. When `error` is `undefined`, returning `false` or throwing is safe — the model call proceeds regardless.
 
-2. **`initAgent(agent)` (optional)**: Override to add proactive management (e.g. trimming after each invocation). Always call `super.initAgent(agent)` to preserve the built-in overflow recovery hook.
+2. **`initAgent(agent)` (optional)**: Override to add proactive management (e.g. trimming after each invocation). Always call `super.initAgent(agent)` to preserve the built-in overflow recovery and proactive compression hooks.
 
 ```typescript
 --8<-- "user-guide/concepts/agents/conversation-management_imports.ts:custom_conversation_manager_imports"

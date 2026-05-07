@@ -211,6 +211,23 @@ image_message = {
 response = agent([image_message])
 ```
 
+## Token Counting
+
+Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+
+The llama.cpp provider uses the server's native `/tokenize` endpoint with chat-template-aware tokenization (requires a llama.cpp server version that supports the `messages` field in tokenize requests). This provides accurate token counts that account for the model's chat template.
+
+You can disable native token counting with:
+
+```python
+model = LlamaCppModel(
+    host="http://localhost:8080",
+    use_native_token_count=False,  # Always use heuristic
+)
+```
+
+When disabled (or if the server doesn't support message-based tokenization), falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
 ## References
 
 - [Python API](@api/python/strands.models.model)
