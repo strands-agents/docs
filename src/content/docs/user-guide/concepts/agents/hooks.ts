@@ -80,7 +80,7 @@ async function hookOrderingExample() {
 
   agent.addHook(BeforeToolCallEvent, (event) => {
     console.log('[security] Checking permissions')
-  }, { order: HookOrder.FIRST })  // -100
+  }, { order: HookOrder.SDK_FIRST })  // -100
 
   // Arbitrary numbers for fine-grained control
   agent.addHook(BeforeToolCallEvent, (event) => {
@@ -93,11 +93,16 @@ async function hookOrderingExample() {
 
   agent.addHook(BeforeToolCallEvent, (event) => {
     console.log('[metrics] Recording call')
-  }, { order: HookOrder.LAST })  // 100
+  }, { order: HookOrder.SDK_LAST })  // 100
+
+  // Run before the SDK's earliest hooks
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    console.log('[guardrail] Runs before SDK hooks')
+  }, { order: HookOrder.SDK_FIRST - 1 })
 
   // Use -Infinity/Infinity for guaranteed absolute first/last
   agent.addHook(BeforeToolCallEvent, (event) => {
-    console.log('[guardrail] Always runs first, no matter what')
+    console.log('[absolute] Always runs first, no matter what')
   }, { order: -Infinity })
   // --8<-- [end:hook_ordering]
 }
