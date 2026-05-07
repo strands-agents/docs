@@ -1,4 +1,4 @@
-import { Agent, FunctionTool } from '@strands-agents/sdk'
+import { Agent, FunctionTool, HookOrder } from '@strands-agents/sdk'
 import type { LocalAgent, Plugin } from '@strands-agents/sdk'
 import {
   BeforeInvocationEvent,
@@ -72,6 +72,32 @@ async function individualCallbackExample() {
 
   agent.addHook(BeforeInvocationEvent, myCallback)
   // --8<-- [end:individual_callback]
+}
+
+async function hookOrderingExample() {
+  // --8<-- [start:hook_ordering]
+  const agent = new Agent()
+
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    console.log('[logging] Tool called:', event.toolUse.name)
+  })  // HookOrder.DEFAULT (0)
+
+  // Run before the SDK's earliest hooks
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    console.log('[guardrail] Runs before SDK hooks')
+  }, { order: HookOrder.SDK_FIRST - 1 })
+
+
+  // Arbitrary numbers for fine-grained control
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    console.log('[validation] Validating input')
+  }, { order: -50 })
+
+  // Use -Infinity/Infinity for guaranteed absolute first/last
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    console.log('[absolute] Always runs first, no matter what')
+  }, { order: -Infinity })
+  // --8<-- [end:hook_ordering]
 }
 
 // =====================
@@ -445,6 +471,7 @@ async function layeredHooksExample() {
 
 // Suppress unused function warnings
 void invocationStateInHooksExample
+void hookOrderingExample
 void limitToolCountsExample
 void orchestratorCallbackExample
 void conditionalNodeExecutionExample
