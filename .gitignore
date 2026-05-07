@@ -21,7 +21,6 @@ package-lock.json
 
 # Generated documentation
 docs/api-reference/
-__*__/
 .build
 
 CLAUDE.md
