@@ -138,7 +138,6 @@
   "/latest/documentation/docs/user-guide/evals-sdk/quickstart/",
   "/latest/documentation/docs/user-guide/evals-sdk/simulators/",
   "/latest/documentation/docs/user-guide/evals-sdk/simulators/user_simulation/",
-  "/latest/documentation/docs/user-guide/observability-evaluation/evaluation/",
   "/latest/documentation/docs/user-guide/observability-evaluation/logs/",
   "/latest/documentation/docs/user-guide/observability-evaluation/metrics/",
   "/latest/documentation/docs/user-guide/observability-evaluation/observability/",
@@ -159,5 +158,6 @@
   "/docs/user-guide/concepts/model-providers/fireworksai/",
   "/docs/user-guide/concepts/model-providers/xai/",
   "/docs/user-guide/quickstart/",
+  "/docs/user-guide/observability-evaluation/evaluation/",
   "/docs/"
 ]
