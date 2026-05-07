@@ -94,6 +94,11 @@ async function hookOrderingExample() {
   agent.addHook(BeforeToolCallEvent, (event) => {
     console.log('[metrics] Recording call')
   }, { order: HookOrder.LAST })  // 100
+
+  // Use -Infinity/Infinity for guaranteed absolute first/last
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    console.log('[guardrail] Always runs first, no matter what')
+  }, { order: -Infinity })
   // --8<-- [end:hook_ordering]
 }
 

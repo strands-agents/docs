@@ -392,11 +392,13 @@ After event callbacks run in reverse registration order for cleanup symmetry:
 
 By default, After event callbacks run in reverse registration order for cleanup symmetry. You can override this with explicit priority using the `order` option — lower values run first.
 
-The SDK exports named constants for common priorities:
+The SDK exports convenience constants for common priorities:
 
-- `HookOrder.FIRST` (-100) — runs before all other hooks
+- `HookOrder.FIRST` (-100) — convenience preset for early hooks
 - `HookOrder.DEFAULT` (0) — implicit when no order is specified
-- `HookOrder.LAST` (100) — runs after all other hooks
+- `HookOrder.LAST` (100) — convenience preset for late hooks
+
+These are not enforced bounds — any numeric value works. For guaranteed absolute ordering, use `-Infinity` or `Infinity`.
 
 ```typescript
 --8<-- "user-guide/concepts/agents/hooks.ts:hook_ordering"
