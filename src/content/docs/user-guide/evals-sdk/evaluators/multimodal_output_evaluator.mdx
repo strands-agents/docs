@@ -6,16 +6,16 @@ sidebar:
 
 ## Overview
 
-The `MultimodalOutputEvaluator` is an MLLM-as-a-Judge evaluator that assesses the quality of agent outputs for tasks that involve non-text inputs such as images and documents. It extends [`OutputEvaluator`](output_evaluator.md) by overriding the `_build_prompt()` hook: `evaluate()` and `evaluate_async()` are inherited unchanged, so the SDK-level invocation pattern is identical to the text-only evaluator. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/multimodal_output_evaluator.py).
+The `MultimodalOutputEvaluator` assesses the quality of agent outputs for tasks that involve images or documents alongside text. It uses an MLLM as the judge and evaluates responses against a user-defined rubric, extending [`OutputEvaluator`](output_evaluator.md) with multimodal input support. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/multimodal_output_evaluator.py).
 
 ## Key Features
 
-- **MLLM-as-a-Judge**: Uses a multimodal judge model to evaluate responses against both the rubric and the original media
-- **Data-Driven Dispatch**: When the input carries media, the evaluator emits Strands SDK content blocks; otherwise it falls back to a plain text prompt — no `include_media` flag to set
-- **Reference-Free and Reference-Based**: Automatically appends a reference comparison suffix to the rubric when `expected_output` is provided on the case
-- **Flexible Media Sources**: Accepts file paths, base64 strings, data URLs, HTTP(S) URLs (auto-fetched via the stdlib), raw bytes, and PIL Images
-- **Convenience Subclasses**: Ships with `MultimodalOverallQualityEvaluator`, `MultimodalCorrectnessEvaluator`, `MultimodalFaithfulnessEvaluator`, and `MultimodalInstructionFollowingEvaluator`, each pre-wired with a built-in rubric
-- **Async Support**: Inherits `evaluate_async()` from `OutputEvaluator`
+- **MLLM-as-a-Judge**: Uses a multimodal judge model to evaluate responses against the rubric and the media
+- **Data-Driven Dispatch**: Emits Strands SDK content blocks when the input carries media; falls back to a plain text prompt otherwise
+- **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+- **Multiple Media Sources**: Accepts file paths, base64 strings, data URLs, HTTP(S) URLs (auto-fetched via the stdlib), raw bytes, and PIL Images
+- **Built-in Subclasses**: `MultimodalOverallQualityEvaluator`, `MultimodalCorrectnessEvaluator`, `MultimodalFaithfulnessEvaluator`, and `MultimodalInstructionFollowingEvaluator` each default to a built-in rubric
+- **Async Support**: Supports both synchronous and asynchronous evaluation
 
 ## When to Use
 
@@ -67,7 +67,7 @@ This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response
 The evaluator decides whether to call the judge as a multimodal or text-only model based on the shape of `case.input`:
 
 - If `case.input` is a `MultimodalInput` carrying non-empty media, the composer returns a list of content blocks (media first, then the evaluation text), and the judge is invoked as an MLLM.
-- If `case.input` is anything else (e.g., a plain string) — or a `MultimodalInput` whose `media` is empty — the composer returns a plain text prompt, and the judge behaves exactly like `OutputEvaluator`.
+- If `case.input` is anything else (e.g., a plain string, or a `MultimodalInput` whose `media` is empty), the composer returns a plain text prompt, and the judge behaves exactly like `OutputEvaluator`.
 
 This means the same evaluator can grade a mixed experiment containing both multimodal and text-only cases without any flags to set.
 
@@ -94,18 +94,26 @@ This means the same evaluator can grade a mixed experiment containing both multi
 | Raw bytes | `b"\x89PNG..."` |
 | PIL Image | `PIL.Image.Image` instance (requires `Pillow`) |
 
-HTTP(S) URLs are auto-fetched via `urllib.request` from the standard library — no extra dependencies. The `format` field (`"jpeg"`, `"png"`, `"gif"`, `"webp"`) is auto-detected from the extension or data URL when omitted. S3 URIs and boto3 auto-fetch are not supported; pre-download S3 objects to bytes or a local path before constructing `ImageData`.
+HTTP(S) URLs are auto-fetched via `urllib.request` from the standard library, so no extra dependencies are required. The `format` field (`"jpeg"`, `"png"`, `"gif"`, `"webp"`) is auto-detected from the extension or data URL when omitted. S3 URIs and boto3 auto-fetch are not supported; pre-download S3 objects to bytes or a local path before constructing `ImageData`.
 
 ## Built-in Rubrics
 
 The following rubric constants are available from `strands_evals.evaluators.prompt_templates.multimodal`:
 
-- `OVERALL_QUALITY_RUBRIC_V0` — Likert-5 scale (`0.0`, `0.25`, `0.5`, `0.75`, `1.0`) across visual accuracy, instruction adherence, completeness, and coherence
-- `CORRECTNESS_RUBRIC_V0` — Strict binary (`1.0` / `0.0`) fact-check against the image
-- `FAITHFULNESS_RUBRIC_V0` — Strict binary, catches hallucinations not grounded in the image
-- `INSTRUCTION_FOLLOWING_RUBRIC_V0` — Strict binary, checks format/length/scope/order/completeness constraints
+- `OVERALL_QUALITY_RUBRIC_V0`: Likert-5 scale (`0.0`, `0.25`, `0.5`, `0.75`, `1.0`) across visual accuracy, instruction adherence, completeness, and coherence
+- `CORRECTNESS_RUBRIC_V0`: strict binary (`1.0` / `0.0`) fact-check against the image
+- `FAITHFULNESS_RUBRIC_V0`: strict binary, catches hallucinations not grounded in the image
+- `INSTRUCTION_FOLLOWING_RUBRIC_V0`: strict binary, checks format/length/scope/order/completeness constraints
 
-Each built-in rubric is the default for the matching convenience subclass (see [Related Evaluators](#related-evaluators)).
+Each built-in rubric is the default for the matching subclass (see [Related Evaluators](#related-evaluators)).
+
+## Scoring System
+
+The score is a float between `0.0` and `1.0`; the granularity is determined by the rubric:
+
+- **Strict binary** (`CORRECTNESS_RUBRIC_V0`, `FAITHFULNESS_RUBRIC_V0`, `INSTRUCTION_FOLLOWING_RUBRIC_V0`): `1.0` on success, `0.0` on any violation. A response passes only if the score is `1.0`.
+- **Likert-5** (`OVERALL_QUALITY_RUBRIC_V0`): `0.0`, `0.25`, `0.5`, `0.75`, or `1.0`. A response typically passes if the score is `>= 0.5`.
+- **Custom rubric**: any granularity you define in the rubric text. Specify the pass threshold in the rubric itself (e.g., "Score 1.0 if ...").
 
 ## Basic Usage
 
@@ -189,10 +197,10 @@ Case(
 
 Like `OutputEvaluator`, `MultimodalOutputEvaluator` returns `EvaluationOutput` objects with:
 
-- **score**: Float between `0.0` and `1.0` (granularity depends on the rubric — binary for the strict rubrics, Likert-5 for `OVERALL_QUALITY_RUBRIC_V0`)
-- **test_pass**: Boolean pass/fail
-- **reason**: The judge's written reasoning, including any factual errors or hallucinations it flagged
-- **label**: Optional categorical label from the rubric
+- **score**: Float between `0.0` and `1.0` (see [Scoring System](#scoring-system))
+- **test_pass**: Boolean indicating if the test passed
+- **reason**: String containing the judge's reasoning for the score
+- **label**: Optional label categorizing the result
 
 ## Best Practices
 
@@ -200,7 +208,7 @@ Like `OutputEvaluator`, `MultimodalOutputEvaluator` returns `EvaluationOutput` o
 2. **Keep Images at Reasonable Resolution**: Very large images increase latency and cost without improving judgment; resize to the minimum resolution needed for the task.
 3. **Write Rubrics That Reference the Image**: Phrases like "based on what is visible in the image" anchor the judge to the media rather than to its prior knowledge.
 4. **Use Reference Mode for Ground-Truth Tasks**: Chart QA and VQA benchmarks with known answers benefit from `expected_output` and the reference suffix.
-5. **Start with a Built-in Rubric**: The four shipped rubrics are tuned on Strands-evals benchmarks; customize only once you see where they fall short on your data.
+5. **Start with a Built-in Rubric**: The four built-in rubrics are tuned on Strands-evals benchmarks; customize only once you see where they fall short on your data.
 
 ## Related Evaluators
 

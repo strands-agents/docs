@@ -6,14 +6,14 @@ sidebar:
 
 ## Overview
 
-The `MultimodalOverallQualityEvaluator` is a convenience subclass of [`MultimodalOutputEvaluator`](multimodal_output_evaluator.md) pre-wired with the built-in `OVERALL_QUALITY_RUBRIC_V0` rubric and a dimension-specific reference suffix that grades responses on factual content rather than word-for-word match. It evaluates an image-to-text response across four dimensions — visual accuracy, instruction adherence, completeness, and coherence/helpfulness — and produces a single Likert-5 score.
+The `MultimodalOverallQualityEvaluator` assesses the overall quality of an agent response across four dimensions: visual accuracy, instruction adherence, completeness, and coherence/helpfulness. It produces a single Likert-5 score and uses the built-in `OVERALL_QUALITY_RUBRIC_V0` rubric by default.
 
 ## Key Features
 
 - **Output-Level Evaluation**: Scores a single agent response per case
 - **Likert-5 Scoring**: Score is one of `0.0`, `0.25`, `0.5`, `0.75`, `1.0`
-- **Reference-Free or Reference-Based**: Adds the reference suffix automatically when `expected_output` is set
-- **MLLM Judge**: Inspects the image and response together
+- **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+- **Four-Dimension Rubric**: Evaluates visual accuracy, instruction adherence, completeness, and coherence together
 
 ## When to Use
 
@@ -23,12 +23,16 @@ Use the `MultimodalOverallQualityEvaluator` when you need to:
 - Track overall quality trends across model or prompt versions
 - Grade open-ended multimodal responses where binary judgments are too coarse
 
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response per case.
+
 ## Parameters
 
 ### `rubric` (optional)
 - **Type**: `str | None`
 - **Default**: `OVERALL_QUALITY_RUBRIC_V0`
-- **Description**: Custom rubric. Leave unset to use the shipped rubric.
+- **Description**: Custom rubric. Leave unset to use the default rubric.
 
 ### `model` (optional)
 - **Type**: `Model | str | None`
@@ -46,7 +50,7 @@ Use the `MultimodalOverallQualityEvaluator` when you need to:
 ### `reference_suffix` (optional)
 - **Type**: `str | None`
 - **Default**: An overall-quality-specific suffix that grades factual content rather than verbatim match
-- **Description**: Override only if you want stricter or looser reference handling than the shipped default.
+- **Description**: Override only if you want stricter or looser reference handling than the built-in default.
 
 ## Scoring System
 

@@ -6,16 +6,14 @@ sidebar:
 
 ## Overview
 
-The `MultimodalFaithfulnessEvaluator` is a convenience subclass of [`MultimodalOutputEvaluator`](multimodal_output_evaluator.md) pre-wired with the built-in `FAITHFULNESS_RUBRIC_V0` rubric. It grades whether a text response is strictly grounded in what is visible in the image, acting as a hallucination detector that penalizes invented details, assumptions, external knowledge, and speculation.
-
-Correctness asks "is the claim true?"; faithfulness asks "is the claim actually supported by the image?" — a response can be plausible and still fail faithfulness if it goes beyond what the pixels show.
+The `MultimodalFaithfulnessEvaluator` assesses whether an agent response is grounded in the image content, detecting hallucinations such as invented details, unsupported assumptions, external knowledge, and speculation. Uses the built-in `FAITHFULNESS_RUBRIC_V0` rubric by default.
 
 ## Key Features
 
 - **Output-Level Evaluation**: Scores a single agent response per case
-- **Strict Binary Scoring**: `1.0` if fully grounded in the image, `0.0` if any hallucination is found
-- **Reference-Free or Reference-Based**: Adds the reference suffix automatically when `expected_output` is set
-- **MLLM Judge**: Inspects the image and response together
+- **Binary Scoring**: `1.0` if fully grounded, `0.0` if any hallucination is found
+- **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+- **Hallucination Detection**: Designed to catch invented details, unsupported assumptions, and speculation
 
 ## When to Use
 
@@ -26,12 +24,16 @@ Use the `MultimodalFaithfulnessEvaluator` when you need to:
 - Screen for inferred-but-unseen details (emotions, off-screen events, brand names, locations)
 - Complement correctness checks with a groundedness check
 
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response per case.
+
 ## Parameters
 
 ### `rubric` (optional)
 - **Type**: `str | None`
 - **Default**: `FAITHFULNESS_RUBRIC_V0`
-- **Description**: Custom rubric. Leave unset to use the shipped image-to-text faithfulness rubric.
+- **Description**: Custom rubric. Leave unset to use the default rubric.
 
 ### `model` (optional)
 - **Type**: `Model | str | None`
@@ -86,8 +88,6 @@ experiment = Experiment(cases=cases, evaluators=[MultimodalFaithfulnessEvaluator
 reports = experiment.run_evaluations(task_function)
 reports[0].run_display()
 ```
-
-A response like "A family is having a picnic in Central Park" would score `0.0` if the location cannot be verified from the pixels, even if the scene correctly depicts a picnic.
 
 ## Combining with Other Evaluators
 

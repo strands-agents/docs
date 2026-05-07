@@ -6,14 +6,14 @@ sidebar:
 
 ## Overview
 
-The `MultimodalInstructionFollowingEvaluator` is a convenience subclass of [`MultimodalOutputEvaluator`](multimodal_output_evaluator.md) pre-wired with the built-in `INSTRUCTION_FOLLOWING_RUBRIC_V0` rubric. It grades whether a text response satisfies the explicit constraints in the user's instruction — counts, format, scope, order, completeness, and style — independently of factual accuracy.
+The `MultimodalInstructionFollowingEvaluator` assesses whether an agent response satisfies the explicit constraints in the user's instruction (counts, format, scope, order, completeness, and style), independently of factual accuracy. Uses the built-in `INSTRUCTION_FOLLOWING_RUBRIC_V0` rubric by default.
 
 ## Key Features
 
 - **Output-Level Evaluation**: Scores a single agent response per case
-- **Strict Binary Scoring**: `1.0` if all constraints are satisfied, `0.0` if any single constraint is violated
+- **Binary Scoring**: `1.0` if all constraints are satisfied, `0.0` if any constraint is violated
 - **Constraint-Focused**: Evaluates compliance with directives, not overall correctness or quality
-- **MLLM Judge**: Sees both the image and the response so it can verify image-referential constraints (e.g., "describe only the background")
+- **Image-Aware**: Verifies image-referential constraints (e.g., "describe only the background")
 
 ## When to Use
 
@@ -25,12 +25,16 @@ Use the `MultimodalInstructionFollowingEvaluator` when you need to:
 - Validate order constraints ("left to right", "largest to smallest")
 - Evaluate instruction compliance independently from factual correctness
 
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response per case.
+
 ## Parameters
 
 ### `rubric` (optional)
 - **Type**: `str | None`
 - **Default**: `INSTRUCTION_FOLLOWING_RUBRIC_V0`
-- **Description**: Custom rubric. Leave unset to use the shipped image-to-text instruction-following rubric.
+- **Description**: Custom rubric. Leave unset to use the default rubric.
 
 ### `model` (optional)
 - **Type**: `Model | str | None`
@@ -88,8 +92,6 @@ experiment = Experiment(
 reports = experiment.run_evaluations(task_function)
 reports[0].run_display()
 ```
-
-Because the rubric is strict, a response that lists four objects, uses numbered format instead of bullets, or mentions a foreground object would score `0.0`.
 
 ## Combining with Other Evaluators
 

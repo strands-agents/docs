@@ -6,14 +6,14 @@ sidebar:
 
 ## Overview
 
-The `MultimodalCorrectnessEvaluator` is a convenience subclass of [`MultimodalOutputEvaluator`](multimodal_output_evaluator.md) pre-wired with the built-in `CORRECTNESS_RUBRIC_V0` rubric. It grades whether a text response is factually correct given the image content, acting as a strict fact-checker that catches errors in objects, counts, colors, positions, readable text, and described actions.
+The `MultimodalCorrectnessEvaluator` assesses whether an agent response is factually correct given the image content. It catches errors in objects, counts, colors, positions, readable text, and described actions. Uses the built-in `CORRECTNESS_RUBRIC_V0` rubric by default.
 
 ## Key Features
 
 - **Output-Level Evaluation**: Scores a single agent response per case
-- **Strict Binary Scoring**: `1.0` for correct, `0.0` if any single factual error is found
-- **Reference-Free or Reference-Based**: Adds the reference suffix automatically when `expected_output` is set
-- **MLLM Judge**: Inspects the image and response together
+- **Binary Scoring**: `1.0` for correct, `0.0` if any factual error is found
+- **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+- **Fact-Checking Focus**: Designed to catch factual errors in image descriptions and VQA answers
 
 ## When to Use
 
@@ -23,12 +23,16 @@ Use the `MultimodalCorrectnessEvaluator` when you need to:
 - Measure exact correctness on benchmark tasks with a known answer
 - Catch small but important errors (off-by-one counts, wrong colors, misread text)
 
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response per case.
+
 ## Parameters
 
 ### `rubric` (optional)
 - **Type**: `str | None`
 - **Default**: `CORRECTNESS_RUBRIC_V0`
-- **Description**: Custom rubric. Leave unset to use the shipped image-to-text correctness rubric.
+- **Description**: Custom rubric. Leave unset to use the default rubric.
 
 ### `model` (optional)
 - **Type**: `Model | str | None`
