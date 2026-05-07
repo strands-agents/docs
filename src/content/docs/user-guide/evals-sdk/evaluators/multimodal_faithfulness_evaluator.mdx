@@ -1,0 +1,107 @@
+---
+title: Multimodal Faithfulness Evaluator
+sidebar:
+  label: "Multimodal Faithfulness"
+---
+
+## Overview
+
+The `MultimodalFaithfulnessEvaluator` is a convenience subclass of [`MultimodalOutputEvaluator`](multimodal_output_evaluator.md) pre-wired with the built-in `FAITHFULNESS_RUBRIC_V0` rubric. It grades whether a text response is strictly grounded in what is visible in the image, acting as a hallucination detector that penalizes invented details, assumptions, external knowledge, and speculation.
+
+Correctness asks "is the claim true?"; faithfulness asks "is the claim actually supported by the image?" — a response can be plausible and still fail faithfulness if it goes beyond what the pixels show.
+
+## Key Features
+
+- **Output-Level Evaluation**: Scores a single agent response per case
+- **Strict Binary Scoring**: `1.0` if fully grounded in the image, `0.0` if any hallucination is found
+- **Reference-Free or Reference-Based**: Adds the reference suffix automatically when `expected_output` is set
+- **MLLM Judge**: Inspects the image and response together
+
+## When to Use
+
+Use the `MultimodalFaithfulnessEvaluator` when you need to:
+
+- Detect hallucinations in image captions or VQA answers
+- Verify that a response only states what is verifiable from the image
+- Screen for inferred-but-unseen details (emotions, off-screen events, brand names, locations)
+- Complement correctness checks with a groundedness check
+
+## Parameters
+
+### `rubric` (optional)
+- **Type**: `str | None`
+- **Default**: `FAITHFULNESS_RUBRIC_V0`
+- **Description**: Custom rubric. Leave unset to use the shipped image-to-text faithfulness rubric.
+
+### `model` (optional)
+- **Type**: `Model | str | None`
+- **Default**: `None` (uses default Bedrock model)
+- **Description**: Multimodal judge model.
+
+### `include_inputs` (optional)
+- **Type**: `bool`
+- **Default**: `True`
+
+### `system_prompt` (optional)
+- **Type**: `str | None`
+- **Default**: `None` (uses the built-in `MLLM_JUDGE_SYSTEM_PROMPT`)
+
+### `reference_suffix` (optional)
+- **Type**: `str | None`
+- **Default**: The `MultimodalOutputEvaluator` default suffix
+
+## Scoring System
+
+| Score | Label | Meaning |
+|-------|-------|---------|
+| 1.0 | Faithful | Response only contains information verifiable from the image |
+| 0.0 | Unfaithful | Response contains one or more hallucinations |
+
+A response passes only if the score is `1.0`.
+
+## Basic Usage
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalFaithfulnessEvaluator
+from strands_evals.types import MultimodalInput
+
+
+def task_function(case: Case) -> str:
+    # Replace with your multimodal agent invocation.
+    return "A family is having a picnic in Central Park."
+
+
+cases = [
+    Case(
+        name="park-scene",
+        input=MultimodalInput(
+            media="/path/to/picnic.jpg",
+            instruction="Describe what is happening in the image.",
+        ),
+    ),
+]
+
+experiment = Experiment(cases=cases, evaluators=[MultimodalFaithfulnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+reports[0].run_display()
+```
+
+A response like "A family is having a picnic in Central Park" would score `0.0` if the location cannot be verified from the pixels, even if the scene correctly depicts a picnic.
+
+## Combining with Other Evaluators
+
+Pair with correctness to distinguish "wrong" from "ungrounded":
+
+```python
+evaluators = [
+    MultimodalCorrectnessEvaluator(),   # Are the claims factually right?
+    MultimodalFaithfulnessEvaluator(),  # Are they supported by the image?
+]
+```
+
+## Related Evaluators
+
+- [**MultimodalOutputEvaluator**](multimodal_output_evaluator.md): Parent class with full parameter reference
+- [**MultimodalCorrectnessEvaluator**](multimodal_correctness_evaluator.md): Strict factual correctness
+- [**FaithfulnessEvaluator**](faithfulness_evaluator.md): Text-only counterpart grounded in conversation history
