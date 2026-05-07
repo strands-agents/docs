@@ -8,7 +8,7 @@ AWS Bedrock model provider.
 class BedrockModel(Model)
 ```
 
-Defined in: [src/strands/models/bedrock.py:62](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L62)
+Defined in: [src/strands/models/bedrock.py:72](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L72)
 
 AWS Bedrock model provider implementation.
 
@@ -26,7 +26,7 @@ The implementation handles Bedrock-specific features such as:
 class BedrockConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/bedrock.py:74](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L74)
+Defined in: [src/strands/models/bedrock.py:84](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L84)
 
 Configuration options for Bedrock models.
 
@@ -57,6 +57,7 @@ Configuration options for Bedrock models.
 -   `"additionalProperties"` - false into all object types in tool input schemas. See [https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html](https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html)
 -   `temperature` - Controls randomness in generation (higher = more random)
 -   `top_p` - Controls diversity via nucleus sampling (alternative to temperature)
+-   `use_native_token_count` - Whether to use the native Bedrock CountTokens API. When True (default), count\_tokens() calls the Bedrock API for accurate counts. When False, skips the API call and uses the local estimator.
 
 #### \_\_init\_\_
 
@@ -69,7 +70,7 @@ def __init__(*,
              **model_config: Unpack[BedrockConfig])
 ```
 
-Defined in: [src/strands/models/bedrock.py:137](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L137)
+Defined in: [src/strands/models/bedrock.py:151](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L151)
 
 Initialize provider instance.
 
@@ -88,7 +89,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[BedrockConfig]) -> None
 ```
 
-Defined in: [src/strands/models/bedrock.py:204](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L204)
+Defined in: [src/strands/models/bedrock.py:218](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L218)
 
 Update the Bedrock Model configuration with the provided arguments.
 
@@ -103,7 +104,7 @@ Update the Bedrock Model configuration with the provided arguments.
 def get_config() -> BedrockConfig
 ```
 
-Defined in: [src/strands/models/bedrock.py:214](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L214)
+Defined in: [src/strands/models/bedrock.py:228](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L228)
 
 Get the current Bedrock Model configuration.
 
@@ -122,7 +123,7 @@ async def count_tokens(
         system_prompt_content: list[SystemContentBlock] | None = None) -> int
 ```
 
-Defined in: [src/strands/models/bedrock.py:766](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L766)
+Defined in: [src/strands/models/bedrock.py:780](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L780)
 
 Count tokens using Bedrock’s native CountTokens API.
 
@@ -152,7 +153,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:821](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L821)
+Defined in: [src/strands/models/bedrock.py:855](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L855)
 
 Stream conversation with the Bedrock model.
 
@@ -187,7 +188,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:1107](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1107)
+Defined in: [src/strands/models/bedrock.py:1141](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1141)
 
 Get structured output from the model.
 

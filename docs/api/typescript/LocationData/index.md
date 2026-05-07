@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:71](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/media.ts#L71)
+Defined in: [src/types/media.ts:71](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/media.ts#L71)
 
 Base interface for a document/media source location.
 
@@ -14,6 +14,6 @@ Base interface for a document/media source location.
 type: string;
 ```
 
-Defined in: [src/types/media.ts:75](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/media.ts#L75)
+Defined in: [src/types/media.ts:75](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/media.ts#L75)
 
 Location type discriminator.

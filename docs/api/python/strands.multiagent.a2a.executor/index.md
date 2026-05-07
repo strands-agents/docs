@@ -10,11 +10,11 @@ The A2A AgentExecutor ensures clients receive responses for synchronous and stre
 class StrandsA2AExecutor(AgentExecutor)
 ```
 
-Defined in: [src/strands/multiagent/a2a/executor.py:41](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L41)
+Defined in: [src/strands/multiagent/a2a/executor.py:42](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L42)
 
 Executor that adapts a Strands Agent to the A2A protocol.
 
-This executor uses streaming mode to handle the execution of agent requests and converts Strands Agent responses to A2A protocol events.
+This executor uses streaming mode to handle the execution of agent requests and converts Strands Agent responses to A2A protocol events. It supports the full A2A task lifecycle including error handling (failed state), cancellation, and interrupt-based input\_required flows.
 
 #### \_\_init\_\_
 
@@ -22,7 +22,7 @@ This executor uses streaming mode to handle the execution of agent requests and 
 def __init__(agent: SAAgent, *, enable_a2a_compliant_streaming: bool = False)
 ```
 
-Defined in: [src/strands/multiagent/a2a/executor.py:58](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L58)
+Defined in: [src/strands/multiagent/a2a/executor.py:61](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L61)
 
 Initialize a StrandsA2AExecutor.
 
@@ -37,11 +37,11 @@ Initialize a StrandsA2AExecutor.
 async def execute(context: RequestContext, event_queue: EventQueue) -> None
 ```
 
-Defined in: [src/strands/multiagent/a2a/executor.py:70](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L70)
+Defined in: [src/strands/multiagent/a2a/executor.py:73](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L73)
 
 Execute a request using the Strands Agent and send the response as A2A events.
 
-This method executes the user’s input using the Strands Agent in streaming mode and converts the agent’s response to A2A events.
+This method executes the user’s input using the Strands Agent in streaming mode and converts the agent’s response to A2A events. If the agent raises an exception, the task transitions to the `failed` state. If the agent returns with interrupts, the task transitions to the `input_required` state.
 
 **Arguments**:
 
@@ -50,7 +50,7 @@ This method executes the user’s input using the Strands Agent in streaming mod
 
 **Raises**:
 
--   `ServerError` - If an error occurs during agent execution
+-   `ServerError` - If an unrecoverable error occurs during agent execution setup (e.g., missing input). Agent execution errors are handled gracefully by transitioning the task to the failed state.
 
 #### cancel
 
@@ -58,11 +58,13 @@ This method executes the user’s input using the Strands Agent in streaming mod
 async def cancel(context: RequestContext, event_queue: EventQueue) -> None
 ```
 
-Defined in: [src/strands/multiagent/a2a/executor.py:219](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L219)
+Defined in: [src/strands/multiagent/a2a/executor.py:295](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/a2a/executor.py#L295)
 
 Cancel an ongoing execution.
 
-This method is called when a request cancellation is requested. Currently, cancellation is not supported by the Strands Agent executor, so this method always raises an UnsupportedOperationError.
+Transitions the task to the canceled state and attempts to stop the agent. The agent’s cancel() method is called to signal cooperative cancellation of in-flight execution.
+
+Note: This transitions the A2A task state. The underlying agent execution may still complete its current model call before stopping.
 
 **Arguments**:
 
@@ -71,4 +73,4 @@ This method is called when a request cancellation is requested. Currently, cance
 
 **Raises**:
 
--   `ServerError` - Always raised with an UnsupportedOperationError, as cancellation is not currently supported.
+-   `ServerError` - If no current task exists or the task is already in a terminal state.

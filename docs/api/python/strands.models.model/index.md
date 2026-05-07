@@ -6,7 +6,7 @@ Abstract base class for Agent model providers.
 class BaseModelConfig(TypedDict)
 ```
 
-Defined in: [src/strands/models/model.py:186](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L186)
+Defined in: [src/strands/models/model.py:118](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L118)
 
 Base configuration shared by all model providers.
 
@@ -21,7 +21,7 @@ Base configuration shared by all model providers.
 class CacheConfig()
 ```
 
-Defined in: [src/strands/models/model.py:198](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L198)
+Defined in: [src/strands/models/model.py:130](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L130)
 
 Configuration for prompt caching.
 
@@ -37,7 +37,7 @@ Configuration for prompt caching.
 class Model(abc.ABC)
 ```
 
-Defined in: [src/strands/models/model.py:210](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L210)
+Defined in: [src/strands/models/model.py:142](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L142)
 
 Abstract base class for Agent model providers.
 
@@ -50,7 +50,7 @@ This class defines the interface for all model implementations in the Strands Ag
 def stateful() -> bool
 ```
 
-Defined in: [src/strands/models/model.py:218](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L218)
+Defined in: [src/strands/models/model.py:150](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L150)
 
 Whether the model manages conversation state server-side.
 
@@ -65,7 +65,7 @@ False by default. Model providers that support server-side state should override
 def context_window_limit() -> int | None
 ```
 
-Defined in: [src/strands/models/model.py:227](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L227)
+Defined in: [src/strands/models/model.py:159](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L159)
 
 Maximum context window size in tokens, or None if not configured.
 
@@ -76,7 +76,7 @@ Maximum context window size in tokens, or None if not configured.
 def update_config(**model_config: Any) -> None
 ```
 
-Defined in: [src/strands/models/model.py:238](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L238)
+Defined in: [src/strands/models/model.py:170](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L170)
 
 Update the model configuration with the provided arguments.
 
@@ -91,7 +91,7 @@ Update the model configuration with the provided arguments.
 def get_config() -> Any
 ```
 
-Defined in: [src/strands/models/model.py:248](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L248)
+Defined in: [src/strands/models/model.py:180](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L180)
 
 Return the model configuration.
 
@@ -110,7 +110,7 @@ def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/model.py:258](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L258)
+Defined in: [src/strands/models/model.py:190](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L190)
 
 Get structured output from the model.
 
@@ -143,7 +143,7 @@ def stream(messages: Messages,
            **kwargs: Any) -> AsyncIterable[StreamEvent]
 ```
 
-Defined in: [src/strands/models/model.py:279](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L279)
+Defined in: [src/strands/models/model.py:211](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L211)
 
 Stream conversation with the model.
 
@@ -181,7 +181,7 @@ async def count_tokens(
         system_prompt_content: list[SystemContentBlock] | None = None) -> int
 ```
 
-Defined in: [src/strands/models/model.py:315](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L315)
+Defined in: [src/strands/models/model.py:247](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L247)
 
 Estimate token count for the given input before sending to the model.
 
@@ -206,7 +206,7 @@ Estimated total input tokens.
 class _ModelPlugin(Plugin)
 ```
 
-Defined in: [src/strands/models/model.py:347](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L347)
+Defined in: [src/strands/models/model.py:276](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L276)
 
 Plugin that manages model-related lifecycle hooks.
 
@@ -217,7 +217,7 @@ Plugin that manages model-related lifecycle hooks.
 def name() -> str
 ```
 
-Defined in: [src/strands/models/model.py:351](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L351)
+Defined in: [src/strands/models/model.py:280](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L280)
 
 A stable string identifier for this plugin.
 
@@ -227,7 +227,7 @@ A stable string identifier for this plugin.
 def init_agent(agent: "Agent") -> None
 ```
 
-Defined in: [src/strands/models/model.py:369](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L369)
+Defined in: [src/strands/models/model.py:298](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/model.py#L298)
 
 Register model lifecycle hooks with the agent.
 

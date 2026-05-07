@@ -395,7 +395,52 @@ Most event properties are read-only to prevent unintended modifications. However
 
 ### Callback Ordering
 
-Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
+(( tab "Python" ))
+After event callbacks run in reverse registration order for cleanup symmetry:
+
+-   **Before**: A, B, C (registration order)
+-   **After**: C, B, A (reverse registration order)
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+By default, After event callbacks run in reverse registration order for cleanup symmetry. You can override this with explicit priority using the `order` option — lower values run first.
+
+The SDK exports convenience presets that mark where the SDK’s own hooks run, so you can position yours relative to them:
+
+-   `HookOrder.SDK_FIRST` (-100) — where the SDK’s earliest hooks run
+-   `HookOrder.DEFAULT` (0) — implicit when no order is specified
+-   `HookOrder.SDK_LAST` (100) — where the SDK’s latest hooks run
+
+These are not enforced bounds — any numeric value works. Use values beyond them (e.g. `SDK_FIRST - 1`) to run before or after the SDK’s hooks, or `-Infinity`/`Infinity` for guaranteed absolute ordering.
+
+```typescript
+import { Agent, HookOrder, BeforeToolCallEvent } from '@strands-agents/sdk'
+
+const agent = new Agent()
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[logging] Tool called:', event.toolUse.name)
+})  // HookOrder.DEFAULT (0)
+
+// Run before the SDK's earliest hooks
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[guardrail] Runs before SDK hooks')
+}, { order: HookOrder.SDK_FIRST - 1 })
+
+
+// Arbitrary numbers for fine-grained control
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[validation] Validating input')
+}, { order: -50 })
+
+// Use -Infinity/Infinity for guaranteed absolute first/last
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[absolute] Always runs first, no matter what')
+}, { order: -Infinity })
+```
+
+Within the same order group, Before events preserve registration order and After events reverse it.
+(( /tab "TypeScript" ))
 
 ## Advanced Usage
 

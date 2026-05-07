@@ -8,7 +8,7 @@ Google Gemini model provider.
 class GeminiModel(Model)
 ```
 
-Defined in: [src/strands/models/gemini.py:30](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L30)
+Defined in: [src/strands/models/gemini.py:31](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L31)
 
 Google Gemini model provider implementation.
 
@@ -20,7 +20,7 @@ Google Gemini model provider implementation.
 class GeminiConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/gemini.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L36)
+Defined in: [src/strands/models/gemini.py:37](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L37)
 
 Configuration options for Gemini models.
 
@@ -29,6 +29,7 @@ Configuration options for Gemini models.
 -   `model_id` - Gemini model ID (e.g., “gemini-2.5-flash”). For a complete list of supported models, see [https://ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models)
 -   `params` - Additional model parameters (e.g., temperature). For a complete list of supported parameters, see [https://ai.google.dev/api/generate-content#generationconfig](https://ai.google.dev/api/generate-content#generationconfig).
 -   `gemini_tools` - Gemini-specific tools that are not FunctionDeclarations (e.g., GoogleSearch, CodeExecution, ComputerUse, UrlContext, FileSearch). Use the standard tools interface for function calling tools. For a complete list of supported tools, see [https://ai.google.dev/api/caching#Tool](https://ai.google.dev/api/caching#Tool)
+-   `use_native_token_count` - Whether to use the native Gemini count\_tokens API. When True (default), count\_tokens() calls the Gemini API for accurate counts. When False, skips the API call and uses the local estimator.
 
 #### \_\_init\_\_
 
@@ -39,7 +40,7 @@ def __init__(*,
              **model_config: Unpack[GeminiConfig]) -> None
 ```
 
-Defined in: [src/strands/models/gemini.py:57](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L57)
+Defined in: [src/strands/models/gemini.py:62](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L62)
 
 Initialize provider instance.
 
@@ -64,7 +65,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[GeminiConfig]) -> None
 ```
 
-Defined in: [src/strands/models/gemini.py:99](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L99)
+Defined in: [src/strands/models/gemini.py:104](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L104)
 
 Update the Gemini model configuration with the provided arguments.
 
@@ -79,7 +80,7 @@ Update the Gemini model configuration with the provided arguments.
 def get_config() -> GeminiConfig
 ```
 
-Defined in: [src/strands/models/gemini.py:112](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L112)
+Defined in: [src/strands/models/gemini.py:117](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L117)
 
 Get the Gemini model configuration.
 
@@ -98,7 +99,7 @@ async def count_tokens(
         system_prompt_content: list[SystemContentBlock] | None = None) -> int
 ```
 
-Defined in: [src/strands/models/gemini.py:438](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L438)
+Defined in: [src/strands/models/gemini.py:443](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L443)
 
 Count tokens using Gemini’s native count\_tokens API.
 
@@ -125,7 +126,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/gemini.py:496](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L496)
+Defined in: [src/strands/models/gemini.py:504](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L504)
 
 Stream conversation with the Gemini model.
 
@@ -157,7 +158,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/gemini.py:594](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L594)
+Defined in: [src/strands/models/gemini.py:602](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/gemini.py#L602)
 
 Get structured output from the model using Gemini’s native structured output.
 

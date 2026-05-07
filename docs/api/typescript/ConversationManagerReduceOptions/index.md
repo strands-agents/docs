@@ -2,13 +2,17 @@
 type ConversationManagerReduceOptions = {
   agent: LocalAgent;
   model: Model;
-  error: ContextWindowOverflowError;
+  error?: ContextWindowOverflowError;
 };
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L17)
+Defined in: [src/conversation-manager/conversation-manager.ts:31](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L31)
 
 Options passed to [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce).
+
+When `error` is set, this is a reactive overflow recovery call — the implementation MUST remove enough history for the next model call to succeed.
+
+When `error` is undefined, this is a proactive compression call — best-effort reduction to avoid hitting the context window limit.
 
 ## Properties
 
@@ -18,7 +22,7 @@ Options passed to [ConversationManager.reduce](/docs/api/typescript/Conversation
 agent: LocalAgent;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L21)
+Defined in: [src/conversation-manager/conversation-manager.ts:35](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L35)
 
 The agent instance. Mutate `agent.messages` in place to reduce history.
 
@@ -30,18 +34,22 @@ The agent instance. Mutate `agent.messages` in place to reduce history.
 model: Model;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:27](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L27)
+Defined in: [src/conversation-manager/conversation-manager.ts:41](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L41)
 
-The model instance that triggered the overflow. Used by conversation managers that perform model-based reduction (e.g. summarization).
+The model instance. Used by conversation managers that perform model-based reduction (e.g. summarization).
 
 ---
 
-### error
+### error?
 
 ```ts
-error: ContextWindowOverflowError;
+optional error?: ContextWindowOverflowError;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:34](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L34)
+Defined in: [src/conversation-manager/conversation-manager.ts:53](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L53)
 
-The [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) that triggered this call. `reduce` MUST remove enough history for the next model call to succeed, or this error will propagate out of the agent loop uncaught.
+The [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) that triggered this call, or `undefined` for proactive compression calls.
+
+When set, `reduce` MUST remove enough history for the next model call to succeed, or this error will propagate out of the agent loop uncaught.
+
+When undefined, `reduce` is best-effort — errors are swallowed and the model call proceeds regardless.

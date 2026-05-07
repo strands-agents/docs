@@ -4,6 +4,7 @@ type StopReason =
   | "contentFiltered"
   | "endTurn"
   | "guardrailIntervened"
+  | "interrupt"
   | "maxTokens"
   | "stopSequence"
   | "toolUse"
@@ -12,7 +13,7 @@ type StopReason =
 };
 ```
 
-Defined in: [src/types/messages.ts:645](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/messages.ts#L645)
+Defined in: [src/types/messages.ts:646](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/messages.ts#L646)
 
 Reason why the model stopped generating content.
 
@@ -20,6 +21,7 @@ Reason why the model stopped generating content.
 -   `contentFiltered` - Content was filtered by safety mechanisms
 -   `endTurn` - Natural end of the model’s turn
 -   `guardrailIntervened` - A guardrail policy stopped generation
+-   `interrupt` - Agent execution was interrupted for human input
 -   `maxTokens` - Maximum token limit was reached
 -   `stopSequence` - A stop sequence was encountered
 -   `toolUse` - Model wants to use a tool

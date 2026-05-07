@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:430](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/streaming.ts#L430)
+Defined in: [src/models/streaming.ts:430](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/models/streaming.ts#L430)
 
 Tool use input delta within a content block. Represents incremental tool input being generated.
 
@@ -10,7 +10,7 @@ Tool use input delta within a content block. Represents incremental tool input b
 type: "toolUseInputDelta";
 ```
 
-Defined in: [src/models/streaming.ts:434](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/streaming.ts#L434)
+Defined in: [src/models/streaming.ts:434](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/models/streaming.ts#L434)
 
 Discriminator for tool use input delta.
 
@@ -22,6 +22,6 @@ Discriminator for tool use input delta.
 input: string;
 ```
 
-Defined in: [src/models/streaming.ts:439](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/streaming.ts#L439)
+Defined in: [src/models/streaming.ts:439](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/models/streaming.ts#L439)
 
 Partial JSON string representing the tool input.

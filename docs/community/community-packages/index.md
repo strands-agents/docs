@@ -21,6 +21,7 @@ Plugins extend agent behavior by hooking into lifecycle events. Use these to add
 | Package | Description | Python | TypeScript |
 | --- | --- | --- | --- |
 | [Agent Control](/docs/community/plugins/agent-control/index.md) | Runtime policy enforcement for agents | ✅ | ❌ |
+| [Amazon AgentCore Payments](/docs/community/plugins/agentcore-payments/index.md) | Automated payment processing for agents using Amazon Bedrock AgentCore | ✅ | ❌ |
 | [Datadog AI Guard](/docs/community/plugins/datadog-ai-guard/index.md) | Real-time AI security with Datadog AI Guard | ✅ | ❌ |
 | [S3 Vectors Memory](/docs/community/plugins/s3-vectors-memory/index.md) | Long-term semantic memory for Strands Agents backed by Amazon S3 Vectors | ✅ | ❌ |
 

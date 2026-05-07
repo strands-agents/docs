@@ -71,8 +71,9 @@ TODO: Refactor to lazy initialization pattern following idiomatic Python. Heavy 
 #### \_\_exit\_\_
 
 ```python
-def __exit__(exc_type: BaseException, exc_val: BaseException,
-             exc_tb: TracebackType) -> None
+def __exit__(exc_type: type[BaseException] | None,
+             exc_val: BaseException | None,
+             exc_tb: TracebackType | None) -> None
 ```
 
 Defined in: [src/strands/tools/mcp/mcp\_client.py:181](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L181)
@@ -85,7 +86,7 @@ Context manager exit point that cleans up resources.
 def start() -> "MCPClient"
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:185](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L185)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:190](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L190)
 
 Starts the background thread and waits for initialization.
 
@@ -105,7 +106,7 @@ This method starts the background thread that manages the MCP connection and blo
 async def load_tools(**kwargs: Any) -> Sequence[AgentTool]
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:227](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L227)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:232](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L232)
 
 Load and return tools from the MCP server.
 
@@ -125,7 +126,7 @@ List of AgentTool instances from the MCP server.
 def add_consumer(consumer_id: Any, **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:289](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L289)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:294](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L294)
 
 Add a consumer to this tool provider.
 
@@ -137,7 +138,7 @@ Synchronous to prevent GC deadlocks when called from Agent finalizers.
 def remove_consumer(consumer_id: Any, **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:297](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L297)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:302](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L302)
 
 Remove a consumer from this tool provider.
 
@@ -148,11 +149,11 @@ Synchronous to prevent GC deadlocks when called from Agent finalizers. Uses exis
 #### stop
 
 ```python
-def stop(exc_type: BaseException | None, exc_val: BaseException | None,
+def stop(exc_type: type[BaseException] | None, exc_val: BaseException | None,
          exc_tb: TracebackType | None) -> None
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:321](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L321)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:326](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L326)
 
 Signals the background thread to stop and waits for it to complete, ensuring proper cleanup of all resources.
 
@@ -189,7 +190,7 @@ def list_tools_sync(
 ) -> PaginatedList[MCPAgentTool]
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:394](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L394)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:404](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L404)
 
 Synchronously retrieves the list of available tools from the MCP server.
 
@@ -212,7 +213,7 @@ def list_prompts_sync(
         pagination_token: str | None = None) -> ListPromptsResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:452](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L452)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:462](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L462)
 
 Synchronously retrieves the list of available prompts from the MCP server.
 
@@ -232,7 +233,7 @@ This method calls the asynchronous list\_prompts method on the MCP session and r
 def get_prompt_sync(prompt_id: str, args: dict[str, Any]) -> GetPromptResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:478](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L478)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:488](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L488)
 
 Synchronously retrieves a prompt from the MCP server.
 
@@ -252,7 +253,7 @@ def list_resources_sync(
         pagination_token: str | None = None) -> ListResourcesResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:500](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L500)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:510](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L510)
 
 Synchronously retrieves the list of available resources from the MCP server.
 
@@ -272,7 +273,7 @@ This method calls the asynchronous list\_resources method on the MCP session and
 def read_resource_sync(uri: AnyUrl | str) -> ReadResourceResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:524](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L524)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:534](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L534)
 
 Synchronously reads a resource from the MCP server.
 
@@ -291,7 +292,7 @@ def list_resource_templates_sync(
         pagination_token: str | None = None) -> ListResourceTemplatesResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:547](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L547)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:557](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L557)
 
 Synchronously retrieves the list of available resource templates from the MCP server.
 
@@ -315,7 +316,7 @@ def call_tool_sync(tool_use_id: str,
                    meta: dict[str, Any] | None = None) -> MCPToolResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:620](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L620)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:630](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L630)
 
 Synchronously calls a tool on the MCP server.
 
@@ -343,7 +344,7 @@ async def call_tool_async(tool_use_id: str,
                           meta: dict[str, Any] | None = None) -> MCPToolResult
 ```
 
-Defined in: [src/strands/tools/mcp/mcp\_client.py:655](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L655)
+Defined in: [src/strands/tools/mcp/mcp\_client.py:665](https://github.com/strands-agents/sdk-python/blob/main/src/strands/tools/mcp/mcp_client.py#L665)
 
 Asynchronously calls a tool on the MCP server.
 

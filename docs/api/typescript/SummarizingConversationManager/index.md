@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:80](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L80)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:95](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L95)
 
 Implements a summarization strategy for managing conversation history.
 
@@ -16,7 +16,7 @@ When a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowEr
 new SummarizingConversationManager(config?): SummarizingConversationManager;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L88)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L103)
 
 #### Parameters
 
@@ -34,13 +34,27 @@ Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:88](ht
 
 ## Properties
 
+### \_compressionThreshold
+
+```ts
+protected readonly _compressionThreshold: number;
+```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:116](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L116)
+
+#### Inherited from
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`_compressionThreshold`](/docs/api/typescript/ConversationManager/index.md#_compressionthreshold)
+
+---
+
 ### name
 
 ```ts
 readonly name: "strands:summarizing-conversation-manager" = 'strands:summarizing-conversation-manager';
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:81](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L81)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:96](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L96)
 
 A stable string identifier for this conversation manager.
 
@@ -56,13 +70,16 @@ A stable string identifier for this conversation manager.
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:170](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L170)
 
 Initialize the conversation manager with the agent instance.
 
-Registers overflow recovery: when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs, calls [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce) and retries the model call if reduction succeeded. If `reduce` returns `false`, the error propagates out of the agent loop uncaught.
+Registers two hooks:
 
-Subclasses that need proactive management MUST call `super.initAgent(agent)` to preserve this overflow recovery behavior.
+1.  `AfterModelCallEvent`: Overflow recovery — when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs, calls [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce) with `error` set and retries if reduction succeeded.
+2.  `BeforeModelCallEvent`: Proactive compression — when projected input tokens exceed the configured compression threshold, calls [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce) without `error`. The hook is always registered but only acts when proactive compression is enabled.
+
+Subclasses that override `initAgent` MUST call `super.initAgent(agent)` to preserve overflow recovery and proactive compression behavior.
 
 #### Parameters
 
@@ -86,9 +103,13 @@ Subclasses that need proactive management MUST call `super.initAgent(agent)` to 
 reduce(options): Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L103)
+Defined in: [src/conversation-manager/summarizing-conversation-manager.ts:124](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/summarizing-conversation-manager.ts#L124)
 
 Reduce the conversation history by summarizing older messages.
+
+When `error` is set (reactive overflow recovery), summarization failure is rethrown with the original error as cause — the agent loop must not proceed with an overflow.
+
+When `error` is undefined (proactive compression), summarization failure is logged and returns `false` — the model call proceeds regardless.
 
 #### Parameters
 

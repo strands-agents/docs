@@ -94,6 +94,24 @@ Evaluators operate at different levels of granularity:
 -   **Purpose**: Binary evaluation for harmful content detection
 -   **Use Case**: Screen responses for dangerous or offensive content
 
+**[RefusalEvaluator](/docs/user-guide/evals-sdk/evaluators/refusal_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for refusal detection
+-   **Use Case**: Detect when agents inappropriately refuse to address valid requests
+
+**[StereotypingEvaluator](/docs/user-guide/evals-sdk/evaluators/stereotyping_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for bias and stereotyping detection
+-   **Use Case**: Screen responses for biased or stereotypical content against groups
+
+**[InstructionFollowingEvaluator](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for instruction compliance
+-   **Use Case**: Verify that agents follow explicit format, length, style, and content constraints
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md)**
@@ -349,9 +367,11 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 -   [OutputEvaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Start with flexible custom evaluation
 -   [HelpfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Assess response helpfulness
 -   [CustomEvaluator](/docs/user-guide/evals-sdk/evaluators/custom_evaluator/index.md): Create domain-specific evaluators
+-   [Detectors](/docs/user-guide/evals-sdk/detectors/index.md): Understand *why* cases fail with automatic failure detection and root cause analysis
 
 ## Related Documentation
 
 -   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with Strands Evals
 -   [Simulators Overview](/docs/user-guide/evals-sdk/simulators/index.md): Learn about simulators
+-   [Detectors Overview](/docs/user-guide/evals-sdk/detectors/index.md): Automatic failure diagnosis for agent traces
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate test cases automatically

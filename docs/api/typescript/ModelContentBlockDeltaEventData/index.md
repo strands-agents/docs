@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:123](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/streaming.ts#L123)
+Defined in: [src/models/streaming.ts:123](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/models/streaming.ts#L123)
 
 Data for a content block delta event.
 
@@ -10,7 +10,7 @@ Data for a content block delta event.
 type: "modelContentBlockDeltaEvent";
 ```
 
-Defined in: [src/models/streaming.ts:127](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/streaming.ts#L127)
+Defined in: [src/models/streaming.ts:127](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/models/streaming.ts#L127)
 
 Discriminator for content block delta events.
 
@@ -22,6 +22,6 @@ Discriminator for content block delta events.
 delta: ContentBlockDelta;
 ```
 
-Defined in: [src/models/streaming.ts:132](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/models/streaming.ts#L132)
+Defined in: [src/models/streaming.ts:132](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/models/streaming.ts#L132)
 
 The incremental content update.

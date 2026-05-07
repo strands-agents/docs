@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:81](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/media.ts#L81)
+Defined in: [src/types/media.ts:81](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/media.ts#L81)
 
 Data for an S3 location.
 
@@ -14,7 +14,7 @@ Data for an S3 location.
 type: "s3";
 ```
 
-Defined in: [src/types/media.ts:85](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/media.ts#L85)
+Defined in: [src/types/media.ts:85](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/media.ts#L85)
 
 Location type — always “s3”.
 
@@ -30,7 +30,7 @@ Location type — always “s3”.
 uri: string;
 ```
 
-Defined in: [src/types/media.ts:90](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/media.ts#L90)
+Defined in: [src/types/media.ts:90](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/media.ts#L90)
 
 S3 URI in format: s3://bucket-name/key-name
 
@@ -42,6 +42,6 @@ S3 URI in format: s3://bucket-name/key-name
 optional bucketOwner?: string;
 ```
 
-Defined in: [src/types/media.ts:96](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/media.ts#L96)
+Defined in: [src/types/media.ts:96](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/media.ts#L96)
 
 AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs to another AWS account.

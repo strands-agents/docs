@@ -12,6 +12,7 @@ Strands Evaluation is a framework for evaluating AI agents and LLM applications.
 -   **Custom Evaluators**: Extensible framework for domain-specific evaluation logic
 -   **Experiment Management**: Save, load, and version your evaluation experiments with JSON serialization
 -   **Built-in Scoring Tools**: Helper functions for exact, in-order, and any-order trajectory matching
+-   **Detectors**: Automatic failure detection, root cause analysis, and fix recommendations for agent traces
 
 This quickstart guide shows you how to create your first evaluation experiment, use built-in evaluators to assess agent performance, generate test cases automatically, and analyze results. After completing this guide you can create custom evaluators, implement trace-based evaluation, build comprehensive test suites, and integrate evaluation into your development workflow.
 
@@ -537,3 +538,4 @@ Ready to dive deeper? Explore these resources:
 -   [Remote Trace Providers](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md) - Evaluate traces from production backends
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md) - Automatically generate comprehensive test suites
 -   [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md) - Save, load, and version your evaluation experiments
+-   [Detectors](/docs/user-guide/evals-sdk/detectors/index.md) - Automatic failure detection and root cause analysis for agent traces

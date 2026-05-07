@@ -10,7 +10,7 @@ A2AAgent can be used to get the Agent Card and interact with the agent.
 class A2AAgent(AgentBase)
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:33](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L33)
+Defined in: [src/strands/agent/a2a\_agent.py:44](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L44)
 
 Client wrapper for remote A2A agents.
 
@@ -26,7 +26,7 @@ def __init__(endpoint: str,
              a2a_client_factory: ClientFactory | None = None)
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L36)
+Defined in: [src/strands/agent/a2a\_agent.py:47](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L47)
 
 Initialize A2A agent.
 
@@ -49,7 +49,7 @@ Initialize A2A agent.
 def __call__(prompt: AgentInput = None, **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:84](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L84)
+Defined in: [src/strands/agent/a2a\_agent.py:95](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L95)
 
 Synchronously invoke the remote A2A agent.
 
@@ -74,7 +74,7 @@ async def invoke_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:104](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L104)
+Defined in: [src/strands/agent/a2a\_agent.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L115)
 
 Asynchronously invoke the remote A2A agent.
 
@@ -99,7 +99,7 @@ async def stream_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AsyncIterator[Any]
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:132](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L132)
+Defined in: [src/strands/agent/a2a\_agent.py:143](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L143)
 
 Stream remote agent execution asynchronously.
 
@@ -137,7 +137,7 @@ async for event in a2a_agent.stream_async("Hello"):
 async def get_agent_card() -> AgentCard
 ```
 
-Defined in: [src/strands/agent/a2a\_agent.py:182](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L182)
+Defined in: [src/strands/agent/a2a\_agent.py:193](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/a2a_agent.py#L193)
 
 Fetch and return the remote agent’s card.
 

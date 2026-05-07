@@ -1,10 +1,10 @@
-Defined in: [src/conversation-manager/conversation-manager.ts:64](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L64)
+Defined in: [src/conversation-manager/conversation-manager.ts:110](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L110)
 
 Abstract base class for conversation history management strategies.
 
-The primary responsibility of a ConversationManager is overflow recovery: when the model returns a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md), [ConversationManager.reduce](#reduce) is called and MUST reduce the history enough for the next model call to succeed. If `reduce` returns `false` (no reduction performed), the error propagates out of the agent loop uncaught. This makes `reduce` a critical operation — implementations must be able to make meaningful progress when called with `error` set.
+The primary responsibility of a ConversationManager is overflow recovery: when the model returns a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md), [ConversationManager.reduce](#reduce) is called with `error` set and MUST reduce the history enough for the next model call to succeed. If `reduce` returns `false` (no reduction performed), the error propagates out of the agent loop uncaught. This makes `reduce` a critical operation — implementations must be able to make meaningful progress when called with `error` set.
 
-Optionally, a manager can also do proactive management (e.g. trimming after every invocation to stay within a window) by overriding `initAgent`, calling `super.initAgent(agent)` to preserve overflow recovery, then registering additional hooks.
+Subclasses can enable proactive compression by passing `proactiveCompression` in the options object to the base constructor. When enabled, the base class registers a `BeforeModelCallEvent` hook that checks projected input tokens against the model’s context window limit and calls `reduce` (without `error`) when the threshold is exceeded.
 
 ## Example
 
@@ -35,8 +35,16 @@ class Last10MessagesManager extends ConversationManager {
 ### Constructor
 
 ```ts
-new ConversationManager(): ConversationManager;
+new ConversationManager(options?): ConversationManager;
 ```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:121](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L121)
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `options?` | [`ConversationManagerOptions`](/docs/api/typescript/ConversationManagerOptions/index.md) | Configuration options for the conversation manager. |
 
 #### Returns
 
@@ -50,13 +58,23 @@ new ConversationManager(): ConversationManager;
 abstract readonly name: string;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:68](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L68)
+Defined in: [src/conversation-manager/conversation-manager.ts:114](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L114)
 
 A stable string identifier for this conversation manager.
 
 #### Implementation of
 
 [`Plugin`](/docs/api/typescript/Plugin/index.md).[`name`](/docs/api/typescript/Plugin/index.md#name)
+
+---
+
+### \_compressionThreshold
+
+```ts
+protected readonly _compressionThreshold: number;
+```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:116](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L116)
 
 ## Methods
 
@@ -66,13 +84,14 @@ A stable string identifier for this conversation manager.
 abstract reduce(options): boolean | Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:86](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L86)
+Defined in: [src/conversation-manager/conversation-manager.ts:153](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L153)
 
 Reduce the conversation history.
 
-Called automatically when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs (with `error` set).
+Called in two scenarios:
 
-This is a critical call: the implementation MUST remove enough history for the next model call to succeed. Returning `false` means no reduction was possible, and the [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) will propagate out of the agent loop.
+1.  **Reactive** (error set): A [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurred. The implementation MUST remove enough history for the next model call to succeed. Returning `false` means no reduction was possible, and the error will propagate out of the agent loop.
+2.  **Proactive** (error undefined): The compression threshold was exceeded. This is best-effort — returning `false` or throwing is acceptable; the model call proceeds regardless.
 
 Implementations should mutate `agent.messages` in place and return `true` if any reduction was performed, `false` otherwise.
 
@@ -96,13 +115,16 @@ Implementations should mutate `agent.messages` in place and return `true` if any
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/conversation-manager/conversation-manager.ts#L100)
+Defined in: [src/conversation-manager/conversation-manager.ts:170](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L170)
 
 Initialize the conversation manager with the agent instance.
 
-Registers overflow recovery: when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs, calls [ConversationManager.reduce](#reduce) and retries the model call if reduction succeeded. If `reduce` returns `false`, the error propagates out of the agent loop uncaught.
+Registers two hooks:
 
-Subclasses that need proactive management MUST call `super.initAgent(agent)` to preserve this overflow recovery behavior.
+1.  `AfterModelCallEvent`: Overflow recovery — when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs, calls [ConversationManager.reduce](#reduce) with `error` set and retries if reduction succeeded.
+2.  `BeforeModelCallEvent`: Proactive compression — when projected input tokens exceed the configured compression threshold, calls [ConversationManager.reduce](#reduce) without `error`. The hook is always registered but only acts when proactive compression is enabled.
+
+Subclasses that override `initAgent` MUST call `super.initAgent(agent)` to preserve overflow recovery and proactive compression behavior.
 
 #### Parameters
 

@@ -12,4 +12,4 @@ type ContentBlock =
   | CitationsBlock;
 ```
 
-Defined in: [src/types/messages.ts:153](https://github.com/strands-agents/sdk-typescript/blob/a12ea3e3c4680daacc8ca5937b6b8be41474c92b/strands-ts/src/types/messages.ts#L153)
+Defined in: [src/types/messages.ts:153](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/messages.ts#L153)

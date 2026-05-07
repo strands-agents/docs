@@ -94,6 +94,8 @@ Configuration options for llama.cpp models.
     -   cache\_prompt: Cache the prompt for faster generation
     -   slot\_id: Slot ID for parallel inference
     -   samplers: Custom sampler order
+-   `use_native_token_count` - Whether to use the native llama.cpp /tokenize endpoint. When True (default), count\_tokens() calls the server’s tokenize endpoint for accurate counts. When False, skips the API call and uses the local estimator.
+    
 
 #### \_\_init\_\_
 
@@ -103,7 +105,7 @@ def __init__(base_url: str = "http://localhost:8080",
              **model_config: Unpack[LlamaCppConfig]) -> None
 ```
 
-Defined in: [src/strands/models/llamacpp.py:133](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L133)
+Defined in: [src/strands/models/llamacpp.py:137](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L137)
 
 Initialize llama.cpp provider instance.
 
@@ -120,7 +122,7 @@ Initialize llama.cpp provider instance.
 def update_config(**model_config: Unpack[LlamaCppConfig]) -> None
 ```
 
-Defined in: [src/strands/models/llamacpp.py:176](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L176)
+Defined in: [src/strands/models/llamacpp.py:180](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L180)
 
 Update the llama.cpp model configuration with provided arguments.
 
@@ -135,7 +137,7 @@ Update the llama.cpp model configuration with provided arguments.
 def get_config() -> LlamaCppConfig
 ```
 
-Defined in: [src/strands/models/llamacpp.py:186](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L186)
+Defined in: [src/strands/models/llamacpp.py:190](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L190)
 
 Get the llama.cpp model configuration.
 
@@ -154,7 +156,7 @@ async def count_tokens(
         system_prompt_content: list[SystemContentBlock] | None = None) -> int
 ```
 
-Defined in: [src/strands/models/llamacpp.py:512](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L512)
+Defined in: [src/strands/models/llamacpp.py:516](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L516)
 
 Count tokens using llama.cpp’s native /tokenize endpoint.
 
@@ -183,7 +185,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:566](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L566)
+Defined in: [src/strands/models/llamacpp.py:573](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L573)
 
 Stream conversation with the llama.cpp model.
 
@@ -215,7 +217,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:762](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L762)
+Defined in: [src/strands/models/llamacpp.py:769](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L769)
 
 Get structured output using llama.cpp’s native JSON schema support.
 
