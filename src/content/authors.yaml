@@ -87,3 +87,48 @@
   name: Patrick Gray
   role: "Software Engineer, AWS Agentic AI"
   bio: Patrick is a Software Engineer at AWS Agentic AI working on the Strands Agents SDK.
+
+- id: ishan-singh
+  name: Ishan Singh
+  role: "Sr. Applied Scientist, AWS"
+  bio: Ishan Singh is a Sr. Applied Scientist at Amazon Web Services, helping customers build generative AI solutions with expertise in building innovative and responsible AI products.
+
+- id: abhishek-kumar
+  name: Abhishek Kumar
+  role: "Applied Scientist, AWS"
+  bio: Abhishek Kumar is an Applied Scientist at AWS focusing on agent observability, simulation, and evaluation.
+
+- id: jonathan-buck
+  name: Jonathan Buck
+  role: "Senior Software Engineer, AWS"
+  bio: Jonathan Buck is a Senior Software Engineer at Amazon Web Services focused on building agent environments, evaluation infrastructure, and systems to support productization of agentic AI.
+
+- id: vinayak-arannil
+  name: Vinayak Arannil
+  role: "Sr. Applied Scientist, AWS"
+  bio: Vinayak Arannil is a Sr. Applied Scientist at Amazon Web Services helping build capabilities on AgentCore and Strands to enable customers to evaluate agentic applications.
+
+- id: akarsha-sehwag
+  name: Akarsha Sehwag
+  role: "Generative AI Data Scientist, AWS"
+  bio: Akarsha Sehwag is a Generative AI Data Scientist for the Amazon Bedrock AgentCore team with over 6 years of experience in production AI/ML solutions across enterprise sectors.
+
+- id: po-shin-chen
+  name: Po-Shin Chen
+  role: "Software Developer, AWS"
+  bio: Po-Shin Chen is a Software Developer focusing on agentic AI development and evaluations at Amazon Web Services, responsible for core capabilities in agent frameworks and evaluation.
+
+- id: smeet-dhakecha
+  name: Smeet Dhakecha
+  role: "Research Engineer, Amazon"
+  bio: Smeet Dhakecha is a Research Engineer at Amazon within the Agentic AI Science team, working on agent simulation, evaluation systems, and data transformation pipeline infrastructure.
+
+- id: darren-wang
+  name: Darren Wang
+  role: "Research Engineer, AWS"
+  bio: Darren Wang is a Research Engineer at Amazon Web Services who bridges AI research and production systems, specializing in agent simulation and evaluation frameworks.
+
+- id: xuan-qi
+  name: Xuan Qi
+  role: "Applied Scientist, AWS"
+  bio: Xuan Qi is an Applied Scientist at Amazon Web Services focusing on ML modeling and simulation, translating scientific concepts into practical AI applications.
