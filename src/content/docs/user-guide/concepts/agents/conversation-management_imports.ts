@@ -37,3 +37,15 @@ import { Agent, SummarizingConversationManager, BedrockModel } from '@strands-ag
 // --8<-- [start:summarizing_conversation_manager_system_prompt_imports]
 import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
 // --8<-- [end:summarizing_conversation_manager_system_prompt_imports]
+
+// --8<-- [start:proactive_sliding_window_imports]
+import {
+  Agent,
+  BedrockModel,
+  SlidingWindowConversationManager,
+} from '@strands-agents/sdk'
+// --8<-- [end:proactive_sliding_window_imports]
+
+// --8<-- [start:proactive_summarizing_imports]
+import { Agent, BedrockModel, SummarizingConversationManager } from '@strands-agents/sdk'
+// --8<-- [end:proactive_summarizing_imports]

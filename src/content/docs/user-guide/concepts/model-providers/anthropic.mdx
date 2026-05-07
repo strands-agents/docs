@@ -140,6 +140,43 @@ The Python SDK does not currently support passing a pre-configured client. Use `
 </Tab>
 </Tabs>
 
+## Token Counting
+
+Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+
+<Tabs>
+<Tab label="Python">
+
+The Anthropic provider uses the native `messages.count_tokens()` API, which provides exact token counts including system prompts, messages, and tool specifications.
+
+You can disable native token counting with:
+
+```python
+model = AnthropicModel(
+    model_id="claude-sonnet-4-6",
+    use_native_token_count=False,  # Always use heuristic
+)
+```
+
+When disabled (or if the API call fails), falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+</Tab>
+<Tab label="TypeScript">
+
+The Anthropic provider uses the native `messages.countTokens()` API, which provides exact token counts including system prompts, messages, and tool specifications.
+
+You can disable native token counting with:
+
+```typescript
+const model = new AnthropicModel({
+  modelId: 'claude-sonnet-4-6',
+  useNativeTokenCount: false, // Always use heuristic
+})
+```
+
+When disabled (or if the API call fails), falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+</Tab>
+</Tabs>
+
 ## References
 
 - [Python API](@api/python/strands.models.model)

@@ -318,6 +318,32 @@ response = agent("What is my name?")
 
 When using a stateful model, the agent automatically uses a null conversation manager and throws an error if a conversation manager is also supplied.
 
+## Token Counting
+
+Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+
+<Tabs>
+<Tab label="Python">
+
+The OpenAI Responses provider uses the native `responses.input_tokens.count()` API, which provides exact token counts including messages, instructions, and tool specifications.
+
+You can disable native token counting with:
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4.1",
+    use_native_token_count=False,  # Always use heuristic
+)
+```
+
+When disabled (or if the API call fails), falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+</Tab>
+<Tab label="TypeScript">
+
+The OpenAI Responses provider does not currently implement native token counting in the TypeScript SDK. It uses a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+</Tab>
+</Tabs>
+
 ## References
 
 - [Python API](@api/python/strands.models.openai_responses)
