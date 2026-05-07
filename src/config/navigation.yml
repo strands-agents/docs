@@ -276,8 +276,12 @@ sidebar:
           - docs/community/tools/utcp
       - label: Tools
         items:
+          - docs/community/tools/strands-agentcore-tools
           - docs/community/tools/strands-deepgram
+          - docs/community/tools/strands-fun-tools
+          - docs/community/tools/strands-google
           - docs/community/tools/strands-hubspot
+          - docs/community/tools/strands-rendercv
           - docs/community/tools/strands-teams
           - docs/community/tools/strands-telegram
           - docs/community/tools/strands-telegram-listener
