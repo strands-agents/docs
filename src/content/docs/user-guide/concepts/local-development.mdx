@@ -1,0 +1,401 @@
+---
+title: Local Development & Mock Mode
+sidebar:
+  label: "Local Development"
+---
+
+When developing agents with the Strands Agents SDK, you don't always need real API credentials. Mock model providers let you build, iterate, and test agent logic locally — without calling Bedrock, OpenAI, or any other remote service.
+
+This guide covers how to create mock models for local development and testing, simulate common scenarios like tool calls and errors, and optionally use a local LLM backend for more realistic testing.
+
+## Creating a Mock Model
+
+A mock model implements the same `Model` interface as any real provider but returns pre-configured responses instead of calling an API. This is the simplest way to develop and test agent logic offline.
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from typing import Any, AsyncIterable, Optional
+from typing_extensions import Unpack
+
+from strands.models import Model
+from strands.types.content import Messages
+from strands.types.streaming import StreamEvent
+from strands.types.tools import ToolSpec
+
+
+class MockModel(Model):
+    """A simple mock model for local development and testing."""
+
+    class ModelConfig:
+        model_id: str = "mock-model"
+
+    def __init__(self, responses: list[str] | None = None) -> None:
+        self.responses = responses or ["Hello! I am a mock response."]
+        self.call_index = 0
+        self.config = {"model_id": "mock-model"}
+
+    def update_config(self, **kwargs: Any) -> None:
+        self.config.update(kwargs)
+
+    def get_config(self) -> dict:
+        return self.config
+
+    async def stream(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
+        system_prompt: Optional[str] = None,
+        **kwargs: Any,
+    ) -> AsyncIterable[StreamEvent]:
+        text = self.responses[self.call_index % len(self.responses)]
+        self.call_index += 1
+
+        yield {"messageStart": {"role": "assistant"}}
+        yield {"contentBlockStart": {"start": {}}}
+        yield {"contentBlockDelta": {"delta": {"text": text}}}
+        yield {"contentBlockStop": {}}
+        yield {"messageStop": {"stopReason": "end_turn"}}
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/local-development.ts:basic_mock_model"
+```
+</Tab>
+</Tabs>
+
+### Using the Mock Model
+
+Pass the mock model to an agent just like any real provider:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+
+mock_model = MockModel(responses=["The capital of France is Paris."])
+agent = Agent(model=mock_model)
+
+response = agent("What is the capital of France?")
+print(response)
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/local-development.ts:use_mock_model"
+```
+</Tab>
+</Tabs>
+
+## Environment Variable Swap Pattern
+
+A common pattern is to swap between mock and real models using an environment variable. This lets you develop locally without changing any application code — just set `MOCK_MODE=true`:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+import os
+from strands import Agent
+from strands.models.bedrock import BedrockModel
+
+
+def create_model():
+    if os.environ.get("MOCK_MODE") == "true":
+        return MockModel(responses=["This is a mock response for local development."])
+    return BedrockModel(model_id="anthropic.claude-sonnet-4-20250514")
+
+
+model = create_model()
+agent = Agent(model=model)
+```
+
+Run locally with mock mode:
+
+```bash
+MOCK_MODE=true python my_agent.py
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/local-development.ts:env_swap_pattern"
+```
+
+Run locally with mock mode:
+
+```bash
+MOCK_MODE=true npx tsx my_agent.ts
+```
+</Tab>
+</Tabs>
+
+## Simulating Tool Calls
+
+To test agent tool-use loops, your mock model needs to return tool use events on the first call and text events after the tool result is returned:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+class MockToolModel(Model):
+    """A mock model that simulates tool calls."""
+
+    def __init__(self) -> None:
+        self.config = {"model_id": "mock-tool-model"}
+
+    def update_config(self, **kwargs: Any) -> None:
+        self.config.update(kwargs)
+
+    def get_config(self) -> dict:
+        return self.config
+
+    async def stream(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
+        system_prompt: Optional[str] = None,
+        **kwargs: Any,
+    ) -> AsyncIterable[StreamEvent]:
+        # Check if the last message contains a tool result
+        last_message = messages[-1] if messages else None
+        has_tool_result = last_message and any(
+            "toolResult" in block for block in last_message.get("content", [])
+        )
+
+        yield {"messageStart": {"role": "assistant"}}
+
+        if has_tool_result:
+            # Respond with final text after tool execution
+            yield {"contentBlockStart": {"start": {}}}
+            yield {
+                "contentBlockDelta": {
+                    "delta": {"text": "The weather in Seattle is 72°F and sunny."}
+                }
+            }
+            yield {"contentBlockStop": {}}
+            yield {"messageStop": {"stopReason": "end_turn"}}
+        else:
+            # Simulate a tool call
+            yield {
+                "contentBlockStart": {
+                    "start": {
+                        "toolUseId": "tool_001",
+                        "name": "get_weather",
+                    }
+                }
+            }
+            yield {
+                "contentBlockDelta": {
+                    "delta": {"toolUse": {"input": '{"location": "Seattle"}'}}
+                }
+            }
+            yield {"contentBlockStop": {}}
+            yield {"messageStop": {"stopReason": "tool_use"}}
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/local-development.ts:mock_tool_calls"
+```
+</Tab>
+</Tabs>
+
+## Simulating Errors
+
+Testing error handling is critical. Create a mock model that throws errors to verify your agent handles failures gracefully:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+class MockErrorModel(Model):
+    """A mock model that simulates errors for testing error handling."""
+
+    def __init__(self, should_fail: bool = True) -> None:
+        self.should_fail = should_fail
+        self.config = {"model_id": "mock-error-model"}
+
+    def update_config(self, **kwargs: Any) -> None:
+        self.config.update(kwargs)
+
+    def get_config(self) -> dict:
+        return self.config
+
+    async def stream(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
+        system_prompt: Optional[str] = None,
+        **kwargs: Any,
+    ) -> AsyncIterable[StreamEvent]:
+        if self.should_fail:
+            raise RuntimeError("Simulated API failure: rate limit exceeded")
+
+        yield {"messageStart": {"role": "assistant"}}
+        yield {"contentBlockStart": {"start": {}}}
+        yield {"contentBlockDelta": {"delta": {"text": "Success!"}}}
+        yield {"contentBlockStop": {}}
+        yield {"messageStop": {"stopReason": "end_turn"}}
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/local-development.ts:mock_errors"
+```
+</Tab>
+</Tabs>
+
+## Simulating Multi-Turn Conversations
+
+For testing multi-turn conversation flows, create a mock model with scripted responses for each turn:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+class MockMultiTurnModel(Model):
+    """A mock model with pre-scripted multi-turn responses."""
+
+    def __init__(self, turns: list[str]) -> None:
+        self.turns = turns
+        self.turn_index = 0
+        self.config = {"model_id": "mock-multi-turn-model"}
+
+    def update_config(self, **kwargs: Any) -> None:
+        self.config.update(kwargs)
+
+    def get_config(self) -> dict:
+        return self.config
+
+    async def stream(
+        self,
+        messages: Messages,
+        tool_specs: Optional[list[ToolSpec]] = None,
+        system_prompt: Optional[str] = None,
+        **kwargs: Any,
+    ) -> AsyncIterable[StreamEvent]:
+        if self.turn_index >= len(self.turns):
+            raise RuntimeError("All scripted turns have been consumed")
+
+        text = self.turns[self.turn_index]
+        self.turn_index += 1
+
+        yield {"messageStart": {"role": "assistant"}}
+        yield {"contentBlockStart": {"start": {}}}
+        yield {"contentBlockDelta": {"delta": {"text": text}}}
+        yield {"contentBlockStop": {}}
+        yield {"messageStop": {"stopReason": "end_turn"}}
+
+
+# Usage
+multi_turn_model = MockMultiTurnModel(turns=[
+    "Hi! How can I help you?",
+    "Sure, I can help with that.",
+    "Here is the result you asked for.",
+])
+agent = Agent(model=multi_turn_model)
+
+agent("Hello")
+agent("Can you help me?")
+agent("Show me the result")
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/local-development.ts:mock_multi_turn"
+```
+</Tab>
+</Tabs>
+
+## Using a Local LLM Backend
+
+For more realistic local development, you can run a local LLM instead of using mock responses. Strands Agents has built-in support for popular local LLM servers.
+
+### Ollama
+
+[Ollama](https://ollama.ai) lets you run open-source models locally. Strands provides a native `OllamaModel` provider:
+
+<Tabs>
+<Tab label="Python">
+
+```bash
+# Install Ollama and pull a model
+brew install ollama       # macOS
+ollama pull llama3.2
+
+# Install the Strands Ollama extra
+pip install 'strands-agents[ollama]'
+```
+
+```python
+from strands import Agent
+from strands.models.ollama import OllamaModel
+
+model = OllamaModel(
+    model_id="llama3.2",
+    host="http://localhost:11434",
+)
+
+agent = Agent(model=model)
+response = agent("Explain quantum computing in simple terms")
+```
+
+For complete Ollama setup and configuration, see the [Ollama model provider](./model-providers/ollama.md) documentation.
+</Tab>
+<Tab label="TypeScript">
+
+Ollama support in the TypeScript SDK is not yet available as a built-in provider. You can use Ollama through the [Custom Model Provider](./model-providers/custom_model_provider.md) interface, or use the `MOCK_MODE` pattern above for local development.
+</Tab>
+</Tabs>
+
+### llama.cpp
+
+[llama.cpp](https://github.com/ggerganov/llama.cpp) provides a lightweight C++ inference engine. Strands supports it natively:
+
+<Tabs>
+<Tab label="Python">
+
+```bash
+# Install the Strands llama.cpp extra
+pip install 'strands-agents[llamacpp]'
+```
+
+```python
+from strands import Agent
+from strands.models.llamacpp import LlamaCppModel
+
+model = LlamaCppModel(
+    host="http://localhost:8080",
+    model_id="local-model",
+)
+
+agent = Agent(model=model)
+response = agent("What are the benefits of local LLM development?")
+```
+
+For complete llama.cpp setup instructions, see the [llama.cpp model provider](./model-providers/llamacpp.md) documentation.
+</Tab>
+<Tab label="TypeScript">
+
+llama.cpp support in the TypeScript SDK is not yet available as a built-in provider. You can use llama.cpp through the [Custom Model Provider](./model-providers/custom_model_provider.md) interface to connect to the llama.cpp HTTP server.
+</Tab>
+</Tabs>
+
+## Choosing Your Approach
+
+| Approach | Best for | Trade-offs |
+|---|---|---|
+| **Mock model** | Unit tests, CI/CD, offline development | Fast and deterministic, but no real LLM behavior |
+| **Env var swap** | Switching between local and production | Zero code changes, easy to integrate |
+| **Ollama / llama.cpp** | Integration testing, realistic local dev | Real LLM responses, but requires local setup and GPU |
+
+For most development workflows, start with a mock model for fast iteration and testing, then validate with a local LLM or real API before deploying.
