@@ -104,6 +104,46 @@ curl localhost:3000/stream -d '{"prompt": "Hello"}' -H "Content-Type: applicatio
 </Tab>
 </Tabs>
 
+## Streaming Only the Final Turn (Python)
+
+When using `stream_async` with tool-using agents, text events are yielded from every model turn — including intermediate reasoning before tool calls. For production chat UIs and SSE endpoints, this intermediate text is often noise. The `stream_final_turn_only` parameter lets you suppress it at the SDK level.
+
+When `stream_final_turn_only=True`:
+- Text events from intermediate turns (where the model calls tools) are buffered and discarded
+- Text events from the final turn (where `stop_reason` is `"end_turn"`) are yielded to the caller and forwarded to the callback handler
+- Non-text events (lifecycle, tool use, reasoning, citations, model stream chunks) pass through unchanged in all turns
+
+The default is `False` — fully backward compatible with no behavior change unless opted in.
+
+```python
+from strands import Agent
+from strands_tools import calculator
+
+agent = Agent(
+    tools=[calculator],
+    callback_handler=None
+)
+
+# Without stream_final_turn_only: receives text from ALL turns,
+# including intermediate "Let me calculate that..." reasoning
+async for event in agent.stream_async("What is 25 * 48?"):
+    if "data" in event:
+        print(event["data"], end="")
+
+# With stream_final_turn_only: receives text only from the final answer
+async for event in agent.stream_async(
+    "What is 25 * 48?",
+    stream_final_turn_only=True
+):
+    if "data" in event:
+        print(event["data"], end="")  # Only the final answer
+```
+
+This is particularly useful for:
+- Chat applications streaming via SSE where users should only see the final answer
+- API endpoints wrapping agents where downstream consumers expect a single coherent streamed response
+- Any deployment where intermediate model reasoning is noise for the end user
+
 ### Agentic Loop
 
 This async stream processor illustrates the event loop lifecycle events and how they relate to each other. It's useful for understanding the flow of execution in the Strands agent:
