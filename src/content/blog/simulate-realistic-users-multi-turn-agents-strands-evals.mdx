@@ -1,0 +1,204 @@
+---
+title: "Simulate realistic users to evaluate multi-turn AI agents in Strands Evals"
+date: 2026-04-02
+description: "ActorSimulator in the Strands Evals SDK enables teams to test conversational agents through realistic, goal-driven simulated users rather than relying on static test cases or manual testing."
+authors:
+  - ishan-singh
+  - abhishek-kumar
+  - jonathan-buck
+  - vinayak-arannil
+tags:
+  - Evaluation
+  - Simulation
+canonicalUrl: "https://aws.amazon.com/blogs/machine-learning/simulate-realistic-users-to-evaluate-multi-turn-ai-agents-in-strands-evals/"
+draft: false
+---
+
+Traditional single-turn evaluation follows a predictable pattern: input, output, judgment. However, real user interactions span multiple turns with adaptive behaviors that cannot be predetermined. Each response depends on prior context, creating conversation paths impossible to capture with static test datasets.
+
+Manual testing appears to address this gap but proves impractical at scale. The number of possible conversation paths grows combinatorially as agent capabilities expand. Additionally, ad-hoc LLM-based user simulation without structured personas produces inconsistent, unrepeatable results that complicate regression detection.
+
+## Why multi-turn evaluation is fundamentally harder
+
+Multi-turn evaluation goes beyond simple input-output testing. Users adapt their behavior based on agent responses, creating branching conversation paths that grow exponentially. A travel booking agent might handle a simple "find me a flight" request well in isolation, but fail when a user changes their mind mid-conversation, asks clarifying questions, or expresses frustration with the options presented.
+
+The challenge isn't just generating multiple turns—it's generating *realistic* turns that expose meaningful agent behaviors. Random or template-based user messages miss the subtle interaction patterns where agents actually fail in production.
+
+## What makes effective simulated users
+
+Quality simulation requires three core elements:
+
+**Consistent personas** maintain uniform communication style, expertise level, and personality throughout interactions, mirroring real human behavior rather than erratic responses.
+
+**Goal-driven behavior** reflects authentic user motivation. Realistic actors pursue specific objectives, persist through obstacles, and recognize completion—preventing premature termination or infinite loops.
+
+**Adaptive responsiveness** means reactions emerge from conversational context rather than rigid scripts. When agents ask clarifying questions, simulated users answer in character; incomplete responses trigger natural follow-ups.
+
+## How ActorSimulator works
+
+ActorSimulator wraps a Strands Agent configured as a realistic user persona. The process begins with automatic profile generation—converting test case inputs and task descriptions into complete actor profiles. A booking request might generate a budget-conscious traveler with beginner expertise and casual communication style.
+
+During conversation, the simulator maintains full history and generates contextually appropriate responses. Goal tracking runs alongside exchanges, with built-in assessment tools determining whether objectives are satisfied. Conversations terminate naturally when goals are met, the agent cannot assist, or maximum turns are reached.
+
+Each simulated response includes structured reasoning explaining behavioral choices—whether following up on gaps, expressing confusion, or redirecting toward original goals. This transparency aids development by making conversation dynamics observable.
+
+## Getting started with ActorSimulator
+
+Installation requires: `pip install strands-agents-evals`
+
+Here's a minimal example:
+
+```python
+from strands import Agent
+from strands_evals import ActorSimulator, Case, Experiment
+
+case = Case(
+    input="I want to plan a trip to Tokyo with hotel and activities",
+    metadata={"task_description": "Complete travel package arranged"}
+)
+
+agent = Agent(
+    system_prompt="You are a helpful travel assistant.",
+    callback_handler=None
+)
+
+user_sim = ActorSimulator.from_case_for_user_simulator(
+    case=case,
+    max_turns=5
+)
+
+user_message = case.input
+conversation_history = []
+
+while user_sim.has_next():
+    agent_response = agent(user_message)
+    agent_message = str(agent_response)
+    conversation_history.append({
+        "role": "assistant",
+        "content": agent_message
+    })
+
+    user_result = user_sim.act(agent_message)
+    user_message = str(user_result.structured_output.message)
+    conversation_history.append({
+        "role": "user",
+        "content": user_message
+    })
+```
+
+Conversations continue until `has_next()` returns false, producing complete multi-turn transcripts ready for evaluation.
+
+## Integration with evaluation pipelines
+
+Production evaluation requires telemetry collection and evaluator integration. This approach captures complete agent behavior traces across conversation turns:
+
+```python
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from strands import Agent
+from strands_evals import ActorSimulator, Case, Experiment
+from strands_evals.evaluators import HelpfulnessEvaluator
+from strands_evals.telemetry import StrandsEvalsTelemetry
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.types.evaluation_report import EvaluationReport
+
+telemetry = StrandsEvalsTelemetry()
+memory_exporter = InMemorySpanExporter()
+span_processor = BatchSpanProcessor(memory_exporter)
+telemetry.tracer_provider.add_span_processor(span_processor)
+
+def evaluation_task(case: Case) -> dict:
+    user_sim = ActorSimulator.from_case_for_user_simulator(
+        case=case,
+        max_turns=3
+    )
+
+    agent = Agent(
+        system_prompt="You are a helpful travel assistant.",
+        callback_handler=None
+    )
+
+    all_target_spans = []
+    user_message = case.input
+
+    while user_sim.has_next():
+        memory_exporter.clear()
+        agent_response = agent(user_message)
+        agent_message = str(agent_response)
+
+        turn_spans = list(memory_exporter.get_finished_spans())
+        all_target_spans.extend(turn_spans)
+
+        user_result = user_sim.act(agent_message)
+        user_message = str(user_result.structured_output.message)
+
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(
+        all_target_spans,
+        session_id="test-session"
+    )
+
+    return {"output": agent_message, "trajectory": session}
+
+test_cases = [
+    Case(
+        name="booking-simple",
+        input="I need to book a flight to Paris next week",
+        metadata={
+            "category": "booking",
+            "task_description": "Flight booking confirmed"
+        }
+    )
+]
+
+experiment = Experiment(cases=test_cases, evaluators=[HelpfulnessEvaluator()])
+
+reports = experiment.run_evaluations(evaluation_task)
+EvaluationReport.flatten(reports).display()
+```
+
+This captures tool calls, model invocations, and timing data across conversation turns, feeding structured sessions into evaluators for comprehensive analysis.
+
+## Custom actor profiles for targeted testing
+
+Automatic profile generation suits most scenarios, but specific personas enable focused testing. Verify agent responses differ appropriately between patient beginners and impatient experts:
+
+```python
+from strands_evals.types.simulation import ActorProfile
+from strands_evals import ActorSimulator
+from strands_evals.simulation.prompt_templates.actor_system_prompt import (
+    DEFAULT_USER_SIMULATOR_PROMPT_TEMPLATE
+)
+
+actor_profile = ActorProfile(
+    traits={
+        "personality": "analytical and detail-oriented",
+        "communication_style": "direct and technical",
+        "expertise_level": "expert",
+        "patience_level": "low"
+    },
+    context="Experienced business traveler with elite status who values efficiency",
+    actor_goal="Book business class flight with specific seat preferences and lounge access"
+)
+
+user_sim = ActorSimulator(
+    actor_profile=actor_profile,
+    initial_query="I need to book a business class flight to London next Tuesday",
+    system_prompt_template=DEFAULT_USER_SIMULATOR_PROMPT_TEMPLATE,
+    max_turns=10
+)
+```
+
+Testing the same goal across multiple personas reveals agent strengths and weaknesses by user segment.
+
+## Best practices for simulation-based evaluation
+
+- Set `max_turns` based on task complexity: 3-5 for focused tasks, 8-10 for multi-step workflows
+- Write specific task descriptions enabling reliable completion judgment
+- Use auto-generated profiles for broad coverage; custom profiles reproduce production patterns
+- Focus on suite-wide patterns rather than individual transcripts
+- Begin with common scenarios, expanding to edge cases as practices mature
+
+## Resources
+
+For implementation examples, explore the [Strands Agents samples repository](https://github.com/strands-agents/samples/tree/main/07-evals). Teams evaluating agents through Amazon Bedrock AgentCore can reference the [AgentCore evaluations sample](https://github.com/awslabs/amazon-bedrock-agentcore-samples/tree/main/01-tutorials/07-AgentCore-evaluations/03-advanced/02-simulating-agent-interactions).
