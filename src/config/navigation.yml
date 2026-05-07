@@ -278,6 +278,7 @@ sidebar:
         items:
           - docs/community/tools/strands-deepgram
           - docs/community/tools/strands-hubspot
+          - docs/community/tools/strands-memmachine
           - docs/community/tools/strands-teams
           - docs/community/tools/strands-telegram
           - docs/community/tools/strands-telegram-listener
