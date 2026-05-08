@@ -118,6 +118,38 @@ Evaluators operate at different levels of granularity:
 - **Purpose**: Binary evaluation for instruction compliance
 - **Use Case**: Verify that agents follow explicit format, length, style, and content constraints
 
+### Multimodal Evaluators
+
+**[MultimodalOutputEvaluator](multimodal_output_evaluator.md)**
+
+- **Level**: OUTPUT_LEVEL
+- **Purpose**: MLLM-as-a-Judge evaluation with custom rubrics for image/document-to-text tasks
+- **Use Case**: Evaluate responses for VQA, chart/document QA, image captioning, and OCR-style tasks
+
+**[MultimodalOverallQualityEvaluator](multimodal_overall_quality_evaluator.md)**
+
+- **Level**: OUTPUT_LEVEL
+- **Purpose**: Likert-5 overall quality scoring across visual accuracy, instruction adherence, completeness, and coherence
+- **Use Case**: Track single-score quality trends for image-to-text responses
+
+**[MultimodalCorrectnessEvaluator](multimodal_correctness_evaluator.md)**
+
+- **Level**: OUTPUT_LEVEL
+- **Purpose**: Strict binary fact-check of a response against the image content
+- **Use Case**: Verify factual accuracy of VQA or chart-QA answers
+
+**[MultimodalFaithfulnessEvaluator](multimodal_faithfulness_evaluator.md)**
+
+- **Level**: OUTPUT_LEVEL
+- **Purpose**: Strict binary hallucination detection that flags claims not verifiable from the image
+- **Use Case**: Catch invented details, assumptions, and ungrounded inferences in image captions
+
+**[MultimodalInstructionFollowingEvaluator](multimodal_instruction_following_evaluator.md)**
+
+- **Level**: OUTPUT_LEVEL
+- **Purpose**: Strict binary evaluation of constraint compliance (count, format, scope, order, completeness, style)
+- **Use Case**: Verify that multimodal responses respect explicit instructions independently of correctness
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](tool_selection_evaluator.md)**
@@ -373,6 +405,7 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 
 - [OutputEvaluator](output_evaluator.md): Start with flexible custom evaluation
 - [HelpfulnessEvaluator](helpfulness_evaluator.md): Assess response helpfulness
+- [MultimodalOutputEvaluator](multimodal_output_evaluator.md): Evaluate image/document-to-text responses with an MLLM judge
 - [CustomEvaluator](custom_evaluator.md): Create domain-specific evaluators
 - [Detectors](../detectors/index.md): Understand _why_ cases fail with automatic failure detection and root cause analysis
 

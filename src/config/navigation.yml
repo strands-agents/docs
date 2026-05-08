@@ -182,6 +182,11 @@ sidebar:
               - docs/user-guide/evals-sdk/evaluators/refusal_evaluator
               - docs/user-guide/evals-sdk/evaluators/stereotyping_evaluator
               - docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator
+              - docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator
+              - docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator
+              - docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator
+              - docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator
+              - docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator
               - docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator
               - docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator
               - docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator
