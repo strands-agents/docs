@@ -971,6 +971,67 @@ Strands uses a default Claude 4 Sonnet inference model from the region of your c
 :::
 
 
+### CacheConfig with ARN-based inference profiles
+
+> **Resolves:** [#821](https://github.com/strands-agents/docs/issues/821)
+
+If you're using an ARN-based inference profile as your model ID (e.g., `arn:aws:bedrock:us-east-1::inference-profile/anthropic.claude-sonnet-4-20250514-v1`), the `strategy="auto"` option in `CacheConfig` will not automatically detect Claude models.
+
+**Why this happens:** The `strategy="auto"` detection requires resolving the inference profile ARN to determine the underlying model. To avoid additional API calls and unnecessary IAM permission requirements, Strands requires explicit strategy configuration for ARN-based inference profiles.
+
+**Solution:** Use `strategy="anthropic"` instead of `strategy="auto"`:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+from strands import Agent
+from strands.models import BedrockModel, CacheConfig
+
+# When using ARN-based inference profiles, use strategy="anthropic"
+bedrock_model = BedrockModel(
+    model_id="arn:aws:bedrock:us-east-1::inference-profile/anthropic.claude-sonnet-4-20250514-v1",
+    cache_config=CacheConfig(strategy="anthropic")
+)
+
+agent = Agent(model=bedrock_model)
+
+# Caching now works correctly with the ARN-based inference profile
+for event in agent.stream("Hello, world!"):
+    if event.type == "modelMetadataEvent" and event.usage:
+        print(f"Cache write tokens: {event.usage.cacheWriteInputTokens or 0}")
+        print(f"Cache read tokens: {event.usage.cacheReadInputTokens or 0}")
+```
+
+</Tab>
+<Tab label="TypeScript">
+
+```ts
+import { Agent, BedrockModel } from "@strands-agents/sdk"
+
+// When using ARN-based inference profiles, use strategy="anthropic"
+const bedrockModel = new BedrockModel({
+  modelId: "arn:aws:bedrock:us-east-1::inference-profile/anthropic.claude-sonnet-4-20250514-v1",
+  cacheConfig: { strategy: "anthropic" }
+})
+
+const agent = new Agent({ model: bedrockModel })
+
+// Caching now works correctly with the ARN-based inference profile
+for await (const event of agent.stream("Hello, world!")) {
+  if (event.type === "modelMetadataEvent" && event.usage) {
+    console.log(`Cache write tokens: ${event.usage.cacheWriteInputTokens || 0}`)
+    console.log(`Cache read tokens: ${event.usage.cacheReadInputTokens || 0}`)
+  }
+}
+```
+
+</Tab>
+</Tabs>
+
+**Performance:** The explicit `strategy="anthropic"` has identical performance to `strategy="auto"` — it carries no performance penalty. It requires no additional API calls or IAM permissions.
+
+
 ## Related Resources
 
 - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
