@@ -1,0 +1,122 @@
+---
+title: strands-memmachine
+community: true
+description: Persistent episodic and semantic memory for Strands agents via the MemMachine Platform.
+integrationType: tool
+languages: Python
+sidebar:
+  label: "memmachine"
+project:
+  pypi: https://pypi.org/project/strands-memmachine/
+  github: https://github.com/MemMachine/MemMachine/tree/main/integrations/strands-memmachine
+  maintainer: MemMachine
+service:
+  name: MemMachine
+  link: https://memmachine.ai
+---
+
+[strands-memmachine](https://github.com/MemMachine/MemMachine/tree/main/integrations/strands-memmachine) is a persistent memory tool for Strands agents powered by the [MemMachine Platform](https://memmachine.ai) by MemVerge. It supports episodic and semantic memory with full project management.
+
+## Installation
+
+```bash
+pip install strands-memmachine
+```
+
+## Usage
+
+```python
+from strands import Agent
+from strands_memmachine import memmachine_memory
+
+agent = Agent(tools=[memmachine_memory])
+
+# Store a memory
+agent.tool.memmachine_memory(
+    action="store",
+    content="User prefers aisle seats on flights",
+    metadata={"user_id": "alice", "category": "travel"},
+)
+
+# Search memories
+agent.tool.memmachine_memory(
+    action="search",
+    query="What are the flight preferences?",
+    top_k=5,
+)
+
+# List memories with filter
+agent.tool.memmachine_memory(
+    action="list",
+    filter="metadata.user_id=alice",
+    page_size=20,
+)
+
+# Delete a memory
+agent.tool.memmachine_memory(
+    action="delete",
+    memory_type="episodic",
+    memory_id="mem-123",
+)
+
+# Bulk delete memories
+agent.tool.memmachine_memory(
+    action="delete",
+    memory_type="semantic",
+    memory_ids=["sem-1", "sem-2", "sem-3"],
+)
+
+# Create a project namespace
+agent.tool.memmachine_memory(
+    action="create_project",
+    project_id="my-project",
+    description="Travel preferences project",
+)
+
+# Get a project
+agent.tool.memmachine_memory(
+    action="get_project",
+    project_id="my-project",
+)
+
+# List all projects
+agent.tool.memmachine_memory(
+    action="list_projects",
+)
+
+# Get episode count for a project
+agent.tool.memmachine_memory(
+    action="get_episode_count",
+    project_id="my-project",
+)
+
+# Delete a project
+agent.tool.memmachine_memory(
+    action="delete_project",
+    project_id="my-project",
+)
+```
+
+## Key Features
+
+- **Episodic Memory**: Conversational, event-based memories tied to interactions
+- **Semantic Memory**: Factual, structured knowledge extracted from conversations
+- **Project Management**: Create, retrieve, list, and delete isolated memory namespaces
+- **Metadata Filtering**: Filter memories using key-value expressions
+- **Bulk Operations**: Single and bulk memory deletion support
+- **Pagination**: Control result sets with page size and page number
+
+## Configuration
+
+```bash
+MEMMACHINE_API_KEY=your_api_key    # Required
+```
+
+Get your API key at: [console.memmachine.ai](https://console.memmachine.ai)
+
+## Resources
+
+- [PyPI Package](https://pypi.org/project/strands-memmachine/)
+- [GitHub Repository](https://github.com/MemMachine/MemMachine/tree/main/integrations/strands-memmachine)
+- [MemMachine Platform](https://memmachine.ai)
+- [MemMachine API Docs](https://api.memmachine.ai/docs)
