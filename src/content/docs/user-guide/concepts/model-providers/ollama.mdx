@@ -204,7 +204,6 @@ from pydantic import BaseModel, Field
 from strands import Agent
 from strands.models.ollama import OllamaModel
 
-# 1) Define the Pydantic model
 class BookAnalysis(BaseModel):
     """Analyze a book's key information."""
     title: str = Field(description="The book's title")
@@ -213,28 +212,25 @@ class BookAnalysis(BaseModel):
     summary: str = Field(description="Brief summary of the book")
     rating: int = Field(description="Rating from 1-10", ge=1, le=10)
 
-# 2) Define Ollama Model and Prompt
 ollama_model = OllamaModel(
     host="http://localhost:11434",
     model_id="llama3.1",
 )
 
-prompt = """
-    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
-    It's a science fiction comedy about Arthur Dent's adventures through space
-    after Earth is destroyed. It's widely considered a classic of humorous sci-fi with good ratings.
-    """
-
-# 3) Pass the model to the agent
 agent = Agent(model=ollama_model)
-result = agent(prompt, structured_output_model=BookAnalysis)
 
-# 4) Access the `structured_output` from the result
-result_info: BookAnalysis = result.structured_output
-print(f"Title: {result_info.title}")
-print(f"Author: {result_info.author}")
-print(f"Genre: {result_info.genre}")
-print(f"Rating: {result_info.rating}")
+result = agent(
+    """Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+    It's a science fiction comedy about Arthur Dent's adventures through space
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.""",
+    structured_output_model=BookAnalysis,
+)
+
+book_analysis: BookAnalysis = result.structured_output
+print(f"Title: {book_analysis.title}")
+print(f"Author: {book_analysis.author}")
+print(f"Genre: {book_analysis.genre}")
+print(f"Rating: {book_analysis.rating}")
 ```
 
 ## Tool Support
