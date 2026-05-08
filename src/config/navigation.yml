@@ -113,6 +113,7 @@ sidebar:
             items:
               - docs/user-guide/concepts/experimental/agent-config
       - label: Model Providers
+        collapsed: true
         items:
           - docs/user-guide/concepts/model-providers
           - docs/user-guide/concepts/model-providers/amazon-bedrock

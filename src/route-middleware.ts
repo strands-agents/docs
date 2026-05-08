@@ -67,23 +67,17 @@ export function filterSidebarByBasePath(entries: SidebarEntry[], basePath: strin
   return filtered
 }
 
-// Groups that should remain collapsed in the sidebar when the user
-// is not actively browsing within them. Starlight auto-expands groups
-// that contain the current page.
-const COLLAPSED_GROUPS = new Set(['Model Providers'])
-
 /**
- * Expand first-level groups (set collapsed to false), except groups
- * listed in COLLAPSED_GROUPS which stay collapsed until the user
- * navigates into them (Starlight handles that automatically).
+ * Apply collapse behavior to all sidebar groups:
+ * - depth 0 (top-level): expanded by default
+ * - depth >= 1 (nested): collapsed by default
+ * An explicit collapsed value in the navigation config always takes precedence.
  */
-export function expandFirstLevelGroups(items: SidebarEntry[]): SidebarEntry[] {
+export function applyCollapse(items: SidebarEntry[], depth: number = 0): SidebarEntry[] {
   return items.map((item) => {
     if (item.type === 'group') {
-      if (COLLAPSED_GROUPS.has(item.label)) {
-        return { ...item, collapsed: true }
-      }
-      return { ...item, collapsed: false }
+      const collapsed = item.collapsed === true || depth >= 1
+      return { ...item, collapsed, entries: applyCollapse(item.entries, depth + 1) }
     }
     return item
   })
@@ -166,8 +160,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
 
   // Otherwise filter it down to the major section that we're in
   const filteredSidebar = filterSidebarByBasePath(sidebar, allBasePaths)
-  const expandedSidebar = expandFirstLevelGroups(filteredSidebar)
-  starlightRoute.sidebar = expandedSidebar
+  starlightRoute.sidebar = applyCollapse(filteredSidebar)
 
   // Starlight pre-computes pagination from the full sidebar before our middleware runs.
   // Prune any prev/next links that fall outside the current nav section, then override
