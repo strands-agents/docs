@@ -89,8 +89,7 @@ The most powerful way to use diagnosis is through the `Experiment` class. Pass a
 
 ```python
 from strands_evals import DiagnosisConfig
-from strands_evals.detectors import ConfidenceLevel
-from strands_evals.types.detector import DiagnosisTrigger
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 
 class DiagnosisConfig(BaseModel):
     trigger: DiagnosisTrigger = DiagnosisTrigger.ON_FAILURE
@@ -109,9 +108,8 @@ class DiagnosisConfig(BaseModel):
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment, DiagnosisConfig, eval_task, TracedHandler
-from strands_evals.detectors import ConfidenceLevel
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 from strands_evals.evaluators import GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
 
 @eval_task(TracedHandler())
 def my_agent_task():
@@ -214,9 +212,8 @@ This example shows the complete workflow: run evaluations with diagnosis, then a
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment, DiagnosisConfig, eval_task, TracedHandler
-from strands_evals.detectors import ConfidenceLevel
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 from strands_evals.evaluators import OutputEvaluator, GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
 from strands_tools import calculator
 
 @eval_task(TracedHandler())

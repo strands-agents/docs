@@ -106,7 +106,7 @@ Detectors integrate directly into the evaluation pipeline. Pass a `DiagnosisConf
 ```python
 from strands_evals import Experiment, Case, DiagnosisConfig
 from strands_evals.evaluators import GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
+from strands_evals.detectors import DiagnosisTrigger
 
 experiment = Experiment(
     cases=test_cases,
