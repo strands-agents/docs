@@ -54,7 +54,7 @@ This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response
 
 ### `reference_suffix` (optional)
 - **Type**: `str | None`
-- **Default**: `None` (uses the built-in `DEFAULT_REFERENCE_SUFFIX`)
+- **Default**: `None` (uses the built-in default suffix)
 - **Description**: Text appended to the rubric when `expected_output` is present on the case. Lets you customize how the judge should use the reference (e.g., strict vs. lenient grading).
 
 ### `uses_environment_state` (optional)
@@ -90,7 +90,7 @@ This means the same evaluator can grade a mixed experiment containing both multi
 | Local file path | `"/path/to/chart.png"` or `pathlib.Path(...)` |
 | Base64 string | `"iVBORw0KGgo..."` |
 | Data URL | `"data:image/png;base64,iVBORw0KGgo..."` |
-| HTTP(S) URL | `"https://upload.wikimedia.org/.../image.jpg"` |
+| HTTP(S) URL | `"https://example.com/image.jpg"` |
 | Raw bytes | `b"\x89PNG..."` |
 | PIL Image | `PIL.Image.Image` instance (requires `Pillow`) |
 
@@ -103,7 +103,7 @@ The following rubric constants are available from `strands_evals.evaluators.prom
 - `OVERALL_QUALITY_RUBRIC_V0`: Likert-5 scale (`0.0`, `0.25`, `0.5`, `0.75`, `1.0`) across visual accuracy, instruction adherence, completeness, and coherence
 - `CORRECTNESS_RUBRIC_V0`: strict binary (`1.0` / `0.0`) fact-check against the image
 - `FAITHFULNESS_RUBRIC_V0`: strict binary, catches hallucinations not grounded in the image
-- `INSTRUCTION_FOLLOWING_RUBRIC_V0`: strict binary, checks format/length/scope/order/completeness constraints
+- `INSTRUCTION_FOLLOWING_RUBRIC_V0`: strict binary, checks count/format/scope/order/completeness/style constraints
 
 Each built-in rubric is the default for the matching subclass (see [Related Evaluators](#related-evaluators)).
 
@@ -112,7 +112,7 @@ Each built-in rubric is the default for the matching subclass (see [Related Eval
 The score is a float between `0.0` and `1.0`; the granularity is determined by the rubric:
 
 - **Strict binary** (`CORRECTNESS_RUBRIC_V0`, `FAITHFULNESS_RUBRIC_V0`, `INSTRUCTION_FOLLOWING_RUBRIC_V0`): `1.0` on success, `0.0` on any violation. A response passes only if the score is `1.0`.
-- **Likert-5** (`OVERALL_QUALITY_RUBRIC_V0`): `0.0`, `0.25`, `0.5`, `0.75`, or `1.0`. A response typically passes if the score is `>= 0.5`.
+- **Likert-5** (`OVERALL_QUALITY_RUBRIC_V0`): `0.0`, `0.25`, `0.5`, `0.75`, or `1.0`. A response typically passes if the score is `>= 0.75`.
 - **Custom rubric**: any granularity you define in the rubric text. Specify the pass threshold in the rubric itself (e.g., "Score 1.0 if ...").
 
 ## Basic Usage
@@ -136,7 +136,7 @@ cases = [
     Case(
         name="chart-overview",
         input=MultimodalInput(
-            media="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bar_chart_example.png/320px-Bar_chart_example.png",
+            media="/path/to/your/chart.png",
             instruction="What kind of chart is shown and what does it represent?",
         ),
     ),
@@ -150,7 +150,7 @@ reports[0].run_display()
 
 ### Reference-Based Evaluation
 
-Setting `expected_output` on a case switches the evaluator into reference-based mode. The configured `reference_suffix` is appended to the rubric so the judge compares the response against the Oracle answer.
+Setting `expected_output` on a case switches the evaluator into reference-based mode. The configured `reference_suffix` is appended to the rubric so the judge compares the response against the reference answer.
 
 ```python
 from strands_evals import Case, Experiment
@@ -208,7 +208,7 @@ Like `OutputEvaluator`, `MultimodalOutputEvaluator` returns `EvaluationOutput` o
 2. **Keep Images at Reasonable Resolution**: Very large images increase latency and cost without improving judgment; resize to the minimum resolution needed for the task.
 3. **Write Rubrics That Reference the Image**: Phrases like "based on what is visible in the image" anchor the judge to the media rather than to its prior knowledge.
 4. **Use Reference Mode for Ground-Truth Tasks**: Chart QA and VQA benchmarks with known answers benefit from `expected_output` and the reference suffix.
-5. **Start with a Built-in Rubric**: The four built-in rubrics are tuned on Strands-evals benchmarks; customize only once you see where they fall short on your data.
+5. **Start with a Built-in Rubric**: The four built-in rubrics are the defaults shipped with Strands Evals; customize only once you see where they fall short on your data.
 
 ## Related Evaluators
 

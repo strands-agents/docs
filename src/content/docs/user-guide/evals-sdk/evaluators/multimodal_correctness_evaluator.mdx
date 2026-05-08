@@ -6,7 +6,7 @@ sidebar:
 
 ## Overview
 
-The `MultimodalCorrectnessEvaluator` assesses whether an agent response is factually correct given the image content. It catches errors in objects, counts, colors, positions, readable text, and described actions. Uses the built-in `CORRECTNESS_RUBRIC_V0` rubric by default.
+The `MultimodalCorrectnessEvaluator` assesses whether an agent response is factually correct given the image content. It catches errors in objects, counts, colors, positions, readable text, and described actions.
 
 ## Key Features
 
@@ -49,7 +49,7 @@ This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response
 
 ### `reference_suffix` (optional)
 - **Type**: `str | None`
-- **Default**: The `MultimodalOutputEvaluator` default suffix
+- **Default**: `None` (uses the built-in default suffix)
 - **Description**: Override to customize reference-based grading.
 
 ## Scoring System
@@ -109,7 +109,7 @@ experiment = Experiment(cases=cases, evaluators=[MultimodalCorrectnessEvaluator(
 reports = experiment.run_evaluations(task_function)
 ```
 
-When `expected_output` is set, the evaluator automatically appends the reference suffix so the judge compares the response to the Oracle answer.
+When `expected_output` is set, the evaluator automatically appends the reference suffix so the judge compares the response to the reference answer.
 
 ## Related Evaluators
 

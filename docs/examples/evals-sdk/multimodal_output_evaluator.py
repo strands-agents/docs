@@ -14,12 +14,10 @@ from strands_evals.evaluators.prompt_templates.multimodal import (
 from strands_evals.types import ImageData, MultimodalInput
 
 
-# A small public image used so the example is self-contained.
-# Replace with your own file path or ImageData instance for real experiments.
-SAMPLE_IMAGE_URL = (
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/"
-    "5/5c/Bar_chart_example.png/320px-Bar_chart_example.png"
-)
+# Replace with a path to your own image before running the example.
+# `MultimodalInput.media` also accepts an `ImageData` instance, base64 string,
+# data URL, HTTP(S) URL, raw bytes, or a PIL Image.
+SAMPLE_IMAGE_PATH = "/path/to/your/chart.png"
 
 
 async def multimodal_output_evaluator_example():
@@ -48,11 +46,13 @@ async def multimodal_output_evaluator_example():
         if not isinstance(multimodal_input, MultimodalInput):
             raise TypeError("This example expects MultimodalInput cases.")
 
-        image_bytes = ImageData(source=multimodal_input.media).to_bytes()
-        image_format = ImageData(source=multimodal_input.media).format or "png"
-
+        # Normalize media to an ImageData instance.
+        # MultimodalInput.media can be a str, ImageData, or list[ImageData];
+        # this example assumes a single str or ImageData.
+        media = multimodal_input.media
+        image = media if isinstance(media, ImageData) else ImageData(source=media)
         prompt = [
-            {"image": {"format": image_format, "source": {"bytes": image_bytes}}},
+            {"image": {"format": image.format or "png", "source": {"bytes": image.to_bytes()}}},
             {"text": multimodal_input.instruction},
         ]
         response = await agent.invoke_async(prompt)
@@ -62,7 +62,7 @@ async def multimodal_output_evaluator_example():
     reference_free_case = Case(
         name="chart-overview",
         input=MultimodalInput(
-            media=SAMPLE_IMAGE_URL,
+            media=SAMPLE_IMAGE_PATH,
             instruction="What kind of chart is shown and what does it represent?",
         ),
         metadata={"category": "chart-qa", "mode": "reference-free"},
@@ -71,7 +71,7 @@ async def multimodal_output_evaluator_example():
     reference_based_case = Case(
         name="chart-type",
         input=MultimodalInput(
-            media=SAMPLE_IMAGE_URL,
+            media=SAMPLE_IMAGE_PATH,
             instruction="What type of chart is this? Answer in one word.",
         ),
         expected_output="bar chart",
@@ -84,7 +84,7 @@ async def multimodal_output_evaluator_example():
         rubric=OVERALL_QUALITY_RUBRIC_V0,
         include_inputs=True,
     )
-    #    - Built-in rubric via the convenience subclass
+    #    - Built-in rubric via the matching subclass
     correctness_judge = MultimodalCorrectnessEvaluator()
 
     # 4. Create an experiment.

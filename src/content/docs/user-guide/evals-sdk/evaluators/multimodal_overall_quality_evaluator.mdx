@@ -6,7 +6,7 @@ sidebar:
 
 ## Overview
 
-The `MultimodalOverallQualityEvaluator` assesses the overall quality of an agent response across four dimensions: visual accuracy, instruction adherence, completeness, and coherence/helpfulness. It produces a single Likert-5 score and uses the built-in `OVERALL_QUALITY_RUBRIC_V0` rubric by default.
+The `MultimodalOverallQualityEvaluator` assesses the overall quality of an agent response across four dimensions: visual accuracy, instruction adherence, completeness, and coherence/helpfulness. It produces a single Likert-5 score.
 
 ## Key Features
 
@@ -61,6 +61,8 @@ This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response
 | 0.5 | Average | Partially correct; misses important details or has minor errors |
 | 0.25 | Poor | Weak response with multiple inaccuracies or significant omissions |
 | 0.0 | Very Poor | Factually wrong, off-topic, and unhelpful |
+
+A response typically passes if the score is `>= 0.75`.
 
 ## Basic Usage
 

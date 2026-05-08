@@ -6,7 +6,7 @@ sidebar:
 
 ## Overview
 
-The `MultimodalInstructionFollowingEvaluator` assesses whether an agent response satisfies the explicit constraints in the user's instruction (counts, format, scope, order, completeness, and style), independently of factual accuracy. Uses the built-in `INSTRUCTION_FOLLOWING_RUBRIC_V0` rubric by default.
+The `MultimodalInstructionFollowingEvaluator` assesses whether an agent response satisfies the explicit constraints in the user's instruction (count, format, scope, order, completeness, and style), independently of factual accuracy.
 
 ## Key Features
 
@@ -20,7 +20,7 @@ The `MultimodalInstructionFollowingEvaluator` assesses whether an agent response
 Use the `MultimodalInstructionFollowingEvaluator` when you need to:
 
 - Verify that responses respect format constraints (bullet vs. numbered list, paragraph, JSON)
-- Check length constraints ("exactly N sentences", "in one paragraph")
+- Check count constraints ("exactly N sentences", "in one paragraph")
 - Assess scope constraints ("describe only the foreground", "do not mention people")
 - Validate order constraints ("left to right", "largest to smallest")
 - Evaluate instruction compliance independently from factual correctness
@@ -51,7 +51,7 @@ This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response
 
 ### `reference_suffix` (optional)
 - **Type**: `str | None`
-- **Default**: The `MultimodalOutputEvaluator` default suffix
+- **Default**: `None` (uses the built-in default suffix)
 
 ## Scoring System
 
@@ -99,7 +99,7 @@ Pair with correctness and faithfulness to assess different failure modes separat
 
 ```python
 evaluators = [
-    MultimodalInstructionFollowingEvaluator(),  # Did it follow the format/scope?
+    MultimodalInstructionFollowingEvaluator(),  # Did it follow the instruction constraints?
     MultimodalCorrectnessEvaluator(),           # Are the listed objects correct?
     MultimodalFaithfulnessEvaluator(),          # Are they actually in the image?
 ]

@@ -6,7 +6,7 @@ sidebar:
 
 ## Overview
 
-The `MultimodalFaithfulnessEvaluator` assesses whether an agent response is grounded in the image content, detecting hallucinations such as invented details, unsupported assumptions, external knowledge, and speculation. Uses the built-in `FAITHFULNESS_RUBRIC_V0` rubric by default.
+The `MultimodalFaithfulnessEvaluator` assesses whether an agent response is grounded in the image content, detecting hallucinations such as invented details, unsupported assumptions, external knowledge, and speculation.
 
 ## Key Features
 
@@ -50,7 +50,7 @@ This evaluator operates at the **OUTPUT_LEVEL**, scoring a single agent response
 
 ### `reference_suffix` (optional)
 - **Type**: `str | None`
-- **Default**: The `MultimodalOutputEvaluator` default suffix
+- **Default**: `None` (uses the built-in default suffix)
 
 ## Scoring System
 
