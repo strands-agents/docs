@@ -70,6 +70,7 @@ A response typically passes if the score is `>= 0.75`.
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import MultimodalOverallQualityEvaluator
 from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
 
 
 def task_function(case: Case) -> str:
@@ -89,7 +90,7 @@ cases = [
 
 experiment = Experiment(cases=cases, evaluators=[MultimodalOverallQualityEvaluator()])
 reports = experiment.run_evaluations(task_function)
-reports[0].run_display()
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ## Related Evaluators

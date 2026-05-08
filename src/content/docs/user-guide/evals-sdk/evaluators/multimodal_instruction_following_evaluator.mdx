@@ -68,6 +68,7 @@ A response passes only if the score is `1.0`.
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import MultimodalInstructionFollowingEvaluator
 from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
 
 
 def task_function(case: Case) -> str:
@@ -90,19 +91,31 @@ experiment = Experiment(
     evaluators=[MultimodalInstructionFollowingEvaluator()],
 )
 reports = experiment.run_evaluations(task_function)
-reports[0].run_display()
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ## Combining with Other Evaluators
 
-Pair with correctness and faithfulness to assess different failure modes separately:
+Pair with correctness and faithfulness to assess different failure modes separately. `Experiment.run_evaluations` returns one report per evaluator, so use `EvaluationReport.flatten` to view them together:
 
 ```python
+from strands_evals import Experiment
+from strands_evals.evaluators import (
+    MultimodalCorrectnessEvaluator,
+    MultimodalFaithfulnessEvaluator,
+    MultimodalInstructionFollowingEvaluator,
+)
+from strands_evals.types.evaluation_report import EvaluationReport
+
 evaluators = [
     MultimodalInstructionFollowingEvaluator(),  # Did it follow the instruction constraints?
     MultimodalCorrectnessEvaluator(),           # Are the listed objects correct?
     MultimodalFaithfulnessEvaluator(),          # Are they actually in the image?
 ]
+
+experiment = Experiment(cases=cases, evaluators=evaluators)
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ## Related Evaluators

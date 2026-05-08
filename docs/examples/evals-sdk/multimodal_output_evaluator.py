@@ -12,6 +12,7 @@ from strands_evals.evaluators.prompt_templates.multimodal import (
     OVERALL_QUALITY_RUBRIC_V0,
 )
 from strands_evals.types import ImageData, MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
 
 
 # Replace with a path to your own image before running the example.
@@ -96,9 +97,9 @@ async def multimodal_output_evaluator_example():
     # 4.5. (Optional) Save the experiment for later reloading.
     experiment.to_file("multimodal_output_evaluator_experiment.json")
 
-    # 5. Run evaluations.
+    # 5. Run evaluations. Each evaluator returns its own report; flatten to combine them.
     reports = await experiment.run_evaluations_async(get_response)
-    return reports[0]
+    return EvaluationReport.flatten(reports)
 
 
 if __name__ == "__main__":

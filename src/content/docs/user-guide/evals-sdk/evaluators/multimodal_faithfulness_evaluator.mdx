@@ -67,6 +67,7 @@ A response passes only if the score is `1.0`.
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import MultimodalFaithfulnessEvaluator
 from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
 
 
 def task_function(case: Case) -> str:
@@ -86,18 +87,29 @@ cases = [
 
 experiment = Experiment(cases=cases, evaluators=[MultimodalFaithfulnessEvaluator()])
 reports = experiment.run_evaluations(task_function)
-reports[0].run_display()
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ## Combining with Other Evaluators
 
-Pair with correctness to distinguish "wrong" from "ungrounded":
+Pair with correctness to distinguish "wrong" from "ungrounded". `Experiment.run_evaluations` returns one report per evaluator, so use `EvaluationReport.flatten` to view them together:
 
 ```python
+from strands_evals import Experiment
+from strands_evals.evaluators import (
+    MultimodalCorrectnessEvaluator,
+    MultimodalFaithfulnessEvaluator,
+)
+from strands_evals.types.evaluation_report import EvaluationReport
+
 evaluators = [
     MultimodalCorrectnessEvaluator(),   # Are the claims factually right?
     MultimodalFaithfulnessEvaluator(),  # Are they supported by the image?
 ]
+
+experiment = Experiment(cases=cases, evaluators=evaluators)
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ## Related Evaluators

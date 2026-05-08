@@ -124,6 +124,7 @@ from strands_evals import Case, Experiment
 from strands_evals.evaluators import MultimodalOutputEvaluator
 from strands_evals.evaluators.prompt_templates.multimodal import OVERALL_QUALITY_RUBRIC_V0
 from strands_evals.types import ImageData, MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
 
 
 def task_function(case: Case) -> str:
@@ -145,7 +146,7 @@ cases = [
 evaluator = MultimodalOutputEvaluator(rubric=OVERALL_QUALITY_RUBRIC_V0)
 experiment = Experiment(cases=cases, evaluators=[evaluator])
 reports = experiment.run_evaluations(task_function)
-reports[0].run_display()
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ### Reference-Based Evaluation
@@ -158,6 +159,7 @@ from strands_evals.evaluators import MultimodalOutputEvaluator
 from strands_evals.evaluators.prompt_templates.multimodal import CORRECTNESS_RUBRIC_V0
 from strands_evals.types import ImageData, MultimodalInput
 
+# Reuses the task_function defined in the reference-free example above.
 
 cases = [
     Case(
@@ -208,7 +210,7 @@ Like `OutputEvaluator`, `MultimodalOutputEvaluator` returns `EvaluationOutput` o
 2. **Keep Images at Reasonable Resolution**: Very large images increase latency and cost without improving judgment; resize to the minimum resolution needed for the task.
 3. **Write Rubrics That Reference the Image**: Phrases like "based on what is visible in the image" anchor the judge to the media rather than to its prior knowledge.
 4. **Use Reference Mode for Ground-Truth Tasks**: Chart QA and VQA benchmarks with known answers benefit from `expected_output` and the reference suffix.
-5. **Start with a Built-in Rubric**: The four built-in rubrics are the defaults shipped with Strands Evals; customize only once you see where they fall short on your data.
+5. **Start with a Built-in Rubric**: The four built-in rubrics are the defaults that come with Strands Evals; customize only once you see where they fall short on your data.
 
 ## Related Evaluators
 

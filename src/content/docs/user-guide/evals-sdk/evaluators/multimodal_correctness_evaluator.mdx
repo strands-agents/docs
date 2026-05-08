@@ -69,6 +69,7 @@ A response passes only if the score is `1.0`.
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import MultimodalCorrectnessEvaluator
 from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
 
 
 def task_function(case: Case) -> str:
@@ -88,7 +89,7 @@ cases = [
 
 experiment = Experiment(cases=cases, evaluators=[MultimodalCorrectnessEvaluator()])
 reports = experiment.run_evaluations(task_function)
-reports[0].run_display()
+EvaluationReport.flatten(reports).run_display()
 ```
 
 ### Reference-Based (compare against a known answer)
