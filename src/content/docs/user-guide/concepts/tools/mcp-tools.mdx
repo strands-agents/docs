@@ -194,10 +194,10 @@ pip install mcp-proxy-for-aws
 Then you use it like any other transport:
 
 ```python
-from mcp_proxy_for_aws.client import aws_iam_streamable_http_client
+from mcp_proxy_for_aws.client import aws_iam_streamablehttp_client
 from strands.tools.mcp import MCPClient
 
-mcp_client = MCPClient(lambda: aws_iam_streamable_http_client(
+mcp_client = MCPClient(lambda: aws_iam_streamablehttp_client(
     endpoint="https://your-service.us-east-1.amazonaws.com/mcp",
     aws_region="us-east-1",
     aws_service="bedrock-agentcore"
