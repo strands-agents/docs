@@ -86,7 +86,7 @@ const structuredData = {
 <script>
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
 
-  // Transform Expressive Code mermaid blocks into mermaid.js format and render
+  // Transform Expressive Code mermaid blocks into mermaid.js format
   document.querySelectorAll('pre[data-language="mermaid"]').forEach((pre) => {
     const diagram = [...pre.querySelectorAll('code > .ec-line')].map((it) => it.textContent).join('\n')
     const div = document.createElement('pre')
@@ -97,5 +97,35 @@ const structuredData = {
 
   const isDark = document.documentElement.dataset.theme === 'dark'
   mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'neutral' })
-  mermaid.run()
+
+  // Only render diagrams in visible panels; defer hidden ones until shown
+  const hiddenDiagrams = new Set(
+    document.querySelectorAll('[role="tabpanel"][hidden] .mermaid')
+  )
+  const visibleDiagrams = [...document.querySelectorAll('.mermaid')].filter(
+    (el) => !hiddenDiagrams.has(el)
+  )
+  if (visibleDiagrams.length > 0) {
+    await mermaid.run({ nodes: visibleDiagrams })
+  }
+
+  // Render deferred diagrams once when their panel becomes visible
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+        const panel = mutation.target as Element
+        if (panel.hasAttribute('hidden')) continue
+        const pending = [...panel.querySelectorAll('.mermaid')].filter(
+          (el) => hiddenDiagrams.has(el)
+        )
+        if (pending.length === 0) continue
+        pending.forEach((el) => hiddenDiagrams.delete(el))
+        mermaid.run({ nodes: pending })
+      }
+    }
+  })
+
+  document.querySelectorAll('[role="tabpanel"]').forEach((panel) => {
+    observer.observe(panel, { attributes: true, attributeFilter: ['hidden'] })
+  })
 </script>
