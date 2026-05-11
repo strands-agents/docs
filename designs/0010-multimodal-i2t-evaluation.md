@@ -1,7 +1,7 @@
 # Multimodal Image-to-Text Evaluation Support
 
 **Status**: Accepted (merged 2026-04-30)  
-**Date**: 2026-05-06  
+**Last updated**: 2026-05-06  
 **Issue**: https://github.com/strands-agents/evals/issues/128  
 **PR**: https://github.com/strands-agents/evals/pull/187  
 
@@ -9,17 +9,17 @@
 
 Strands-evals SDK evaluates text-based outputs using LLM-as-a-Judge, but cannot assess multimodal outputs. A developer building a vision agent hits this wall today:
 
-```
+```python
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import OutputEvaluator
 
 evaluator = OutputEvaluator(rubric="Is the caption accurate?")
 case = Case(
     name="image-caption-001",
-    input="Describe this image.",  *# No way to carry image data*
+    input="Describe this image.",  # No way to carry image data
     expected_output="A dog playing fetch in a park.",
 )
-# The judge never sees the image — it cannot detect visual hallucinations*
+# The judge never sees the image — it cannot detect visual hallucinations
 experiment = Experiment(cases=[case], evaluators=[evaluator])
 ```
 
@@ -42,10 +42,17 @@ New `MultimodalOutputEvaluator(OutputEvaluator[InputT, OutputT])` class for medi
 
 ### Core API
 
-```
-from strands import Agent
+```python
+from strands.models.model import Model
 from strands_evals.evaluators import OutputEvaluator
-from strands_evals.types import EvaluationData, EvaluationOutput, InputT, OutputT
+from strands_evals.evaluators.prompt_templates.multimodal_case_prompt_template import (
+    compose_multimodal_test_prompt,
+)
+from strands_evals.evaluators.prompt_templates.multimodal_judge_system_prompt import (
+    MLLM_JUDGE_SYSTEM_PROMPT,
+)
+from strands_evals.types.evaluation import InputT, OutputT
+
 
 class MultimodalOutputEvaluator(OutputEvaluator[InputT, OutputT]):
     """MLLM-as-a-Judge evaluator for multimodal tasks."""
@@ -80,12 +87,37 @@ REFERENCE COMPARISON:
             rubric=self._select_rubric(evaluation_case),
             include_inputs=self.include_inputs,
         )
+```
 
-        # compose_multimodal_test_prompt returns either:
-        #   list[ContentBlock] when the input is a MultimodalInput carrying media:
-        #     [{"image": {"format": "jpeg", "source": {"bytes": b"..."}}},
-        #      {"text": "<Input>...</Input><Output>...</Output><Rubric>...</Rubric>"}]
-        #   str otherwise (text-only LLM mode)
+`compose_multimodal_test_prompt` returns a `list[ContentBlock]` when the input is a `MultimodalInput` carrying media (e.g. `[{"image": {"format": "jpeg", "source": {"bytes": b"..."}}}, {"text": "<Input>...</Input><Output>...</Output><Rubric>...</Rubric>"}]`) and a plain `str` otherwise (text-only LLM mode).
+
+The supporting `MultimodalInput` and `ImageData` Pydantic models are used directly in every developer example and have this shape:
+
+```python
+from typing import Any, Literal
+
+from pydantic import BaseModel
+
+
+class ImageData(BaseModel):
+    """Normalizes image sources so the judge receives raw bytes."""
+    source: str | bytes | Any  # file path, base64, data URL, HTTP(S) URL, bytes, or PIL Image
+    format: Literal["jpeg", "png", "gif", "webp"] | None = None  # auto-detected from extension / data URL
+    media_type: str | None = None  # auto-derived from format
+
+    def to_bytes(self) -> bytes: ...
+    def to_base64(self) -> str: ...
+    def to_data_url(self) -> str: ...
+
+
+AnyMediaData = ImageData  # Future: ImageData | VideoData | AudioData | DocumentData
+
+
+class MultimodalInput(BaseModel):
+    """Input structure for multimodal evaluations."""
+    media: AnyMediaData | list[AnyMediaData] | str
+    instruction: str
+    context: str | None = None
 ```
 
 **Key design choices:**
@@ -104,7 +136,7 @@ REFERENCE COMPARISON:
 
 ### Basic usage
 
-```
+```python
 from strands_evals import Case, Experiment
 from strands_evals.evaluators import MultimodalCorrectnessEvaluator
 from strands_evals.types import ImageData, MultimodalInput
@@ -123,7 +155,7 @@ experiment = Experiment(cases=cases, evaluators=[evaluator])
 reports = experiment.run_evaluations(task=lambda case: my_model(case.input))
 ```
 
-```
+```python
 # Reference-based evaluation: providing expected_output auto-appends the reference suffix
 case = Case(
     input=MultimodalInput(
@@ -134,7 +166,7 @@ case = Case(
 )
 ```
 
-```
+```python
 # Custom rubric and/or custom reference suffix
 from strands_evals.evaluators import MultimodalOutputEvaluator
 
@@ -149,13 +181,13 @@ evaluator = MultimodalOutputEvaluator(
 )
 ```
 
-```
+```python
 # Text-only (LLM-as-a-Judge) fallback: pass a plain string instead of a MultimodalInput
 case = Case(input="Describe the chart.", actual_output="Revenue rose 15% YoY.")
 # compose_multimodal_test_prompt returns a text-only prompt for this case.
 ```
 
-```
+```python
 # Multiple images per case
 case = Case(
     input=MultimodalInput(
