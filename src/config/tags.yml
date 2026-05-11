@@ -1,0 +1,42 @@
+# Allowed tag vocabulary for user-guide pages.
+#
+# Tags drive the build-time "Related pages" block. A page's `tags` frontmatter
+# is validated against this list by the docs schema (src/content.config.ts) —
+# unknown tags fail the build.
+#
+# Scoring: `more shared tags = more related`. Aim for 2–4 tags per page drawn
+# from different axes below so pages naturally connect along topic, capability,
+# lifecycle, and audience dimensions.
+#
+# Adding a tag = PR editing this file in the same change that first uses it.
+
+# Topics / domains — specific products, protocols, data types
+- agentcore
+- aws
+- bedrock
+- guardrails
+- mcp
+- pii
+
+# Capabilities — what the page teaches the reader to do
+- conversation-management
+- hooks
+- multi-agent
+- retry
+- session-management
+- state
+- streaming
+- structured-output
+- tools
+
+# Lifecycle / practice — where in the dev lifecycle this sits
+- deployment
+- evaluation
+- observability
+- production
+- quickstart
+- safety
+
+# Audience — language-specific pages
+- python
+- typescript

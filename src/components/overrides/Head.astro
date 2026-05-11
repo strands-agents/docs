@@ -4,8 +4,10 @@
  * and structured data (JSON-LD).
  * See ARCHITECTURE.md for details.
  */
+import { getCollection } from 'astro:content'
 import SiteScripts from '../SiteScripts.astro'
 import { baseSchemas } from '../../util/structured-data'
+import { relatedUserGuideFor } from '../../util/related-docs'
 
 const { head } = Astro.locals.starlightRoute
 const route = Astro.locals.starlightRoute
@@ -60,6 +62,39 @@ const breadcrumbItems = pathSegments.map((segment, i) => {
   }
 })
 
+// TechArticle node for docs pages with tags or sourceLinks.
+// Reaches HTML-only crawlers that don't follow the llms.txt convention.
+const entry = route.entry
+// Non-docs routes (blog authors/tags pages, etc.) flow through Starlight too
+// but their synthetic entry.data has no `tags` field — guard with ??.
+const tags = entry.data.tags ?? []
+const sourceLinks = entry.data.sourceLinks ?? []
+let techArticle: Record<string, unknown> | null = null
+if (tags.length > 0 || sourceLinks.length > 0) {
+  const related = tags.length > 0
+    ? relatedUserGuideFor(entry, await getCollection('docs'))
+    : []
+  techArticle = {
+    "@type": "TechArticle",
+    "headline": entry.data.title,
+    "url": siteUrl + Astro.url.pathname,
+    ...(tags.length > 0 ? { "keywords": tags.join(', ') } : {}),
+    ...(entry.data.description ? { "description": entry.data.description } : {}),
+    ...(related.length > 0
+      ? { "relatedLink": related.map((r) => siteUrl + '/' + r.slug + '/') }
+      : {}),
+    ...(sourceLinks.length > 0
+      ? {
+          "isBasedOn": sourceLinks.map((s: { repo: string, path: string }) => ({
+            "@type": "SoftwareSourceCode",
+            "codeRepository": `https://github.com/strands-agents/${s.repo}`,
+            "url": `https://github.com/strands-agents/${s.repo}/blob/main/${s.path}`,
+          })),
+        }
+      : {}),
+  }
+}
+
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -67,7 +102,8 @@ const structuredData = {
     {
       "@type": "BreadcrumbList",
       "itemListElement": breadcrumbItems
-    }
+    },
+    ...(techArticle ? [techArticle] : []),
   ]
 }
 ---

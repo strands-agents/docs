@@ -1,5 +1,11 @@
 ---
 title: Retry Strategies
+tags: [retry]
+sourceLinks:
+  - repo: sdk-python
+    path: src/strands/event_loop/_retry.py
+  - repo: sdk-typescript
+    path: strands-ts/src/retry/retry-strategy.ts
 ---
 
 Model providers occasionally encounter errors such as rate limits, service unavailability, or network timeouts. By default, the agent retries `ModelThrottledException` failures automatically with exponential backoff and the `Angent.retry_strategy` parameter lets you customize this behavior.
