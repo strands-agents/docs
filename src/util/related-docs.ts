@@ -40,15 +40,17 @@ export function relatedUserGuideFor(
   allDocs: readonly CollectionEntry<'docs'>[],
 ): RelatedLink[] {
   if (!isUserGuide(current)) return []
-  const currentTags = current.data.tags
+  // `?? []` guards non-docs Starlight routes (blog, StarlightPage) that flow
+  // through the same components but whose synthetic entry.data lacks `tags`.
+  const currentTags = current.data.tags ?? []
   if (currentTags.length === 0) return []
   const tagSet = new Set<string>(currentTags)
 
   return allDocs
-    .filter((d) => d.id !== current.id && isUserGuide(d) && d.data.tags.length > 0)
+    .filter((d) => d.id !== current.id && isUserGuide(d) && (d.data.tags ?? []).length > 0)
     .map((d) => ({
       doc: d,
-      overlap: d.data.tags.reduce((n, t) => n + (tagSet.has(t) ? 1 : 0), 0),
+      overlap: (d.data.tags ?? []).reduce((n, t) => n + (tagSet.has(t) ? 1 : 0), 0),
     }))
     .filter((s) => s.overlap > 0)
     .sort((a, b) => b.overlap - a.overlap || a.doc.data.title.localeCompare(b.doc.data.title))

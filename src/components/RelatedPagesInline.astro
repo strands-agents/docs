@@ -1,0 +1,75 @@
+---
+/**
+ * Quiet "See also" list rendered at the end of the article body, above
+ * Starlight's Prev/Next pagination. Reads as a caption, not navigation —
+ * complements the linear Prev/Next with lateral topical jumps.
+ *
+ * Display cap (4) differs from the headless cap (10) in related-docs.ts:
+ * humans can only scan a handful of links before it becomes noise.
+ */
+import { getCollection } from 'astro:content'
+import { relatedUserGuideFor } from '../util/related-docs'
+import { pathWithBase } from '../util/links'
+
+const MAX_DISPLAY = 4
+
+const { starlightRoute } = Astro.locals
+const entry = starlightRoute.entry
+// Non-docs routes (blog pages, StarlightPage splashes) flow through
+// MarkdownContent too — short-circuit before calling into the util.
+const related = entry.collection === 'docs'
+  ? relatedUserGuideFor(entry, await getCollection('docs')).slice(0, MAX_DISPLAY)
+  : []
+---
+
+{related.length > 0 && (
+  <aside class="related-inline" aria-label="Related pages">
+    <div class="related-inline__label">See also</div>
+    <ul class="related-inline__list">
+      {related.map((link) => (
+        <li>
+          <a href={pathWithBase(`/${link.slug}/`)}>{link.title}</a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .related-inline {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    line-height: 1.4;
+  }
+
+  .related-inline__label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--sl-color-white);
+    margin-bottom: 0.5rem;
+  }
+
+  .related-inline__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .related-inline__list li {
+    margin: 0;
+  }
+
+  .related-inline__list a {
+    display: inline-block;
+    padding: 0.0625rem 0;
+    font-size: 0.875rem;
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+  }
+
+  .related-inline__list a:hover {
+    text-decoration: underline;
+  }
+</style>

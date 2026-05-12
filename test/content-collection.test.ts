@@ -62,4 +62,32 @@ describe('Content Collections', () => {
 
     expect(invalidSlugs).toEqual([])
   })
+
+  it('has unique titles across user-guide pages', async () => {
+    // Related-pages output and JSON-LD `headline` use `title` verbatim. Two
+    // user-guide pages with the same title produce ambiguous links that look
+    // like duplicates (e.g. a "Hooks" that could mean the agents or bidi one).
+    // Set `sidebar.label` if you want the sidebar to stay terse while the page
+    // title remains unambiguous out-of-context.
+    const docs = await getCollection('docs')
+    const userGuide = docs.filter((d) => d.id.startsWith('docs/user-guide/'))
+
+    const titleMap = new Map<string, string[]>()
+    for (const doc of userGuide) {
+      const slugs = titleMap.get(doc.data.title) ?? []
+      slugs.push(doc.id)
+      titleMap.set(doc.data.title, slugs)
+    }
+
+    const collisions = [...titleMap.entries()].filter(([, slugs]) => slugs.length > 1)
+    if (collisions.length > 0) {
+      console.log('\n=== Duplicate user-guide titles ===\n')
+      for (const [title, slugs] of collisions) {
+        console.log(`"${title}"`)
+        for (const s of slugs) console.log(`  ${s}`)
+      }
+    }
+
+    expect(collisions).toEqual([])
+  })
 })
