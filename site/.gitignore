@@ -23,6 +23,5 @@ docs/api-reference/
 __*__/
 .build
 
-CLAUDE.md
 mise.toml
 *.log
