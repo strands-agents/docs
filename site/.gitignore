@@ -6,7 +6,6 @@
 __pycache__
 .venv
 .idea
-.kiro
 *.egg-info
 
 dist
@@ -23,5 +22,6 @@ docs/api-reference/
 __*__/
 .build
 
+CLAUDE.md
 mise.toml
 *.log

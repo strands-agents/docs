@@ -27,6 +27,8 @@ One concept, one term. Never vary for stylistic reasons. This file is the canoni
 | Running agents in production | deployment | hosting, serving, shipping |
 | The decorator for making Python functions into tools | @tool decorator | tool annotation, tool wrapper |
 
+> **Note on "skills":** The banned synonym above applies to the SDK domain — never call SDK tools "skills" in user-facing docs. The term "skills" *is* correct when referring to [agentskills.io](https://agentskills.io)-style agent skill files (e.g., the contents of `.agents/skills/`). Those are authoring procedures for agents working on this repo, not SDK constructs.
+
 ## Infrastructure and Cloud
 
 | Concept | Canonical Term | NOT These |

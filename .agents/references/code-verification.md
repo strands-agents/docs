@@ -35,14 +35,21 @@ gh api repos/strands-agents/sdk-typescript/contents/src/[path]
 
 ## Tier 2: Local SDK Clones
 
-If `gh` is unavailable, check local build artifacts (populated by `npm run sdk:clone`):
+If `gh` is unavailable, check a local clone of the SDK source. The default location is the `.build/` directory populated by `npm run sdk:clone`:
 
 ```
 .build/sdk-python/src/strands/[path]
 .build/sdk-typescript/src/[path]
 ```
 
-Read files directly from these directories.
+Contributors who keep their SDK clones elsewhere can override the lookup path by exporting environment variables before running the agent:
+
+```bash
+export STRANDS_SDK_PYTHON=/path/to/your/sdk-python
+export STRANDS_SDK_TYPESCRIPT=/path/to/your/sdk-typescript
+```
+
+When set, prefer `$STRANDS_SDK_PYTHON/src/strands/[path]` and `$STRANDS_SDK_TYPESCRIPT/src/[path]` over the `.build/` defaults. If neither the env var nor the default directory resolves to a real file, fall through to Tier 3.
 
 ## Tier 3: Installed Package Introspection
 

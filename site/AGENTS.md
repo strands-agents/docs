@@ -24,6 +24,26 @@ When working on SDK features or documentation, familiarize yourself with these t
 
 These documents define the standards and processes that ensure consistency and quality across the Strands SDK.
 
+## Documentation Skills and Voice References
+
+Documentation authoring skills and shared reference material live under `.agents/`. The `.claude/skills`, `.claude/references`, `.kiro/skills`, and `.kiro/references` paths are symlinks into `.agents/`, so edits through any path hit the same files.
+
+```
+.agents/
+├── skills/
+│   ├── docs-writer/      # Draft or rewrite doc pages
+│   ├── docs-reviewer/    # Review drafts before PR submission
+│   ├── docs-audit/       # Assess published pages for quality
+│   └── docs-planner/     # Prioritize the docs backlog
+└── references/
+    ├── voice-guide.md       # Five-layer voice stack
+    ├── terminology.md       # Canonical terms (one concept, one term)
+    ├── mdx-authoring.md     # Tabs, snippets, callouts
+    └── code-verification.md # Verifying code examples against SDK source
+```
+
+When authoring or reviewing documentation pages, follow the voice guide and the terminology lock. When verifying code examples in docs, follow the tiered procedure in `.agents/references/code-verification.md`.
+
 ## Directory Structure
 
 ```

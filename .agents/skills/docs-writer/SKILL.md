@@ -22,7 +22,6 @@ Draft or rewrite Strands Agents documentation following the five-layer voice sta
 Read these files before writing anything:
 1. `../../references/voice-guide.md` (the full voice stack)
 2. `../../references/terminology.md` (canonical terms)
-3. If exemplars exist in `../../references/exemplars/`, load the one matching your content type
 
 If rewriting, read the current published page as a baseline.
 
@@ -106,7 +105,7 @@ Present the completed draft as:
 
 ## Git workflow
 
-Follow the git workflow described in the repo's CLAUDE.md.
+Follow the git workflow described in the repo's `AGENTS.md` and `CONTRIBUTING.md`.
 
 ## What this skill does NOT do
 
