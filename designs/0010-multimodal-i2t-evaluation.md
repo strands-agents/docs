@@ -42,6 +42,8 @@ New `MultimodalOutputEvaluator(OutputEvaluator[InputT, OutputT])` class for medi
 
 ### Core API
 
+The public API users import is `from strands_evals.evaluators import MultimodalOutputEvaluator` (see Developer Experience below). The imports in the snippet that follows are implementation-internal, shown for class context, not as paths end users should reach for.
+
 ```python
 from strands.models.model import Model
 from strands_evals.evaluators import OutputEvaluator
@@ -94,14 +96,19 @@ REFERENCE COMPARISON:
 The supporting `MultimodalInput` and `ImageData` Pydantic models are used directly in every developer example and have this shape:
 
 ```python
-from typing import Any, Literal
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from PIL.Image import Image as PILImage
 
 
 class ImageData(BaseModel):
     """Normalizes image sources so the judge receives raw bytes."""
-    source: str | bytes | Any  # file path, base64, data URL, HTTP(S) URL, bytes, or PIL Image
+    source: str | bytes | PILImage  # file path, base64, data URL, HTTP(S) URL, bytes, or PIL Image
     format: Literal["jpeg", "png", "gif", "webp"] | None = None  # auto-detected from extension / data URL
     media_type: str | None = None  # auto-derived from format
 
@@ -110,7 +117,7 @@ class ImageData(BaseModel):
     def to_data_url(self) -> str: ...
 
 
-AnyMediaData = ImageData  # Future: ImageData | VideoData | AudioData | DocumentData
+AnyMediaData = ImageData  # currently aliases ImageData; future: ImageData | VideoData | AudioData | DocumentData
 
 
 class MultimodalInput(BaseModel):
@@ -129,7 +136,7 @@ class MultimodalInput(BaseModel):
 * **Reference handling via suffix, not rubric swap:** When `expected_output` is present, `_select_rubric()` appends `reference_suffix` to the base rubric rather than swapping to a parallel reference-rubric. This keeps a single source of truth per dimension and eliminates `*_REF` rubric duplicates.
 * **Built-in rubric templates:** Ships with `OVERALL_QUALITY_RUBRIC_V0`, `CORRECTNESS_RUBRIC_V0`, `FAITHFULNESS_RUBRIC_V0`, `INSTRUCTION_FOLLOWING_RUBRIC_V0`. `MultimodalOverallQualityEvaluator` overrides the default suffix with a dimension-specific one; the other three use the default suffix. Users can also provide custom rubrics and/or a custom `reference_suffix`.
 * **Convenience subclasses:** `MultimodalOverallQualityEvaluator`, `MultimodalCorrectnessEvaluator`, `MultimodalFaithfulnessEvaluator`, `MultimodalInstructionFollowingEvaluator` — each pre-configures the appropriate rubric.
-* **`MultimodalInput` is a Pydantic `BaseModel`:** fields are `media` (`ImageData | list[ImageData] | str`), `instruction` (`str`), and `context` (`str | None`). Lists of media are supported natively; a bare string source is coerced to `ImageData`. Modality-generic naming (`media`, `AnyMediaData`) leaves room for future document/video/audio types without API changes.
+* **`MultimodalInput` is a Pydantic `BaseModel`:** fields are `media` (`AnyMediaData | list[AnyMediaData] | str`, where `AnyMediaData` is currently an alias for `ImageData`), `instruction` (`str`), and `context` (`str | None`). Lists of media are supported natively; a bare string source is coerced to `ImageData`. Modality-generic naming (`media`, `AnyMediaData`) leaves room for future document/video/audio types without API changes.
 * **Save/load round-trip safety:** `compose_multimodal_test_prompt` coerces a raw `dict` input back to `MultimodalInput` at the prompt-composer boundary, so cases reloaded via `Experiment.from_dict` (which loses the generic parameterization) still dispatch correctly.
 
 ## Developer Experience
