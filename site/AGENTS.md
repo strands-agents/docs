@@ -42,6 +42,13 @@ Documentation authoring skills and shared reference material live under `.agents
     └── code-verification.md # Verifying code examples against SDK source
 ```
 
+| Skill | Purpose | Sample triggers |
+|-------|---------|-----------------|
+| `docs-writer`   | Draft or rewrite doc pages          | "write a doc", "draft a page", "rewrite the quickstart" |
+| `docs-reviewer` | Review drafts before PR submission  | "review this draft", "is this ready to ship" |
+| `docs-audit`    | Assess published pages for quality  | "audit this page", "check docs quality" |
+| `docs-planner`  | Prioritize the docs backlog         | "plan docs work", "what docs need writing" |
+
 When authoring or reviewing documentation pages, follow the voice guide and the terminology lock. When verifying code examples in docs, follow the tiered procedure in `.agents/references/code-verification.md`.
 
 ## Directory Structure
