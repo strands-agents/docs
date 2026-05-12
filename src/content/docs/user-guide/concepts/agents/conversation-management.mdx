@@ -376,18 +376,39 @@ The agent estimates input tokens using a hybrid strategy that minimizes estimati
 2. **Delta estimation**: Only estimates tokens for new messages added since that assistant message (typically tool results), using the model's `countTokens()` method
 3. **Cold start fallback**: When no prior usage metadata exists (first call or after session restore without metadata), estimates all messages via `countTokens()`
 
-The `countTokens()` implementation varies by model provider — some use native token counting APIs for exact counts, while others use a character-based heuristic. See the [Token Counting](#token-counting) section on each provider's page for details:
+The `countTokens()` implementation varies by model provider — some use native token counting APIs for exact counts, while others use a character-based heuristic. See the Token Counting section on each provider's page for details:
 
 - [Amazon Bedrock](../model-providers/amazon-bedrock/#token-counting) — native API with fallback caching
 - [Anthropic](../model-providers/anthropic/#token-counting) — native API
 - [Google Gemini](../model-providers/google/#token-counting) — native API (messages only)
 - [OpenAI Responses](../model-providers/openai-responses/#token-counting) — native API (Python only)
-- [OpenAI Chat](../model-providers/openai/#token-counting) — heuristic
 - [llama.cpp](../model-providers/llamacpp/#token-counting) — native server tokenization (Python only)
 
-All providers fall back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) when native counting is unavailable.
+Providers without native token counting APIs (OpenAI Chat Completions, Ollama, Mistral, LiteLLM, Vercel) use a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON). All native providers also fall back to this heuristic when native counting is unavailable or disabled.
 
-If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of 200,000 tokens and emits a warning.
+### Context Window Limit Fallback
+
+If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of **200,000 tokens** and emits a warning:
+
+```
+contextWindowLimit is not set on the model, using default of 200000 — set contextWindowLimit in your model config for accurate proactive compression
+```
+
+:::caution[Inaccurate compression with default fallback]
+When the default 200,000-token limit is used but the model's actual context window is significantly different, proactive compression will not behave correctly:
+
+- **Actual limit is smaller** (e.g., 8k or 32k): Compression triggers too late — the model will hit context overflow errors before proactive compression fires, falling back to reactive recovery.
+- **Actual limit is larger** (e.g., 1M): Compression triggers too early — the agent proactively trims context well before the model's capacity is reached, discarding useful conversation history unnecessarily.
+:::
+
+To avoid this, always set `contextWindowLimit` explicitly for models not in the built-in lookup tables:
+
+```typescript
+const model = new BedrockModel({
+  modelId: 'my-custom-model',
+  contextWindowLimit: 32_000,
+})
+```
 
 ## Creating a ConversationManager
 

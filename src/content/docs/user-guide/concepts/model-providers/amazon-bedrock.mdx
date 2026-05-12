@@ -917,6 +917,43 @@ print(f"Rating: {result.rating}")
 </Tab>
 </Tabs>
 
+### Token Counting
+
+Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+
+<Tabs>
+<Tab label="Python">
+
+The Bedrock provider uses the native `count_tokens` API (via the `CountTokens` action in the Converse API). This includes system prompts, messages, and tool specifications in the count.
+
+Not all Bedrock models support the `CountTokens` API. When a model doesn’t support it, the provider caches this result and falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
+
+You can disable native token counting with:
+
+```python
+model = BedrockModel(
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    use_native_token_count=False,  # Always use heuristic
+)
+```
+</Tab>
+<Tab label="TypeScript">
+
+The Bedrock provider uses the native `CountTokensCommand` API. This includes system prompts, messages, and tool specifications in the count.
+
+Not all Bedrock models support the `CountTokens` API. When a model doesn’t support it (returns a `ValidationException`), the provider caches this result and falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
+
+You can disable native token counting with:
+
+```typescript
+const model = new BedrockModel({
+  modelId: ‘anthropic.claude-sonnet-4-20250514-v1:0’,
+  useNativeTokenCount: false, // Always use heuristic
+})
+```
+</Tab>
+</Tabs>
+
 ## Troubleshooting
 
 ### On-demand throughput isn’t supported
@@ -970,43 +1007,6 @@ const agent = new Agent({
 Strands uses a default Claude 4 Sonnet inference model from the region of your credentials when no model is provided. So if you did not pass in any model id and are getting the above error, it's very likely due to the `region` from the credentials not supporting inference profiles.
 :::
 
-
-## Token Counting
-
-Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
-
-<Tabs>
-<Tab label="Python">
-
-The Bedrock provider uses the native `count_tokens` API (via the `CountTokens` action in the Converse API). This includes system prompts, messages, and tool specifications in the count.
-
-Not all Bedrock models support the `CountTokens` API. When a model doesn't support it, the provider caches this result and falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
-
-You can disable native token counting with:
-
-```python
-model = BedrockModel(
-    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
-    use_native_token_count=False,  # Always use heuristic
-)
-```
-</Tab>
-<Tab label="TypeScript">
-
-The Bedrock provider uses the native `CountTokensCommand` API. This includes system prompts, messages, and tool specifications in the count.
-
-Not all Bedrock models support the `CountTokens` API. When a model doesn't support it (returns a `ValidationException`), the provider caches this result and falls back to a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
-
-You can disable native token counting with:
-
-```typescript
-const model = new BedrockModel({
-  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
-  useNativeTokenCount: false, // Always use heuristic
-})
-```
-</Tab>
-</Tabs>
 
 ## Related Resources
 
