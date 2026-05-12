@@ -106,4 +106,4 @@ If unsure between Tighten and Rethink: "Can the writer fix this by editing in pl
 
 ## Review Log (optional)
 
-Track patterns across reviews by appending to `.claude/review-log.md` in the repo root. Include: date, draft title, content type, verdict, dimension scores, recurring patterns, terminology decisions.
+Track patterns across reviews by appending to `.agents/review-log.md`. Include: date, draft title, content type, verdict, dimension scores, recurring patterns, terminology decisions.

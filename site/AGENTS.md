@@ -28,6 +28,8 @@ These documents define the standards and processes that ensure consistency and q
 
 Documentation authoring skills and shared reference material live under `.agents/`. The `.claude/skills`, `.claude/references`, `.kiro/skills`, and `.kiro/references` paths are symlinks into `.agents/`, so edits through any path hit the same files.
 
+On Windows, these symlinks require Developer Mode or `git config core.symlinks true`. If they don't resolve on your machine, work directly in `.agents/` — every tool-specific path is just a pointer to the same files.
+
 ```
 .agents/
 ├── skills/
