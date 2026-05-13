@@ -318,6 +318,47 @@ By default, conversation managers are reactive. They only reduce context after t
 
 ### Enabling Proactive Compression
 
+<Tabs>
+<Tab label="Python">
+
+Pass `proactive_compression` to any built-in conversation manager. Use `True` for the default 0.7 threshold, or pass a dict with a custom `compression_threshold` ratio between 0 and 1. For example, `0.7` will trigger compression when 70% of the model's context window is used:
+
+**With SlidingWindowConversationManager:**
+
+```python
+from strands import Agent
+from strands.agent.conversation_manager import SlidingWindowConversationManager
+from strands.models.bedrock import BedrockModel
+
+agent = Agent(
+    model=BedrockModel(model_id="anthropic.claude-sonnet-4-6-v1:0"),
+    conversation_manager=SlidingWindowConversationManager(
+        window_size=50,
+        proactive_compression={"compression_threshold": 0.7},
+    ),
+)
+```
+
+**With SummarizingConversationManager:**
+
+```python
+from strands import Agent
+from strands.agent.conversation_manager import SummarizingConversationManager
+from strands.models.bedrock import BedrockModel
+
+agent = Agent(
+    model=BedrockModel(model_id="anthropic.claude-sonnet-4-6-v1:0"),
+    conversation_manager=SummarizingConversationManager(
+        proactive_compression=True,
+    ),
+)
+```
+
+Without `proactive_compression`, only reactive overflow recovery is used.
+
+</Tab>
+<Tab label="TypeScript">
+
 Pass `proactiveCompression` to any built-in conversation manager. Use `true` for the default 0.7 threshold, or pass an object with a custom `compressionThreshold` ratio between 0 and 1. For example, `0.7` will trigger compression when 70% of the model's context window is used:
 
 **With SlidingWindowConversationManager:**
@@ -336,11 +377,14 @@ Pass `proactiveCompression` to any built-in conversation manager. Use `true` for
 --8<-- "user-guide/concepts/agents/conversation-management.ts:proactive_summarizing"
 ```
 
-Without `proactiveCompression`, behavior is unchanged — only reactive overflow recovery is used.
+Without `proactiveCompression`, only reactive overflow recovery is used.
+
+</Tab>
+</Tabs>
 
 ### How It Works
 
-Before each model call, the agent estimates the projected input token count and attaches it to the `BeforeModelCallEvent`. When `proactiveCompression` is configured, the conversation manager compares this estimate against the model's `contextWindowLimit`:
+Before each model call, the agent estimates the projected input token count and attaches it to the `BeforeModelCallEvent`. When proactive compression is configured, the conversation manager compares this estimate against the model's `contextWindowLimit`:
 
 ```
 if projectedInputTokens / contextWindowLimit >= compressionThreshold:
@@ -353,7 +397,20 @@ Because `BeforeModelCallEvent` triggers before every model call including calls 
 
 ### Context Window Limit
 
-The threshold check requires the model's context window size. The SDK auto-populates `contextWindowLimit` from built-in lookup tables for known models (Anthropic, Bedrock, OpenAI, Google Gemini). You can override it manually for models not in the lookup table:
+The threshold check requires the model's context window size. The SDK auto-populates `contextWindowLimit` from built-in lookup tables ([Python](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/_defaults.py), [TypeScript](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/models/defaults.ts)) for known models. You can override it manually for models not in the lookup table:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+model = BedrockModel(
+    model_id="my-custom-model",
+    context_window_limit=128_000,
+)
+```
+
+</Tab>
+<Tab label="TypeScript">
 
 ```typescript
 const model = new BedrockModel({
@@ -362,20 +419,18 @@ const model = new BedrockModel({
 })
 ```
 
-If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of 200,000 tokens.
+</Tab>
+</Tabs>
 
 :::caution[Inaccurate compression with default fallback]
-When the default 200,000-token limit is used but the model's actual context window is significantly different, proactive compression will not behave correctly:
-
-- **Actual limit is smaller** (e.g., 8k or 32k): Compression triggers too late. The model will hit context overflow errors before proactive compression is triggered, falling back fully to reactive overflow recovery.
-- **Actual limit is larger** (e.g., 1M): Compression triggers too early. The agent proactively trims context well before the model's capacity is reached.
+If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of 200,000 tokens. When the default token limit is used but the model's actual context window is significantly different, proactive compression will not behave correctly.
 :::
 
 ### Token Estimation
 
-The agent estimates input tokens using a the following strategy:
+The agent estimates input tokens using the following strategy:
 
-1. **Known baseline**: Reads `inputTokens + outputTokens` from the last assistant message's metadata
+1. **Known baseline**: Reads `inputTokens + outputTokens` from the last assistant message's `metadata.usage`
 2. **Delta estimation**: Only estimates tokens for new messages added since that assistant message using the model's `countTokens()` method
 3. **Cold start fallback**: When no prior usage metadata exists (first call or after session restore without metadata), estimates all messages via `countTokens()`
 

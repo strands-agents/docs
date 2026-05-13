@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Agent,
   ConversationManager,
@@ -128,10 +127,6 @@ async function proactiveSlidingWindow() {
   const agent = new Agent({
     model: new BedrockModel({
       modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
-      // contextWindowLimit is auto-populated from the
-      // model ID for known models. Override manually
-      // if your model is not in the lookup table:
-      // contextWindowLimit: 200_000,
     }),
     conversationManager: new SlidingWindowConversationManager({
       windowSize: 50,
@@ -148,7 +143,7 @@ async function proactiveSummarizing() {
       modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
     }),
     conversationManager: new SummarizingConversationManager({
-      proactiveCompression: { compressionThreshold: 0.7 },
+      proactiveCompression: true,
     }),
   })
   // --8<-- [end:proactive_summarizing]

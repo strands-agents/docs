@@ -213,7 +213,7 @@ response = agent([image_message])
 
 ### Token Counting
 
-Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+Token counting is used by context management strategies to estimate input tokens before each model call.
 
 The llama.cpp provider can use the server's native `/tokenize` endpoint for accurate estimation.
 

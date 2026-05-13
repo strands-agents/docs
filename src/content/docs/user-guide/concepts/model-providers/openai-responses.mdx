@@ -322,14 +322,14 @@ When using a stateful model, the agent automatically uses a null conversation ma
 
 ### Token Counting
 
-Token counting is used by [proactive context compression](/docs/user-guide/concepts/agents/conversation-management/#proactive-context-compression) to estimate input tokens before each model call.
+Token counting is used by context management strategies to estimate input tokens before each model call.
 
 <Tabs>
 <Tab label="Python">
 
 The OpenAI Responses provider can use the native `responses.input_tokens.count()` API, which provides exact token counts including messages, instructions, and tool specifications.
 
-You can enalbe native token counting with:
+You can enable native token counting with:
 
 ```python
 model = OpenAIResponsesModel(
