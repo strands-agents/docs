@@ -6,7 +6,7 @@ Null implementation of conversation management.
 class NullConversationManager(ConversationManager)
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/null\_conversation\_manager.py:12](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/null_conversation_manager.py#L12)
+Defined in: [src/strands/agent/conversation\_manager/null\_conversation\_manager.py:11](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/null_conversation_manager.py#L11)
 
 A no-op conversation manager that does not modify the conversation history.
 
@@ -22,7 +22,7 @@ Useful for:
 def apply_management(agent: "Agent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/null\_conversation\_manager.py:22](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/null_conversation_manager.py#L22)
+Defined in: [src/strands/agent/conversation\_manager/null\_conversation\_manager.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/null_conversation_manager.py#L21)
 
 Does nothing to the conversation history.
 
@@ -39,9 +39,11 @@ def reduce_context(agent: "Agent",
                    **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/null\_conversation\_manager.py:31](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/null_conversation_manager.py#L31)
+Defined in: [src/strands/agent/conversation\_manager/null\_conversation\_manager.py:30](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/null_conversation_manager.py#L30)
 
-Does not reduce context and raises an exception.
+Does not reduce context.
+
+When called reactively (e is not None), re-raises the overflow exception since this manager cannot reduce context. When called proactively (e is None), returns silently.
 
 **Arguments**:
 
@@ -51,5 +53,4 @@ Does not reduce context and raises an exception.
 
 **Raises**:
 
--   `e` - If provided.
--   `ContextWindowOverflowException` - If e is None.
+-   `e` - If provided (reactive overflow).

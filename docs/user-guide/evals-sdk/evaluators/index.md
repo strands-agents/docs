@@ -112,6 +112,38 @@ Evaluators operate at different levels of granularity:
 -   **Purpose**: Binary evaluation for instruction compliance
 -   **Use Case**: Verify that agents follow explicit format, length, style, and content constraints
 
+### Multimodal Evaluators
+
+**[MultimodalOutputEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: MLLM-as-a-Judge evaluation with custom rubrics for image/document-to-text tasks
+-   **Use Case**: Evaluate responses for VQA, chart/document QA, image captioning, and OCR-style tasks
+
+**[MultimodalOverallQualityEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Likert-5 overall quality scoring across visual accuracy, instruction adherence, completeness, and coherence
+-   **Use Case**: Track single-score quality trends for image-to-text responses
+
+**[MultimodalCorrectnessEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Strict binary fact-check of a response against the image content
+-   **Use Case**: Verify factual accuracy of VQA or chart-QA answers
+
+**[MultimodalFaithfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Strict binary hallucination detection that flags claims not verifiable from the image
+-   **Use Case**: Catch invented details, assumptions, and ungrounded inferences in image captions
+
+**[MultimodalInstructionFollowingEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Strict binary evaluation of constraint compliance (count, format, scope, order, completeness, style)
+-   **Use Case**: Verify that multimodal responses respect explicit instructions independently of correctness
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md)**
@@ -366,6 +398,7 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 
 -   [OutputEvaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Start with flexible custom evaluation
 -   [HelpfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Assess response helpfulness
+-   [MultimodalOutputEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md): Evaluate image/document-to-text responses with an MLLM judge
 -   [CustomEvaluator](/docs/user-guide/evals-sdk/evaluators/custom_evaluator/index.md): Create domain-specific evaluators
 -   [Detectors](/docs/user-guide/evals-sdk/detectors/index.md): Understand *why* cases fail with automatic failure detection and root cause analysis
 

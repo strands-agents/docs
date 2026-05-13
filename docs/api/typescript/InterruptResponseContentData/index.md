@@ -1,4 +1,4 @@
-Defined in: [src/types/interrupt.ts:63](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/interrupt.ts#L63)
+Defined in: [src/types/interrupt.ts:63](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/interrupt.ts#L63)
 
 Data format for a content block containing a user response to an interrupt.
 
@@ -10,6 +10,6 @@ Data format for a content block containing a user response to an interrupt.
 interruptResponse: InterruptResponse;
 ```
 
-Defined in: [src/types/interrupt.ts:67](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/interrupt.ts#L67)
+Defined in: [src/types/interrupt.ts:67](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/interrupt.ts#L67)
 
 The interrupt response data.

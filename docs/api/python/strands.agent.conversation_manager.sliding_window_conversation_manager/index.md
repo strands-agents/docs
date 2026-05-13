@@ -22,7 +22,9 @@ Supports proactive management during agent loop execution via the per\_turn para
 def __init__(window_size: int = 40,
              should_truncate_results: bool = True,
              *,
-             per_turn: bool | int = False)
+             per_turn: bool | int = False,
+             proactive_compression: bool | ProactiveCompressionConfig
+             | None = None)
 ```
 
 Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:34](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L34)
@@ -43,6 +45,11 @@ Initialize the sliding window conversation manager.
     
     When to use per\_turn: If your agent performs many tool operations in loops (e.g., web browsing with frequent screenshots), enable per\_turn to proactively manage message history and prevent the agent loop from slowing down. Start with per\_turn=True and adjust to a specific frequency (e.g., per\_turn=5) if needed for performance tuning.
     
+-   `proactive_compression` - Enable proactive context compression before the model call.
+    
+    -   `True`: compress when 70% of the context window is used (default threshold).
+    -   `\{"compression_threshold": float}`: compress at the specified ratio (0, 1\].
+    -   `False` or `None`: disabled, only reactive overflow recovery is used.
 
 **Raises**:
 
@@ -54,7 +61,7 @@ Initialize the sliding window conversation manager.
 def register_hooks(registry: "HookRegistry", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:73](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L73)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:78](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L78)
 
 Register hook callbacks for per-turn conversation management.
 
@@ -69,7 +76,7 @@ Register hook callbacks for per-turn conversation management.
 def get_state() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:115](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L115)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:120](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L120)
 
 Get the current state of the conversation manager.
 
@@ -83,7 +90,7 @@ Dictionary containing the manager’s state, including model call count for per-
 def restore_from_session(state: dict[str, Any]) -> list | None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:125](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L125)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:130](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L130)
 
 Restore the conversation manager’s state from a session.
 
@@ -101,7 +108,7 @@ Optional list of messages to prepend to the agent’s messages.
 def apply_management(agent: "Agent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:138](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L138)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:143](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L143)
 
 Apply the sliding window to the agent’s messages array to maintain a manageable history size.
 
@@ -120,9 +127,13 @@ def reduce_context(agent: "Agent",
                    **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:158](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L158)
+Defined in: [src/strands/agent/conversation\_manager/sliding\_window\_conversation\_manager.py:163](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py#L163)
 
 Trim the oldest messages to reduce the conversation context size.
+
+When `e` is set (reactive overflow recovery), attempts to truncate large tool results first before falling back to message trimming.
+
+When `e` is None (proactive compression or routine management), only trims messages without attempting tool result truncation.
 
 The method handles special cases where trimming the messages leads to:
 
@@ -132,9 +143,9 @@ The method handles special cases where trimming the messages leads to:
 **Arguments**:
 
 -   `agent` - The agent whose messages will be reduce. This list is modified in-place.
--   `e` - The exception that triggered the context reduction, if any.
+-   `e` - The exception that triggered the context reduction, if any. When set, this is a reactive overflow recovery call. When None, this is a proactive or routine management call.
 -   `**kwargs` - Additional keyword arguments for future extensibility.
 
 **Raises**:
 
--   `ContextWindowOverflowException` - If the context cannot be reduced further and a context overflow error was provided (e is not None). When called during routine window management (e is None), logs a warning and returns without modification.
+-   `ContextWindowOverflowException` - If the context cannot be reduced further and a context overflow error was provided (e is not None). When called during routine window management or proactive compression (e is None), logs a warning and returns without modification.

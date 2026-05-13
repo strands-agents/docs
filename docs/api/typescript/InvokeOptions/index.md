@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:74](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/agent.ts#L74)
+Defined in: [src/types/agent.ts:76](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/agent.ts#L76)
 
 Options for a single agent invocation.
 
@@ -10,7 +10,7 @@ Options for a single agent invocation.
 optional structuredOutputSchema?: ZodType;
 ```
 
-Defined in: [src/types/agent.ts:78](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/agent.ts#L78)
+Defined in: [src/types/agent.ts:80](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/agent.ts#L80)
 
 Zod schema for structured output validation, overriding the constructor-provided schema for this invocation only.
 
@@ -22,7 +22,7 @@ Zod schema for structured output validation, overriding the constructor-provided
 optional invocationState?: InvocationState;
 ```
 
-Defined in: [src/types/agent.ts:87](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/agent.ts#L87)
+Defined in: [src/types/agent.ts:89](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/agent.ts#L89)
 
 Per-invocation state. Passed to lifecycle hook events and tools, and returned on [AgentResult.invocationState](/docs/api/typescript/AgentResult/index.md#invocationstate). Mutable — hooks and tools may read and write. See [InvocationState](/docs/api/typescript/InvocationState/index.md) for details.
 
@@ -36,7 +36,7 @@ Defaults to an empty object when omitted.
 optional cancelSignal?: AbortSignal;
 ```
 
-Defined in: [src/types/agent.ts:117](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/agent.ts#L117)
+Defined in: [src/types/agent.ts:119](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/agent.ts#L119)
 
 External AbortSignal for cancelling the agent invocation.
 

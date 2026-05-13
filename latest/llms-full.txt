@@ -10671,6 +10671,366 @@ Source: https://strandsagents.com/docs/user-guide/concepts/agents/session-manage
 
 ---
 
+## Snapshots
+
+Snapshots capture agent state at a point in time so you can save and restore it later. You choose which fields to include — either by picking a preset (a preconfigured set of fields) or by specifying fields directly — and you can further refine with includes and excludes. Snapshots are plain JSON-serializable objects — persistence is up to you.
+
+## Basic Usage
+
+### Taking a Snapshot
+
+Use the `"session"` preset to capture the most common fields:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a helpful assistant")
+agent("Hello!")
+agent.state.set("user_id", "user-123")
+
+# Capture a snapshot with the session preset
+snapshot = agent.take_snapshot(preset="session")
+
+print(snapshot.schema_version)  # "1.0"
+print(snapshot.created_at)      # ISO 8601 timestamp
+print(snapshot.data.keys())     # messages, state, conversation_manager_state, interrupt_state
+```
+
+The `"session"` preset captures `messages`, `state`, `conversation_manager_state`, and `interrupt_state`. The `system_prompt` field is not included by default — see [Field Selection](#field-selection) to customize which fields are captured.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a helpful assistant' })
+await agent.invoke('Hello!')
+agent.appState.set('user_id', 'user-123')
+
+// Capture a snapshot with the session preset
+const snapshot = agent.takeSnapshot({ preset: 'session' })
+
+console.log(snapshot.schemaVersion) // "1.0"
+console.log(snapshot.createdAt) // ISO 8601 timestamp
+console.log(Object.keys(snapshot.data)) // messages, state, systemPrompt, modelState, interrupts
+```
+
+The `"session"` preset captures `messages`, `state`, `systemPrompt`, `modelState`, and `interrupts`.
+(( /tab "TypeScript" ))
+
+### Restoring a Snapshot
+
+Load a snapshot to restore the agent to a previous state:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a helpful assistant")
+agent("Hello!")
+
+# Take a snapshot
+snapshot = agent.take_snapshot(preset="session")
+
+# Continue the conversation
+agent("Tell me a joke")
+agent("Tell me another one")
+
+# Restore to the earlier state
+agent.load_snapshot(snapshot)
+
+# The agent is back to the state after "Hello!"
+print(len(agent.messages))  # Only the messages from before the jokes
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a helpful assistant' })
+await agent.invoke('Hello!')
+
+// Take a snapshot
+const snapshot = agent.takeSnapshot({ preset: 'session' })
+
+// Continue the conversation
+await agent.invoke('Tell me a joke')
+await agent.invoke('Tell me another one')
+
+// Restore to the earlier state
+agent.loadSnapshot(snapshot)
+
+// The agent is back to the state after "Hello!"
+console.log(agent.messages.length) // Only the messages from before the jokes
+```
+(( /tab "TypeScript" ))
+
+Only fields present in the snapshot are restored. If a field was not included when the snapshot was taken, the agent’s current value for that field is left unchanged.
+
+## Field Selection
+
+Snapshots support flexible field selection through presets, includes, and excludes. The resolution order is: **preset → include → exclude** — start with the fields defined by the preset, add any fields listed in `include`, then remove any fields listed in `exclude`.
+
+(( tab "Python" ))
+| Field | Description |
+| --- | --- |
+| `messages` | Conversation history |
+| `state` | Agent key-value state |
+| `conversation_manager_state` | Conversation manager internal state |
+| `interrupt_state` | Human-in-the-loop interrupt state |
+| `system_prompt` | System prompt content |
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+| Field | Description |
+| --- | --- |
+| `messages` | Conversation history |
+| `state` | Agent key-value state (appState) |
+| `systemPrompt` | System prompt content |
+| `modelState` | Model provider state (e.g. response IDs for stateful models) |
+| `interrupts` | Human-in-the-loop interrupt state |
+(( /tab "TypeScript" ))
+
+Note
+
+The `"session"` preset is currently the only available preset. It includes the same fields that the [Session Manager](/docs/user-guide/concepts/agents/session-management/index.md) persists by default.
+
+Use `include` to select specific fields without a preset, or to add fields on top of a preset. Use `exclude` to remove fields from a preset:
+
+(( tab "Python" ))
+```python
+# Capture only messages and state (no preset)
+snapshot = agent.take_snapshot(include=["messages", "state"])
+
+# Session preset plus system_prompt
+snapshot = agent.take_snapshot(preset="session", include=["system_prompt"])
+
+# Session preset minus interrupt_state
+snapshot = agent.take_snapshot(preset="session", exclude=["interrupt_state"])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+// Capture only messages and state (no preset)
+const messagesOnly = agent.takeSnapshot({ include: ['messages', 'state'] })
+
+// Session preset minus systemPrompt
+const noPrompt = agent.takeSnapshot({ preset: 'session', exclude: ['systemPrompt'] })
+```
+(( /tab "TypeScript" ))
+
+## Application Data
+
+Snapshots support an `app_data` (Python) / `appData` (TypeScript) field for storing application-owned data alongside the agent state. Strands does not read or modify this data — it’s passed through verbatim.
+
+This is useful for attaching metadata like a display name for the snapshot, the current step in a workflow, user preferences, or any other context your application needs to associate with a particular point in time.
+
+(( tab "Python" ))
+```python
+snapshot = agent.take_snapshot(
+    preset="session",
+    app_data={
+        "snapshot_label": "After onboarding",
+        "workflow_step": 3,
+        "user_display_name": "Alice",
+    },
+)
+
+# Access app data later
+print(snapshot.app_data["snapshot_label"])     # "After onboarding"
+print(snapshot.app_data["user_display_name"])  # "Alice"
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const snapshot = agent.takeSnapshot({
+  preset: 'session',
+  appData: {
+    snapshotLabel: 'After onboarding',
+    workflowStep: 3,
+    userDisplayName: 'Alice',
+  },
+})
+
+// Access app data later
+console.log(snapshot.appData.snapshotLabel) // "After onboarding"
+console.log(snapshot.appData.userDisplayName) // "Alice"
+```
+(( /tab "TypeScript" ))
+
+## Serialization
+
+Snapshots are JSON-serializable, making them easy to persist to any storage backend.
+
+(( tab "Python" ))
+```python
+import json
+from strands import Agent, Snapshot
+
+agent = Agent()
+agent("Hello!")
+
+# Take a snapshot
+snapshot = agent.take_snapshot(preset="session")
+
+# Serialize to JSON
+json_str = json.dumps(snapshot.to_dict())
+
+# Store to file, database, S3, etc.
+with open("snapshot.json", "w") as f:
+    f.write(json_str)
+
+# Later, restore from JSON
+with open("snapshot.json", "r") as f:
+    data = json.loads(f.read())
+
+restored_snapshot = Snapshot.from_dict(data)
+
+# Load into a new agent
+new_agent = Agent()
+new_agent.load_snapshot(restored_snapshot)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent, type Snapshot } from '@strands-agents/sdk'
+
+const agent = new Agent()
+await agent.invoke('Hello!')
+
+// Take a snapshot
+const snapshot = agent.takeSnapshot({ preset: 'session' })
+
+// Serialize to JSON string
+const jsonString = JSON.stringify(snapshot)
+
+// Store to file, database, S3, etc.
+// ...
+
+// Later, restore from JSON
+const parsed: Snapshot = JSON.parse(jsonString)
+
+// Load into a new agent
+const newAgent = new Agent()
+newAgent.loadSnapshot(parsed)
+```
+(( /tab "TypeScript" ))
+
+## Use Cases
+
+### Checkpointing
+
+Save agent state at key points in a workflow so you can resume from the last checkpoint if something goes wrong:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a research assistant")
+
+# Step 1: Gather information
+agent("Research the latest trends in AI agents")
+checkpoint_1 = agent.take_snapshot(preset="session")
+
+# Step 2: Analyze (might fail or produce poor results)
+agent("Analyze the key themes and summarize")
+checkpoint_2 = agent.take_snapshot(preset="session")
+
+# If step 2 didn't go well, roll back to checkpoint 1
+agent.load_snapshot(checkpoint_1)
+agent("Focus specifically on multi-agent systems and summarize")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a research assistant' })
+
+// Step 1: Gather information
+await agent.invoke('Research the latest trends in AI agents')
+const checkpoint1 = agent.takeSnapshot({ preset: 'session' })
+
+// Step 2: Analyze (might fail or produce poor results)
+await agent.invoke('Analyze the key themes and summarize')
+const checkpoint2 = agent.takeSnapshot({ preset: 'session' })
+
+// If step 2 didn't go well, roll back to checkpoint 1
+agent.loadSnapshot(checkpoint1)
+await agent.invoke('Focus specifically on multi-agent systems and summarize')
+```
+(( /tab "TypeScript" ))
+
+### Branching Conversations
+
+Create multiple conversation branches from the same starting point:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a creative writer")
+agent("Write the opening paragraph of a mystery novel")
+
+# Save the branch point
+branch_point = agent.take_snapshot(preset="session")
+
+# Branch A: formal tone
+agent("Continue in a formal, academic tone")
+formal_snapshot = agent.take_snapshot(preset="session")
+
+# Branch B: go back and try casual tone
+agent.load_snapshot(branch_point)
+agent("Continue in a casual, conversational tone")
+casual_snapshot = agent.take_snapshot(preset="session")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a creative writer' })
+await agent.invoke('Write the opening paragraph of a mystery novel')
+
+// Save the branch point
+const branchPoint = agent.takeSnapshot({ preset: 'session' })
+
+// Branch A: formal tone
+await agent.invoke('Continue in a formal, academic tone')
+const formalSnapshot = agent.takeSnapshot({ preset: 'session' })
+
+// Branch B: go back and try casual tone
+agent.loadSnapshot(branchPoint)
+await agent.invoke('Continue in a casual, conversational tone')
+const casualSnapshot = agent.takeSnapshot({ preset: 'session' })
+```
+(( /tab "TypeScript" ))
+
+## Relationship to Session Management
+
+[Session management](/docs/user-guide/concepts/agents/session-management/index.md) handles persistence automatically — state is saved and restored at the right lifecycle points without you writing any persistence code. Snapshots give you manual control: you decide when to capture state, what to include, and where to store it. Use session management when you want hands-off persistence, and snapshots when you need precise control over save points.
+
+## See Also
+
+-   [State Management](/docs/user-guide/concepts/agents/state/index.md) — Conversation history, agent state, and request state
+-   [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) — Automatic persistence with file or S3 storage
+-   [Conversation Management](/docs/user-guide/concepts/agents/conversation-management/index.md) — Managing conversation history and context window
+
+Source: https://strandsagents.com/docs/user-guide/concepts/agents/snapshots/index.md
+
+---
+
 ## State Management
 
 Strands Agents state is maintained in several forms:
@@ -11084,7 +11444,7 @@ Invocation state (`invocationState` in TypeScript, `invocation_state` / `request
 
 ## Persisting State Across Sessions
 
-For information on how to persist agent state and conversation history across multiple interactions or application restarts, see the [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) documentation.
+For automatic persistence of agent state and conversation history across application restarts, see [Session Management](/docs/user-guide/concepts/agents/session-management/index.md). For manual, point-in-time capture and restore of agent state, see [Snapshots](/docs/user-guide/concepts/agents/snapshots/index.md).
 
 Source: https://strandsagents.com/docs/user-guide/concepts/agents/state/index.md
 
@@ -14793,7 +15153,10 @@ flowchart TD
 
 ## Hooks
 
-Users can raise interrupts within their [hook callbacks](/docs/user-guide/concepts/agents/hooks/index.md) to pause agent execution at specific life-cycle events in the agentic loop. Currently, only the `BeforeToolCallEvent` is interruptible. Interrupting on a `BeforeToolCallEvent` allows users to intercept tool calls before execution to request human approval or additional inputs.
+Users can raise interrupts within their [hook callbacks](/docs/user-guide/concepts/agents/hooks/index.md) to pause agent execution at specific life-cycle events in the agentic loop.
+
+(( tab "Python" ))
+Currently, only the `BeforeToolCallEvent` is interruptible. Interrupting on a `BeforeToolCallEvent` allows users to intercept tool calls before execution to request human approval or additional inputs.
 
 ```python
 import json
@@ -14860,11 +15223,99 @@ while True:
 
 print(f"MESSAGE: {json.dumps(result.message)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Both `BeforeToolCallEvent` and `BeforeToolsEvent` are interruptible. Interrupting on a `BeforeToolCallEvent` allows users to intercept individual tool calls before execution, while `BeforeToolsEvent` allows intercepting the entire batch of tool calls before any execute.
+
+#### BeforeToolCallEvent
+
+```typescript
+const deleteFiles = tool({
+  name: 'delete_files',
+  description: 'Delete files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return true
+  },
+})
+
+const inspectFiles = tool({
+  name: 'inspect_files',
+  description: 'Inspect files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return {}
+  },
+})
+
+const agent = new Agent({
+  systemPrompt: 'You delete files older than 5 days',
+  tools: [deleteFiles, inspectFiles],
+})
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  if (event.toolUse.name !== 'delete_files') return
+
+  const approval = event.interrupt<string>({
+    name: 'myapp-approval',
+    reason: { paths: (event.toolUse.input as { paths: string[] }).paths },
+  })
+  if (approval.toLowerCase() !== 'y') {
+    event.cancel = 'User denied permission to delete files'
+  }
+})
+
+const paths = ['a/b/c.txt', 'd/e/f.txt']
+let result = await agent.invoke(`paths=<${JSON.stringify(paths)}>`)
+
+while (result.stopReason === 'interrupt') {
+  const responses = result.interrupts!.map((interrupt) => ({
+    interruptResponse: {
+      interruptId: interrupt.id,
+      // In a real app, collect user input here
+      response: 'y',
+    },
+  }))
+
+  result = await agent.invoke(responses)
+}
+
+console.log('MESSAGE:', JSON.stringify(result.lastMessage))
+```
+
+#### BeforeToolsEvent
+
+```typescript
+const agent = new Agent({
+  tools: [/* ... */],
+})
+
+agent.addHook(BeforeToolsEvent, (event) => {
+  const dangerousTools = event.message.content
+    .filter((block) => block.type === 'toolUseBlock')
+    .filter((block) => ['delete_files'].includes(block.name))
+
+  if (dangerousTools.length > 0) {
+    const response = event.interrupt<{ approved: boolean }>({
+      name: 'batch_approval',
+      reason: `Approve ${dangerousTools.length} dangerous tool calls?`,
+    })
+    if (!response.approved) {
+      event.cancel = 'Batch cancelled by user'
+    }
+  }
+})
+```
+(( /tab "TypeScript" ))
 
 ### Components
 
 Interrupts in Strands are comprised of the following components:
 
+(( tab "Python" ))
 -   `event.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique across all interrupt calls configured on the `BeforeToolCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     -   You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable.
@@ -14877,22 +15328,48 @@ Interrupts in Strands are comprised of the following components:
     -   You can either set `cancel_tool` to `True` or provide a custom cancellation message.
 
 For additional details on each of these components, refer to the [Python API Reference](/docs/api/python/strands.types.interrupt).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   [`BeforeToolCallEvent`](/docs/api/typescript/BeforeToolCallEvent/index.md) / [`BeforeToolsEvent`](/docs/api/typescript/BeforeToolsEvent/index.md) — hook events that expose the ability to interrupt via the `interrupt` method
+    -   `event.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value providing context for why the interrupt was raised.
+    -   The `name` must be unique across all interrupt calls configured on the same event. In the example above, we demonstrate using a namespace prefix for the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
+    -   `event.cancel` — cancel tool execution based on the interrupt response. Set to `true` for a default message or provide a custom cancellation message string.
+-   [`AgentResult`](/docs/api/typescript/AgentResult/index.md) — returned by `invoke()` / `stream()`, contains interrupt information when the agent pauses
+    -   `result.stopReason` — check if agent stopped due to `'interrupt'`
+    -   `result.interrupts` — array of `Interrupt` objects, each containing the user-provided `name` and `reason`, along with a unique `id`
+-   `InterruptResponseContent` — content block type for resuming from an interrupt
+    -   Pass an array of these to `agent.invoke()` to resume. Each response is keyed by the interrupt’s `id` and will be returned from the associated `interrupt()` call when the tool/hook re-executes. The `response` must be JSON-serializable.
+(( /tab "TypeScript" ))
 
 ### Rules
 
 Strands enforces the following rules for interrupts:
 
+(( tab "Python" ))
 -   All hooks configured on the interrupted event will execute
 -   All hooks configured on the interrupted event are allowed to raise an interrupt
 -   A single hook can raise multiple interrupts but only one at a time
     -   In other words, within a single hook, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
 -   All tools running concurrently are interruptible
 -   All tools running concurrently that are not interrupted will execute
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   All hooks configured on the interrupted event will execute
+-   All hooks configured on the interrupted event are allowed to raise an interrupt
+-   A single hook can raise multiple interrupts but only one at a time
+    -   In other words, within a single hook, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+-   When an interrupt fires from `BeforeToolCallEvent`, `AfterToolCallEvent` does not fire for that tool — but `AfterToolsEvent` always fires
+-   When an interrupt fires mid-batch, completed tool results are preserved so the agent skips the model call on resume and only executes remaining tools
+-   Both assistant and tool result messages are appended only after tool execution completes, preventing dangling `toolUse` blocks without matching results
+(( /tab "TypeScript" ))
 
 ## Tools
 
 Users can also raise interrupts from their tool definitions.
 
+(( tab "Python" ))
 ```python
 from typing import Any
 
@@ -14931,29 +15408,86 @@ agent = Agent(
 ```
 
 > ⚠️ Interrupts are not supported in [direct tool calls](/docs/user-guide/concepts/tools/index.md#direct-method-calls) (i.e., calls such as `agent.tool.my_tool()`).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The tool callback receives a `context` parameter (the second argument) which provides the `interrupt` method.
+
+```typescript
+const deleteFiles = tool({
+  name: 'delete_files',
+  description: 'Delete files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input, context) => {
+    const approval = context.interrupt<string>({
+      name: 'myapp-approval',
+      reason: { paths: input.paths },
+    })
+    if (approval.toLowerCase() !== 'y') return false
+
+    // Implementation here
+
+    return true
+  },
+})
+
+const inspectFiles = tool({
+  name: 'inspect_files',
+  description: 'Inspect files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return {}
+  },
+})
+
+const agent = new Agent({
+  systemPrompt: 'You delete files older than 5 days',
+  tools: [deleteFiles, inspectFiles],
+})
+
+// ...
+```
+(( /tab "TypeScript" ))
 
 ### Components
 
-Tool interrupts work similiarly to hook interrupts with only a few notable differences:
+Tool interrupts work similarly to hook interrupts with only a few notable differences. For more on tool context, see [ToolContext](/docs/user-guide/concepts/tools/custom-tools/index.md#toolcontext).
 
+(( tab "Python" ))
 -   `tool_context` - Strands object that defines the interrupt call
-    -   You can learn more about `tool_context` [here](/docs/user-guide/concepts/tools/custom-tools/index.md#toolcontext).
 -   `tool_context.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique only among interrupt calls configured in the same tool definition. It is still advisable however to namespace your interrupts so as to more easily distinguish the calls when constructing responses outside the agent.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   [`ToolContext`](/docs/api/typescript/ToolContext/index.md) — the second argument passed to the tool callback, providing access to the `interrupt` method
+    -   `context.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value.
+    -   The `name` must be unique only among interrupt calls configured in the same tool definition. It is still advisable however to namespace your interrupts so as to more easily distinguish the calls when constructing responses outside the agent.
+(( /tab "TypeScript" ))
 
 ### Rules
 
 Strands enforces the following rules for tool interrupts:
 
+(( tab "Python" ))
 -   All tools running concurrently will execute
 -   All tools running concurrently are interruptible
 -   A single tool can raise multiple interrupts but only one at a time
     -   In other words, within a single tool, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   A single tool can raise multiple interrupts but only one at a time
+    -   In other words, within a single tool, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+-   When an interrupt fires mid-batch, completed tool results are preserved so the agent skips the model call on resume and only executes remaining tools
+(( /tab "TypeScript" ))
 
 ## Session Management
 
 Users can session manage their interrupts and respond back at a later time under a new agent session. Additionally, users can session manage the responses to avoid repeated interrupts on subsequent tool calls.
 
+(( tab "Python" ))
 ```python
 ##### server.py #####
 
@@ -15039,15 +15573,105 @@ paths = ["a/b/c.txt", "d/e/f.txt"]
 result = client(paths)
 print(f"MESSAGE: {json.dumps(result.message)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const deleteFiles = tool({
+  name: 'delete_files',
+  description: 'Delete files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return true
+  },
+})
+
+const inspectFiles = tool({
+  name: 'inspect_files',
+  description: 'Inspect files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return {}
+  },
+})
+
+// Server function — creates a fresh agent with session management each call
+async function server(
+  prompt: string | { interruptResponse: { interruptId: string; response: unknown } }[]
+) {
+  const agent = new Agent({
+    systemPrompt: 'You delete files older than 5 days',
+    tools: [deleteFiles, inspectFiles],
+    sessionManager: new SessionManager({
+      sessionId: 'myapp',
+      storage: { snapshot: new FileStorage('/path/to/storage') },
+    }),
+  })
+
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    if (event.toolUse.name !== 'delete_files') return
+
+    // Check if user already trusted this approval
+    if (event.agent.appState.get('myapp-approval') === 't') return
+
+    const approval = event.interrupt<string>({
+      name: 'myapp-approval',
+      reason: { paths: (event.toolUse.input as { paths: string[] }).paths },
+    })
+    if (!['y', 't'].includes(approval.toLowerCase())) {
+      event.cancel = 'User denied permission to delete files'
+    }
+
+    event.agent.appState.set('myapp-approval', approval.toLowerCase())
+  })
+
+  return agent.invoke(prompt)
+}
+
+// Client function
+async function client(paths: string[]) {
+  let result = await server(`paths=<${JSON.stringify(paths)}>`)
+
+  while (result.stopReason === 'interrupt') {
+    const responses = result.interrupts!.map((interrupt) => ({
+      interruptResponse: {
+        interruptId: interrupt.id,
+        // In a real app, collect user input here
+        response: 'y',
+      },
+    }))
+
+    result = await server(responses)
+  }
+
+  return result
+}
+
+const paths = ['a/b/c.txt', 'd/e/f.txt']
+const result = await client(paths)
+console.log('MESSAGE:', JSON.stringify(result.lastMessage))
+```
+(( /tab "TypeScript" ))
 
 ### Components
 
 Session managing interrupts involves the following key components:
 
+(( tab "Python" ))
 -   `session_manager` - Automatically persists the agent interrupt state between tear down and start up
     -   For more information on session management in Strands, please refer to [here](/docs/user-guide/concepts/agents/session-management/index.md).
 -   `agent.state` - General purpose key-value store that can be used to persist interrupt responses
     -   On subsequent tool calls, you can reference the responses stored in `agent.state` to decide whether another interrupt is necessary. For more information on `agent.state`, please refer to [here](/docs/user-guide/concepts/agents/state/index.md#agent-state).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   `sessionManager` - Automatically persists the agent interrupt state between tear down and start up
+    -   For more information on session management in Strands, please refer to [here](/docs/user-guide/concepts/agents/session-management/index.md).
+-   `agent.appState` - General purpose key-value store that can be used to persist interrupt responses
+    -   On subsequent tool calls, you can reference the responses stored in `appState` to decide whether another interrupt is necessary. For more information on `appState`, please refer to [here](/docs/user-guide/concepts/agents/state/index.md#agent-state).
+(( /tab "TypeScript" ))
 
 ## MCP Elicitation
 
@@ -15057,10 +15681,15 @@ Similar to interrupts, an MCP server can request additional information from the
 
 Interrupts are supported in multi-agent patterns, enabling human-in-the-loop workflows across agent orchestration systems. The interfaces mirror those used for single-agent interrupts. You can raise interrupts from `BeforeNodeCallEvent` hooks executed before each node or from within the nodes themselves. Session management is also supported, allowing you to persist and resume your interrupted multi-agents.
 
+Note
+
+Multi-agent interrupts are currently only available in the Python SDK. TypeScript multi-agent interrupt support is planned for a future release.
+
 ### Swarm
 
 A [Swarm](/docs/user-guide/concepts/multi-agent/swarm/index.md) is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. The following example demonstrates interrupting your swarm invocation through a `BeforeNodeCallEvent` hook.
 
+(( tab "Python" ))
 ```python
 import json
 
@@ -15109,11 +15738,19 @@ while result.status == Status.INTERRUPTED:
 
 print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message, indent=2)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 Swarms also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
 
 #### Components
 
+(( tab "Python" ))
 -   `event.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     -   You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable.
@@ -15124,6 +15761,13 @@ Swarms also support interrupts raised from within the nodes themselves following
     -   Each `response` is uniquely identified by their interrupt’s id and will be returned from the associated interrupt call when invoked the second time around. Note, the `response` must be JSON-serializable.
 -   `event.cancel_node` - Cancel node execution based on interrupt response
     -   You can either set `cancel_node` to `True` or provide a custom cancellation message.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 #### Rules
 
@@ -15139,6 +15783,7 @@ Strands enforces the following rules for interrupts in swarm:
 
 A [Graph](/docs/user-guide/concepts/multi-agent/graph/index.md) is a deterministic agent orchestration system based on a directed graph, where agents are nodes executed according to edge dependencies. The following example demonstrates interrupting your graph invocation through a `BeforeNodeCallEvent` hook.
 
+(( tab "Python" ))
 ```python
 import json
 
@@ -15191,11 +15836,19 @@ while result.status == Status.INTERRUPTED:
 
 print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message, indent=2)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 Graphs also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
 
 #### Components
 
+(( tab "Python" ))
 -   `event.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     -   You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable.
@@ -15206,6 +15859,13 @@ Graphs also support interrupts raised from within the nodes themselves following
     -   Each `response` is uniquely identified by their interrupt’s id and will be returned from the associated interrupt call when invoked the second time around. Note, the `response` must be JSON-serializable.
 -   `event.cancel_node` - Cancel node execution based on interrupt response
     -   You can either set `cancel_node` to `True` or provide a custom cancellation message.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 #### Rules
 
@@ -18910,7 +19570,7 @@ factual_agent = Agent(model=factual_model)
 
 ### Structured Output
 
-Ollama supports structured output for models that have tool calling capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
+Ollama supports structured output for models that have tool calling capabilities. When you pass `structured_output_model` parameter to the [agent invocation](/docs/api/python/strands.agent.agent#Agent.__call__), the Strands SDK converts your Pydantic models to tool specifications that compatible Ollama models can understand.
 
 ```python
 from pydantic import BaseModel, Field
@@ -18932,19 +19592,18 @@ ollama_model = OllamaModel(
 
 agent = Agent(model=ollama_model)
 
-result = agent.structured_output(
-    BookAnalysis,
-    """
-    Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
+result = agent(
+    """Analyze this book: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams.
     It's a science fiction comedy about Arthur Dent's adventures through space
-    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.
-    """
+    after Earth is destroyed. It's widely considered a classic of humorous sci-fi.""",
+    structured_output_model=BookAnalysis,
 )
 
-print(f"Title: {result.title}")
-print(f"Author: {result.author}")
-print(f"Genre: {result.genre}")
-print(f"Rating: {result.rating}")
+book_analysis: BookAnalysis = result.structured_output
+print(f"Title: {book_analysis.title}")
+print(f"Author: {book_analysis.author}")
+print(f"Genre: {book_analysis.genre}")
+print(f"Rating: {book_analysis.rating}")
 ```
 
 ## Tool Support
@@ -33593,7 +34252,7 @@ Detectors integrate directly into the evaluation pipeline. Pass a `DiagnosisConf
 ```python
 from strands_evals import Experiment, Case, DiagnosisConfig
 from strands_evals.evaluators import GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
+from strands_evals.detectors import DiagnosisTrigger
 
 experiment = Experiment(
     cases=test_cases,
@@ -33732,8 +34391,7 @@ The most powerful way to use diagnosis is through the `Experiment` class. Pass a
 
 ```python
 from strands_evals import DiagnosisConfig
-from strands_evals.detectors import ConfidenceLevel
-from strands_evals.types.detector import DiagnosisTrigger
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 
 class DiagnosisConfig(BaseModel):
     trigger: DiagnosisTrigger = DiagnosisTrigger.ON_FAILURE
@@ -33752,9 +34410,8 @@ class DiagnosisConfig(BaseModel):
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment, DiagnosisConfig, eval_task, TracedHandler
-from strands_evals.detectors import ConfidenceLevel
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 from strands_evals.evaluators import GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
 
 @eval_task(TracedHandler())
 def my_agent_task():
@@ -33857,9 +34514,8 @@ This example shows the complete workflow: run evaluations with diagnosis, then a
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment, DiagnosisConfig, eval_task, TracedHandler
-from strands_evals.detectors import ConfidenceLevel
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 from strands_evals.evaluators import OutputEvaluator, GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
 from strands_tools import calculator
 
 @eval_task(TracedHandler())
@@ -34834,6 +35490,38 @@ Evaluators operate at different levels of granularity:
 -   **Purpose**: Binary evaluation for instruction compliance
 -   **Use Case**: Verify that agents follow explicit format, length, style, and content constraints
 
+### Multimodal Evaluators
+
+**[MultimodalOutputEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: MLLM-as-a-Judge evaluation with custom rubrics for image/document-to-text tasks
+-   **Use Case**: Evaluate responses for VQA, chart/document QA, image captioning, and OCR-style tasks
+
+**[MultimodalOverallQualityEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Likert-5 overall quality scoring across visual accuracy, instruction adherence, completeness, and coherence
+-   **Use Case**: Track single-score quality trends for image-to-text responses
+
+**[MultimodalCorrectnessEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Strict binary fact-check of a response against the image content
+-   **Use Case**: Verify factual accuracy of VQA or chart-QA answers
+
+**[MultimodalFaithfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Strict binary hallucination detection that flags claims not verifiable from the image
+-   **Use Case**: Catch invented details, assumptions, and ungrounded inferences in image captions
+
+**[MultimodalInstructionFollowingEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL
+-   **Purpose**: Strict binary evaluation of constraint compliance (count, format, scope, order, completeness, style)
+-   **Use Case**: Verify that multimodal responses respect explicit instructions independently of correctness
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md)**
@@ -35088,6 +35776,7 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 
 -   [OutputEvaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Start with flexible custom evaluation
 -   [HelpfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Assess response helpfulness
+-   [MultimodalOutputEvaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md): Evaluate image/document-to-text responses with an MLLM judge
 -   [CustomEvaluator](/docs/user-guide/evals-sdk/evaluators/custom_evaluator/index.md): Create domain-specific evaluators
 -   [Detectors](/docs/user-guide/evals-sdk/detectors/index.md): Understand *why* cases fail with automatic failure detection and root cause analysis
 
@@ -37197,6 +37886,721 @@ Verify that agents respect declared dependencies.
 -   [**HelpfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Evaluates individual response helpfulness
 
 Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/interactions_evaluator/index.md
+
+---
+
+## Multimodal Correctness Evaluator
+
+## Overview
+
+The `MultimodalCorrectnessEvaluator` assesses whether an agent response is factually correct given the image content. It catches errors in objects, counts, colors, positions, readable text, and described actions.
+
+## Key Features
+
+-   **Output-Level Evaluation**: Scores a single agent response per case
+-   **Binary Scoring**: `1.0` for correct, `0.0` if any factual error is found
+-   **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+-   **Fact-Checking Focus**: Designed to catch factual errors in image descriptions and VQA answers
+
+## When to Use
+
+Use the `MultimodalCorrectnessEvaluator` when you need to:
+
+-   Verify factual accuracy of image captions, VQA answers, or chart/document QA responses
+-   Measure exact correctness on benchmark tasks with a known answer
+-   Catch small but important errors (off-by-one counts, wrong colors, misread text)
+
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT\_LEVEL**, scoring a single agent response per case.
+
+## Parameters
+
+### `rubric` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `CORRECTNESS_RUBRIC_V0`
+-   **Description**: Custom rubric. Leave unset to use the default rubric.
+
+### `model` (optional)
+
+-   **Type**: `Model | str | None`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: Multimodal judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in `MLLM_JUDGE_SYSTEM_PROMPT`)
+
+### `reference_suffix` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in default suffix)
+-   **Description**: Override to customize reference-based grading.
+
+## Scoring System
+
+| Score | Label | Meaning |
+| --- | --- | --- |
+| 1.0 | Correct | No factual errors found |
+| 0.0 | Incorrect | One or more factual errors found |
+
+A response passes only if the score is `1.0`.
+
+## Basic Usage
+
+### Reference-Free (fact-check against the image)
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalCorrectnessEvaluator
+from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
+
+
+def task_function(case: Case) -> str:
+    # Replace with your multimodal agent invocation.
+    return "There are 3 people sitting on the red couch."
+
+
+cases = [
+    Case(
+        name="scene-count",
+        input=MultimodalInput(
+            media="/path/to/living_room.jpg",
+            instruction="How many people are on the couch and what color is it?",
+        ),
+    ),
+]
+
+experiment = Experiment(cases=cases, evaluators=[MultimodalCorrectnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+### Reference-Based (compare against a known answer)
+
+```python
+cases = [
+    Case(
+        name="chart-value",
+        input=MultimodalInput(
+            media="/path/to/revenue_chart.png",
+            instruction="What is the Q3 revenue for Product A?",
+        ),
+        expected_output="$4.2M",
+    ),
+]
+
+experiment = Experiment(cases=cases, evaluators=[MultimodalCorrectnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+```
+
+When `expected_output` is set, the evaluator automatically appends the reference suffix so the judge compares the response to the reference answer.
+
+## Related Evaluators
+
+-   [**MultimodalOutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md): Parent class with full parameter reference
+-   [**MultimodalFaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md): Catches hallucinations (claims not verifiable from the image)
+-   [**CorrectnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md): Text-only counterpart
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md
+
+---
+
+## Multimodal Faithfulness Evaluator
+
+## Overview
+
+The `MultimodalFaithfulnessEvaluator` assesses whether an agent response is grounded in the image content, detecting hallucinations such as invented details, unsupported assumptions, external knowledge, and speculation.
+
+## Key Features
+
+-   **Output-Level Evaluation**: Scores a single agent response per case
+-   **Binary Scoring**: `1.0` if fully grounded, `0.0` if any hallucination is found
+-   **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+-   **Hallucination Detection**: Designed to catch invented details, unsupported assumptions, and speculation
+
+## When to Use
+
+Use the `MultimodalFaithfulnessEvaluator` when you need to:
+
+-   Detect hallucinations in image captions or VQA answers
+-   Verify that a response only states what is verifiable from the image
+-   Screen for inferred-but-unseen details (emotions, off-screen events, brand names, locations)
+-   Complement correctness checks with a groundedness check
+
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT\_LEVEL**, scoring a single agent response per case.
+
+## Parameters
+
+### `rubric` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `FAITHFULNESS_RUBRIC_V0`
+-   **Description**: Custom rubric. Leave unset to use the default rubric.
+
+### `model` (optional)
+
+-   **Type**: `Model | str | None`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: Multimodal judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in `MLLM_JUDGE_SYSTEM_PROMPT`)
+
+### `reference_suffix` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in default suffix)
+
+## Scoring System
+
+| Score | Label | Meaning |
+| --- | --- | --- |
+| 1.0 | Faithful | Response only contains information verifiable from the image |
+| 0.0 | Unfaithful | Response contains one or more hallucinations |
+
+A response passes only if the score is `1.0`.
+
+## Basic Usage
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalFaithfulnessEvaluator
+from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
+
+
+def task_function(case: Case) -> str:
+    # Replace with your multimodal agent invocation.
+    return "A family is having a picnic in Central Park."
+
+
+cases = [
+    Case(
+        name="park-scene",
+        input=MultimodalInput(
+            media="/path/to/picnic.jpg",
+            instruction="Describe what is happening in the image.",
+        ),
+    ),
+]
+
+experiment = Experiment(cases=cases, evaluators=[MultimodalFaithfulnessEvaluator()])
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+## Combining with Other Evaluators
+
+Pair with correctness to distinguish “wrong” from “ungrounded”. `Experiment.run_evaluations` returns one report per evaluator, so use `EvaluationReport.flatten` to view them together:
+
+```python
+from strands_evals import Experiment
+from strands_evals.evaluators import (
+    MultimodalCorrectnessEvaluator,
+    MultimodalFaithfulnessEvaluator,
+)
+from strands_evals.types.evaluation_report import EvaluationReport
+
+evaluators = [
+    MultimodalCorrectnessEvaluator(),   # Are the claims factually right?
+    MultimodalFaithfulnessEvaluator(),  # Are they supported by the image?
+]
+
+experiment = Experiment(cases=cases, evaluators=evaluators)
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+## Related Evaluators
+
+-   [**MultimodalOutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md): Parent class with full parameter reference
+-   [**MultimodalCorrectnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md): Strict factual correctness
+-   [**FaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md): Text-only counterpart grounded in conversation history
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md
+
+---
+
+## Multimodal Instruction Following Evaluator
+
+## Overview
+
+The `MultimodalInstructionFollowingEvaluator` assesses whether an agent response satisfies the explicit constraints in the user’s instruction (count, format, scope, order, completeness, and style), independently of factual accuracy.
+
+## Key Features
+
+-   **Output-Level Evaluation**: Scores a single agent response per case
+-   **Binary Scoring**: `1.0` if all constraints are satisfied, `0.0` if any constraint is violated
+-   **Constraint-Focused**: Evaluates compliance with directives, not overall correctness or quality
+-   **Image-Aware**: Verifies image-referential constraints (e.g., “describe only the background”)
+
+## When to Use
+
+Use the `MultimodalInstructionFollowingEvaluator` when you need to:
+
+-   Verify that responses respect format constraints (bullet vs. numbered list, paragraph, JSON)
+-   Check count constraints (“exactly N sentences”, “in one paragraph”)
+-   Assess scope constraints (“describe only the foreground”, “do not mention people”)
+-   Validate order constraints (“left to right”, “largest to smallest”)
+-   Evaluate instruction compliance independently from factual correctness
+
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT\_LEVEL**, scoring a single agent response per case.
+
+## Parameters
+
+### `rubric` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `INSTRUCTION_FOLLOWING_RUBRIC_V0`
+-   **Description**: Custom rubric. Leave unset to use the default rubric.
+
+### `model` (optional)
+
+-   **Type**: `Model | str | None`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: Multimodal judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in `MLLM_JUDGE_SYSTEM_PROMPT`)
+
+### `reference_suffix` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in default suffix)
+
+## Scoring System
+
+| Score | Label | Meaning |
+| --- | --- | --- |
+| 1.0 | Following | All explicit constraints are satisfied |
+| 0.0 | Not Following | One or more constraints are violated |
+
+A response passes only if the score is `1.0`.
+
+## Basic Usage
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalInstructionFollowingEvaluator
+from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
+
+
+def task_function(case: Case) -> str:
+    # Replace with your multimodal agent invocation.
+    return "- tree\n- bench\n- lamppost"
+
+
+cases = [
+    Case(
+        name="bullet-format",
+        input=MultimodalInput(
+            media="/path/to/park.jpg",
+            instruction="List exactly three objects visible in the background as bullet points.",
+        ),
+    ),
+]
+
+experiment = Experiment(
+    cases=cases,
+    evaluators=[MultimodalInstructionFollowingEvaluator()],
+)
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+## Combining with Other Evaluators
+
+Pair with correctness and faithfulness to assess different failure modes separately. `Experiment.run_evaluations` returns one report per evaluator, so use `EvaluationReport.flatten` to view them together:
+
+```python
+from strands_evals import Experiment
+from strands_evals.evaluators import (
+    MultimodalCorrectnessEvaluator,
+    MultimodalFaithfulnessEvaluator,
+    MultimodalInstructionFollowingEvaluator,
+)
+from strands_evals.types.evaluation_report import EvaluationReport
+
+evaluators = [
+    MultimodalInstructionFollowingEvaluator(),  # Did it follow the instruction constraints?
+    MultimodalCorrectnessEvaluator(),           # Are the listed objects correct?
+    MultimodalFaithfulnessEvaluator(),          # Are they actually in the image?
+]
+
+experiment = Experiment(cases=cases, evaluators=evaluators)
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+## Related Evaluators
+
+-   [**MultimodalOutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md): Parent class with full parameter reference
+-   [**InstructionFollowingEvaluator**](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md): Text-only counterpart
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md
+
+---
+
+## Multimodal Output Evaluator
+
+## Overview
+
+The `MultimodalOutputEvaluator` assesses the quality of agent outputs for tasks that involve images or documents alongside text. It uses an MLLM as the judge and evaluates responses against a user-defined rubric, extending [`OutputEvaluator`](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md) with multimodal input support. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/multimodal_output_evaluator.py).
+
+## Key Features
+
+-   **MLLM-as-a-Judge**: Uses a multimodal judge model to evaluate responses against the rubric and the media
+-   **Data-Driven Dispatch**: Emits Strands SDK content blocks when the input carries media; falls back to a plain text prompt otherwise
+-   **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+-   **Multiple Media Sources**: Accepts file paths, base64 strings, data URLs, HTTP(S) URLs (auto-fetched via the stdlib), raw bytes, and PIL Images
+-   **Built-in Subclasses**: `MultimodalOverallQualityEvaluator`, `MultimodalCorrectnessEvaluator`, `MultimodalFaithfulnessEvaluator`, and `MultimodalInstructionFollowingEvaluator` each default to a built-in rubric
+-   **Async Support**: Supports both synchronous and asynchronous evaluation
+
+## When to Use
+
+Use the `MultimodalOutputEvaluator` when you need to:
+
+-   Evaluate image or document understanding (VQA, chart QA, document QA, image captioning, OCR-style tasks)
+-   Assess whether a text response is grounded in the visual content it describes
+-   Score multimodal responses against a custom rubric that cannot be expressed as exact-match assertions
+-   Compare multimodal agent configurations or prompts
+-   Benchmark MLLM judges against text-only LLM judges on the same tasks
+
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT\_LEVEL**, scoring a single agent response per case.
+
+## Parameters
+
+### `rubric` (required)
+
+-   **Type**: `str`
+-   **Description**: The evaluation criteria that define what constitutes a good response. Should include scoring guidelines (e.g., “Score 1.0 if …, 0.0 if …”). You can author your own or reuse a built-in (see [Built-in Rubrics](#built-in-rubrics)).
+
+### `model` (optional)
+
+-   **Type**: `Model | str | None`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: The multimodal judge model. Can be a model ID string or a `Model` instance. The default must support image input.
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in `MLLM_JUDGE_SYSTEM_PROMPT`)
+-   **Description**: Custom system prompt to guide the judge model’s behavior.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+-   **Description**: Whether to include the user instruction in the evaluation prompt. Set to `False` to score the response in isolation.
+
+### `reference_suffix` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in default suffix)
+-   **Description**: Text appended to the rubric when `expected_output` is present on the case. Lets you customize how the judge should use the reference (e.g., strict vs. lenient grading).
+
+### `uses_environment_state` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `False`
+-   **Description**: Whether to include environment state in the evaluation prompt, enabling assessment of agent side effects alongside the output.
+
+## Data-Driven Dispatch
+
+The evaluator decides whether to call the judge as a multimodal or text-only model based on the shape of `case.input`:
+
+-   If `case.input` is a `MultimodalInput` carrying non-empty media, the composer returns a list of content blocks (media first, then the evaluation text), and the judge is invoked as an MLLM.
+-   If `case.input` is anything else (e.g., a plain string, or a `MultimodalInput` whose `media` is empty), the composer returns a plain text prompt, and the judge behaves exactly like `OutputEvaluator`.
+
+This means the same evaluator can grade a mixed experiment containing both multimodal and text-only cases without any flags to set.
+
+## `MultimodalInput`
+
+`MultimodalInput` is the Pydantic model used for multimodal cases. It has three fields:
+
+-   **`media`** (`ImageData | list[ImageData] | str`): one or more image sources. A plain string is accepted as shorthand for a single `ImageData(source=...)`.
+-   **`instruction`** (`str`): the user’s question or request about the media.
+-   **`context`** (`str | None`): optional additional context surfaced to the judge.
+
+`MultimodalInput` round-trips through `Experiment.to_dict` / `from_dict`: when a saved experiment is reloaded, raw dicts are coerced back to `MultimodalInput` at the prompt-composer boundary.
+
+## `ImageData`
+
+`ImageData` normalizes image sources so the judge receives raw bytes in the correct format. Accepted forms for the `source` field:
+
+| Source | Example |
+| --- | --- |
+| Local file path | `"/path/to/chart.png"` or `pathlib.Path(...)` |
+| Base64 string | `"iVBORw0KGgo..."` |
+| Data URL | `"data:image/png;base64,iVBORw0KGgo..."` |
+| HTTP(S) URL | `"https://example.com/image.jpg"` |
+| Raw bytes | `b"\x89PNG..."` |
+| PIL Image | `PIL.Image.Image` instance (requires `Pillow`) |
+
+HTTP(S) URLs are auto-fetched via `urllib.request` from the standard library, so no extra dependencies are required. The `format` field (`"jpeg"`, `"png"`, `"gif"`, `"webp"`) is auto-detected from the extension or data URL when omitted. S3 URIs and boto3 auto-fetch are not supported; pre-download S3 objects to bytes or a local path before constructing `ImageData`.
+
+## Built-in Rubrics
+
+The following rubric constants are available from `strands_evals.evaluators.prompt_templates.multimodal`:
+
+-   `OVERALL_QUALITY_RUBRIC_V0`: Likert-5 scale (`0.0`, `0.25`, `0.5`, `0.75`, `1.0`) across visual accuracy, instruction adherence, completeness, and coherence
+-   `CORRECTNESS_RUBRIC_V0`: strict binary (`1.0` / `0.0`) fact-check against the image
+-   `FAITHFULNESS_RUBRIC_V0`: strict binary, catches hallucinations not grounded in the image
+-   `INSTRUCTION_FOLLOWING_RUBRIC_V0`: strict binary, checks count/format/scope/order/completeness/style constraints
+
+Each built-in rubric is the default for the matching subclass (see [Related Evaluators](#related-evaluators)).
+
+## Scoring System
+
+The score is a float between `0.0` and `1.0`; the granularity is determined by the rubric:
+
+-   **Strict binary** (`CORRECTNESS_RUBRIC_V0`, `FAITHFULNESS_RUBRIC_V0`, `INSTRUCTION_FOLLOWING_RUBRIC_V0`): `1.0` on success, `0.0` on any violation. A response passes only if the score is `1.0`.
+-   **Likert-5** (`OVERALL_QUALITY_RUBRIC_V0`): `0.0`, `0.25`, `0.5`, `0.75`, or `1.0`. A response typically passes if the score is `>= 0.75`.
+-   **Custom rubric**: any granularity you define in the rubric text. Specify the pass threshold in the rubric itself (e.g., “Score 1.0 if …”).
+
+## Basic Usage
+
+### Reference-Free Evaluation
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalOutputEvaluator
+from strands_evals.evaluators.prompt_templates.multimodal import OVERALL_QUALITY_RUBRIC_V0
+from strands_evals.types import ImageData, MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
+
+
+def task_function(case: Case) -> str:
+    # Replace with a call to your multimodal agent. For illustration we return
+    # a fixed response so the evaluator has something to score.
+    return "The chart is a bar chart showing quarterly revenue for three product lines in 2024."
+
+
+cases = [
+    Case(
+        name="chart-overview",
+        input=MultimodalInput(
+            media="/path/to/your/chart.png",
+            instruction="What kind of chart is shown and what does it represent?",
+        ),
+    ),
+]
+
+evaluator = MultimodalOutputEvaluator(rubric=OVERALL_QUALITY_RUBRIC_V0)
+experiment = Experiment(cases=cases, evaluators=[evaluator])
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+### Reference-Based Evaluation
+
+Setting `expected_output` on a case switches the evaluator into reference-based mode. The configured `reference_suffix` is appended to the rubric so the judge compares the response against the reference answer.
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalOutputEvaluator
+from strands_evals.evaluators.prompt_templates.multimodal import CORRECTNESS_RUBRIC_V0
+from strands_evals.types import ImageData, MultimodalInput
+
+# Reuses the task_function defined in the reference-free example above.
+
+cases = [
+    Case(
+        name="chart-value",
+        input=MultimodalInput(
+            media=ImageData(source="/path/to/revenue_chart.png"),
+            instruction="What is the Q3 revenue for Product A?",
+        ),
+        expected_output="$4.2M",
+    ),
+]
+
+evaluator = MultimodalOutputEvaluator(rubric=CORRECTNESS_RUBRIC_V0)
+experiment = Experiment(cases=cases, evaluators=[evaluator])
+reports = experiment.run_evaluations(task_function)
+```
+
+### Multiple Images per Case
+
+Pass a list of `ImageData` (or a list of source strings) to evaluate responses that reason over several images at once:
+
+```python
+Case(
+    name="before-after",
+    input=MultimodalInput(
+        media=[
+            ImageData(source="/path/to/before.jpg"),
+            ImageData(source="/path/to/after.jpg"),
+        ],
+        instruction="What changed between the two photos?",
+        context="Both photos were taken at the same location one year apart.",
+    ),
+)
+```
+
+## Evaluation Output
+
+Like `OutputEvaluator`, `MultimodalOutputEvaluator` returns `EvaluationOutput` objects with:
+
+-   **score**: Float between `0.0` and `1.0` (see [Scoring System](#scoring-system))
+-   **test\_pass**: Boolean indicating if the test passed
+-   **reason**: String containing the judge’s reasoning for the score
+-   **label**: Optional label categorizing the result
+
+## Best Practices
+
+1.  **Use a Multimodal-Capable Judge**: The default Bedrock model must support image input. If you override `model`, confirm the model ID accepts image content blocks.
+2.  **Keep Images at Reasonable Resolution**: Very large images increase latency and cost without improving judgment; resize to the minimum resolution needed for the task.
+3.  **Write Rubrics That Reference the Image**: Phrases like “based on what is visible in the image” anchor the judge to the media rather than to its prior knowledge.
+4.  **Use Reference Mode for Ground-Truth Tasks**: Chart QA and VQA benchmarks with known answers benefit from `expected_output` and the reference suffix.
+5.  **Start with a Built-in Rubric**: The four built-in rubrics are the defaults that come with Strands Evals; customize only once you see where they fall short on your data.
+
+## Related Evaluators
+
+-   [**MultimodalOverallQualityEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md): Likert-5 quality scoring
+-   [**MultimodalCorrectnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md): Strict binary factual correctness
+-   [**MultimodalFaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md): Strict binary hallucination detection against the image
+-   [**MultimodalInstructionFollowingEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md): Strict binary instruction compliance
+-   [**OutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Text-only parent class with the same `evaluate()` contract
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md
+
+---
+
+## Multimodal Overall Quality Evaluator
+
+## Overview
+
+The `MultimodalOverallQualityEvaluator` assesses the overall quality of an agent response across four dimensions: visual accuracy, instruction adherence, completeness, and coherence/helpfulness. It produces a single Likert-5 score.
+
+## Key Features
+
+-   **Output-Level Evaluation**: Scores a single agent response per case
+-   **Likert-5 Scoring**: Score is one of `0.0`, `0.25`, `0.5`, `0.75`, `1.0`
+-   **Automatic Reference Comparison**: Appends a reference suffix to the rubric when `expected_output` is provided on the case
+-   **Four-Dimension Rubric**: Evaluates visual accuracy, instruction adherence, completeness, and coherence together
+
+## When to Use
+
+Use the `MultimodalOverallQualityEvaluator` when you need to:
+
+-   Get a single, interpretable quality score for image-to-text responses
+-   Track overall quality trends across model or prompt versions
+-   Grade open-ended multimodal responses where binary judgments are too coarse
+
+## Evaluation Level
+
+This evaluator operates at the **OUTPUT\_LEVEL**, scoring a single agent response per case.
+
+## Parameters
+
+### `rubric` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `OVERALL_QUALITY_RUBRIC_V0`
+-   **Description**: Custom rubric. Leave unset to use the default rubric.
+
+### `model` (optional)
+
+-   **Type**: `Model | str | None`
+-   **Default**: `None` (uses default Bedrock model)
+-   **Description**: Multimodal judge model.
+
+### `include_inputs` (optional)
+
+-   **Type**: `bool`
+-   **Default**: `True`
+
+### `system_prompt` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: `None` (uses the built-in `MLLM_JUDGE_SYSTEM_PROMPT`)
+
+### `reference_suffix` (optional)
+
+-   **Type**: `str | None`
+-   **Default**: An overall-quality-specific suffix that grades factual content rather than verbatim match
+-   **Description**: Override only if you want stricter or looser reference handling than the built-in default.
+
+## Scoring System
+
+| Score | Label | Meaning |
+| --- | --- | --- |
+| 1.0 | Excellent | Accurate, complete, directly addresses the instruction |
+| 0.75 | Good | Mostly accurate with minor imprecisions |
+| 0.5 | Average | Partially correct; misses important details or has minor errors |
+| 0.25 | Poor | Weak response with multiple inaccuracies or significant omissions |
+| 0.0 | Very Poor | Factually wrong, off-topic, and unhelpful |
+
+A response typically passes if the score is `>= 0.75`.
+
+## Basic Usage
+
+```python
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import MultimodalOverallQualityEvaluator
+from strands_evals.types import MultimodalInput
+from strands_evals.types.evaluation_report import EvaluationReport
+
+
+def task_function(case: Case) -> str:
+    # Replace with your multimodal agent invocation.
+    return "The chart is a bar chart of quarterly revenue for products A, B, and C."
+
+
+cases = [
+    Case(
+        name="chart-overview",
+        input=MultimodalInput(
+            media="/path/to/revenue_chart.png",
+            instruction="What kind of chart is shown and what does it represent?",
+        ),
+    ),
+]
+
+experiment = Experiment(cases=cases, evaluators=[MultimodalOverallQualityEvaluator()])
+reports = experiment.run_evaluations(task_function)
+EvaluationReport.flatten(reports).run_display()
+```
+
+## Related Evaluators
+
+-   [**MultimodalOutputEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md): Parent class with full parameter reference
+-   [**MultimodalCorrectnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md): Strict binary factual correctness
+-   [**MultimodalFaithfulnessEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md): Strict binary hallucination detection
+-   [**MultimodalInstructionFollowingEvaluator**](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md): Strict binary instruction compliance
+
+Source: https://strandsagents.com/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md
 
 ---
 
@@ -46032,6 +47436,330 @@ Source: https://strandsagents.com/blog/strands-agents-discord-community/index.md
 
 ---
 
+## ToolSimulator: scalable tool testing for AI agents
+
+Date: 2026-04-20T00:00:00.000Z
+Tags: Evaluation, Simulation, Tools
+
+You can use ToolSimulator, an LLM-powered tool simulation framework within Strands Evals, to thoroughly and safely test AI agents that rely on external tools, at scale. Instead of risking live API calls that expose personally identifiable information (PII), trigger unintended actions, or settling for static mocks that break with multi-turn workflows, you can use ToolSimulator’s large language model (LLM)-powered simulations to validate your agents. Available today as part of the [Strands Evals SDK](https://github.com/strands-agents/evals), ToolSimulator helps you catch integration bugs early, test edge cases comprehensively, and ship production-ready agents with confidence.
+
+In this post, you will learn how to:
+
+-   Set up ToolSimulator and register tools for simulation
+-   Configure stateful tool simulations for multi-turn agent workflows
+-   Enforce response schemas with Pydantic models
+-   Integrate ToolSimulator into a complete Strands Evals evaluation pipeline
+-   Apply best practices for simulation-based agent evaluation
+
+## Prerequisites
+
+Before you begin, make sure that you have the following:
+
+-   Python 3.10 or later installed in your environment
+-   Strands Evals SDK installed: `pip install strands-agents-evals`
+-   Basic familiarity with Python, including decorators and type hints
+-   Familiarity with AI agents and tool-calling concepts (API calls, function schemas)
+-   Pydantic knowledge is helpful for the advanced schema examples, but is not required to get started
+-   An AWS account is not required to run ToolSimulator locally
+
+## Why tool testing challenges your development workflow
+
+Modern AI agents don’t just reason. They call APIs, query databases, invoke Model Context Protocol (MCP) services, and interact with external systems to complete tasks. Your agent’s behavior depends not only on its reasoning, but on what those tools return. When you test these agents against live APIs, you run into three challenges that slow you down and put your systems at risk.
+
+Three challenges that live APIs create:
+
+-   **External dependencies slow you down.** Live APIs impose rate limits, experience downtime, and require network connectivity. When you’re running hundreds of test cases, these constraints make comprehensive testing impractical.
+-   **Test isolation becomes risky.** Real tool calls trigger real side effects. You risk sending actual emails, modifying production databases, or booking actual flights during testing. Your agent tests shouldn’t interact with the systems that they’re testing against.
+-   **Privacy and security create barriers.** Many tools handle sensitive data, including user records, financial information, and PII. Running tests against live systems unnecessarily exposes that data and creates compliance risks.
+
+## Why static mocks fall short
+
+You might consider static mocks as an alternative. Static mocks work for straightforward, predictable scenarios, but they require constant maintenance as your APIs evolve. More importantly, they break down in the multi-turn, stateful workflows that real agents perform.
+
+Consider a flight booking agent. It searches for flights with one tool call, then checks booking status with another. The second response should depend on what the first call did. A hardcoded response can’t reflect a database that changes state between calls. Static mocks can’t capture this.
+
+## What makes ToolSimulator different
+
+ToolSimulator solves these challenges with three essential capabilities that work together to give you safe, scalable agent testing without sacrificing realism.
+
+-   **Adaptive response generation.** Tool outputs reflect what your agent actually requested, not a fixed template. When your agent calls to search for Seattle-to-New York flights, ToolSimulator returns plausible options with realistic prices and times, not a generic placeholder.
+-   **Stateful workflow support.** Many real-world tools maintain state across calls. A write operation should affect subsequent reads. ToolSimulator maintains consistent shared state across tool calls, making it safe to test database interactions, booking workflows, and multi-step processes without touching production systems.
+-   **Schema enforcement.** Developers typically add a post-processing layer that parses raw tool output into a structured format. When a tool returns a malformed response, this layer breaks. ToolSimulator validates responses against Pydantic schemas that you define, catching malformed responses before they reach your agent.
+
+## How ToolSimulator works
+
+![ToolSimulator architecture diagram showing how tool calls are intercepted and routed to an LLM-based response generator](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/04/15/ml-20730-image-1.png)
+
+ToolSimulator intercepts calls to your registered tools and routes them to an LLM-based response generator. The generator uses the tool schema, your agent’s input, and the current simulation state to produce a realistic, context-appropriate response. No handwritten fixtures required.
+
+Your workflow follows three steps: decorate and register your tools, optionally steer the simulation with context, then let ToolSimulator mock the tool responses when your agent runs.
+
+![Process flow diagram showing the three-step ToolSimulator workflow: Decorate & Register, Steer, and Mock](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/04/15/ml-20730-image-2.png)
+
+## Getting started with ToolSimulator
+
+The following sections walk you through each step of the ToolSimulator workflow, from initial setup to running your first simulation.
+
+### Step 1: Decorate and register
+
+Create a ToolSimulator instance, then wrap your tool function with the `@simulator.tool()` decorator to register it for simulation. The real function body can remain empty. ToolSimulator intercepts calls before they reach the implementation:
+
+```python
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+tool_simulator = ToolSimulator()
+
+@tool_simulator.tool()
+def search_flights(origin: str, destination: str, date: str) -> dict:
+    """Search for available flights between two airports on a given date."""
+    pass  # The real implementation is never called during simulation
+```
+
+### Step 2: Steer (optional configuration)
+
+By default, ToolSimulator automatically infers how each tool should behave from its schema and docstring. No additional configuration is needed to get started. When you need more control, you can use these three optional parameters to customize simulation behavior:
+
+-   **share\_state\_id**: Links tools that share the same backend under a common state key. State changes made by one tool (for example, a setter) are immediately visible to subsequent calls by another (for example, a getter).
+-   **initial\_state\_description**: Seeds the simulation with a natural language description of pre-existing state. Richer context produces more realistic and consistent responses.
+-   **output\_schema**: A Pydantic model defining the expected response structure. ToolSimulator generates responses that conform strictly to this schema.
+
+### Step 3: Mock
+
+When your agent calls a registered tool, the ToolSimulator wrapper intercepts the call and routes it to the dynamic response generator. The generator validates the agent’s parameters against the tool schema, produces a response that matches the output\_schema, and updates the state registry so subsequent tool calls see a consistent world.
+
+![Process flow diagram showing four sequential steps of ToolSimulator: Agent Calls Tool, Validate Parameters, Generate Response, and Update State](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/04/15/ml-20730-image-3.png)
+
+The following example simulates a flight search tool attached to a flight search assistant:
+
+```python
+from strands import Agent
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+# 1. Create a simulator instance
+tool_simulator = ToolSimulator()
+
+# 2. Register a tool for simulation with initial state context
+@tool_simulator.tool(
+    initial_state_description="Flight database: SEA->JFK flights available at 8am, 12pm, and 6pm. Prices range from $180 to $420.",
+)
+def search_flights(origin: str, destination: str, date: str) -> dict:
+    """Search for available flights between two airports on a given date."""
+    pass
+
+# 3. Create an agent with the simulated tool and run it
+flight_tool = tool_simulator.get_tool("search_flights")
+agent = Agent(
+    system_prompt="You are a flight search assistant.",
+    tools=[flight_tool],
+)
+
+response = agent("Find me flights from Seattle to New York on March 15.")
+print(response)
+```
+
+## Advanced ToolSimulator usage
+
+The following sections cover three advanced capabilities that give you more control over simulation behavior: running independent instances for parallel testing, configuring shared state for multi-turn workflows, and enforcing custom response schemas.
+
+### Run independent simulator instances
+
+You can create multiple ToolSimulator instances side by side. Each instance maintains its own tool registry and state, so you can run parallel experiment configurations in the same codebase:
+
+```python
+simulator_a = ToolSimulator()
+simulator_b = ToolSimulator()
+# Each instance has an independent tool registry and state --
+# ideal for comparing agent behavior across different tool setups.
+```
+
+### Configure shared state for multi-turn workflows
+
+For stateful tools such as database getters and setters, ToolSimulator maintains consistent shared state across tool calls. Use `share_state_id` to link tools that operate on the same backend, and `initial_state_description` to seed the simulation with pre-existing context:
+
+```python
+@tool_simulator.tool(
+    share_state_id="flight_booking",
+    initial_state_description="Flight booking system: SEA->JFK flights available at 8am, 12pm, and 6pm. No bookings currently active.",
+)
+def search_flights(origin: str, destination: str, date: str) -> dict:
+    """Search for available flights between two airports on a given date."""
+    pass
+
+@tool_simulator.tool(
+    share_state_id="flight_booking",
+)
+def get_booking_status(booking_id: str) -> dict:
+    """Retrieve the current status of a flight booking by booking ID."""
+    pass
+
+# Both tools share "flight_booking" state.
+# When search_flights is called, get_booking_status sees the same
+# flight availability data in subsequent calls.
+```
+
+Inspect the state before and after agent execution to validate that tool interactions produced the expected changes:
+
+```python
+initial_state = tool_simulator.get_state("flight_booking")
+# ... run the agent ...
+final_state = tool_simulator.get_state("flight_booking")
+# Verify not just the final output, but the full sequence of tool interactions.
+```
+
+> **Tip: Seeding state from real data**
+> 
+> Because `initial_state_description` accepts natural language, you can get creative with how you seed context. For tools that interact with tabular data, use a `DataFrame.describe()` call to generate statistical summaries and pass those statistics directly as the state description. ToolSimulator will generate responses that reflect realistic data distributions, without ever accessing the actual data.
+
+### Enforce a custom response schema
+
+By default, ToolSimulator infers a response structure from the tool’s docstring and type hints. For tools that follow strict specifications such as OpenAPI or MCP schemas, define the expected response as a Pydantic model and pass it using `output_schema`:
+
+```python
+from pydantic import BaseModel, Field
+
+class FlightSearchResponse(BaseModel):
+    flights: list[dict] = Field(
+        ..., description="List of available flights with flight number, departure time, and price"
+    )
+    origin: str = Field(..., description="Origin airport code")
+    destination: str = Field(..., description="Destination airport code")
+    status: str = Field(default="success", description="Search operation status")
+    message: str = Field(default="", description="Additional status message")
+
+@tool_simulator.tool(output_schema=FlightSearchResponse)
+def search_flights(origin: str, destination: str, date: str) -> dict:
+    """Search for available flights between two airports on a given date."""
+    pass
+
+# ToolSimulator validates parameters strictly and returns only valid JSON
+# responses that conform to the FlightSearchResponse schema.
+```
+
+## Integration with Strands Evaluation pipelines
+
+ToolSimulator fits naturally into the Strands Evals evaluation framework. The following example shows a complete pipeline, from simulation setup to experiment report, using the GoalSuccessRateEvaluator to score agent performance on tool-calling tasks:
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals import Case, Experiment
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+from strands_evals.simulation.tool_simulator import ToolSimulator
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.telemetry import StrandsEvalsTelemetry
+from strands_evals.types.evaluation_report import EvaluationReport
+
+# Set up telemetry and tool simulator
+telemetry = StrandsEvalsTelemetry().setup_in_memory_exporter()
+memory_exporter = telemetry.in_memory_exporter
+tool_simulator = ToolSimulator()
+
+# Define the response schema
+class FlightSearchResponse(BaseModel):
+    flights: list[dict] = Field(
+        ..., description="Available flights with number, departure time, and price"
+    )
+    origin: str = Field(..., description="Origin airport code")
+    destination: str = Field(..., description="Destination airport code")
+    status: str = Field(default="success", description="Search operation status")
+    message: str = Field(default="", description="Additional status message")
+
+# Register tools for simulation
+@tool_simulator.tool(
+    share_state_id="flight_booking",
+    initial_state_description="Flight booking system: SEA->JFK flights at 8am, 12pm, and 6pm. No bookings currently active.",
+    output_schema=FlightSearchResponse,
+)
+def search_flights(origin: str, destination: str, date: str) -> dict[str, Any]:
+    """Search for available flights between two airports on a given date."""
+    pass
+
+@tool_simulator.tool(share_state_id="flight_booking")
+def get_booking_status(booking_id: str) -> dict[str, Any]:
+    """Retrieve the current status of a flight booking by booking ID."""
+    pass
+
+# Define the evaluation task
+def user_task_function(case: Case) -> dict:
+    initial_state = tool_simulator.get_state("flight_booking")
+    print(f"[State before]: {initial_state.get('initial_state')}")
+
+    search_tool = tool_simulator.get_tool("search_flights")
+    status_tool = tool_simulator.get_tool("get_booking_status")
+    agent = Agent(
+        trace_attributes={
+            "gen_ai.conversation.id": case.session_id,
+            "session.id": case.session_id
+        },
+        system_prompt="You are a flight booking assistant.",
+        tools=[search_tool, status_tool],
+        callback_handler=None,
+    )
+
+    agent_response = agent(case.input)
+    print(f"[User]: {case.input}")
+    print(f"[Agent]: {agent_response}")
+
+    final_state = tool_simulator.get_state("flight_booking")
+    print(f"[State after]: {final_state.get('previous_calls', [])}")
+
+    finished_spans = memory_exporter.get_finished_spans()
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(finished_spans, session_id=case.session_id)
+    return {"output": str(agent_response), "trajectory": session}
+
+# Define test cases, run the experiment, and display the report
+test_cases = [
+    Case(
+        name="flight_search",
+        input="Find me flights from Seattle to New York on March 15.",
+        metadata={"category": "flight_booking"},
+    ),
+]
+experiment = Experiment[str, str](
+    cases=test_cases,
+    evaluators=[GoalSuccessRateEvaluator()]
+)
+
+reports = experiment.run_evaluations(user_task_function)
+EvaluationReport.flatten(reports).display()
+```
+
+The task function retrieves the simulated tools, creates an agent, runs the interaction, and returns both the agent’s output and the full telemetry trajectory. The trajectory gives evaluators like GoalSuccessRateEvaluator access to the complete sequence of tool calls and model invocations, not just the final response.
+
+## Best practices for simulation-based evaluation
+
+-   **Start with the default configuration** for broad coverage. Add configuration overrides only for the specific tool environments that you want to control precisely. ToolSimulator’s defaults are designed to produce realistic behavior without requiring setup.
+-   **Provide rich initial\_state\_description values** for stateful tools. The more context that you seed, the more realistic and consistent the simulated responses will be. Include data ranges, entity counts, and relationship context.
+-   **Use share\_state\_id for tools that interact with the same backend**, so write operations are visible to subsequent reads. This is essential for testing multi-turn workflows like booking, cart management, or database updates.
+-   **Apply output\_schema for tools that follow strict specifications**, such as OpenAPI or MCP schemas. Schema enforcement catches malformed responses before they reach your agent and break your post-processing layer.
+-   **Validate tool interaction sequences, not just final outputs.** Inspect state changes before and after agent execution to confirm that tool calls occurred in the right order and produced the right state transitions.
+-   **Start small and expand.** Begin with your most common tool interaction scenarios, then expand to edge cases as your evaluation practice matures. Complement simulation-based testing with targeted live API tests for critical production paths.
+
+## Conclusion
+
+ToolSimulator transforms how you test AI agents by replacing risky live API calls with intelligent, adaptive simulations. You can now safely validate complex, stateful workflows at scale, catching integration bugs early and shipping production-ready agents with confidence. Combining ToolSimulator with Strands Evals evaluation pipelines gives you full visibility into agent behavior without managing test infrastructure or risking real-world side effects.
+
+## Next steps
+
+Start testing your AI agents safely today. Install ToolSimulator with the following command:
+
+```bash
+pip install strands-agents-evals
+```
+
+To continue exploring ToolSimulator and Strands Evals:
+
+-   Read the [Strands Evals documentation](https://strandsagents.com/latest/user-guide/observability-evaluation/evals/) to explore all configuration options, including advanced state management and custom evaluators.
+-   Try the [examples](https://github.com/strands-agents/samples/tree/main/07-evals) to see ToolSimulator in action. Extend the example by adding more tools and testing multi-step agent workflows.
+-   Explore [Amazon Bedrock](https://aws.amazon.com/bedrock/) for the LLM backend options that power ToolSimulator’s response generation.
+-   Join the Strands community forums to ask questions, share your evaluation setups, and connect with other agent developers.
+
+Source: https://strandsagents.com/blog/toolsimulator-scalable-tool-testing-ai-agents/index.md
+
+---
+
 ## Strands Agents TypeScript SDK: Build AI Agents in TypeScript
 
 Date: 2026-04-06T00:00:00.000Z
@@ -46198,6 +47926,561 @@ Here’s where to go next:
 We’re building this in the open and contributions are welcome. Whether it’s a bug fix, a new feature, or a cool example, we’d love to see what you build. Join us [on GitHub](https://github.com/strands-agents/sdk-typescript) and let us know what you think.
 
 Source: https://strandsagents.com/blog/strands-agents-typescript-sdk/index.md
+
+---
+
+## Simulate realistic users to evaluate multi-turn AI agents in Strands Evals
+
+Date: 2026-04-02T00:00:00.000Z
+Tags: Evaluation, Simulation
+
+Evaluating single-turn agent interactions follows a pattern that most teams understand well. You provide an input, collect the output, and judge the result. Frameworks like [Strands Evaluation SDK](https://github.com/strands-agents/evals) make this process systematic through evaluators that assess helpfulness, faithfulness, and tool usage. In a [previous blog post](/blog/evaluating-ai-agents-practical-guide-strands-evals/index.md), we covered how to build comprehensive evaluation suites for AI agents using these capabilities. However, production conversations rarely stop at one turn.
+
+Real users engage in exchanges that unfold over multiple turns. They ask follow-up questions when answers are incomplete, change direction when new information surfaces, and express frustration when their needs go unmet. A travel assistant that handles “Book me a flight to Paris” well in isolation might struggle when the same user follows up with “Actually, can we look at trains instead?” or “What about hotels near the Eiffel Tower?” Testing these dynamic patterns requires more than static test cases with fixed inputs and expected outputs.
+
+The core difficulty is scale because you can’t manually conduct hundreds of multi-turn conversations every time your agent changes, and writing scripted conversation flows locks you into predetermined paths that miss how real users behave. What evaluation teams need is a way to generate realistic, goal-driven users programmatically and let them converse naturally with an agent across multiple turns. In this post, we explore how ActorSimulator in Strands Evaluations SDK addresses this challenge with structured user simulation that integrates into your evaluation pipeline.
+
+## Why multi-turn evaluation is fundamentally harder
+
+![Multi-turn evaluation diagram](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/23/ml-20566-image-1.png)
+
+Single-turn evaluation has a straightforward structure. The input is known ahead of time, the output is self-contained, and the evaluation context is limited to that single exchange. Multi-turn conversations break every one of these assumptions.
+
+In a multi-turn interaction, each message depends on everything that came before it. The user’s second question is shaped by how the agent answered the first. A partial answer draws a follow-up about whatever was left out, a misunderstanding leads the user to restate their original request, and a surprising suggestion can send the conversation in a new direction.
+
+These adaptive behaviors create conversation paths that can’t be predicted at test-design time. A static dataset of I/O pairs, no matter how large, can’t capture this dynamic quality because the “correct” next user message depends on what the agent just said.
+
+Manual testing covers this gap in theory but fails in practice. Testers can conduct realistic multi-turn conversations, but doing so for every scenario, across every persona type, after every agent change is not sustainable. As the agent’s capabilities grow, the number of conversation paths grows combinatorially, well beyond what teams can explore manually.
+
+Some teams turn to prompt engineering as a shortcut, asking a large language model (LLM) to “act like a user” during testing. Without structured persona definitions and explicit goal tracking, these approaches produce inconsistent results. The simulated user’s behavior drifts between runs, making it difficult to compare evaluations over time or identify genuine regressions versus random variation. A structured approach to user simulation can bridge this gap by combining the realism of human conversation with the repeatability and scale of automated testing.
+
+## What makes a good simulated user
+
+Simulation-based testing is well established in other engineering disciplines. Flight simulators test pilot responses to scenarios that would be dangerous or impossible to reproduce in the real world. Game engines use AI-driven agents to explore millions of player behavior paths before release. The same principle applies to conversational AI. You create a controlled environment where realistic actors interact with your system under conditions you define, then measure the outcomes.
+
+For AI agent evaluation, a useful simulated user starts with a consistent persona. One that behaves like a technical expert in one turn and a confused novice in the next produces unreliable evaluation data. Consistency means to maintain the same communication style, expertise level, and personality traits through every exchange, just as a real person would.
+
+Equally important is goal-driven behavior. Real users come to an agent with something they want to accomplish. They persist until they achieve it, adjust their approach when something is not working, and recognize when their goal has been met. Without explicit goals, a simulated user tends to either end conversations too early or continue asking questions indefinitely, neither of which reflects real usage.
+
+The simulated user must also respond adaptively to what the agent says, not follow a predetermined script. When the agent asks a clarifying question, the actor should answer it in character. If the response is incomplete, the actor follows up on whatever was left out rather than moving on. If the conversation drifts off topic, the actor steers it back toward the original goal. These adaptive behaviors make simulated conversations valuable as evaluation data because they exercise the same conversation dynamics your agent faces in production.
+
+Building persona consistency, goal tracking, and adaptive behavior into a simulation framework is what differentiates structured user simulation from ad-hoc prompting. ActorSimulator in Strands Evals is designed around exactly these principles.
+
+## How ActorSimulator works
+
+![ActorSimulator architecture](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/23/ml-20566-image-2.png)
+
+ActorSimulator implements these simulation qualities through a system that wraps a Strands Agent configured to behave as a realistic user persona. The process begins with profile generation. Given a test case containing an input query and an optional task description, ActorSimulator uses an LLM to create a complete actor profile. A test case with input “I need help booking a flight to Paris” and task description “Complete flight booking under budget” might produce a budget-conscious traveler with beginner-level experience and a casual communication style. Profile generation gives each simulated conversation a distinct, consistent character.
+
+With the profile established, the simulator manages the conversation turn by turn. It maintains the full conversation history and generates each response in context, keeping the simulated user’s behavior aligned with their profile and goals throughout. When your agent addresses only part of the request, the simulated user naturally follows up on the gaps. A clarifying question from your agent gets a response that stays consistent with the persona. The conversation feels organic because every response reflects both the actor’s persona and everything said so far.
+
+Goal tracking runs alongside the conversation. ActorSimulator includes a built-in goal completion assessment tool that the simulated user can invoke to evaluate whether their original objective has been met. When the goal is satisfied or the simulated user determines that the agent cannot complete their request, the simulator emits a stop signal and the conversation ends. If the maximum turn count is reached before the goal is met, the conversation also stops. This gives you a signal that the agent might not be resolving user needs efficiently. This mechanism makes sure conversations have a natural endpoint rather than running indefinitely or cutting off arbitrarily.
+
+Each response from the simulated user also includes structured reasoning alongside the message text. You can inspect why the simulated user chose to say what they said, whether they were following up on missing information, expressing confusion, or redirecting the conversation. This transparency is valuable during evaluation development because you can see the reasoning behind each turn, making it more straightforward to trace where conversations succeed or go off track.
+
+## Getting started with ActorSimulator
+
+To get started, you will need to install the Strands Evaluation SDK using: `pip install strands-agents-evals`. For a step-by-step setup, you can refer to our [documentation](https://strandsagents.com/latest/user-guide/observability-evaluation/evals/) or our [previous blog](/blog/evaluating-ai-agents-practical-guide-strands-evals/index.md) for more details. Putting these concepts into practice requires minimal code. You define a test case with an input query and a task description that captures the user’s goal. ActorSimulator handles profile generation, conversation management, and goal tracking automatically.
+
+The following example evaluates a travel assistant agent through a multi-turn simulated conversation.
+
+```python
+from strands import Agent
+from strands_evals import ActorSimulator, Case, Experiment
+
+# Define your test case
+case = Case(
+    input="I want to plan a trip to Tokyo with hotel and activities",
+    metadata={"task_description": "Complete travel package arranged"}
+)
+
+# Create the agent you want to evaluate
+agent = Agent(
+    system_prompt="You are a helpful travel assistant.",
+    callback_handler=None
+)
+
+# Create user simulator from test case
+user_sim = ActorSimulator.from_case_for_user_simulator(
+    case=case,
+    max_turns=5
+)
+
+# Run the multi-turn conversation
+user_message = case.input
+conversation_history = []
+
+while user_sim.has_next():
+    # Agent responds to user
+    agent_response = agent(user_message)
+    agent_message = str(agent_response)
+    conversation_history.append({
+        "role": "assistant",
+        "content": agent_message
+    })
+
+    # Simulator generates next user message
+    user_result = user_sim.act(agent_message)
+    user_message = str(user_result.structured_output.message)
+    conversation_history.append({
+        "role": "user",
+        "content": user_message
+    })
+
+print(f"Conversation completed in {len(conversation_history) // 2} turns")
+```
+
+The conversation loop continues until `has_next()` returns False, which happens when the simulated user’s goals are met or simulated user determines that the agent cannot complete the request or the maximum turn limit is reached. The resulting conversation\_history contains the full multi-turn transcript, ready for evaluation.
+
+## Integration with evaluation pipelines
+
+![Evaluation pipeline integration](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/23/ml-20566-image-3.png)
+
+A standalone conversation loop is useful for quick experiments, but production evaluation requires capturing traces and feeding them into your evaluator pipeline. The next example combines ActorSimulator with OpenTelemetry telemetry collection and Strands Evals session mapping. The task function runs a simulated conversation and collects spans from each turn, then maps them into a structured session for evaluation.
+
+```python
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from strands import Agent
+from strands_evals import ActorSimulator, Case, Experiment
+from strands_evals.evaluators import HelpfulnessEvaluator
+from strands_evals.telemetry import StrandsEvalsTelemetry
+from strands_evals.mappers import StrandsInMemorySessionMapper
+from strands_evals.types.evaluation_report import EvaluationReport
+
+# Setup telemetry for capturing agent traces
+telemetry = StrandsEvalsTelemetry()
+memory_exporter = InMemorySpanExporter()
+span_processor = BatchSpanProcessor(memory_exporter)
+telemetry.tracer_provider.add_span_processor(span_processor)
+
+def evaluation_task(case: Case) -> dict:
+    # Create simulator
+    user_sim = ActorSimulator.from_case_for_user_simulator(
+        case=case,
+        max_turns=3
+    )
+
+    # Create agent
+    agent = Agent(
+        system_prompt="You are a helpful travel assistant.",
+        callback_handler=None
+    )
+
+    # Accumulate spans across conversation
+    all_target_spans = []
+    user_message = case.input
+
+    while user_sim.has_next():
+        memory_exporter.clear()
+        agent_response = agent(user_message)
+        agent_message = str(agent_response)
+
+        # Capture telemetry
+        turn_spans = list(memory_exporter.get_finished_spans())
+        all_target_spans.extend(turn_spans)
+
+        # Generate next user message
+        user_result = user_sim.act(agent_message)
+        user_message = str(user_result.structured_output.message)
+
+    # Map to session for evaluation
+    mapper = StrandsInMemorySessionMapper()
+    session = mapper.map_to_session(
+        all_target_spans,
+        session_id="test-session"
+    )
+
+    return {"output": agent_message, "trajectory": session}
+
+# Create evaluation dataset
+test_cases = [
+    Case(
+        name="booking-simple",
+        input="I need to book a flight to Paris next week",
+        metadata={
+            "category": "booking",
+            "task_description": "Flight booking confirmed"
+        }
+    )
+]
+
+experiment = Experiment(cases=test_cases, evaluators=[HelpfulnessEvaluator()])
+
+# Run evaluations
+reports = experiment.run_evaluations(evaluation_task)
+EvaluationReport.flatten(reports).display()
+```
+
+This approach captures complete traces of your agent’s behavior across conversation turns. The spans include tool calls, model invocations, and timing information for every turn in the simulated conversation. By mapping these spans into a structured session, you make the full multi-turn interaction available to evaluators like GoalSuccessRateEvaluator and HelpfulnessEvaluator, which can then assess the conversation as a whole, rather than isolated turns.
+
+## Custom actor profiles for targeted testing
+
+Automatic profile generation covers most evaluation scenarios well, but some testing goals require specific personas. You might want to verify that your agent handles an impatient expert user differently from a patient beginner, or that it responds appropriately to a user with domain-specific needs. For these cases, ActorSimulator accepts a fully defined actor profile that you control.
+
+```python
+from strands_evals.types.simulation import ActorProfile
+from strands_evals import ActorSimulator
+from strands_evals.simulation.prompt_templates.actor_system_prompt import (
+    DEFAULT_USER_SIMULATOR_PROMPT_TEMPLATE
+)
+
+# Define a custom actor profile
+actor_profile = ActorProfile(
+    traits={
+        "personality": "analytical and detail-oriented",
+        "communication_style": "direct and technical",
+        "expertise_level": "expert",
+        "patience_level": "low"
+    },
+    context="Experienced business traveler with elite status who values efficiency",
+    actor_goal="Book business class flight with specific seat preferences and lounge access"
+)
+
+# Initialize simulator with custom profile
+user_sim = ActorSimulator(
+    actor_profile=actor_profile,
+    initial_query="I need to book a business class flight to London next Tuesday",
+    system_prompt_template=DEFAULT_USER_SIMULATOR_PROMPT_TEMPLATE,
+    max_turns=10
+)
+```
+
+By defining traits like patience level, communication style, and expertise, you can systematically test how your agent performs across different user segments. An agent that scores well with patient, non-technical users but poorly with impatient experts reveals a specific quality gap that you can address. Running the same goal across multiple persona configurations turns user simulation into a tool for understanding your agent’s strengths and weaknesses by user type.
+
+## Best practices for simulation-based evaluation
+
+These best practices help you get the most out of simulation-based evaluation:
+
+-   Set `max_turns` based on task complexity, using 3-5 for focused tasks and 8-10 for multi-step workflows. If most conversations reach the limit without completing the goal, increase it.
+-   Write specific task descriptions that the simulator can evaluate against. “Help the user book a flight” is too vague to judge completion reliably, while “flight booking confirmed with dates, destination, and price” gives a concrete target.
+-   Use auto-generated profiles for broad coverage across user types and custom profiles to reproduce specific patterns from your production logs, such as an impatient expert or a first-time user.
+-   Focus on patterns across your test suite rather than individual transcripts. Consistent redirects from the simulated user suggests that the agent is drifting off topic, and declining goal completion rates after an agent change points to a regression.
+-   Start with a small set of test cases covering your most common scenarios and expand to edge cases and additional personas as your evaluation practice matures.
+
+## Conclusion
+
+We showed how ActorSimulator in [Strands Evals](https://github.com/strands-agents/evals) enables systematic, multi-turn evaluation of conversational AI agents through realistic user simulation. Rather than relying on static test cases that capture only single exchanges, you can define goals and personas and let simulated users interact with your agent across natural, adaptive conversations. The resulting transcripts feed directly into the same evaluation pipeline that you use for single-turn testing, giving you helpfulness scores, goal success rates, and detailed traces across every conversation turn.
+
+To get started, explore the working examples in the [Strands Agents samples repository](https://github.com/strands-agents/samples/tree/main/07-evals). For teams evaluating agents deployed through Amazon Bedrock AgentCore, the [AgentCore evaluations sample](https://github.com/awslabs/amazon-bedrock-agentcore-samples/tree/main/01-tutorials/07-AgentCore-evaluations/03-advanced/02-simulating-agent-interactions) demonstrates how to simulate interactions with deployed agents. Start with a handful of test cases representing your most common user scenarios, run them through ActorSimulator, and evaluate the results. As your evaluation practice matures, expand to cover more personas, edge cases, and conversation patterns.
+
+Source: https://strandsagents.com/blog/simulate-realistic-users-multi-turn-agents-strands-evals/index.md
+
+---
+
+## Evaluating AI agents for production: A practical guide to Strands Evals
+
+Date: 2026-03-18T00:00:00.000Z
+Tags: Evaluation, Best Practices
+
+Moving AI agents from prototypes to production surfaces a challenge that traditional testing is unable to address. Agents are flexible, adaptive, and context-aware by design, but the same qualities that make them powerful also make them difficult to evaluate systematically.
+
+Traditional software testing relies on deterministic outputs: same input, same expected output, every time. AI agents break this assumption. They generate natural language, make context-dependent decisions, and produce varied outputs even from identical inputs. How do you systematically evaluate something that is not deterministic?
+
+In this post, we show how to evaluate AI agents systematically using [Strands Evals](https://github.com/strands-agents/evals). We walk through the core concepts, built-in evaluators, multi-turn simulation capabilities and practical approaches and patterns for integration. Strands Evals provides a structured framework for evaluating AI agents built with the Strands Agents SDK, offering evaluators, simulation tools, and reporting capabilities. Whether you need to verify that your agent uses the right tools, produces helpful responses, or guides users toward their goals, the framework provides infrastructure to measure and track these qualities systematically.
+
+## Why evaluating AI agents is different
+
+When you ask an agent “What is the weather like in Tokyo?”, many valid responses exist, and no single answer is definitively correct. The agent might report temperature in Celsius or Fahrenheit, include humidity and wind, or only focus on temperature. These variations could be correct and helpful, which is exactly why traditional assertion-based testing falls short. Beyond text generation, agents also take action. A well-designed agent calls tools, retrieves information, and makes decisions throughout a conversation. Evaluating the final response alone misses whether the agent took appropriate steps to reach that response.
+
+Even correct responses can fall short. A response might be factually accurate but unhelpful, or helpful but unfaithful to source materials. No single metric captures these different quality dimensions. Conversations add another layer of complexity because they unfold over time. In multi-turn interactions, earlier responses affect later ones. An agent might handle individual queries well but fail to maintain a coherent context across a conversation. Testing single turns in isolation misses these interaction patterns.
+
+These characteristics demand evaluation that requires judgment rather than keyword comparison. Large language model (LLM)-based evaluation addresses this need. By using language models as evaluators, we can assess qualities like helpfulness, coherence, and faithfulness that resist mechanical checking. Strands Evals embraces this flexibility while still offering rigorous, repeatable quality assessments.
+
+## Core concepts of Strands Evals
+
+Strands Evals follows a pattern that should feel familiar to anyone who has written unit tests but adapts it for the judgment-based evaluation that AI agents require. The framework introduces three foundational concepts that work together: Cases, Experiments, and Evaluators.
+
+![Figure: High-Level Architecture](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/06/image001-1024x496.png)
+
+A Case represents a single test scenario. It contains the input that you want to test, perhaps a user’s query like “What is the weather in Paris?”, along with optional expected outputs, expected tool sequences known as trajectories, and metadata. Cases are the atomic unit of evaluation. Each one defines one scenario that you want your agent to handle correctly.
+
+```python
+from strands_evals import Case
+
+case = Case(
+    name="Weather Query",
+    input="What is the weather like in Tokyo?",
+    expected_output="Should include temperature and conditions",
+    expected_trajectory=["weather_api"]
+)
+```
+
+An Experiment bundles multiple Cases together with one or more evaluators. Think of it as a test suite in traditional testing. The Experiment orchestrates the evaluation process. It takes each Case, runs your agent on it, and applies the configured evaluators to score the results.
+
+Evaluators are the judges. They examine what your agent produced (the actual output and trajectory) and compare it against what was expected. Unlike simple assertion checks, evaluators in Strands Evals are primarily LLM-based. They use language models to make nuanced judgments about quality, relevance, helpfulness, and other qualities that cannot be reduced to string comparison.
+
+Separating these concerns helps keep the framework flexible. You can define what to test with Cases, how to test it with evaluators, and the framework handles orchestration and reporting through Experiments. Each piece can be configured independently so that you can build evaluation suites that are tailored to your specific needs.
+
+## The task function: connecting agents to evaluation
+
+Cases define your scenarios, and evaluators provide judgment. But how does your agent actually connect to this evaluation system? That is where the Task Function comes in.
+
+A Task Function is a callable that you provide to the Experiment. It receives a Case and returns the results of running that case through your system. This interface enables two fundamentally different evaluation patterns.
+
+![Figure: Task Function Patterns](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/06/image002-908x1024.png)
+
+Online evaluation involves invoking your agent live during the evaluation run. Your Task Function creates an agent, sends it the case input, captures the response and execution trace, and returns them for evaluation. This pattern is recommended during development when you want to test changes immediately, or in continuous integration and delivery (CI/CD) pipelines where you need to verify agent behavior before deployment.
+
+```python
+from strands import Agent
+
+def online_task(case):
+    agent = Agent(tools=[search_tool, calculator_tool])
+    result = agent(case.input)
+
+    return {
+        "output": str(result),
+        "trajectory": agent.session
+    }
+```
+
+Offline evaluation works with historical data. Instead of invoking an agent, your Task Function retrieves previously recorded traces from logs, databases, or observability systems. It parses these traces into the format that evaluators expect and returns them for judgment. This pattern works well when you need to evaluate production traffic, perform historical analysis, or compare agent versions against the same set of real user interactions.
+
+```python
+def offline_task(case):
+    trace = load_trace_from_database(case.session_id)
+    session = session_mapper.map_to_session(trace)
+
+    return {
+        "output": extract_final_response(trace),
+        "trajectory": session
+    }
+```
+
+Whether you are testing a new agent implementation or analyzing months of production data, the same evaluators and reporting infrastructure apply. The Task Function adapts your data source to the evaluation system.
+
+## Built-in evaluators for comprehensive assessment
+
+With your Task Function connecting agent output to the evaluation system, you can now decide which aspects of quality to measure. Strands Evals ships with ten built-in evaluators, each designed to assess a different dimension of agent quality.
+
+![Figure: Evaluator Types](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/06/image003-1024x652.png)
+
+### Rubric-based evaluators
+
+The most flexible evaluators let you define custom criteria through natural language rubrics.
+
+-   **OutputEvaluator** judges the final response that your agent produces. You provide a rubric, a description of what good looks like, and the evaluators use an LLM to score the output against that criteria. This works well for general quality checks where you want to define specific standards for your use case.
+
+```python
+from strands_evals.evaluators import OutputEvaluator
+
+output_evaluator = OutputEvaluator(
+    rubric="Score 1.0 if the response correctly answers the question and is well-structured. "
+           "Score 0.5 if partially correct. Score 0.0 if incorrect or irrelevant."
+)
+```
+
+-   **TrajectoryEvaluator** extends this to examine the sequence of actions (typically tool calls) that your agent took. Beyond just looking at the final answer, you can verify that the agent used appropriate tools in a logical order. The evaluators include three built-in scoring functions for comparing actual versus expected trajectories: exact match, in-order match, and any-order match. These scorers are provided as tools to the evaluation LLM, which chooses the most appropriate one based on your rubric.
+-   **InteractionsEvaluator** handles multi-agent systems where multiple components communicate. It evaluates sequences of interactions between agents or system components. This is useful when your architecture involves orchestrators, sub-agents, or complex tool chains.
+
+### Semantic evaluators
+
+Some quality dimensions are common enough that Strands Evals provides pre-built evaluators with carefully designed prompts and scoring scales.
+
+-   **HelpfulnessEvaluator** assesses responses from the user’s perspective using a seven-point scale ranging from “Not helpful at all” to “Above and beyond.” It evaluates whether the response actually addresses the user’s needs, not only whether it is technically correct.
+-   **FaithfulnessEvaluator** checks whether the response is grounded in the conversation history. This is particularly important for Retrieval Augmented Generation (RAG) systems where you need to make sure that the agent doesn’t hallucinate information. The five-point scale ranges from “Not at all” faithful to “Completely yes.”
+-   **HarmfulnessEvaluator** performs safety checks, helping determine whether responses contain harmful, inappropriate, or dangerous content. It provides binary yes/no judgments for clear decision-making.
+
+### Tool-level evaluators
+
+When your agent uses tools, you often need to evaluate not only the final outcome, but the quality of individual tool invocations.
+
+-   **ToolSelectionAccuracyEvaluator** examines each tool call in context and judges whether selecting that particular tool was justified given the conversation state. It answers: “At this point in the conversation, was it reasonable to call this tool?”
+-   **ToolParameterAccuracyEvaluator** goes deeper, checking whether the parameters passed to each tool were correct and appropriate. It helps catch subtle errors where the right tool was chosen but called with wrong or incomplete arguments.
+
+### Session-level evaluators
+
+-   **GoalSuccessRateEvaluator** takes the broadest view, evaluating entire conversation sessions to determine whether the user ultimately achieved their goal. For task-oriented agents, success is defined by outcomes rather than a single response.
+
+### Choosing the right evaluators
+
+The choice depends on what matters most for your application. A customer service agent might prioritize helpfulness and goal success. A research assistant might emphasize faithfulness. Start with a small set of evaluators that cover your core quality dimensions, then add more as you learn how your agent fails.
+
+## Simulating users for multi-turn testing
+
+The previously mentioned evaluators work well for single-turn interactions where you provide an input, get an output, and evaluate it. Multi-turn conversations present a harder challenge. Real users don’t follow scripts. They ask follow-up questions, change direction, and express confusion. How do you test this? Strands Evals includes an ActorSimulator that creates AI-powered simulated users to drive multi-turn conversations with your agent.
+
+![Figure: User Simulator Flow](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/06/image004-932x1024.png)
+
+ActorSimulator starts with a test case that defines what the user wants to achieve. From this, it generates a realistic user profile using an LLM, including personality traits, expertise level, communication style, and a specific goal. This profile shapes how the simulated user behaves throughout the conversation.
+
+```python
+from strands_evals import Case, ActorSimulator
+from strands import Agent
+
+case = Case(
+    input="I need help setting up a new bank account",
+    metadata={"task_description": "Successfully open a checking account"}
+)
+
+user_sim = ActorSimulator.from_case_for_user_simulator(
+    case=case,
+    max_turns=10
+)
+```
+
+During the interaction, the simulated user sends messages to your agent, receives responses, and decides what to say next. This loop continues until either the goal is achieved, indicated by emitting a special stop token, or the maximum turn count is reached.
+
+```python
+agent = Agent(system_prompt="You are a helpful banking assistant.")
+
+user_message = case.input
+while user_sim.has_next():
+    agent_response = agent(user_message)
+    user_result = user_sim.act(str(agent_response))
+    user_message = str(user_result.structured_output.message)
+```
+
+You can then pass the resulting conversation transcript to session-level evaluators like GoalSuccessRateEvaluator to assess whether your agent successfully helped the simulated user achieve their goal. Instead of manually writing multi-turn scripts, you define goals and let the simulator create realistic interaction patterns. It might ask unexpected follow-up questions, express confusion, or take the conversation in directions that you didn’t anticipate, catching edge cases that scripted tests can miss.
+
+## Evaluation levels: understanding the hierarchy
+
+Whether using simulated or real conversations, different evaluators operate at different granularities. Strands Evals uses a TraceExtractor to parse session data into the format that each evaluator needs.
+
+![Evaluation hierarchy diagram](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/06/image005-Large-902x1024.png)
+
+Session level evaluation looks at the complete conversation from beginning to end. The evaluator receives the full history, the tool executions, and understands the entire context. GoalSuccessRateEvaluator works at this level because determining goal achievement requires understanding the whole interaction.
+
+Trace level evaluation focuses on individual turns, each user prompt, and agent response pair. Evaluators at this level receive the conversation history up to that point and judge the specific response. Helpfulness, Faithfulness, and Harmfulness evaluators work here because these qualities can be assessed turn by turn.
+
+Tool level evaluation drills down to individual tool invocations. Each tool call is evaluated in context, with access to the available tools, the conversation so far, and the specific arguments passed. Tool Selection and Tool Parameter evaluators operate at this granularity.
+
+You can use the hierarchical design to compose evaluation suites that check quality at multiple levels simultaneously. Within a single evaluation run, you can verify that individual tool calls are sensible, responses are helpful, and overall goals are achieved.
+
+## Ground truth and expected behaviors
+
+At many different evaluation levels, evaluators can benefit from having reference points for comparison. Strands Evals provides first-class support for ground truth through three expected fields on Cases.
+
+The expected\_output field specifies what the agent should say. This is useful when there are correct answers or standard response formats. The expected\_trajectory field defines the sequence of tools or actions that the agent should take. You might require that a customer service agent checks account status before making changes, or that a research agent queries multiple sources before synthesizing. Not every Case needs every field. You define expectations based on what matters for your evaluation goals. When expected values are provided, evaluators receive both expected and actual results, enabling comparison-based scoring alongside standalone quality assessment.
+
+## Putting it all together
+
+Let’s walk through a typical evaluation workflow to see how these concepts come together.
+
+![Figure: Evaluation Flow](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2026/03/06/image006-1024x608.png)
+
+First, you define your test cases, meaning the scenarios you want your agent to handle well. They might come from real user queries, synthetic generation, or edge cases that you have identified.
+
+```python
+from strands_evals import Experiment, Case
+from strands_evals.evaluators import OutputEvaluator, TrajectoryEvaluator
+from strands_evals.extractors.tools_use_extractor import extract_agent_tools_used
+
+cases = [
+    Case(
+        name="Weather Query",
+        input="What is the weather like in Tokyo?",
+        expected_output="Should include temperature and conditions",
+        expected_trajectory=["weather_api"]
+    ),
+    Case(
+        name="Calculator Usage",
+        input="What is 15% of 847?",
+        expected_output="127.05",
+        expected_trajectory=["calculator"]
+    )
+]
+```
+
+Next, you configure evaluators with appropriate rubrics or settings.
+
+```python
+output_evaluator = OutputEvaluator(
+    rubric="Score 1.0 if the response is accurate and directly answers the question. "
+           "Score 0.5 if partially correct. Score 0.0 if incorrect or irrelevant."
+)
+
+trajectory_evaluator = TrajectoryEvaluator(
+    rubric="Verify the agent used appropriate tools for the task."
+)
+```
+
+Then, you create an experiment bundling cases and evaluators.
+
+```python
+experiment = Experiment(
+    cases=cases,
+    evaluators=[output_evaluator, trajectory_evaluator]
+)
+```
+
+Finally, you run the evaluation with your Task Function and examine the results.
+
+```python
+from strands_evals.types.evaluation_report import EvaluationReport
+
+def my_task(case):
+    agent = Agent(tools=[weather_tool, calculator_tool])
+    result = agent(case.input)
+    return {
+        "output": str(result),
+        "trajectory": extract_agent_tools_used(agent.messages)
+    }
+
+reports = experiment.run_evaluations(my_task)
+
+EvaluationReport.flatten(reports).display()
+```
+
+The EvaluationReport provides overall scores, per-case breakdowns, pass/fail status, and detailed reasoning from each evaluator. You can display results interactively in the console, export to JSON for further analysis, or integrate into CI/CD pipelines. For larger test suites, Strands Evals supports asynchronous evaluation with configurable parallelism:
+
+```python
+reports = await experiment.run_evaluations_async(my_task, max_workers=10)
+```
+
+## Generating test cases at scale
+
+The previous workflow assumes that you have test cases ready. Creating comprehensive test suites by hand is tedious as your agent’s capabilities grow. Strands Evals includes an ExperimentGenerator that uses LLMs to create test cases and evaluation rubrics from high-level descriptions.
+
+```python
+from strands_evals.generators import ExperimentGenerator
+from strands_evals.evaluators import OutputEvaluator
+
+generator = ExperimentGenerator(
+    input_type=str,
+    output_type=str,
+    include_expected_output=True
+)
+
+experiment = await generator.from_context_async(
+    context="A customer service agent for an e-commerce platform",
+    task_description="Handle customer inquiries about orders, returns, and products",
+    num_cases=20,
+    evaluator=OutputEvaluator
+)
+```
+
+The generator creates diverse test cases covering different aspects of the specified context, with appropriate difficulty levels. It can also generate evaluation rubrics that are tailored to the task. Generated cases are particularly valuable during early development when you want broad coverage but have not yet identified specific failure patterns. As your evaluation practice matures, supplement generated Cases with hand-crafted scenarios targeting known edge cases.
+
+## Integrating evaluation into your workflow
+
+Evaluation helps deliver the most value as part of your regular development workflow. During development, run evaluations frequently as you make changes. Fast feedback helps you catch regressions early and understand how changes affect different quality dimensions.
+
+In CI/CD pipelines, include evaluation as a quality gate before deployment. Set score thresholds that must be met for a build to pass. This helps prevent quality regressions from reaching production. For production monitoring, use offline evaluation to assess real user interactions periodically. This reveals patterns that development testing might miss: unusual queries, edge cases you did not anticipate, or gradual drift in agent behavior. Track evaluation results over time. Trending metrics help you understand whether quality is improving or degrading.
+
+## Best practices for agent evaluation
+
+-   **Start small and iterate**: Begin with a handful of test cases covering your most critical user scenarios. As you observe how your agent fails in practice, add targeted cases that address those specific failure modes. A focused test suite that catches real problems is more valuable than a large suite with poor coverage.
+-   **Match Evaluators to your quality goals**: Choose evaluators that directly measure what matters for your use case. A customer-facing agent might prioritize HelpfulnessEvaluator and GoalSuccessRateEvaluator, while a research assistant might weigh FaithfulnessEvaluator more heavily. Avoid the temptation to add every available evaluator, as this increases cost and can dilute focus.
+-   **Write clear, specific rubrics**: Rubric-based evaluators are only as good as the rubrics you provide. Avoid vague criteria like “good response” in favor of specific, measurable standards. Include examples of what constitutes high, medium, and low scores. Test your rubrics on sample outputs before running full evaluations.
+-   **Combine online and offline evaluation**: Use online evaluation during development for fast feedback on code changes. Complement this with offline evaluation of production traces to catch issues that only appear with real user behavior. The two approaches reveal different types of problems.
+-   **Set meaningful thresholds**: Define pass/fail thresholds based on your actual quality requirements, not arbitrary numbers. A 0.8 threshold means nothing if your users need 0.95 accuracy. Analyze evaluation results to understand what scores correlate with good user outcomes, then set thresholds accordingly.
+-   **Track trends over time**: Individual evaluation runs provide snapshots, but trends reveal the trajectory. Store evaluation results and track key metrics across releases. Gradual degradation can be harder to notice than sudden failures, but equally damaging.
+-   **Invest in test case diversity**: Cover the full range of inputs that your agent will encounter: common queries, edge cases, adversarial inputs, and multi-turn conversations. Use the ExperimentGenerator for broad coverage, then supplement with hand-crafted Cases targeting known weaknesses.
+-   **Evaluate at multiple levels**: Session-level success can mask tool-level problems, and the reverse. An agent might achieve user goals through inefficient or incorrect intermediate steps. Compose evaluation suites that check quality at session, trace, and tool levels to get a complete picture.
+
+## Conclusion
+
+Building reliable AI agents requires more than intuition and spot checks. It requires systematic evaluation that tracks quality across multiple dimensions over time. Strands Evals helps provide this foundation through a framework designed specifically for the unique challenges of agent evaluation.
+
+Task Functions separate agent invocation from evaluation logic, enabling both online testing during development and offline analysis of production traces. LLM-based evaluators provide the judgment that quality assessment requires. Hierarchical evaluation levels allow assessment at multiple granularities, from individual tool calls to complete conversation sessions. And the user simulator transforms multi-turn testing from a scripting exercise into realistic user behavior simulation.
+
+These capabilities help you build confidence in your AI agents through evidence rather than assumptions. You can measure whether changes improve or degrade quality, catch regressions before they reach production, and demonstrate to stakeholders that your agents meet defined quality standards.
+
+We encourage you to explore Strands Evals for your agent evaluation needs. The [samples repository](https://github.com/strands-agents/samples/tree/main/07-evals) contains practical examples that you can adapt to your own use cases. Start with a few test cases representing your most important user scenarios, add evaluators that match your quality criteria, and run evaluations as part of your development workflow. Over time, expand your test suite to cover more scenarios. Systematic evaluation is the foundation that helps you ship AI agents with confidence.
+
+Source: https://strandsagents.com/blog/evaluating-ai-agents-practical-guide-strands-evals/index.md
 
 ---
 

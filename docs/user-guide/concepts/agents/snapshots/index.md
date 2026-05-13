@@ -1,0 +1,353 @@
+Snapshots capture agent state at a point in time so you can save and restore it later. You choose which fields to include — either by picking a preset (a preconfigured set of fields) or by specifying fields directly — and you can further refine with includes and excludes. Snapshots are plain JSON-serializable objects — persistence is up to you.
+
+## Basic Usage
+
+### Taking a Snapshot
+
+Use the `"session"` preset to capture the most common fields:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a helpful assistant")
+agent("Hello!")
+agent.state.set("user_id", "user-123")
+
+# Capture a snapshot with the session preset
+snapshot = agent.take_snapshot(preset="session")
+
+print(snapshot.schema_version)  # "1.0"
+print(snapshot.created_at)      # ISO 8601 timestamp
+print(snapshot.data.keys())     # messages, state, conversation_manager_state, interrupt_state
+```
+
+The `"session"` preset captures `messages`, `state`, `conversation_manager_state`, and `interrupt_state`. The `system_prompt` field is not included by default — see [Field Selection](#field-selection) to customize which fields are captured.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a helpful assistant' })
+await agent.invoke('Hello!')
+agent.appState.set('user_id', 'user-123')
+
+// Capture a snapshot with the session preset
+const snapshot = agent.takeSnapshot({ preset: 'session' })
+
+console.log(snapshot.schemaVersion) // "1.0"
+console.log(snapshot.createdAt) // ISO 8601 timestamp
+console.log(Object.keys(snapshot.data)) // messages, state, systemPrompt, modelState, interrupts
+```
+
+The `"session"` preset captures `messages`, `state`, `systemPrompt`, `modelState`, and `interrupts`.
+(( /tab "TypeScript" ))
+
+### Restoring a Snapshot
+
+Load a snapshot to restore the agent to a previous state:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a helpful assistant")
+agent("Hello!")
+
+# Take a snapshot
+snapshot = agent.take_snapshot(preset="session")
+
+# Continue the conversation
+agent("Tell me a joke")
+agent("Tell me another one")
+
+# Restore to the earlier state
+agent.load_snapshot(snapshot)
+
+# The agent is back to the state after "Hello!"
+print(len(agent.messages))  # Only the messages from before the jokes
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a helpful assistant' })
+await agent.invoke('Hello!')
+
+// Take a snapshot
+const snapshot = agent.takeSnapshot({ preset: 'session' })
+
+// Continue the conversation
+await agent.invoke('Tell me a joke')
+await agent.invoke('Tell me another one')
+
+// Restore to the earlier state
+agent.loadSnapshot(snapshot)
+
+// The agent is back to the state after "Hello!"
+console.log(agent.messages.length) // Only the messages from before the jokes
+```
+(( /tab "TypeScript" ))
+
+Only fields present in the snapshot are restored. If a field was not included when the snapshot was taken, the agent’s current value for that field is left unchanged.
+
+## Field Selection
+
+Snapshots support flexible field selection through presets, includes, and excludes. The resolution order is: **preset → include → exclude** — start with the fields defined by the preset, add any fields listed in `include`, then remove any fields listed in `exclude`.
+
+(( tab "Python" ))
+| Field | Description |
+| --- | --- |
+| `messages` | Conversation history |
+| `state` | Agent key-value state |
+| `conversation_manager_state` | Conversation manager internal state |
+| `interrupt_state` | Human-in-the-loop interrupt state |
+| `system_prompt` | System prompt content |
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+| Field | Description |
+| --- | --- |
+| `messages` | Conversation history |
+| `state` | Agent key-value state (appState) |
+| `systemPrompt` | System prompt content |
+| `modelState` | Model provider state (e.g. response IDs for stateful models) |
+| `interrupts` | Human-in-the-loop interrupt state |
+(( /tab "TypeScript" ))
+
+Note
+
+The `"session"` preset is currently the only available preset. It includes the same fields that the [Session Manager](/docs/user-guide/concepts/agents/session-management/index.md) persists by default.
+
+Use `include` to select specific fields without a preset, or to add fields on top of a preset. Use `exclude` to remove fields from a preset:
+
+(( tab "Python" ))
+```python
+# Capture only messages and state (no preset)
+snapshot = agent.take_snapshot(include=["messages", "state"])
+
+# Session preset plus system_prompt
+snapshot = agent.take_snapshot(preset="session", include=["system_prompt"])
+
+# Session preset minus interrupt_state
+snapshot = agent.take_snapshot(preset="session", exclude=["interrupt_state"])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+// Capture only messages and state (no preset)
+const messagesOnly = agent.takeSnapshot({ include: ['messages', 'state'] })
+
+// Session preset minus systemPrompt
+const noPrompt = agent.takeSnapshot({ preset: 'session', exclude: ['systemPrompt'] })
+```
+(( /tab "TypeScript" ))
+
+## Application Data
+
+Snapshots support an `app_data` (Python) / `appData` (TypeScript) field for storing application-owned data alongside the agent state. Strands does not read or modify this data — it’s passed through verbatim.
+
+This is useful for attaching metadata like a display name for the snapshot, the current step in a workflow, user preferences, or any other context your application needs to associate with a particular point in time.
+
+(( tab "Python" ))
+```python
+snapshot = agent.take_snapshot(
+    preset="session",
+    app_data={
+        "snapshot_label": "After onboarding",
+        "workflow_step": 3,
+        "user_display_name": "Alice",
+    },
+)
+
+# Access app data later
+print(snapshot.app_data["snapshot_label"])     # "After onboarding"
+print(snapshot.app_data["user_display_name"])  # "Alice"
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const snapshot = agent.takeSnapshot({
+  preset: 'session',
+  appData: {
+    snapshotLabel: 'After onboarding',
+    workflowStep: 3,
+    userDisplayName: 'Alice',
+  },
+})
+
+// Access app data later
+console.log(snapshot.appData.snapshotLabel) // "After onboarding"
+console.log(snapshot.appData.userDisplayName) // "Alice"
+```
+(( /tab "TypeScript" ))
+
+## Serialization
+
+Snapshots are JSON-serializable, making them easy to persist to any storage backend.
+
+(( tab "Python" ))
+```python
+import json
+from strands import Agent, Snapshot
+
+agent = Agent()
+agent("Hello!")
+
+# Take a snapshot
+snapshot = agent.take_snapshot(preset="session")
+
+# Serialize to JSON
+json_str = json.dumps(snapshot.to_dict())
+
+# Store to file, database, S3, etc.
+with open("snapshot.json", "w") as f:
+    f.write(json_str)
+
+# Later, restore from JSON
+with open("snapshot.json", "r") as f:
+    data = json.loads(f.read())
+
+restored_snapshot = Snapshot.from_dict(data)
+
+# Load into a new agent
+new_agent = Agent()
+new_agent.load_snapshot(restored_snapshot)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent, type Snapshot } from '@strands-agents/sdk'
+
+const agent = new Agent()
+await agent.invoke('Hello!')
+
+// Take a snapshot
+const snapshot = agent.takeSnapshot({ preset: 'session' })
+
+// Serialize to JSON string
+const jsonString = JSON.stringify(snapshot)
+
+// Store to file, database, S3, etc.
+// ...
+
+// Later, restore from JSON
+const parsed: Snapshot = JSON.parse(jsonString)
+
+// Load into a new agent
+const newAgent = new Agent()
+newAgent.loadSnapshot(parsed)
+```
+(( /tab "TypeScript" ))
+
+## Use Cases
+
+### Checkpointing
+
+Save agent state at key points in a workflow so you can resume from the last checkpoint if something goes wrong:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a research assistant")
+
+# Step 1: Gather information
+agent("Research the latest trends in AI agents")
+checkpoint_1 = agent.take_snapshot(preset="session")
+
+# Step 2: Analyze (might fail or produce poor results)
+agent("Analyze the key themes and summarize")
+checkpoint_2 = agent.take_snapshot(preset="session")
+
+# If step 2 didn't go well, roll back to checkpoint 1
+agent.load_snapshot(checkpoint_1)
+agent("Focus specifically on multi-agent systems and summarize")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a research assistant' })
+
+// Step 1: Gather information
+await agent.invoke('Research the latest trends in AI agents')
+const checkpoint1 = agent.takeSnapshot({ preset: 'session' })
+
+// Step 2: Analyze (might fail or produce poor results)
+await agent.invoke('Analyze the key themes and summarize')
+const checkpoint2 = agent.takeSnapshot({ preset: 'session' })
+
+// If step 2 didn't go well, roll back to checkpoint 1
+agent.loadSnapshot(checkpoint1)
+await agent.invoke('Focus specifically on multi-agent systems and summarize')
+```
+(( /tab "TypeScript" ))
+
+### Branching Conversations
+
+Create multiple conversation branches from the same starting point:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+agent = Agent(system_prompt="You are a creative writer")
+agent("Write the opening paragraph of a mystery novel")
+
+# Save the branch point
+branch_point = agent.take_snapshot(preset="session")
+
+# Branch A: formal tone
+agent("Continue in a formal, academic tone")
+formal_snapshot = agent.take_snapshot(preset="session")
+
+# Branch B: go back and try casual tone
+agent.load_snapshot(branch_point)
+agent("Continue in a casual, conversational tone")
+casual_snapshot = agent.take_snapshot(preset="session")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({ systemPrompt: 'You are a creative writer' })
+await agent.invoke('Write the opening paragraph of a mystery novel')
+
+// Save the branch point
+const branchPoint = agent.takeSnapshot({ preset: 'session' })
+
+// Branch A: formal tone
+await agent.invoke('Continue in a formal, academic tone')
+const formalSnapshot = agent.takeSnapshot({ preset: 'session' })
+
+// Branch B: go back and try casual tone
+agent.loadSnapshot(branchPoint)
+await agent.invoke('Continue in a casual, conversational tone')
+const casualSnapshot = agent.takeSnapshot({ preset: 'session' })
+```
+(( /tab "TypeScript" ))
+
+## Relationship to Session Management
+
+[Session management](/docs/user-guide/concepts/agents/session-management/index.md) handles persistence automatically — state is saved and restored at the right lifecycle points without you writing any persistence code. Snapshots give you manual control: you decide when to capture state, what to include, and where to store it. Use session management when you want hands-off persistence, and snapshots when you need precise control over save points.
+
+## See Also
+
+-   [State Management](/docs/user-guide/concepts/agents/state/index.md) — Conversation history, agent state, and request state
+-   [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) — Automatic persistence with file or S3 storage
+-   [Conversation Management](/docs/user-guide/concepts/agents/conversation-management/index.md) — Managing conversation history and context window

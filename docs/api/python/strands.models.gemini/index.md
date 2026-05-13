@@ -29,7 +29,7 @@ Configuration options for Gemini models.
 -   `model_id` - Gemini model ID (e.g., “gemini-2.5-flash”). For a complete list of supported models, see [https://ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models)
 -   `params` - Additional model parameters (e.g., temperature). For a complete list of supported parameters, see [https://ai.google.dev/api/generate-content#generationconfig](https://ai.google.dev/api/generate-content#generationconfig).
 -   `gemini_tools` - Gemini-specific tools that are not FunctionDeclarations (e.g., GoogleSearch, CodeExecution, ComputerUse, UrlContext, FileSearch). Use the standard tools interface for function calling tools. For a complete list of supported tools, see [https://ai.google.dev/api/caching#Tool](https://ai.google.dev/api/caching#Tool)
--   `use_native_token_count` - Whether to use the native Gemini count\_tokens API. When True (default), count\_tokens() calls the Gemini API for accurate counts. When False, skips the API call and uses the local estimator.
+-   `use_native_token_count` - Whether to use the native Gemini count\_tokens API. When True, count\_tokens() calls the Gemini API for accurate counts. When False (default), skips the API call and uses the local estimator.
 
 #### \_\_init\_\_
 

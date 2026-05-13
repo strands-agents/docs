@@ -61,7 +61,7 @@ Configuration options for OpenAI Responses API models.
 -   `model_id` - Model ID (e.g., “gpt-4o”). For a complete list of supported models, see [https://platform.openai.com/docs/models](https://platform.openai.com/docs/models).
 -   `params` - Model parameters (e.g., max\_output\_tokens, temperature, etc.). For a complete list of supported parameters, see [https://platform.openai.com/docs/api-reference/responses/create](https://platform.openai.com/docs/api-reference/responses/create).
 -   `stateful` - Whether to enable server-side conversation state management. When True, the server stores conversation history and the client does not need to send the full message history with each request. Defaults to False.
--   `use_native_token_count` - Whether to use the native OpenAI input\_tokens.count API. When True (default), count\_tokens() calls the OpenAI API for accurate counts. When False, skips the API call and uses the local estimator.
+-   `use_native_token_count` - Whether to use the native OpenAI input\_tokens.count API. When True, count\_tokens() calls the OpenAI API for accurate counts. When False (default), skips the API call and uses the local estimator.
 
 #### \_\_init\_\_
 

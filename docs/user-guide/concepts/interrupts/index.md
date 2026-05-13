@@ -16,7 +16,10 @@ flowchart TD
 
 ## Hooks
 
-Users can raise interrupts within their [hook callbacks](/docs/user-guide/concepts/agents/hooks/index.md) to pause agent execution at specific life-cycle events in the agentic loop. Currently, only the `BeforeToolCallEvent` is interruptible. Interrupting on a `BeforeToolCallEvent` allows users to intercept tool calls before execution to request human approval or additional inputs.
+Users can raise interrupts within their [hook callbacks](/docs/user-guide/concepts/agents/hooks/index.md) to pause agent execution at specific life-cycle events in the agentic loop.
+
+(( tab "Python" ))
+Currently, only the `BeforeToolCallEvent` is interruptible. Interrupting on a `BeforeToolCallEvent` allows users to intercept tool calls before execution to request human approval or additional inputs.
 
 ```python
 import json
@@ -83,11 +86,99 @@ while True:
 
 print(f"MESSAGE: {json.dumps(result.message)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Both `BeforeToolCallEvent` and `BeforeToolsEvent` are interruptible. Interrupting on a `BeforeToolCallEvent` allows users to intercept individual tool calls before execution, while `BeforeToolsEvent` allows intercepting the entire batch of tool calls before any execute.
+
+#### BeforeToolCallEvent
+
+```typescript
+const deleteFiles = tool({
+  name: 'delete_files',
+  description: 'Delete files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return true
+  },
+})
+
+const inspectFiles = tool({
+  name: 'inspect_files',
+  description: 'Inspect files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return {}
+  },
+})
+
+const agent = new Agent({
+  systemPrompt: 'You delete files older than 5 days',
+  tools: [deleteFiles, inspectFiles],
+})
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  if (event.toolUse.name !== 'delete_files') return
+
+  const approval = event.interrupt<string>({
+    name: 'myapp-approval',
+    reason: { paths: (event.toolUse.input as { paths: string[] }).paths },
+  })
+  if (approval.toLowerCase() !== 'y') {
+    event.cancel = 'User denied permission to delete files'
+  }
+})
+
+const paths = ['a/b/c.txt', 'd/e/f.txt']
+let result = await agent.invoke(`paths=<${JSON.stringify(paths)}>`)
+
+while (result.stopReason === 'interrupt') {
+  const responses = result.interrupts!.map((interrupt) => ({
+    interruptResponse: {
+      interruptId: interrupt.id,
+      // In a real app, collect user input here
+      response: 'y',
+    },
+  }))
+
+  result = await agent.invoke(responses)
+}
+
+console.log('MESSAGE:', JSON.stringify(result.lastMessage))
+```
+
+#### BeforeToolsEvent
+
+```typescript
+const agent = new Agent({
+  tools: [/* ... */],
+})
+
+agent.addHook(BeforeToolsEvent, (event) => {
+  const dangerousTools = event.message.content
+    .filter((block) => block.type === 'toolUseBlock')
+    .filter((block) => ['delete_files'].includes(block.name))
+
+  if (dangerousTools.length > 0) {
+    const response = event.interrupt<{ approved: boolean }>({
+      name: 'batch_approval',
+      reason: `Approve ${dangerousTools.length} dangerous tool calls?`,
+    })
+    if (!response.approved) {
+      event.cancel = 'Batch cancelled by user'
+    }
+  }
+})
+```
+(( /tab "TypeScript" ))
 
 ### Components
 
 Interrupts in Strands are comprised of the following components:
 
+(( tab "Python" ))
 -   `event.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique across all interrupt calls configured on the `BeforeToolCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     -   You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable.
@@ -100,22 +191,48 @@ Interrupts in Strands are comprised of the following components:
     -   You can either set `cancel_tool` to `True` or provide a custom cancellation message.
 
 For additional details on each of these components, refer to the [Python API Reference](/docs/api/python/strands.types.interrupt).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   [`BeforeToolCallEvent`](/docs/api/typescript/BeforeToolCallEvent/index.md) / [`BeforeToolsEvent`](/docs/api/typescript/BeforeToolsEvent/index.md) — hook events that expose the ability to interrupt via the `interrupt` method
+    -   `event.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value providing context for why the interrupt was raised.
+    -   The `name` must be unique across all interrupt calls configured on the same event. In the example above, we demonstrate using a namespace prefix for the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
+    -   `event.cancel` — cancel tool execution based on the interrupt response. Set to `true` for a default message or provide a custom cancellation message string.
+-   [`AgentResult`](/docs/api/typescript/AgentResult/index.md) — returned by `invoke()` / `stream()`, contains interrupt information when the agent pauses
+    -   `result.stopReason` — check if agent stopped due to `'interrupt'`
+    -   `result.interrupts` — array of `Interrupt` objects, each containing the user-provided `name` and `reason`, along with a unique `id`
+-   `InterruptResponseContent` — content block type for resuming from an interrupt
+    -   Pass an array of these to `agent.invoke()` to resume. Each response is keyed by the interrupt’s `id` and will be returned from the associated `interrupt()` call when the tool/hook re-executes. The `response` must be JSON-serializable.
+(( /tab "TypeScript" ))
 
 ### Rules
 
 Strands enforces the following rules for interrupts:
 
+(( tab "Python" ))
 -   All hooks configured on the interrupted event will execute
 -   All hooks configured on the interrupted event are allowed to raise an interrupt
 -   A single hook can raise multiple interrupts but only one at a time
     -   In other words, within a single hook, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
 -   All tools running concurrently are interruptible
 -   All tools running concurrently that are not interrupted will execute
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   All hooks configured on the interrupted event will execute
+-   All hooks configured on the interrupted event are allowed to raise an interrupt
+-   A single hook can raise multiple interrupts but only one at a time
+    -   In other words, within a single hook, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+-   When an interrupt fires from `BeforeToolCallEvent`, `AfterToolCallEvent` does not fire for that tool — but `AfterToolsEvent` always fires
+-   When an interrupt fires mid-batch, completed tool results are preserved so the agent skips the model call on resume and only executes remaining tools
+-   Both assistant and tool result messages are appended only after tool execution completes, preventing dangling `toolUse` blocks without matching results
+(( /tab "TypeScript" ))
 
 ## Tools
 
 Users can also raise interrupts from their tool definitions.
 
+(( tab "Python" ))
 ```python
 from typing import Any
 
@@ -154,29 +271,86 @@ agent = Agent(
 ```
 
 > ⚠️ Interrupts are not supported in [direct tool calls](/docs/user-guide/concepts/tools/index.md#direct-method-calls) (i.e., calls such as `agent.tool.my_tool()`).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The tool callback receives a `context` parameter (the second argument) which provides the `interrupt` method.
+
+```typescript
+const deleteFiles = tool({
+  name: 'delete_files',
+  description: 'Delete files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input, context) => {
+    const approval = context.interrupt<string>({
+      name: 'myapp-approval',
+      reason: { paths: input.paths },
+    })
+    if (approval.toLowerCase() !== 'y') return false
+
+    // Implementation here
+
+    return true
+  },
+})
+
+const inspectFiles = tool({
+  name: 'inspect_files',
+  description: 'Inspect files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return {}
+  },
+})
+
+const agent = new Agent({
+  systemPrompt: 'You delete files older than 5 days',
+  tools: [deleteFiles, inspectFiles],
+})
+
+// ...
+```
+(( /tab "TypeScript" ))
 
 ### Components
 
-Tool interrupts work similiarly to hook interrupts with only a few notable differences:
+Tool interrupts work similarly to hook interrupts with only a few notable differences. For more on tool context, see [ToolContext](/docs/user-guide/concepts/tools/custom-tools/index.md#toolcontext).
 
+(( tab "Python" ))
 -   `tool_context` - Strands object that defines the interrupt call
-    -   You can learn more about `tool_context` [here](/docs/user-guide/concepts/tools/custom-tools/index.md#toolcontext).
 -   `tool_context.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique only among interrupt calls configured in the same tool definition. It is still advisable however to namespace your interrupts so as to more easily distinguish the calls when constructing responses outside the agent.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   [`ToolContext`](/docs/api/typescript/ToolContext/index.md) — the second argument passed to the tool callback, providing access to the `interrupt` method
+    -   `context.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value.
+    -   The `name` must be unique only among interrupt calls configured in the same tool definition. It is still advisable however to namespace your interrupts so as to more easily distinguish the calls when constructing responses outside the agent.
+(( /tab "TypeScript" ))
 
 ### Rules
 
 Strands enforces the following rules for tool interrupts:
 
+(( tab "Python" ))
 -   All tools running concurrently will execute
 -   All tools running concurrently are interruptible
 -   A single tool can raise multiple interrupts but only one at a time
     -   In other words, within a single tool, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   A single tool can raise multiple interrupts but only one at a time
+    -   In other words, within a single tool, you can interrupt, respond to that interrupt, and then proceed to interrupt again.
+-   When an interrupt fires mid-batch, completed tool results are preserved so the agent skips the model call on resume and only executes remaining tools
+(( /tab "TypeScript" ))
 
 ## Session Management
 
 Users can session manage their interrupts and respond back at a later time under a new agent session. Additionally, users can session manage the responses to avoid repeated interrupts on subsequent tool calls.
 
+(( tab "Python" ))
 ```python
 ##### server.py #####
 
@@ -262,15 +436,105 @@ paths = ["a/b/c.txt", "d/e/f.txt"]
 result = client(paths)
 print(f"MESSAGE: {json.dumps(result.message)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const deleteFiles = tool({
+  name: 'delete_files',
+  description: 'Delete files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return true
+  },
+})
+
+const inspectFiles = tool({
+  name: 'inspect_files',
+  description: 'Inspect files at the given paths',
+  inputSchema: z.object({ paths: z.array(z.string()) }),
+  callback: (input) => {
+    // Implementation here
+    return {}
+  },
+})
+
+// Server function — creates a fresh agent with session management each call
+async function server(
+  prompt: string | { interruptResponse: { interruptId: string; response: unknown } }[]
+) {
+  const agent = new Agent({
+    systemPrompt: 'You delete files older than 5 days',
+    tools: [deleteFiles, inspectFiles],
+    sessionManager: new SessionManager({
+      sessionId: 'myapp',
+      storage: { snapshot: new FileStorage('/path/to/storage') },
+    }),
+  })
+
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    if (event.toolUse.name !== 'delete_files') return
+
+    // Check if user already trusted this approval
+    if (event.agent.appState.get('myapp-approval') === 't') return
+
+    const approval = event.interrupt<string>({
+      name: 'myapp-approval',
+      reason: { paths: (event.toolUse.input as { paths: string[] }).paths },
+    })
+    if (!['y', 't'].includes(approval.toLowerCase())) {
+      event.cancel = 'User denied permission to delete files'
+    }
+
+    event.agent.appState.set('myapp-approval', approval.toLowerCase())
+  })
+
+  return agent.invoke(prompt)
+}
+
+// Client function
+async function client(paths: string[]) {
+  let result = await server(`paths=<${JSON.stringify(paths)}>`)
+
+  while (result.stopReason === 'interrupt') {
+    const responses = result.interrupts!.map((interrupt) => ({
+      interruptResponse: {
+        interruptId: interrupt.id,
+        // In a real app, collect user input here
+        response: 'y',
+      },
+    }))
+
+    result = await server(responses)
+  }
+
+  return result
+}
+
+const paths = ['a/b/c.txt', 'd/e/f.txt']
+const result = await client(paths)
+console.log('MESSAGE:', JSON.stringify(result.lastMessage))
+```
+(( /tab "TypeScript" ))
 
 ### Components
 
 Session managing interrupts involves the following key components:
 
+(( tab "Python" ))
 -   `session_manager` - Automatically persists the agent interrupt state between tear down and start up
     -   For more information on session management in Strands, please refer to [here](/docs/user-guide/concepts/agents/session-management/index.md).
 -   `agent.state` - General purpose key-value store that can be used to persist interrupt responses
     -   On subsequent tool calls, you can reference the responses stored in `agent.state` to decide whether another interrupt is necessary. For more information on `agent.state`, please refer to [here](/docs/user-guide/concepts/agents/state/index.md#agent-state).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+-   `sessionManager` - Automatically persists the agent interrupt state between tear down and start up
+    -   For more information on session management in Strands, please refer to [here](/docs/user-guide/concepts/agents/session-management/index.md).
+-   `agent.appState` - General purpose key-value store that can be used to persist interrupt responses
+    -   On subsequent tool calls, you can reference the responses stored in `appState` to decide whether another interrupt is necessary. For more information on `appState`, please refer to [here](/docs/user-guide/concepts/agents/state/index.md#agent-state).
+(( /tab "TypeScript" ))
 
 ## MCP Elicitation
 
@@ -280,10 +544,15 @@ Similar to interrupts, an MCP server can request additional information from the
 
 Interrupts are supported in multi-agent patterns, enabling human-in-the-loop workflows across agent orchestration systems. The interfaces mirror those used for single-agent interrupts. You can raise interrupts from `BeforeNodeCallEvent` hooks executed before each node or from within the nodes themselves. Session management is also supported, allowing you to persist and resume your interrupted multi-agents.
 
+Note
+
+Multi-agent interrupts are currently only available in the Python SDK. TypeScript multi-agent interrupt support is planned for a future release.
+
 ### Swarm
 
 A [Swarm](/docs/user-guide/concepts/multi-agent/swarm/index.md) is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. The following example demonstrates interrupting your swarm invocation through a `BeforeNodeCallEvent` hook.
 
+(( tab "Python" ))
 ```python
 import json
 
@@ -332,11 +601,19 @@ while result.status == Status.INTERRUPTED:
 
 print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message, indent=2)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 Swarms also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
 
 #### Components
 
+(( tab "Python" ))
 -   `event.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     -   You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable.
@@ -347,6 +624,13 @@ Swarms also support interrupts raised from within the nodes themselves following
     -   Each `response` is uniquely identified by their interrupt’s id and will be returned from the associated interrupt call when invoked the second time around. Note, the `response` must be JSON-serializable.
 -   `event.cancel_node` - Cancel node execution based on interrupt response
     -   You can either set `cancel_node` to `True` or provide a custom cancellation message.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 #### Rules
 
@@ -362,6 +646,7 @@ Strands enforces the following rules for interrupts in swarm:
 
 A [Graph](/docs/user-guide/concepts/multi-agent/graph/index.md) is a deterministic agent orchestration system based on a directed graph, where agents are nodes executed according to edge dependencies. The following example demonstrates interrupting your graph invocation through a `BeforeNodeCallEvent` hook.
 
+(( tab "Python" ))
 ```python
 import json
 
@@ -414,11 +699,19 @@ while result.status == Status.INTERRUPTED:
 
 print(f"MESSAGE: {json.dumps(result.results['cleanup'].result.message, indent=2)}")
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 Graphs also support interrupts raised from within the nodes themselves following any of the single-agent interrupt patterns outlined above.
 
 #### Components
 
+(( tab "Python" ))
 -   `event.interrupt` - Raises an interrupt with a unique name and optional reason
     -   The `name` must be unique across all interrupt calls configured on the `BeforeNodeCallEvent`. In the example above, we demonstrate using `app_name` to namespace the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     -   You can assign additional context for raising the interrupt to the `reason` field. Note, the `reason` must be JSON-serializable.
@@ -429,6 +722,13 @@ Graphs also support interrupts raised from within the nodes themselves following
     -   Each `response` is uniquely identified by their interrupt’s id and will be returned from the associated interrupt call when invoked the second time around. Note, the `response` must be JSON-serializable.
 -   `event.cancel_node` - Cancel node execution based on interrupt response
     -   You can either set `cancel_node` to `True` or provide a custom cancellation message.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// Multi-agent interrupts are not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
 
 #### Rules
 

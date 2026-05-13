@@ -409,4 +409,4 @@ Invocation state (`invocationState` in TypeScript, `invocation_state` / `request
 
 ## Persisting State Across Sessions
 
-For information on how to persist agent state and conversation history across multiple interactions or application restarts, see the [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) documentation.
+For automatic persistence of agent state and conversation history across application restarts, see [Session Management](/docs/user-guide/concepts/agents/session-management/index.md). For manual, point-in-time capture and restore of agent state, see [Snapshots](/docs/user-guide/concepts/agents/snapshots/index.md).

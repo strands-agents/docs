@@ -57,7 +57,7 @@ Configuration options for Bedrock models.
 -   `"additionalProperties"` - false into all object types in tool input schemas. See [https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html](https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html)
 -   `temperature` - Controls randomness in generation (higher = more random)
 -   `top_p` - Controls diversity via nucleus sampling (alternative to temperature)
--   `use_native_token_count` - Whether to use the native Bedrock CountTokens API. When True (default), count\_tokens() calls the Bedrock API for accurate counts. When False, skips the API call and uses the local estimator.
+-   `use_native_token_count` - Whether to use the native Bedrock CountTokens API. When True, count\_tokens() calls the Bedrock API for accurate counts. When False (default), skips the API call and uses the local estimator.
 
 #### \_\_init\_\_
 
@@ -153,7 +153,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:855](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L855)
+Defined in: [src/strands/models/bedrock.py:866](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L866)
 
 Stream conversation with the Bedrock model.
 
@@ -188,7 +188,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:1141](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1141)
+Defined in: [src/strands/models/bedrock.py:1152](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1152)
 
 Get structured output from the model.
 

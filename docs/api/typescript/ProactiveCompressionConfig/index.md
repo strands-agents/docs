@@ -4,7 +4,7 @@ type ProactiveCompressionConfig = {
 };
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:59](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L59)
+Defined in: [src/conversation-manager/conversation-manager.ts:59](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/conversation-manager/conversation-manager.ts#L59)
 
 Configuration for proactive compression when passed as an object.
 
@@ -16,6 +16,6 @@ Configuration for proactive compression when passed as an object.
 compressionThreshold: number;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:65](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/conversation-manager/conversation-manager.ts#L65)
+Defined in: [src/conversation-manager/conversation-manager.ts:65](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/conversation-manager/conversation-manager.ts#L65)
 
 Ratio of context window usage that triggers proactive compression. Value between 0 (exclusive) and 1 (inclusive). Defaults to 0.7 (compress when 70% of the context window is used).

@@ -27,7 +27,7 @@ Configuration options for Anthropic models.
 -   `max_tokens` - Maximum number of tokens to generate.
 -   `model_id` - Calude model ID (e.g., “claude-3-7-sonnet-latest”). For a complete list of supported models, see [https://docs.anthropic.com/en/docs/about-claude/models/all-models](https://docs.anthropic.com/en/docs/about-claude/models/all-models).
 -   `params` - Additional model parameters (e.g., temperature). For a complete list of supported parameters, see [https://docs.anthropic.com/en/api/messages](https://docs.anthropic.com/en/api/messages).
--   `use_native_token_count` - Whether to use the native Anthropic count\_tokens API. When True (default), count\_tokens() calls the Anthropic API for accurate counts. When False, skips the API call and uses the local estimator.
+-   `use_native_token_count` - Whether to use the native Anthropic count\_tokens API. When True, count\_tokens() calls the Anthropic API for accurate counts. When False (default), skips the API call and uses the local estimator.
 
 #### \_\_init\_\_
 

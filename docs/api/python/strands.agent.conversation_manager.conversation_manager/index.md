@@ -1,12 +1,26 @@
 Abstract interface for conversation history management.
 
+## ProactiveCompressionConfig
+
+```python
+class ProactiveCompressionConfig(TypedDict)
+```
+
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:20](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L20)
+
+Configuration for proactive compression when passed as an object.
+
+**Attributes**:
+
+-   `compression_threshold` - Ratio of context window usage that triggers proactive compression. Value between 0 (exclusive) and 1 (inclusive). Defaults to 0.7 (compress when 70% of the context window is used).
+
 ## ConversationManager
 
 ```python
 class ConversationManager(ABC, HookProvider)
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:13](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L13)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:32](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L32)
 
 Abstract base class for managing conversation history.
 
@@ -16,26 +30,46 @@ This class provides an interface for implementing conversation management strate
 -   Control context length
 -   Maintain relevant conversation state
 
-ConversationManager implements the HookProvider protocol, allowing derived classes to register hooks for agent lifecycle events. Derived classes that override register\_hooks must call the base implementation to ensure proper hook registration.
+ConversationManager implements the HookProvider protocol, allowing derived classes to register hooks for agent lifecycle events. Derived classes that override register\_hooks must call the base implementation to ensure proper hook registration chain.
+
+The primary responsibility of a ConversationManager is overflow recovery: when the model encounters a context window overflow, :meth:`reduce_context` is called with `e` set and MUST reduce the history enough for the next model call to succeed.
+
+Subclasses can enable proactive compression by passing `proactive_compression` in the constructor. When enabled, the base class registers a `BeforeModelCallEvent` hook that checks projected input tokens against the model’s context window limit and calls :meth:`reduce_context` (without `e`) when the threshold is exceeded. This is a best-effort operation — errors are swallowed so the model call can still proceed.
 
 **Example**:
 
 ```python
-class MyConversationManager(ConversationManager):
-    def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
-        super().register_hooks(registry, **kwargs)
-        # Register additional hooks here
+# Enable proactive compression with default threshold (0.7)
+SlidingWindowConversationManager(window_size=50, proactive_compression=True)
+
+# Enable proactive compression with custom threshold
+SummarizingConversationManager(proactive_compression=\{"compression_threshold": 0.8})
 ```
 
 #### \_\_init\_\_
 
 ```python
-def __init__() -> None
+def __init__(
+    *,
+    proactive_compression: Union[bool, "ProactiveCompressionConfig",
+                                 None] = None
+) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L36)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:66](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L66)
 
 Initialize the ConversationManager.
+
+**Arguments**:
+
+-   `proactive_compression` - Enable proactive context compression before the model call.
+    -   `True`: compress when 70% of the context window is used (default threshold).
+    -   `\{"compression_threshold": float}`: compress at the specified ratio (0, 1\].
+    -   `False` or `None`: disabled, only reactive overflow recovery is used.
+
+**Raises**:
+
+-   `ValueError` - If compression\_threshold is not in the valid range (0, 1\].
 
 **Attributes**:
 
@@ -47,9 +81,11 @@ Initialize the ConversationManager.
 def register_hooks(registry: HookRegistry, **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:46](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L46)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:100](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L100)
 
 Register hooks for agent lifecycle events.
+
+Always registers a `BeforeModelCallEvent` hook for proactive compression. When `proactive_compression` is not configured, the handler is a no-op (early return).
 
 Derived classes that override this method must call the base implementation to ensure proper hook registration chain.
 
@@ -58,21 +94,13 @@ Derived classes that override this method must call the base implementation to e
 -   `registry` - The hook registry to register callbacks with.
 -   `**kwargs` - Additional keyword arguments for future extensibility.
 
-**Example**:
-
-```python
-def register_hooks(self, registry: HookRegistry, **kwargs: Any) -> None:
-    super().register_hooks(registry, **kwargs)
-    registry.add_callback(SomeEvent, self.on_some_event)
-```
-
 #### restore\_from\_session
 
 ```python
 def restore_from_session(state: dict[str, Any]) -> list[Message] | None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:65](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L65)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:161](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L161)
 
 Restore the Conversation Manager’s state from a session.
 
@@ -90,7 +118,7 @@ Optional list of messages to prepend to the agents messages. By default returns 
 def get_state() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:78](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L78)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:174](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L174)
 
 Get the current state of a Conversation Manager as a Json serializable dictionary.
 
@@ -101,7 +129,7 @@ Get the current state of a Conversation Manager as a Json serializable dictionar
 def apply_management(agent: "Agent", **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:86](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L86)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:182](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L182)
 
 Applies management strategy to the provided agent.
 
@@ -121,21 +149,19 @@ def reduce_context(agent: "Agent",
                    **kwargs: Any) -> None
 ```
 
-Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:101](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L101)
+Defined in: [src/strands/agent/conversation\_manager/conversation\_manager.py:197](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/conversation_manager.py#L197)
 
-Called when the model’s context window is exceeded.
+Reduce the conversation history.
 
-This method should implement the specific strategy for reducing the window size when a context overflow occurs. It is typically called after a ContextWindowOverflowException is caught.
+Called in two scenarios:
 
-Implementations might use strategies such as:
+1.  **Reactive** (e is set): A context window overflow occurred. The implementation MUST remove enough history for the next model call to succeed, or re-raise the error.
+2.  **Proactive** (e is None): The compression threshold was exceeded. This is best-effort — returning without reduction or raising is acceptable; the model call proceeds regardless.
 
--   Removing the N oldest messages
--   Summarizing older context
--   Applying importance-based filtering
--   Maintaining critical conversation markers
+Implementations should modify `agent.messages` in-place.
 
 **Arguments**:
 
 -   `agent` - The agent whose conversation history will be reduced. This list is modified in-place.
--   `e` - The exception that triggered the context reduction, if any.
+-   `e` - The exception that triggered the context reduction, if any. When set, this is a reactive overflow recovery call — the implementation MUST reduce enough history for the next model call to succeed. When None, this is a proactive compression call — best-effort reduction to avoid hitting the context window limit.
 -   `**kwargs` - Additional keyword arguments for future extensibility.

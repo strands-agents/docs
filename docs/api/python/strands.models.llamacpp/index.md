@@ -94,7 +94,7 @@ Configuration options for llama.cpp models.
     -   cache\_prompt: Cache the prompt for faster generation
     -   slot\_id: Slot ID for parallel inference
     -   samplers: Custom sampler order
--   `use_native_token_count` - Whether to use the native llama.cpp /tokenize endpoint. When True (default), count\_tokens() calls the server’s tokenize endpoint for accurate counts. When False, skips the API call and uses the local estimator.
+-   `use_native_token_count` - Whether to use the native llama.cpp /tokenize endpoint. When True, count\_tokens() calls the server’s tokenize endpoint for accurate counts. When False (default), skips the API call and uses the local estimator.
     
 
 #### \_\_init\_\_

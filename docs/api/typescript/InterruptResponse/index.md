@@ -1,4 +1,4 @@
-Defined in: [src/types/interrupt.ts:48](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/interrupt.ts#L48)
+Defined in: [src/types/interrupt.ts:48](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/interrupt.ts#L48)
 
 User response to an interrupt.
 
@@ -10,7 +10,7 @@ User response to an interrupt.
 interruptId: string;
 ```
 
-Defined in: [src/types/interrupt.ts:52](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/interrupt.ts#L52)
+Defined in: [src/types/interrupt.ts:52](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/interrupt.ts#L52)
 
 Unique identifier of the interrupt being responded to.
 
@@ -22,6 +22,6 @@ Unique identifier of the interrupt being responded to.
 response: JSONValue;
 ```
 
-Defined in: [src/types/interrupt.ts:57](https://github.com/strands-agents/sdk-typescript/blob/9d6ae1a310097815db085f4d3aec6ec8f0057c1b/strands-ts/src/types/interrupt.ts#L57)
+Defined in: [src/types/interrupt.ts:57](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/types/interrupt.ts#L57)
 
 User’s response to the interrupt.
