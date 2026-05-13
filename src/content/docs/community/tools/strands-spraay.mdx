@@ -47,8 +47,11 @@ agent("Send 0.01 ETH to 0xAAA..., 0xBBB..., and 0xCCC... using batch payment")
 
 ```bash
 SPRAAY_PRIVATE_KEY=your_wallet_private_key    # Required
+PRIVATE_KEY=your_wallet_private_key            # Alternative
 BASE_RPC_URL=https://mainnet.base.org         # Optional
 ```
+
+> ⚠️ **Security**: Never commit your private key to source control. Use environment variables or a secrets manager.
 
 ## Resources
 
