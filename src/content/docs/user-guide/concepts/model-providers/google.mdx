@@ -465,31 +465,31 @@ Token counting is used by [proactive context compression](/docs/user-guide/conce
 <Tabs>
 <Tab label="Python">
 
-The Google provider uses the native `models.count_tokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively — these are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+The Google provider can use the native `models.count_tokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively. These are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
 
-You can disable native token counting with:
+You can enable native token counting with:
 
 ```python
 model = GoogleModel(
     model_id="gemini-2.5-flash",
-    use_native_token_count=False,  # Always use heuristic
+    use_native_token_count=True,
 )
 ```
 </Tab>
 <Tab label="TypeScript">
 
-The Google provider uses the native `models.countTokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively — these are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+The Google provider can use the native `models.countTokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively. These are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
 
-You can disable native token counting with:
+You can enable native token counting with:
 
 ```typescript
 const model = new GoogleModel({
   modelId: 'gemini-2.5-flash',
-  useNativeTokenCount: false, // Always use heuristic
+  useNativeTokenCount: true,
 })
 ```
 
-When disabled (or if the API call fails), falls back to the character-based heuristic for all content.
+When disabled (or if the API call fails), falls back to estimation using the character-based heuristic.
 </Tab>
 </Tabs>
 

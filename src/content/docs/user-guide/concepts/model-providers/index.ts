@@ -28,4 +28,3 @@ async function basicUsage() {
   response = await agent.invoke('What can you help me with?')
   // --8<-- [end:basic_usage]
 }
-

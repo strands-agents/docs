@@ -314,13 +314,11 @@ agent = Agent(
 
 ## Proactive Context Compression
 
-By default, conversation managers are **reactive** — they only reduce context after the model rejects a request with a context window overflow error. This means the agent operates at maximum context capacity until it fails, then retries after trimming. This wastes a round-trip and can cause **output token starvation**, where the model has so little remaining capacity that it cannot generate a meaningful response even if it doesn't overflow.
-
-Proactive compression solves this by triggering context reduction **before** the model call when projected input tokens exceed a configurable threshold of the model's context window.
+By default, conversation managers are reactive. They only reduce context after the model rejects a request with a context window overflow error. Proactive compression avoids wasting round-trips and output token starvation by triggering context reduction before the model call when the projected input token count exceeds a configurable threshold of the model's context window.
 
 ### Enabling Proactive Compression
 
-Pass `proactiveCompression` to any built-in conversation manager. Use `true` for the default 0.7 threshold, or pass an object with a custom `compressionThreshold` ratio between 0 and 1 — for example, `0.7` means "compress when 70% of the context window is used":
+Pass `proactiveCompression` to any built-in conversation manager. Use `true` for the default 0.7 threshold, or pass an object with a custom `compressionThreshold` ratio between 0 and 1. For example, `0.7` will trigger compression when 70% of the model's context window is used:
 
 **With SlidingWindowConversationManager:**
 
@@ -346,20 +344,16 @@ Before each model call, the agent estimates the projected input token count and 
 
 ```
 if projectedInputTokens / contextWindowLimit >= compressionThreshold:
-    reduce()  // proactively compress context (called without error)
+    reduce()  // proactively compress context
 ```
 
-Because `BeforeModelCallEvent` fires before **every** model call — including calls within a tool-use cycle — this provides automatic in-loop compression. If an agent makes five tool calls in a single invocation and context grows past the threshold between calls three and four, compression triggers before call four.
+Each conversation manager uses the same reduction logic for proactive compression as reactive overflow recovery. Proactive compression is best-effort only, so if `reduce()` throws or returns `false`, the error is swallowed and the model call proceeds normally.
 
-Proactive compression is **best-effort**: if `reduce()` throws or returns `false`, the error is swallowed and the model call proceeds normally. This ensures proactive compression never breaks an otherwise-working agent.
-
-When triggered proactively, each built-in manager uses the same reduction logic as reactive overflow recovery:
-- **SlidingWindowConversationManager**: Trims the oldest messages down to `windowSize`, same as overflow recovery.
-- **SummarizingConversationManager**: Summarizes the oldest portion of the conversation using the configured `summaryRatio` and `preserveRecentMessages`, same as overflow recovery.
+Because `BeforeModelCallEvent` triggers before every model call including calls within a tool-use cycle, this provides automatic in-loop compression. If an agent makes five tool calls in a single invocation and context grows past the threshold between calls three and four, compression triggers before call four.
 
 ### Context Window Limit
 
-The threshold check requires knowing the model's context window size. The SDK auto-populates `contextWindowLimit` from built-in lookup tables for known models (Anthropic, Bedrock, OpenAI, Google Gemini). You can override it manually for models not in the lookup table:
+The threshold check requires the model's context window size. The SDK auto-populates `contextWindowLimit` from built-in lookup tables for known models (Anthropic, Bedrock, OpenAI, Google Gemini). You can override it manually for models not in the lookup table:
 
 ```typescript
 const model = new BedrockModel({
@@ -368,47 +362,30 @@ const model = new BedrockModel({
 })
 ```
 
-### Token Estimation
-
-The agent estimates input tokens using a hybrid strategy that minimizes estimation overhead:
-
-1. **Known baseline**: Reads `inputTokens + outputTokens` from the last assistant message's metadata (exact values reported by the model provider after the previous call)
-2. **Delta estimation**: Only estimates tokens for new messages added since that assistant message (typically tool results), using the model's `countTokens()` method
-3. **Cold start fallback**: When no prior usage metadata exists (first call or after session restore without metadata), estimates all messages via `countTokens()`
-
-The `countTokens()` implementation varies by model provider — some use native token counting APIs for exact counts, while others use a character-based heuristic. See the Token Counting section on each provider's page for details:
-
-- [Amazon Bedrock](../model-providers/amazon-bedrock/#token-counting) — native API with fallback caching
-- [Anthropic](../model-providers/anthropic/#token-counting) — native API
-- [Google Gemini](../model-providers/google/#token-counting) — native API (messages only)
-- [OpenAI Responses](../model-providers/openai-responses/#token-counting) — native API (Python only)
-- [llama.cpp](../model-providers/llamacpp/#token-counting) — native server tokenization (Python only)
-
-Providers without native token counting APIs (OpenAI Chat Completions, Ollama, Mistral, LiteLLM, Vercel) use a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON). All native providers also fall back to this heuristic when native counting is unavailable or disabled.
-
-### Context Window Limit Fallback
-
-If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of **200,000 tokens** and emits a warning:
-
-```
-contextWindowLimit is not set on the model, using default of 200000 — set contextWindowLimit in your model config for accurate proactive compression
-```
+If `contextWindowLimit` is not set and the model ID is not in the built-in lookup table, the SDK falls back to a default of 200,000 tokens.
 
 :::caution[Inaccurate compression with default fallback]
 When the default 200,000-token limit is used but the model's actual context window is significantly different, proactive compression will not behave correctly:
 
-- **Actual limit is smaller** (e.g., 8k or 32k): Compression triggers too late — the model will hit context overflow errors before proactive compression fires, falling back to reactive recovery.
-- **Actual limit is larger** (e.g., 1M): Compression triggers too early — the agent proactively trims context well before the model's capacity is reached, discarding useful conversation history unnecessarily.
+- **Actual limit is smaller** (e.g., 8k or 32k): Compression triggers too late. The model will hit context overflow errors before proactive compression is triggered, falling back fully to reactive overflow recovery.
+- **Actual limit is larger** (e.g., 1M): Compression triggers too early. The agent proactively trims context well before the model's capacity is reached.
 :::
 
-To avoid this, always set `contextWindowLimit` explicitly for models not in the built-in lookup tables:
+### Token Estimation
 
-```typescript
-const model = new BedrockModel({
-  modelId: 'my-custom-model',
-  contextWindowLimit: 32_000,
-})
-```
+The agent estimates input tokens using a the following strategy:
+
+1. **Known baseline**: Reads `inputTokens + outputTokens` from the last assistant message's metadata
+2. **Delta estimation**: Only estimates tokens for new messages added since that assistant message using the model's `countTokens()` method
+3. **Cold start fallback**: When no prior usage metadata exists (first call or after session restore without metadata), estimates all messages via `countTokens()`
+
+The `countTokens()` method uses a character-based heuristic to estimate token count by default (characters ÷ 4 for text, characters ÷ 2 for JSON). Some model providers support native token counting APIs for exact counts, which can be enabled on the model. See the Token Counting section on each provider's page for details and instructions:
+
+- [Amazon Bedrock](../model-providers/amazon-bedrock/#token-counting)
+- [Anthropic](../model-providers/anthropic/#token-counting)
+- [Google Gemini](../model-providers/google/#token-counting)
+- [OpenAI Responses](../model-providers/openai-responses/#token-counting)
+- [llama.cpp](../model-providers/llamacpp/#token-counting)
 
 ## Creating a ConversationManager
 
