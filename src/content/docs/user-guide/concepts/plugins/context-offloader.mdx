@@ -46,34 +46,6 @@ For non-text content, the plugin replaces the result with a descriptive placehol
 | Image | `[image: format, N bytes]` placeholder + storage reference |
 | Document | `[document: format, name, N bytes]` placeholder + storage reference |
 
-### Retrieval tool
-
-The plugin includes a `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. This tool is registered by default.
-
-The inline guidance in offloaded results tells the agent to use its available tools to selectively access the data it needs, and mentions `retrieve_offloaded_content` as a fallback. If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it:
-
-<Tabs>
-<Tab label="Python">
-
-```python
-agent = Agent(plugins=[
-    ContextOffloader(
-        storage=FileStorage("./artifacts"),
-        include_retrieval_tool=False,
-    )
-])
-```
-</Tab>
-<Tab label="TypeScript">
-
-```typescript
---8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:disable_retrieval_tool"
-
---8<-- "user-guide/concepts/plugins/context-offloader.ts:disable_retrieval_tool"
-```
-</Tab>
-</Tabs>
-
 ## Getting Started
 
 Pass a `ContextOffloader` instance to your agent's `plugins` list with your choice of storage backend:
@@ -249,6 +221,171 @@ agent = Agent(plugins=[
 | `previewTokens` | `1_000` | Number of tokens to keep as an in-context preview |
 | `includeRetrievalTool` | `true` | Registers a `retrieve_offloaded_content` tool the agent can use to fetch full content by reference. Enabled by default; set to `false` to disable |
 
+</Tab>
+</Tabs>
+
+## Retrieval Tool
+
+The plugin includes a `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. This tool is registered by default.
+
+<Tabs>
+<Tab label="Python">
+
+The inline guidance in offloaded results tells the agent to use its available tools to selectively access the data it needs, and mentions `retrieve_offloaded_content` as a fallback.
+
+In Python, the retrieval tool returns the full offloaded content. Search and filtering parameters are not yet available — use the agent's other tools (file readers, shell, etc.) for targeted access.
+
+</Tab>
+<Tab label="TypeScript">
+
+In the TypeScript SDK, the retrieval tool supports targeted retrieval through optional parameters, so the agent can search and filter offloaded content without loading it entirely back into context.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `reference` | `string` | *(required)* Storage reference from the offloaded result |
+| `pattern` | `string` | Regex or keyword to grep for |
+| `line_range` | `{ start: number; end: number }` | 1-indexed inclusive line span to retrieve |
+| `context_lines` | `number` | Lines of context around pattern matches (default: 5) |
+
+**Retrieval modes:**
+
+- **Pattern search** — Provide `pattern` to grep for regex/keyword matches with configurable `context_lines`
+- **Line range** — Provide `line_range` for random access to specific line numbers
+- **Combined** — Provide both `pattern` and `line_range` to search within a specific range
+- **Head** — Provide only `context_lines` without a `pattern` or `line_range` to return the first N lines of the content
+- **Full retrieval** — Omit all optional parameters to retrieve everything (discouraged for large content)
+
+Results include line numbers to enable follow-up queries. Large result sets are truncated with guidance to narrow the search. Binary content cannot be searched — pattern and line range parameters return an error for binary references.
+
+</Tab>
+</Tabs>
+
+### Example: what the agent sees
+
+<Tabs>
+<Tab label="Python">
+
+**1. Tool result gets offloaded (replaces original result inline)**
+
+```
+[Offloaded: 1 blocks, ~10,000 tokens]
+Tool result was offloaded to external storage due to size.
+Use the preview below to answer if possible.
+Use retrieve_offloaded_content to fetch the full content by reference.
+
+{"users":[{"id":1,"name":"Alice","role":"admin"},{"id":2,"name":"Bob","role":"user"},{"id":3,"name":"Charlie","rol
+
+[Stored references:]
+  mem_1_tool-123_0 (json, 42,000 bytes)
+```
+
+**2. Agent retrieves full content**
+
+Input: `{ reference: "mem_1_tool-123_0" }`
+
+The tool returns the full offloaded content in its native format.
+
+</Tab>
+<Tab label="TypeScript">
+
+**1. Tool result gets offloaded (replaces original result inline)**
+
+```
+[Offloaded: 1 blocks, ~10,000 tokens]
+Tool result was offloaded to external storage due to size.
+Use the preview below to answer if possible.
+Use retrieve_offloaded_content with a reference and either:
+  - pattern: regex or keyword to find matching lines with context
+  - line_range: { start, end } to read a specific span of lines
+Only retrieve the full content (omit pattern/line_range) as a last resort.
+
+{"users":[{"id":1,"name":"Alice","role":"admin"},{"id":2,"name":"Bob","role":"user"},{"id":3,"name":"Charlie","rol
+
+[Stored references:]
+  mem_1_tool-123_0 (json, 42,000 bytes)
+```
+
+**2. Agent searches with a pattern**
+
+Input: `{ reference: "mem_1_tool-123_0", pattern: "admin", context_lines: 2 }`
+
+```
+[2 matches for /admin/]
+
+   1| {
+   2|   "users": [
+>  3|     { "id": 1, "name": "Alice", "role": "admin" },
+   4|     { "id": 2, "name": "Bob", "role": "user" },
+   5|     { "id": 3, "name": "Charlie", "role": "user" },
+---
+  48|     { "id": 15, "name": "Dana", "role": "user" },
+> 49|     { "id": 16, "name": "Eve", "role": "admin" },
+  50|     { "id": 17, "name": "Frank", "role": "user" }
+  51|   ]
+```
+
+**3. Agent reads a specific line range**
+
+Input: `{ reference: "mem_1_tool-123_0", line_range: { start: 45, end: 55 } }`
+
+```
+[Lines 45-55 of 200]
+
+  45|     { "id": 14, "name": "Mallory", "role": "user" },
+  46|     { "id": 15, "name": "Dana", "role": "user" },
+  47|     { "id": 16, "name": "Eve", "role": "admin" },
+  48|     { "id": 17, "name": "Frank", "role": "user" },
+  49|     { "id": 18, "name": "Grace", "role": "user" },
+  50|     { "id": 19, "name": "Heidi", "role": "moderator" },
+  51|     { "id": 20, "name": "Ivan", "role": "user" },
+  52|     { "id": 21, "name": "Judy", "role": "admin" },
+  53|     { "id": 22, "name": "Karl", "role": "user" },
+  54|     { "id": 23, "name": "Liam", "role": "user" },
+  55|     { "id": 24, "name": "Mia", "role": "user" }
+```
+
+**4. Truncated output (too many matches)**
+
+```
+[500 matches for /user/]
+
+>  2|   "users": [
+>  3|     { "id": 1, "name": "Alice", "role": "admin" },
+>  4|     { "id": 2, "name": "Bob", "role": "user" },
+>  5|     { "id": 3, "name": "Charlie", "role": "user" },
+...
+
+[output truncated, narrow your search]
+```
+
+</Tab>
+</Tabs>
+
+### Disabling the retrieval tool
+
+If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it:
+
+<Tabs>
+<Tab label="Python">
+
+```python
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=FileStorage("./artifacts"),
+        include_retrieval_tool=False,
+    )
+])
+```
+</Tab>
+<Tab label="TypeScript">
+
+```typescript
+--8<-- "user-guide/concepts/plugins/context-offloader_imports.ts:disable_retrieval_tool"
+
+--8<-- "user-guide/concepts/plugins/context-offloader.ts:disable_retrieval_tool"
+```
 </Tab>
 </Tabs>
 
