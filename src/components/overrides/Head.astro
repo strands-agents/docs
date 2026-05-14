@@ -62,8 +62,15 @@ const breadcrumbItems = pathSegments.map((segment, i) => {
   }
 })
 
-// TechArticle node for docs pages with tags or sourceLinks.
-// Reaches HTML-only crawlers that don't follow the llms.txt convention.
+// TechArticle node for docs pages with tags or sourceLinks. Reaches HTML-only
+// crawlers that don't follow the llms.txt convention.
+//
+// Schema reference for the fields used below:
+//   TechArticle:        https://schema.org/TechArticle
+//   keywords:           https://schema.org/keywords
+//   relatedLink:        https://schema.org/relatedLink
+//   isBasedOn:          https://schema.org/isBasedOn
+//   SoftwareSourceCode: https://schema.org/SoftwareSourceCode
 const entry = route.entry
 // Non-docs routes (blog authors/tags pages, etc.) flow through Starlight too
 // but their synthetic entry.data has no `tags` field — guard with ??.

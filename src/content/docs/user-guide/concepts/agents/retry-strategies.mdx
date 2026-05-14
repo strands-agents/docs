@@ -1,6 +1,6 @@
 ---
 title: Retry Strategies
-tags: [retry]
+tags: [event-loop, error-handling]
 ---
 
 Model providers occasionally encounter errors such as rate limits, service unavailability, or network timeouts. By default, the agent retries `ModelThrottledException` failures automatically with exponential backoff and the `Angent.retry_strategy` parameter lets you customize this behavior.

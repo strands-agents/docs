@@ -1,42 +1,65 @@
-# Allowed tag vocabulary for user-guide pages.
+# Allowed tag vocabulary for user-guide pages. Drives the "Related pages"
+# block. Validated by Zod (src/content.config.ts) — unknown tags fail the
+# build.
 #
-# Tags drive the build-time "Related pages" block. A page's `tags` frontmatter
-# is validated against this list by the docs schema (src/content.config.ts) —
-# unknown tags fail the build.
+# THE RULE: a tag means "this page TEACHES the named thing." Not "mentions
+# it" or "has a section labeled with it." If a reader landed on the page
+# looking to learn the tagged topic, they should leave understanding it.
 #
-# Scoring: `more shared tags = more related`. Aim for 2–4 tags per page drawn
-# from different axes below so pages naturally connect along topic, capability,
-# lifecycle, and audience dimensions.
+# Common traps to avoid:
+# - Section heading matches tag name. A model provider with a "Streaming"
+#   section is not teaching streaming — the section says "yes, this
+#   provider supports it." Don't tag the provider page with `streaming`.
+# - Page mentions X in passing. References to other pages don't warrant
+#   tags. Tag for what the page IS, not what it links to.
+# - Lifecycle bloat. Words like "production" feel applicable to anything
+#   serious. We removed `production` for this reason — it labeled a
+#   property, not a topic.
+# - Over-tagging. 6+ tags dilutes the page's coordinates and makes it
+#   match too broadly. Aim for 2-4 tags that each name a primary topic.
 #
-# Adding a tag = PR editing this file in the same change that first uses it.
+# Authoring checklist:
+# 1. Does this page TEACH the tag? If not, leave it off.
+# 2. Would this page belong in the See also of every other tag-mate?
+# 3. Is the tag a primary topic, or just mentioned? Tag only primaries.
+# 4. When in doubt, leave the tag off. Empty See also beats misleading.
+#
+# Adding a new tag = PR editing this file. Every tag must apply to ≥2
+# pages and meaningfully bridge across sidebar sections.
 
 # Topics / domains — specific products, protocols, data types
 - agentcore
 - aws
 - bedrock
-- guardrails
 - mcp
 - pii
+- vision
 
 # Capabilities — what the page teaches the reader to do
+- bidi-streaming
+- caching
 - conversation-management
+- error-handling
+- event-loop
+- failure-diagnosis
 - hooks
+- local-models
 - multi-agent
-- retry
+- multimodal-evaluation
+- prompt-authoring
 - session-management
+- simulation
+- snapshots
 - state
 - streaming
 - structured-output
-- tools
+- token-management
+- tool-authoring
+- tool-evaluation
+- tool-execution
 
 # Lifecycle / practice — where in the dev lifecycle this sits
 - deployment
-- evaluation
 - observability
-- production
 - quickstart
 - safety
-
-# Audience — language-specific pages
-- python
-- typescript
