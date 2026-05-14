@@ -6,8 +6,8 @@ function doc(id: string, title: string, tags: string[]): CollectionEntry<'docs'>
   return { id, collection: 'docs', data: { title, tags } } as unknown as CollectionEntry<'docs'>
 }
 
-describe('relatedUserGuideFor (headless: top 10, Jaccard)', () => {
-  it('ranks pages by tag-overlap size, descending', () => {
+describe('relatedUserGuideFor (headless: top 10, specificity-weighted Jaccard)', () => {
+  it('ranks pages by score, descending', () => {
     const current = doc('docs/user-guide/a', 'A', ['x', 'y', 'z'])
     const two = doc('docs/user-guide/b', 'B', ['x', 'y'])
     const one = doc('docs/user-guide/c', 'C', ['x'])
@@ -16,7 +16,7 @@ describe('relatedUserGuideFor (headless: top 10, Jaccard)', () => {
     expect(result.map((r) => r.title)).toEqual(['B', 'C'])
   })
 
-  it('breaks overlap ties alphabetically by title', () => {
+  it('breaks score ties alphabetically by title', () => {
     const current = doc('docs/user-guide/a', 'A', ['x'])
     const zebra = doc('docs/user-guide/z', 'Zebra', ['x'])
     const apple = doc('docs/user-guide/b', 'Apple', ['x'])

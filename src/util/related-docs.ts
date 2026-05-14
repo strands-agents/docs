@@ -68,10 +68,8 @@ const HUMAN_MAX = 6
  * corpus shape shifts substantially (much larger registry, much wider tag
  * frequency distribution), this number may need re-tuning.
  *
- * Tradeoff: ~30-50% of tagged pages produce no human strip at this floor.
- * That's the right outcome for pages whose tags don't differentiate them
- * from others sharing only common tags. To bring those pages back into the
- * See also flow, the answer is sharper tagging, not a lower threshold.
+ * ~30-50% of tagged pages produce no human strip at this floor. To bring
+ * a page back, add sharper tags rather than lowering the threshold.
  */
 const HUMAN_SCORE_FLOOR = 0.4
 const USER_GUIDE_PREFIX = 'docs/user-guide/'
