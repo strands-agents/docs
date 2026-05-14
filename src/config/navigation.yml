@@ -283,9 +283,7 @@ sidebar:
           - docs/community/tools/strands-sql
           - docs/community/tools/strands-teams
           - docs/community/tools/strands-telegram
-          - docs/community/tools/strands-telegram-listener
-          
-          
+          - docs/community/tools/strands-telegram-listener             
 
 github:
   sections:
