@@ -1,5 +1,7 @@
 /**
- * Compute "Related pages" for user-guide docs.
+ * Compute "Related pages" for user-guide docs. Headless-only — surfaced in
+ * /<slug>/index.md, /llms-full.txt, and JSON-LD `relatedLink`. Not rendered
+ * on the HTML page itself.
  *
  * Called from src/util/render-to-markdown.ts (markdown/llms surfaces) and
  * src/components/overrides/Head.astro (JSON-LD).
@@ -50,28 +52,6 @@ export interface RelatedLink {
 }
 
 const HEADLESS_MAX = 10
-const HUMAN_MAX = 6
-
-/**
- * Score floor for the human-facing "See also" strip. Headless surfaces are
- * unfiltered (LLMs filter noise themselves and benefit from wider recall),
- * but humans don't tolerate "why is this here?" links — so on the rendered
- * page we hide anything below a confidence threshold.
- *
- * 0.4 maps to roughly: "two specific tags shared" or "one specific tag +
- * one broad tag shared." Below that, the connection is usually a single
- * broad tag in common (e.g. both pages mention `aws`) and the See also
- * starts to look spurious. Pages whose best match is below the floor get
- * NO strip, which is strictly better than a misleading one.
- *
- * Calibrated against ~110 tagged user-guide pages with ~30 tags. If the
- * corpus shape shifts substantially (much larger registry, much wider tag
- * frequency distribution), this number may need re-tuning.
- *
- * ~30-50% of tagged pages produce no human strip at this floor. To bring
- * a page back, add sharper tags rather than lowering the threshold.
- */
-const HUMAN_SCORE_FLOOR = 0.4
 const USER_GUIDE_PREFIX = 'docs/user-guide/'
 
 function isUserGuide(entry: CollectionEntry<'docs'>): boolean {
@@ -90,7 +70,7 @@ interface ScoredCandidate {
  *
  * Memoized on the `allDocs` array. Astro's `getCollection` returns a stable
  * reference within a build, so successive calls (one per page render across
- * Head.astro / RelatedPagesInline.astro / render-to-markdown) hit the cache.
+ * Head.astro and render-to-markdown) hit the cache.
  */
 const specificityCache = new WeakMap<readonly CollectionEntry<'docs'>[], Map<string, number>>()
 
@@ -157,15 +137,4 @@ export function relatedUserGuideFor(
   allDocs: readonly CollectionEntry<'docs'>[],
 ): RelatedLink[] {
   return rankedCandidates(current, allDocs).slice(0, HEADLESS_MAX).map(toLink)
-}
-
-/** Human surface: top 6 by specificity-weighted Jaccard, above the score floor. */
-export function humanRelatedUserGuideFor(
-  current: CollectionEntry<'docs'>,
-  allDocs: readonly CollectionEntry<'docs'>[],
-): RelatedLink[] {
-  return rankedCandidates(current, allDocs)
-    .filter((c) => c.score >= HUMAN_SCORE_FLOOR)
-    .slice(0, HUMAN_MAX)
-    .map(toLink)
 }

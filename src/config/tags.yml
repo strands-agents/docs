@@ -1,6 +1,7 @@
-# Allowed tag vocabulary for user-guide pages. Drives the "Related pages"
-# block. Validated by Zod (src/content.config.ts) — unknown tags fail the
-# build.
+# Allowed tag vocabulary for user-guide pages. Drives the headless
+# "Related pages" block (in /<slug>/index.md, /llms-full.txt, and JSON-LD
+# `relatedLink`). Not surfaced on the rendered HTML — agent-facing only.
+# Validated by Zod (src/content.config.ts) — unknown tags fail the build.
 #
 # THE RULE: a tag means "this page TEACHES the named thing." Not "mentions
 # it" or "has a section labeled with it." If a reader landed on the page
@@ -20,9 +21,9 @@
 #
 # Authoring checklist:
 # 1. Does this page TEACH the tag? If not, leave it off.
-# 2. Would this page belong in the See also of every other tag-mate?
+# 2. Would this page be a useful related-link for every other tag-mate?
 # 3. Is the tag a primary topic, or just mentioned? Tag only primaries.
-# 4. When in doubt, leave the tag off. Empty See also beats misleading.
+# 4. When in doubt, leave the tag off. Empty related-links beat misleading.
 #
 # Adding a new tag = PR editing this file. Every tag must apply to ≥2
 # pages and meaningfully bridge across sidebar sections.

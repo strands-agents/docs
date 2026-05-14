@@ -3,7 +3,6 @@ import '@astrojs/starlight/style/markdown.css';
 import CommunityContributionAside from '../CommunityContributionAside.astro';
 import LanguageSupportAside from '../LanguageSupportAside.astro';
 import ExperimentalAside from '../ExperimentalAside.astro';
-import RelatedPagesInline from '../RelatedPagesInline.astro';
 
 const { starlightRoute } = Astro.locals;
 const { languages, community, experimental } = starlightRoute.entry.data;
@@ -16,5 +15,4 @@ const { languages, community, experimental } = starlightRoute.entry.data;
       contextualizes the page, and language support is listed in the community catalog table instead. */}
   {languages && !community && <LanguageSupportAside languages={languages} />}
   <slot />
-  <RelatedPagesInline />
 </div>
