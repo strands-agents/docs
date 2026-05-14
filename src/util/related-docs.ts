@@ -138,3 +138,19 @@ export function relatedUserGuideFor(
 ): RelatedLink[] {
   return rankedCandidates(current, allDocs).slice(0, HEADLESS_MAX).map(toLink)
 }
+
+/**
+ * Other user-guide pages carrying a given tag, sorted alphabetically by title.
+ * Used by the clickable-tags UI to populate per-tag expansion content.
+ * Excludes the current page so a tag never lists itself.
+ */
+export function userGuidePagesWithTag(
+  tag: string,
+  current: CollectionEntry<'docs'>,
+  allDocs: readonly CollectionEntry<'docs'>[],
+): { slug: string; title: string }[] {
+  return allDocs
+    .filter((d) => d.id !== current.id && isUserGuide(d) && (d.data.tags ?? []).includes(tag))
+    .map((d) => ({ slug: d.id, title: d.data.title }))
+    .sort((a, b) => a.title.localeCompare(b.title))
+}

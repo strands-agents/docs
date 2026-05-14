@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { CollectionEntry } from 'astro:content'
-import { relatedUserGuideFor } from '../src/util/related-docs'
+import { relatedUserGuideFor, userGuidePagesWithTag } from '../src/util/related-docs'
 
 function doc(id: string, title: string, tags: string[]): CollectionEntry<'docs'> {
   return { id, collection: 'docs', data: { title, tags } } as unknown as CollectionEntry<'docs'>
@@ -95,6 +95,48 @@ describe('relatedUserGuideFor (headless: top 10, specificity-weighted Jaccard)',
 
     const result = relatedUserGuideFor(current, [current, focused, coincidental])
     expect(result.map((r) => r.title)).toEqual(['Focused', 'Coincidental'])
+  })
+})
+
+describe('userGuidePagesWithTag', () => {
+  it('returns user-guide pages carrying the given tag, alphabetical by title', () => {
+    const current = doc('docs/user-guide/a', 'A', ['safety'])
+    const zebra = doc('docs/user-guide/z', 'Zebra', ['safety'])
+    const apple = doc('docs/user-guide/b', 'Apple', ['safety'])
+
+    const result = userGuidePagesWithTag('safety', current, [current, zebra, apple])
+    expect(result.map((r) => r.title)).toEqual(['Apple', 'Zebra'])
+  })
+
+  it('excludes the current page from its own results', () => {
+    const current = doc('docs/user-guide/a', 'A', ['safety'])
+    const other = doc('docs/user-guide/b', 'B', ['safety'])
+
+    const result = userGuidePagesWithTag('safety', current, [current, other])
+    expect(result.map((r) => r.slug)).toEqual(['docs/user-guide/b'])
+  })
+
+  it('returns empty when no other page carries the tag', () => {
+    const current = doc('docs/user-guide/a', 'A', ['safety'])
+    const other = doc('docs/user-guide/b', 'B', ['production'])
+
+    expect(userGuidePagesWithTag('safety', current, [current, other])).toEqual([])
+  })
+
+  it('ignores pages outside the user-guide tree', () => {
+    const current = doc('docs/user-guide/a', 'A', ['safety'])
+    const blog = doc('docs/community/b', 'Blog Post', ['safety'])
+    const guide = doc('docs/user-guide/c', 'Guide', ['safety'])
+
+    const result = userGuidePagesWithTag('safety', current, [current, blog, guide])
+    expect(result.map((r) => r.slug)).toEqual(['docs/user-guide/c'])
+  })
+
+  it('ignores pages with no tags', () => {
+    const current = doc('docs/user-guide/a', 'A', ['safety'])
+    const untagged = doc('docs/user-guide/b', 'Untagged', [])
+
+    expect(userGuidePagesWithTag('safety', current, [current, untagged])).toEqual([])
   })
 })
 
