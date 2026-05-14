@@ -57,9 +57,7 @@ async function builtInTools() {
   })
 
   const agent = new Agent({ model })
-  const response = await agent.invoke(
-    'What are the latest AI news today?'
-  )
+  const response = await agent.invoke('What are the latest AI news today?')
   console.log(response)
   // --8<-- [end:builtin_tools]
 }

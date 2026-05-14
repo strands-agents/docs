@@ -98,9 +98,17 @@ The `Graph` constructor accepts:
 - **nodes**: Array of `AgentBase`, `MultiAgentBase`, or `Node` instances
 - **edges**: Array of edge definitions (tuples or objects with handlers)
 - **sources**: Entry point node IDs (auto-detected from nodes with no incoming edges)
-- **maxSteps**: Maximum total node executions (useful for cyclic graphs)
-- **maxConcurrency**: Maximum nodes executing in parallel
+- **maxSteps**: Maximum total node executions (useful for cyclic graphs). Defaults to `Infinity`.
+- **maxConcurrency**: Maximum nodes executing in parallel. Defaults to `Infinity`.
+- **timeout**: Wall-clock ceiling for the entire graph invocation, in milliseconds. Defaults to `Infinity`. Does not propagate into nested orchestrators wrapped via `MultiAgentNode`; nested `Swarm`/`Graph` instances run under their own timeout config.
+- **nodeTimeout**: Fallback per-node wall-clock ceiling in milliseconds. Applied to any `AgentNode` that does not set its own `timeout`. Defaults to `Infinity`. Does not apply to `MultiAgentNode`.
 - **plugins**: Plugins for event-driven extensibility
+
+To bound an individual `AgentNode`, pass `timeout` to its options object instead of relying on the orchestrator's `nodeTimeout`. Per-node `timeout` overrides `nodeTimeout` for that node and must be at least 1 ms.
+
+If neither `maxSteps` nor `timeout` is set, the SDK emits a one-time warning at construction since a graph with cyclic edges and no bound can run indefinitely.
+
+Timeouts are enforced via `AbortSignal` and are cooperative. A tool that neither polls its cancel signal nor forwards it to a cancellable API can run past the deadline.
 
 </Tab>
 </Tabs>

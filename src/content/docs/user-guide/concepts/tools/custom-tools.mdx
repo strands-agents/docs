@@ -108,6 +108,8 @@ In TypeScript, the tool name and description are always provided explicitly in t
 </Tab>
 </Tabs>
 
+Tool names must match `^[a-zA-Z0-9_-]+$` and be 1 to 64 characters long. Names that do not match this format are replaced with `INVALID_TOOL_NAME` on assistant messages before they are sent to the model, so the request still succeeds but the model can no longer reference the original name.
+
 
 ### Overriding Input Schema
 

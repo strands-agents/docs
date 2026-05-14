@@ -12,3 +12,7 @@ import { z } from 'zod'
 // --8<-- [start:custom_credentials_imports]
 import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
 // --8<-- [end:custom_credentials_imports]
+
+// --8<-- [start:request_timeout_imports]
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+// --8<-- [end:request_timeout_imports]
