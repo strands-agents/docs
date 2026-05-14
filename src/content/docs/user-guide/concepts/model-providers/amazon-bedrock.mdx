@@ -323,6 +323,18 @@ response = agent("Write a short story about an AI assistant.")
 </Tab>
 </Tabs>
 
+#### TypeScript Request Timeout
+
+The TypeScript SDK applies a default `requestTimeout` of 120000 ms (120 seconds) when constructing the Bedrock Runtime client, since the underlying AWS SDK defaults to `0` (disabled), which lets a stuck connection hang. Override it by passing your own value through `clientConfig.requestHandler`:
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/amazon-bedrock_imports.ts:request_timeout_imports"
+
+--8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:request_timeout"
+```
+
+Passing a fully-constructed handler instance (rather than an options bag) bypasses the default; the handler's own timeouts apply unchanged.
+
 ## Advanced Features
 
 ### Streaming vs Non-Streaming Mode
