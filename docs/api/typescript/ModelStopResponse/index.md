@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:438](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L438)
+Defined in: [src/hooks/events.ts:443](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L443)
 
 Response from a model invocation containing the message and stop reason.
 
@@ -10,7 +10,7 @@ Response from a model invocation containing the message and stop reason.
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:442](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L442)
+Defined in: [src/hooks/events.ts:447](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L447)
 
 The message returned by the model.
 
@@ -22,7 +22,7 @@ The message returned by the model.
 readonly stopReason: StopReason;
 ```
 
-Defined in: [src/hooks/events.ts:446](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L446)
+Defined in: [src/hooks/events.ts:451](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L451)
 
 The reason the model stopped generating.
 
@@ -34,6 +34,6 @@ The reason the model stopped generating.
 readonly optional redaction?: Redaction;
 ```
 
-Defined in: [src/hooks/events.ts:452](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L452)
+Defined in: [src/hooks/events.ts:457](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L457)
 
 Optional redaction info when guardrails blocked input. When present, indicates the last user message was redacted. The redacted message is available in `agent.messages` (last message).

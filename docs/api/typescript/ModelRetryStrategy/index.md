@@ -1,4 +1,4 @@
-Defined in: [src/retry/model-retry-strategy.ts:33](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/retry/model-retry-strategy.ts#L33)
+Defined in: [src/retry/model-retry-strategy.ts:33](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/retry/model-retry-strategy.ts#L33)
 
 Abstract base class for model-retry strategies.
 
@@ -41,7 +41,7 @@ new ModelRetryStrategy(): ModelRetryStrategy;
 abstract readonly name: string;
 ```
 
-Defined in: [src/retry/model-retry-strategy.ts:37](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/retry/model-retry-strategy.ts#L37)
+Defined in: [src/retry/model-retry-strategy.ts:37](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/retry/model-retry-strategy.ts#L37)
 
 A stable string identifier for this retry strategy.
 
@@ -59,7 +59,7 @@ abstract protected computeRetryDecision(event):
 | Promise<RetryDecision>;
 ```
 
-Defined in: [src/retry/model-retry-strategy.ts:53](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/retry/model-retry-strategy.ts#L53)
+Defined in: [src/retry/model-retry-strategy.ts:53](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/retry/model-retry-strategy.ts#L53)
 
 Decide whether to retry the failed model call, and how long to wait first.
 
@@ -85,7 +85,7 @@ Return `{ retry: false }` to let the error propagate. Return `{ retry: true, wai
 protected onFirstModelAttempt(): void;
 ```
 
-Defined in: [src/retry/model-retry-strategy.ts:63](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/retry/model-retry-strategy.ts#L63)
+Defined in: [src/retry/model-retry-strategy.ts:63](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/retry/model-retry-strategy.ts#L63)
 
 Called when `event.attemptCount === 1`, i.e. at the start of a fresh turn. Subclasses with per-turn state override this to clear it; the default is a no-op.
 
@@ -103,7 +103,7 @@ The agent loop guarantees `attemptCount === 1` on every new turn, so this is a r
 initAgent(agent): void;
 ```
 
-Defined in: [src/retry/model-retry-strategy.ts:99](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/retry/model-retry-strategy.ts#L99)
+Defined in: [src/retry/model-retry-strategy.ts:99](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/retry/model-retry-strategy.ts#L99)
 
 Initialize the retry strategy with the agent instance.
 

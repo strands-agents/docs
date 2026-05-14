@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:313](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L313)
+Defined in: [src/hooks/events.ts:318](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L318)
 
 Event triggered after a tool execution completes. Fired after tool execution finishes, whether successful or failed. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -16,7 +16,7 @@ Hook callbacks can mutate [result](#result) to rewrite the tool result before it
 new AfterToolCallEvent(data): AfterToolCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:334](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L334)
+Defined in: [src/hooks/events.ts:339](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L339)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [src/hooks/events.ts:334](https://github.com/strands-agents/sdk-type
 readonly type: "afterToolCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:314](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L314)
+Defined in: [src/hooks/events.ts:319](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L319)
 
 ---
 
@@ -56,7 +56,7 @@ Defined in: [src/hooks/events.ts:314](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:315](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L315)
+Defined in: [src/hooks/events.ts:320](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L320)
 
 ---
 
@@ -66,7 +66,7 @@ Defined in: [src/hooks/events.ts:315](https://github.com/strands-agents/sdk-type
 readonly toolUse: ToolUseData;
 ```
 
-Defined in: [src/hooks/events.ts:316](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L316)
+Defined in: [src/hooks/events.ts:321](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L321)
 
 ---
 
@@ -76,7 +76,7 @@ Defined in: [src/hooks/events.ts:316](https://github.com/strands-agents/sdk-type
 readonly tool: Tool;
 ```
 
-Defined in: [src/hooks/events.ts:317](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L317)
+Defined in: [src/hooks/events.ts:322](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L322)
 
 ---
 
@@ -86,7 +86,7 @@ Defined in: [src/hooks/events.ts:317](https://github.com/strands-agents/sdk-type
 result: ToolResultBlock;
 ```
 
-Defined in: [src/hooks/events.ts:323](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L323)
+Defined in: [src/hooks/events.ts:328](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L328)
 
 The tool result. Can be replaced by hook callbacks to transform the result before it enters the conversation history.
 
@@ -98,7 +98,7 @@ The tool result. Can be replaced by hook callbacks to transform the result befor
 readonly optional error?: Error;
 ```
 
-Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L325)
+Defined in: [src/hooks/events.ts:330](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L330)
 
 ---
 
@@ -108,7 +108,7 @@ Defined in: [src/hooks/events.ts:325](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:326](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L326)
+Defined in: [src/hooks/events.ts:331](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L331)
 
 ---
 
@@ -118,7 +118,7 @@ Defined in: [src/hooks/events.ts:326](https://github.com/strands-agents/sdk-type
 optional retry?: boolean;
 ```
 
-Defined in: [src/hooks/events.ts:332](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L332)
+Defined in: [src/hooks/events.ts:337](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L337)
 
 Optional flag that can be set by hook callbacks to request a retry of the tool call. When set to true, the agent will re-execute the tool.
 
@@ -134,7 +134,7 @@ toJSON(): Pick<AfterToolCallEvent, "toolUse" | "type" | "result"> & {
 };
 ```
 
-Defined in: [src/hooks/events.ts:362](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/hooks/events.ts#L362)
+Defined in: [src/hooks/events.ts:367](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/hooks/events.ts#L367)
 
 Serializes for wire transport, excluding the agent reference, tool instance, invocationState, and mutable retry flag. Converts Error to an extensible object for safe wire serialization. Called automatically by JSON.stringify().
 

@@ -1,4 +1,4 @@
-Defined in: [src/interrupt.ts:20](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L20)
+Defined in: [src/interrupt.ts:28](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L28)
 
 Represents an interrupt that can pause agent execution for human-in-the-loop workflows.
 
@@ -10,7 +10,7 @@ Represents an interrupt that can pause agent execution for human-in-the-loop wor
 readonly id: string;
 ```
 
-Defined in: [src/interrupt.ts:24](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L24)
+Defined in: [src/interrupt.ts:32](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L32)
 
 Unique identifier for this interrupt.
 
@@ -22,7 +22,7 @@ Unique identifier for this interrupt.
 readonly name: string;
 ```
 
-Defined in: [src/interrupt.ts:29](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L29)
+Defined in: [src/interrupt.ts:37](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L37)
 
 User-defined name for the interrupt.
 
@@ -34,7 +34,7 @@ User-defined name for the interrupt.
 readonly optional reason?: JSONValue;
 ```
 
-Defined in: [src/interrupt.ts:34](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L34)
+Defined in: [src/interrupt.ts:42](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L42)
 
 User-provided reason for raising the interrupt.
 
@@ -46,9 +46,21 @@ User-provided reason for raising the interrupt.
 optional response?: JSONValue;
 ```
 
-Defined in: [src/interrupt.ts:39](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L39)
+Defined in: [src/interrupt.ts:47](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L47)
 
 Human response provided when resuming the agent after an interrupt.
+
+---
+
+### source
+
+```ts
+readonly source: InterruptSource;
+```
+
+Defined in: [src/interrupt.ts:54](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L54)
+
+Where this interrupt was raised from — a tool callback, an agent-level hook, or a multi-agent orchestrator hook. Always populated. When deserializing a snapshot produced by an older SDK that did not record this field, defaults to `'hook'`.
 
 ## Methods
 
@@ -60,10 +72,11 @@ toJSON(): {
   name: string;
   reason?: JSONValue;
   response?: JSONValue;
+  source: InterruptSource;
 };
 ```
 
-Defined in: [src/interrupt.ts:55](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L55)
+Defined in: [src/interrupt.ts:73](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L73)
 
 Serializes the interrupt to a JSON-compatible object.
 
@@ -75,12 +88,14 @@ Serializes the interrupt to a JSON-compatible object.
   name: string;
   reason?: JSONValue;
   response?: JSONValue;
+  source: InterruptSource;
 }
 ```
 
 | Name | Type | Defined in |
 | --- | --- | --- |
-| `id` | `string` | [src/interrupt.ts:55](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L55) |
-| `name` | `string` | [src/interrupt.ts:55](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L55) |
-| `reason?` | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [src/interrupt.ts:55](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L55) |
-| `response?` | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [src/interrupt.ts:55](https://github.com/strands-agents/sdk-typescript/blob/f72cbc85fd52a15f9ee0400e717de2ab11731169/strands-ts/src/interrupt.ts#L55) |
+| `id` | `string` | [src/interrupt.ts:73](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L73) |
+| `name` | `string` | [src/interrupt.ts:73](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L73) |
+| `reason?` | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [src/interrupt.ts:73](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L73) |
+| `response?` | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | [src/interrupt.ts:73](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L73) |
+| `source` | [`InterruptSource`](/docs/api/typescript/InterruptSource/index.md) | [src/interrupt.ts:73](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/interrupt.ts#L73) |

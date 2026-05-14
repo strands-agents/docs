@@ -493,6 +493,38 @@ const result = await agent.invoke([
 -   **Documents**: PDF and other binary formats (automatically detected via MIME type)
 -   **Video**: MP4 and other video formats (automatically detected via MIME type)
 
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+(( tab "Python" ))
+The Google provider can use the native `models.count_tokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively. These are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
+You can enable native token counting with:
+
+```python
+model = GoogleModel(
+    model_id="gemini-2.5-flash",
+    use_native_token_count=True,
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The Google provider can use the native `models.countTokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively. These are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
+You can enable native token counting with:
+
+```typescript
+const model = new GoogleModel({
+  modelId: 'gemini-2.5-flash',
+  useNativeTokenCount: true,
+})
+```
+
+When disabled (or if the API call fails), falls back to estimation using the character-based heuristic.
+(( /tab "TypeScript" ))
+
 ## References
 
 -   [Python API](/docs/api/python/strands.models.model)

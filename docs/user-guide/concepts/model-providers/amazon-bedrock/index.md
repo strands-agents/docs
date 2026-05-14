@@ -1150,6 +1150,40 @@ print(f"Rating: {result.rating}")
 ```
 (( /tab "TypeScript" ))
 
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+(( tab "Python" ))
+The Bedrock provider can use the native `count_tokens` API via the `CountTokens` action in the Converse API. This includes system prompts, messages, and tool specifications in the count.
+
+Not all Bedrock models support the `CountTokens` API. When a model doesn’t support it or the caller doesn’t have the required IAM permissions, the provider caches this result and falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
+
+You can enable native token counting with:
+
+```python
+model = BedrockModel(
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    use_native_token_count=True,
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The Bedrock provider can use the native `CountTokensCommand` API. This includes system prompts, messages, and tool specifications in the count.
+
+Not all Bedrock models support the `CountTokens` API. When a model doesn’t support it or the caller doesn’t have the required IAM permissions, the provider caches this result and falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
+
+You can enable native token counting with:
+
+```typescript
+const model = new BedrockModel({
+  modelId: ‘anthropic.claude-sonnet-4-20250514-v1:0’,
+  useNativeTokenCount: true,
+})
+```
+(( /tab "TypeScript" ))
+
 ## Troubleshooting
 
 ### On-demand throughput isn’t supported

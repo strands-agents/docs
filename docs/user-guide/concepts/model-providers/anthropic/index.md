@@ -141,6 +141,40 @@ console.log(response)
 ```
 (( /tab "TypeScript" ))
 
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+(( tab "Python" ))
+The Anthropic provider can use the native `messages.count_tokens()` API, which provides exact token counts including system prompts, messages, and tool specifications.
+
+You can enable native token counting with:
+
+```python
+model = AnthropicModel(
+    model_id="claude-sonnet-4-6",
+    use_native_token_count=True,
+)
+```
+
+When disabled (or if the API call fails), falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The Anthropic provider can use the native `messages.countTokens()` API, which provides exact token counts including system prompts, messages, and tool specifications.
+
+You can enable native token counting with:
+
+```typescript
+const model = new AnthropicModel({
+  modelId: 'claude-sonnet-4-6',
+  useNativeTokenCount: true,
+})
+```
+
+When disabled (or if the API call fails), falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+(( /tab "TypeScript" ))
+
 ## References
 
 -   [Python API](/docs/api/python/strands.models.model)
