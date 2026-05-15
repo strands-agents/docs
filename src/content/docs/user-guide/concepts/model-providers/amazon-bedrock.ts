@@ -430,7 +430,7 @@ async function guardrailsExample() {
 async function requestTimeoutExample() {
   // --8<-- [start:request_timeout]
   const bedrockModel = new BedrockModel({
-    modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+    modelId: 'us.anthropic.claude-sonnet-4-6',
     clientConfig: {
       requestHandler: { requestTimeout: 60_000 },
     },

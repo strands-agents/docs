@@ -494,11 +494,11 @@ Swarms also support interrupts raised from within the nodes themselves following
 </Tab>
 <Tab label="TypeScript">
 
-- [`BeforeNodeCallEvent`](@api/typescript/BeforeNodeCallEvent): orchestrator hook event that exposes the ability to interrupt before a node runs
+- `BeforeNodeCallEvent`: orchestrator hook event that exposes the ability to interrupt before a node runs
     - `event.interrupt({ name, reason? })`: halts the orchestrator. `name` is a string identifier and `reason` is an optional JSON-serializable value providing context for why the interrupt was raised.
     - The `name` must be unique across all interrupt calls configured on the same event. In the example above, we demonstrate using a namespace prefix for the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     - `event.cancel`: cancel node execution based on the interrupt response. Set to `true` for a default message or provide a custom cancellation message string.
-- [`MultiAgentResult`](@api/typescript/MultiAgentResult): returned by `invoke()` / `stream()`, contains interrupt information when the orchestrator pauses
+- `MultiAgentResult`: returned by `invoke()` / `stream()`, contains interrupt information when the orchestrator pauses
     - `result.status`: check if the swarm stopped due to `Status.INTERRUPTED`
     - `result.interrupts`: array of `Interrupt` objects, each with `name`, `reason`, and a unique `id`. Each interrupt's `source` field is `'multiagent-hook'` when raised from `BeforeNodeCallEvent`.
 - `InterruptResponseContent`: content block type for resuming from an interrupt
@@ -606,11 +606,11 @@ Graphs also support interrupts raised from within the nodes themselves following
 </Tab>
 <Tab label="TypeScript">
 
-- [`BeforeNodeCallEvent`](@api/typescript/BeforeNodeCallEvent): orchestrator hook event that exposes the ability to interrupt before a node runs
+- `BeforeNodeCallEvent`: orchestrator hook event that exposes the ability to interrupt before a node runs
     - `event.interrupt({ name, reason? })`: halts the orchestrator. `name` is a string identifier and `reason` is an optional JSON-serializable value providing context for why the interrupt was raised.
     - The `name` must be unique across all interrupt calls configured on the same event. In the example above, we demonstrate using a namespace prefix for the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     - `event.cancel`: cancel node execution based on the interrupt response. Set to `true` for a default message or provide a custom cancellation message string.
-- [`MultiAgentResult`](@api/typescript/MultiAgentResult): returned by `invoke()` / `stream()`, contains interrupt information when the orchestrator pauses
+- `MultiAgentResult`: returned by `invoke()` / `stream()`, contains interrupt information when the orchestrator pauses
     - `result.status`: check if the graph stopped due to `Status.INTERRUPTED`
     - `result.interrupts`: array of `Interrupt` objects, each with `name`, `reason`, and a unique `id`. Each interrupt's `source` field is `'multiagent-hook'` when raised from `BeforeNodeCallEvent`.
 - `InterruptResponseContent`: content block type for resuming from an interrupt

@@ -91,7 +91,7 @@ The TypeScript SDK ships three built-in strategies:
 - `LinearBackoff`: delay grows as `baseMs * attempt`, capped at `maxMs`.
 - `ConstantBackoff`: same delay for every retry.
 
-Each accepts a `jitter` option (`'none'`, `'full'`, `'equal'`, `'decorrelated'`). Default is `'full'` jitter, which spreads concurrent clients across the wait window.
+`ExponentialBackoff` and `LinearBackoff` accept a `jitter` option (`'none'`, `'full'`, `'equal'`, `'decorrelated'`). Default is `'full'` jitter, which spreads concurrent clients across the wait window. `ConstantBackoff` returns the configured delay unchanged.
 
 ```typescript
 --8<-- "user-guide/concepts/agents/retry-strategies_imports.ts:custom_backoff_imports"
