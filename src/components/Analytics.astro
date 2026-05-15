@@ -1,0 +1,223 @@
+---
+/**
+ * Analytics instrumentation via AWS WebSDK (Adobe Analytics under the hood).
+ * Dispatches custom events through the WebSDK's event listener system.
+ * Included in Head.astro for all pages.
+ */
+---
+
+<script is:inline>
+;(function () {
+  'use strict'
+
+  const CUSTOM_EVENT_LISTENER = 'custom-awsm-acs-analytics-event-listener'
+  const SEARCH_EVENT_LISTENER = 'custom-awsm-acs-search-event-listener'
+
+  // --- Helpers ---
+
+  function deriveSections(pathname) {
+    const segments = pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean)
+    // Skip leading "docs" segment if present
+    const start = segments[0] === 'docs' ? 1 : 0
+    return {
+      siteSection: segments[start] || 'home',
+      subSection1: segments[start + 1] || '',
+      subSection2: segments[start + 2] || '',
+      hierarchy: segments.slice(start).join('|'),
+    }
+  }
+
+  function dispatchAnalyticsEvent(eventType, data, useBeacon) {
+    var detail = {
+      eventType: eventType,
+      data: data,
+      useBeacon: !!useBeacon,
+    }
+    window.dispatchEvent(new CustomEvent(CUSTOM_EVENT_LISTENER, { detail: detail }))
+  }
+
+  function dispatchCTAClick(name, type) {
+    dispatchAnalyticsEvent('web.awsm.customCTAClick', {
+      pageInteraction: {
+        click: { name: name, type: type || 'customClick' },
+      },
+    })
+  }
+
+  function dispatchSearchEvent(searchTerm, resultCount) {
+    window.dispatchEvent(
+      new CustomEvent(SEARCH_EVENT_LISTENER, {
+        detail: {
+          eventType: 'web.awsm.search',
+          data: {
+            searchOperations: {
+              searchTerm: searchTerm,
+              searchFilter: [],
+              resultCount: resultCount,
+            },
+          },
+        },
+      })
+    )
+  }
+
+  // --- 1. Page View with Site Sections ---
+
+  function trackPageView() {
+    var sections = deriveSections(window.location.pathname)
+    dispatchAnalyticsEvent('web.awsm.pageInteraction', {
+      pageInteraction: {
+        name: 'pageView',
+        siteSection: sections.siteSection,
+        subSection1: sections.subSection1,
+        subSection2: sections.subSection2,
+        hierarchy: sections.hierarchy,
+      },
+    })
+  }
+
+  // --- 2. Anchor / In-Page Section Clicks ---
+
+  function setupAnchorTracking() {
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a[href^="#"]')
+      if (!link) return
+      var anchor = link.getAttribute('href').replace('#', '')
+      if (!anchor) return
+      var isToc = !!link.closest('nav.right-sidebar, [class*="toc"], starlight-toc')
+      var prefix = isToc ? 'toc-click' : 'anchor-click'
+      dispatchCTAClick(prefix + ':' + anchor, 'linkClick')
+    })
+  }
+
+  // --- 3. Search Events ---
+
+  function setupSearchTracking() {
+    var searchTimeout = null
+    var observer = new MutationObserver(function () {
+      var resultsContainer = document.querySelector('[data-pagefind-ui] .pagefind-ui__results')
+      if (!resultsContainer) return
+      clearTimeout(searchTimeout)
+      searchTimeout = setTimeout(function () {
+        var input = document.querySelector('[data-pagefind-ui] input')
+        var term = input ? input.value : ''
+        if (!term) return
+        var items = resultsContainer.querySelectorAll('.pagefind-ui__result')
+        dispatchSearchEvent(term, items.length)
+      }, 800)
+    })
+
+    // Starlight uses a dialog for search; observe when it appears
+    var searchDialog = document.querySelector('dialog[aria-label*="earch"], [data-pagefind-ui]')
+    if (searchDialog) {
+      observer.observe(searchDialog, { childList: true, subtree: true })
+    } else {
+      // Fallback: observe body for dialog insertion
+      var bodyObserver = new MutationObserver(function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var nodes = mutations[i].addedNodes
+          for (var j = 0; j < nodes.length; j++) {
+            if (nodes[j].nodeType === 1 && (nodes[j].matches('dialog') || nodes[j].querySelector('[data-pagefind-ui]'))) {
+              observer.observe(nodes[j], { childList: true, subtree: true })
+              bodyObserver.disconnect()
+              return
+            }
+          }
+        }
+      })
+      bodyObserver.observe(document.body, { childList: true })
+    }
+  }
+
+  // --- 4. Scroll Depth ---
+
+  function setupScrollTracking() {
+    var scrollData = { initial: 0, max: 0, latest: 0 }
+
+    function updateScroll() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight
+      var depth = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0
+      scrollData.latest = depth
+      if (depth > scrollData.max) scrollData.max = depth
+    }
+
+    var debounceTimer
+    window.addEventListener('scroll', function () {
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(updateScroll, 200)
+    }, { passive: true })
+
+    // Capture initial position
+    setTimeout(function () {
+      updateScroll()
+      scrollData.initial = scrollData.latest
+    }, 500)
+
+    // Send on page unload via beacon
+    window.addEventListener('beforeunload', function () {
+      updateScroll()
+      dispatchAnalyticsEvent(
+        'web.awsm.pageInteraction',
+        {
+          pageInteraction: {
+            name: 'scroll',
+            scrollDepths: {
+              initial: scrollData.initial,
+              max: scrollData.max,
+              latest: scrollData.latest,
+            },
+          },
+        },
+        true // useBeacon
+      )
+    })
+  }
+
+  // --- 5. Navigation Tab & Outbound Link Clicks ---
+
+  function setupNavTracking() {
+    document.addEventListener('click', function (e) {
+      // Nav tab clicks
+      var navTab = e.target.closest('.nav-tab, .mobile-nav-link')
+      if (navTab) {
+        var label = navTab.textContent.trim().replace(/\s*↗$/, '')
+        dispatchCTAClick('nav-tab:' + label, 'click')
+        return
+      }
+
+      // Code copy button
+      var copyBtn = e.target.closest('.copy button, button.copy, [data-code] button')
+      if (copyBtn) {
+        var sections = deriveSections(window.location.pathname)
+        dispatchCTAClick('code-copy:' + sections.hierarchy, 'customClick')
+        return
+      }
+
+      // Outbound links
+      var link = e.target.closest('a[href]')
+      if (link && link.hostname && link.hostname !== window.location.hostname) {
+        dispatchCTAClick('outbound:' + link.hostname + link.pathname, 'linkClick')
+      }
+    })
+  }
+
+  // --- 6. SPA / View Transition Support ---
+
+  function init() {
+    trackPageView()
+    setupScrollTracking()
+  }
+
+  // Run on initial load
+  setupAnchorTracking()
+  setupSearchTracking()
+  setupNavTracking()
+  init()
+
+  // Re-run page-level tracking on Astro client-side navigation
+  document.addEventListener('astro:page-load', function () {
+    init()
+  })
+})()
+</script>

@@ -6,6 +6,7 @@
  */
 import { getCollection } from 'astro:content'
 import SiteScripts from '../SiteScripts.astro'
+import Analytics from '../Analytics.astro'
 import { baseSchemas } from '../../util/structured-data'
 import { relatedUserGuideFor } from '../../util/related-docs'
 
@@ -122,6 +123,9 @@ const structuredData = {
 
 <!-- AWS Shortbread cookie consent -->
 <SiteScripts />
+
+<!-- Analytics instrumentation (site sections, anchors, search, scroll, nav) -->
+<Analytics />
 
 <!-- Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

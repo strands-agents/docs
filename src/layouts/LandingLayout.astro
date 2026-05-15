@@ -25,6 +25,7 @@ import ThemeProvider from 'virtual:starlight/components/ThemeProvider'
 
 import Header from '../components/overrides/Header.astro'
 import SiteScripts from '../components/SiteScripts.astro'
+import Analytics from '../components/Analytics.astro'
 import { pathWithBase } from '../util/links'
 import { baseSchemas } from '../util/structured-data'
 
@@ -137,6 +138,9 @@ Astro.locals.t = mockT
 
     <!-- AWS Shortbread cookie consent -->
     <SiteScripts />
+
+    <!-- Analytics instrumentation -->
+    <Analytics />
 
     <ThemeProvider />
     
