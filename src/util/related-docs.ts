@@ -140,7 +140,10 @@ export function relatedUserGuideFor(
 }
 
 /**
- * Other user-guide pages carrying a given tag, sorted alphabetically by title.
+ * Other user-guide pages carrying a given tag, ranked by relevance to the
+ * current page (specificity-weighted Jaccard, the same scorer used for the
+ * headless Related Pages list). Ties break alphabetically by title.
+ *
  * Used by the clickable-tags UI to populate per-tag expansion content.
  * Excludes the current page so a tag never lists itself.
  */
@@ -149,8 +152,7 @@ export function userGuidePagesWithTag(
   current: CollectionEntry<'docs'>,
   allDocs: readonly CollectionEntry<'docs'>[],
 ): { slug: string; title: string }[] {
-  return allDocs
-    .filter((d) => d.id !== current.id && isUserGuide(d) && (d.data.tags ?? []).includes(tag))
-    .map((d) => ({ slug: d.id, title: d.data.title }))
-    .sort((a, b) => a.title.localeCompare(b.title))
+  return rankedCandidates(current, allDocs)
+    .filter(({ doc }) => (doc.data.tags ?? []).includes(tag))
+    .map(({ doc }) => ({ slug: doc.id, title: doc.data.title }))
 }

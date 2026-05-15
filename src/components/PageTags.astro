@@ -2,13 +2,11 @@
 /**
  * Clickable tag pills at the bottom of user-guide articles.
  *
- * Pill row stays static — never reflows. Clicking a pill opens a single
- * shared panel below the row showing every other user-guide page carrying
- * that tag. Click the same pill again (or the panel's close button) to
- * collapse.
- *
- * State is driven by a small script that toggles an `is-active` class on
- * the clicked pill and the `hidden` attribute on each panel.
+ * The pill row is the only thing that ever takes layout space. Clicking a
+ * pill reveals a single shared panel that floats *over* the page below the
+ * row (absolutely positioned), so opening or closing it doesn't push the
+ * footer up or down. Click the pill again, the close button, the ESC key,
+ * or anywhere outside the panel to dismiss.
  *
  * Uses an `aria-expanded` disclosure pattern (each pill is a disclosure
  * button revealing its panel). Not a full ARIA tablist — that would
@@ -16,6 +14,7 @@
  * we don't currently implement.
  */
 import { getCollection } from 'astro:content'
+import { slug as githubSlug } from 'github-slugger'
 import { userGuidePagesWithTag } from '../util/related-docs'
 import { pathWithBase } from '../util/links'
 
@@ -25,10 +24,9 @@ const entry = starlightRoute.entry
 const allDocs = entry.collection === 'docs' ? await getCollection('docs') : []
 const tags: string[] = entry.collection === 'docs' ? (entry.data.tags ?? []) : []
 
-// Build a panel id that's unique to this page + tag, and safe for HTML
-// attribute use even if a tag ever contains characters outside [a-z0-9-].
-const idSlug = (s: string) => s.replace(/[^a-zA-Z0-9-]/g, '-')
-const panelId = (tag: string) => `pagetags-${idSlug(entry.id)}-${idSlug(tag)}`
+// Panel id must be unique per (page, tag) and safe for HTML attribute use.
+// github-slugger is the same library Astro uses internally for slugs.
+const panelId = (tag: string) => `pagetags-${githubSlug(entry.id)}-${githubSlug(tag)}`
 
 const items = tags.map((tag) => ({
   tag,
@@ -41,41 +39,43 @@ const items = tags.map((tag) => ({
   <aside class="page-tags not-content" aria-label="Tags">
     <div class="page-tags__label">Tags</div>
 
-    <div class="page-tags__row">
+    <div class="page-tags__anchor">
+      <div class="page-tags__row">
+        {items.map(({ tag, matches, panelId }) => (
+          <button
+            type="button"
+            class="page-tags__pill"
+            data-tag={tag}
+            aria-expanded="false"
+            aria-controls={panelId}
+          >
+            <span class="page-tags__name">{tag}</span>
+            <span class="page-tags__count" aria-hidden="true">{matches.length}</span>
+          </button>
+        ))}
+      </div>
+
       {items.map(({ tag, matches, panelId }) => (
-        <button
-          type="button"
-          class="page-tags__pill"
-          data-tag={tag}
-          aria-expanded="false"
-          aria-controls={panelId}
-        >
-          <span class="page-tags__name">{tag}</span>
-          <span class="page-tags__count" aria-hidden="true">{matches.length}</span>
-        </button>
+        <div class="page-tags__panel" id={panelId} data-tag={tag} hidden>
+          <div class="page-tags__panel-header">
+            <span class="page-tags__panel-tag">{tag}</span>
+            <span class="page-tags__panel-count">{`${matches.length} ${matches.length === 1 ? 'page' : 'pages'}`}</span>
+            <button type="button" class="page-tags__close" data-action="close" aria-label="Close">×</button>
+          </div>
+          {matches.length > 0 ? (
+            <ul class="page-tags__matches">
+              {matches.map((m) => (
+                <li>
+                  <a href={pathWithBase(`/${m.slug}/`)}>{m.title}</a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="page-tags__empty">No other pages with this tag.</p>
+          )}
+        </div>
       ))}
     </div>
-
-    {items.map(({ tag, matches, panelId }) => (
-      <div class="page-tags__panel" id={panelId} data-tag={tag} hidden>
-        <div class="page-tags__panel-header">
-          <span class="page-tags__panel-tag">{tag}</span>
-          <span class="page-tags__panel-count">{`${matches.length} ${matches.length === 1 ? 'page' : 'pages'}`}</span>
-          <button type="button" class="page-tags__close" data-action="close" aria-label="Close">×</button>
-        </div>
-        {matches.length > 0 ? (
-          <ul class="page-tags__matches">
-            {matches.map((m) => (
-              <li>
-                <a href={pathWithBase(`/${m.slug}/`)}>{m.title}</a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="page-tags__empty">No other pages with this tag.</p>
-        )}
-      </div>
-    ))}
   </aside>
 )}
 
@@ -95,10 +95,12 @@ const items = tags.map((tag) => ({
         panels.forEach((p) => {
           p.hidden = p.dataset.tag !== tag
         })
+        root.classList.toggle('is-open', tag !== null)
       }
 
       pills.forEach((pill) => {
-        pill.addEventListener('click', () => {
+        pill.addEventListener('click', (e) => {
+          e.stopPropagation()
           const isActive = pill.classList.contains('is-active')
           setActive(isActive ? null : pill.dataset.tag ?? null)
         })
@@ -107,6 +109,20 @@ const items = tags.map((tag) => ({
       closeButtons.forEach((b) =>
         b.addEventListener('click', () => setActive(null))
       )
+
+      // Click outside the aside dismisses the panel. Clicks inside (on a
+      // matched-page link, the panel itself, etc.) are left alone.
+      document.addEventListener('click', (e) => {
+        if (!root.classList.contains('is-open')) return
+        if (e.target instanceof Node && root.contains(e.target)) return
+        setActive(null)
+      })
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && root.classList.contains('is-open')) {
+          setActive(null)
+        }
+      })
     })
   }
 
@@ -129,6 +145,13 @@ const items = tags.map((tag) => ({
     text-transform: uppercase;
     color: var(--sl-color-gray-3);
     margin-bottom: 0.625rem;
+  }
+
+  /* The anchor establishes the positioning context for the floating panel,
+     so the panel hangs from the bottom of the pill row regardless of how
+     much vertical content sits below it. */
+  .page-tags__anchor {
+    position: relative;
   }
 
   .page-tags__row {
@@ -180,11 +203,19 @@ const items = tags.map((tag) => ({
     opacity: 0.7;
   }
 
+  /* Floating panel: anchored to the bottom of the pill row, layered over
+     content below. Page does not reflow when it opens or closes. */
   .page-tags__panel {
-    margin-top: 0.75rem;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    z-index: 5;
     padding: 0.625rem 1rem 0.75rem;
     border: 1px solid var(--sl-color-hairline);
     border-radius: 0.5rem;
+    background: var(--sl-color-bg);
+    box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.25);
   }
 
   .page-tags__panel-header {

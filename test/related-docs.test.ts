@@ -99,7 +99,19 @@ describe('relatedUserGuideFor (headless: top 10, specificity-weighted Jaccard)',
 })
 
 describe('userGuidePagesWithTag', () => {
-  it('returns user-guide pages carrying the given tag, alphabetical by title', () => {
+  it('ranks pages by relevance score, descending', () => {
+    // Current page has the safety tag plus another. Pages sharing more
+    // weighted overlap with current should rank above ones that only carry
+    // the queried tag.
+    const current = doc('docs/user-guide/a', 'A', ['safety', 'bedrock'])
+    const richMatch = doc('docs/user-guide/b', 'Rich', ['safety', 'bedrock'])
+    const thinMatch = doc('docs/user-guide/c', 'Thin', ['safety'])
+
+    const result = userGuidePagesWithTag('safety', current, [current, thinMatch, richMatch])
+    expect(result.map((r) => r.title)).toEqual(['Rich', 'Thin'])
+  })
+
+  it('breaks score ties alphabetically by title', () => {
     const current = doc('docs/user-guide/a', 'A', ['safety'])
     const zebra = doc('docs/user-guide/z', 'Zebra', ['safety'])
     const apple = doc('docs/user-guide/b', 'Apple', ['safety'])
