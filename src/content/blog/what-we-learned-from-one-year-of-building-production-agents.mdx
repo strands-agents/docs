@@ -10,7 +10,7 @@ tags:
 draft: false
 ---
 
-We turned 1 years old!
+We turned 1 year old!
 
 Strands Agents launched over a year ago thanks to an internal effort by AWS engineers building a network troubleshooting agent. They didn't use a heavy-duty framework or write enormous amounts of workflow boilerplate. They essentially wired up a system prompt, a Claude 3 model, and tools, resolving 80% of network root causes. Today that's branded as an "agent harness".
 
@@ -74,7 +74,7 @@ result = graph.invoke({"input": "What alarms are firing right now?"})
 
 A lot of developers thought best practices meant using a graph workflow that scaffolded each step into a separate agent. For simpler use cases like this, that seemed over-engineered to us. This type of scaffolding also became outdated when Sonnet 4 launched just a few months after 3.7, allowing the model's [extended thinking](https://www.anthropic.com/news/claude-4#:~:text=In%20addition%20to,shortcuts%20and%20loopholes.) to better alternate between reasoning and tools.
 
-Here's what that same agent on Strands would've look like without signing up with refactoring work if a better model released:
+Here's what that same agent on Strands would've looked like — no refactoring needed when a better model releases:
 
 ```python
 from strands import Agent, tool
@@ -91,7 +91,11 @@ def get_alarm_logs(alarm_name: str) -> dict:
 
 agent = Agent(
     model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
-    system_prompt="You check CloudWatch alarms and report what's firing. List active alarms, pull logs from the past 7 days for each, and produce a report grouped by severity.",
+    system_prompt=(
+        "You check CloudWatch alarms and report what's firing. "
+        "List active alarms, pull logs from the past 7 days for each, "
+        "and produce a report grouped by severity."
+    ),
     tools=[list_cloudwatch_alarms, get_alarm_logs],
 )
 result = agent("What alarms are firing right now?")
@@ -104,7 +108,7 @@ Simply change the `model_id`, run evals, and check logs for improvements.
 
 When an agent has dozens of steps of business logic, most agent frameworks suggest predefining each step to reduce the chance of the model making mistakes. Graph-based workflows became popular for this reason, but our testing found this led to 80.8% accuracy for agent output. Claire Liguori, Sr. Principal Engineer at AWS, [ran](https://strandsagents.com/blog/steering-accuracy-beats-prompts-workflows/) hundreds of evals and found [Steering Hooks](https://strandsagents.com/docs/user-guide/concepts/plugins/steering/) could provide 100% accuracy pass rate in comparison. You simply define hooks that verify agent output in the loop at two points: before a tool executes and after the model responds.
 
-Claire showed this in action with an [agent harness](https://strandsagents.com/blog/steering-accuracy-beats-prompts-workflows/#:~:text=Demo%3A%20Library%20book%20renewal%20agent) that checks your local library's book renewal status. Before the agent renews a book, Strands provides  the controls to first check the book status, whether the book is recalled, and is if it's using the right library card number. If not, Steering Hooks stop the action and gives the model feedback so it can fix itself. After the model responds, Steering Hooks can check whether the answer was right and ask the model to revise if needed.
+Clare showed this in action with an [agent harness](https://strandsagents.com/blog/steering-accuracy-beats-prompts-workflows/#:~:text=Demo%3A%20Library%20book%20renewal%20agent) that checks your local library's book renewal status. Before the agent renews a book, Strands provides the controls to first check the book status, whether the book is recalled, and if it's using the right library card number. If not, Steering Hooks stop the action and give the model feedback so it can fix itself. After the model responds, Steering Hooks can check whether the answer was right and ask the model to revise if needed.
 
 ## Are people really building long-running agents and subagents?
 
