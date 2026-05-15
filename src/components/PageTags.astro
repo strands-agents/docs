@@ -2,11 +2,13 @@
 /**
  * Clickable tag pills at the bottom of user-guide articles.
  *
- * The pill row is the only thing that ever takes layout space. Clicking a
- * pill reveals a single shared panel that floats *over* the page below the
- * row (absolutely positioned), so opening or closing it doesn't push the
- * footer up or down. Click the pill again, the close button, the ESC key,
- * or anywhere outside the panel to dismiss.
+ * Pill row stays static — never reflows. Clicking a pill opens a single
+ * shared panel below the row showing every other user-guide page carrying
+ * that tag. Click the same pill again (or the panel's close button) to
+ * collapse.
+ *
+ * State is driven by a small script that toggles an `is-active` class on
+ * the clicked pill and the `hidden` attribute on each panel.
  *
  * Uses an `aria-expanded` disclosure pattern (each pill is a disclosure
  * button revealing its panel). Not a full ARIA tablist — that would
@@ -39,43 +41,41 @@ const items = tags.map((tag) => ({
   <aside class="page-tags not-content" aria-label="Tags">
     <div class="page-tags__label">Tags</div>
 
-    <div class="page-tags__anchor">
-      <div class="page-tags__row">
-        {items.map(({ tag, matches, panelId }) => (
-          <button
-            type="button"
-            class="page-tags__pill"
-            data-tag={tag}
-            aria-expanded="false"
-            aria-controls={panelId}
-          >
-            <span class="page-tags__name">{tag}</span>
-            <span class="page-tags__count" aria-hidden="true">{matches.length}</span>
-          </button>
-        ))}
-      </div>
-
+    <div class="page-tags__row">
       {items.map(({ tag, matches, panelId }) => (
-        <div class="page-tags__panel" id={panelId} data-tag={tag} hidden>
-          <div class="page-tags__panel-header">
-            <span class="page-tags__panel-tag">{tag}</span>
-            <span class="page-tags__panel-count">{`${matches.length} ${matches.length === 1 ? 'page' : 'pages'}`}</span>
-            <button type="button" class="page-tags__close" data-action="close" aria-label="Close">×</button>
-          </div>
-          {matches.length > 0 ? (
-            <ul class="page-tags__matches">
-              {matches.map((m) => (
-                <li>
-                  <a href={pathWithBase(`/${m.slug}/`)}>{m.title}</a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p class="page-tags__empty">No other pages with this tag.</p>
-          )}
-        </div>
+        <button
+          type="button"
+          class="page-tags__pill"
+          data-tag={tag}
+          aria-expanded="false"
+          aria-controls={panelId}
+        >
+          <span class="page-tags__name">{tag}</span>
+          <span class="page-tags__count" aria-hidden="true">{matches.length}</span>
+        </button>
       ))}
     </div>
+
+    {items.map(({ tag, matches, panelId }) => (
+      <div class="page-tags__panel" id={panelId} data-tag={tag} hidden>
+        <div class="page-tags__panel-header">
+          <span class="page-tags__panel-tag">{tag}</span>
+          <span class="page-tags__panel-count">{`${matches.length} ${matches.length === 1 ? 'page' : 'pages'}`}</span>
+          <button type="button" class="page-tags__close" data-action="close" aria-label="Close">×</button>
+        </div>
+        {matches.length > 0 ? (
+          <ul class="page-tags__matches">
+            {matches.map((m) => (
+              <li>
+                <a href={pathWithBase(`/${m.slug}/`)}>{m.title}</a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="page-tags__empty">No other pages with this tag.</p>
+        )}
+      </div>
+    ))}
   </aside>
 )}
 
@@ -95,12 +95,10 @@ const items = tags.map((tag) => ({
         panels.forEach((p) => {
           p.hidden = p.dataset.tag !== tag
         })
-        root.classList.toggle('is-open', tag !== null)
       }
 
       pills.forEach((pill) => {
-        pill.addEventListener('click', (e) => {
-          e.stopPropagation()
+        pill.addEventListener('click', () => {
           const isActive = pill.classList.contains('is-active')
           setActive(isActive ? null : pill.dataset.tag ?? null)
         })
@@ -109,20 +107,6 @@ const items = tags.map((tag) => ({
       closeButtons.forEach((b) =>
         b.addEventListener('click', () => setActive(null))
       )
-
-      // Click outside the aside dismisses the panel. Clicks inside (on a
-      // matched-page link, the panel itself, etc.) are left alone.
-      document.addEventListener('click', (e) => {
-        if (!root.classList.contains('is-open')) return
-        if (e.target instanceof Node && root.contains(e.target)) return
-        setActive(null)
-      })
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && root.classList.contains('is-open')) {
-          setActive(null)
-        }
-      })
     })
   }
 
@@ -145,13 +129,6 @@ const items = tags.map((tag) => ({
     text-transform: uppercase;
     color: var(--sl-color-gray-3);
     margin-bottom: 0.625rem;
-  }
-
-  /* The anchor establishes the positioning context for the floating panel,
-     so the panel hangs from the bottom of the pill row regardless of how
-     much vertical content sits below it. */
-  .page-tags__anchor {
-    position: relative;
   }
 
   .page-tags__row {
@@ -203,19 +180,11 @@ const items = tags.map((tag) => ({
     opacity: 0.7;
   }
 
-  /* Floating panel: anchored to the bottom of the pill row, layered over
-     content below. Page does not reflow when it opens or closes. */
   .page-tags__panel {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    left: 0;
-    right: 0;
-    z-index: 5;
+    margin-top: 0.75rem;
     padding: 0.625rem 1rem 0.75rem;
     border: 1px solid var(--sl-color-hairline);
     border-radius: 0.5rem;
-    background: var(--sl-color-bg);
-    box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.25);
   }
 
   .page-tags__panel-header {
@@ -269,10 +238,15 @@ const items = tags.map((tag) => ({
     column-gap: 1.5rem;
     max-width: 44rem;
   }
+  /* Space between separate items comes from li padding; space between
+     wrapped lines of a single long title comes from the li's
+     line-height (an inline anchor's own line-height doesn't size the
+     line box — the line-box parent does). */
   .page-tags__matches li {
     margin: 0;
     padding: 0.1875rem 0;
     break-inside: avoid;
+    line-height: 1.2;
   }
   .page-tags__matches a {
     color: var(--sl-color-text-accent);
