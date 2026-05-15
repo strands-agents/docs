@@ -123,11 +123,8 @@ export function resolveRedirectFromUrl(
 
   if (path === '') return '/'
 
-  // Reject paths that look like absolute URLs after normalization.
-  // This prevents open redirects where e.g. /latest/https://evil.com would be
-  // stripped to https://evil.com and passed to location.replace().
-  // Explicit external redirects work because SLUG_RULES match on the slug
-  // (e.g. "discord") before the path could ever look like a URL.
+  // Prevent open redirects: absolute URLs can only come from explicit SLUG_RULES,
+  // never from the path-normalization fallback.
   if (/^https?:\/\//i.test(path)) return null
 
   const resolved = resolveRedirect(path, redirectFromMap) ?? path
