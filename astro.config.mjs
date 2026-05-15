@@ -25,15 +25,6 @@ const sidebar = loadSidebarFromConfig(
 export default defineConfig({
   site: 'https://strandsagents.com',
   base: process.env.ASTRO_BASE_PATH || '/',
-  redirects: {
-    '/discord': 'https://discord.gg/strands',
-    '/docs/examples/cdk/deploy_to_apprunner': 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_apprunner/README.md',
-    '/docs/examples/cdk/deploy_to_ec2': 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_ec2/README.md',
-    '/docs/examples/cdk/deploy_to_fargate': 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_fargate/README.md',
-    '/docs/examples/cdk/deploy_to_lambda': 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_lambda/README.md',
-    '/docs/examples/deploy_to_eks': 'https://github.com/strands-agents/docs/blob/main/docs/examples/deploy_to_eks/README.md',
-    '/docs/examples/typescript/deploy_to_bedrock_agentcore': 'https://github.com/strands-agents/docs/blob/main/docs/examples/typescript/deploy_to_bedrock_agentcore/README.md',
-  },
   vite: {
     plugins: [sdkSetupPlugin(), watchNavigationPlugin()],
     // TODO once we separate out CMS build from TS verification, fix this

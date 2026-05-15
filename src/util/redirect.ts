@@ -1,11 +1,11 @@
 /**
- * Redirect helper: maps old MkDocs-style URLs to new CMS slugs.
+ * Redirect helper: maps old MkDocs-style URLs to new CMS slugs or explicit external URLs.
  *
  * resolveRedirectFromUrl normalises a versioned URL to a slug, then
  * resolveRedirect applies rename rules for paths that changed structure.
  *
- * External vanity redirects (e.g. /discord) are handled by Astro's
- * built-in redirects in astro.config.mjs and never reach this code.
+ * Only explicit rules in SLUG_RULES or redirectFromMap may produce external URLs.
+ * The path-normalization fallback never returns an external URL (prevents open redirects).
  */
 
 import { exactly } from '../utils/regex'
@@ -33,6 +33,38 @@ const SLUG_RULES: SlugRule[] = [
   {
     match: exactly('docs/examples/python/multi_agent_example'),
     to: 'docs/examples/python/multi_agent_example/multi_agent_example',
+  },
+
+  // Vanity URLs for community links
+  {
+    match: exactly('discord'),
+    to: 'https://discord.gg/strands',
+  },
+
+  // CDK and deployment examples now live on GitHub
+  {
+    match: exactly('docs/examples/cdk/deploy_to_apprunner'),
+    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_apprunner/README.md',
+  },
+  {
+    match: exactly('docs/examples/cdk/deploy_to_ec2'),
+    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_ec2/README.md',
+  },
+  {
+    match: exactly('docs/examples/cdk/deploy_to_fargate'),
+    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_fargate/README.md',
+  },
+  {
+    match: exactly('docs/examples/cdk/deploy_to_lambda'),
+    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_lambda/README.md',
+  },
+  {
+    match: exactly('docs/examples/deploy_to_eks'),
+    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/deploy_to_eks/README.md',
+  },
+  {
+    match: exactly('docs/examples/typescript/deploy_to_bedrock_agentcore'),
+    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/typescript/deploy_to_bedrock_agentcore/README.md',
   },
 ]
 
@@ -65,6 +97,11 @@ export function resolveRedirect(slug: string, redirectFromMap?: Record<string, s
  * Given a path from the old site, normalise it to a slug and apply redirect rules.
  * Returns '/' for versioned root paths, or null if the path isn't recognisable.
  *
+ * External URLs (https://) are only returned when an explicit rule in SLUG_RULES
+ * or redirectFromMap matched. The path-normalization fallback never produces an
+ * external URL, preventing open redirect attacks via crafted paths like
+ * /latest/https://evil.com.
+ *
  * @param path - The URL path to resolve (e.g. "/docs/user-guide/...")
  * @param redirectFromMap - Optional map of source slugs to target slugs (from frontmatter redirectFrom)
  */
@@ -85,6 +122,13 @@ export function resolveRedirectFromUrl(
   path = path.replace(/^\/+|\/+$/g, '')
 
   if (path === '') return '/'
+
+  // Reject paths that look like absolute URLs after normalization.
+  // This prevents open redirects where e.g. /latest/https://evil.com would be
+  // stripped to https://evil.com and passed to location.replace().
+  // Explicit external redirects work because SLUG_RULES match on the slug
+  // (e.g. "discord") before the path could ever look like a URL.
+  if (/^https?:\/\//i.test(path)) return null
 
   const resolved = resolveRedirect(path, redirectFromMap) ?? path
   return hadTrailingSlash ? `${resolved}/` : resolved

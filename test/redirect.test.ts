@@ -5,8 +5,8 @@ const redirectCases: Array<{ description: string; input: string; expected: strin
   // Renamed pages
   { description: 'python-tools renamed to custom-tools',   input: 'docs/user-guide/concepts/tools/python-tools',         expected: 'docs/user-guide/concepts/tools/custom-tools' },
   { description: 'multi_agent_example index -> main page', input: 'docs/examples/python/multi_agent_example',             expected: 'docs/examples/python/multi_agent_example/multi_agent_example' },
-  // External vanity URLs are handled by Astro redirects in astro.config.mjs
-  { description: 'discord has no slug-level rule',         input: 'discord',                                              expected: null },
+  // External vanity URLs
+  { description: '/discord redirects to Discord invite',   input: 'discord',                                              expected: 'https://discord.gg/strands' },
   // No redirect
   { description: 'current page returns null',              input: 'docs/user-guide/concepts/agents/agent-loop',           expected: null },
   { description: 'unknown path returns null',              input: 'docs/some/unknown/path',                               expected: null },
@@ -83,12 +83,12 @@ const urlCases: Array<{ description: string; path: string; expected: string | nu
   { description: '.txt path has no trailing slash added',              path: '/latest/documentation/docs/llms.txt',                                   expected: 'docs/llms.txt' },
   // Top-level versioned paths (not under /documentation/docs/) pass through after version strip
   { description: 'versioned llms.txt redirects to llms.txt',           path: '/latest/llms.txt',                                                      expected: 'llms.txt' },
-  // Absolute URLs after version stripping pass through as relative paths
-  // (safe because Redirect404.astro constructs same-origin URLs via new URL(path, origin))
-  { description: 'https:// path passes through as-is',                 path: '/latest/https://evil.com/',                                             expected: 'https://evil.com/' },
-  { description: 'http:// path passes through as-is',                  path: '/latest/http://evil.com/',                                              expected: 'http://evil.com/' },
-  { description: 'https:// with version prefix passes through',        path: '/1.x/https://evil.com/',                                                expected: 'https://evil.com/' },
-  { description: 'https:// without trailing slash passes through',     path: '/latest/https://evil.com',                                              expected: 'https://evil.com' },
+  // Open redirect prevention: absolute URLs from path normalization are rejected.
+  // Only explicit SLUG_RULES may return external URLs.
+  { description: 'rejects https:// open redirect via /latest/',        path: '/latest/https://evil.com/',                                             expected: null },
+  { description: 'rejects http:// open redirect via /latest/',         path: '/latest/http://evil.com/',                                              expected: null },
+  { description: 'rejects https:// open redirect via version prefix',  path: '/1.x/https://evil.com/',                                               expected: null },
+  { description: 'rejects https:// open redirect without trailing /',  path: '/latest/https://evil.com',                                              expected: null },
 ]
 
 describe('resolveRedirectFromUrl', () => {
