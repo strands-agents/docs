@@ -257,6 +257,9 @@ sidebar:
       - label: Integrations
         items:
           - docs/community/integrations/ag-ui
+      - label: Agent Extensions
+        items:
+          - docs/community/agent-extensions/strands-code-agent
       - label: Plugins
         items:
           - docs/community/plugins/agent-control
