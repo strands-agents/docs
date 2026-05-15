@@ -200,9 +200,7 @@ const model = new GoogleModel({
 })
 
 const agent = new Agent({ model })
-const response = await agent.invoke(
-  'What are the latest AI news today?'
-)
+const response = await agent.invoke('What are the latest AI news today?')
 console.log(response)
 ```
 (( /tab "TypeScript" ))
@@ -532,3 +530,16 @@ When disabled (or if the API call fails), falls back to estimation using the cha
 -   [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 -   [Google AI Studio](https://aistudio.google.com/)
 -   [@google/genai TypeScript SDK](https://github.com/googleapis/js-genai)
+
+## Related pages
+
+- [Vercel](/docs/user-guide/concepts/model-providers/vercel/index.md) (1 shared tag)
+- [Multimodal Correctness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md) (1 shared tag)
+- [Multimodal Faithfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md) (1 shared tag)
+- [Multimodal Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md) (1 shared tag)
+- [Multimodal Output Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md) (1 shared tag)
+- [Multimodal Overall Quality Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (1 shared tag)
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (1 shared tag)

@@ -233,3 +233,11 @@ For detailed implementation guides and examples:
 -   [Graph Documentation](/docs/user-guide/concepts/multi-agent/graph/index.md)
 -   [Swarm Documentation](/docs/user-guide/concepts/multi-agent/swarm/index.md)
 -   [Workflow Documentation](/docs/user-guide/concepts/multi-agent/workflow/index.md)
+
+## Related pages
+
+- [Agent Workflows: Building Multi-Agent Systems with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/workflow/index.md) (1 shared tag)
+- [Agent-to-Agent (A2A) Protocol](/docs/user-guide/concepts/multi-agent/agent-to-agent/index.md) (1 shared tag)
+- [Graph Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/graph/index.md) (1 shared tag)
+- [Swarm Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/swarm/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

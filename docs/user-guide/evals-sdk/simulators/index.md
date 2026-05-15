@@ -317,3 +317,9 @@ def compare_agent_configurations(case: Case, configs: list) -> dict:
 -   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with Strands Evals
 -   [Evaluators Overview](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Learn about evaluators
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate test cases automatically
+
+## Related pages
+
+- [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md) (1 shared tag)
+- [User Simulation](/docs/user-guide/evals-sdk/simulators/user_simulation/index.md) (1 shared tag)
+- [Tool Simulation](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md) (1 shared tag)

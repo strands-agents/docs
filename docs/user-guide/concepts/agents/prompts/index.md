@@ -164,3 +164,16 @@ For guidance on writing safe and responsible prompts, including defending agains
 -   [Llama - Prompting](https://www.llama.com/docs/how-to-guides/prompting/)
 -   [Anthropic - Prompt engineering overview](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
 -   [OpenAI - Prompt engineering](https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results)
+
+## Related pages
+
+- [Prompt Engineering](/docs/user-guide/safety-security/prompt-engineering/index.md) (3 shared tags)
+- [Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md) (2 shared tags)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (2 shared tags)
+- [Harmfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md) (1 shared tag)
+- [Refusal Evaluator](/docs/user-guide/evals-sdk/evaluators/refusal_evaluator/index.md) (1 shared tag)
+- [Responsible AI](/docs/user-guide/safety-security/responsible-ai/index.md) (1 shared tag)
+- [Stereotyping Evaluator](/docs/user-guide/evals-sdk/evaluators/stereotyping_evaluator/index.md) (1 shared tag)
+- [Coherence Evaluator](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md) (1 shared tag)
+- [Conciseness Evaluator](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md) (1 shared tag)
+- [Goal Success Rate Evaluator](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md) (1 shared tag)

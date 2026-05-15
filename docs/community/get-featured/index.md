@@ -9,6 +9,7 @@ We feature **reusable packages** that extend Strands Agents capabilities:
 -   **Session Managers** — custom session/memory implementations
 -   **Plugins** — extend or modify agent behavior during lifecycle events
 -   **Integrations** — protocol implementations, framework bridges, etc.
+-   **Agent Extensions** — specialized agent subclasses that change how agents reason and act
 
 We’re not looking for example agents or one-off projects — the focus is on packages published to PyPI that others can `pip install` or `npm install` and use in their own agents. See [Community Packages](/docs/community/community-packages/index.md) for guidance on creating and publishing your package.
 
@@ -34,6 +35,7 @@ Place your documentation in the right spot:
 | Session Managers | `community/session-managers/` | `agentcore-memory.mdx` |
 | Plugins | `community/plugins/` | `my-plugin.mdx` |
 | Integrations | `community/integrations/` | `ag-ui.mdx` |
+| Agent Extensions | `community/agent-extensions/` | `strands-code-agent.mdx` |
 
 ## Document Layout
 
@@ -71,7 +73,7 @@ Links to your repo, PyPI, official docs, etc.
 
 Every community page needs frontmatter with catalog fields so it appears in the [community catalog](/docs/community/community-packages/index.md). Without `community: true`, `integrationType`, `description`, and `languages`, your page won’t show up in the catalog tables.
 
-Here’s the full frontmatter for a **Tool** (adapt `integrationType` for your package type — `tool`, `model-provider`, `session-manager`, `plugin`, or `integration`):
+Here’s the full frontmatter for a **Tool** (adapt `integrationType` for your package type — `tool`, `model-provider`, `session-manager`, `plugin`, `integration`, or `agent-extension`):
 
 ```yaml
 ---

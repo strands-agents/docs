@@ -41,6 +41,8 @@
     -   [Swarm](/docs/api/python/strands.multiagent.swarm)
 -   **Plugins**
     -   [Decorator](/docs/api/python/strands.plugins.decorator)
+    -   [Multiagent Plugin](/docs/api/python/strands.plugins.multiagent_plugin)
+    -   [Multiagent Registry](/docs/api/python/strands.plugins.multiagent_registry)
     -   [Plugin](/docs/api/python/strands.plugins.plugin)
     -   [Registry](/docs/api/python/strands.plugins.registry)
 -   **Session**

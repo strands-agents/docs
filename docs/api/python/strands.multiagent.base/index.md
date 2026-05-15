@@ -8,7 +8,7 @@ Provides minimal foundation for multi-agent patterns (Swarm, Graph).
 class Status(Enum)
 ```
 
-Defined in: [src/strands/multiagent/base.py:24](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L24)
+Defined in: [src/strands/multiagent/base.py:25](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L25)
 
 Execution status for both graphs and nodes.
 
@@ -27,7 +27,7 @@ Execution status for both graphs and nodes.
 class NodeResult()
 ```
 
-Defined in: [src/strands/multiagent/base.py:43](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L43)
+Defined in: [src/strands/multiagent/base.py:44](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L44)
 
 Unified result from node execution - handles both Agent and nested MultiAgentBase results.
 
@@ -37,7 +37,7 @@ Unified result from node execution - handles both Agent and nested MultiAgentBas
 def get_agent_results() -> list[AgentResult]
 ```
 
-Defined in: [src/strands/multiagent/base.py:59](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L59)
+Defined in: [src/strands/multiagent/base.py:60](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L60)
 
 Get all AgentResult objects from this node, flattened if nested.
 
@@ -47,7 +47,7 @@ Get all AgentResult objects from this node, flattened if nested.
 def to_dict() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/multiagent/base.py:72](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L72)
+Defined in: [src/strands/multiagent/base.py:73](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L73)
 
 Convert NodeResult to JSON-serializable dict, ignoring state field.
 
@@ -58,7 +58,7 @@ Convert NodeResult to JSON-serializable dict, ignoring state field.
 def from_dict(cls, data: dict[str, Any]) -> "NodeResult"
 ```
 
-Defined in: [src/strands/multiagent/base.py:93](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L93)
+Defined in: [src/strands/multiagent/base.py:94](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L94)
 
 Rehydrate a NodeResult from persisted JSON.
 
@@ -69,7 +69,7 @@ Rehydrate a NodeResult from persisted JSON.
 class MultiAgentResult()
 ```
 
-Defined in: [src/strands/multiagent/base.py:128](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L128)
+Defined in: [src/strands/multiagent/base.py:129](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L129)
 
 Result from multi-agent execution with accumulated metrics.
 
@@ -80,7 +80,7 @@ Result from multi-agent execution with accumulated metrics.
 def from_dict(cls, data: dict[str, Any]) -> "MultiAgentResult"
 ```
 
-Defined in: [src/strands/multiagent/base.py:140](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L140)
+Defined in: [src/strands/multiagent/base.py:141](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L141)
 
 Rehydrate a MultiAgentResult from persisted JSON.
 
@@ -90,7 +90,7 @@ Rehydrate a MultiAgentResult from persisted JSON.
 def to_dict() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/multiagent/base.py:164](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L164)
+Defined in: [src/strands/multiagent/base.py:165](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L165)
 
 Convert MultiAgentResult to JSON-serializable dict.
 
@@ -100,7 +100,7 @@ Convert MultiAgentResult to JSON-serializable dict.
 class MultiAgentBase(ABC)
 ```
 
-Defined in: [src/strands/multiagent/base.py:178](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L178)
+Defined in: [src/strands/multiagent/base.py:179](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L179)
 
 Base class for multi-agent helpers.
 
@@ -119,7 +119,7 @@ async def invoke_async(task: MultiAgentInput,
                        **kwargs: Any) -> MultiAgentResult
 ```
 
-Defined in: [src/strands/multiagent/base.py:191](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L191)
+Defined in: [src/strands/multiagent/base.py:192](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L192)
 
 Invoke asynchronously.
 
@@ -137,7 +137,7 @@ async def stream_async(task: MultiAgentInput,
                        **kwargs: Any) -> AsyncIterator[dict[str, Any]]
 ```
 
-Defined in: [src/strands/multiagent/base.py:204](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L204)
+Defined in: [src/strands/multiagent/base.py:205](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L205)
 
 Stream events during multi-agent execution.
 
@@ -165,7 +165,7 @@ def __call__(task: MultiAgentInput,
              **kwargs: Any) -> MultiAgentResult
 ```
 
-Defined in: [src/strands/multiagent/base.py:229](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L229)
+Defined in: [src/strands/multiagent/base.py:230](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L230)
 
 Invoke synchronously.
 
@@ -181,7 +181,7 @@ Invoke synchronously.
 def serialize_state() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/multiagent/base.py:249](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L249)
+Defined in: [src/strands/multiagent/base.py:250](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L250)
 
 Return a JSON-serializable snapshot of the orchestrator state.
 
@@ -191,6 +191,24 @@ Return a JSON-serializable snapshot of the orchestrator state.
 def deserialize_state(payload: dict[str, Any]) -> None
 ```
 
-Defined in: [src/strands/multiagent/base.py:253](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L253)
+Defined in: [src/strands/multiagent/base.py:254](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L254)
 
 Restore orchestrator state from a session dict.
+
+#### add\_hook
+
+```python
+def add_hook(callback: HookCallback,
+             event_type: type | list[type] | None = None) -> None
+```
+
+Defined in: [src/strands/multiagent/base.py:258](https://github.com/strands-agents/sdk-python/blob/main/src/strands/multiagent/base.py#L258)
+
+Register a hook callback with the orchestrator.
+
+Subclasses that support hooks should override this method to register the callback with their hook registry.
+
+**Arguments**:
+
+-   `callback` - The callback function to invoke when events of this type occur.
+-   `event_type` - The class type(s) of events this callback should handle. Can be a single type, a list of types, or None to infer from the callback’s first parameter type hint.

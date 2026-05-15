@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/conversation-manager.ts:110](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/conversation-manager.ts#L110)
+Defined in: [src/conversation-manager/conversation-manager.ts:110](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/conversation-manager.ts#L110)
 
 Abstract base class for conversation history management strategies.
 
@@ -38,7 +38,7 @@ class Last10MessagesManager extends ConversationManager {
 new ConversationManager(options?): ConversationManager;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:121](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/conversation-manager.ts#L121)
+Defined in: [src/conversation-manager/conversation-manager.ts:121](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/conversation-manager.ts#L121)
 
 #### Parameters
 
@@ -58,7 +58,7 @@ Defined in: [src/conversation-manager/conversation-manager.ts:121](https://githu
 abstract readonly name: string;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:114](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/conversation-manager.ts#L114)
+Defined in: [src/conversation-manager/conversation-manager.ts:114](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/conversation-manager.ts#L114)
 
 A stable string identifier for this conversation manager.
 
@@ -74,7 +74,7 @@ A stable string identifier for this conversation manager.
 protected readonly _compressionThreshold: number;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:116](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/conversation-manager.ts#L116)
+Defined in: [src/conversation-manager/conversation-manager.ts:116](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/conversation-manager.ts#L116)
 
 ## Methods
 
@@ -84,7 +84,7 @@ Defined in: [src/conversation-manager/conversation-manager.ts:116](https://githu
 abstract reduce(options): boolean | Promise<boolean>;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:153](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/conversation-manager.ts#L153)
+Defined in: [src/conversation-manager/conversation-manager.ts:153](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/conversation-manager.ts#L153)
 
 Reduce the conversation history.
 
@@ -115,7 +115,7 @@ Implementations should mutate `agent.messages` in place and return `true` if any
 initAgent(agent): void;
 ```
 
-Defined in: [src/conversation-manager/conversation-manager.ts:170](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/conversation-manager.ts#L170)
+Defined in: [src/conversation-manager/conversation-manager.ts:170](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/conversation-manager.ts#L170)
 
 Initialize the conversation manager with the agent instance.
 

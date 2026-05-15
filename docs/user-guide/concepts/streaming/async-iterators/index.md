@@ -244,3 +244,8 @@ The output will show the sequence of events:
 5.  The model may be called again in subsequent cycles
 6.  Finally, the invocation completes (`afterInvocationEvent`)
 (( /tab "TypeScript" ))
+
+## Related pages
+
+- [Callback Handlers](/docs/user-guide/concepts/streaming/callback-handlers/index.md) (1 shared tag)
+- [Streaming Events](/docs/user-guide/concepts/streaming/index.md) (1 shared tag)

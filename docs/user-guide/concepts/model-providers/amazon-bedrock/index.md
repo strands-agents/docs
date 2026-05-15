@@ -349,6 +349,23 @@ const response = await agent.invoke('Write a short story about an AI assistant.'
 ```
 (( /tab "TypeScript" ))
 
+#### TypeScript Request Timeout
+
+The TypeScript SDK applies a default `requestTimeout` of 120000 ms (120 seconds) when constructing the Bedrock Runtime client, since the underlying AWS SDK defaults to `0` (disabled), which lets a stuck connection hang. Override it by passing your own value through `clientConfig.requestHandler`:
+
+```typescript
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+
+const bedrockModel = new BedrockModel({
+  modelId: 'us.anthropic.claude-sonnet-4-6',
+  clientConfig: {
+    requestHandler: { requestTimeout: 60_000 },
+  },
+})
+```
+
+Passing a fully-constructed handler instance (rather than an options bag) bypasses the default; the handler’s own timeouts apply unchanged.
+
 ## Advanced Features
 
 ### Streaming vs Non-Streaming Mode
@@ -1237,3 +1254,16 @@ Strands uses a default Claude 4 Sonnet inference model from the region of your c
 -   [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 -   [Bedrock Model IDs Reference](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)
 -   [Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
+
+## Related pages
+
+- [Guardrails](/docs/user-guide/safety-security/guardrails/index.md) (3 shared tags)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (3 shared tags)
+- [Nova Sonic](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) (2 shared tags)
+- [Deploying Strands Agents to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md) (2 shared tags)
+- [Python Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md) (2 shared tags)
+- [TypeScript Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md) (2 shared tags)
+- [AgentCore Evaluation Dashboard Configuration](/docs/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard/index.md) (2 shared tags)
+- [PII Redaction](/docs/user-guide/safety-security/pii-redaction/index.md) (2 shared tags)
+- [Result Caching](/docs/user-guide/evals-sdk/how-to/result_caching/index.md) (1 shared tag)
+- [Harmfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md) (1 shared tag)

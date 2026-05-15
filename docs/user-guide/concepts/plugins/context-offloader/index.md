@@ -58,7 +58,10 @@ agent = Agent(plugins=[
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import {
+  ContextOffloader,
+  FileStorage,
+} from '@strands-agents/sdk/vended-plugins/context-offloader'
 
 const agent = new Agent({
   plugins: [
@@ -92,7 +95,10 @@ agent = Agent(plugins=[
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import {
+  ContextOffloader,
+  InMemoryStorage,
+} from '@strands-agents/sdk/vended-plugins/context-offloader'
 
 const agent = new Agent({
   plugins: [new ContextOffloader({ storage: new InMemoryStorage() })],
@@ -117,7 +123,10 @@ agent = Agent(plugins=[
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import {
+  ContextOffloader,
+  InMemoryStorage,
+} from '@strands-agents/sdk/vended-plugins/context-offloader'
 
 const agent = new Agent({
   plugins: [
@@ -163,7 +172,10 @@ agent = Agent(plugins=[
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import {
+  ContextOffloader,
+  InMemoryStorage,
+} from '@strands-agents/sdk/vended-plugins/context-offloader'
 
 const agent = new Agent({
   plugins: [
@@ -195,7 +207,10 @@ agent = Agent(plugins=[
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import {
+  ContextOffloader,
+  FileStorage,
+} from '@strands-agents/sdk/vended-plugins/context-offloader'
 
 const agent = new Agent({
   plugins: [
@@ -230,7 +245,10 @@ agent = Agent(plugins=[
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { ContextOffloader, S3Storage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import {
+  ContextOffloader,
+  S3Storage,
+} from '@strands-agents/sdk/vended-plugins/context-offloader'
 
 const agent = new Agent({
   plugins: [
@@ -269,3 +287,16 @@ const agent = new Agent({
 -   **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_tokens` to balance context usage against information loss for your use case. The `retrieve_offloaded_content` tool is enabled by default so the agent can fetch full offloaded content as a fallback. If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it with `include_retrieval_tool=False`.
 -   **Storage costs**: `S3Storage` incurs S3 PUT/GET and storage charges. `FileStorage` writes to disk on every large result.
 -   **Not a replacement for conversation management**: This plugin handles individual large results. You still need a conversation manager like `SlidingWindowConversationManager` to handle overall context growth across many turns.
+
+## Related pages
+
+- [Conversation Management](/docs/user-guide/concepts/agents/conversation-management/index.md) (2 shared tags)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (2 shared tags)
+- [Coherence Evaluator](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md) (1 shared tag)
+- [Conciseness Evaluator](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md) (1 shared tag)
+- [Goal Success Rate Evaluator](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md) (1 shared tag)
+- [Helpfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md) (1 shared tag)
+- [Interactions Evaluator](/docs/user-guide/evals-sdk/evaluators/interactions_evaluator/index.md) (1 shared tag)
+- [Output Evaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md) (1 shared tag)
+- [Skills](/docs/user-guide/concepts/plugins/skills/index.md) (1 shared tag)
+- [Bidirectional Streaming Hooks](/docs/user-guide/concepts/bidirectional-streaming/hooks/index.md) (1 shared tag)

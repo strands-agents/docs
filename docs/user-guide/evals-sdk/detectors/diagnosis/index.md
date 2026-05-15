@@ -266,3 +266,16 @@ combined.display(include_recommendations=True)
 -   [Detectors Overview](/docs/user-guide/evals-sdk/detectors/index.md): High-level detectors guide
 -   [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md): Simplify task functions with `@eval_task`
 -   [Remote Trace Providers](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md): Fetch traces from production backends
+
+## Related pages
+
+- [Root Cause Analysis](/docs/user-guide/evals-sdk/detectors/root_cause_analysis/index.md) (3 shared tags)
+- [Detectors](/docs/user-guide/evals-sdk/detectors/index.md) (2 shared tags)
+- [Failure Detection](/docs/user-guide/evals-sdk/detectors/failure_detection/index.md) (2 shared tags)
+- [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) (2 shared tags)
+- [Evaluating Remote Traces](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md) (1 shared tag)
+- [Evaluation](/docs/user-guide/observability-evaluation/evaluation/index.md) (1 shared tag)
+- [Metrics](/docs/user-guide/observability-evaluation/metrics/index.md) (1 shared tag)
+- [Observability](/docs/user-guide/observability-evaluation/observability/index.md) (1 shared tag)
+- [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md) (1 shared tag)
+- [Traces](/docs/user-guide/observability-evaluation/traces/index.md) (1 shared tag)

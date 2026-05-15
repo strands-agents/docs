@@ -238,3 +238,9 @@ with open("experiment.json", "w") as f:
 -   [Experiment Management](/docs/user-guide/evals-sdk/how-to/experiment_management/index.md): Organize experiments
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate experiments
 -   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with Strands Evals
+
+## Related pages
+
+- [Bidirectional Streaming Session Management](/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md) (1 shared tag)
+- [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) (1 shared tag)
+- [State Management](/docs/user-guide/concepts/agents/state/index.md) (1 shared tag)

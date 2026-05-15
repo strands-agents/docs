@@ -729,3 +729,11 @@ When implementing session persistence in your applications, consider these best 
 -   **Understand Persistence Triggers**: Remember that changes to agent state or messages are only persisted during specific lifecycle events.
 -   **Concurrent Access**: Session managers are not thread-safe; use appropriate locking for concurrent access.
 -   **Secure Storage Directories**: The session storage directory is a trusted data store. Restrict filesystem permissions so that only the agent process can read and write to it. In shared or multi-tenant environments (shared volumes, containers), be aware that the SDK does not block symlinks in the session storage directory. If an attacker with write access to the storage directory creates a symlink (e.g., `message_0.json` pointing to an arbitrary file), the SDK will follow it, which could cause sensitive file contents to be loaded into the agent’s conversation history.
+
+## Related pages
+
+- [State Management](/docs/user-guide/concepts/agents/state/index.md) (3 shared tags)
+- [Bidirectional Streaming Session Management](/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md) (2 shared tags)
+- [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md) (1 shared tag)
+- [OpenAI Responses API](/docs/user-guide/concepts/model-providers/openai-responses/index.md) (1 shared tag)
+- [Conversation Management](/docs/user-guide/concepts/agents/conversation-management/index.md) (1 shared tag)

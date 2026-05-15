@@ -104,3 +104,8 @@ print(f"Rating: {result.rating}")
 
 -   [Python API](/docs/api/python/strands.models.model)
 -   [LlamaAPI](https://llama.developer.meta.com/docs/)
+
+## Related pages
+
+- [llama.cpp](/docs/user-guide/concepts/model-providers/llamacpp/index.md) (1 shared tag)
+- [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) (1 shared tag)

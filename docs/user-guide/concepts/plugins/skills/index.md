@@ -391,3 +391,13 @@ Use skills when you want a single agent that can handle a wide range of tasks by
 -   [Agent state](/docs/user-guide/concepts/agents/state/index.md) — How activated skills are persisted
 -   [Session management](/docs/user-guide/concepts/agents/session-management/index.md) — Persist skills across sessions
 -   [Agent Skills specification](https://agentskills.io/specification) — The open specification skills are built on
+
+## Related pages
+
+- [Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md) (1 shared tag)
+- [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) (1 shared tag)
+- [Conversation Management](/docs/user-guide/concepts/agents/conversation-management/index.md) (1 shared tag)
+- [Prompt Engineering](/docs/user-guide/safety-security/prompt-engineering/index.md) (1 shared tag)
+- [Prompts](/docs/user-guide/concepts/agents/prompts/index.md) (1 shared tag)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (1 shared tag)
+- [Agent Configuration](/docs/user-guide/concepts/experimental/agent-config/index.md) (1 shared tag)

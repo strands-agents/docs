@@ -182,3 +182,13 @@ agent.tool.handoff_to_user(
 ```
 
 This tool is designed for terminal environments as an example implementation. For production applications, you may want to implement custom handoff mechanisms tailored to your specific UI/UX requirements, such as web interfaces or messaging platforms.
+
+## Related pages
+
+- [Creating Custom Tools](/docs/user-guide/concepts/tools/custom-tools/index.md) (1 shared tag)
+- [Vended Tools](/docs/user-guide/concepts/tools/vended-tools/index.md) (1 shared tag)
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (1 shared tag)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (1 shared tag)
+- [Tools Overview](/docs/user-guide/concepts/tools/index.md) (1 shared tag)
+- [Agent Configuration](/docs/user-guide/concepts/experimental/agent-config/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

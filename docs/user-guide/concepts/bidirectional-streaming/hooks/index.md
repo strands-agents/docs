@@ -344,3 +344,16 @@ For additional best practices on performance considerations, error handling, com
 -   [Session Management](/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md) - Persist conversations across sessions
 -   [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) - Complete guide to bidirectional streaming events
 -   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+
+## Related pages
+
+- [BidiAgent](/docs/user-guide/concepts/bidirectional-streaming/agent/index.md) (1 shared tag)
+- [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) (1 shared tag)
+- [Gemini Live](/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md) (1 shared tag)
+- [I/O Channels](/docs/user-guide/concepts/bidirectional-streaming/io/index.md) (1 shared tag)
+- [Interruptions](/docs/user-guide/concepts/bidirectional-streaming/interruption/index.md) (1 shared tag)
+- [OpenAI Realtime](/docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md) (1 shared tag)
+- [Plugins](/docs/user-guide/concepts/plugins/index.md) (1 shared tag)
+- [Quickstart](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) (1 shared tag)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (1 shared tag)
+- [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) (1 shared tag)

@@ -167,3 +167,16 @@ Only after validation, process the request to:
 -   [AWS Prescriptive Guidance: LLM Prompt Engineering and Common Attacks](https://docs.aws.amazon.com/prescriptive-guidance/latest/llm-prompt-engineering-best-practices/common-attacks.html)
 -   [Anthropic’s Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
 -   [How to prompt Code Llama](https://ollama.com/blog/how-to-prompt-code-llama)
+
+## Related pages
+
+- [Prompts](/docs/user-guide/concepts/agents/prompts/index.md) (3 shared tags)
+- [Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md) (2 shared tags)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (2 shared tags)
+- [Harmfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md) (1 shared tag)
+- [Refusal Evaluator](/docs/user-guide/evals-sdk/evaluators/refusal_evaluator/index.md) (1 shared tag)
+- [Responsible AI](/docs/user-guide/safety-security/responsible-ai/index.md) (1 shared tag)
+- [Stereotyping Evaluator](/docs/user-guide/evals-sdk/evaluators/stereotyping_evaluator/index.md) (1 shared tag)
+- [Coherence Evaluator](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md) (1 shared tag)
+- [Conciseness Evaluator](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md) (1 shared tag)
+- [Goal Success Rate Evaluator](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md) (1 shared tag)

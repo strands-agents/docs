@@ -175,3 +175,10 @@ print(f"Rating: {result.rating}")
 
 -   [Python API](/docs/api/python/strands.models.model)
 -   [LiteLLM](https://docs.litellm.ai/docs/)
+
+## Related pages
+
+- [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) (1 shared tag)

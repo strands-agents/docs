@@ -280,3 +280,10 @@ def task_with_metrics(case: Case) -> dict:
 -   [**ToolParameterAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md): Evaluates if tool parameters are correct
 -   [**ToolSelectionAccuracyEvaluator**](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md): Evaluates if correct tools were selected
 -   [**GoalSuccessRateEvaluator**](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md): Evaluates if overall goals were achieved
+
+## Related pages
+
+- [Deterministic Evaluators](/docs/user-guide/evals-sdk/evaluators/deterministic_evaluators/index.md) (1 shared tag)
+- [Tool Parameter Accuracy Evaluator](/docs/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md) (1 shared tag)
+- [Tool Selection Accuracy Evaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md) (1 shared tag)
+- [Tool Simulation](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md) (1 shared tag)

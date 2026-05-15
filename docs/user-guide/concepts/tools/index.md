@@ -639,3 +639,14 @@ Notes:
   })
 ```
 (( /tab "TypeScript" ))
+
+## Related pages
+
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (2 shared tags)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (2 shared tags)
+- [Community Built Tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) (1 shared tag)
+- [Creating Custom Tools](/docs/user-guide/concepts/tools/custom-tools/index.md) (1 shared tag)
+- [Vended Tools](/docs/user-guide/concepts/tools/vended-tools/index.md) (1 shared tag)
+- [OpenAI Responses API](/docs/user-guide/concepts/model-providers/openai-responses/index.md) (1 shared tag)
+- [Agent Configuration](/docs/user-guide/concepts/experimental/agent-config/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

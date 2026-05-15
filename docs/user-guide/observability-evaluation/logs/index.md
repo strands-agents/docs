@@ -273,3 +273,16 @@ configureLogging(customLogger)
 4.  **Compatible Libraries**: Use established logging libraries like Pino or Winston for production deployments
 5.  **Consistent Format**: Ensure your custom logger maintains consistent formatting across log levels
 (( /tab "TypeScript" ))
+
+## Related pages
+
+- [PII Redaction](/docs/user-guide/safety-security/pii-redaction/index.md) (2 shared tags)
+- [Evaluating Remote Traces](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md) (1 shared tag)
+- [Evaluation](/docs/user-guide/observability-evaluation/evaluation/index.md) (1 shared tag)
+- [Metrics](/docs/user-guide/observability-evaluation/metrics/index.md) (1 shared tag)
+- [Observability](/docs/user-guide/observability-evaluation/observability/index.md) (1 shared tag)
+- [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md) (1 shared tag)
+- [Traces](/docs/user-guide/observability-evaluation/traces/index.md) (1 shared tag)
+- [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) (1 shared tag)
+- [Root Cause Analysis](/docs/user-guide/evals-sdk/detectors/root_cause_analysis/index.md) (1 shared tag)
+- [Session Diagnosis](/docs/user-guide/evals-sdk/detectors/diagnosis/index.md) (1 shared tag)

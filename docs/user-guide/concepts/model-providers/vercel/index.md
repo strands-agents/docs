@@ -220,3 +220,16 @@ Authentication is handled by the underlying Vercel provider package. Refer to th
 -   [Vercel AI SDK](https://sdk.vercel.ai/)
 -   [Language Model Specification v3](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3)
 -   [Vercel AI SDK Providers](https://sdk.vercel.ai/docs/foundations/providers-and-models)
+
+## Related pages
+
+- [Google](/docs/user-guide/concepts/model-providers/google/index.md) (1 shared tag)
+- [Multimodal Correctness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md) (1 shared tag)
+- [Multimodal Faithfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md) (1 shared tag)
+- [Multimodal Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md) (1 shared tag)
+- [Multimodal Output Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md) (1 shared tag)
+- [Multimodal Overall Quality Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (1 shared tag)
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (1 shared tag)

@@ -241,3 +241,11 @@ def build_task_context(task_id, tasks, results):
 ## Conclusion
 
 Multi-agent workflows provide a structured approach to complex tasks by coordinating specialized agents in defined sequences with clear dependencies. The Strands Agents SDK supports both custom workflow implementations and a built-in workflow tool with advanced features for state management, resource optimization, and monitoring. By choosing the right workflow architecture for your needs, you can create efficient, reliable, and maintainable multi-agent systems that handle complex processes with clarity and control.
+
+## Related pages
+
+- [Agent-to-Agent (A2A) Protocol](/docs/user-guide/concepts/multi-agent/agent-to-agent/index.md) (1 shared tag)
+- [Graph Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/graph/index.md) (1 shared tag)
+- [Multi-agent Patterns](/docs/user-guide/concepts/multi-agent/multi-agent-patterns/index.md) (1 shared tag)
+- [Swarm Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/swarm/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

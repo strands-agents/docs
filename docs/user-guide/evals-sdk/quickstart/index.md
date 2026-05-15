@@ -539,3 +539,10 @@ Ready to dive deeper? Explore these resources:
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md) - Automatically generate comprehensive test suites
 -   [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md) - Save, load, and version your evaluation experiments
 -   [Detectors](/docs/user-guide/evals-sdk/detectors/index.md) - Automatic failure detection and root cause analysis for agent traces
+
+## Related pages
+
+- [Get started](/docs/user-guide/quickstart/overview/index.md) (1 shared tag)
+- [Python Quickstart](/docs/user-guide/quickstart/python/index.md) (1 shared tag)
+- [TypeScript Quickstart](/docs/user-guide/quickstart/typescript/index.md) (1 shared tag)
+- [Quickstart](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) (1 shared tag)

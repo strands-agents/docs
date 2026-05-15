@@ -764,3 +764,11 @@ The built-in `get_config` and `update_config` methods allow for the model’s co
 -   `get_config` exposes the current model config
 -   `update_config` allows for at-runtime updates to the model config
     -   For example, changing model\_id with a tool call
+
+## Related pages
+
+- [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)
+- [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) (1 shared tag)
+- [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) (1 shared tag)
+- [Interrupts](/docs/user-guide/concepts/interrupts/index.md) (1 shared tag)

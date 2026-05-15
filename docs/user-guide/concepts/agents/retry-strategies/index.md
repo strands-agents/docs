@@ -1,8 +1,8 @@
-Model providers occasionally encounter errors such as rate limits, service unavailability, or network timeouts. By default, the agent retries `ModelThrottledException` failures automatically with exponential backoff and the `Angent.retry_strategy` parameter lets you customize this behavior.
+Model providers occasionally encounter errors such as rate limits, service unavailability, or network timeouts. By default, the agent retries throttled responses automatically with exponential backoff. The `Agent.retry_strategy` (Python) or `Agent.retryStrategy` (TypeScript) parameter lets you customize this behavior.
 
 ## Default Behavior
 
-Without configuration, agents retry `ModelThrottledException` up to 5 times (6 total attempts) with exponential backoff starting at 4 seconds:
+Without configuration, agents retry throttling errors up to 5 times (6 total attempts) with exponential backoff starting at 4 seconds:
 
 ```plaintext
 Attempt 1: fails → wait 4s
@@ -15,7 +15,7 @@ Attempt 6: fails → exception raised
 
 ## Customizing Retry Behavior
 
-Use `ModelRetryStrategy` to adjust the retry parameters:
+To adjust retry parameters, pass a configured strategy to the agent constructor.
 
 (( tab "Python" ))
 ```python
@@ -32,18 +32,69 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+In TypeScript, `ModelRetryStrategy` is the abstract base class. Use `DefaultModelRetryStrategy` for the standard configurable strategy:
+
+```typescript
+import { Agent, DefaultModelRetryStrategy } from '@strands-agents/sdk'
+
+const agent = new Agent({
+  retryStrategy: new DefaultModelRetryStrategy({ maxAttempts: 3 }),
+})
 ```
 (( /tab "TypeScript" ))
 
 ### Parameters
 
+(( tab "Python" ))
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `max_attempts` | `int` | `6` | Total number of attempts including the initial call. Set to `1` to disable retries. |
 | `initial_delay` | `float` | `4` | Seconds to wait before the first retry. Subsequent retries double this value. |
 | `max_delay` | `float` | `128` | Maximum seconds to wait between retries. Caps the exponential growth. |
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+`DefaultModelRetryStrategy` accepts:
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `maxAttempts` | `number` | `6` | Total number of attempts including the initial call. Must be `>= 1`. |
+| `backoff` | `BackoffStrategy` | `new ExponentialBackoff({ baseMs: 4000, maxMs: 240000 })` | Computes delay between retries. See [Backoff Strategies](#backoff-strategies). |
+(( /tab "TypeScript" ))
+
+### Backoff Strategies
+
+In TypeScript, the delay between retries is delegated to a `BackoffStrategy` passed via the `backoff` parameter. The Python SDK does not expose a separate backoff interface; configure exponential backoff through the `initial_delay` and `max_delay` parameters above.
+
+(( tab "Python" ))
+Configure backoff through `ModelRetryStrategy` parameters in [Customizing Retry Behavior](#customizing-retry-behavior).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The TypeScript SDK ships three built-in strategies:
+
+-   `ExponentialBackoff` (default): delay grows as `baseMs * multiplier^(attempt-1)`, capped at `maxMs`.
+-   `LinearBackoff`: delay grows as `baseMs * attempt`, capped at `maxMs`.
+-   `ConstantBackoff`: same delay for every retry.
+
+`ExponentialBackoff` and `LinearBackoff` accept a `jitter` option (`'none'`, `'full'`, `'equal'`, `'decorrelated'`). Default is `'full'` jitter, which spreads concurrent clients across the wait window. `ConstantBackoff` returns the configured delay unchanged.
+
+```typescript
+import { Agent, DefaultModelRetryStrategy, ExponentialBackoff } from '@strands-agents/sdk'
+
+const agent = new Agent({
+  retryStrategy: new DefaultModelRetryStrategy({
+    maxAttempts: 4,
+    backoff: new ExponentialBackoff({
+      baseMs: 2_000,
+      maxMs: 60_000,
+      multiplier: 2,
+      jitter: 'full',
+    }),
+  }),
+})
+```
+(( /tab "TypeScript" ))
 
 ## Disabling Retries
 
@@ -51,7 +102,7 @@ To disable automatic retries entirely:
 
 (( tab "Python" ))
 ```python
-from strands import Agent, ModelRetryStrategy
+from strands import Agent
 
 agent = Agent(
     retry_strategy=None
@@ -60,18 +111,64 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+```typescript
+import { Agent } from '@strands-agents/sdk'
+
+const agent = new Agent({
+  retryStrategy: null,
+})
 ```
 (( /tab "TypeScript" ))
 
 ## When Retries Occur
 
-`ModelRetryStrategy` handles `ModelThrottledException`, which model providers raise for rate-limiting. Other exceptions propagate immediately without retry.
+Default retry strategies handle throttling errors (`ModelThrottledException` in Python, `ModelThrottledError` in TypeScript) raised by model providers for rate-limiting. Other exceptions propagate immediately without retry.
+
+To extend or narrow the retryable set, see [Custom Retry Logic](#custom-retry-logic).
 
 ## Custom Retry Logic
 
-Built in retry constructs like `ModelRetryStrategy` are useful for customizing model rate-limiting behavior, but for more fine-grained control - like validating model responses or handling additional exception types - use a hook instead. The `AfterModelCallEvent` fires after each model call and lets you set `event.retry = True` to trigger another attempt:
+For more control over retry decisions, such as validating model responses or handling additional error types, two paths are available:
+
+1.  Subclass the retry strategy class to own the full decision shape and reuse hook plumbing.
+2.  Use a hook on `AfterModelCallEvent` to set `event.retry = true` directly.
+
+### Subclassing the Retry Strategy
+
+(( tab "Python" ))
+The Python SDK’s `ModelRetryStrategy` is a concrete configurable class. To customize beyond its `max_attempts` / `initial_delay` / `max_delay` parameters, use the hook approach below.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+To extend or narrow which errors are retryable, subclass `DefaultModelRetryStrategy` and override `isRetryable`. The default implementation retries `ModelThrottledError` only; `super.isRetryable(error)` preserves that base behavior so you can opt additional error types in (or specific ones out) without reimplementing the rest of the retry policy.
+
+```typescript
+import { Agent, DefaultModelRetryStrategy } from '@strands-agents/sdk'
+
+class TransientServiceError extends Error {
+  readonly name = 'TransientServiceError'
+}
+
+// Retry throttles (the default retryable set) plus our own transient error class.
+class WiderRetryStrategy extends DefaultModelRetryStrategy {
+  protected override isRetryable(error: Error): boolean {
+    return super.isRetryable(error) || error instanceof TransientServiceError
+  }
+}
+
+const agent = new Agent({
+  retryStrategy: new WiderRetryStrategy({ maxAttempts: 5 }),
+})
+```
+
+For full control over the retry decision (custom backoff state, attempt-aware logic), subclass the abstract `ModelRetryStrategy` directly and implement `computeRetryDecision`. The base class handles short-circuits, per-turn state reset, and sleeping between attempts.
+
+A retry-strategy instance carries per-turn state and must not be shared across agents. Create a new instance per agent.
+(( /tab "TypeScript" ))
+
+### Using a Hook
+
+Hooks are simpler when you only need to inspect a model error and request a retry. Set `event.retry = true` from an `AfterModelCallEvent` callback. Hooks do not introduce delays automatically; the example below adds a 2-second wait.
 
 (( tab "Python" ))
 ```python
@@ -99,11 +196,35 @@ agent = Agent(hooks=[CustomRetry()])
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+The `AfterModelCallEvent` exposes `attemptCount` (1-indexed). Use it to bound retry counts without tracking state outside the hook.
+
+```typescript
+import { Agent, AfterModelCallEvent } from '@strands-agents/sdk'
+
+const agent = new Agent({})
+
+let attempts = 0
+agent.addHook(AfterModelCallEvent, async (event) => {
+  if (event.error && attempts < 3) {
+    attempts += 1
+    await new Promise((resolve) => setTimeout(resolve, 2_000))
+    event.retry = true
+  }
+})
 ```
 (( /tab "TypeScript" ))
 
-Unlike `ModelRetryStrategy`, hooks don’t automatically introduce delays between retries. The example above uses `asyncio.sleep` to add a 2-second delay before each retry.
-
 See [Hooks](/docs/user-guide/concepts/agents/hooks/index.md#model-call-retry) for more examples.
+
+## Related pages
+
+- [Interrupts](/docs/user-guide/concepts/interrupts/index.md) (2 shared tags)
+- [Plugins](/docs/user-guide/concepts/plugins/index.md) (1 shared tag)
+- [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md) (1 shared tag)
+- [Detectors](/docs/user-guide/evals-sdk/detectors/index.md) (1 shared tag)
+- [Failure Detection](/docs/user-guide/evals-sdk/detectors/failure_detection/index.md) (1 shared tag)
+- [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) (1 shared tag)
+- [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) (1 shared tag)
+- [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) (1 shared tag)
+- [Root Cause Analysis](/docs/user-guide/evals-sdk/detectors/root_cause_analysis/index.md) (1 shared tag)
+- [Session Diagnosis](/docs/user-guide/evals-sdk/detectors/diagnosis/index.md) (1 shared tag)

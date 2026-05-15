@@ -202,3 +202,16 @@ for fix_type, recs in by_type.items():
 -   [Failure Detection](/docs/user-guide/evals-sdk/detectors/failure_detection/index.md): Identify failures before analyzing root causes
 -   [Session Diagnosis](/docs/user-guide/evals-sdk/detectors/diagnosis/index.md): Combined detection + RCA pipeline
 -   [Detectors Overview](/docs/user-guide/evals-sdk/detectors/index.md): High-level detectors guide
+
+## Related pages
+
+- [Session Diagnosis](/docs/user-guide/evals-sdk/detectors/diagnosis/index.md) (3 shared tags)
+- [Detectors](/docs/user-guide/evals-sdk/detectors/index.md) (2 shared tags)
+- [Failure Detection](/docs/user-guide/evals-sdk/detectors/failure_detection/index.md) (2 shared tags)
+- [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) (2 shared tags)
+- [Evaluating Remote Traces](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md) (1 shared tag)
+- [Evaluation](/docs/user-guide/observability-evaluation/evaluation/index.md) (1 shared tag)
+- [Metrics](/docs/user-guide/observability-evaluation/metrics/index.md) (1 shared tag)
+- [Observability](/docs/user-guide/observability-evaluation/observability/index.md) (1 shared tag)
+- [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md) (1 shared tag)
+- [Traces](/docs/user-guide/observability-evaluation/traces/index.md) (1 shared tag)

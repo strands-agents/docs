@@ -228,3 +228,8 @@ When disabled (or if the call fails), falls back to estimation with a character-
 -   [llama.cpp](https://github.com/ggml-org/llama.cpp)
 -   [llama.cpp Server Documentation](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)
 -   [GGUF Models on Hugging Face](https://huggingface.co/models?search=gguf)
+
+## Related pages
+
+- [Llama API](/docs/user-guide/concepts/model-providers/llamaapi/index.md) (1 shared tag)
+- [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) (1 shared tag)

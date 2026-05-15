@@ -1,4 +1,4 @@
-Defined in: [src/models/model.ts:159](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/models/model.ts#L159)
+Defined in: [src/models/model.ts:159](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/models/model.ts#L159)
 
 Options for counting tokens in a set of messages.
 
@@ -10,7 +10,7 @@ Options for counting tokens in a set of messages.
 optional systemPrompt?: SystemPrompt;
 ```
 
-Defined in: [src/models/model.ts:164](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/models/model.ts#L164)
+Defined in: [src/models/model.ts:164](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/models/model.ts#L164)
 
 System prompt to guide the model’s behavior. Can be a simple string or an array of content blocks for advanced caching.
 
@@ -22,6 +22,6 @@ System prompt to guide the model’s behavior. Can be a simple string or an arra
 optional toolSpecs?: ToolSpec[];
 ```
 
-Defined in: [src/models/model.ts:169](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/models/model.ts#L169)
+Defined in: [src/models/model.ts:169](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/models/model.ts#L169)
 
 Array of tool specifications to include in the count.

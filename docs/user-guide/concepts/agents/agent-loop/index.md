@@ -237,3 +237,16 @@ The agent loop is the execution primitive. Higher-level patterns build on top of
 -   Evaluation frameworks that assess agent performance on complex tasks
 
 Understanding the loop deeply makes these advanced patterns more approachable. The same principles apply at every level: clear tool contracts, accumulated context, and autonomous decision-making within defined boundaries.
+
+## Related pages
+
+- [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) (3 shared tags)
+- [Interrupts](/docs/user-guide/concepts/interrupts/index.md) (3 shared tags)
+- [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md) (2 shared tags)
+- [Plugins](/docs/user-guide/concepts/plugins/index.md) (2 shared tags)
+- [Creating a Custom Model Provider](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) (1 shared tag)
+- [Retry Strategies](/docs/user-guide/concepts/agents/retry-strategies/index.md) (1 shared tag)
+- [Bidirectional Streaming Hooks](/docs/user-guide/concepts/bidirectional-streaming/hooks/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (1 shared tag)
+- [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) (1 shared tag)

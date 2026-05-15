@@ -284,3 +284,8 @@ response = agent("What's the square root of 144 plus the current time?")
 -   [Ollama Documentation](https://github.com/ollama/ollama/blob/main/README.md)
 -   [Ollama Docker Hub](https://hub.docker.com/r/ollama/ollama)
 -   [Available Ollama Models](https://ollama.ai/library)
+
+## Related pages
+
+- [Llama API](/docs/user-guide/concepts/model-providers/llamaapi/index.md) (1 shared tag)
+- [llama.cpp](/docs/user-guide/concepts/model-providers/llamacpp/index.md) (1 shared tag)

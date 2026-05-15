@@ -30,7 +30,7 @@ type ContentBlockData =
 };
 ```
 
-Defined in: [src/types/messages.ts:141](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/types/messages.ts#L141)
+Defined in: [src/types/messages.ts:141](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/types/messages.ts#L141)
 
 A block of content within a message. Content blocks can contain text, tool usage requests, tool results, reasoning content, cache points, guard content, or media (image, video, document).
 

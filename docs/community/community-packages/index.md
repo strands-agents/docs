@@ -61,11 +61,20 @@ Tools extend your agents with capabilities for specific services and platforms. 
 | [google](/docs/community/tools/strands-google/index.md) | Google API integration | ✅ | ❌ |
 | [hubspot](/docs/community/tools/strands-hubspot/index.md) | HubSpot CRM integration | ✅ | ❌ |
 | [perplexity](/docs/community/tools/strands-perplexity/index.md) | Perplexity web search | ✅ | ❌ |
+| [spraay](/docs/community/tools/strands-spraay/index.md) | Spraay batch payments on Base | ✅ | ❌ |
 | [strands-sql](/docs/community/tools/strands-sql/index.md) | General-purpose SQL tool for Strands Agents — PostgreSQL, MySQL, and SQLite via SQLAlchemy. | ✅ | ❌ |
 | [teams](/docs/community/tools/strands-teams/index.md) | Microsoft Teams | ✅ | ❌ |
 | [telegram](/docs/community/tools/strands-telegram/index.md) | Telegram bot | ✅ | ❌ |
 | [telegram-listener](/docs/community/tools/strands-telegram-listener/index.md) | Telegram listener | ✅ | ❌ |
 | [UTCP](/docs/community/tools/utcp/index.md) | Universal Tool Calling Protocol | ✅ | ❌ |
+
+## Agent Extensions
+
+Agent extensions provide specialized agent subclasses that change how Strands agents reason and act. Use these when you need an alternative action paradigm beyond the default tool-calling approach.
+
+| Package | Description | Python | TypeScript |
+| --- | --- | --- | --- |
+| [Code Agent](/docs/community/agent-extensions/strands-code-agent/index.md) | A coding agent that replaces tool-calling with code generation in a persistent Python REPL | ✅ | ❌ |
 
 ---
 

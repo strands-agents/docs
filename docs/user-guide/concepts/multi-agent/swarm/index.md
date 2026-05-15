@@ -147,7 +147,15 @@ The following initialization parameters control swarm behavior and safety limits
 | `start` | Agent ID that receives the initial input | First agent in `nodes` |
 | `nodes` | Array of agents (or `AgentNodeOptions`) | (required) |
 | `maxSteps` | Maximum total agent executions (including start) | Infinity |
+| `timeout` | Wall-clock ceiling for the entire swarm invocation, in milliseconds | Infinity |
+| `nodeTimeout` | Fallback per-node wall-clock ceiling in milliseconds. Applied to any node without its own `timeout` | Infinity |
 | `plugins` | Plugins for event-driven extensibility | None |
+
+To bound an individual node, pass `timeout` on its `AgentNodeOptions` entry. Per-node `timeout` overrides the orchestrator’s `nodeTimeout` and must be at least 1 ms.
+
+If neither `maxSteps` nor `timeout` is set, the SDK emits a one-time warning at construction since a swarm with no bound can run indefinitely.
+
+Timeouts are enforced via `AbortSignal` and are cooperative. A tool that neither polls its cancel signal nor forwards it to a cancellable API can run past the deadline.
 (( /tab "TypeScript" ))
 
 ## Multi-Modal Input Support
@@ -457,3 +465,11 @@ The Swarm pattern is available in multiple SDKs. While the core concept is the s
 **Error handling**: In both SDKs, node failures produce a FAILED result. Orchestrator-level limit violations (e.g., exceeding `maxSteps`) throw an exception in TypeScript to promote fail-fast behavior for global failures. Python returns a FAILED result instead.
 
 **Node cancellation**: Both SDKs support cancelling a node before execution via hook callbacks. In TypeScript, a cancelled node produces a CANCELLED result status, allowing the orchestrator to distinguish cancellation from failure. In Python, a cancelled node results in a FAILED status.
+
+## Related pages
+
+- [Agent Workflows: Building Multi-Agent Systems with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/workflow/index.md) (1 shared tag)
+- [Agent-to-Agent (A2A) Protocol](/docs/user-guide/concepts/multi-agent/agent-to-agent/index.md) (1 shared tag)
+- [Graph Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/graph/index.md) (1 shared tag)
+- [Multi-agent Patterns](/docs/user-guide/concepts/multi-agent/multi-agent-patterns/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

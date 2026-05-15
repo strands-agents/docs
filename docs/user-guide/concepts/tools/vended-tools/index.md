@@ -222,3 +222,13 @@ Tool names are stable and will not change. In minor versions, a tool’s descrip
 -   [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) — Persist agent state including notebooks
 -   [Interrupts](/docs/user-guide/concepts/interrupts/index.md) — Implement approval workflows for sensitive operations
 -   [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) — Intercept and customize tool execution
+
+## Related pages
+
+- [Community Built Tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) (1 shared tag)
+- [Creating Custom Tools](/docs/user-guide/concepts/tools/custom-tools/index.md) (1 shared tag)
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (1 shared tag)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (1 shared tag)
+- [Tools Overview](/docs/user-guide/concepts/tools/index.md) (1 shared tag)
+- [Agent Configuration](/docs/user-guide/concepts/experimental/agent-config/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

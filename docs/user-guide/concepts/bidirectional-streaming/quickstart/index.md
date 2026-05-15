@@ -537,3 +537,16 @@ Ready to learn more? Check out these resources:
     -   [OpenAI Realtime](/docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md) - OpenAI’s Realtime API
     -   [Gemini Live](/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md) - Google’s Gemini Live API
 -   [Python API Reference](/docs/api/python/strands.experimental.bidi.agent.agent) - Complete API documentation
+
+## Related pages
+
+- [Get started](/docs/user-guide/quickstart/overview/index.md) (1 shared tag)
+- [Python Quickstart](/docs/user-guide/quickstart/python/index.md) (1 shared tag)
+- [Strands Evaluation Quickstart](/docs/user-guide/evals-sdk/quickstart/index.md) (1 shared tag)
+- [TypeScript Quickstart](/docs/user-guide/quickstart/typescript/index.md) (1 shared tag)
+- [BidiAgent](/docs/user-guide/concepts/bidirectional-streaming/agent/index.md) (1 shared tag)
+- [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) (1 shared tag)
+- [Gemini Live](/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md) (1 shared tag)
+- [I/O Channels](/docs/user-guide/concepts/bidirectional-streaming/io/index.md) (1 shared tag)
+- [Interruptions](/docs/user-guide/concepts/bidirectional-streaming/interruption/index.md) (1 shared tag)
+- [OpenAI Realtime](/docs/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md) (1 shared tag)

@@ -88,9 +88,17 @@ The `Graph` constructor accepts:
 -   **nodes**: Array of `AgentBase`, `MultiAgentBase`, or `Node` instances
 -   **edges**: Array of edge definitions (tuples or objects with handlers)
 -   **sources**: Entry point node IDs (auto-detected from nodes with no incoming edges)
--   **maxSteps**: Maximum total node executions (useful for cyclic graphs)
--   **maxConcurrency**: Maximum nodes executing in parallel
+-   **maxSteps**: Maximum total node executions (useful for cyclic graphs). Defaults to `Infinity`.
+-   **maxConcurrency**: Maximum nodes executing in parallel. Defaults to `Infinity`.
+-   **timeout**: Wall-clock ceiling for the entire graph invocation, in milliseconds. Defaults to `Infinity`. Does not propagate into nested orchestrators wrapped via `MultiAgentNode`; nested `Swarm`/`Graph` instances run under their own timeout config.
+-   **nodeTimeout**: Fallback per-node wall-clock ceiling in milliseconds. Applied to any `AgentNode` that does not set its own `timeout`. Defaults to `Infinity`. Does not apply to `MultiAgentNode`.
 -   **plugins**: Plugins for event-driven extensibility
+
+To bound an individual `AgentNode`, pass `timeout` to its options object instead of relying on the orchestrator’s `nodeTimeout`. Per-node `timeout` overrides `nodeTimeout` for that node and must be at least 1 ms.
+
+If neither `maxSteps` nor `timeout` is set, the SDK emits a one-time warning at construction since a graph with cyclic edges and no bound can run indefinitely.
+
+Timeouts are enforced via `AbortSignal` and are cooperative. A tool that neither polls its cancel signal nor forwards it to a cancellable API can run past the deadline.
 (( /tab "TypeScript" ))
 
 ## Creating a Graph
@@ -1008,3 +1016,11 @@ The Graph pattern is available in multiple SDKs. While the core concept is the s
 **Error handling**: Python node failures throw exceptions (fail-fast), while orchestrator-level limit violations return a FAILED result. TypeScript does the inverse: node failures produce a FAILED result, allowing parallel paths to continue, while orchestrator-level limits (`maxSteps`) throw exceptions to promote fail-fast behavior for global failures.
 
 **Node cancellation**: Both SDKs support cancelling a node before execution via hook callbacks. In TypeScript, a cancelled node produces a CANCELLED result status, allowing the orchestrator to distinguish cancellation from failure. In Python, a cancelled node results in a FAILED status.
+
+## Related pages
+
+- [Agent Workflows: Building Multi-Agent Systems with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/workflow/index.md) (1 shared tag)
+- [Agent-to-Agent (A2A) Protocol](/docs/user-guide/concepts/multi-agent/agent-to-agent/index.md) (1 shared tag)
+- [Multi-agent Patterns](/docs/user-guide/concepts/multi-agent/multi-agent-patterns/index.md) (1 shared tag)
+- [Swarm Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/swarm/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

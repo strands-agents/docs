@@ -79,3 +79,8 @@ The protocol requires just two methods: `load(case_name) -> EvaluationData | Non
 -   [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md): Simplify task function boilerplate
 -   [Experiment Management](/docs/user-guide/evals-sdk/how-to/experiment_management/index.md): Save and load experiments
 -   [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md): Experiment serialization formats
+
+## Related pages
+
+- [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) (1 shared tag)
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (1 shared tag)

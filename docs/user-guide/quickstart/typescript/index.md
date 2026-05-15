@@ -249,3 +249,10 @@ Ready to learn more? Check out these resources:
 -   [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) - Learn how Strands agents work under the hood
 -   [State](/docs/user-guide/concepts/agents/state/index.md) - Understand how agents maintain context and state across a conversation
 -   [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) - Taking agents from development to production, operating them responsibly at scale
+
+## Related pages
+
+- [Get started](/docs/user-guide/quickstart/overview/index.md) (1 shared tag)
+- [Python Quickstart](/docs/user-guide/quickstart/python/index.md) (1 shared tag)
+- [Strands Evaluation Quickstart](/docs/user-guide/evals-sdk/quickstart/index.md) (1 shared tag)
+- [Quickstart](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) (1 shared tag)

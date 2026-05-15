@@ -179,3 +179,12 @@ When disabled (or if the API call fails), falls back to estimation with a charac
 
 -   [Python API](/docs/api/python/strands.models.model)
 -   [Anthropic](https://platform.claude.com/docs/en/home)
+
+## Related pages
+
+- [Result Caching](/docs/user-guide/evals-sdk/how-to/result_caching/index.md) (1 shared tag)
+- [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) (1 shared tag)
+- [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (1 shared tag)

@@ -400,3 +400,14 @@ class AsyncConfigPlugin implements Plugin {
 -   [Steering](/docs/user-guide/concepts/plugins/steering/index.md) - Explore the built-in steering plugin
 -   [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) - Manage large tool results proactively
 -   [Get Featured](/docs/community/get-featured/index.md) - Share your plugins with the community
+
+## Related pages
+
+- [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) (2 shared tags)
+- [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) (2 shared tags)
+- [Interrupts](/docs/user-guide/concepts/interrupts/index.md) (2 shared tags)
+- [Bidirectional Streaming Hooks](/docs/user-guide/concepts/bidirectional-streaming/hooks/index.md) (1 shared tag)
+- [Retry Strategies](/docs/user-guide/concepts/agents/retry-strategies/index.md) (1 shared tag)
+- [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md) (1 shared tag)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (1 shared tag)
+- [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) (1 shared tag)

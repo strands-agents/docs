@@ -162,3 +162,8 @@ When implementing callback handlers:
 2.  **Handle All Event Types**: Be prepared for different event types
 3.  **Graceful Errors**: Handle exceptions within your handler
 4.  **State Management**: Store accumulated state in the `request_state`
+
+## Related pages
+
+- [Async Iterators for Streaming](/docs/user-guide/concepts/streaming/async-iterators/index.md) (1 shared tag)
+- [Streaming Events](/docs/user-guide/concepts/streaming/index.md) (1 shared tag)

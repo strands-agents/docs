@@ -283,3 +283,16 @@ Ensure your Writer API key is valid and has the necessary permissions. You can g
 -   [Writer Documentation](https://dev.writer.com/)
 -   [Writer Models Guide](https://dev.writer.com/home/models)
 -   [Writer API Reference](https://dev.writer.com/api-reference)
+
+## Related pages
+
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (2 shared tags)
+- [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) (1 shared tag)
+- [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md) (1 shared tag)
+- [Google](/docs/user-guide/concepts/model-providers/google/index.md) (1 shared tag)
+- [Vercel](/docs/user-guide/concepts/model-providers/vercel/index.md) (1 shared tag)
+- [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) (1 shared tag)
+- [Multimodal Correctness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md) (1 shared tag)
+- [Multimodal Faithfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md) (1 shared tag)
+- [Multimodal Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md) (1 shared tag)
+- [Multimodal Output Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md) (1 shared tag)

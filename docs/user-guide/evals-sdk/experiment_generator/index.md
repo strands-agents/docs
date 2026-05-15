@@ -551,3 +551,9 @@ experiment = await generator.from_context_async(
 -   [Trajectory Evaluator](/docs/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md): Understand trajectory evaluation
 -   [Dataset Management](/docs/user-guide/evals-sdk/how-to/experiment_management/index.md): Manage and organize datasets
 -   [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md): Save and load experiments
+
+## Related pages
+
+- [Simulators](/docs/user-guide/evals-sdk/simulators/index.md) (1 shared tag)
+- [User Simulation](/docs/user-guide/evals-sdk/simulators/user_simulation/index.md) (1 shared tag)
+- [Tool Simulation](/docs/user-guide/evals-sdk/simulators/tool_simulation/index.md) (1 shared tag)

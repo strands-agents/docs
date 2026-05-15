@@ -156,3 +156,16 @@ agent = config_to_agent(
 2.  **Leverage agent defaults**: Only specify configuration values you want to override
 3.  **Use standard tool formats**: Follow Agent class conventions for tool specifications
 4.  **Handle errors gracefully**: Catch FileNotFoundError and JSONDecodeError for robust applications
+
+## Related pages
+
+- [Community Built Tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) (1 shared tag)
+- [Creating Custom Tools](/docs/user-guide/concepts/tools/custom-tools/index.md) (1 shared tag)
+- [Vended Tools](/docs/user-guide/concepts/tools/vended-tools/index.md) (1 shared tag)
+- [Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md) (1 shared tag)
+- [Skills](/docs/user-guide/concepts/plugins/skills/index.md) (1 shared tag)
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (1 shared tag)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (1 shared tag)
+- [Tools Overview](/docs/user-guide/concepts/tools/index.md) (1 shared tag)
+- [Prompt Engineering](/docs/user-guide/safety-security/prompt-engineering/index.md) (1 shared tag)
+- [Prompts](/docs/user-guide/concepts/agents/prompts/index.md) (1 shared tag)

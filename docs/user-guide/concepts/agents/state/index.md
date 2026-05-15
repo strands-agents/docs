@@ -410,3 +410,11 @@ Invocation state (`invocationState` in TypeScript, `invocation_state` / `request
 ## Persisting State Across Sessions
 
 For automatic persistence of agent state and conversation history across application restarts, see [Session Management](/docs/user-guide/concepts/agents/session-management/index.md). For manual, point-in-time capture and restore of agent state, see [Snapshots](/docs/user-guide/concepts/agents/snapshots/index.md).
+
+## Related pages
+
+- [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) (3 shared tags)
+- [Bidirectional Streaming Session Management](/docs/user-guide/concepts/bidirectional-streaming/session-management/index.md) (2 shared tags)
+- [Serialization](/docs/user-guide/evals-sdk/how-to/serialization/index.md) (1 shared tag)
+- [OpenAI Responses API](/docs/user-guide/concepts/model-providers/openai-responses/index.md) (1 shared tag)
+- [Conversation Management](/docs/user-guide/concepts/agents/conversation-management/index.md) (1 shared tag)

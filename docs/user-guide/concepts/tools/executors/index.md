@@ -101,3 +101,13 @@ Cancellation works identically in both modes. Call `agent.cancel()` to request c
 ## Custom Executors
 
 Custom tool executors are not currently supported but are planned for a future release. You can track progress on this feature at [GitHub Issue #762](https://github.com/strands-agents/sdk-python/issues/762).
+
+## Related pages
+
+- [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) (2 shared tags)
+- [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) (2 shared tags)
+- [Interrupts](/docs/user-guide/concepts/interrupts/index.md) (2 shared tags)
+- [Creating a Custom Model Provider](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) (1 shared tag)
+- [Plugins](/docs/user-guide/concepts/plugins/index.md) (1 shared tag)
+- [Retry Strategies](/docs/user-guide/concepts/agents/retry-strategies/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

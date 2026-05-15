@@ -6,7 +6,7 @@ type SlidingWindowConversationManagerConfig = {
 };
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:85](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L85)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:85](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L85)
 
 Configuration for the sliding window conversation manager.
 
@@ -18,7 +18,7 @@ Configuration for the sliding window conversation manager.
 optional windowSize?: number;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:90](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L90)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:90](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L90)
 
 Maximum number of messages to keep in the conversation history. Defaults to 40 messages.
 
@@ -30,7 +30,7 @@ Maximum number of messages to keep in the conversation history. Defaults to 40 m
 optional shouldTruncateResults?: boolean;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:96](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L96)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:96](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L96)
 
 Whether to truncate tool results when a message is too large for the model’s context window. Defaults to true.
 
@@ -42,7 +42,7 @@ Whether to truncate tool results when a message is too large for the model’s c
 optional proactiveCompression?: boolean | ProactiveCompressionConfig;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:105](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L105)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:105](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L105)
 
 Enable proactive context compression before the model call.
 

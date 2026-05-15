@@ -413,3 +413,11 @@ The OpenAI Responses provider does not currently implement native token counting
 -   [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
 -   [Amazon Bedrock Mantle](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)
 -   [OpenAI Chat Completions](/docs/user-guide/concepts/model-providers/openai/index.md) (alternative provider using the Chat Completions API)
+
+## Related pages
+
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (1 shared tag)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (1 shared tag)
+- [Tools Overview](/docs/user-guide/concepts/tools/index.md) (1 shared tag)
+- [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) (1 shared tag)
+- [State Management](/docs/user-guide/concepts/agents/state/index.md) (1 shared tag)

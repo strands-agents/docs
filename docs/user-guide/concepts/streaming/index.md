@@ -493,3 +493,8 @@ console.log('\nDone!')
 -   Learn about [Async Iterators](/docs/user-guide/concepts/streaming/async-iterators/index.md) for asynchronous streaming
 -   Explore [Callback Handlers](/docs/user-guide/concepts/streaming/callback-handlers/index.md) for synchronous event processing
 -   See the Agent API Reference for complete method documentation: [Python](/docs/api/python/strands.agent.agent) | [TypeScript](/docs/api/typescript/Agent/index.md)
+
+## Related pages
+
+- [Async Iterators for Streaming](/docs/user-guide/concepts/streaming/async-iterators/index.md) (1 shared tag)
+- [Callback Handlers](/docs/user-guide/concepts/streaming/callback-handlers/index.md) (1 shared tag)

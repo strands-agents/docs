@@ -135,3 +135,16 @@ As a reminder, Nova Sonic is only available in us-east-1, eu-north-1, and ap-nor
 -   [Nova Sonic](https://docs.aws.amazon.com/nova/latest/userguide/speech.html)
 -   [Experimental Bedrock Client](https://github.com/awslabs/aws-sdk-python/tree/develop/clients/aws-sdk-bedrock-runtime)
 -   [Python API Reference](/docs/api/python/strands.experimental.bidi.models.nova_sonic#BidiNovaSonicModel)
+
+## Related pages
+
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (2 shared tags)
+- [Guardrails](/docs/user-guide/safety-security/guardrails/index.md) (2 shared tags)
+- [Deploying Strands Agents to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md) (2 shared tags)
+- [Python Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md) (2 shared tags)
+- [TypeScript Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md) (2 shared tags)
+- [AgentCore Evaluation Dashboard Configuration](/docs/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard/index.md) (2 shared tags)
+- [BidiAgent](/docs/user-guide/concepts/bidirectional-streaming/agent/index.md) (1 shared tag)
+- [Events](/docs/user-guide/concepts/bidirectional-streaming/events/index.md) (1 shared tag)
+- [Gemini Live](/docs/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md) (1 shared tag)
+- [I/O Channels](/docs/user-guide/concepts/bidirectional-streaming/io/index.md) (1 shared tag)

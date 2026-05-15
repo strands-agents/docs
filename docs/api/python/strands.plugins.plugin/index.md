@@ -8,7 +8,7 @@ This module defines the Plugin base class, which provides a composable way to ad
 class Plugin(ABC)
 ```
 
-Defined in: [src/strands/plugins/plugin.py:21](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L21)
+Defined in: [src/strands/plugins/plugin.py:19](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L19)
 
 Base class for objects that extend agent functionality.
 
@@ -68,7 +68,7 @@ Plugins provide a composable way to add behavior changes to agents. They support
 def name() -> str
 ```
 
-Defined in: [src/strands/plugins/plugin.py:73](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L73)
+Defined in: [src/strands/plugins/plugin.py:71](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L71)
 
 A stable string identifier for the plugin.
 
@@ -78,11 +78,13 @@ A stable string identifier for the plugin.
 def __init__() -> None
 ```
 
-Defined in: [src/strands/plugins/plugin.py:77](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L77)
+Defined in: [src/strands/plugins/plugin.py:75](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L75)
 
 Initialize the plugin and discover decorated methods.
 
 Scans the class for methods decorated with @hook and @tool and stores references for later registration when the plugin is attached to an agent.
+
+Uses a guard to prevent double-discovery when used with multiple inheritance (e.g., a class that inherits from both Plugin and MultiAgentPlugin).
 
 #### hooks
 
@@ -91,7 +93,7 @@ Scans the class for methods decorated with @hook and @tool and stores references
 def hooks() -> list[HookCallback]
 ```
 
-Defined in: [src/strands/plugins/plugin.py:88](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L88)
+Defined in: [src/strands/plugins/plugin.py:90](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L90)
 
 List of hooks the plugin provides, auto-discovered from @hook decorated methods.
 
@@ -102,7 +104,7 @@ List of hooks the plugin provides, auto-discovered from @hook decorated methods.
 def tools() -> list[DecoratedFunctionTool]
 ```
 
-Defined in: [src/strands/plugins/plugin.py:93](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L93)
+Defined in: [src/strands/plugins/plugin.py:95](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L95)
 
 List of tools the plugin provides, auto-discovered from @tool decorated methods.
 
@@ -112,7 +114,7 @@ List of tools the plugin provides, auto-discovered from @tool decorated methods.
 def init_agent(agent: "Agent") -> None | Awaitable[None]
 ```
 
-Defined in: [src/strands/plugins/plugin.py:123](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L123)
+Defined in: [src/strands/plugins/plugin.py:99](https://github.com/strands-agents/sdk-python/blob/main/src/strands/plugins/plugin.py#L99)
 
 Initialize the agent instance.
 

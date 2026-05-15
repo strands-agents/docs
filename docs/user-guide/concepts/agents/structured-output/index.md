@@ -583,3 +583,10 @@ console.log(`Industry: ${company.industry}`) // "software"
 console.log(`Size: ${company.employees}`) // 500
 ```
 (( /tab "TypeScript" ))
+
+## Related pages
+
+- [LiteLLM](/docs/user-guide/concepts/model-providers/litellm/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Anthropic](/docs/user-guide/concepts/model-providers/anthropic/index.md) (1 shared tag)

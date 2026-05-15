@@ -45,3 +45,10 @@ The table below compares feature availability between the Python and TypeScript 
 | **Observability** | [OpenTelemetry integration](/docs/user-guide/observability-evaluation/observability/index.md) | ✅ | ✅ |
 | **Experimental** | [Bidirectional streaming](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) | ✅ | ❌ |
 |  | [Agent steering](/docs/user-guide/concepts/plugins/steering/index.md) | ✅ | ❌ |
+
+## Related pages
+
+- [Python Quickstart](/docs/user-guide/quickstart/python/index.md) (1 shared tag)
+- [Strands Evaluation Quickstart](/docs/user-guide/evals-sdk/quickstart/index.md) (1 shared tag)
+- [TypeScript Quickstart](/docs/user-guide/quickstart/typescript/index.md) (1 shared tag)
+- [Quickstart](/docs/user-guide/concepts/bidirectional-streaming/quickstart/index.md) (1 shared tag)

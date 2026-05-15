@@ -226,7 +226,9 @@ flowchart LR
     direction TB
         AgentResultEvent["AgentResultEvent"]
         AfterInvocationEvent["AfterInvocationEvent"]
+        InterruptEvent["InterruptEvent"]
         AgentResultEvent --> AfterInvocationEvent
+        InterruptEvent --> AfterInvocationEvent
   end
 Start --> Model
 Model <--> Tool
@@ -335,6 +337,7 @@ All events extend `HookableEvent`, making them both streamable via `agent.stream
 | `ToolStreamUpdateEvent` | Wraps streaming progress events from tool execution. Access via `.event` |
 | `ToolResultEvent` | Wraps a completed tool result. Access via `.result` |
 | `AgentResultEvent` | Wraps the final agent result at the end of the invocation. Access via `.result` |
+| `InterruptEvent` | Fires once per unanswered interrupt when the agent halts to wait for responses. Access via `.interrupt` |
 | `MultiAgentInitializedEvent` | Triggered when a multi-agent orchestrator has finished initialization |
 | `BeforeMultiAgentInvocationEvent` | Triggered before orchestrator execution starts |
 | `AfterMultiAgentInvocationEvent` | Triggered after orchestrator execution completes. Uses reverse callback ordering |
@@ -385,12 +388,18 @@ Most event properties are read-only to prevent unintended modifications. However
 -   `BeforeToolCallEvent`
     
     -   `cancel` - Cancel tool execution with a message. See [Limit Tool Counts](#limit-tool-counts).
+    -   `selectedTool` - Replace the tool to be executed with a different `Tool` instance. See [Tool Interception](#tool-interception).
+    -   `toolUse` - Mutable. Rewrite `name`, `toolUseId`, or `input` before execution. Renaming `name` re-resolves the tool from the registry when `selectedTool` is not set. See [Fixed Tool Arguments](#fixed-tool-arguments).
 -   `AfterModelCallEvent`
     
     -   `retry` - Request a retry of the model invocation.
 -   `AfterToolCallEvent`
     
     -   `retry` - Request a retry of the tool invocation.
+    -   `result` - Mutable. Rewrite the `ToolResultBlock` before it propagates to the model. See [Result Modification](#result-modification).
+-   `AfterInvocationEvent`
+    
+    -   `resume` - Trigger a follow-up agent invocation with new input. Setting it re-enters the agent loop under the same invocation lock. See [Invocation resume](#invocation-resume).
 (( /tab "TypeScript" ))
 
 ### Callback Ordering
@@ -420,23 +429,34 @@ const agent = new Agent()
 
 agent.addHook(BeforeToolCallEvent, (event) => {
   console.log('[logging] Tool called:', event.toolUse.name)
-})  // HookOrder.DEFAULT (0)
+}) // HookOrder.DEFAULT (0)
 
 // Run before the SDK's earliest hooks
-agent.addHook(BeforeToolCallEvent, (event) => {
-  console.log('[guardrail] Runs before SDK hooks')
-}, { order: HookOrder.SDK_FIRST - 1 })
-
+agent.addHook(
+  BeforeToolCallEvent,
+  (event) => {
+    console.log('[guardrail] Runs before SDK hooks')
+  },
+  { order: HookOrder.SDK_FIRST - 1 }
+)
 
 // Arbitrary numbers for fine-grained control
-agent.addHook(BeforeToolCallEvent, (event) => {
-  console.log('[validation] Validating input')
-}, { order: -50 })
+agent.addHook(
+  BeforeToolCallEvent,
+  (event) => {
+    console.log('[validation] Validating input')
+  },
+  { order: -50 }
+)
 
 // Use -Infinity/Infinity for guaranteed absolute first/last
-agent.addHook(BeforeToolCallEvent, (event) => {
-  console.log('[absolute] Always runs first, no matter what')
-}, { order: -Infinity })
+agent.addHook(
+  BeforeToolCallEvent,
+  (event) => {
+    console.log('[absolute] Always runs first, no matter what')
+  },
+  { order: -Infinity }
+)
 ```
 
 Within the same order group, Before events preserve registration order and After events reverse it.
@@ -556,8 +576,31 @@ class ToolInterceptor(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Changing of tools is not yet available in TypeScript SDK
+```typescript
+import {
+  BeforeToolCallEvent,
+  type LocalAgent,
+  type Plugin,
+  type FunctionTool,
+} from '@strands-agents/sdk'
+
+class ToolInterceptor implements Plugin {
+  name = 'tool-interceptor'
+
+  constructor(private readonly safeAlternative: FunctionTool) {}
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
+  }
+
+  private interceptTool(event: BeforeToolCallEvent): void {
+    if (event.toolUse.name !== 'sensitive_tool') return
+    // Run a safer tool in place of the registry's match for this call.
+    event.selectedTool = this.safeAlternative
+    // Mirror the rename on toolUse so the model sees the substitution.
+    event.toolUse.name = this.safeAlternative.name
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -580,8 +623,36 @@ class ResultProcessor(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Changing of tool results is not yet available in TypeScript SDK
+```typescript
+import {
+  AfterToolCallEvent,
+  ToolResultBlock,
+  TextBlock,
+  type LocalAgent,
+  type Plugin,
+} from '@strands-agents/sdk'
+
+class ResultProcessor implements Plugin {
+  name = 'result-processor'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(AfterToolCallEvent, (event) => this.processResult(event))
+  }
+
+  private processResult(event: AfterToolCallEvent): void {
+    if (event.toolUse.name !== 'calculator') return
+
+    // Prefix calculator output before it propagates to the model.
+    event.result = new ToolResultBlock({
+      toolUseId: event.result.toolUseId,
+      status: event.result.status,
+      content: event.result.content.map((block) =>
+        block.type === 'textBlock' ? new TextBlock(`Result: ${block.text}`) : block
+      ),
+      ...(event.result.error !== undefined ? { error: event.result.error } : {}),
+    })
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -693,8 +764,40 @@ class ResultProcessor(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Changing of tools is not yet available in TypeScript SDK
+```typescript
+import {
+  AfterToolCallEvent,
+  ToolResultBlock,
+  TextBlock,
+  type LocalAgent,
+  type Plugin,
+} from '@strands-agents/sdk'
+
+class ResultProcessor implements Plugin {
+  name = 'result-processor'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(AfterToolCallEvent, (event) => this.processResult(event))
+  }
+
+  private processResult(event: AfterToolCallEvent): void {
+    if (event.toolUse.name !== 'calculator') return
+
+    const original = event.result.content.find((block) => block.type === 'textBlock')
+    if (original?.type !== 'textBlock') return
+
+    // Log the change before mutating so the audit trail captures both states.
+    console.log(`Modifying calculator result: ${original.text}`)
+    event.result = new ToolResultBlock({
+      toolUseId: event.result.toolUseId,
+      status: event.result.status,
+      content: event.result.content.map((block) =>
+        block.type === 'textBlock' ? new TextBlock(`Result: ${block.text}`) : block
+      ),
+      ...(event.result.error !== undefined ? { error: event.result.error } : {}),
+    })
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -1270,8 +1373,21 @@ result = agent("Look up the weather in Seattle")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+import { Agent, AfterInvocationEvent } from '@strands-agents/sdk'
+
+let resumeCount = 0
+
+const agent = new Agent({})
+agent.addHook(AfterInvocationEvent, (event) => {
+  // Resume once after a clean turn to ask the model for a one-line summary.
+  if (resumeCount === 0) {
+    resumeCount += 1
+    event.resume = 'Now summarize what you just did in one sentence.'
+  }
+})
+
+const result = await agent.invoke('Look up the weather in Seattle')
 ```
 (( /tab "TypeScript" ))
 
@@ -1300,8 +1416,20 @@ result = agent("Draft a haiku about programming")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+import { Agent, AfterInvocationEvent } from '@strands-agents/sdk'
+
+const MAX_ITERATIONS = 3
+let iteration = 0
+
+const agent = new Agent({})
+agent.addHook(AfterInvocationEvent, (event) => {
+  if (iteration >= MAX_ITERATIONS) return
+  iteration += 1
+  event.resume = `Review your previous response and improve it. Iteration ${iteration} of ${MAX_ITERATIONS}.`
+})
+
+const result = await agent.invoke('Draft a haiku about programming')
 ```
 (( /tab "TypeScript" ))
 
@@ -1351,8 +1479,43 @@ result = agent("Send an email to alice@example.com saying hello")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+import {
+  Agent,
+  AfterInvocationEvent,
+  BeforeToolCallEvent,
+  InterruptEvent,
+} from '@strands-agents/sdk'
+import type { Interrupt } from '@strands-agents/sdk'
+
+const agent = new Agent({ tools: [] })
+
+// Track interrupts as they fire so AfterInvocationEvent can build resume input.
+const pendingInterrupts: Interrupt[] = []
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  if (event.toolUse.name === 'send_email') {
+    event.interrupt({ name: 'email_approval', reason: 'Approve this email?' })
+  }
+})
+
+agent.addHook(InterruptEvent, (event) => {
+  pendingInterrupts.push(event.interrupt)
+})
+
+agent.addHook(AfterInvocationEvent, (event) => {
+  if (pendingInterrupts.length === 0) return
+  // Auto-approve every interrupted tool call so the caller never sees the interrupt.
+  event.resume = pendingInterrupts.map((interrupt) => ({
+    interruptResponse: {
+      interruptId: interrupt.id,
+      response: 'approved',
+    },
+  }))
+  pendingInterrupts.length = 0
+})
+
+const result = await agent.invoke('Send an email to alice@example.com saying hello')
 ```
 (( /tab "TypeScript" ))
 
@@ -1408,3 +1571,16 @@ class LoggingPlugin implements Plugin {
 const agent = new Agent({ plugins: [new LoggingPlugin()] })
 ```
 (( /tab "TypeScript" ))
+
+## Related pages
+
+- [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) (3 shared tags)
+- [Interrupts](/docs/user-guide/concepts/interrupts/index.md) (3 shared tags)
+- [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md) (2 shared tags)
+- [Plugins](/docs/user-guide/concepts/plugins/index.md) (2 shared tags)
+- [Creating a Custom Model Provider](/docs/user-guide/concepts/model-providers/custom_model_provider/index.md) (1 shared tag)
+- [Retry Strategies](/docs/user-guide/concepts/agents/retry-strategies/index.md) (1 shared tag)
+- [Bidirectional Streaming Hooks](/docs/user-guide/concepts/bidirectional-streaming/hooks/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)
+- [Steering](/docs/user-guide/concepts/plugins/steering/index.md) (1 shared tag)
+- [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) (1 shared tag)

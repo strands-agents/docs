@@ -620,3 +620,11 @@ If you encounter bugs or need to request features for A2A support:
 1.  Check the [A2A documentation](https://a2aproject.github.io/A2A/latest/) for protocol-specific issues
 2.  Report Strands-specific issues on GitHub: [Python SDK](https://github.com/strands-agents/sdk-python/issues/new/choose) or [TypeScript SDK](https://github.com/strands-agents/sdk-typescript/issues/new/choose)
 3.  Include relevant error messages and code samples in your reports
+
+## Related pages
+
+- [Agent Workflows: Building Multi-Agent Systems with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/workflow/index.md) (1 shared tag)
+- [Graph Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/graph/index.md) (1 shared tag)
+- [Multi-agent Patterns](/docs/user-guide/concepts/multi-agent/multi-agent-patterns/index.md) (1 shared tag)
+- [Swarm Multi-Agent Pattern](/docs/user-guide/concepts/multi-agent/swarm/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)

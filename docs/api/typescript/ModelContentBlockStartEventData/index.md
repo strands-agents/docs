@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:85](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/models/streaming.ts#L85)
+Defined in: [src/models/streaming.ts:85](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/models/streaming.ts#L85)
 
 Data for a content block start event.
 
@@ -10,7 +10,7 @@ Data for a content block start event.
 type: "modelContentBlockStartEvent";
 ```
 
-Defined in: [src/models/streaming.ts:89](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/models/streaming.ts#L89)
+Defined in: [src/models/streaming.ts:89](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/models/streaming.ts#L89)
 
 Discriminator for content block start events.
 
@@ -22,6 +22,6 @@ Discriminator for content block start events.
 optional start?: ToolUseStart;
 ```
 
-Defined in: [src/models/streaming.ts:95](https://github.com/strands-agents/sdk-typescript/blob/13a12727f03fa603a6fe1163a9e2a97bd32f1e8c/strands-ts/src/models/streaming.ts#L95)
+Defined in: [src/models/streaming.ts:95](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/models/streaming.ts#L95)
 
 Information about the content block being started. Only present for tool use blocks.

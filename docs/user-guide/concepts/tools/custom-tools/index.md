@@ -119,6 +119,8 @@ const weatherTool = tool({
 ```
 (( /tab "TypeScript" ))
 
+Tool names must match `^[a-zA-Z0-9_-]+$` and be 1 to 64 characters long. Names that do not match this format are replaced with `INVALID_TOOL_NAME` on assistant messages before they are sent to the model, so the request still succeeds but the model can no longer reference the original name.
+
 ### Overriding Input Schema
 
 (( tab "Python" ))
@@ -910,3 +912,13 @@ async def call_api(tool, **kwargs):
     }
 ```
 (( /tab "Python" ))
+
+## Related pages
+
+- [Community Built Tools](/docs/user-guide/concepts/tools/community-tools-package/index.md) (1 shared tag)
+- [Vended Tools](/docs/user-guide/concepts/tools/vended-tools/index.md) (1 shared tag)
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (1 shared tag)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (1 shared tag)
+- [Tools Overview](/docs/user-guide/concepts/tools/index.md) (1 shared tag)
+- [Agent Configuration](/docs/user-guide/concepts/experimental/agent-config/index.md) (1 shared tag)
+- [Agents as Tools with Strands Agents SDK](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md) (1 shared tag)
