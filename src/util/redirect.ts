@@ -1,10 +1,11 @@
 /**
- * Redirect helper: maps old MkDocs-style URLs to new CMS slugs or external URLs.
+ * Redirect helper: maps old MkDocs-style URLs to new CMS slugs.
  *
  * resolveRedirectFromUrl normalises a versioned URL to a slug, then
  * resolveRedirect applies rename rules for paths that changed structure.
  *
- * Rules may return a full https:// URL for external redirects (e.g. GitHub).
+ * External vanity redirects (e.g. /discord) are handled by Astro's
+ * built-in redirects in astro.config.mjs and never reach this code.
  */
 
 import { exactly } from '../utils/regex'
@@ -32,38 +33,6 @@ const SLUG_RULES: SlugRule[] = [
   {
     match: exactly('docs/examples/python/multi_agent_example'),
     to: 'docs/examples/python/multi_agent_example/multi_agent_example',
-  },
-
-  // Vanity URLs for community links
-  {
-    match: exactly('discord'),
-    to: 'https://discord.gg/strands',
-  },
-
-  // CDK and deployment examples now live on GitHub
-  {
-    match: exactly('docs/examples/cdk/deploy_to_apprunner'),
-    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_apprunner/README.md',
-  },
-  {
-    match: exactly('docs/examples/cdk/deploy_to_ec2'),
-    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_ec2/README.md',
-  },
-  {
-    match: exactly('docs/examples/cdk/deploy_to_fargate'),
-    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_fargate/README.md',
-  },
-  {
-    match: exactly('docs/examples/cdk/deploy_to_lambda'),
-    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/cdk/deploy_to_lambda/README.md',
-  },
-  {
-    match: exactly('docs/examples/deploy_to_eks'),
-    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/deploy_to_eks/README.md',
-  },
-  {
-    match: exactly('docs/examples/typescript/deploy_to_bedrock_agentcore'),
-    to: 'https://github.com/strands-agents/docs/blob/main/docs/examples/typescript/deploy_to_bedrock_agentcore/README.md',
   },
 ]
 

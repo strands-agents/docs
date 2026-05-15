@@ -59,19 +59,14 @@ const redirectFromMap = await buildRedirectFromMap()
     const target = resolveRedirectFromUrl(pathWithoutBase, redirectFromMap)
     if (!target) return false
 
-    let destPath: string
-    if (target.startsWith('https://') || target.startsWith('http://')) {
-      console.log(`[Redirect404] Redirecting ${window.location.href} → ${target}`)
-      window.location.replace(target)
-      return true
-    }
-
-    destPath = target === '/' ? `${base}/` : `${base}/${target}`
+    // All redirect targets are relative paths. External redirects are handled
+    // by Astro's built-in redirects in astro.config.mjs before reaching the 404 page.
+    const destPath = target === '/' ? `${base}/` : `${base}/${target}`
 
     const currentPath = window.location.pathname.replace(/\/+$/, '')
     if (destPath.replace(/\/+$/, '') === currentPath) return false
 
-    // Preserve query params when redirecting to an internal path
+    // Preserve query params when redirecting
     const destUrl = new URL(destPath, window.location.origin)
     new URLSearchParams(window.location.search).forEach((v, k) => destUrl.searchParams.set(k, v))
 
