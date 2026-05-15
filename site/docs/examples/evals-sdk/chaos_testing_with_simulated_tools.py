@@ -6,9 +6,9 @@ from pydantic import BaseModel, Field
 from strands import Agent
 from strands_evals import Case
 from strands_evals.chaos import (
+    ChaosCase,
     ChaosExperiment,
     ChaosPlugin,
-    ChaosScenario,
     CorruptValues,
     RemoveFields,
     ToolCallFailure,
@@ -69,34 +69,24 @@ def send_booking_confirmation(booking_id: str = "", flight_id: str = "", method:
 # 2. Create the ChaosPlugin
 chaos_plugin = ChaosPlugin()
 
-# 3. Define chaos scenarios
-scenarios = [
+# 3. Define named effect maps
+effect_maps = {
     # Single-tool, pre-hook: tool call is cancelled before execution
-    ChaosScenario(
-        name="search_timeout",
-        description="Search tool times out — agent must handle a hard failure",
-        effects={"search_flights": [ToolCallFailure(error_type="timeout")]},
-    ),
+    "search_timeout": {
+        "search_flights": [ToolCallFailure(error_type="timeout")],
+    },
     # Two-tool, post-hook: tools execute but responses are silently corrupted
-    ChaosScenario(
-        name="book_corrupt_and_confirm_truncated",
-        description="Booking returns garbage data while confirmation is truncated",
-        effects={
-            "book_flight": [CorruptValues(corrupt_ratio=0.8)],
-            "send_booking_confirmation": [TruncateFields(max_length=5)],
-        },
-    ),
+    "book_corrupt_and_confirm_truncated": {
+        "book_flight": [CorruptValues(corrupt_ratio=0.8)],
+        "send_booking_confirmation": [TruncateFields(max_length=5)],
+    },
     # All-tool, mixed pre+post: combines hard failures with silent corruption
-    ChaosScenario(
-        name="total_chaos",
-        description="Search network error (pre), book execution error (pre), confirm fields removed (post)",
-        effects={
-            "search_flights": [ToolCallFailure(error_type="network_error")],
-            "book_flight": [ToolCallFailure(error_type="execution_error")],
-            "send_booking_confirmation": [RemoveFields(remove_ratio=0.7)],
-        },
-    ),
-]
+    "total_chaos": {
+        "search_flights": [ToolCallFailure(error_type="network_error")],
+        "book_flight": [ToolCallFailure(error_type="execution_error")],
+        "send_booking_confirmation": [RemoveFields(remove_ratio=0.7)],
+    },
+}
 
 # 4. Define the task function
 # Pre-create tool instances once (avoids registry issues across runs)
@@ -104,7 +94,7 @@ _search_tool = tool_simulator.get_tool("search_flights")
 _book_tool = tool_simulator.get_tool("book_flight")
 _confirm_tool = tool_simulator.get_tool("send_booking_confirmation")
 
-def travel_agent_task(case: Case) -> dict:
+def travel_agent_task(case: ChaosCase) -> dict:
     """Run the travel agent with a single user query."""
     logger.info(f"\n{'─'*60}")
     logger.info(f"  Case: {case.name}")
@@ -148,7 +138,7 @@ def travel_agent_task(case: Case) -> dict:
 
     return {"output": output, "trajectory": session}
 
-# 5. Define test cases
+# 5. Define test cases and expand with effect maps
 test_cases = [
     Case(
         name="book_a_flight",
@@ -160,16 +150,17 @@ test_cases = [
     ),
 ]
 
+# Expand: 2 cases × (3 effect maps + 1 baseline) = 8 ChaosCase objects
+chaos_cases = ChaosCase.expand(test_cases, effect_maps, include_no_effect_baseline=True)
+
 # 6. Create and run the ChaosExperiment
 evaluators = [GoalSuccessRateEvaluator()]
 
 experiment = ChaosExperiment(
-    cases=test_cases,
-    scenarios=scenarios,
+    cases=chaos_cases,
     evaluators=evaluators,
-    include_baseline=True,
 )
 
-# Run: (1 baseline + 3 scenarios) × 2 cases = 8 runs
+# Run: 8 chaos cases = 8 agent invocations
 reports = experiment.run_evaluations(task=travel_agent_task)
 reports[0].run_display()
