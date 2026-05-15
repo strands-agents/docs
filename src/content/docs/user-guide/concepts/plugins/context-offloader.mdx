@@ -233,8 +233,6 @@ The plugin includes a `retrieve_offloaded_content` tool that lets the agent fetc
 
 The inline guidance in offloaded results tells the agent to use its available tools to selectively access the data it needs, and mentions `retrieve_offloaded_content` as a fallback.
 
-In Python, the retrieval tool returns the full offloaded content. Search and filtering parameters are not yet available — use the agent's other tools (file readers, shell, etc.) for targeted access.
-
 </Tab>
 <Tab label="TypeScript">
 
@@ -287,6 +285,10 @@ Input: `{ reference: "mem_1_tool-123_0" }`
 
 The tool returns the full offloaded content in its native format.
 
+```
+{"users":[{"id":1,"name":"Alice","role":"admin"},{"id":2,"name":"Bob","role":"user"},{"id":3,"name":"Charlie","role":"user"}, ...]}
+```
+
 </Tab>
 <Tab label="TypeScript">
 
@@ -324,40 +326,6 @@ Input: `{ reference: "mem_1_tool-123_0", pattern: "admin", context_lines: 2 }`
 > 49|     { "id": 16, "name": "Eve", "role": "admin" },
   50|     { "id": 17, "name": "Frank", "role": "user" }
   51|   ]
-```
-
-**3. Agent reads a specific line range**
-
-Input: `{ reference: "mem_1_tool-123_0", line_range: { start: 45, end: 55 } }`
-
-```
-[Lines 45-55 of 200]
-
-  45|     { "id": 14, "name": "Mallory", "role": "user" },
-  46|     { "id": 15, "name": "Dana", "role": "user" },
-  47|     { "id": 16, "name": "Eve", "role": "admin" },
-  48|     { "id": 17, "name": "Frank", "role": "user" },
-  49|     { "id": 18, "name": "Grace", "role": "user" },
-  50|     { "id": 19, "name": "Heidi", "role": "moderator" },
-  51|     { "id": 20, "name": "Ivan", "role": "user" },
-  52|     { "id": 21, "name": "Judy", "role": "admin" },
-  53|     { "id": 22, "name": "Karl", "role": "user" },
-  54|     { "id": 23, "name": "Liam", "role": "user" },
-  55|     { "id": 24, "name": "Mia", "role": "user" }
-```
-
-**4. Truncated output (too many matches)**
-
-```
-[500 matches for /user/]
-
->  2|   "users": [
->  3|     { "id": 1, "name": "Alice", "role": "admin" },
->  4|     { "id": 2, "name": "Bob", "role": "user" },
->  5|     { "id": 3, "name": "Charlie", "role": "user" },
-...
-
-[output truncated, narrow your search]
 ```
 
 </Tab>
