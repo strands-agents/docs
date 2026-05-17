@@ -10,15 +10,24 @@
 ;(function () {
   'use strict'
 
-  const CUSTOM_EVENT_LISTENER = 'custom-awsm-acs-analytics-event-listener'
-  const SEARCH_EVENT_LISTENER = 'custom-awsm-acs-search-event-listener'
+  // Prevent duplicate initialization on View Transition re-executions
+  if (window.__strandsAnalyticsInit) {
+    onPageTransition()
+    return
+  }
+  window.__strandsAnalyticsInit = true
+
+  var CUSTOM_EVENT_LISTENER = 'custom-awsm-acs-analytics-event-listener'
+  var SEARCH_EVENT_LISTENER = 'custom-awsm-acs-search-event-listener'
+
+  // Scroll state - lives outside setupScrollTracking so it can be reset on transitions
+  var scrollData = { initial: 0, max: 0, latest: 0 }
 
   // --- Helpers ---
 
   function deriveSections(pathname) {
-    const segments = pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean)
-    // Skip leading "docs" segment if present
-    const start = segments[0] === 'docs' ? 1 : 0
+    var segments = pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean)
+    var start = segments[0] === 'docs' ? 1 : 0
     return {
       siteSection: segments[start] || 'home',
       subSection1: segments[start + 1] || '',
@@ -27,6 +36,8 @@
     }
   }
 
+  // Consent is enforced by the WebSDK listener itself - events dispatched here
+  // are silently dropped if the user has not accepted performance cookies via Shortbread.
   function dispatchAnalyticsEvent(eventType, data, useBeacon) {
     var detail = {
       eventType: eventType,
@@ -80,6 +91,7 @@
 
   function setupAnchorTracking() {
     document.addEventListener('click', function (e) {
+      if (!e.target || !e.target.closest) return
       var link = e.target.closest('a[href^="#"]')
       if (!link) return
       var anchor = link.getAttribute('href').replace('#', '')
@@ -92,9 +104,11 @@
 
   // --- 3. Search Events ---
 
+  var searchObserver = null
+
   function setupSearchTracking() {
     var searchTimeout = null
-    var observer = new MutationObserver(function () {
+    searchObserver = new MutationObserver(function () {
       var resultsContainer = document.querySelector('[data-pagefind-ui] .pagefind-ui__results')
       if (!resultsContainer) return
       clearTimeout(searchTimeout)
@@ -107,18 +121,16 @@
       }, 800)
     })
 
-    // Starlight uses a dialog for search; observe when it appears
     var searchDialog = document.querySelector('dialog[aria-label*="earch"], [data-pagefind-ui]')
     if (searchDialog) {
-      observer.observe(searchDialog, { childList: true, subtree: true })
+      searchObserver.observe(searchDialog, { childList: true, subtree: true })
     } else {
-      // Fallback: observe body for dialog insertion
       var bodyObserver = new MutationObserver(function (mutations) {
         for (var i = 0; i < mutations.length; i++) {
           var nodes = mutations[i].addedNodes
           for (var j = 0; j < nodes.length; j++) {
             if (nodes[j].nodeType === 1 && (nodes[j].matches('dialog') || nodes[j].querySelector('[data-pagefind-ui]'))) {
-              observer.observe(nodes[j], { childList: true, subtree: true })
+              searchObserver.observe(nodes[j], { childList: true, subtree: true })
               bodyObserver.disconnect()
               return
             }
@@ -131,53 +143,70 @@
 
   // --- 4. Scroll Depth ---
 
+  function updateScroll() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight
+    var depth = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0
+    scrollData.latest = depth
+    if (depth > scrollData.max) scrollData.max = depth
+  }
+
+  function sendScrollDepth() {
+    updateScroll()
+    dispatchAnalyticsEvent(
+      'web.awsm.pageInteraction',
+      {
+        pageInteraction: {
+          name: 'scroll',
+          scrollDepths: {
+            initial: scrollData.initial,
+            max: scrollData.max,
+            latest: scrollData.latest,
+          },
+        },
+      },
+      true
+    )
+  }
+
   function setupScrollTracking() {
-    var scrollData = { initial: 0, max: 0, latest: 0 }
-
-    function updateScroll() {
-      var scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      var docHeight = document.documentElement.scrollHeight - window.innerHeight
-      var depth = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0
-      scrollData.latest = depth
-      if (depth > scrollData.max) scrollData.max = depth
-    }
-
     var debounceTimer
     window.addEventListener('scroll', function () {
       clearTimeout(debounceTimer)
       debounceTimer = setTimeout(updateScroll, 200)
     }, { passive: true })
 
-    // Capture initial position
     setTimeout(function () {
       updateScroll()
       scrollData.initial = scrollData.latest
     }, 500)
 
-    // Send on page unload via beacon
-    window.addEventListener('beforeunload', function () {
-      updateScroll()
-      dispatchAnalyticsEvent(
-        'web.awsm.pageInteraction',
-        {
-          pageInteraction: {
-            name: 'scroll',
-            scrollDepths: {
-              initial: scrollData.initial,
-              max: scrollData.max,
-              latest: scrollData.latest,
-            },
-          },
-        },
-        true // useBeacon
-      )
+    window.addEventListener('beforeunload', sendScrollDepth)
+
+    // visibilitychange is more reliable on mobile (iOS Safari doesn't always fire beforeunload)
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') {
+        sendScrollDepth()
+      }
     })
+  }
+
+  function resetScrollData() {
+    scrollData.initial = 0
+    scrollData.max = 0
+    scrollData.latest = 0
+    setTimeout(function () {
+      updateScroll()
+      scrollData.initial = scrollData.latest
+    }, 500)
   }
 
   // --- 5. Navigation Tab & Outbound Link Clicks ---
 
   function setupNavTracking() {
     document.addEventListener('click', function (e) {
+      if (!e.target || !e.target.closest) return
+
       // Nav tab clicks
       var navTab = e.target.closest('.nav-tab, .mobile-nav-link')
       if (navTab) {
@@ -189,8 +218,8 @@
       // Code copy button
       var copyBtn = e.target.closest('.copy button, button.copy, [data-code] button')
       if (copyBtn) {
-        var sections = deriveSections(window.location.pathname)
-        dispatchCTAClick('code-copy:' + sections.hierarchy, 'customClick')
+        var pageSections = deriveSections(window.location.pathname)
+        dispatchCTAClick('code-copy:' + pageSections.hierarchy, 'customClick')
         return
       }
 
@@ -204,20 +233,30 @@
 
   // --- 6. SPA / View Transition Support ---
 
-  function init() {
+  function onPageTransition() {
     trackPageView()
-    setupScrollTracking()
+    resetScrollData()
   }
 
-  // Run on initial load
+  // Disconnect search observer before page swap to prevent leaks
+  document.addEventListener('astro:before-swap', function () {
+    if (searchObserver) {
+      searchObserver.disconnect()
+      searchObserver = null
+    }
+  })
+
+  document.addEventListener('astro:page-load', function () {
+    // Re-attach search observer for the new page
+    if (!searchObserver) setupSearchTracking()
+    onPageTransition()
+  })
+
+  // --- Initial setup (runs once) ---
   setupAnchorTracking()
   setupSearchTracking()
   setupNavTracking()
-  init()
-
-  // Re-run page-level tracking on Astro client-side navigation
-  document.addEventListener('astro:page-load', function () {
-    init()
-  })
+  setupScrollTracking()
+  trackPageView()
 })()
 </script>
