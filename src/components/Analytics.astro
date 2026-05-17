@@ -10,18 +10,18 @@
 ;(function () {
   'use strict'
 
-  // Prevent duplicate initialization on View Transition re-executions
-  if (window.__strandsAnalyticsInit) {
-    onPageTransition()
-    return
-  }
+  // Prevent duplicate initialization on View Transition re-executions.
+  // The astro:page-load listener (registered on first init) handles transitions.
+  if (window.__strandsAnalyticsInit) return
   window.__strandsAnalyticsInit = true
 
   var CUSTOM_EVENT_LISTENER = 'custom-awsm-acs-analytics-event-listener'
   var SEARCH_EVENT_LISTENER = 'custom-awsm-acs-search-event-listener'
 
-  // Scroll state - lives outside setupScrollTracking so it can be reset on transitions
   var scrollData = { initial: 0, max: 0, latest: 0 }
+  var scrollSent = false
+  var searchObserver = null
+  var searchBodyObserver = null
 
   // --- Helpers ---
 
@@ -87,24 +87,48 @@
     })
   }
 
-  // --- 2. Anchor / In-Page Section Clicks ---
+  // --- 2. Click Tracking (anchors, nav tabs, code copy, outbound) ---
 
-  function setupAnchorTracking() {
+  function setupClickTracking() {
     document.addEventListener('click', function (e) {
       if (!e.target || !e.target.closest) return
-      var link = e.target.closest('a[href^="#"]')
-      if (!link) return
-      var anchor = link.getAttribute('href').replace('#', '')
-      if (!anchor) return
-      var isToc = !!link.closest('nav.right-sidebar, [class*="toc"], starlight-toc')
-      var prefix = isToc ? 'toc-click' : 'anchor-click'
-      dispatchCTAClick(prefix + ':' + anchor, 'linkClick')
+
+      // Anchor / TOC clicks
+      var anchorLink = e.target.closest('a[href^="#"]')
+      if (anchorLink) {
+        var anchor = anchorLink.getAttribute('href').replace('#', '')
+        if (!anchor) return
+        var isToc = !!anchorLink.closest('nav.right-sidebar, [class*="toc"], starlight-toc')
+        var prefix = isToc ? 'toc-click' : 'anchor-click'
+        dispatchCTAClick(prefix + ':' + anchor, 'linkClick')
+        return
+      }
+
+      // Nav tab clicks
+      var navTab = e.target.closest('.nav-tab, .mobile-nav-link')
+      if (navTab) {
+        var label = navTab.textContent.trim().replace(/\s*↗$/, '')
+        dispatchCTAClick('nav-tab:' + label, 'click')
+        return
+      }
+
+      // Code copy button
+      var copyBtn = e.target.closest('.copy button, button.copy, [data-code] button')
+      if (copyBtn) {
+        var pageSections = deriveSections(window.location.pathname)
+        dispatchCTAClick('code-copy:' + pageSections.hierarchy, 'customClick')
+        return
+      }
+
+      // Outbound links
+      var link = e.target.closest('a[href]')
+      if (link && link.hostname && link.hostname !== window.location.hostname) {
+        dispatchCTAClick('outbound:' + link.hostname + link.pathname, 'linkClick')
+      }
     })
   }
 
   // --- 3. Search Events ---
-
-  var searchObserver = null
 
   function setupSearchTracking() {
     var searchTimeout = null
@@ -121,24 +145,33 @@
       }, 800)
     })
 
+    // Starlight renders search in a <dialog> with aria-label containing "Search".
+    // Partial match on "earch" handles capitalization; if the label changes, the
+    // bodyObserver fallback will still pick up [data-pagefind-ui] when it appears.
     var searchDialog = document.querySelector('dialog[aria-label*="earch"], [data-pagefind-ui]')
     if (searchDialog) {
       searchObserver.observe(searchDialog, { childList: true, subtree: true })
     } else {
-      var bodyObserver = new MutationObserver(function (mutations) {
+      searchBodyObserver = new MutationObserver(function (mutations) {
         for (var i = 0; i < mutations.length; i++) {
           var nodes = mutations[i].addedNodes
           for (var j = 0; j < nodes.length; j++) {
             if (nodes[j].nodeType === 1 && (nodes[j].matches('dialog') || nodes[j].querySelector('[data-pagefind-ui]'))) {
               searchObserver.observe(nodes[j], { childList: true, subtree: true })
-              bodyObserver.disconnect()
+              searchBodyObserver.disconnect()
+              searchBodyObserver = null
               return
             }
           }
         }
       })
-      bodyObserver.observe(document.body, { childList: true })
+      searchBodyObserver.observe(document.body, { childList: true })
     }
+  }
+
+  function disconnectSearchObservers() {
+    if (searchObserver) { searchObserver.disconnect(); searchObserver = null }
+    if (searchBodyObserver) { searchBodyObserver.disconnect(); searchBodyObserver = null }
   }
 
   // --- 4. Scroll Depth ---
@@ -152,6 +185,8 @@
   }
 
   function sendScrollDepth() {
+    if (scrollSent) return
+    scrollSent = true
     updateScroll()
     dispatchAnalyticsEvent(
       'web.awsm.pageInteraction',
@@ -195,67 +230,28 @@
     scrollData.initial = 0
     scrollData.max = 0
     scrollData.latest = 0
+    scrollSent = false
     setTimeout(function () {
       updateScroll()
       scrollData.initial = scrollData.latest
     }, 500)
   }
 
-  // --- 5. Navigation Tab & Outbound Link Clicks ---
+  // --- 5. SPA / View Transition Support ---
 
-  function setupNavTracking() {
-    document.addEventListener('click', function (e) {
-      if (!e.target || !e.target.closest) return
-
-      // Nav tab clicks
-      var navTab = e.target.closest('.nav-tab, .mobile-nav-link')
-      if (navTab) {
-        var label = navTab.textContent.trim().replace(/\s*↗$/, '')
-        dispatchCTAClick('nav-tab:' + label, 'click')
-        return
-      }
-
-      // Code copy button
-      var copyBtn = e.target.closest('.copy button, button.copy, [data-code] button')
-      if (copyBtn) {
-        var pageSections = deriveSections(window.location.pathname)
-        dispatchCTAClick('code-copy:' + pageSections.hierarchy, 'customClick')
-        return
-      }
-
-      // Outbound links
-      var link = e.target.closest('a[href]')
-      if (link && link.hostname && link.hostname !== window.location.hostname) {
-        dispatchCTAClick('outbound:' + link.hostname + link.pathname, 'linkClick')
-      }
-    })
-  }
-
-  // --- 6. SPA / View Transition Support ---
-
-  function onPageTransition() {
-    trackPageView()
-    resetScrollData()
-  }
-
-  // Disconnect search observer before page swap to prevent leaks
   document.addEventListener('astro:before-swap', function () {
-    if (searchObserver) {
-      searchObserver.disconnect()
-      searchObserver = null
-    }
+    disconnectSearchObservers()
   })
 
   document.addEventListener('astro:page-load', function () {
-    // Re-attach search observer for the new page
-    if (!searchObserver) setupSearchTracking()
-    onPageTransition()
+    setupSearchTracking()
+    trackPageView()
+    resetScrollData()
   })
 
   // --- Initial setup (runs once) ---
-  setupAnchorTracking()
+  setupClickTracking()
   setupSearchTracking()
-  setupNavTracking()
   setupScrollTracking()
   trackPageView()
 })()
