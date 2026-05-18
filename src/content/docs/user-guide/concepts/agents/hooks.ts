@@ -1,5 +1,5 @@
 import { Agent, FunctionTool, HookOrder } from '@strands-agents/sdk'
-import type { LocalAgent, Plugin } from '@strands-agents/sdk'
+import type { LocalAgent, Plugin, Interrupt } from '@strands-agents/sdk'
 import {
   BeforeInvocationEvent,
   AfterInvocationEvent,
@@ -8,6 +8,9 @@ import {
   BeforeModelCallEvent,
   AfterModelCallEvent,
   MessageAddedEvent,
+  InterruptEvent,
+  ToolResultBlock,
+  TextBlock,
 } from '@strands-agents/sdk'
 import {
   Graph,
@@ -80,23 +83,34 @@ async function hookOrderingExample() {
 
   agent.addHook(BeforeToolCallEvent, (event) => {
     console.log('[logging] Tool called:', event.toolUse.name)
-  })  // HookOrder.DEFAULT (0)
+  }) // HookOrder.DEFAULT (0)
 
   // Run before the SDK's earliest hooks
-  agent.addHook(BeforeToolCallEvent, (event) => {
-    console.log('[guardrail] Runs before SDK hooks')
-  }, { order: HookOrder.SDK_FIRST - 1 })
-
+  agent.addHook(
+    BeforeToolCallEvent,
+    (event) => {
+      console.log('[guardrail] Runs before SDK hooks')
+    },
+    { order: HookOrder.SDK_FIRST - 1 }
+  )
 
   // Arbitrary numbers for fine-grained control
-  agent.addHook(BeforeToolCallEvent, (event) => {
-    console.log('[validation] Validating input')
-  }, { order: -50 })
+  agent.addHook(
+    BeforeToolCallEvent,
+    (event) => {
+      console.log('[validation] Validating input')
+    },
+    { order: -50 }
+  )
 
   // Use -Infinity/Infinity for guaranteed absolute first/last
-  agent.addHook(BeforeToolCallEvent, (event) => {
-    console.log('[absolute] Always runs first, no matter what')
-  }, { order: -Infinity })
+  agent.addHook(
+    BeforeToolCallEvent,
+    (event) => {
+      console.log('[absolute] Always runs first, no matter what')
+    },
+    { order: -Infinity }
+  )
   // --8<-- [end:hook_ordering]
 }
 
@@ -136,16 +150,18 @@ async function toolInterceptionExample() {
   class ToolInterceptor implements Plugin {
     name = 'tool-interceptor'
 
+    constructor(private readonly safeAlternative: FunctionTool) {}
+
     initAgent(agent: LocalAgent): void {
       agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
     }
 
     private interceptTool(event: BeforeToolCallEvent): void {
-      if (event.toolUse.name === 'sensitive_tool') {
-        // Replace with a safer alternative
-        // Note: This is conceptual - actual API may differ
-        console.log('Intercepting sensitive tool with safe alternative')
-      }
+      if (event.toolUse.name !== 'sensitive_tool') return
+      // Run a safer tool in place of the registry's match for this call.
+      event.selectedTool = this.safeAlternative
+      // Mirror the rename on toolUse so the model sees the substitution.
+      event.toolUse.name = this.safeAlternative.name
     }
   }
   // --8<-- [end:tool_interception]
@@ -157,20 +173,21 @@ async function resultModificationExample() {
     name = 'result-processor'
 
     initAgent(agent: LocalAgent): void {
-      agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
+      agent.addHook(AfterToolCallEvent, (event) => this.processResult(event))
     }
 
     private processResult(event: AfterToolCallEvent): void {
-      if (event.toolUse.name === 'calculator') {
-        // Add formatting to calculator results
-        const textContent = event.result.content.find(
-          (block) => block.type === 'textBlock'
-        )
-        if (textContent && textContent.type === 'textBlock') {
-          // Note: In actual implementation, result modification may work differently
-          console.log(`Would modify result: ${textContent.text}`)
-        }
-      }
+      if (event.toolUse.name !== 'calculator') return
+
+      // Prefix calculator output before it propagates to the model.
+      event.result = new ToolResultBlock({
+        toolUseId: event.result.toolUseId,
+        status: event.result.status,
+        content: event.result.content.map((block) =>
+          block.type === 'textBlock' ? new TextBlock(`Result: ${block.text}`) : block
+        ),
+        ...(event.result.error !== undefined ? { error: event.result.error } : {}),
+      })
     }
   }
   // --8<-- [end:result_modification]
@@ -214,21 +231,25 @@ async function loggingModificationsExample() {
     name = 'result-processor'
 
     initAgent(agent: LocalAgent): void {
-      agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
+      agent.addHook(AfterToolCallEvent, (event) => this.processResult(event))
     }
 
     private processResult(event: AfterToolCallEvent): void {
-      if (event.toolUse.name === 'calculator') {
-        const textContent = event.result.content.find(
-          (block) => block.type === 'textBlock'
-        )
-        if (textContent && textContent.type === 'textBlock') {
-          const originalContent = textContent.text
-          console.log(`Modifying calculator result: ${originalContent}`)
-          // Note: In actual implementation, result modification may work differently
-          console.log(`Would modify to: Result: ${originalContent}`)
-        }
-      }
+      if (event.toolUse.name !== 'calculator') return
+
+      const original = event.result.content.find((block) => block.type === 'textBlock')
+      if (original?.type !== 'textBlock') return
+
+      // Log the change before mutating so the audit trail captures both states.
+      console.log(`Modifying calculator result: ${original.text}`)
+      event.result = new ToolResultBlock({
+        toolUseId: event.result.toolUseId,
+        status: event.result.status,
+        content: event.result.content.map((block) =>
+          block.type === 'textBlock' ? new TextBlock(`Result: ${block.text}`) : block
+        ),
+        ...(event.result.error !== undefined ? { error: event.result.error } : {}),
+      })
     }
   }
   // --8<-- [end:logging_modifications]
@@ -469,6 +490,75 @@ async function layeredHooksExample() {
   void graph
 }
 
+async function summarizeAfterToolsExample() {
+  // --8<-- [start:summarize_after_tools]
+  let resumeCount = 0
+
+  const agent = new Agent({})
+  agent.addHook(AfterInvocationEvent, (event) => {
+    // Resume once after a clean turn to ask the model for a one-line summary.
+    if (resumeCount === 0) {
+      resumeCount += 1
+      event.resume = 'Now summarize what you just did in one sentence.'
+    }
+  })
+
+  const result = await agent.invoke('Look up the weather in Seattle')
+  // --8<-- [end:summarize_after_tools]
+  void result
+}
+
+async function iterativeRefinementExample() {
+  // --8<-- [start:iterative_refinement]
+  const MAX_ITERATIONS = 3
+  let iteration = 0
+
+  const agent = new Agent({})
+  agent.addHook(AfterInvocationEvent, (event) => {
+    if (iteration >= MAX_ITERATIONS) return
+    iteration += 1
+    event.resume = `Review your previous response and improve it. Iteration ${iteration} of ${MAX_ITERATIONS}.`
+  })
+
+  const result = await agent.invoke('Draft a haiku about programming')
+  // --8<-- [end:iterative_refinement]
+  void result
+}
+
+async function autoApproveInterruptsExample() {
+  // --8<-- [start:auto_approve_interrupts]
+  const agent = new Agent({ tools: [] })
+
+  // Track interrupts as they fire so AfterInvocationEvent can build resume input.
+  const pendingInterrupts: Interrupt[] = []
+
+  agent.addHook(BeforeToolCallEvent, (event) => {
+    if (event.toolUse.name === 'send_email') {
+      event.interrupt({ name: 'email_approval', reason: 'Approve this email?' })
+    }
+  })
+
+  agent.addHook(InterruptEvent, (event) => {
+    pendingInterrupts.push(event.interrupt)
+  })
+
+  agent.addHook(AfterInvocationEvent, (event) => {
+    if (pendingInterrupts.length === 0) return
+    // Auto-approve every interrupted tool call so the caller never sees the interrupt.
+    event.resume = pendingInterrupts.map((interrupt) => ({
+      interruptResponse: {
+        interruptId: interrupt.id,
+        response: 'approved',
+      },
+    }))
+    pendingInterrupts.length = 0
+  })
+
+  const result = await agent.invoke('Send an email to alice@example.com saying hello')
+  // --8<-- [end:auto_approve_interrupts]
+  void result
+}
+
 // Suppress unused function warnings
 void invocationStateInHooksExample
 void hookOrderingExample
@@ -477,3 +567,6 @@ void orchestratorCallbackExample
 void conditionalNodeExecutionExample
 void orchestratorAgnosticDesignExample
 void layeredHooksExample
+void summarizeAfterToolsExample
+void iterativeRefinementExample
+void autoApproveInterruptsExample

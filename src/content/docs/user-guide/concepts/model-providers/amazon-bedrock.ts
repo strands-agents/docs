@@ -426,3 +426,17 @@ async function guardrailsExample() {
   const response = await guardrailAgent.invoke('Can you tell me about the Strands SDK?')
   // --8<-- [end:guardrails]
 }
+
+async function requestTimeoutExample() {
+  // --8<-- [start:request_timeout]
+  const bedrockModel = new BedrockModel({
+    modelId: 'us.anthropic.claude-sonnet-4-6',
+    clientConfig: {
+      requestHandler: { requestTimeout: 60_000 },
+    },
+  })
+  // --8<-- [end:request_timeout]
+  void bedrockModel
+}
+
+void requestTimeoutExample

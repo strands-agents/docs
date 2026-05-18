@@ -15,6 +15,7 @@ export const communityPlugins = getIntegrationEntries(allDocs, 'plugin', true)
 export const communityModelProviders = getIntegrationEntries(allDocs, 'model-provider', true)
 export const communitySessionManagers = getIntegrationEntries(allDocs, 'session-manager', true)
 export const communityTools = getIntegrationEntries(allDocs, 'tool', true)
+export const communityAgentExtensions = getIntegrationEntries(allDocs, 'agent-extension', true)
 
 export const packageColumns = [
   { header: "Package" },
@@ -75,6 +76,14 @@ Session managers provide alternative storage backends for conversation history. 
 Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
 
 <SimpleTable data={communityTools} columns={packageColumns}>
+  {renderCell}
+</SimpleTable>
+
+## Agent Extensions
+
+Agent extensions provide specialized agent subclasses that change how Strands agents reason and act. Use these when you need an alternative action paradigm beyond the default tool-calling approach.
+
+<SimpleTable data={communityAgentExtensions} columns={packageColumns}>
   {renderCell}
 </SimpleTable>
 

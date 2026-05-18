@@ -1,10 +1,11 @@
 /**
- * Redirect helper: maps old MkDocs-style URLs to new CMS slugs or external URLs.
+ * Redirect helper: maps old MkDocs-style URLs to new CMS slugs or explicit external URLs.
  *
  * resolveRedirectFromUrl normalises a versioned URL to a slug, then
  * resolveRedirect applies rename rules for paths that changed structure.
  *
- * Rules may return a full https:// URL for external redirects (e.g. GitHub).
+ * Only explicit rules in SLUG_RULES or redirectFromMap may produce external URLs.
+ * The path-normalization fallback never returns an external URL (prevents open redirects).
  */
 
 import { exactly } from '../utils/regex'
@@ -96,6 +97,11 @@ export function resolveRedirect(slug: string, redirectFromMap?: Record<string, s
  * Given a path from the old site, normalise it to a slug and apply redirect rules.
  * Returns '/' for versioned root paths, or null if the path isn't recognisable.
  *
+ * External URLs (https://) are only returned when an explicit rule in SLUG_RULES
+ * or redirectFromMap matched. The path-normalization fallback never produces an
+ * external URL, preventing open redirect attacks via crafted paths like
+ * /latest/https://evil.com.
+ *
  * @param path - The URL path to resolve (e.g. "/docs/user-guide/...")
  * @param redirectFromMap - Optional map of source slugs to target slugs (from frontmatter redirectFrom)
  */
@@ -116,6 +122,10 @@ export function resolveRedirectFromUrl(
   path = path.replace(/^\/+|\/+$/g, '')
 
   if (path === '') return '/'
+
+  // Prevent open redirects: absolute URLs can only come from explicit SLUG_RULES,
+  // never from the path-normalization fallback.
+  if (/^https?:\/\//i.test(path)) return null
 
   const resolved = resolveRedirect(path, redirectFromMap) ?? path
   return hadTrailingSlash ? `${resolved}/` : resolved

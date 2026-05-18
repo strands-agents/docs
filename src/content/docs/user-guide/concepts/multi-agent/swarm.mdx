@@ -2,6 +2,7 @@
 title: Swarm Multi-Agent Pattern
 sidebar:
   label: "Swarm"
+tags: [multi-agent]
 ---
 
 A Swarm is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. Unlike traditional sequential or hierarchical multi-agent systems, a Swarm enables autonomous coordination between agents with shared context and working memory.
@@ -122,7 +123,15 @@ The following initialization parameters control swarm behavior and safety limits
 | `start` | Agent ID that receives the initial input | First agent in `nodes` |
 | `nodes` | Array of agents (or `AgentNodeOptions`) | (required) |
 | `maxSteps` | Maximum total agent executions (including start) | Infinity |
+| `timeout` | Wall-clock ceiling for the entire swarm invocation, in milliseconds | Infinity |
+| `nodeTimeout` | Fallback per-node wall-clock ceiling in milliseconds. Applied to any node without its own `timeout` | Infinity |
 | `plugins` | Plugins for event-driven extensibility | None |
+
+To bound an individual node, pass `timeout` on its `AgentNodeOptions` entry. Per-node `timeout` overrides the orchestrator's `nodeTimeout` and must be at least 1 ms.
+
+If neither `maxSteps` nor `timeout` is set, the SDK emits a one-time warning at construction since a swarm with no bound can run indefinitely.
+
+Timeouts are enforced via `AbortSignal` and are cooperative. A tool that neither polls its cancel signal nor forwards it to a cancellable API can run past the deadline.
 
 </Tab>
 </Tabs>

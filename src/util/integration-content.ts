@@ -16,6 +16,7 @@ export type IntegrationType =
   | 'session-manager'
   | 'integration'
   | 'plugin'
+  | 'agent-extension'
 
 /**
  * Represents language support for an integration.

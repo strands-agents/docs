@@ -59,14 +59,15 @@ const redirectFromMap = await buildRedirectFromMap()
     const target = resolveRedirectFromUrl(pathWithoutBase, redirectFromMap)
     if (!target) return false
 
-    let destPath: string
+    // External URLs come only from explicit rules in SLUG_RULES (e.g. /discord).
+    // resolveRedirectFromUrl never returns an external URL from path normalization alone.
     if (target.startsWith('https://') || target.startsWith('http://')) {
       console.log(`[Redirect404] Redirecting ${window.location.href} → ${target}`)
       window.location.replace(target)
       return true
     }
 
-    destPath = target === '/' ? `${base}/` : `${base}/${target}`
+    const destPath = target === '/' ? `${base}/` : `${base}/${target}`
 
     const currentPath = window.location.pathname.replace(/\/+$/, '')
     if (destPath.replace(/\/+$/, '') === currentPath) return false

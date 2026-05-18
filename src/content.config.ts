@@ -6,6 +6,7 @@ import { docsSchema } from '@astrojs/starlight/schema'
 import { slug as githubSlug } from 'github-slugger'
 import { glob, file } from 'astro/loaders'
 import { normalizePathToSlug } from './util/links'
+import { TagSchema } from './config/tags'
 
 const authorSchema = z.object({
   name: z.string(),
@@ -13,6 +14,12 @@ const authorSchema = z.object({
   bio: z.string(),
   avatar: z.string().optional(),
 })
+
+export const sourceLinkSchema = z.object({
+  repo: z.enum(['sdk-python', 'sdk-typescript']),
+  path: z.string(),
+})
+export type SourceLink = z.infer<typeof sourceLinkSchema>
 
 const blogSchema = z.object({
   title: z.string(),
@@ -84,11 +91,16 @@ export const collections = {
         // Category for TypeScript API docs (classes, interfaces, type-aliases, functions)
         category: z.string().optional(),
         // Integration type for filtering (e.g., 'model-provider' for model providers)
-        integrationType: z.enum(['model-provider', 'tool', 'session-manager', 'integration', 'plugin']).optional(),
+        integrationType: z.enum(['model-provider', 'tool', 'session-manager', 'integration', 'plugin', 'agent-extension']).optional(),
         // Short description for catalog listings
         description: z.string().optional(),
         // Array of slugs that should redirect to this page (e.g., old URLs)
         redirectFrom: z.array(z.string()).optional(),
+        // Tags from src/config/tags.yml — drive the build-time "Related pages" block
+        tags: z.array(TagSchema).default([]),
+        // Pointers to the SDK implementation behind this page. Rendered as an
+        // "Implementation" section on headless surfaces only (index.md, llms-full.txt).
+        sourceLinks: z.array(sourceLinkSchema).optional(),
       }),
     }),
   }),

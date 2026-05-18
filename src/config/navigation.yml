@@ -257,6 +257,9 @@ sidebar:
       - label: Integrations
         items:
           - docs/community/integrations/ag-ui
+      - label: Agent Extensions
+        items:
+          - docs/community/agent-extensions/strands-code-agent
       - label: Plugins
         items:
           - docs/community/plugins/agent-control
@@ -286,10 +289,11 @@ sidebar:
         items:
           - docs/community/tools/strands-deepgram
           - docs/community/tools/strands-hubspot
+          - docs/community/tools/strands-spraay
+          - docs/community/tools/strands-sql
           - docs/community/tools/strands-teams
           - docs/community/tools/strands-telegram
-          - docs/community/tools/strands-telegram-listener
-          - docs/community/tools/strands-sql
+          - docs/community/tools/strands-telegram-listener             
 
 github:
   sections:

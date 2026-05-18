@@ -8,7 +8,6 @@ import {
 import { bash } from '@strands-agents/sdk/vended-tools/bash'
 import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
 
-
 // =====================
 // Disable Retrieval Tool
 // =====================
