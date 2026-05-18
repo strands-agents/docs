@@ -2,14 +2,14 @@
 
 ## Overview
 
-This monorepo produces two user-facing packages from a single TypeScript agent runtime:
+Today, the TypeScript SDK (`@strands-agents/sdk`) and the Python SDK (`strands-agents`) live in separate repositories. Each has its own independent release pipeline: a maintainer creates a git tag, publishes a GitHub Release, and CI builds and publishes the package to its respective registry (npm or PyPI).
+
+With the monorepo effort, both language SDKs will be consolidated into a single repository. The repository will produce two user-facing packages from one codebase, which creates a natural need for a coordinated publish pipeline:
 
 | Package | Registry | Consumers |
 |---------|----------|-----------|
 | `@strands-agents/sdk` | npm | JS/TS developers using the SDK directly |
 | `strands-agents` | PyPI | Python developers using the SDK via WASM |
-
-Currently, the TypeScript and Python SDKs live in separate repositories, each with their own publish pipeline. When a maintainer creates a git tag and publishes a GitHub Release, CI runs checks, builds the package, and publishes to its respective registry. With the monorepo effort, both language SDKs will live in this single repository and publish from a unified pipeline.
 
 As part of the WASM effort, the TypeScript SDK becomes the canonical agent runtime and the single source of truth for all agent logic. The Python 2.0 SDK will not reimplement the runtime; instead, it provides a thin host that loads and executes the TS runtime (compiled to a WASM component) using wasmtime-py. Future language SDKs (Rust, Java, Go) follow the same pattern, resulting in one implementation shared across all languages.
 
