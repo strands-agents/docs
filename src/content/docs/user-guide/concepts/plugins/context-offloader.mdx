@@ -333,7 +333,7 @@ Input: `{ reference: "mem_1_tool-123_0", pattern: "admin", context_lines: 2 }`
 
 ### Using other tools for retrieval
 
-When using `FileStorage`, the agent can use its existing tools (shell, grep, cat, etc.) to access offloaded content directly from the file system:
+When using `FileStorage`, the agent can use its existing tools (shell, grep, cat, etc.) to access offloaded content directly from the file system. The offloaded guidance includes the full storage path, so the agent knows where to look:
 
 ```
 grep -n "admin" ./artifacts/mem_1_tool-123_0
@@ -356,12 +356,17 @@ This approach is often preferable because the agent already knows these tools we
 <Tab label="Python">
 
 ```python
-agent = Agent(plugins=[
-    ContextOffloader(
-        storage=FileStorage("./artifacts"),
-        include_retrieval_tool=False,
-    )
-])
+from strands_tools import shell
+
+agent = Agent(
+    tools=[shell],
+    plugins=[
+        ContextOffloader(
+            storage=FileStorage("./artifacts"),
+            include_retrieval_tool=False,
+        )
+    ]
+)
 ```
 </Tab>
 <Tab label="TypeScript">

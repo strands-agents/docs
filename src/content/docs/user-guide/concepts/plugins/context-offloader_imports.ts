@@ -5,6 +5,8 @@
 // --8<-- [start:disable_retrieval_tool]
 import { Agent } from '@strands-agents/sdk'
 import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import { bash } from '@strands-agents/sdk/vended-tools/bash'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
 // --8<-- [end:disable_retrieval_tool]
 
 // --8<-- [start:getting_started]
