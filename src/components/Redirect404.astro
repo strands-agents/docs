@@ -72,7 +72,7 @@ const redirectFromMap = await buildRedirectFromMap()
     const currentPath = window.location.pathname.replace(/\/+$/, '')
     if (destPath.replace(/\/+$/, '') === currentPath) return false
 
-    // Preserve query params when redirecting
+    // Preserve query params when redirecting to an internal path
     const destUrl = new URL(destPath, window.location.origin)
     new URLSearchParams(window.location.search).forEach((v, k) => destUrl.searchParams.set(k, v))
 
