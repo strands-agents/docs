@@ -260,7 +260,7 @@ Results include line numbers to enable follow-up queries. Large result sets are 
 </Tab>
 </Tabs>
 
-### Example: what the agent sees
+### Retrieval examples
 
 <Tabs>
 <Tab label="Python">
@@ -331,9 +331,26 @@ Input: `{ reference: "mem_1_tool-123_0", pattern: "admin", context_lines: 2 }`
 </Tab>
 </Tabs>
 
-### Disabling the retrieval tool
+### Using other tools for retrieval
 
-If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it:
+When using `FileStorage`, the agent can use its existing tools (shell, grep, cat, etc.) to access offloaded content directly from the file system:
+
+```
+grep -n "admin" ./artifacts/mem_1_tool-123_0
+cat ./artifacts/mem_1_tool-123_0 | head -50
+sed -n '45,55p' ./artifacts/mem_1_tool-123_0
+```
+
+With `S3Storage`, the agent can use the AWS CLI to access offloaded content:
+
+```
+aws s3 cp s3://my-agent-artifacts/tool-results/mem_1_tool-123_0 - | grep -n "admin"
+aws s3 cp s3://my-agent-artifacts/tool-results/mem_1_tool-123_0 - | head -50
+```
+
+With `InMemoryStorage`, there is no external access path — the built-in retrieval tool is the only way to access offloaded content, so keep it enabled.
+
+This approach is often preferable because the agent already knows these tools well and can chain them together for complex queries. To disable the built-in retrieval tool and rely on the agent's own tools:
 
 <Tabs>
 <Tab label="Python">
