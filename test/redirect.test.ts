@@ -87,7 +87,7 @@ const urlCases: Array<{ description: string; path: string; expected: string | nu
   // Only explicit SLUG_RULES may return external URLs.
   { description: 'rejects https:// open redirect via /latest/',        path: '/latest/https://evil.com/',                                             expected: null },
   { description: 'rejects http:// open redirect via /latest/',         path: '/latest/http://evil.com/',                                              expected: null },
-  { description: 'rejects https:// open redirect via version prefix',  path: '/1.x/https://evil.com/',                                               expected: null },
+  { description: 'rejects https:// open redirect via version prefix',  path: '/1.x/https://evil.com/',                                                expected: null },
   { description: 'rejects https:// open redirect without trailing /',  path: '/latest/https://evil.com',                                              expected: null },
 ]
 
