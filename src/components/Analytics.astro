@@ -20,8 +20,6 @@
 
   var scrollData = { initial: 0, max: 0, latest: 0 }
   var scrollSent = false
-  var searchObserver = null
-  var searchBodyObserver = null
 
   // --- Helpers ---
 
@@ -132,46 +130,19 @@
 
   function setupSearchTracking() {
     var searchTimeout = null
-    searchObserver = new MutationObserver(function () {
-      var resultsContainer = document.querySelector('[data-pagefind-ui] .pagefind-ui__results')
-      if (!resultsContainer) return
+
+    document.addEventListener('input', function (e) {
+      var input = e.target
+      if (!input || !input.matches || !input.matches('[data-pagefind-ui] input')) return
+
       clearTimeout(searchTimeout)
       searchTimeout = setTimeout(function () {
-        var input = document.querySelector('[data-pagefind-ui] input')
-        var term = input ? input.value : ''
+        var term = input.value
         if (!term) return
-        var items = resultsContainer.querySelectorAll('.pagefind-ui__result')
-        dispatchSearchEvent(term, items.length)
+        var results = document.querySelectorAll('[data-pagefind-ui] .pagefind-ui__result')
+        dispatchSearchEvent(term, results.length)
       }, 800)
     })
-
-    // Starlight renders search in a <dialog> with aria-label containing "Search".
-    // Partial match on "earch" handles capitalization; if the label changes, the
-    // bodyObserver fallback will still pick up [data-pagefind-ui] when it appears.
-    var searchDialog = document.querySelector('dialog[aria-label*="earch"], [data-pagefind-ui]')
-    if (searchDialog) {
-      searchObserver.observe(searchDialog, { childList: true, subtree: true })
-    } else {
-      searchBodyObserver = new MutationObserver(function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-          var nodes = mutations[i].addedNodes
-          for (var j = 0; j < nodes.length; j++) {
-            if (nodes[j].nodeType === 1 && (nodes[j].matches('dialog') || nodes[j].querySelector('[data-pagefind-ui]'))) {
-              searchObserver.observe(nodes[j], { childList: true, subtree: true })
-              searchBodyObserver.disconnect()
-              searchBodyObserver = null
-              return
-            }
-          }
-        }
-      })
-      searchBodyObserver.observe(document.body, { childList: true })
-    }
-  }
-
-  function disconnectSearchObservers() {
-    if (searchObserver) { searchObserver.disconnect(); searchObserver = null }
-    if (searchBodyObserver) { searchBodyObserver.disconnect(); searchBodyObserver = null }
   }
 
   // --- 4. Scroll Depth ---
@@ -239,12 +210,7 @@
 
   // --- 5. SPA / View Transition Support ---
 
-  document.addEventListener('astro:before-swap', function () {
-    disconnectSearchObservers()
-  })
-
   document.addEventListener('astro:page-load', function () {
-    setupSearchTracking()
     trackPageView()
     resetScrollData()
   })
