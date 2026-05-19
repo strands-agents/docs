@@ -38,6 +38,11 @@ import { Agent, SummarizingConversationManager, BedrockModel } from '@strands-ag
 import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
 // --8<-- [end:summarizing_conversation_manager_system_prompt_imports]
 
+// --8<-- [start:summarizing_conversation_manager_advanced_imports]
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+// --8<-- [end:summarizing_conversation_manager_advanced_imports]
+
 // --8<-- [start:proactive_sliding_window_imports]
 import {
   Agent,

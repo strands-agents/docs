@@ -883,10 +883,12 @@ Strands allows you to enable and configure reasoning capabilities with your [`Be
 
 ### Structured Output
 
+Amazon Bedrock models support structured output through their tool calling capabilities. Pass a schema to the agent, and Strands converts it to Bedrock's tool specification format and validates the response.
+
 <Tabs>
 <Tab label="Python">
 
-Amazon Bedrock models support structured output through their tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK converts your schema to Bedrock's tool specification format.
+Define a Pydantic model and pass it to `agent.structured_output()`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -924,11 +926,17 @@ print(f"Rating: {result.rating}")
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/amazon-bedrock_imports.ts:structured_output_imports"
+
+--8<-- "user-guide/concepts/model-providers/amazon-bedrock.ts:structured_output"
 ```
 </Tab>
 </Tabs>
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/user-guide/concepts/agents/structured-output/).
 
 ### Token Counting
 

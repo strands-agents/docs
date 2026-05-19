@@ -7,6 +7,7 @@
 
 import { Agent } from '@strands-agents/sdk'
 import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+import { z } from 'zod'
 
 // Basic usage
 async function basicUsage() {
@@ -83,13 +84,29 @@ async function updateConfig() {
   // --8<-- [end:update_config]
 }
 
-// Structured output
 async function structuredOutput() {
   // --8<-- [start:structured_output]
-  // Note: Structured output is not yet supported in the TypeScript SDK
-  // This feature is coming soon. For now, you can use tool calling to achieve similar results.
-  //
-  // In Python, you can use agent.structured_output() with Pydantic models.
-  // Follow the TypeScript SDK roadmap for updates on this feature.
+  const PersonInfo = z.object({
+    name: z.string().describe('Full name of the person'),
+    age: z.number().describe('Age in years'),
+    occupation: z.string().describe('Job or profession'),
+  })
+
+  const model = new OpenAIModel({
+    api: 'chat',
+    apiKey: process.env.OPENAI_API_KEY || '<KEY>',
+    modelId: 'gpt-4o',
+  })
+
+  const agent = new Agent({ model, structuredOutputSchema: PersonInfo })
+
+  const result = await agent.invoke(
+    'John Smith is a 30-year-old software engineer working at a tech startup.'
+  )
+
+  const person = result.structuredOutput as z.infer<typeof PersonInfo>
+  console.log(`Name: ${person.name}`) // "John Smith"
+  console.log(`Age: ${person.age}`) // 30
+  console.log(`Job: ${person.occupation}`) // "software engineer"
   // --8<-- [end:structured_output]
 }

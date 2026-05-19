@@ -190,10 +190,12 @@ See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/ope
 
 ### Structured Output
 
-OpenAI models support structured output through their native tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK automatically converts your schema to OpenAI's function calling format.
+OpenAI models support structured output through their native tool calling capabilities. Pass a schema to the agent, and Strands converts it to OpenAI's function calling format and validates the response.
 
 <Tabs>
 <Tab label="Python">
+
+Define a Pydantic model and pass it to `agent.structured_output()`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -225,11 +227,15 @@ print(f"Job: {result.occupation}") # "software engineer"
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/openai.ts:structured_output"
 ```
 </Tab>
 </Tabs>
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/user-guide/concepts/agents/structured-output/).
 
 ### Custom client
 

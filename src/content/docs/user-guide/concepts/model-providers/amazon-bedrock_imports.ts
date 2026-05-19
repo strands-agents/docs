@@ -16,3 +16,9 @@ import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
 // --8<-- [start:request_timeout_imports]
 import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
 // --8<-- [end:request_timeout_imports]
+
+// --8<-- [start:structured_output_imports]
+import { Agent } from '@strands-agents/sdk'
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+import { z } from 'zod'
+// --8<-- [end:structured_output_imports]

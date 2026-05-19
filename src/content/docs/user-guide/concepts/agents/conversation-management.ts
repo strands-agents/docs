@@ -7,6 +7,7 @@ import {
   SummarizingConversationManager,
   BedrockModel,
 } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
 import type { LocalAgent, ConversationManagerReduceOptions } from '@strands-agents/sdk'
 
 async function nullConversationManagerAgent() {
@@ -96,6 +97,27 @@ async function summarizingCustom() {
     conversationManager,
   })
   // --8<-- [end:summarizing_conversation_manager_custom]
+}
+
+async function summarizingAdvanced() {
+  // --8<-- [start:summarizing_conversation_manager_advanced]
+  // Use a cheaper, faster model for summarization tasks
+  const summarizationModel = new AnthropicModel({
+    modelId: 'claude-haiku-4-5-20251001',
+    maxTokens: 1000,
+    params: { temperature: 0.1 }, // Low temperature for consistent summaries
+  })
+
+  const conversationManager = new SummarizingConversationManager({
+    model: summarizationModel,
+    summaryRatio: 0.4,
+    preserveRecentMessages: 8,
+  })
+
+  const agent = new Agent({
+    conversationManager,
+  })
+  // --8<-- [end:summarizing_conversation_manager_advanced]
 }
 
 async function summarizingSystemPrompt() {

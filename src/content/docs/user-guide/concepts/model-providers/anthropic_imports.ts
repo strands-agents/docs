@@ -10,3 +10,9 @@ import Anthropic from '@anthropic-ai/sdk'
 import { Agent } from '@strands-agents/sdk'
 import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
 // --8<-- [end:custom_client_imports]
+
+// --8<-- [start:structured_output_imports]
+import { Agent } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+import { z } from 'zod'
+// --8<-- [end:structured_output_imports]

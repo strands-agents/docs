@@ -12,6 +12,7 @@ import {
   CachePointBlock,
   Message,
 } from '@strands-agents/sdk'
+import { z } from 'zod'
 
 // Basic usage examples
 async function basicUsageDefault() {
@@ -440,3 +441,33 @@ async function requestTimeoutExample() {
 }
 
 void requestTimeoutExample
+
+async function structuredOutputExample() {
+  // --8<-- [start:structured_output]
+  const ProductAnalysis = z.object({
+    name: z.string().describe('Product name'),
+    category: z.string().describe('Product category'),
+    price: z.number().describe('Price in USD'),
+    features: z.array(z.string()).describe('Key product features'),
+    rating: z.number().min(1).max(5).optional().describe('Customer rating 1-5'),
+  })
+
+  const bedrockModel = new BedrockModel()
+  const agent = new Agent({ model: bedrockModel, structuredOutputSchema: ProductAnalysis })
+
+  const result = await agent.invoke(
+    `Analyze this product: The UltraBook Pro is a premium laptop computer
+     priced at $1,299. It features a 15-inch 4K display, 16GB RAM, 512GB SSD,
+     and 12-hour battery life. Customer reviews average 4.5 stars.`
+  )
+
+  const product = result.structuredOutput as z.infer<typeof ProductAnalysis>
+  console.log(`Product: ${product.name}`)
+  console.log(`Category: ${product.category}`)
+  console.log(`Price: $${product.price}`)
+  console.log(`Features: ${product.features.join(', ')}`)
+  console.log(`Rating: ${product.rating}`)
+  // --8<-- [end:structured_output]
+}
+
+void structuredOutputExample

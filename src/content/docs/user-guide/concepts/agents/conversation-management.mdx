@@ -304,9 +304,14 @@ agent = Agent(
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Not supported in TypeScript
+Pass a custom `model` to `SummarizingConversationManager` to override the model used for summarization. This enables using a different model, such as a faster or more cost-effective one, without affecting the agent's primary model. Injecting a full `Agent` (with its own tools, hooks, or plugins) for summarization is not currently supported in TypeScript.
+
+```typescript
+--8<-- "user-guide/concepts/agents/conversation-management_imports.ts:summarizing_conversation_manager_advanced_imports"
+
+--8<-- "user-guide/concepts/agents/conversation-management.ts:summarizing_conversation_manager_advanced"
 ```
+
 </Tab>
 </Tabs>
 

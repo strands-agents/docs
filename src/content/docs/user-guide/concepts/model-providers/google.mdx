@@ -256,10 +256,12 @@ except ModelThrottledException as e:
 
 ### Structured Output
 
-Gemini models support structured output through their native JSON schema capabilities. When you use [`Agent.structured_output()`](@api/python/strands.agent.agent#Agent.structured_output), the Strands SDK automatically converts your Pydantic models to Gemini's JSON schema format.
+Gemini models support structured output through their native JSON schema capabilities. Pass a schema to the agent, and Strands converts it to Gemini's JSON schema format and validates the response.
 
 <Tabs>
 <Tab label="Python">
+
+Define a Pydantic model and pass it to [`agent.structured_output()`](@api/python/strands.agent.agent#Agent.structured_output):
 
 ```python
 from pydantic import BaseModel, Field
@@ -303,11 +305,17 @@ print(f"Sentiment: {result.sentiment}")
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Structured output is not yet supported for Gemini in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+--8<-- "user-guide/concepts/model-providers/google_imports.ts:structured_output_imports"
+
+--8<-- "user-guide/concepts/model-providers/google.ts:structured_output"
 ```
 </Tab>
 </Tabs>
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/user-guide/concepts/agents/structured-output/).
 
 ### Custom client
 

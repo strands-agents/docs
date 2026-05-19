@@ -23,3 +23,9 @@ import { DocumentBlock, TextBlock } from '@strands-agents/sdk'
 // --8<-- [start:video_imports]
 import { VideoBlock, TextBlock } from '@strands-agents/sdk'
 // --8<-- [end:video_imports]
+
+// --8<-- [start:structured_output_imports]
+import { Agent } from '@strands-agents/sdk'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
+import { z } from 'zod'
+// --8<-- [end:structured_output_imports]

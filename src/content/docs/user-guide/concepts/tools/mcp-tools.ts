@@ -2,6 +2,7 @@ import { Agent, McpClient } from '@strands-agents/sdk'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js'
+import type { ElicitResult } from '@modelcontextprotocol/sdk/types.js'
 
 // --8<-- [start:quick_start]
 // Create MCP client with stdio transport
@@ -142,6 +143,29 @@ server.tool(
 const transport = new StdioServerTransport()
 await server.connect(transport)
 // --8<-- [end:mcp_server]
+
+async function elicitationExample() {
+  // --8<-- [start:elicitation]
+  const client = new McpClient({
+    transport: new StdioClientTransport({
+      command: 'python',
+      args: ['/path/to/server.py'],
+    }),
+    elicitationCallback: async (_context, params): Promise<ElicitResult> => {
+      console.log(`ELICITATION: ${params.message}`)
+      // Get user confirmation...
+      return {
+        action: 'accept',
+        content: { username: 'myname' },
+      }
+    },
+  })
+
+  const agent = new Agent({ tools: [client] })
+  await agent.invoke("Delete 'a/b/c.txt' and share the name of the approver")
+  // --8<-- [end:elicitation]
+}
+void elicitationExample
 
 // --8<-- [start:tools_overview_example]
 // Create MCP client with stdio transport
