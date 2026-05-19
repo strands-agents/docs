@@ -10,6 +10,13 @@
  *   <TabItem label="npm">npm install</TabItem>
  *   <TabItem label="yarn">yarn add</TabItem>
  * </AutoSyncTabs>
+ *
+ * Special case: language tabs.
+ * When the labels are exactly the language pair {"Python", "TypeScript"},
+ * the wrapper is marked with `data-language-tabs` so the inline tablist
+ * can be visually hidden via global CSS. The site's header LanguageToggle
+ * remains the single language selector. Tab logic, syncing, and switching
+ * are unchanged — only the inline UI is hidden.
  */
 import { Tabs } from '@astrojs/starlight/components';
 
@@ -43,8 +50,42 @@ function hashString(str: string): string {
 
 // Generate syncKey from labels if not explicitly provided
 const syncKey = explicitSyncKey ?? (labels.length > 0 ? hashString(labels.join('|')) : undefined);
+
+// Detect language tabs (Python + TypeScript pair, in any order).
+// Only this exact pair is treated as a "language tab" — other tab groups
+// (npm/yarn, OS variants, IDE choice, etc.) keep their normal tablist UI.
+const labelSet = new Set(labels);
+const isLanguageTabs =
+  labels.length === 2 &&
+  labelSet.has('Python') &&
+  labelSet.has('TypeScript');
 ---
 
-<Tabs syncKey={syncKey}>
-  <Fragment set:html={slotContent} />
-</Tabs>
+{isLanguageTabs ? (
+  <div data-language-tabs>
+    <Tabs syncKey={syncKey}>
+      <Fragment set:html={slotContent} />
+    </Tabs>
+  </div>
+) : (
+  <Tabs syncKey={syncKey}>
+    <Fragment set:html={slotContent} />
+  </Tabs>
+)}
+
+<style is:global>
+  /*
+   * Hide the inline tablist for language tabs only.
+   * The header LanguageToggle is the single source of truth for language
+   * selection — inline tablists became visually distracting on pages with
+   * many language tab groups. The Starlight tab logic is preserved (panels
+   * are still selectively shown/hidden by Starlight), so the header toggle
+   * can programmatically switch tabs via tab.click() exactly as before.
+   *
+   * We keep the inline tablist for non-language tabs (e.g. macOS/Windows,
+   * npm/yarn) — those still need an inline selector.
+   */
+  [data-language-tabs] starlight-tabs > .tablist-wrapper {
+    display: none;
+  }
+</style>
