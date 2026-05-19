@@ -120,8 +120,11 @@
 
       // Outbound links
       var link = e.target.closest('a[href]')
-      if (link && link.hostname && link.hostname !== window.location.hostname) {
+      if (!link || !link.hostname) return
+      if (link.hostname !== window.location.hostname) {
         dispatchCTAClick('outbound:' + link.hostname + link.pathname, 'linkClick')
+      } else if (link.pathname !== window.location.pathname) {
+        dispatchCTAClick('inbound:' + link.pathname, 'linkClick')
       }
     })
   }
