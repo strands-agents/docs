@@ -48,6 +48,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     </div>
     <div class="header-spacer"></div>
     {shouldRenderSearch && <div class="search-wrapper print:hidden"><Search /></div>}
+    {/* Language toggle: visible on both mobile and desktop.
+         The PR feat/hide-inline-language-tabs hides the inline language tablist
+         in <Tabs>, so this header toggle becomes the sole language selector.
+         Without rendering it on mobile, mobile users would have no way to switch
+         languages. The toggle itself collapses to icon-only on narrow viewports
+         (see LanguageToggle.astro media query). */}
+    <div class="header-language-toggle print:hidden">
+      <LanguageToggle />
+    </div>
     {/* Mobile nav dropdown */}
     {navLinks.length > 0 && (
       <nav class="mobile-nav md:sl-hidden print:hidden" aria-label="Main navigation">
@@ -94,7 +103,6 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     <div class="sl-hidden md:sl-flex print:hidden right-group">
       <GitHubDropdown />
       <DiscordLink />
-      <LanguageToggle />
       <ThemeSelect />
       <LanguageSelect />
     </div>
@@ -277,6 +285,18 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     .right-group {
       gap: 1rem;
       align-items: center;
+    }
+
+    /*
+     * Header language toggle wrapper.
+     * Visible on all viewports so mobile users can switch languages
+     * (the inline tablist is hidden by AutoSyncTabs for Python/TypeScript).
+     * On mobile the inner <LanguageToggle /> renders icon-only to save space.
+     */
+    .header-language-toggle {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
     }
 
     /*
@@ -480,6 +500,9 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     @media (min-width: 50rem) {
       .header-top {
         display: grid;
+        /* On desktop, mobile-nav is display:none and removed from grid layout.
+           Visible items: logo (180px) | spacer (1fr) | search (300px) |
+           language-toggle (auto) | right-group (auto). */
         grid-template-columns: 180px 1fr 300px auto auto;
         align-content: center;
       }
