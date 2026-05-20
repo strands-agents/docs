@@ -82,49 +82,16 @@
     flex-shrink: 0;
   }
 
-  .lang-label {
-    /* Visible by default; hidden on narrow viewports below */
-  }
-
-  /*
-   * Compact (icon-only) presentation on narrow viewports.
-   *
-   * On mobile, the header has limited horizontal space (logo + search +
-   * mobile-nav menu), so we hide the "Python"/"TypeScript" text labels and
-   * rely on the language icons alone. The buttons still expose the language
-   * via aria-label for screen readers and keyboard users.
-   *
-   * The 50rem breakpoint matches Starlight's mobile/desktop boundary used
-   * elsewhere in the header (sl-hidden / md:sl-flex).
-   */
-  @media (max-width: 49.999rem) {
-    .lang-label {
-      /* Visually hidden but accessible: keep the text in the DOM for AT */
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .lang-option {
-      padding: 0.25rem 0.4rem;
-      gap: 0;
-    }
-
-    .language-toggle {
-      /* Slight visual breathing room from neighboring header controls */
-      margin-inline: 0.25rem;
-    }
-  }
 </style>
 
 <script is:inline>
   (function () {
+    // Idempotency guard: <LanguageToggle /> can render in multiple places
+    // (desktop right-group + mobile dropdown menu). Astro inlines this script
+    // tag once per instance, but the document-level listeners and DOM-wide
+    // sync logic only need to run once. Skip on subsequent invocations.
+    if (window.__strandsLanguageToggleInit) return;
+    window.__strandsLanguageToggleInit = true;
     // This key must match the one Starlight generates for synced tabs.
     // Derived from: AutoSyncTabs.astro hashes the tab labels "Python|TypeScript"
     // using a djb2 hash, producing "jarkqt". Starlight stores the selected label

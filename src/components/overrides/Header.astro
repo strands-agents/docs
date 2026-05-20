@@ -48,15 +48,6 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     </div>
     <div class="header-spacer"></div>
     {shouldRenderSearch && <div class="search-wrapper print:hidden"><Search /></div>}
-    {/* Language toggle: visible on both mobile and desktop.
-         The PR feat/hide-inline-language-tabs hides the inline language tablist
-         in <Tabs>, so this header toggle becomes the sole language selector.
-         Without rendering it on mobile, mobile users would have no way to switch
-         languages. The toggle itself collapses to icon-only on narrow viewports
-         (see LanguageToggle.astro media query). */}
-    <div class="header-language-toggle print:hidden">
-      <LanguageToggle />
-    </div>
     {/* Mobile nav dropdown */}
     {navLinks.length > 0 && (
       <nav class="mobile-nav md:sl-hidden print:hidden" aria-label="Main navigation">
@@ -81,6 +72,14 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
                 </a>
               );
             })}
+            {/* Language toggle inside the mobile dropdown menu.
+                 Keeps the header bar uncluttered on narrow viewports while
+                 still giving mobile users access to switch languages. */}
+            <div class="mobile-nav-divider"></div>
+            <div class="mobile-nav-section-label">Language</div>
+            <div class="mobile-nav-language">
+              <LanguageToggle />
+            </div>
             {githubSections.map((section: GitHubSection, i: number) => (
               <Fragment>
                 <div class={i === 0 ? 'mobile-nav-divider' : undefined}></div>
@@ -100,7 +99,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
         </details>
       </nav>
     )}
+    {/* Right-side controls (desktop only).
+         The language toggle lives here so the header bar stays a single,
+         aligned row. On mobile the toggle is rendered inside the
+         .mobile-nav-menu dropdown instead (see above), keeping the narrow
+         header uncluttered. The inline language tablist inside <Tabs> is
+         hidden by AutoSyncTabs, so this toggle is the sole language
+         selector site-wide. */}
     <div class="sl-hidden md:sl-flex print:hidden right-group">
+      <LanguageToggle />
       <GitHubDropdown />
       <DiscordLink />
       <ThemeSelect />
@@ -285,18 +292,6 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     .right-group {
       gap: 1rem;
       align-items: center;
-    }
-
-    /*
-     * Header language toggle wrapper.
-     * Visible on all viewports so mobile users can switch languages
-     * (the inline tablist is hidden by AutoSyncTabs for Python/TypeScript).
-     * On mobile the inner <LanguageToggle /> renders icon-only to save space.
-     */
-    .header-language-toggle {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
     }
 
     /*
@@ -486,6 +481,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
     }
 
     /*
+     * Wrapper for the LanguageToggle inside the mobile dropdown.
+     * Provides padding consistent with other dropdown rows so the
+     * Python/TypeScript radio pair lines up with mobile-nav-link items.
+     */
+    .mobile-nav-language {
+      padding: 0.25rem 0.75rem 0.5rem;
+    }
+
+    /*
      * ==========================================================================
      * DESKTOP GRID LAYOUT
      * ==========================================================================
@@ -502,8 +506,9 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
         display: grid;
         /* On desktop, mobile-nav is display:none and removed from grid layout.
            Visible items: logo (180px) | spacer (1fr) | search (300px) |
-           language-toggle (auto) | right-group (auto). */
-        grid-template-columns: 180px 1fr 300px auto auto;
+           right-group (auto). The right-group contains the language toggle
+           plus social/theme controls in one aligned cluster. */
+        grid-template-columns: 180px 1fr 300px auto;
         align-content: center;
       }
       
