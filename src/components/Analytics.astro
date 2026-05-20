@@ -136,6 +136,8 @@
       if (!input || !input.matches || !input.matches('[data-pagefind-ui] input')) return
 
       clearTimeout(searchTimeout)
+      // 800ms debounce captures user intent; result count may lag if Pagefind
+      // hasn't responded yet, but this is acceptable for analytics purposes.
       searchTimeout = setTimeout(function () {
         var term = input.value
         if (!term) return
@@ -148,7 +150,7 @@
   // --- 4. Scroll Depth ---
 
   function updateScroll() {
-    var scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    var scrollTop = window.scrollY || document.documentElement.scrollTop
     var docHeight = document.documentElement.scrollHeight - window.innerHeight
     var depth = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0
     scrollData.latest = depth
@@ -182,11 +184,6 @@
       debounceTimer = setTimeout(updateScroll, 200)
     }, { passive: true })
 
-    setTimeout(function () {
-      updateScroll()
-      scrollData.initial = scrollData.latest
-    }, 500)
-
     window.addEventListener('beforeunload', sendScrollDepth)
 
     // visibilitychange is more reliable on mobile (iOS Safari doesn't always fire beforeunload)
@@ -216,9 +213,10 @@
   })
 
   // --- Initial setup (runs once) ---
+  // astro:page-load fires on initial load and all subsequent navigations,
+  // so it handles trackPageView() and resetScrollData() for every page.
   setupClickTracking()
   setupSearchTracking()
   setupScrollTracking()
-  trackPageView()
 })()
 </script>
