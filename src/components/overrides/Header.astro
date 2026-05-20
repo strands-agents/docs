@@ -59,6 +59,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
             <Icon name="down-caret" class="mobile-nav-caret" size="1rem" />
           </summary>
           <div class="mobile-nav-menu">
+            {/* Language toggle at the top of the dropdown.
+                 Most-used control for the docs (Python vs TypeScript) so it
+                 takes the prime spot. The header bar stays uncluttered on
+                 narrow viewports because the toggle no longer lives there. */}
+            <div class="mobile-nav-section-label mobile-nav-section-label--first">Language</div>
+            <div class="mobile-nav-language">
+              <LanguageToggle />
+            </div>
+            <div class="mobile-nav-divider"></div>
             {navLinks.map((link: NavLink) => {
               const isActive = activeNav?.label === link.label;
               return (
@@ -72,14 +81,6 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
                 </a>
               );
             })}
-            {/* Language toggle inside the mobile dropdown menu.
-                 Keeps the header bar uncluttered on narrow viewports while
-                 still giving mobile users access to switch languages. */}
-            <div class="mobile-nav-divider"></div>
-            <div class="mobile-nav-section-label">Language</div>
-            <div class="mobile-nav-language">
-              <LanguageToggle />
-            </div>
             {githubSections.map((section: GitHubSection, i: number) => (
               <Fragment>
                 <div class={i === 0 ? 'mobile-nav-divider' : undefined}></div>
@@ -478,6 +479,15 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--sl-color-gray-3);
+    }
+
+    /*
+     * The first label in the dropdown (currently "Language") shouldn't have
+     * extra top padding above it — the .mobile-nav-menu panel already has
+     * 0.5rem padding, so this keeps the toggle visually flush with the top.
+     */
+    .mobile-nav-section-label--first {
+      padding-top: 0;
     }
 
     /*
