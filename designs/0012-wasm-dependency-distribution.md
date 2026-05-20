@@ -55,17 +55,27 @@ dependencies = [
 
 ### Fork Repo Structure
 
-A single repo contains all fork source and CI:
+A single repo contains all fork source and CI. Each upstream dependency is imported via **git subtree**, enabling periodic sync with upstream while keeping everything in one place:
 
 ```
 strands-agents/wasm-deps/
-├── wasmtime/
-├── wasmtime-py/
-├── componentize-js/
-├── jco/
+├── wasmtime/                 # subtree from bytecodealliance/wasmtime
+├── wasmtime-py/              # subtree from bytecodealliance/wasmtime-py
+├── componentize-js/          # subtree from bytecodealliance/ComponentizeJS
+├── jco/                      # subtree from bytecodealliance/jco
 └── .github/workflows/
     ├── test.yml              # test against sdk-typescript on PR
     └── publish.yml           # build and publish on release tag
+```
+
+Day-to-day, developers just edit files and commit normally. The subtree commands are only used for syncing with upstream:
+
+```bash
+# Pull latest upstream changes into a specific dependency:
+git subtree pull --prefix=wasmtime https://github.com/bytecodealliance/wasmtime.git main --squash
+
+# Push a fix back upstream (when ready to contribute):
+git subtree push --prefix=wasmtime https://github.com/bytecodealliance/wasmtime.git fix/async-streaming
 ```
 
 ### CI Pipeline (Fork Repo)
