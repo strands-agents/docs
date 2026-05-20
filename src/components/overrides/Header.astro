@@ -493,13 +493,14 @@ const { siteTitleHref } = Astro.locals.starlightRoute;
      * ==========================================================================
      * DESKTOP GRID LAYOUT
      * ==========================================================================
-     * On desktop, switch header-top from flexbox to CSS Grid for precise control:
-     * 
-     * Column 1 (180px): Logo - fixed width prevents layout shift
-     * Column 2 (1fr): Spacer - flexible, pushes remaining items to the right
-     * Column 3 (300px): Search - fixed width for consistent positioning
-     * Column 4 (auto): Mobile nav - hidden on desktop but needs grid slot
-     * Column 5 (auto): Right group - social icons, theme, language
+     * On desktop, switch header-top from flexbox to CSS Grid for precise control.
+     * mobile-nav is display:none on desktop and removed from grid flow, so the
+     * visible tracks are:
+     *
+     *   Column 1 (180px): Logo - fixed width prevents layout shift
+     *   Column 2 (1fr):   Spacer - flexible, pushes remaining items to the right
+     *   Column 3 (300px): Search - fixed width for consistent positioning
+     *   Column 4 (auto):  Right group - social icons, theme, language toggle
      */
     @media (min-width: 50rem) {
       .header-top {
