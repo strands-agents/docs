@@ -453,7 +453,10 @@ async function structuredOutputExample() {
   })
 
   const bedrockModel = new BedrockModel()
-  const agent = new Agent({ model: bedrockModel, structuredOutputSchema: ProductAnalysis })
+  const agent = new Agent({
+    model: bedrockModel,
+    structuredOutputSchema: ProductAnalysis,
+  })
 
   const result = await agent.invoke(
     `Analyze this product: The UltraBook Pro is a premium laptop computer

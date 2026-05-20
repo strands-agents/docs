@@ -156,3 +156,5 @@ async function structuredOutputExample() {
   console.log(`Sentiment: ${review.sentiment}`)
   // --8<-- [end:structured_output]
 }
+
+void structuredOutputExample
