@@ -1,6 +1,6 @@
 # Long-Term Memory
 
-**Status**: Proposed
+**Status**: Implemented
 
 **Date**: 2026-05-14
 
@@ -24,7 +24,7 @@ This design proposes a `MemoryManager` primitive that owns long-term knowledge: 
 
 `MemoryManager` is the component that gives agents persistent knowledge across sessions. It handles storing facts, recalling them when relevant, and optionally extracting them from conversations.
 
-It is exposed as a top-level `memoryManager` parameter on `AgentConfig`, following the pattern of `contextManager` and `sessionManager`:
+It is exposed as a top-level `memoryManager` parameter on `AgentConfig`, following the pattern of `contextManager` and `sessionManager`. It accepts either a `MemoryManager` instance or a plain `MemoryManagerConfig` object (auto-wrapped):
 
 ```typescript
 new Agent({
@@ -35,21 +35,29 @@ new Agent({
 
 Under the hood, MemoryManager integrates with the agent lifecycle via hooks: registering tools at initialization, injecting knowledge before model calls, and ingesting new facts after each turn.
 
-**Stores.** A store is a backend that holds and retrieves knowledge (a vector database, a managed service like Amazon Bedrock Knowledge Bases or AgentCore Memory, or any implementation of the store interface). MemoryManager orchestrates one or more stores, each scoped by a namespace:
+**Stores.** A store is a backend that holds and retrieves knowledge (a vector database, a managed service like Amazon Bedrock Knowledge Bases or AgentCore Memory, or any implementation of the store interface). MemoryManager orchestrates one or more stores:
 
 ```typescript
 memoryManager: new MemoryManager({
   stores: [
-    { store: userStore, namespace: 'user-123' },
-    { store: teamStore, namespace: 'team-marketing' },
-    { store: orgStore,  namespace: 'org-acme' },
+    { store: userStore, ingestion: { trigger: 'tool' } },
+    { store: teamStore },   // search-only
+    { store: orgStore },    // search-only
   ],
 })
 ```
 
-Multi-store support avoids pushing multi-tenancy complexity onto the developer. A single agent can query personal, team, and organization knowledge simultaneously, with namespace isolation keeping them separate.
+Multi-store support avoids pushing multi-tenancy complexity onto the developer. A single agent can query personal, team, and organization knowledge simultaneously. Scoping (namespace, tenant isolation) is handled by each store's own constructor config — e.g., `BedrockKnowledgeBaseStore({ scope: 'user-123' })` or `AgentCoreMemoryStore({ namespace: 'facts/user-123' })`.
 
-**Read-only vs. mutable stores.** Two interfaces: `KnowledgeStore` (search-only) and `MutableKnowledgeStore` (search + write + delete). This distinction makes multi-tenant patterns natural: team or org stores that are pre-populated externally are read-only, while a user's personal store is mutable and accepts new facts during conversation. Mutability is determined by whether the store has an ingestion configuration (see Knowledge Ingestion below).
+One `KnowledgeStore` interface with `search()` required and `add()` / `delete()` optional. Runtime helpers narrow the type when writes are needed. This makes multi-tenant patterns natural: team or org stores that are pre-populated externally simply don't implement `add()`, while a user's personal store does. Writability at the MemoryManager level is determined by whether the store has an ingestion configuration (see Knowledge Ingestion below).
+
+```typescript
+interface KnowledgeStore {
+  search(query: string, options?: Record<string, unknown>): Promise<KnowledgeEntry[]>
+  add?(content: string, metadata?: Record<string, unknown>): Promise<void>
+  delete?(id: string): Promise<void>
+}
+```
 
 **Shipped backends.**
 
@@ -78,8 +86,8 @@ This works by registering a `search_memory` tool that the agent can call like an
 const agent = new Agent({
   model,
   memoryManager: new MemoryManager({
-    stores: [{ store, namespace: 'user-123' }],
-    tools: true, // Agent gets search_memory tool.
+    stores: [{ store, ingestion: { trigger: 'tool' } }],
+    includeTools: true, // Agent gets search_memory tool.
   }),
 })
 ```
@@ -96,7 +104,7 @@ Enabled via `injection: true`. Each turn, MemoryManager searches stores using th
 const agent = new Agent({
   model,
   memoryManager: new MemoryManager({
-    stores: [{ store, namespace: 'user-123' }],
+    stores: [{ store, ingestion: { trigger: 'tool' } }],
     injection: true, // searches every turn, injects into system prompt
   }),
 })
@@ -121,9 +129,9 @@ All writes are async and non-blocking. This means a fact stored in one turn may 
 
 **Deduplication.** MemoryManager tracks a per-store high-water mark: a pointer to the last message that was already processed. Each trigger only processes messages beyond that mark, preventing duplicate writes. Tool-related content blocks (`toolUse`, `toolResult`) are filtered out by default before processing, since they rarely contain user-relevant knowledge.
 
-**Custom triggers.** For cases the built-in triggers don't cover, the store interface is public and can be called directly from any lifecycle hook.
+**Custom triggers.** For cases the built-in triggers don't cover, the store interface is public and `add()` can be called directly from any lifecycle hook.
 
-**Deletion and corrections.** `MutableKnowledgeStore.delete()` is exposed for programmatic use (compliance, cleanup), but no `delete_memory` tool is registered for the agent. Exposing deletion to the agent risks accidental data loss with no undo path. Instead, corrections are handled by storing updated facts. Newer entries take precedence via recency weighting in search results.
+**Deletion and corrections.** `KnowledgeStore.delete()` is an optional method available for programmatic use (compliance, cleanup), but no `delete_memory` tool is registered for the agent. Stores that don't support deletion simply don't implement it. Exposing deletion to the agent risks accidental data loss with no undo path. Instead, corrections are handled by storing updated facts. Newer entries take precedence via recency weighting in search results.
 
 ---
 
@@ -147,7 +155,7 @@ import { Agent, MemoryManager, InMemoryKnowledgeStore } from '@strands-agents/sd
 const agent = new Agent({
   model,
   memoryManager: new MemoryManager({
-    stores: [{ store: new InMemoryKnowledgeStore(), namespace: 'user-123', ingestion: { trigger: 'tool' } }],
+    stores: [{ store: new InMemoryKnowledgeStore(), ingestion: { trigger: 'tool' } }],
   }),
 })
 // Agent now has search_memory and store_memory tools. Zero infrastructure.
@@ -162,8 +170,7 @@ const agent = new Agent({
   model,
   memoryManager: new MemoryManager({
     stores: [{
-      store: new BedrockKnowledgeBaseStore({ knowledgeBaseId: 'KB123', dataSourceId: 'DS456' }),
-      namespace: 'user-123',
+      store: new BedrockKnowledgeBaseStore({ knowledgeBaseId: 'KB123', dataSourceId: 'DS456', scope: 'user-123' }),
       ingestion: { trigger: ['tool', 'perTurn'], extractor: new ModelExtractor({ model }) },
     }],
   }),
@@ -177,16 +184,16 @@ const agent = new Agent({
   model,
   memoryManager: new MemoryManager({
     stores: [
-      // Personal: learns from conversation
-      { store: userKB, namespace: 'user-123', ingestion: { trigger: ['tool', 'perTurn'], extractor } },
-      // Team: read-only, pre-populated
-      { store: teamKB, namespace: 'team-marketing' },
-      // Org: read-only, shared
-      { store: orgKB, namespace: 'org-acme' },
+      // Personal: learns from conversation (scope configured on store)
+      { store: userKB, ingestion: { trigger: ['tool', 'perTurn'], extractor } },
+      // Team: search-only, pre-populated (no ingestion = no writes)
+      { store: teamKB },
+      // Org: search-only, shared
+      { store: orgKB },
     ],
   }),
 })
-// search_memory queries all three, merges by store priority
+// search_memory queries all three, merges by rank position
 // store_memory writes only to stores with 'tool' trigger
 ```
 
@@ -196,7 +203,7 @@ const agent = new Agent({
 const agent = new Agent({
   model,
   memoryManager: new MemoryManager({
-    stores: [{ store, namespace: 'user-123', ingestion: { trigger: 'tool' } }],
+    stores: [{ store, ingestion: { trigger: 'tool' } }],
     injection: true,  // default XML format, 2000 token budget
   }),
 })
@@ -210,15 +217,15 @@ const agent = new Agent({
 new Agent({ memory: { stores: [...], injection: {...} } })
 ```
 
-**Why rejected:** A config object doesn't provide methods (`search`, `add`, `flush`) that power users need for programmatic access. The class also owns the ingestion queue lifecycle.
+**Why rejected:** A config object doesn't provide methods (`search`, `store`, `flush`) that power users need for programmatic access. The class also owns the ingestion queue lifecycle.
 
 ### 2. Single store (no multi-store orchestration)
 
 **Why rejected:** Forces multi-tenant patterns onto the developer. Multi-store is a customer ask for production agents.
 
-### 3. Single `KnowledgeStore` interface with optional write methods
+### 3. Two-interface split (`KnowledgeStore` + `MutableKnowledgeStore`)
 
-**Why rejected:** Optional methods push type safety to runtime. The interface split makes read-only vs mutable an explicit compile-time guarantee.
+The split provides compile-time guarantees that are leaky in practice for custom extensions. AgentCore Memory is event-sourced. `delete()` operates on a different entity than what `add()` creates. HindSight doesn't support deletion at all, but it would be forced to implement `delete()` that throws. The two-interface approach creates false confidence while real integrations still hits runtime failures. A single interface with optional methods and runtime helpers is simpler and more honest.
 
 
 ## Consequences
@@ -226,7 +233,7 @@ new Agent({ memory: { stores: [...], injection: {...} } })
 ### What Becomes Easier
 
 - Cross-session knowledge becomes a single parameter. No custom persistence, no manual tool registration, no vector store wiring.
-- Multi-tenancy is built in via multi-store + namespacing.
+- Multi-tenancy is built in via multi-store (scoping handled per-store).
 - Progressive complexity: `InMemoryKnowledgeStore` (prototyping) to `BedrockKnowledgeBaseStore` (production) is changing one import.
 
 ### What Becomes Harder or Requires Attention
@@ -254,25 +261,32 @@ Yes.
 interface KnowledgeEntry {
   id: string
   content: string
-  score?: number
-  metadata?: Record<string, JSONValue>
+  metadata?: Record<string, unknown>  // score, provenance, etc. live here
 }
 ```
 
-### Store Interfaces
+### Store Interface
 
 ```typescript
-// Read-only: for managed or pre-populated backends
 interface KnowledgeStore {
-  search(namespace: string, query: string, limit?: number): Promise<KnowledgeEntry[]>
+  search(query: string, options?: Record<string, unknown>): Promise<KnowledgeEntry[]>
+  add?(content: string, metadata?: Record<string, unknown>): Promise<void>
+  delete?(id: string): Promise<void>
 }
 
-// Read+write: for self-managed backends
-interface MutableKnowledgeStore extends KnowledgeStore {
-  add(namespace: string, content: string, metadata?: Record<string, JSONValue>): Promise<string>
-  delete(namespace: string, id: string): Promise<void>
-}
+// Runtime type guards for narrowing
+function hasAdd(store: KnowledgeStore): store is KnowledgeStore & { add(...): Promise<void> }
+function hasDelete(store: KnowledgeStore): store is KnowledgeStore & { delete(...): Promise<void> }
 ```
+
+**`search()` options bag:** Each backend pulls what it understands from the options record:
+- InMemory/File/BedrockKB read `options.limit`
+- AgentCore reads `options.memoryStrategyId`
+- HindSight reads `options.budget`, `options.tags`
+
+MemoryManager passes `{ limit: config.limit ?? 10 }` — stores use what's relevant, ignore the rest.
+
+**`score` is metadata:** All backends return results in relevance order. Score is informational metadata some backends provide (`metadata.score`), not a first-class field. Stores that don't produce scores just don't set it. MemoryManager trusts position for round-robin interleaving.
 
 ### Ingestion Pipeline
 
@@ -293,7 +307,7 @@ interface IngestionConfig {
 }
 
 interface Extractor {
-  extract(messages: MessageData[]): Promise<{ content: string; metadata?: Record<string, JSONValue> }[]>
+  extract(messages: MessageData[]): Promise<{ content: string; metadata?: Record<string, unknown> }[]>
 }
 ```
 
@@ -302,7 +316,7 @@ interface Extractor {
 ```typescript
 interface MemoryManagerConfig {
   stores: StoreConfig[]
-  tools?: boolean | ToolsConfig   // default: true (registers search_memory, store_memory)
+  includeTools?: boolean | ToolsConfig   // default: true (registers search_memory, store_memory)
   injection?: boolean | InjectionConfig  // default: false (opt-in passive recall)
 }
 
@@ -316,19 +330,10 @@ interface ToolsConfig {
   store?: boolean | ToolConfig
 }
 
-type StoreConfig = ReadOnlyStoreConfig | WritableStoreConfig
-
-interface ReadOnlyStoreConfig {
+interface StoreConfig {
   store: KnowledgeStore
-  namespace: string
   limit?: number              // max results from this store (default: 10)
-}
-
-interface WritableStoreConfig {
-  store: MutableKnowledgeStore
-  namespace: string
-  limit?: number              // max results from this store (default: 10)
-  ingestion: IngestionConfig  // required: determines when writes happen
+  ingestion?: IngestionConfig // if present, store is a write target
 }
 
 interface InjectionConfig {
@@ -338,7 +343,7 @@ interface InjectionConfig {
 }
 ```
 
-**`tools` resolution:**
+**`includeTools` resolution:**
 - `true` (default): registers both `search_memory` and `store_memory`
 - `false`: no tools registered (use with injection-only)
 - `{ search: true, store: false }`: search only, no agent-driven writes
@@ -371,7 +376,7 @@ If no substantive message exists or retrieval returns zero results, injection is
 
 ### `store_memory` tool behavior
 
-Accepts `{ entries: string[] }` (batch). Writes fan out to all stores with `'tool'` in their trigger array. Writes are async and non-blocking.
+Accepts `{ entries: string[] }` (batch). Writes fan out to all stores with `'tool'` in their trigger array. Writes are async and non-blocking. Returns `{ stored: true }` — no IDs are surfaced to the agent.
 
 ### Message filter details
 
@@ -393,7 +398,7 @@ const myStore = new BedrockKnowledgeBaseStore({ ... })
 
 agent.addHook(AfterToolCallEvent, async (event) => {
   if (event.tool.name === 'important_api') {
-    await myStore.add('user-123', `API result: ${summarize(event.result)}`)
+    await myStore.add(`API result: ${summarize(event.result)}`)
   }
 })
 ```
