@@ -74,7 +74,7 @@ arn:aws:lambda:{region}:856699698935:layer:strands-agents-py{python_version}-{ar
 **Example:**
 
 ```plaintext
-arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
+arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:2
 ```
 
 | Component | Options |
@@ -87,6 +87,7 @@ arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
 
 | Layer Version | SDK Version |
 | --- | --- |
+| 2 | strands-agents v1.40.0 |
 | 1 | strands-agents v1.23.0 |
 
 To check the details of a layer version yourself:

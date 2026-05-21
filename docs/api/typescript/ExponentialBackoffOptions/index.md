@@ -1,4 +1,4 @@
-Defined in: [src/retry/backoff-strategy.ts:117](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/retry/backoff-strategy.ts#L117)
+Defined in: [src/retry/backoff-strategy.ts:117](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/retry/backoff-strategy.ts#L117)
 
 Options for [ExponentialBackoff](/docs/api/typescript/ExponentialBackoff/index.md).
 
@@ -10,7 +10,7 @@ Options for [ExponentialBackoff](/docs/api/typescript/ExponentialBackoff/index.m
 optional baseMs?: number;
 ```
 
-Defined in: [src/retry/backoff-strategy.ts:119](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/retry/backoff-strategy.ts#L119)
+Defined in: [src/retry/backoff-strategy.ts:119](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/retry/backoff-strategy.ts#L119)
 
 Base delay in ms. Delay grows as `baseMs * multiplier^(attempt-1)`. Default 1000.
 
@@ -22,7 +22,7 @@ Base delay in ms. Delay grows as `baseMs * multiplier^(attempt-1)`. Default 1000
 optional maxMs?: number;
 ```
 
-Defined in: [src/retry/backoff-strategy.ts:121](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/retry/backoff-strategy.ts#L121)
+Defined in: [src/retry/backoff-strategy.ts:121](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/retry/backoff-strategy.ts#L121)
 
 Upper bound applied before jitter. Default 30\_000.
 
@@ -34,7 +34,7 @@ Upper bound applied before jitter. Default 30\_000.
 optional multiplier?: number;
 ```
 
-Defined in: [src/retry/backoff-strategy.ts:123](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/retry/backoff-strategy.ts#L123)
+Defined in: [src/retry/backoff-strategy.ts:123](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/retry/backoff-strategy.ts#L123)
 
 Growth factor per attempt. Default 2.
 
@@ -46,6 +46,6 @@ Growth factor per attempt. Default 2.
 optional jitter?: JitterKind;
 ```
 
-Defined in: [src/retry/backoff-strategy.ts:125](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/retry/backoff-strategy.ts#L125)
+Defined in: [src/retry/backoff-strategy.ts:125](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/retry/backoff-strategy.ts#L125)
 
 Jitter mode. Default ‘full’.

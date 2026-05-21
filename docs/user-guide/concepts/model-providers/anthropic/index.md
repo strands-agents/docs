@@ -141,6 +141,90 @@ console.log(response)
 ```
 (( /tab "TypeScript" ))
 
+### Structured Output
+
+Anthropic models support structured output through tool use. Pass a schema to the agent, and Strands generates a tool from it that the model calls to return validated, type-safe data.
+
+(( tab "Python" ))
+Define a Pydantic model and pass it to [`agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output):
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.anthropic import AnthropicModel
+
+class MovieReview(BaseModel):
+    """Analyze a movie review."""
+    title: str = Field(description="Movie title")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+    genre: str = Field(description="Primary genre")
+    sentiment: str = Field(description="Overall sentiment: positive, negative, or neutral")
+    summary: str = Field(description="Brief summary of the review")
+
+model = AnthropicModel(
+    client_args={"api_key": "<KEY>"},
+    max_tokens=1028,
+    model_id="claude-sonnet-4-6",
+)
+
+agent = Agent(model=model)
+
+result = agent.structured_output(
+    MovieReview,
+    """
+    Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+    The groundbreaking visual effects and philosophical themes make this
+    a must-watch. Keanu Reeves delivers a solid performance. 9/10!
+    """
+)
+
+print(f"Movie: {result.title}")
+print(f"Rating: {result.rating}/10")
+print(f"Genre: {result.genre}")
+print(f"Sentiment: {result.sentiment}")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const model = new AnthropicModel({
+  apiKey: '<KEY>',
+  modelId: 'claude-sonnet-4-6',
+  maxTokens: 1028,
+})
+
+const agent = new Agent({ model, structuredOutputSchema: MovieReview })
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Genre: ${review.genre}`)
+console.log(`Sentiment: ${review.sentiment}`)
+```
+(( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
+
 ### Token Counting
 
 Token counting is used by context management strategies to estimate input tokens before each model call.

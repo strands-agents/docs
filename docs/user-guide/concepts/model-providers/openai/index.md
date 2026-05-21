@@ -187,9 +187,11 @@ See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/ope
 
 ### Structured Output
 
-OpenAI models support structured output through their native tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK automatically converts your schema to OpenAI’s function calling format.
+OpenAI models support structured output through their native tool calling capabilities. Pass a schema to the agent, and Strands converts it to OpenAI’s function calling format and validates the response.
 
 (( tab "Python" ))
+Define a Pydantic model and pass it to `agent.structured_output()`:
+
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
@@ -220,10 +222,39 @@ print(f"Job: {result.occupation}") # "software engineer"
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+import { z } from 'zod'
+
+const PersonInfo = z.object({
+  name: z.string().describe('Full name of the person'),
+  age: z.number().describe('Age in years'),
+  occupation: z.string().describe('Job or profession'),
+})
+
+const model = new OpenAIModel({
+  api: 'chat',
+  apiKey: process.env.OPENAI_API_KEY || '<KEY>',
+  modelId: 'gpt-4o',
+})
+
+const agent = new Agent({ model, structuredOutputSchema: PersonInfo })
+
+const result = await agent.invoke(
+  'John Smith is a 30-year-old software engineer working at a tech startup.'
+)
+
+const person = result.structuredOutput as z.infer<typeof PersonInfo>
+console.log(`Name: ${person.name}`) // "John Smith"
+console.log(`Age: ${person.age}`) // 30
+console.log(`Job: ${person.occupation}`) // "software engineer"
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Custom client
 

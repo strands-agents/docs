@@ -4,7 +4,7 @@ type CitationGeneratedContent = {
 };
 ```
 
-Defined in: [src/types/citations.ts:126](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/types/citations.ts#L126)
+Defined in: [src/types/citations.ts:126](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/types/citations.ts#L126)
 
 Generated content associated with a citation. Modeled as a union type for future extensibility.
 
@@ -16,4 +16,4 @@ Generated content associated with a citation. Modeled as a union type for future
 text: string;
 ```
 
-Defined in: [src/types/citations.ts:126](https://github.com/strands-agents/sdk-typescript/blob/6a95bb5c4ffe0bb4e9969eefa8ccc38ba19193b6/strands-ts/src/types/citations.ts#L126)
+Defined in: [src/types/citations.ts:126](https://github.com/strands-agents/sdk-typescript/blob/4dd13ca32f73cd4603a1d468e3e5f60292a88334/strands-ts/src/types/citations.ts#L126)

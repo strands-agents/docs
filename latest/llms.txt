@@ -337,6 +337,8 @@
 - [BackoffContext](https://strandsagents.com/docs/api/typescript/BackoffContext/index.md)
 - [BackoffStrategy](https://strandsagents.com/docs/api/typescript/BackoffStrategy/index.md)
 - [BaseModelConfig](https://strandsagents.com/docs/api/typescript/BaseModelConfig/index.md)
+- [BedrockCacheConfig](https://strandsagents.com/docs/api/typescript/BedrockCacheConfig/index.md)
+- [BedrockCacheTTL](https://strandsagents.com/docs/api/typescript/BedrockCacheTTL/index.md)
 - [BedrockGuardrailConfig](https://strandsagents.com/docs/api/typescript/BedrockGuardrailConfig/index.md)
 - [BedrockGuardrailRedactionConfig](https://strandsagents.com/docs/api/typescript/BedrockGuardrailRedactionConfig/index.md)
 - [BedrockModel](https://strandsagents.com/docs/api/typescript/BedrockModel/index.md)

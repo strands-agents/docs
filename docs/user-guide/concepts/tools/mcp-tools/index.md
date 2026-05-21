@@ -503,10 +503,12 @@ For more information on implementing MCP servers, see the [MCP documentation](ht
 
 ## Advanced Usage
 
-(( tab "Python" ))
 ### Elicitation
 
-An MCP server can request additional information from the user by sending an elicitation request. Set up an elicitation callback to handle these requests:
+An MCP server can pause a tool call to request additional input from the user. Configure an elicitation callback on the client to respond to these requests:
+
+(( tab "Python" ))
+The server declares the schema it wants back, and the client returns a matching response:
 
 server.py
 
@@ -561,15 +563,33 @@ with client:
     agent = Agent(tools=client.list_tools_sync())
     result = agent("Delete 'a/b/c.txt' and share the name of the approver")
 ```
-
-For more information on elicitation, see the [MCP specification](https://modelcontextprotocol.io/specification/draft/client/elicitation).
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+Pass an `elicitationCallback` when constructing the client. The callback receives the request context and the server’s elicitation params, and returns an `ElicitResult`:
+
+```typescript
+const client = new McpClient({
+  transport: new StdioClientTransport({
+    command: 'python',
+    args: ['/path/to/server.py'],
+  }),
+  elicitationCallback: async (_context, params): Promise<ElicitResult> => {
+    console.log(`ELICITATION: ${params.message}`)
+    // Get user confirmation...
+    return {
+      action: 'accept',
+      content: { username: 'myname' },
+    }
+  },
+})
+
+const agent = new Agent({ tools: [client] })
+await agent.invoke("Delete 'a/b/c.txt' and share the name of the approver")
 ```
 (( /tab "TypeScript" ))
+
+For more information on elicitation, see the [MCP specification](https://modelcontextprotocol.io/specification/draft/client/elicitation).
 
 ## Best Practices
 

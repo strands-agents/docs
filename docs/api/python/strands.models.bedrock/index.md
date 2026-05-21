@@ -37,7 +37,7 @@ Configuration options for Bedrock models.
 -   `additional_response_field_paths` - Additional response field paths to extract
 -   `cache_prompt` - Cache point type for the system prompt (deprecated, use cache\_config)
 -   `cache_config` - Configuration for prompt caching. Use CacheConfig(strategy=“auto”) for automatic caching.
--   `cache_tools` - Cache point type for tools
+-   `cache_tools` - Cache point type for tools. Pass a string (e.g. “default”) for the default 5m TTL, or a CacheToolsConfig instance to set both type and TTL (e.g. “1h”).
 -   `guardrail_id` - ID of the guardrail to apply
 -   `guardrail_trace` - Guardrail trace mode. Defaults to enabled.
 -   `guardrail_version` - Version of the guardrail to apply
@@ -70,7 +70,7 @@ def __init__(*,
              **model_config: Unpack[BedrockConfig])
 ```
 
-Defined in: [src/strands/models/bedrock.py:151](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L151)
+Defined in: [src/strands/models/bedrock.py:152](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L152)
 
 Initialize provider instance.
 
@@ -89,7 +89,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[BedrockConfig]) -> None
 ```
 
-Defined in: [src/strands/models/bedrock.py:218](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L218)
+Defined in: [src/strands/models/bedrock.py:219](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L219)
 
 Update the Bedrock Model configuration with the provided arguments.
 
@@ -104,7 +104,7 @@ Update the Bedrock Model configuration with the provided arguments.
 def get_config() -> BedrockConfig
 ```
 
-Defined in: [src/strands/models/bedrock.py:228](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L228)
+Defined in: [src/strands/models/bedrock.py:229](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L229)
 
 Get the current Bedrock Model configuration.
 
@@ -123,7 +123,7 @@ async def count_tokens(
         system_prompt_content: list[SystemContentBlock] | None = None) -> int
 ```
 
-Defined in: [src/strands/models/bedrock.py:780](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L780)
+Defined in: [src/strands/models/bedrock.py:800](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L800)
 
 Count tokens using Bedrock’s native CountTokens API.
 
@@ -153,7 +153,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:866](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L866)
+Defined in: [src/strands/models/bedrock.py:886](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L886)
 
 Stream conversation with the Bedrock model.
 
@@ -188,7 +188,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/bedrock.py:1152](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1152)
+Defined in: [src/strands/models/bedrock.py:1172](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/bedrock.py#L1172)
 
 Get structured output from the model.
 

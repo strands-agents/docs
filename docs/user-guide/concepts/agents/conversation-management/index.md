@@ -323,8 +323,28 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+Pass a custom `model` to `SummarizingConversationManager` to override the model used for summarization. This enables using a different model, such as a faster or more cost-effective one, without affecting the agent’s primary model. Injecting a full `Agent` (with its own tools, hooks, or plugins) for summarization is not currently supported in TypeScript.
+
+```typescript
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+
+// Use a cheaper, faster model for summarization tasks
+const summarizationModel = new AnthropicModel({
+  modelId: 'claude-haiku-4-5-20251001',
+  maxTokens: 1000,
+  params: { temperature: 0.1 }, // Low temperature for consistent summaries
+})
+
+const conversationManager = new SummarizingConversationManager({
+  model: summarizationModel,
+  summaryRatio: 0.4,
+  preserveRecentMessages: 8,
+})
+
+const agent = new Agent({
+  conversationManager,
+})
 ```
 (( /tab "TypeScript" ))
 

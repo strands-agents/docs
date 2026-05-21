@@ -165,6 +165,43 @@ for await (const event of agent.stream('Tell me a story')) {
 }
 ```
 
+## Structured Output
+
+The adapter supports structured output through the underlying provider’s native capabilities. Define a Zod schema, pass it as `structuredOutputSchema`, and read validated output from `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { VercelModel } from '@strands-agents/sdk/models/vercel'
+import { openai } from '@ai-sdk/openai'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const agent = new Agent({
+  model: new VercelModel({ provider: openai('gpt-4o') }),
+  structuredOutputSchema: MovieReview,
+})
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Sentiment: ${review.sentiment}`)
+```
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
+
 ## Supported features
 
 The `VercelModel` adapter handles:

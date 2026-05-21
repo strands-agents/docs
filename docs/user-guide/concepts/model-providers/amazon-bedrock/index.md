@@ -1123,8 +1123,10 @@ const response = await agent.invoke(
 
 ### Structured Output
 
+Amazon Bedrock models support structured output through their tool calling capabilities. Pass a schema to the agent, and Strands converts it to Bedrock’s tool specification format and validates the response.
+
 (( tab "Python" ))
-Amazon Bedrock models support structured output through their tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK converts your schema to Bedrock’s tool specification format.
+Define a Pydantic model and pass it to `agent.structured_output()`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -1162,10 +1164,43 @@ print(f"Rating: {result.rating}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+import { z } from 'zod'
+
+const ProductAnalysis = z.object({
+  name: z.string().describe('Product name'),
+  category: z.string().describe('Product category'),
+  price: z.number().describe('Price in USD'),
+  features: z.array(z.string()).describe('Key product features'),
+  rating: z.number().min(1).max(5).optional().describe('Customer rating 1-5'),
+})
+
+const bedrockModel = new BedrockModel()
+const agent = new Agent({
+  model: bedrockModel,
+  structuredOutputSchema: ProductAnalysis,
+})
+
+const result = await agent.invoke(
+  `Analyze this product: The UltraBook Pro is a premium laptop computer
+   priced at $1,299. It features a 15-inch 4K display, 16GB RAM, 512GB SSD,
+   and 12-hour battery life. Customer reviews average 4.5 stars.`
+)
+
+const product = result.structuredOutput as z.infer<typeof ProductAnalysis>
+console.log(`Product: ${product.name}`)
+console.log(`Category: ${product.category}`)
+console.log(`Price: $${product.price}`)
+console.log(`Features: ${product.features.join(', ')}`)
+console.log(`Rating: ${product.rating}`)
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Token Counting
 

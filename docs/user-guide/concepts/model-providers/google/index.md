@@ -258,9 +258,11 @@ try {
 
 ### Structured Output
 
-Gemini models support structured output through their native JSON schema capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK automatically converts your Pydantic models to Gemini’s JSON schema format.
+Gemini models support structured output through their native JSON schema capabilities. Pass a schema to the agent, and Strands converts it to Gemini’s JSON schema format and validates the response.
 
 (( tab "Python" ))
+Define a Pydantic model and pass it to [`agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output):
+
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
@@ -303,10 +305,43 @@ print(f"Sentiment: {result.sentiment}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported for Gemini in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const model = new GoogleModel({
+  apiKey: '<KEY>',
+  modelId: 'gemini-2.5-flash',
+})
+
+const agent = new Agent({ model, structuredOutputSchema: MovieReview })
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Genre: ${review.genre}`)
+console.log(`Sentiment: ${review.sentiment}`)
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Custom client
 

@@ -8289,8 +8289,28 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+Pass a custom `model` to `SummarizingConversationManager` to override the model used for summarization. This enables using a different model, such as a faster or more cost-effective one, without affecting the agent’s primary model. Injecting a full `Agent` (with its own tools, hooks, or plugins) for summarization is not currently supported in TypeScript.
+
+```typescript
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+
+// Use a cheaper, faster model for summarization tasks
+const summarizationModel = new AnthropicModel({
+  modelId: 'claude-haiku-4-5-20251001',
+  maxTokens: 1000,
+  params: { temperature: 0.1 }, // Low temperature for consistent summaries
+})
+
+const conversationManager = new SummarizingConversationManager({
+  model: summarizationModel,
+  summaryRatio: 0.4,
+  preserveRecentMessages: 8,
+})
+
+const agent = new Agent({
+  conversationManager,
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -18052,8 +18072,10 @@ const response = await agent.invoke(
 
 ### Structured Output
 
+Amazon Bedrock models support structured output through their tool calling capabilities. Pass a schema to the agent, and Strands converts it to Bedrock’s tool specification format and validates the response.
+
 (( tab "Python" ))
-Amazon Bedrock models support structured output through their tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK converts your schema to Bedrock’s tool specification format.
+Define a Pydantic model and pass it to `agent.structured_output()`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -18091,10 +18113,43 @@ print(f"Rating: {result.rating}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+import { z } from 'zod'
+
+const ProductAnalysis = z.object({
+  name: z.string().describe('Product name'),
+  category: z.string().describe('Product category'),
+  price: z.number().describe('Price in USD'),
+  features: z.array(z.string()).describe('Key product features'),
+  rating: z.number().min(1).max(5).optional().describe('Customer rating 1-5'),
+})
+
+const bedrockModel = new BedrockModel()
+const agent = new Agent({
+  model: bedrockModel,
+  structuredOutputSchema: ProductAnalysis,
+})
+
+const result = await agent.invoke(
+  `Analyze this product: The UltraBook Pro is a premium laptop computer
+   priced at $1,299. It features a 15-inch 4K display, 16GB RAM, 512GB SSD,
+   and 12-hour battery life. Customer reviews average 4.5 stars.`
+)
+
+const product = result.structuredOutput as z.infer<typeof ProductAnalysis>
+console.log(`Product: ${product.name}`)
+console.log(`Category: ${product.category}`)
+console.log(`Price: $${product.price}`)
+console.log(`Features: ${product.features.join(', ')}`)
+console.log(`Rating: ${product.rating}`)
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Token Counting
 
@@ -18442,6 +18497,90 @@ const response = await agent.invoke('What is 2+2')
 console.log(response)
 ```
 (( /tab "TypeScript" ))
+
+### Structured Output
+
+Anthropic models support structured output through tool use. Pass a schema to the agent, and Strands generates a tool from it that the model calls to return validated, type-safe data.
+
+(( tab "Python" ))
+Define a Pydantic model and pass it to [`agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output):
+
+```python
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands.models.anthropic import AnthropicModel
+
+class MovieReview(BaseModel):
+    """Analyze a movie review."""
+    title: str = Field(description="Movie title")
+    rating: int = Field(description="Rating from 1-10", ge=1, le=10)
+    genre: str = Field(description="Primary genre")
+    sentiment: str = Field(description="Overall sentiment: positive, negative, or neutral")
+    summary: str = Field(description="Brief summary of the review")
+
+model = AnthropicModel(
+    client_args={"api_key": "<KEY>"},
+    max_tokens=1028,
+    model_id="claude-sonnet-4-6",
+)
+
+agent = Agent(model=model)
+
+result = agent.structured_output(
+    MovieReview,
+    """
+    Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+    The groundbreaking visual effects and philosophical themes make this
+    a must-watch. Keanu Reeves delivers a solid performance. 9/10!
+    """
+)
+
+print(f"Movie: {result.title}")
+print(f"Rating: {result.rating}/10")
+print(f"Genre: {result.genre}")
+print(f"Sentiment: {result.sentiment}")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { AnthropicModel } from '@strands-agents/sdk/models/anthropic'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const model = new AnthropicModel({
+  apiKey: '<KEY>',
+  modelId: 'claude-sonnet-4-6',
+  maxTokens: 1028,
+})
+
+const agent = new Agent({ model, structuredOutputSchema: MovieReview })
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Genre: ${review.genre}`)
+console.log(`Sentiment: ${review.sentiment}`)
+```
+(( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Token Counting
 
@@ -19538,9 +19677,11 @@ try {
 
 ### Structured Output
 
-Gemini models support structured output through their native JSON schema capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK automatically converts your Pydantic models to Gemini’s JSON schema format.
+Gemini models support structured output through their native JSON schema capabilities. Pass a schema to the agent, and Strands converts it to Gemini’s JSON schema format and validates the response.
 
 (( tab "Python" ))
+Define a Pydantic model and pass it to [`agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output):
+
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
@@ -19583,10 +19724,43 @@ print(f"Sentiment: {result.sentiment}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported for Gemini in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const model = new GoogleModel({
+  apiKey: '<KEY>',
+  modelId: 'gemini-2.5-flash',
+})
+
+const agent = new Agent({ model, structuredOutputSchema: MovieReview })
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Genre: ${review.genre}`)
+console.log(`Sentiment: ${review.sentiment}`)
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Custom client
 
@@ -20962,9 +21136,11 @@ See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/ope
 
 ### Structured Output
 
-OpenAI models support structured output through their native tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK automatically converts your schema to OpenAI’s function calling format.
+OpenAI models support structured output through their native tool calling capabilities. Pass a schema to the agent, and Strands converts it to OpenAI’s function calling format and validates the response.
 
 (( tab "Python" ))
+Define a Pydantic model and pass it to `agent.structured_output()`:
+
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
@@ -20995,10 +21171,39 @@ print(f"Job: {result.occupation}") # "software engineer"
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+import { z } from 'zod'
+
+const PersonInfo = z.object({
+  name: z.string().describe('Full name of the person'),
+  age: z.number().describe('Age in years'),
+  occupation: z.string().describe('Job or profession'),
+})
+
+const model = new OpenAIModel({
+  api: 'chat',
+  apiKey: process.env.OPENAI_API_KEY || '<KEY>',
+  modelId: 'gpt-4o',
+})
+
+const agent = new Agent({ model, structuredOutputSchema: PersonInfo })
+
+const result = await agent.invoke(
+  'John Smith is a 30-year-old software engineer working at a tech startup.'
+)
+
+const person = result.structuredOutput as z.infer<typeof PersonInfo>
+console.log(`Name: ${person.name}`) // "John Smith"
+console.log(`Age: ${person.age}`) // 30
+console.log(`Job: ${person.occupation}`) // "software engineer"
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Custom client
 
@@ -21770,6 +21975,43 @@ for await (const event of agent.stream('Tell me a story')) {
   }
 }
 ```
+
+## Structured Output
+
+The adapter supports structured output through the underlying provider’s native capabilities. Define a Zod schema, pass it as `structuredOutputSchema`, and read validated output from `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { VercelModel } from '@strands-agents/sdk/models/vercel'
+import { openai } from '@ai-sdk/openai'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const agent = new Agent({
+  model: new VercelModel({ provider: openai('gpt-4o') }),
+  structuredOutputSchema: MovieReview,
+})
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Sentiment: ${review.sentiment}`)
+```
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ## Supported features
 
@@ -25728,42 +25970,6 @@ For non-text content, the plugin replaces the result with a descriptive placehol
 | Image | `[image: format, N bytes]` placeholder + storage reference |
 | Document | `[document: format, name, N bytes]` placeholder + storage reference |
 
-### Retrieval tool
-
-The plugin includes a `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. This tool is registered by default.
-
-The inline guidance in offloaded results tells the agent to use its available tools to selectively access the data it needs, and mentions `retrieve_offloaded_content` as a fallback. If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it:
-
-(( tab "Python" ))
-```python
-agent = Agent(plugins=[
-    ContextOffloader(
-        storage=FileStorage("./artifacts"),
-        include_retrieval_tool=False,
-    )
-])
-```
-(( /tab "Python" ))
-
-(( tab "TypeScript" ))
-```typescript
-import { Agent } from '@strands-agents/sdk'
-import {
-  ContextOffloader,
-  FileStorage,
-} from '@strands-agents/sdk/vended-plugins/context-offloader'
-
-const agent = new Agent({
-  plugins: [
-    new ContextOffloader({
-      storage: new FileStorage('./artifacts'),
-      includeRetrievalTool: false,
-    }),
-  ],
-})
-```
-(( /tab "TypeScript" ))
-
 ## Getting Started
 
 Pass a `ContextOffloader` instance to your agent’s `plugins` list with your choice of storage backend:
@@ -25970,6 +26176,159 @@ const agent = new Agent({
 | `maxResultTokens` | `2_500` | Results whose estimated token count exceeds this are offloaded |
 | `previewTokens` | `1_000` | Number of tokens to keep as an in-context preview |
 | `includeRetrievalTool` | `true` | Registers a `retrieve_offloaded_content` tool the agent can use to fetch full content by reference. Enabled by default; set to `false` to disable |
+(( /tab "TypeScript" ))
+
+## Retrieval Tool
+
+The plugin includes a `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. This tool is registered by default.
+
+(( tab "Python" ))
+The inline guidance in offloaded results tells the agent to use its available tools to selectively access the data it needs, and mentions `retrieve_offloaded_content` as a fallback.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+In the TypeScript SDK, the retrieval tool supports targeted retrieval through optional parameters, so the agent can search and filter offloaded content without loading it entirely back into context.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `reference` | `string` | *(required)* Storage reference from the offloaded result |
+| `pattern` | `string` | Regex or keyword to grep for |
+| `line_range` | `{ start: number; end: number }` | 1-indexed inclusive line span to retrieve |
+| `context_lines` | `number` | Lines of context around pattern matches (default: 5) |
+
+**Retrieval modes:**
+
+-   **Pattern search** — Provide `pattern` to grep for regex/keyword matches with configurable `context_lines`
+-   **Line range** — Provide `line_range` for random access to specific line numbers
+-   **Combined** — Provide both `pattern` and `line_range` to search within a specific range
+-   **Head** — Provide only `context_lines` without a `pattern` or `line_range` to return the first N lines of the content
+-   **Full retrieval** — Omit all optional parameters to retrieve everything (discouraged for large content)
+
+Results include line numbers to enable follow-up queries. Large result sets are truncated with guidance to narrow the search. Binary content cannot be searched — pattern and line range parameters return an error for binary references.
+(( /tab "TypeScript" ))
+
+### Retrieval examples
+
+(( tab "Python" ))
+**1\. Tool result gets offloaded (replaces original result inline)**
+
+```plaintext
+[Offloaded: 1 blocks, ~10,000 tokens]
+Tool result was offloaded to external storage due to size.
+Use the preview below to answer if possible.
+Use retrieve_offloaded_content to fetch the full content by reference.
+
+{"users":[{"id":1,"name":"Alice","role":"admin"},{"id":2,"name":"Bob","role":"user"},{"id":3,"name":"Charlie","rol
+
+[Stored references:]
+  mem_1_tool-123_0 (json, 42,000 bytes)
+```
+
+**2\. Agent retrieves full content**
+
+Input: `{ reference: "mem_1_tool-123_0" }`
+
+The tool returns the full offloaded content in its native format.
+
+```plaintext
+{"users":[{"id":1,"name":"Alice","role":"admin"},{"id":2,"name":"Bob","role":"user"},{"id":3,"name":"Charlie","role":"user"}, ...]}
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+**1\. Tool result gets offloaded (replaces original result inline)**
+
+```plaintext
+[Offloaded: 1 blocks, ~10,000 tokens]
+Tool result was offloaded to external storage due to size.
+Use the preview below to answer if possible.
+Use retrieve_offloaded_content with a reference and either:
+  - pattern: regex or keyword to find matching lines with context
+  - line_range: { start, end } to read a specific span of lines
+Only retrieve the full content (omit pattern/line_range) as a last resort.
+
+{"users":[{"id":1,"name":"Alice","role":"admin"},{"id":2,"name":"Bob","role":"user"},{"id":3,"name":"Charlie","rol
+
+[Stored references:]
+  mem_1_tool-123_0 (json, 42,000 bytes)
+```
+
+**2\. Agent searches with a pattern**
+
+Input: `{ reference: "mem_1_tool-123_0", pattern: "admin", context_lines: 2 }`
+
+```plaintext
+[2 matches for /admin/]
+
+   1| {
+   2|   "users": [
+>  3|     { "id": 1, "name": "Alice", "role": "admin" },
+   4|     { "id": 2, "name": "Bob", "role": "user" },
+   5|     { "id": 3, "name": "Charlie", "role": "user" },
+---
+  48|     { "id": 15, "name": "Dana", "role": "user" },
+> 49|     { "id": 16, "name": "Eve", "role": "admin" },
+  50|     { "id": 17, "name": "Frank", "role": "user" }
+  51|   ]
+```
+(( /tab "TypeScript" ))
+
+### Using other tools for retrieval
+
+When using `FileStorage`, the agent can use its existing tools (shell, grep, cat, etc.) to access offloaded content directly from the file system. The offloaded guidance includes the full storage path, so the agent knows where to look:
+
+```plaintext
+grep -n "admin" ./artifacts/mem_1_tool-123_0
+cat ./artifacts/mem_1_tool-123_0 | head -50
+sed -n '45,55p' ./artifacts/mem_1_tool-123_0
+```
+
+With `S3Storage`, the agent can use the AWS CLI to access offloaded content:
+
+```plaintext
+aws s3 cp s3://my-agent-artifacts/tool-results/mem_1_tool-123_0 - | grep -n "admin"
+aws s3 cp s3://my-agent-artifacts/tool-results/mem_1_tool-123_0 - | head -50
+```
+
+With `InMemoryStorage`, there is no external access path — the built-in retrieval tool is the only way to access offloaded content, so keep it enabled.
+
+This approach is often preferable because the agent already knows these tools well and can chain them together for complex queries. To disable the built-in retrieval tool and rely on the agent’s own tools:
+
+(( tab "Python" ))
+```python
+from strands_tools import shell
+
+agent = Agent(
+    tools=[shell],
+    plugins=[
+        ContextOffloader(
+            storage=FileStorage("./artifacts"),
+            include_retrieval_tool=False,
+        )
+    ]
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+import { bash } from '@strands-agents/sdk/vended-tools/bash'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
+const agent = new Agent({
+  tools: [bash, fileEditor],
+  plugins: [
+    new ContextOffloader({
+      storage: new FileStorage('./artifacts'),
+      includeRetrievalTool: false,
+    }),
+  ],
+})
+```
 (( /tab "TypeScript" ))
 
 ## Tradeoffs
@@ -29933,10 +30292,12 @@ For more information on implementing MCP servers, see the [MCP documentation](ht
 
 ## Advanced Usage
 
-(( tab "Python" ))
 ### Elicitation
 
-An MCP server can request additional information from the user by sending an elicitation request. Set up an elicitation callback to handle these requests:
+An MCP server can pause a tool call to request additional input from the user. Configure an elicitation callback on the client to respond to these requests:
+
+(( tab "Python" ))
+The server declares the schema it wants back, and the client returns a matching response:
 
 server.py
 
@@ -29991,15 +30352,33 @@ with client:
     agent = Agent(tools=client.list_tools_sync())
     result = agent("Delete 'a/b/c.txt' and share the name of the approver")
 ```
-
-For more information on elicitation, see the [MCP specification](https://modelcontextprotocol.io/specification/draft/client/elicitation).
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+Pass an `elicitationCallback` when constructing the client. The callback receives the request context and the server’s elicitation params, and returns an `ElicitResult`:
+
+```typescript
+const client = new McpClient({
+  transport: new StdioClientTransport({
+    command: 'python',
+    args: ['/path/to/server.py'],
+  }),
+  elicitationCallback: async (_context, params): Promise<ElicitResult> => {
+    console.log(`ELICITATION: ${params.message}`)
+    // Get user confirmation...
+    return {
+      action: 'accept',
+      content: { username: 'myname' },
+    }
+  },
+})
+
+const agent = new Agent({ tools: [client] })
+await agent.invoke("Delete 'a/b/c.txt' and share the name of the approver")
 ```
 (( /tab "TypeScript" ))
+
+For more information on elicitation, see the [MCP specification](https://modelcontextprotocol.io/specification/draft/client/elicitation).
 
 ## Best Practices
 
@@ -31559,7 +31938,7 @@ arn:aws:lambda:{region}:856699698935:layer:strands-agents-py{python_version}-{ar
 **Example:**
 
 ```plaintext
-arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
+arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:2
 ```
 
 | Component | Options |
@@ -31572,6 +31951,7 @@ arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
 
 | Layer Version | SDK Version |
 | --- | --- |
+| 2 | strands-agents v1.40.0 |
 | 1 | strands-agents v1.23.0 |
 
 To check the details of a layer version yourself:
@@ -48367,10 +48747,6 @@ Strands Agents SDK allows integration with different model providers, which impl
 
 ### Amazon Bedrock
 
-Not supported in TypeScript
-
-This feature is not supported in TypeScript.
-
 Amazon Bedrock provides a [built-in guardrails framework](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) that integrates directly with Strands Agents SDK. If a guardrail is triggered, the Strands Agents SDK will automatically overwrite the user’s input in the conversation history. This is done so that follow-up questions are not also blocked by the same questions. This can be configured with the `guardrail_redact_input` boolean, and the `guardrail_redact_input_message` string to change the overwrite message. Additionally, the same functionality is built for the model’s output, but this is disabled by default. You can enable this with the `guardrail_redact_output` boolean, and change the overwrite message with the `guardrail_redact_output_message` string. Below is an example of how to leverage Bedrock guardrails in your code:
 
 ```python
@@ -48401,6 +48777,8 @@ if response.stop_reason == "guardrail_intervened":
 
 print(f"Conversation: {json.dumps(agent.messages, indent=4)}")
 ```
+
+For the TypeScript equivalent and the full configuration reference, see [Bedrock guardrails](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md#guardrails).
 
 Alternatively, if you want to implement your own soft-launching guardrails, you can utilize Hooks along with Bedrock’s ApplyGuardrail API in shadow mode. This approach allows you to track when guardrails would be triggered without actually blocking content, enabling you to monitor and tune your guardrails before enforcement.
 
