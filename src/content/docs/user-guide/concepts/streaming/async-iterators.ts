@@ -55,3 +55,32 @@ async function expressExample() {
   app.listen(3000)
   // --8<-- [end:express_example]
 }
+
+// Tool Results Example
+async function toolResultsExample() {
+  const agent = new Agent({
+    tools: [notebook],
+    printer: false,
+  })
+
+  // --8<-- [start:tool_results]
+  for await (const event of agent.stream('Record that my meeting is at 3pm')) {
+    // Track when a tool starts executing
+    if (event.type === 'beforeToolCallEvent') {
+      console.log(`🔧 Using tool: ${event.toolUse.name}`)
+    }
+
+    // Access tool results as each tool completes
+    if (event.type === 'afterToolCallEvent') {
+      const result = event.result
+      console.log(`Tool status: ${result.status}`)
+
+      for (const item of result.content) {
+        if (item.type === 'textBlock') {
+          console.log(`Result: ${item.text}`)
+        }
+      }
+    }
+  }
+  // --8<-- [end:tool_results]
+}
