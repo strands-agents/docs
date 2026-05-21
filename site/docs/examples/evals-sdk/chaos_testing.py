@@ -10,10 +10,12 @@ from strands_evals.chaos import (
     ChaosExperiment,
     ChaosPlugin,
     CorruptValues,
+    NetworkError,
     RemoveFields,
-    ToolCallFailure,
+    Timeout,
     TruncateFields,
 )
+from strands_evals.chaos.effects import ExecutionError
 from strands_evals.evaluators import GoalSuccessRateEvaluator
 from strands_evals.mappers import StrandsInMemorySessionMapper
 from strands_evals.simulation.tool_simulator import ToolSimulator
@@ -73,18 +75,22 @@ chaos_plugin = ChaosPlugin()
 effect_maps = {
     # Single-tool, pre-hook: tool call is cancelled before execution
     "search_timeout": {
-        "search_flights": [ToolCallFailure(error_type="timeout")],
+        "tool_effects": {"search_flights": [Timeout()]},
     },
     # Two-tool, post-hook: tools execute but responses are silently corrupted
     "book_corrupt_and_confirm_truncated": {
-        "book_flight": [CorruptValues(corrupt_ratio=0.8)],
-        "send_booking_confirmation": [TruncateFields(max_length=5)],
+        "tool_effects": {
+            "book_flight": [CorruptValues(corrupt_ratio=0.8)],
+            "send_booking_confirmation": [TruncateFields(max_length=5)],
+        },
     },
     # All-tool, mixed pre+post: combines hard failures with silent corruption
     "total_chaos": {
-        "search_flights": [ToolCallFailure(error_type="network_error")],
-        "book_flight": [ToolCallFailure(error_type="execution_error")],
-        "send_booking_confirmation": [RemoveFields(remove_ratio=0.7)],
+        "tool_effects": {
+            "search_flights": [NetworkError()],
+            "book_flight": [ExecutionError()],
+            "send_booking_confirmation": [RemoveFields(remove_ratio=0.7)],
+        },
     },
 }
 
