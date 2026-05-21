@@ -1,0 +1,137 @@
+---
+title: Handling Large Tool Outputs
+description: "Keep multi-megabyte tool results out of the model context window using file references, result-modification hooks, or wrapper tools."
+---
+
+Tools that return large outputs — thousands of database rows, raw HTML, multi-megabyte API responses, or binary files — can quickly fill the model's context window. Three composable patterns keep large results out of conversation history while preserving access to the data.
+
+| Pattern | Use when… |
+|---|---|
+| [File Reference](#1-file-reference) | The model should lazily explore large data. |
+| [AfterToolCallEvent Hook](#2-aftertoolcallevent-hook) | You want a uniform truncation policy across many tools. |
+| [Wrapper Tool](#3-wrapper-tool) | A multi-step workflow should expose only its final result. |
+
+## 1. File Reference
+
+Write the payload to disk and return a path. Pair it with a second tool (or a built-in one such as those in the [community tools package](./community-tools-package.md)) that can read slices of the file.
+
+```python
+import hashlib
+import json
+from pathlib import Path
+from strands import Agent, tool
+
+ARTIFACTS = Path("/tmp/strands-artifacts")
+ARTIFACTS.mkdir(exist_ok=True)
+
+@tool
+def query_dataset(query: str) -> str:
+    """Run a query whose result may be very large.
+
+    Writes the full result to disk and returns a short summary with the path.
+    """
+    rows = run_query(query)  # your query function; returns list[dict]
+    query_id = hashlib.sha1(query.encode()).hexdigest()[:12]
+    path = ARTIFACTS / f"{query_id}.json"
+    path.write_text(json.dumps(rows))
+    return (
+        f"Retrieved {len(rows)} rows ({path.stat().st_size // 1024} KB). "
+        f"Saved to {path}. Use a file-reading tool to inspect specific records."
+    )
+
+agent = Agent(tools=[query_dataset, read_file_slice])  # read_file_slice reads N bytes at an offset
+agent("Find premium-tier customers from Q4.")
+```
+
+**Tradeoffs.** Requires the model to perform follow-up reads — prompt the agent accordingly. You must manage artifact lifecycle (TTL, cleanup, permissions).
+
+## 2. AfterToolCallEvent Hook
+
+When you can't modify a tool (MCP tools, community tools) or want one policy across many tools, intercept results with a [hook](../agents/hooks.md). `AfterToolCallEvent.result` is writable — see [Result Modification](../agents/hooks.md#result-modification).
+
+The hook below truncates text above a threshold and stashes the full value in `invocation_state` so the caller can retrieve it:
+
+```python
+from strands import Agent
+from strands.hooks import AfterToolCallEvent, HookProvider, HookRegistry
+
+class TruncateLargeToolResults(HookProvider):
+    """Truncate tool-result text over max_chars and stash the full value
+    in invocation_state['tool_artifacts'] keyed by toolUseId."""
+
+    def __init__(self, max_chars: int = 8_000) -> None:
+        self.max_chars = max_chars
+
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(AfterToolCallEvent, self._truncate)
+
+    def _truncate(self, event: AfterToolCallEvent) -> None:
+        for block in event.result.get("content", []):
+            text = block.get("text")
+            if text is None or len(text) <= self.max_chars:
+                continue
+            tool_use_id = event.tool_use["toolUseId"]
+            store = event.invocation_state.setdefault("tool_artifacts", {})
+            store[tool_use_id] = text
+            block["text"] = (
+                f"{text[: self.max_chars]}\n\n"
+                f"[truncated {len(text) - self.max_chars} chars; "
+                f"full result stored under toolUseId={tool_use_id}]"
+            )
+
+state: dict = {}
+agent = Agent(tools=[...], hooks=[TruncateLargeToolResults()])
+agent("Summarize today's logs.", invocation_state=state)
+
+# After the run, the caller has every full, un-truncated result.
+print(state.get("tool_artifacts", {}))
+```
+
+To summarize instead of truncate, call a cheaper model inside `_truncate` and replace `block["text"]` with the summary.
+
+**Tradeoffs.** Information is lost from the model's view; it can only recover the data if the caller reinjects it. For workflows where a later step needs the full payload verbatim, use pattern 3.
+
+## 3. Wrapper Tool
+
+Chain multiple steps inside a single tool so only the compact final result enters the outer agent's context. The nested [Agent](../agents/agent-loop.md) has its own conversation history that is discarded when the tool returns.
+
+```python
+from strands import Agent, tool
+
+@tool
+def research(question: str) -> str:
+    """Search the web, fetch top results, and synthesize a 500-word answer."""
+    urls = web_search(question, limit=5)
+    sources = [fetch(u) for u in urls]
+
+    # Sub-agent with its own context; raw HTML never reaches the outer agent.
+    summarizer = Agent(
+        system_prompt="Synthesize an answer. Cite each claim with a URL.",
+    )
+    return str(summarizer(
+        f"Question: {question}\n\nSources:\n"
+        + "\n---\n".join(f"{u}\n{s[:20_000]}" for u, s in zip(urls, sources))
+    ).message)
+
+agent = Agent(tools=[research])
+agent("Most-cited mixture-of-experts papers from 2024?")
+```
+
+**Tradeoffs.** The outer agent cannot inspect or iterate on intermediate steps; errors inside the wrapper must be handled by the wrapper itself.
+
+## Combining patterns
+
+The three are complementary. A common production setup is **pattern 3 for the main workflow**, **pattern 1 when any single step produces data too large to embed even in the sub-agent**, and **pattern 2 as a safety net** so a misbehaving tool can't blow the context:
+
+```python
+agent = Agent(
+    tools=[research, query_dataset, read_file_slice],   # 1 + 3
+    hooks=[TruncateLargeToolResults(max_chars=8_000)],  # 2
+)
+```
+
+## Related
+
+- [Hooks](../agents/hooks.md) — `AfterToolCallEvent` and invocation-state access.
+- [Plugins](../plugins/index.md) — package a truncation hook and its retrieval tool as a reusable unit.
+- [Creating custom tools](./custom-tools.md)
