@@ -1,4 +1,4 @@
-name: Strands Command Handler
+name: "Docs: Strands Command Handler"
 
 on:
   issue_comment:
@@ -36,14 +36,12 @@ jobs:
           skip-check: ${{ github.event_name == 'workflow_dispatch' }}
           username: ${{ github.event.comment.user.login || 'invalid' }}
           allowed-roles: 'triage,write,admin'
-  
+
   setup-and-process:
     needs: [authorization-check]
     environment: ${{ needs.authorization-check.outputs.approval-env }}
     permissions:
-      # Needed to create a branch for the Implementer Agent
       contents: write
-      # These both are needed to add the `strands-running` label to issues and prs
       issues: write
       pull-requests: write
     runs-on: ubuntu-latest
@@ -63,13 +61,9 @@ jobs:
       issues: read
       pull-requests: read
       id-token: write # Required for OIDC
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      
-      # Add any steps here to set up the environment for the Agent in your repo
-      # setup node, setup python, or any other dependencies
-
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
@@ -94,7 +88,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Execute write operations

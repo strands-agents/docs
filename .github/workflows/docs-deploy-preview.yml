@@ -1,8 +1,11 @@
-name: Deploy Docs Preview
+name: "Docs: Deploy Preview"
 
 on:
   pull_request_target:
     types: [opened, reopened, synchronize]
+    paths:
+      - 'site/**'
+      - '.github/workflows/docs-*'
 
 concurrency:
   group: preview-cms-${{ github.event.pull_request.number }}
@@ -46,17 +49,21 @@ jobs:
       CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
       CLOUDFRONT_DOMAIN: ${{ secrets.CLOUDFRONT_DOMAIN }}
       # Derived paths (defined once, used everywhere)
-      BUILD_OUTPUT_DIR: dist
+      BUILD_OUTPUT_DIR: site/dist
       S3_PATH: pr-cms-${{ github.event.pull_request.number }}
       PREVIEW_URL: https://${{ secrets.CLOUDFRONT_DOMAIN }}/pr-cms-${{ github.event.pull_request.number }}/docs/user-guide/quickstart/overview/
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    defaults:
+      run:
+        working-directory: site
 
     steps:
       - name: Checkout head commit
         uses: actions/checkout@v4
         with:
           ref: ${{ env.PR_HEAD_SHA }}
-          persist-credentials: false # Don't persist credentials for subsequent actions
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -80,11 +87,13 @@ jobs:
           mask-aws-account-id: true
 
       - name: Deploy to S3
+        working-directory: .
         run: |
           aws s3 sync ${{ env.BUILD_OUTPUT_DIR }}/ s3://${{ env.S3_BUCKET }}/${{ env.S3_PATH }}/ \
             --cache-control "public, max-age=3600"
 
       - name: Invalidate CloudFront cache for PR preview
+        working-directory: .
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \

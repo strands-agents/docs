@@ -1,9 +1,12 @@
-name: Auto Strands Review
+name: "Docs: Auto Strands Review"
 
 on:
   pull_request_target:
     branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'site/**'
+      - '.github/workflows/docs-*'
 
 jobs:
   authorization-check:
@@ -38,7 +41,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'strands-command.yml',
+              workflow_id: 'docs-strands-command.yml',
               ref: 'main',
               inputs: {
                 issue_id: String(context.payload.pull_request.number),

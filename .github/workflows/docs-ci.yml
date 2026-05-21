@@ -1,14 +1,19 @@
-# Combined CI workflow for typecheck and tests.
-# Both require cms:build which is slow (~50s), so we run it once and do all checks sequentially.
-name: CI
+name: "Docs: CI"
 
 on:
   workflow_dispatch:
   pull_request:
-    types: [ opened, synchronize, reopened, ready_for_review ]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'site/**'
+      - '.github/workflows/docs-*'
 
 permissions:
   contents: read
+
+defaults:
+  run:
+    working-directory: site
 
 jobs:
   ci:
@@ -34,7 +39,7 @@ jobs:
 
       - name: Build TypeScript SDK
         run: npm install --ignore-scripts && npm run build && rm -rf node_modules
-        working-directory: .build/sdk-typescript
+        working-directory: site/.build/sdk-typescript
 
       - name: Re-link SDK types
         run: npm install
