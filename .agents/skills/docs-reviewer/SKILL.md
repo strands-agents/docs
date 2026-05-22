@@ -24,6 +24,7 @@ description: Review documentation drafts for voice consistency, structure, and t
 Reference `../../references/voice-guide.md` for the full layer definitions. Check:
 
 - **Structure:** Does each section answer exactly one question? Flag mixed-purpose sections.
+- **Narrative flow:** Start with why the topic matters and what use-case problems it solves. Throughout, show how to implement using Strands SDK in a self-contained, concise way.
 - **Framing:** Does the first sentence of every section describe the developer's goal? Flag sections leading with API descriptions.
 - **Register:** Is the tone appropriate for the content type?
 - **Constraints:** Scan for banned phrases, em-dashes, passive voice, hedging. Apply type-aware overrides (passive in reference is fine; longer sentences in explanation are fine).
@@ -38,9 +39,10 @@ Reference `../../references/terminology.md`. Check every technical term against 
 For each code block:
 - Structurally complete (Stripe principle): imports present, variables defined, copy-paste-ready without hunting for context.
 - Self-explanatory (Deno principle): makes sense without surrounding prose; comments explain intent, not mechanics.
-- Realistic variable names (no `foo`, `bar`, `my_var`).
+- Self-documenting, concise variable names (no `foo`, `bar`, `my_var`).
 - Focused on one concept.
 - Non-deterministic output labeled "Typical output" per voice guide patterns.
+- Claim parity: every claim made by surrounding prose or in-snippet comments is demonstrated by the code. If the prose says "this retries an additional error type," the code must show the override. If a comment says "preserves the status field," that field must appear in the reconstruction. Type-correct snippets that don't back their claims slip past typecheck and erode trust faster than missing examples.
 
 ### 4. Human+AI Readability
 

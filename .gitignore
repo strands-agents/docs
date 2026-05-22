@@ -1,0 +1,6 @@
+.claude/*
+!.claude/skills
+!.claude/references
+.kiro/*
+!.kiro/skills
+!.kiro/references

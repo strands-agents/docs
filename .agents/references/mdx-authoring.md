@@ -30,27 +30,69 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Snippet Inclusion
 
-Include code from external files using MkDocs-compatible syntax:
+Code lives in runnable source files; the MDX page references named regions of those files. **Imports go in a sibling `*_imports.ts` file**; the body lives in the main `.ts` file. The MDX block pulls both — imports first, then body — so a single rendered code block shows imports + usage.
+
+Snippet names use `snake_case` (build-time identifiers, not source code) and follow `<feature>_<variant>` for bodies, plus `_imports` suffix for the matching import set.
+
+**1. Imports file** — one snippet per import set, named `<name>_imports`. Add `// @ts-nocheck` at the top *only* when the same identifier is intentionally re-imported across multiple snippets in this file:
+
+```typescript
+// traces_imports.ts
+// --8<-- [start:code_configuration_option1_imports]
+import { Agent } from '@strands-agents/sdk'
+// --8<-- [end:code_configuration_option1_imports]
+```
+
+**2. Body file** — runnable code, body snippets wrapped in functions for scoping (see "TypeScript Snippet Scoping" below):
+
+```typescript
+// traces.ts
+async function codeConfigurationOption1() {
+  // --8<-- [start:code_configuration_option1]
+  const agent = new Agent({
+    systemPrompt: 'You are a helpful AI assistant',
+  })
+  // --8<-- [end:code_configuration_option1]
+}
+```
+
+**3. MDX page** — pull both into **one** code block. Both `--8<--` directives go inside a single ` ```typescript ` fence, separated by a blank line. The reader sees imports above the body in one continuous, copy-pasteable code box:
 
 ````markdown
 ```typescript
---8<-- "path/to/file.ts:snippet_name"
+--8<-- "user-guide/observability-evaluation/traces_imports.ts:code_configuration_option1_imports"
+
+--8<-- "user-guide/observability-evaluation/traces.ts:code_configuration_option1"
 ```
 ````
 
-Mark snippet boundaries in source files:
+**Common mistake — do not** wrap each include in its own fence. Two fences render as two disconnected code blocks with a visible gap, which breaks the copy-paste-as-one-unit affordance:
 
+````markdown
+<!-- WRONG: renders as two disconnected blocks -->
 ```typescript
-// --8<-- [start:snippet_name]
-const agent = new Agent({ tools: [notebook] })
-// --8<-- [end:snippet_name]
+--8<-- "user-guide/observability-evaluation/traces_imports.ts:code_configuration_option1_imports"
 ```
 
-Paths are relative to `src/content/docs/`.
+```typescript
+--8<-- "user-guide/observability-evaluation/traces.ts:code_configuration_option1"
+```
+````
+
+Only the code between markers is rendered. Paths are relative to `src/content/docs/`.
+
+**When to skip the imports file:** the page renders no TypeScript snippets, *or* every snippet body genuinely has zero external imports. Otherwise, write the imports file — relying on the imports at the top of the body `.ts` is wrong, since those lines live above the `[start:...]` marker and never appear in rendered docs.
 
 ## Callout Syntax
 
-Starlight-native admonitions:
+Starlight-native admonitions. **Use sparingly** — callouts are visually loud and reset the reader's flow. In most cases inline prose is the better choice; reach for a callout only when the information genuinely needs to break frame. Overusing `caution`/`danger` in particular trains readers to ignore them.
+
+When you do use one, pick the level that matches consequence:
+
+- `:::note` — context the reader needs but might miss; non-actionable. *Use for:* clarifications, links to related concepts.
+- `:::tip` — an optional improvement or shortcut. *Use for:* performance hints, idiomatic alternatives, "you can also…" suggestions.
+- `:::caution` — something that will work but has a non-obvious gotcha or cost. Strongest when the failure is silent or hard to diagnose (wrong-but-not-broken output, a config that degrades behavior without erroring) and the reader could plausibly hit it on the happy path.
+- `:::danger` — even rarer. Only for actions that destroy work, lose data, or have no recovery path.
 
 ```markdown
 :::note[Optional Title]
@@ -96,7 +138,7 @@ These render contextual banners automatically (experimental → community → la
 
 ## TypeScript Snippet Scoping
 
-When a `.ts` file has multiple snippets using the same variable names, wrap snippets in functions. Place markers **inside** the function so only the code appears in docs:
+When a `.ts` file has multiple snippets using the same variable names, wrap each snippet body in a function. Place markers **inside** the function so only the snippet body — not the function declaration — appears in docs:
 
 ```typescript
 // Correct: function is for scoping only
@@ -108,7 +150,9 @@ async function exampleScope() {
 }
 ```
 
-TypeScript uses `isolatedModules: true` — multiple snippets with the same variable names cause redeclaration errors without scoping.
+TypeScript uses `isolatedModules: true` — multiple top-level snippets that redeclare the same identifiers will fail type-checking without scoping. Body files generally should *not* need `// @ts-nocheck`; if they do, the snippets aren't scoped correctly.
+
+Markers must be on their own line as line comments — anything else on the line and the build won't detect them. A typo in the snippet name fails to render the block; verify each `--8<--` reference resolves to a real `[start:…]`/`[end:…]` pair.
 
 ## Relative Links
 

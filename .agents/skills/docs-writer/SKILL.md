@@ -43,13 +43,15 @@ Write each section following the outline.
 - First sentence of every section describes the developer's goal (framing layer)
 - Use the tone appropriate for this content type (register layer)
 - Code examples: runnable with real Strands imports and realistic values
-- For agent responses, label non-deterministic output: "Your agent's response will vary. Here's a typical result."
+- For agent responses, label non-deterministic output following the patterns in `voice-guide.md` under "Documenting non-deterministic behavior" (typical output as a comment under the code; capability language for tool selection).
 - Comments explain intent, not mechanics
 - One concept per code block
 
 ### Step 3b: Apply MDX formatting
 
 Apply MDX formatting patterns from `../../references/mdx-authoring.md` — especially Tabs/Tab syntax, snippet includes, and callout syntax.
+
+Code examples longer than a few lines live in runnable `.ts`/`.py` source files alongside the MDX page, not inline. Pull them in via the `--8<--` include syntax. See "Snippet Inclusion" and "TypeScript Snippet Scoping" in `mdx-authoring.md` for the imports/body file pattern and naming conventions.
 
 ### Step 4: Constrain
 

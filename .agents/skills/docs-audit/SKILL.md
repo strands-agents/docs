@@ -44,6 +44,8 @@ Walk through each layer of the voice stack defined in `../../references/voice-gu
 
 Follow the verification procedure in `../../references/code-verification.md`. Check imports, parameter names, types, defaults, and method signatures against SDK source.
 
+**The SDK source is the source of truth.** Where the docs page contradicts the source, the docs are wrong by definition — flag the inconsistency under Accuracy Issues with the file/line in the SDK that the docs disagree with. Never reconcile in the other direction (do not "update" the source to match a docs claim).
+
 Specific checks:
 - Are code examples using current API signatures?
 - Do import statements reference current package names and module paths?
@@ -60,10 +62,14 @@ Specific checks:
 
 ### Step 5: Competitive comparison (optional)
 
-If the topic is covered by competitor docs (LangChain, CrewAI, Anthropic, OpenAI), fetch their equivalent page and note:
-- What do they explain that we don't?
-- What voice choices do they make differently?
-- Where is their coverage stronger or weaker?
+**When to run.** Only on conceptual or how-to pages covering tasks other agent frameworks also address (agents, tools, hooks, sessions, streaming, multi-agent, structured output). Skip for Strands-internal architecture, reference/API, and governance pages.
+
+**How.**
+1. Fetch 1–3 relevant comparator pages via web access (cite URL + access date in the report).
+2. Compare on three axes — coverage, depth, voice — one observation per axis.
+3. Output one-line gaps under `### Competitive Notes`: *"Add [topic] — comparators X, Y cover it; we don't."*
+
+Don't imitate voice; only adopt structure or coverage. If a comparator does something we shouldn't (hype, non-deterministic shown as deterministic), note it so future audits don't drift toward it.
 
 ## Output Format
 

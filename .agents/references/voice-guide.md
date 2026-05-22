@@ -20,9 +20,9 @@ When writing or reviewing any developer-facing content, walk through the five la
   - [Type-aware constraint overrides](#type-aware-constraint-overrides)
   - [Banned phrases](#banned-phrases-ai-tells-and-hype)
   - [Code examples](#code-examples)
+    - [Documenting non-deterministic behavior](#documenting-non-deterministic-behavior)
 - [Layer 5: Authenticity](#layer-5-authenticity)
 - [Agent SDK-Specific Guidance](#agent-sdk-specific-guidance)
-  - [Documenting non-deterministic behavior](#documenting-non-deterministic-behavior)
   - [Multi-language documentation](#multi-language-documentation-python--typescript)
   - [Multi-agent patterns](#multi-agent-patterns)
   - [Streaming and async](#streaming-and-async)
@@ -80,7 +80,7 @@ The specific tone varies by content type. Classify every page or section before 
 
 **Structure:** Linear progression. Each step builds on the previous one. Prerequisites stated upfront. Expected outcome described before the steps begin. End with "what you built" summary and pointers to next topics.
 
-**What to include:** Every step the developer needs, even "obvious" ones. Context for why each step matters. Expected output after key steps. For non-deterministic output, follow the patterns in "Documenting non-deterministic behavior" below.
+**What to include:** Every step the developer needs, even "obvious" ones. Context for why each step matters. Expected output after key steps. For non-deterministic output, follow the patterns in "Documenting non-deterministic behavior" under Code examples.
 
 **What to exclude:** Alternative approaches (save for how-to guides). Deep architectural reasoning (save for explanation pages). Exhaustive parameter lists (link to reference).
 
@@ -123,6 +123,8 @@ The specific tone varies by content type. Classify every page or section before 
 **Voice markers:** "We" for design decisions ("We chose X because..."). Longer paragraphs than other types. Visible editorial judgment. Sentence fragments for emphasis after complex passages.
 
 ### Error documentation (Elm compiler philosophy)
+
+**When to document:** when the developer can't figure out what to do next from the error message alone. If the message is self-explanatory and the fix is "do what it says," leave it out — documentation should add information the developer doesn't already have.
 
 **Register:** Calm, diagnostic, forward-looking. The developer hit a wall. Help them understand what happened, why, and what to do next.
 
@@ -210,9 +212,65 @@ See `terminology.md` in this directory for the canonical term for each concept. 
 
 Keep snippets focused on one concept per block. Use real tool names and realistic values from the actual SDK.
 
-For agent SDK code: show the deterministic parts (agent creation, tool config, prompt) as exact code. For non-deterministic parts, follow the patterns in "Documenting non-deterministic behavior" below.
-
 For code verification procedures, see `code-verification.md` in this directory.
+
+#### Documenting non-deterministic behavior
+
+Agent behavior is non-deterministic: the same prompt can produce different model responses, tool selections, and reasoning paths. Documentation must acknowledge this without undermining developer confidence. The principle: **show deterministic code exactly, label non-deterministic parts explicitly.**
+
+Keep the example and its expected output close together. The labels `Typical` and `Example` already convey variability — don't restate that with parenthetical disclaimers.
+
+**Pattern 1 — Model output.** Append the expected response as a comment under the code:
+
+```python
+result = agent("What's the square root of 144?")
+print(result)
+
+# Typical output:
+# "The square root of 144 is 12."
+```
+
+Never write "the agent will respond with..." — it *might* respond with that.
+
+**Pattern 2 — Tool selection.** Show possible tool selection, not guaranteed execution. Describe tools the agent *can* use for a task without promising that a specific call will happen. Prefer capability language like "can use" or "may use" over deterministic language like "will call."
+
+Example:
+
+```md
+The agent can use `calculator` for arithmetic.
+```
+
+**Pattern 3 — Multi-step reasoning.** When documenting agents that chain multiple tool calls, show one representative trace as ordered steps in a comment under the code:
+
+```python
+result = agent("Find the lifecycle hooks doc and summarize it")
+
+# Example:
+# 1. Agent calls search_docs with query "hooks lifecycle"
+# 2. Agent calls read_file on the top result
+# 3. Agent synthesizes a response
+```
+
+**Pattern 4 — Structured output.** When an agent uses structured output (Pydantic models), the schema is deterministic even though the content values vary. Show the schema as exact code, then show example values in a separate adjacent block:
+
+```python
+class ResearchResult(BaseModel):
+    summary: str
+    sources: list[str]
+    confidence: float
+```
+
+Example values:
+
+```json
+{
+  "summary": "Three studies converge on ...",
+  "sources": ["doi:10.1/abc", "doi:10.2/def"],
+  "confidence": 0.82
+}
+```
+
+**When NOT to flag non-determinism:** Pure SDK configuration (agent creation, tool registration, hook setup) is deterministic. Don't add "typical output" labels to code that produces the same result every time.
 
 ### Punctuation
 
@@ -248,51 +306,6 @@ Replace "you could use X or Y" with "use X. Y works too, but X handles [common c
 
 ## Agent SDK-Specific Guidance
 
-### Documenting non-deterministic behavior
-
-This is the single reference section for handling non-determinism. All content types follow these patterns; Layer 3 register and the self-check reference this section rather than repeating it.
-
-Agent behavior is non-deterministic: the same prompt can produce different model responses, tool selections, and reasoning paths. Documentation must acknowledge this without undermining developer confidence. The principle: **show deterministic code exactly, label non-deterministic parts explicitly.**
-
-**Pattern 1 — Model output.** Show the deterministic setup code as exact, runnable code. Below the code block, show expected output with a label:
-
-```
-> **Typical output** (your agent's response will vary):
-> "The square root of 144 is 12."
-```
-
-Never show model output without the "typical output" label. Never write "the agent will respond with..." — it *might* respond with that.
-
-**Pattern 2 — Tool selection.** Show what tools the agent *might* call, not what it *will* call:
-
-```
-> The agent typically calls `calculator` for this query, but may reason
-> through the math directly for simple cases.
-```
-
-**Pattern 3 — Multi-step reasoning.** When documenting agents that chain multiple tool calls, show one representative trace and label it:
-
-```
-> **Example trace** (tool order and count may vary):
-> 1. Agent calls `search_docs` with query "hooks lifecycle"
-> 2. Agent calls `read_file` on the top result
-> 3. Agent synthesizes a response
-```
-
-**Pattern 4 — Structured output.** When an agent uses structured output (Pydantic models), the schema is deterministic even though the content varies. Document the schema as exact, the values as examples:
-
-```python
-# Schema (exact) — every response matches this structure
-class ResearchResult(BaseModel):
-    summary: str
-    sources: list[str]
-    confidence: float
-
-# Example values (will vary per query)
-```
-
-**When NOT to flag non-determinism:** Pure SDK configuration (agent creation, tool registration, hook setup) is deterministic. Don't add "typical output" labels to code that produces the same result every time.
-
 ### Multi-language documentation (Python + TypeScript)
 
 Strands ships both a Python and TypeScript SDK. Most doc pages show code in both languages via tabs. This creates specific challenges.
@@ -311,6 +324,14 @@ Strands ships both a Python and TypeScript SDK. Most doc pages show code in both
 
 **Prose between tabs should be language-neutral.** Don't write "Pass the `retry_strategy` parameter..." when the tabs show both Python and TypeScript. Write "Configure a retry strategy:" and let the code speak for itself. Language-specific parameter names belong in the code blocks, not in the prose.
 
+#### Where divergence content lives in the page structure
+
+The page's heading structure should read the same in both languages. A reader on either tab should see the same table of contents. Divergence is content, not structure — keep it **inside the existing `<Tab>`**: same heading on both sides, with per-tab prose and code carrying the difference.
+
+Avoid:
+- **A heading that exists in only one language.** It produces an empty stub in the other language's table of contents and breaks the page's symmetry. Demote it under a shared parent or fold it into the tab.
+- **A heading suffixed with a language name** (e.g. `### Subclassing the Retry Strategy (TypeScript)`, `## Tool Caching: Python`). The table of contents should describe the *concept*, not the language.
+
 ### Multi-agent patterns
 
 Multi-agent documentation faces a combinatorial problem: patterns compose, so documenting every combination is impossible. Document the building blocks clearly (individual agent setup, tool passing, state sharing) and provide 2-3 composed examples as architecture patterns. Link patterns to each other rather than duplicating setup code.
@@ -321,16 +342,18 @@ Streaming is where agent frameworks diverge most from traditional APIs. A REST e
 
 **Principle: intermediate states are more valuable than final output for teaching.** A developer debugging a streaming agent needs to understand what happens between the prompt and the response, not just the response itself.
 
-**Timeline examples.** Show the temporal flow of agent execution:
+**Ordered examples, not timestamps.** Show the *sequence* of events, not specific times. Timestamps create the illusion of precision when all that matters is order, and they go stale or look invented across different model/tool/hardware combinations.
 
 ```
-t=0.0s  Agent receives prompt
-t=0.2s  Agent begins reasoning (streaming text tokens)
-t=1.1s  Agent calls calculator tool
-t=1.2s  Tool returns result
-t=1.5s  Agent incorporates result, continues streaming
-t=2.0s  Agent completes response
+1. Agent receives prompt
+2. Agent begins reasoning (streaming text tokens)
+3. Agent calls calculator tool
+4. Tool returns result
+5. Agent incorporates result, continues streaming
+6. Agent completes response
 ```
+
+If the doc genuinely needs to talk about latency (e.g., a streaming-performance page), measure it for that specific page rather than sprinkling fabricated timestamps into general examples.
 
 **Event-type documentation.** When documenting stream events, show what the developer receives at each stage. Don't just document the final aggregated response.
 
@@ -338,7 +361,9 @@ t=2.0s  Agent completes response
 
 ### Version sensitivity
 
-Agent SDK APIs change frequently. Every doc page should include the minimum SDK version in frontmatter. Reference pages should note when parameters were added or changed. Avoid "new in version X" phrasing (it ages poorly). Use "requires strands-agents >= 1.2.0" instead.
+Agent SDK APIs change frequently. Page-level version metadata belongs in frontmatter (e.g., `minSDKVersion`) so it can be surfaced consistently by the site rather than scattered through prose.
+
+Don't inline version requirements ("requires strands-agents >= 1.2.0", "new in version X") in the body of docs. These age poorly, create an assortment of inconsistent claims across the doc set, and duplicate information the frontmatter already tracks.
 
 ## Documentation for Humans and AI
 
