@@ -79,7 +79,7 @@ async function codeConfigurationOption1() {
 ```
 ````
 
-Only the code between markers is rendered. Paths are relative to `src/content/docs/`.
+Only the code between markers is rendered. Paths inside the `--8<--` directive are relative to `site/src/content/docs/`; you can also write them relative to the repo root with the `site/` prefix.
 
 **When to skip the imports file:** the page renders no TypeScript snippets, *or* every snippet body genuinely has zero external imports. Otherwise, write the imports file — relying on the imports at the top of the body `.ts` is wrong, since those lines live above the `[start:...]` marker and never appear in rendered docs.
 
@@ -174,13 +174,13 @@ Link to generated API docs without fragile relative paths:
 
 ## Line Length
 
-90 characters maximum for files under `src/content/docs/`. Template literal contents in snippet files must also stay under 90 characters. Prettier does not enforce this automatically.
+90 characters maximum for files under `site/src/content/docs/`. Template literal contents in snippet files must also stay under 90 characters. Prettier does not enforce this automatically.
 
 ## Gotchas
 
 - **Snippet dedent**: Leading whitespace is automatically stripped from included snippets. If the snippet reference in markdown is indented, content indents to that level.
 - **Tab indentation**: Content inside `<Tab>` must not have leading blank lines or it may not render correctly.
-- **API docs are symlinked**: `src/content/docs/api/python/_generated` and `typescript/_generated` are symlinks to `.build/api-docs/`. Never edit these directly — they are auto-generated.
+- **API docs are symlinked**: `site/src/content/docs/api/python/_generated` and `typescript/_generated` are symlinks to `site/.build/api-docs/`. Never edit these directly — they are auto-generated.
 - **No `TabItem`**: The auto-imported component is `Tab`, not `TabItem` (even though Starlight's native component is called TabItem).
 - **Code theme**: Uses GitHub Light/Dark themes. Follows Starlight's `[data-theme]` attribute.
 - **Formatting**: No semicolons, single quotes, 2-space indent, trailing commas ES5 style (enforced by Prettier).

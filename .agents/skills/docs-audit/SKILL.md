@@ -18,7 +18,7 @@ Assess an existing documentation page. Produces a structured assessment with spe
 
 ## Inputs
 
-- **Target page**: File path in `src/content/docs/` or published URL
+- **Target page**: File path in `site/src/content/docs/` or published URL
 - **Content type**: If known. If not, classify it first.
 - **Context** (optional): Community signals, GitHub issues, or specific concerns
 
@@ -26,7 +26,7 @@ Assess an existing documentation page. Produces a structured assessment with spe
 
 ### Step 1: Fetch and classify
 
-Read the source file from `src/content/docs/` in this repo. If you need the published version and have web access, fetch from strandsagents.com.
+Read the source file from `site/src/content/docs/` in this repo. If you need the published version and have web access, fetch from strandsagents.com.
 
 Classify the content type (tutorial, howto, reference, explanation, mixed). Note: "mixed" is itself a finding. Pages that mix types are the most common structural problem.
 

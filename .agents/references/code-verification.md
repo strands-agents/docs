@@ -2,6 +2,8 @@
 
 When writing or auditing documentation, verify every code example against the actual SDK source. Plausible-but-wrong code erodes developer trust faster than missing documentation.
 
+The docs site lives under `site/` in this repo. All paths in this guide — including those in skill procedures that reference it — are written relative to the repo root, so they include the `site/` prefix where applicable. Run shell commands like `npm run sdk:clone` from inside `site/` (where `package.json` lives).
+
 Use the first tier available in your environment. Fall back only when the preferred tier is unavailable.
 
 ## Tier 1: Local SDK Clones (preferred)
@@ -9,11 +11,11 @@ Use the first tier available in your environment. Fall back only when the prefer
 If you have the local clones populated by `npm run sdk:clone`, read directly from disk — it's faster than network calls and avoids API rate limits:
 
 ```
-.build/sdk-python/src/strands/[path]
-.build/sdk-typescript/strands-ts/src/[path]
+site/.build/sdk-python/src/strands/[path]
+site/.build/sdk-typescript/strands-ts/src/[path]
 ```
 
-If the clones aren't present, run `npm run sdk:clone` from the repo root, or fall back to Tier 2.
+If the clones aren't present, run `npm run sdk:clone` from `site/`, or fall back to Tier 2.
 
 **Key Python modules** (under `src/strands/`):
 - `agent/agent.py` — `Agent` class, constructor signature, `__call__`/`stream_async`
