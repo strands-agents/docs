@@ -79,7 +79,7 @@ async function codeConfigurationOption1() {
 ```
 ````
 
-Only the code between markers is rendered. Paths inside the `--8<--` directive are relative to `site/src/content/docs/`; you can also write them relative to the repo root with the `site/` prefix.
+Only the code between markers is rendered. Paths inside the `--8<--` directive are always resolved relative to `site/src/content/docs/`.
 
 **When to skip the imports file:** the page renders no TypeScript snippets, *or* every snippet body genuinely has zero external imports. Otherwise, write the imports file — relying on the imports at the top of the body `.ts` is wrong, since those lines live above the `[start:...]` marker and never appear in rendered docs.
 
@@ -123,18 +123,20 @@ description: "Short description for SEO (140-160 chars)"
 ---
 ```
 
-Optional fields (validated by Zod in `src/content.config.ts`):
+Optional fields (validated by Zod in `site/src/content.config.ts`):
 
 | Field | Type | Purpose |
 |-------|------|---------|
-| `languages` | `string` | Feature only available in specific SDK language |
+| `languages` | `string \| string[]` | Feature only available in specific SDK language(s) |
 | `community` | `boolean` | Marks page as community-contributed |
 | `experimental` | `boolean` | Marks feature as experimental |
-| `integrationType` | enum | `model-provider`, `tool`, `session-manager`, `integration`, `plugin` |
+| `integrationType` | enum | `model-provider`, `tool`, `session-manager`, `integration`, `plugin`, `agent-extension` |
 | `category` | `string` | For TypeScript API doc grouping |
 | `redirectFrom` | `string[]` | Old slugs that should redirect here |
+| `tags` | `Tag[]` | From `site/src/config/tags.yml`; drives the build-time "Related pages" block |
+| `sourceLinks` | `{repo, path}[]` | Pointers to SDK implementation; rendered on headless surfaces (index.md, llms-full.txt) |
 
-These render contextual banners automatically (experimental → community → languages).
+These render contextual banners automatically (experimental → community → languages). Anything not in this table is silently stripped by Zod at build time, so don't invent fields like `contentType` or `lastReviewed` — add them to the schema first if they'd be useful.
 
 ## TypeScript Snippet Scoping
 

@@ -83,16 +83,16 @@ Review the draft for machine-generated feel:
 
 ### Step 6: Metadata
 
-Add frontmatter:
+Add frontmatter following the schema documented in `../../references/mdx-authoring.md` ("Frontmatter Schema"). At minimum:
+
 ```yaml
 ---
 title: "[title]"
-description: "[140-160 char description]"
-contentType: [type]
-minSDKVersion: "[version]"
-lastReviewed: "[today's date]"
+description: "[140-160 char description for SEO]"
 ---
 ```
+
+Add optional fields (`languages`, `community`, `experimental`, `integrationType`, `category`, `redirectFrom`, `tags`, `sourceLinks`) only when applicable. Don't add fields the schema doesn't validate — Zod silently strips unknown keys at build time.
 
 ### Step 7: Run docs-reviewer
 

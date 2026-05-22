@@ -170,7 +170,7 @@ Some constraints flex by content type. The defaults below are strict; these over
 | Contractions | Use freely | Use freely | **Avoid** | Use freely | Use freely |
 | Hedging ban | Enforce | Enforce | Enforce | **Soften** (tradeoff discussion needs nuance) | Enforce |
 
-When Vale flags a passive construction in a reference page, it's a false positive. When it flags one in a tutorial, it's a real issue. The frontmatter `contentType` field determines which rules apply.
+When Vale flags a passive construction in a reference page, it's a false positive. When it flags one in a tutorial, it's a real issue. Classify the page's content type from its structure and apply the matching column.
 
 ### Banned phrases (AI tells and hype)
 
@@ -361,9 +361,7 @@ If the doc genuinely needs to talk about latency (e.g., a streaming-performance 
 
 ### Version sensitivity
 
-Agent SDK APIs change frequently. Page-level version metadata belongs in frontmatter (e.g., `minSDKVersion`) so it can be surfaced consistently by the site rather than scattered through prose.
-
-Don't inline version requirements ("requires strands-agents >= 1.2.0", "new in version X") in the body of docs. These age poorly, create an assortment of inconsistent claims across the doc set, and duplicate information the frontmatter already tracks.
+Agent SDK APIs change frequently. Don't inline version requirements ("requires strands-agents >= 1.2.0", "new in version X") in the body of docs — they age poorly and create inconsistent claims across the doc set. If a page genuinely needs version-gated content, raise it on the PR rather than encoding the version in prose.
 
 ## Documentation for Humans and AI
 

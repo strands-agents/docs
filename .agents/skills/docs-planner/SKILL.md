@@ -17,7 +17,7 @@ Identify gaps in the docs site and produce a prioritized backlog.
 
 ### Step 1: Inventory current docs
 
-Read `site/src/config/navigation.yml` for the full navigation tree — this is the authoritative navigation source for the Astro site, loaded by `site/astro.config.mjs` via `site/src/sidebar.ts`. Glob `site/src/content/docs/**/*.{md,mdx}` for all content files. Classify each by content type (tutorial, how-to, reference, explanation, mixed), coverage area (quickstart, tools, agents, multi-agent, deployment, etc.), and estimated freshness (check lastReviewed frontmatter if available, otherwise flag as unknown).
+Read `site/src/config/navigation.yml` for the full navigation tree — this is the authoritative navigation source for the Astro site, loaded by `site/astro.config.mjs` via `site/src/sidebar.ts`. Glob `site/src/content/docs/**/*.{md,mdx}` for all content files. Classify each by content type (tutorial, how-to, reference, explanation, mixed) and coverage area (quickstart, tools, agents, multi-agent, deployment, etc.).
 
 ### Step 2: Identify gaps
 
