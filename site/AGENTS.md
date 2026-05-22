@@ -54,7 +54,6 @@ These documents define the standards and processes that ensure consistency and q
 │   ├── plugins/                  # Remark/Rehype plugins
 │   ├── styles/                   # Global styles
 │   └── util/                     # Utility functions
-├── mkdocs.yml                    # Navigation structure (still used by Astro)
 ├── astro.config.mjs              # Astro configuration
 ├── package.json                  # Node.js dependencies and scripts
 ├── tsconfig.json                 # TypeScript configuration
