@@ -49,13 +49,12 @@ memoryManager: new MemoryManager({
 
 Multi-store support avoids pushing multi-tenancy complexity onto the developer. A single agent can query personal, team, and organization knowledge simultaneously. Scoping (namespace, tenant isolation) is handled by each store's own constructor config — e.g., `BedrockKnowledgeBaseStore({ scope: 'user-123' })` or `AgentCoreMemoryStore({ namespace: 'facts/user-123' })`.
 
-One `KnowledgeStore` interface with `search()` required and `add()` / `delete()` optional. Runtime helpers narrow the type when writes are needed. This makes multi-tenant patterns natural: team or org stores that are pre-populated externally simply don't implement `add()`, while a user's personal store does. Writability at the MemoryManager level is determined by whether the store has an ingestion configuration (see Knowledge Ingestion below).
+One `KnowledgeStore` interface with `search()` required and `add()` optional. Runtime helpers narrow the type when writes are needed. This makes multi-tenant patterns natural: team or org stores that are pre-populated externally simply don't implement `add()`, while a user's personal store does. Writability at the MemoryManager level is determined by whether the store implements `add()`.
 
 ```typescript
 interface KnowledgeStore {
   search(query: string, options?: Record<string, unknown>): Promise<KnowledgeEntry[]>
   add?(content: string, metadata?: Record<string, unknown>): Promise<void>
-  delete?(id: string): Promise<void>
 }
 ```
 
@@ -92,7 +91,7 @@ const agent = new Agent({
 })
 ```
 
-When multiple stores are configured, results are interleaved by rank using store config order as the priority signal. Scores are not compared across stores because different backends produce incomparable scales. If a store fails, partial results from other stores are still returned.
+When multiple stores are configured, results are interleaved by rank using store config order as the priority signal. Scores are not compared across stores because different backends produce incomparable scales. If a store fails, partial results from other stores are still returned. Store names and descriptions (from `StoreConfig`) are included in the tool description so the model can target specific stores by name when it knows which domain is relevant.
 
 #### Context Injection
 
@@ -131,7 +130,7 @@ All writes are async and non-blocking. This means a fact stored in one turn may 
 
 **Custom triggers.** For cases the built-in triggers don't cover, the store interface is public and `add()` can be called directly from any lifecycle hook.
 
-**Deletion and corrections.** `KnowledgeStore.delete()` is an optional method available for programmatic use (compliance, cleanup), but no `delete_memory` tool is registered for the agent. Stores that don't support deletion simply don't implement it. Exposing deletion to the agent risks accidental data loss with no undo path. Instead, corrections are handled by storing updated facts. Newer entries take precedence via recency weighting in search results.
+**Corrections.** Corrections are handled by storing updated facts. Newer entries take precedence via recency weighting in search results.
 
 ---
 
@@ -225,7 +224,7 @@ new Agent({ memory: { stores: [...], injection: {...} } })
 
 ### 3. Two-interface split (`KnowledgeStore` + `MutableKnowledgeStore`)
 
-The split provides compile-time guarantees that are leaky in practice for custom extensions. AgentCore Memory is event-sourced. `delete()` operates on a different entity than what `add()` creates. HindSight doesn't support deletion at all, but it would be forced to implement `delete()` that throws. The two-interface approach creates false confidence while real integrations still hits runtime failures. A single interface with optional methods and runtime helpers is simpler and more honest.
+The split provides compile-time guarantees that are leaky in practice for custom extensions. Some backends don't support writes at all, but would be forced to implement `add()` that throws. The two-interface approach creates false confidence while real integrations still hit runtime failures. A single interface with optional methods and runtime helpers is simpler and more honest.
 
 
 ## Consequences
@@ -271,12 +270,10 @@ interface KnowledgeEntry {
 interface KnowledgeStore {
   search(query: string, options?: Record<string, unknown>): Promise<KnowledgeEntry[]>
   add?(content: string, metadata?: Record<string, unknown>): Promise<void>
-  delete?(id: string): Promise<void>
 }
 
-// Runtime type guards for narrowing
+// Runtime type guard for narrowing
 function hasAdd(store: KnowledgeStore): store is KnowledgeStore & { add(...): Promise<void> }
-function hasDelete(store: KnowledgeStore): store is KnowledgeStore & { delete(...): Promise<void> }
 ```
 
 **`search()` options bag:** Each backend pulls what it understands from the options record:
@@ -332,8 +329,10 @@ interface ToolsConfig {
 
 interface StoreConfig {
   store: KnowledgeStore
+  name?: string               // identifier for targeting in search/store
+  description?: string        // human-readable, included in tool descriptions
   limit?: number              // max results from this store (default: 10)
-  ingestion?: IngestionConfig // if present, store is a write target
+  ingestion?: IngestionConfig // configures automatic ingestion triggers
 }
 
 interface InjectionConfig {
@@ -374,9 +373,13 @@ When injection is enabled, MemoryManager hooks into `BeforeInvocationEvent` (onc
 
 If no substantive message exists or retrieval returns zero results, injection is skipped for that turn. The block is never persisted in conversation history.
 
+### `search_memory` tool behavior
+
+Accepts `{ query: string, limit?: number, stores?: string[] }`. When `stores` is provided, only those named stores are queried; otherwise all stores are searched. Results are concatenated in store config order. Stores that fail are logged and skipped — partial results from other stores are still returned.
+
 ### `store_memory` tool behavior
 
-Accepts `{ entries: string[] }` (batch). Writes fan out to all stores with `'tool'` in their trigger array. Writes are async and non-blocking. Returns `{ stored: true }` — no IDs are surfaced to the agent.
+Accepts `{ entries: string[], stores?: string[] }` (batch). When `stores` is provided, writes are routed only to those named stores; otherwise writes fan out to all writable stores (those implementing `add()`). Writes are async and non-blocking. Returns `{ stored: number, failed: number }`.
 
 ### Message filter details
 
