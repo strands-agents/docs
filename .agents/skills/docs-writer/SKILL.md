@@ -46,6 +46,9 @@ Write each section following the outline.
 - For agent responses, label non-deterministic output following the patterns in `voice-guide.md` under "Documenting non-deterministic behavior" (typical output as a comment under the code; capability language for tool selection).
 - Comments explain intent, not mechanics
 - One concept per code block
+- Match snippet length to the complexity of what's being demonstrated. Bias toward brevity. If setup machinery dwarfs the feature being shown, the snippet is overweight.
+- Snippets must be copy-paste-runnable: imports present, variables defined, no missing context.
+- Prefer prose over a snippet for trivial API surface. A single property, a single method call, or a one-line config change is often clearer as inline backtick code in a sentence than as a dedicated code block. Reach for a snippet when the shape, ordering, or interaction between calls carries the lesson.
 
 ### Step 3b: Apply MDX formatting
 

@@ -178,11 +178,19 @@ result = agent.tool.read_all(path="/path/to/file.txt")
 </Tab>
 <Tab label="TypeScript">
 
-Find the tool in the `agent.tools` array and call its `invoke()` method. You need to provide both the input and a context object (when required) with the tool use details.
+Every tool added to an agent is accessible as a method on `agent.tool`. Call `.invoke(input)` for the result, or `.stream(input)` to consume intermediate events:
 
 ```typescript
+--8<-- "user-guide/concepts/tools/tools_imports.ts:direct_invocation_imports"
+
 --8<-- "user-guide/concepts/tools/tools.ts:direct_invocation"
 ```
+
+Note `agent.tool` (singular) is the direct-call accessor; `agent.tools` (plural) is the array of registered tools.
+
+The accessor resolves names by exact match first, then with underscores substituted for hyphens, then case-insensitively. `agent.tool.read_all` resolves to a tool registered as `read-all`. Calling a name that doesn't resolve throws `ToolNotFoundError`.
+
+By default, direct calls are recorded in the agent's message history. Pass `{ recordDirectToolCall: false }` to skip recording. This is required when calling tools during an active agent invocation (otherwise `ConcurrentInvocationError` is thrown), and useful for side-effect tools whose output should stay out of conversation context.
 </Tab>
 </Tabs>
 

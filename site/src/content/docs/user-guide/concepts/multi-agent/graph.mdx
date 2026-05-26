@@ -106,6 +106,12 @@ The `Graph` constructor accepts:
 
 To bound an individual `AgentNode`, pass `timeout` to its options object instead of relying on the orchestrator's `nodeTimeout`. Per-node `timeout` overrides `nodeTimeout` for that node and must be at least 1 ms.
 
+Each `AgentNode` snapshots the wrapped agent's state before execution and restores it afterward, so a node visited multiple times runs from a clean slate.
+
+Set `preserveContext: true` on the node to opt out: `new AgentNode({ agent: analyst, preserveContext: true })`. The wrapped agent then accumulates messages, app state, and model state across executions, which suits revisited nodes that build on prior work like iterative refinement.
+
+`preserveContext: true` requires an `Agent` instance; passing it with a non-`Agent` `InvokableAgent` throws at construction time.
+
 If neither `maxSteps` nor `timeout` is set, the SDK emits a one-time warning at construction since a graph with cyclic edges and no bound can run indefinitely.
 
 Timeouts are enforced via `AbortSignal` and are cooperative. A tool that neither polls its cancel signal nor forwards it to a cancellable API can run past the deadline.
@@ -774,7 +780,7 @@ The Graph pattern is available in multiple SDKs. While the core concept is the s
 
 **Scheduling**: Python executes in discrete batches, waiting for the entire batch to complete before scheduling the next set of nodes. TypeScript launches nodes individually as they become ready, up to `maxConcurrency`. This avoids artificial bottlenecks where a fast node waits for a slow sibling to finish before its dependents can start.
 
-**Node state**: Python accumulates agent state across executions unless `reset_on_revisit` is explicitly enabled. TypeScript agent nodes are stateless by default, snapshotting and restoring the agent's messages and state on each execution.
+**Node state**: Python accumulates agent state across executions unless `reset_on_revisit` is explicitly enabled. TypeScript agent nodes are stateless by default, snapshotting and restoring the agent's messages and state on each execution. Set `preserveContext: true` on an individual `AgentNode` to opt into accumulation for revisited nodes.
 
 **Error handling**: Python node failures throw exceptions (fail-fast), while orchestrator-level limit violations return a FAILED result. TypeScript does the inverse: node failures produce a FAILED result, allowing parallel paths to continue, while orchestrator-level limits (`maxSteps`) throw exceptions to promote fail-fast behavior for global failures.
 

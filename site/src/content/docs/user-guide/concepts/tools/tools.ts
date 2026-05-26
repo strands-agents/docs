@@ -281,34 +281,31 @@ async function addingToolsExample() {
 // Direct invocation example
 async function directInvocationExample() {
   // --8<-- [start:direct_invocation]
-  // Create an agent with tools
   const agent = new Agent({
     tools: [notebook],
   })
 
-  // Find the tool by name and cast to InvokableTool
-  const notebookTool = agent.tools.find(
-    (t: { name: string }) => t.name === 'notebook'
-  ) as InvokableTool<any, any>
+  // Call a tool by name. Returns a ToolResultBlock with `status`
+  // ('success' | 'error') and `content` blocks.
+  const result = await agent.tool.notebook!.invoke({
+    mode: 'read',
+    name: 'default',
+  })
+  console.log(result.status, result.content)
 
-  // Directly invoke the tool
-  const result = await notebookTool.invoke(
+  // Stream intermediate events; the generator returns the final result.
+  for await (const event of agent.tool.notebook!.stream({
+    mode: 'read',
+    name: 'default',
+  })) {
+    console.log('progress:', event)
+  }
+
+  // Skip recording the call in conversation history.
+  await agent.tool.notebook!.invoke(
     { mode: 'read', name: 'default' },
-    {
-      toolUse: {
-        name: 'notebook',
-        toolUseId: 'direct-invoke-123',
-        input: { mode: 'read', name: 'default' },
-      },
-      agent: agent,
-      invocationState: {},
-      interrupt: () => {
-        throw new Error('not supported')
-      },
-    }
+    { recordDirectToolCall: false }
   )
-
-  console.log(result)
   // --8<-- [end:direct_invocation]
 }
 
