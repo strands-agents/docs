@@ -475,6 +475,7 @@ payload = json.dumps({
 response = agent_core_client.invoke_agent_runtime(
     agentRuntimeArn='arn:aws:bedrock-agentcore:us-west-2:<account-id>:runtime/myStrandsAgent-suffix',
     runtimeSessionId='dfmeoagmreaklgmrkleafremoigrmtesogmtrskhmtkrlshmt',  # Must be 33+ chars
+    accept="application/json",
     payload=payload,
     qualifier="DEFAULT"
 )
