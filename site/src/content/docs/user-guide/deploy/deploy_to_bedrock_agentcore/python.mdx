@@ -140,6 +140,8 @@ curl -X POST http://localhost:8080/invocations \
 
 #### Method A: Starter Toolkit (For quick prototyping)
 
+> **Note**: The starter toolkit is being superseded by the [AgentCore CLI (`@aws/agentcore`)](https://github.com/aws/agentcore-cli), which is now the recommended tool for new projects. Install with `npm install -g @aws/agentcore`.
+
 For quick prototyping with automated deployment:
 
 ```bash
@@ -189,16 +191,16 @@ Deploy with Starter Toolkit
 agentcore configure --entrypoint agent_example.py
 
 # Optional: Local testing (requires Docker, Finch, or Podman)
-agentcore launch --local
+agentcore deploy --local
 
 # Deploy to AWS
-agentcore launch
+agentcore deploy
 
 # Test your agent with CLI
 agentcore invoke '{"prompt": "Hello"}'
 ```
 
-> **Note**: The `agentcore launch --local` command requires a container engine (Docker, Finch, or Podman) for local deployment testing. This step is optional - you can skip directly to `agentcore launch` for AWS deployment if you don't need local testing.
+> **Note**: The `agentcore deploy --local` command requires a container engine (Docker, Finch, or Podman) for local deployment testing. This step is optional - you can skip directly to `agentcore deploy` for AWS deployment if you don't need local testing.
 
 #### Method B: Manual Deployment with boto3
 
