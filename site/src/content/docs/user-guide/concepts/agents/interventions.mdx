@@ -1,6 +1,7 @@
 ---
 title: Interventions
 description: "A composable control layer for authorization, guardrails, and steering with typed actions, ordered evaluation, and short-circuiting."
+tags: [hooks, event-loop, tool-execution]
 languages: [typescript]
 ---
 
@@ -27,6 +28,8 @@ Each lifecycle method returns one of five typed actions:
 | Guide | `InterventionActions.guide(feedback)` | Cancel and provide feedback for the model to retry with |
 | Confirm | `InterventionActions.confirm(prompt)` | Pause for human approval |
 | Transform | `InterventionActions.transform(apply)` | Modify event content in-place before execution continues |
+
+The following examples show each action type in a realistic handler:
 
 ```typescript
 --8<-- "user-guide/concepts/agents/interventions.ts:action_types"
@@ -92,3 +95,9 @@ Interventions return typed actions that the framework interprets. This enables:
 - **Human-in-the-loop** — `confirm()` integrates with the SDK's interrupt/resume system to pause for approval without the handler needing to manage interrupt lifecycle.
 - **Ordered evaluation** — handlers always run in registration order with well-defined precedence (deny > confirm > guide > transform > proceed).
 - **Error policies** — each handler declares its own failure mode via `onError`. A logging handler can use `'proceed'` (skip on failure), while an auth handler can use `'deny'` (fail closed). Hooks have no equivalent — a thrown error always propagates.
+
+## Related topics
+
+- [Hooks](./hooks.mdx) — Low-level event callbacks for observing and modifying agent behavior
+- [Plugins](../plugins/index.mdx) — Bundle related hooks and tools into reusable modules
+- [Interrupts](../interrupts.mdx) — The interrupt/resume system that `confirm()` builds on
