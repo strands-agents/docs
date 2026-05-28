@@ -12,13 +12,11 @@ description: "Web scraping, social media (Instagram, LinkedIn, Twitter/X, TikTok
 integrationType: tool
 languages: Python
 sidebar:
-  label: "apify"
+  label: "Apify"
 ---
 
 
 [strands-apify](https://github.com/apify/strands-apify) gives your Strands agent web scraping, search, crawling, e-commerce, and social media capabilities through the [Apify platform](https://apify.com/) and its library of thousands of pre-built Actors.
-
-For detailed examples, production tips, and troubleshooting, see the [full integration guide](https://docs.apify.com/integrations/strands-agents).
 
 ## Prerequisites
 
@@ -50,52 +48,9 @@ agent("Find the top-rated Italian restaurants in Prague")
 
 - **18 pre-built tools** for scraping, search, social media, and e-commerce
 - **Focused tool sets** organized into `APIFY_CORE_TOOLS`, `APIFY_SEARCH_TOOLS`, and `APIFY_SOCIAL_TOOLS` for better LLM tool selection
-- **Apify Store access** to run any of 4,000+ Actors with a single generic tool
+- **Apify Store access** to run any of thousands of Actors with a single generic tool
 - **Dataset integration** to fetch and process Actor results directly
 - **URL to markdown** conversion for any webpage
-
-## Available Tools
-
-You can also import `APIFY_ALL_TOOLS` (all 18 tools combined) for prototyping, but smaller sets are recommended in production for better LLM tool-selection accuracy.
-
-### Core tools
-
-Included in `APIFY_CORE_TOOLS`.
-
-| Tool | Description |
-|---|---|
-| `apify_run_actor` | Run any Actor by ID and return run metadata (status, dataset ID, timestamps) |
-| `apify_get_dataset_items` | Fetch items from an existing dataset with pagination support |
-| `apify_run_actor_and_get_dataset` | Run an Actor and fetch its dataset items in one call |
-| `apify_run_task` | Run a saved task (preset Actor configuration) and return run metadata |
-| `apify_run_task_and_get_dataset` | Run a saved task and fetch its dataset items in one call |
-| `apify_scrape_url` | Scrape a single URL and return its content as markdown |
-
-### Search, crawling & e-commerce tools
-
-Included in `APIFY_SEARCH_TOOLS`.
-
-| Tool | Description |
-|---|---|
-| `apify_google_search_scraper` | Search Google and return organic results, ads, and related queries |
-| `apify_google_places_scraper` | Search Google Maps for businesses with ratings, reviews, and contact info |
-| `apify_youtube_scraper` | Scrape YouTube videos, channels, or search results |
-| `apify_website_content_crawler` | Crawl multiple pages of a website with configurable depth and page limits |
-| `apify_ecommerce_scraper` | Scrape product data from Amazon, eBay, Walmart, and other e-commerce sites |
-
-### Social media tools
-
-Included in `APIFY_SOCIAL_TOOLS`.
-
-| Tool | Description |
-|---|---|
-| `apify_instagram_scraper` | Scrape Instagram profiles, posts, reels, or hashtags |
-| `apify_linkedin_profile_posts` | Scrape posts from a LinkedIn profile |
-| `apify_linkedin_profile_search` | Search for LinkedIn profiles by keywords, location, or job title |
-| `apify_linkedin_profile_detail` | Get detailed profile info: experience, education, skills, certifications |
-| `apify_twitter_scraper` | Scrape tweets by search query, handles, or URLs (supports advanced search syntax) |
-| `apify_tiktok_scraper` | Scrape TikTok videos by keyword, hashtag, profile, or URL |
-| `apify_facebook_posts_scraper` | Scrape posts from a Facebook page or profile with optional date filtering |
 
 ## Configuration
 
@@ -106,7 +61,8 @@ STRANDS_APIFY_QUIET=1                     # Optional: suppress rich panels in in
 
 ## Resources
 
-- [PyPI Package](https://pypi.org/project/strands-apify/)
-- [GitHub Repository](https://github.com/apify/strands-apify)
+- [PyPI package](https://pypi.org/project/strands-apify/)
+- [GitHub repository](https://github.com/apify/strands-apify)
+- [Apify integration guide](https://docs.apify.com/integrations/strands-agents) for the full tool reference, model provider setup, and production tips
 - [Apify Store](https://apify.com/store)
-- [Apify API Reference](https://docs.apify.com/api/v2)
+- [Apify API reference](https://docs.apify.com/api/v2)
