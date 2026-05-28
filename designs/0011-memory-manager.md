@@ -1,6 +1,6 @@
 # Long-Term Memory
 
-**Status**: Implemented
+**Status**: Proposed
 
 **Date**: 2026-05-14
 
