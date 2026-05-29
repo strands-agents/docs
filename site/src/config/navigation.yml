@@ -211,6 +211,10 @@ sidebar:
           - label: Remote Trace Providers
             items:
               - docs/user-guide/evals-sdk/how-to/trace_providers
+          - label: Chaos Testing
+            items:
+              - docs/user-guide/evals-sdk/chaos_testing
+              - docs/user-guide/evals-sdk/chaos_testing/chaos_testing
           - label: How-To Guides
             items:
               - docs/user-guide/evals-sdk/how-to/eval_task

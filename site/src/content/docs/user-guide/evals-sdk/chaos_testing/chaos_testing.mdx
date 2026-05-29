@@ -1,0 +1,472 @@
+---
+title: Chaos Testing Guide
+tags: [error-handling, tool-evaluation, simulation]
+sidebar:
+  label: "Chaos Testing Guide"
+---
+
+## Overview
+
+This guide covers the complete chaos testing workflow: defining effects, expanding test cases, running experiments with `ChaosPlugin`, and evaluating agent resilience with specialized evaluators. Chaos testing uses Strands' native plugin system to inject failures transparently — your task function code stays chaos-free.
+
+```python
+from strands import Agent
+from strands_evals import Case
+from strands_evals.chaos import ChaosCase, ChaosExperiment, ChaosPlugin
+from strands_evals.chaos.effects import Timeout, NetworkError, CorruptValues
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+
+# Define base cases
+base_cases = [
+    Case(
+        name="flight-booking",
+        input="Book me a flight to Paris next Tuesday",
+        metadata={"task_description": "Flight booked with confirmation number"}
+    )
+]
+
+# Define named effect maps
+effect_maps = {
+    "booking_timeout": {
+        "tool_effects": {"book_flight": Timeout()}
+    },
+    "search_corrupted": {
+        "tool_effects": {"search_flights": CorruptValues(corrupt_ratio=0.8)}
+    },
+}
+
+# Generate chaos cases
+chaos_cases = ChaosCase.expand(base_cases, effect_maps, include_baseline=True)
+
+# Run experiment
+def task_function(case: Case) -> dict:
+    agent = Agent(
+        system_prompt="You are a travel booking assistant.",
+        plugins=[ChaosPlugin()],
+        callback_handler=None
+    )
+    response = agent(case.input)
+    return {"output": str(response)}
+
+experiment = ChaosExperiment(
+    cases=chaos_cases,
+    evaluators=[GoalSuccessRateEvaluator()]
+)
+reports = experiment.run_evaluations(task_function)
+```
+
+## How It Works
+
+1. **Case Expansion**: `ChaosCase.expand()` generates the Cartesian product of base cases × named effect maps, producing `ChaosCase` objects with an `effects` field.
+2. **Context Injection**: `ChaosExperiment` sets a `ContextVar` with the active `ChaosCase` before each task execution, ensuring thread/async safety.
+3. **Plugin Interception**: `ChaosPlugin` reads the active case from the `ContextVar` and applies effects via `BeforeToolCallEvent` (pre-hook) or `AfterToolCallEvent` (post-hook).
+4. **Transparent Execution**: Your task function code has zero chaos concepts — just add `ChaosPlugin()` to the agent's plugins list.
+
+## Defining Effects
+
+### Pre-hook Effects
+
+Pre-hook effects cancel the tool call and return an error message to the agent:
+
+```python
+from strands_evals.chaos.effects import (
+    Timeout,
+    NetworkError,
+    ExecutionError,
+    ValidationError,
+)
+
+effect_maps = {
+    "timeout": {"tool_effects": {"my_tool": Timeout()}},
+    "network": {"tool_effects": {"my_tool": NetworkError()}},
+    "execution": {"tool_effects": {"my_tool": ExecutionError()}},
+    "validation": {"tool_effects": {"my_tool": ValidationError()}},
+}
+```
+
+### Post-hook Effects
+
+Post-hook effects let the tool execute normally but corrupt the response:
+
+```python
+from strands_evals.chaos.effects import (
+    TruncateFields,
+    RemoveFields,
+    CorruptValues,
+)
+
+effect_maps = {
+    "truncated": {
+        "tool_effects": {"my_tool": TruncateFields(max_length=10)}
+    },
+    "missing_fields": {
+        "tool_effects": {"my_tool": RemoveFields(remove_ratio=0.5)}
+    },
+    "corrupted": {
+        "tool_effects": {"my_tool": CorruptValues(corrupt_ratio=0.3)}
+    },
+}
+```
+
+### Compound Effects (Multiple Tools)
+
+Target multiple tools in a single effect map to simulate cascading failures:
+
+```python
+effect_maps = {
+    "total_chaos": {
+        "tool_effects": {
+            "search_flights": Timeout(),
+            "book_flight": NetworkError(),
+            "send_confirmation": CorruptValues(corrupt_ratio=0.5),
+        }
+    },
+}
+```
+
+## ChaosCase
+
+`ChaosCase` extends `Case` with an `effects` field. The `effects` dict keys are restricted to known categories (currently `"tool_effects"`):
+
+```python
+from strands_evals.chaos import ChaosCase
+from strands_evals.chaos.effects import Timeout
+
+# Manual construction
+chaos_case = ChaosCase(
+    name="timeout-test",
+    input="Book a flight",
+    effects={"tool_effects": {"book_flight": Timeout()}},
+    metadata={"task_description": "Flight booked"}
+)
+
+# Expansion from base cases (preferred)
+chaos_cases = ChaosCase.expand(
+    cases=[Case(name="test", input="Book a flight")],
+    effect_maps={"timeout": {"tool_effects": {"book_flight": Timeout()}}},
+    include_baseline=True
+)
+```
+
+## ChaosPlugin
+
+`ChaosPlugin` hooks into Strands' event system. Add it to your agent's plugins list:
+
+```python
+from strands import Agent
+from strands_evals.chaos import ChaosPlugin
+
+agent = Agent(
+    system_prompt="You are a helpful assistant.",
+    plugins=[ChaosPlugin()],
+    callback_handler=None
+)
+```
+
+The plugin reads the active `ChaosCase` from a `ContextVar` (managed by `ChaosExperiment`) and applies effects only to tools listed in the case's `effects["tool_effects"]` dict. Tools not listed execute normally.
+
+## ChaosExperiment
+
+`ChaosExperiment` composes the base `Experiment` class and manages the `ContextVar` lifecycle:
+
+```python
+from strands_evals.chaos import ChaosExperiment
+
+experiment = ChaosExperiment(
+    cases=chaos_cases,
+    evaluators=evaluators
+)
+
+# Sync execution
+reports = experiment.run_evaluations(task_function)
+
+# Async execution
+reports = await experiment.run_evaluations_async(async_task_function)
+```
+
+## Resilience Evaluators
+
+### FailureCommunicationEvaluator
+
+Scores how well the agent communicates failures to the user across four dimensions: clarity, actionability, transparency, and tone.
+
+```python
+from strands_evals.chaos.evaluators import FailureCommunicationEvaluator
+
+evaluator = FailureCommunicationEvaluator()
+```
+
+**Scoring criteria:**
+- Does the agent acknowledge the failure clearly?
+- Does it suggest actionable next steps?
+- Is it transparent about what went wrong (without exposing internals)?
+- Is the tone appropriate (not dismissive, not alarming)?
+
+### PartialCompletionEvaluator
+
+Scores what percentage of the user's goal was achieved despite failures, returning a continuous 0.0–1.0 score:
+
+```python
+from strands_evals.chaos.evaluators import PartialCompletionEvaluator
+
+evaluator = PartialCompletionEvaluator()
+```
+
+**Example scores:**
+- `1.0` — Full goal achieved despite failures
+- `0.7` — Most sub-goals completed, one blocked by failure
+- `0.0` — Agent gave up entirely or crashed
+
+### RecoveryStrategyEvaluator
+
+Scores the quality of the agent's recovery actions when tools fail:
+
+```python
+from strands_evals.chaos.evaluators import RecoveryStrategyEvaluator
+
+evaluator = RecoveryStrategyEvaluator()
+```
+
+**Scoring criteria:**
+- Exploration breadth — Did the agent try alternative tools or approaches?
+- Retry discipline — Did it retry appropriately (not excessively)?
+- Approach variation — Did retries use different strategies?
+
+## Complete Example: Multi-Tool Chaos with Resilience Evaluation
+
+```python
+from typing import Any
+from pydantic import BaseModel, Field
+from strands import Agent
+from strands_evals import Case
+from strands_evals.chaos import ChaosCase, ChaosExperiment, ChaosPlugin
+from strands_evals.chaos.effects import Timeout, NetworkError, CorruptValues
+from strands_evals.chaos.evaluators import (
+    FailureCommunicationEvaluator,
+    PartialCompletionEvaluator,
+    RecoveryStrategyEvaluator,
+)
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+from strands_evals.simulation.tool_simulator import ToolSimulator
+
+# Setup tool simulator for reproducible responses
+tool_simulator = ToolSimulator()
+
+class FlightResult(BaseModel):
+    airline: str = Field(..., description="Airline name")
+    price: float = Field(..., description="Price in USD")
+    departure: str = Field(..., description="Departure time")
+
+class BookingConfirmation(BaseModel):
+    confirmation_id: str = Field(..., description="Booking confirmation ID")
+    status: str = Field(..., description="Booking status")
+
+@tool_simulator.tool(
+    share_state_id="travel",
+    initial_state_description="Available flights: AA101 $450 8am, UA202 $380 2pm, DL303 $520 6pm",
+    output_schema=FlightResult,
+)
+def search_flights(destination: str, date: str) -> dict[str, Any]:
+    """Search for available flights."""
+    pass
+
+@tool_simulator.tool(
+    share_state_id="travel",
+    output_schema=BookingConfirmation,
+)
+def book_flight(flight_id: str, passenger_name: str) -> dict[str, Any]:
+    """Book a specific flight."""
+    pass
+
+# Define effect maps
+effect_maps = {
+    "search_timeout": {
+        "tool_effects": {"search_flights": Timeout()}
+    },
+    "booking_network_error": {
+        "tool_effects": {"book_flight": NetworkError()}
+    },
+    "corrupted_search": {
+        "tool_effects": {"search_flights": CorruptValues(corrupt_ratio=0.8)}
+    },
+    "total_chaos": {
+        "tool_effects": {
+            "search_flights": Timeout(),
+            "book_flight": NetworkError(),
+        }
+    },
+}
+
+# Define base cases
+base_cases = [
+    Case(
+        name="book-cheapest",
+        input="Find the cheapest flight to Paris next Tuesday and book it for John Smith",
+        metadata={"task_description": "Flight searched, cheapest option identified, booking confirmed"}
+    ),
+    Case(
+        name="book-morning",
+        input="I need a morning flight to Tokyo on Friday",
+        metadata={"task_description": "Morning flight found and booked"}
+    ),
+]
+
+# Expand into chaos cases
+chaos_cases = ChaosCase.expand(base_cases, effect_maps, include_baseline=True)
+
+# Task function — no chaos concepts here
+def task_function(case: Case) -> dict:
+    search_tool = tool_simulator.get_tool("search_flights")
+    booking_tool = tool_simulator.get_tool("book_flight")
+
+    agent = Agent(
+        system_prompt="You are a travel booking assistant. Help users find and book flights.",
+        tools=[search_tool, booking_tool],
+        plugins=[ChaosPlugin()],
+        callback_handler=None,
+    )
+    response = agent(case.input)
+    return {"output": str(response)}
+
+# Run with all evaluators
+evaluators = [
+    GoalSuccessRateEvaluator(),
+    FailureCommunicationEvaluator(),
+    PartialCompletionEvaluator(),
+    RecoveryStrategyEvaluator(),
+]
+
+experiment = ChaosExperiment(cases=chaos_cases, evaluators=evaluators)
+reports = experiment.run_evaluations(task_function)
+
+# Display results
+for report in reports:
+    print(f"\n{'='*60}")
+    print(f"Evaluator: {report.evaluator_name}")
+    print(f"{'='*60}")
+    report.run_display()
+```
+
+## Advanced Patterns
+
+### Pattern 1: Comparing Agent Configurations Under Chaos
+
+```python
+def compare_agents_under_chaos(chaos_cases, configs):
+    """Compare how different agent configs handle the same failures."""
+    results = {}
+
+    for config_name, system_prompt in configs.items():
+        def make_task(prompt):
+            def task_function(case: Case) -> dict:
+                agent = Agent(
+                    system_prompt=prompt,
+                    plugins=[ChaosPlugin()],
+                    callback_handler=None,
+                )
+                response = agent(case.input)
+                return {"output": str(response)}
+            return task_function
+
+        experiment = ChaosExperiment(
+            cases=chaos_cases,
+            evaluators=[PartialCompletionEvaluator()]
+        )
+        reports = experiment.run_evaluations(make_task(system_prompt))
+        results[config_name] = reports
+
+    return results
+```
+
+### Pattern 2: Progressive Failure Escalation
+
+```python
+# Test increasing severity
+effect_maps = {
+    "mild": {
+        "tool_effects": {"search": CorruptValues(corrupt_ratio=0.2)}
+    },
+    "moderate": {
+        "tool_effects": {"search": CorruptValues(corrupt_ratio=0.5)}
+    },
+    "severe": {
+        "tool_effects": {"search": CorruptValues(corrupt_ratio=0.9)}
+    },
+    "total_failure": {
+        "tool_effects": {"search": Timeout()}
+    },
+}
+```
+
+### Pattern 3: Chaos with User Simulation
+
+Combine chaos testing with user simulation for multi-turn resilience evaluation:
+
+```python
+from strands_evals import ActorSimulator
+
+def task_function(case: Case) -> dict:
+    user_sim = ActorSimulator.from_case_for_user_simulator(
+        case=case, max_turns=8
+    )
+
+    agent = Agent(
+        system_prompt="You are a helpful assistant.",
+        plugins=[ChaosPlugin()],
+        callback_handler=None,
+    )
+
+    user_message = case.input
+    while user_sim.has_next():
+        agent_response = agent(user_message)
+        user_result = user_sim.act(str(agent_response))
+        user_message = str(user_result.structured_output.message)
+
+    return {"output": str(agent_response)}
+```
+
+## Troubleshooting
+
+### Issue: Effects Not Being Applied
+
+Ensure `ChaosPlugin()` is in the agent's plugins list and you're using `ChaosExperiment` (not base `Experiment`):
+
+```python
+# Correct
+agent = Agent(plugins=[ChaosPlugin()], ...)
+experiment = ChaosExperiment(cases=chaos_cases, ...)
+
+# Wrong — base Experiment doesn't set the ContextVar
+experiment = Experiment(cases=chaos_cases, ...)
+```
+
+### Issue: All Tools Failing
+
+Check that your effect map keys match the exact tool function names:
+
+```python
+# If your tool is defined as:
+def search_flights(...): ...
+
+# The effect map key must be "search_flights", not "searchFlights" or "search"
+effect_maps = {"test": {"tool_effects": {"search_flights": Timeout()}}}
+```
+
+### Issue: Async Task Errors
+
+`ChaosExperiment` supports both sync and async tasks. Use the appropriate method:
+
+```python
+# Sync
+reports = experiment.run_evaluations(sync_task_function)
+
+# Async
+reports = await experiment.run_evaluations_async(async_task_function)
+```
+
+## Related Documentation
+
+- [Chaos Testing Overview](/docs/user-guide/evals-sdk/chaos_testing/): Overview and quick start
+- [Tool Simulation](/docs/user-guide/evals-sdk/simulators/tool_simulation/): Simulate tool behavior
+- [Goal Success Rate Evaluator](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/): Assess goal completion
+- [Simulators Overview](/docs/user-guide/evals-sdk/simulators/): Simulator framework

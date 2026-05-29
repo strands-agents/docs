@@ -1,0 +1,286 @@
+---
+title: Chaos Testing
+tags: [error-handling, simulation]
+sidebar:
+  label: "Overview"
+---
+
+## Overview
+
+Chaos testing systematically evaluates agent resilience by injecting controlled failures into tool execution. Using the `ChaosPlugin`, `ChaosCase`, and `ChaosExperiment` classes, you can test how agents handle tool timeouts, network errors, and corrupted responses — without modifying agent code.
+
+This enables you to answer questions like:
+- Does the agent gracefully communicate failures to users?
+- Can the agent achieve partial goals when some tools fail?
+- Does the agent employ effective recovery strategies?
+
+## Why Chaos Testing?
+
+Traditional evaluation tests agents under ideal conditions. In production, tools fail unpredictably:
+
+**Standard Evaluation:**
+- Tools always return correct responses
+- No network failures or timeouts
+- Cannot reveal fragile error handling
+- Misses degraded-mode behavior
+
+**Chaos Testing:**
+- Injects realistic tool failures (timeouts, network errors, validation errors)
+- Corrupts tool responses (truncated fields, removed data, corrupted values)
+- Tests agent resilience without live infrastructure failures
+- Measures graceful degradation and recovery behavior
+- Quantifies partial goal completion under failure
+
+## When to Use Chaos Testing
+
+Use chaos testing when you need to:
+- **Evaluate Resilience**: Test how agents handle tool failures gracefully
+- **Assess Recovery**: Verify agents try alternative approaches when tools fail
+- **Measure Degradation**: Quantify how much of a goal agents achieve despite failures
+- **Test Communication**: Ensure agents inform users clearly about failures
+- **Validate Robustness**: Confirm agents don't crash or loop on corrupted data
+
+## Architecture
+
+Chaos testing integrates with Strands' plugin system via `BeforeToolCallEvent` and `AfterToolCallEvent` hooks:
+
+1. **ChaosCase** — Extends `Case` with an `effects` field mapping tool names to failure effects
+2. **ChaosPlugin** — A Strands plugin that intercepts tool calls and applies effects transparently
+3. **ChaosExperiment** — Composes the base `Experiment` to manage chaos context per case
+4. **ChaosEffect** — A hierarchy of pre-hook effects (cancel tool calls) and post-hook effects (corrupt responses)
+
+## Effect Types
+
+### Pre-hook Effects (Tool Call Failures)
+
+These effects cancel the tool call entirely and return an error:
+
+| Effect | Description |
+| :------- | :------------ |
+| `Timeout` | Simulates a tool execution timeout |
+| `NetworkError` | Simulates a network connectivity failure |
+| `ExecutionError` | Simulates a runtime error during tool execution |
+| `ValidationError` | Simulates invalid input/output validation failure |
+
+### Post-hook Effects (Response Corruption)
+
+These effects let the tool execute but corrupt the response:
+
+| Effect | Description | Parameters |
+| :------- | :------------ | :----------- |
+| `TruncateFields` | Truncates string fields in the response | `max_length` |
+| `RemoveFields` | Randomly removes fields from the response | `remove_ratio` |
+| `CorruptValues` | Corrupts field values with garbage data | `corrupt_ratio` |
+
+## Basic Usage
+
+```python
+from strands import Agent
+from strands_evals import Case
+from strands_evals.chaos import ChaosCase, ChaosExperiment, ChaosPlugin
+from strands_evals.chaos.effects import Timeout, NetworkError
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+
+# Define base test cases
+base_cases = [
+    Case(
+        name="weather-lookup",
+        input="What's the weather in Seattle?",
+        metadata={"task_description": "Weather information provided"}
+    )
+]
+
+# Define named effect maps
+effect_maps = {
+    "search_timeout": {
+        "tool_effects": {"get_weather": Timeout()}
+    },
+    "network_failure": {
+        "tool_effects": {"get_weather": NetworkError()}
+    },
+}
+
+# Expand cases into Cartesian product (base cases × effect maps + baseline)
+chaos_cases = ChaosCase.expand(base_cases, effect_maps, include_baseline=True)
+
+# Run chaos experiment
+experiment = ChaosExperiment(
+    cases=chaos_cases,
+    evaluators=[GoalSuccessRateEvaluator()]
+)
+
+def task_function(case: Case) -> dict:
+    agent = Agent(
+        system_prompt="You are a helpful weather assistant.",
+        plugins=[ChaosPlugin()],
+        callback_handler=None
+    )
+    response = agent(case.input)
+    return {"output": str(response)}
+
+reports = experiment.run_evaluations(task_function)
+```
+
+## ChaosCase.expand()
+
+The `expand()` class method generates the Cartesian product of base cases and effect maps, optionally including a baseline (no effects) for comparison:
+
+```python
+chaos_cases = ChaosCase.expand(
+    cases=base_cases,        # List of base Case objects
+    effect_maps=effect_maps, # Dict of named effect configurations
+    include_baseline=True    # Include cases with no effects for comparison
+)
+```
+
+For 2 base cases and 3 effect maps with `include_baseline=True`, this produces `2 × (3 + 1) = 8` chaos cases.
+
+## Integration with ToolSimulator
+
+Chaos testing works naturally with `ToolSimulator` for fully controlled evaluation — simulated tools provide reproducible responses, and chaos effects inject failures on top:
+
+```python
+from strands import Agent
+from strands_evals import Case
+from strands_evals.chaos import ChaosCase, ChaosExperiment, ChaosPlugin
+from strands_evals.chaos.effects import Timeout, CorruptValues
+from strands_evals.evaluators import GoalSuccessRateEvaluator
+from strands_evals.simulation.tool_simulator import ToolSimulator
+from pydantic import BaseModel, Field
+
+tool_simulator = ToolSimulator()
+
+class SearchResult(BaseModel):
+    title: str = Field(..., description="Result title")
+    snippet: str = Field(..., description="Result snippet")
+
+@tool_simulator.tool(output_schema=SearchResult)
+def web_search(query: str) -> dict:
+    """Search the web for information."""
+    pass
+
+# Define effect maps
+effect_maps = {
+    "search_timeout": {
+        "tool_effects": {"web_search": Timeout()}
+    },
+    "corrupted_results": {
+        "tool_effects": {"web_search": CorruptValues(corrupt_ratio=0.5)}
+    },
+}
+
+base_cases = [
+    Case(name="research", input="Find recent news about AI agents")
+]
+
+chaos_cases = ChaosCase.expand(base_cases, effect_maps, include_baseline=True)
+
+def task_function(case: Case) -> dict:
+    search_tool = tool_simulator.get_tool("web_search")
+    agent = Agent(
+        tools=[search_tool],
+        plugins=[ChaosPlugin()],
+        callback_handler=None
+    )
+    response = agent(case.input)
+    return {"output": str(response)}
+
+experiment = ChaosExperiment(
+    cases=chaos_cases,
+    evaluators=[GoalSuccessRateEvaluator()]
+)
+reports = experiment.run_evaluations(task_function)
+```
+
+## Resilience Evaluators
+
+Chaos testing ships with three specialized evaluators designed to assess agent behavior under failure:
+
+| Evaluator | What It Measures |
+| :---------- | :---------------- |
+| `FailureCommunicationEvaluator` | Clarity, actionability, transparency, and tone of failure messages |
+| `PartialCompletionEvaluator` | Percentage of user goal achieved despite failures (0.0–1.0) |
+| `RecoveryStrategyEvaluator` | Quality of recovery actions: exploration breadth, retry discipline, approach variation |
+
+```python
+from strands_evals.chaos.evaluators import (
+    FailureCommunicationEvaluator,
+    PartialCompletionEvaluator,
+    RecoveryStrategyEvaluator,
+)
+
+evaluators = [
+    GoalSuccessRateEvaluator(),
+    FailureCommunicationEvaluator(),
+    PartialCompletionEvaluator(),
+    RecoveryStrategyEvaluator(),
+]
+
+experiment = ChaosExperiment(cases=chaos_cases, evaluators=evaluators)
+```
+
+[Complete Chaos Testing Guide →](/docs/user-guide/evals-sdk/chaos_testing/chaos_testing/)
+
+## Chaos Testing vs Simulators
+
+| Aspect | Simulators | Chaos Testing |
+| :------- | :---------- | :-------------- |
+| **Role** | Replace tool execution entirely | Inject failures into tool execution |
+| **Scope** | All tool calls are simulated | Only targeted tools are affected |
+| **Use Case** | Test without infrastructure | Test resilience under failure |
+| **Combination** | Can be used together | Chaos effects apply on top of simulated tools |
+
+## Best Practices
+
+### 1. Start with Baseline Comparisons
+
+Always include `include_baseline=True` to compare agent performance with and without failures:
+
+```python
+chaos_cases = ChaosCase.expand(cases, effect_maps, include_baseline=True)
+```
+
+### 2. Test One Failure at a Time First
+
+Start with single-tool failures before testing compound chaos:
+
+```python
+# Single failure
+effect_maps = {
+    "search_fails": {"tool_effects": {"search": Timeout()}},
+}
+
+# Compound (test after single failures are understood)
+effect_maps = {
+    "total_chaos": {
+        "tool_effects": {
+            "search": Timeout(),
+            "database": NetworkError(),
+        }
+    },
+}
+```
+
+### 3. Use Resilience Evaluators Together
+
+Combine all three resilience evaluators for a complete picture:
+
+```python
+evaluators = [
+    FailureCommunicationEvaluator(),  # Did the agent tell the user?
+    PartialCompletionEvaluator(),     # How much was achieved?
+    RecoveryStrategyEvaluator(),      # Did it try alternatives?
+]
+```
+
+## Next Steps
+
+- [Chaos Testing Guide](/docs/user-guide/evals-sdk/chaos_testing/chaos_testing/): Complete guide with advanced patterns
+- [Tool Simulation](/docs/user-guide/evals-sdk/simulators/tool_simulation/): Simulate tool behavior
+- [Goal Success Rate Evaluator](/docs/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/): Assess goal completion
+
+## Related Documentation
+
+- [Simulators Overview](/docs/user-guide/evals-sdk/simulators/): Simulator framework
+- [Evaluators](/docs/user-guide/evals-sdk/evaluators/): All available evaluators
+- [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/): Get started with Strands Evals
