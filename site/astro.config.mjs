@@ -11,6 +11,7 @@ import { loadSidebarFromConfig } from "./src/sidebar.ts"
 import { sitemapWithLastmod } from "./src/plugins/sitemap-lastmod.ts"
 import AutoImport from './src/plugins/astro-auto-import.ts'
 import astroExpressiveCode from "astro-expressive-code"
+import remarkGfm from 'remark-gfm'
 import mdx from '@astrojs/mdx';
 import astroBrokenLinksChecker from './scripts/astro-broken-links-checker-index.js';
 
@@ -51,7 +52,6 @@ export default defineConfig({
         },
       },
     }),
-    mdx(),
     starlight({
       social: [],
       head: [
@@ -109,5 +109,6 @@ export default defineConfig({
         a: './src/components/PageLink.astro'
       }
     }),
+    mdx({ remarkPlugins: [remarkGfm] }),
   ],
 })
