@@ -73,6 +73,37 @@ Documentation lives in `docs/` as Markdown files. The site structure is driven b
 
 For a full reference on customizations, components, and the migration status, see [Site Architecture](SITE-ARCHITECTURE.md).
 
+### Using the `docs-` skills
+
+The repo ships four agent skills that cover the documentation workflow: `docs-planner`, `docs-audit`, `docs-writer`, and `docs-reviewer`. They live under `.agents/skills/` (with symlinks at `.claude/skills/` and `.kiro/skills/`). See [`site/AGENTS.md`](site/AGENTS.md#documentation-skills-and-voice-references) for triggers and scopes.
+
+Use them piecemeal when you already know the scope:
+
+- `/docs-audit <page>` to assess a published page before rewriting.
+- `/docs-writer <page or topic>` to draft a new page or rewrite an existing one. Step 7 of the skill runs `docs-reviewer` automatically.
+- `/docs-reviewer <draft>` on its own when you want a voice/style sign-off without a rewrite.
+- `/docs-planner` to prioritize the backlog when you don't yet know what to touch.
+
+Or chain them with a `/goal` directive to drive a full update from a single SDK change. `/goal` is a usage convention, not a built-in command: you set the target and the workflow, the skills do the work. For example:
+
+```
+/goal https://github.com/strands-agents/sdk-typescript/commit/<sha>
+
+1. /docs-planner: pick the top item touched by this commit.
+2. /docs-audit: find issues on that page.
+3. /docs-writer: fix them.
+4. /docs-reviewer: sign off, or send back. Default to step 3 for voice/style/code
+   fixes; bounce to step 2 (or step 1) if the finding is structural. Cap retries at
+   3, then escalate.
+
+The goal is complete when docs-reviewer returns a "Ship it" verdict and the
+resulting commit is on a branch ready for PR.
+```
+
+This pattern is useful when the change is narrow (one feature, one or two pages) and you want the skills to handle planner → audit → write → review without you re-prompting at every step.
+
+> These skills are a work in progress. If outputs are wrong, insufficient, or unexpected, contribute updates to `.agents/`.
+
 ## Contributing ❤️
 
 We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:
