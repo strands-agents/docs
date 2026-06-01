@@ -133,67 +133,63 @@ curl -X POST http://localhost:8080/invocations \
 
 > **Choose ONE of the following deployment methods:**
 
-#### Method A: Starter Toolkit (For quick prototyping)
+#### Method A: AgentCore CLI (Recommended for quick prototyping)
 
-For quick prototyping with automated deployment:
+The [AgentCore CLI](https://github.com/aws/agentcore-cli) provides a streamlined experience for creating, developing, and deploying agents to Amazon Bedrock AgentCore.
 
-```bash
-pip install bedrock-agentcore-starter-toolkit
-```
-
-Project Structure
-
-```
-your_project_directory/
-├── agent_example.py # Your main agent code
-├── requirements.txt # Dependencies for your agent
-└── __init__.py # Makes the directory a Python package
-```
-
-Example: agent_example.py
-
-```python
-from strands import Agent
-from bedrock_agentcore.runtime import BedrockAgentCoreApp
-
-agent = Agent()
-app = BedrockAgentCoreApp()
-
-@app.entrypoint
-def invoke(payload):
-    """Process user input and return a response"""
-    user_message = payload.get("prompt", "Hello")
-    response = agent(user_message)
-    return str(response) # response should be json serializable
-
-if __name__ == "__main__":
-    app.run()
-```
-
-Example: requirements.txt
-
-```
-strands-agents
-bedrock-agentcore
-```
-
-Deploy with Starter Toolkit
+Install the CLI
 
 ```bash
-# Configure your agent
-agentcore configure --entrypoint agent_example.py
-
-# Optional: Local testing (requires Docker, Finch, or Podman)
-agentcore launch --local
-
-# Deploy to AWS
-agentcore launch
-
-# Test your agent with CLI
-agentcore invoke '{"prompt": "Hello"}'
+npm install -g @aws/agentcore
 ```
 
-> **Note**: The `agentcore launch --local` command requires a container engine (Docker, Finch, or Podman) for local deployment testing. This step is optional - you can skip directly to `agentcore launch` for AWS deployment if you don't need local testing.
+Create a New Project
+
+Use the interactive wizard to scaffold a new Strands agent project:
+
+```bash
+agentcore create
+cd myproject
+```
+
+The wizard guides you through selecting a framework (Strands Agents), model provider, and agent configuration. It generates a project with the following structure:
+
+```
+myproject/
+├── agentcore/
+│   ├── agentcore.json      # Resource specifications
+│   └── aws-targets.json    # Deployment targets
+├── app/
+│   └── MyAgent/
+│       ├── main.py         # Agent entry point
+│       ├── pyproject.toml  # Python dependencies
+│       └── model/          # Model configuration
+```
+
+Or, if you already have agent code from Step 2, you can integrate it into the generated `main.py`.
+
+Develop Locally
+
+```bash
+agentcore dev
+```
+
+Deploy to AWS
+
+```bash
+agentcore deploy
+```
+
+Test Your Deployed Agent
+
+```bash
+agentcore invoke
+```
+
+> **Note**: The AgentCore CLI replaces the previously available `bedrock-agentcore-starter-toolkit`. If you have the old toolkit installed, uninstall it to avoid conflicts:
+> ```bash
+> pip uninstall bedrock-agentcore-starter-toolkit
+> ```
 
 #### Method B: Manual Deployment with boto3
 
@@ -545,7 +541,7 @@ Expected Response Format
 
 - Verify AWS credentials are configured correctly
 - Check IAM role permissions
-- Ensure container engine is running (for local testing with `agentcore launch --local` or Option B custom deployments)
+- Ensure container engine is running (for local testing and container-based deployments)
 
 **Runtime Errors**
 
