@@ -82,4 +82,4 @@ Yes / No / Maybe with guidance
 
 ## Accepted Designs
 
-- [0012 — Sandbox](./0012-sandbox.md): An SDK-level execution-environment abstraction that decouples tool logic from where code runs (local, Docker, SSH).
+*No designs have been accepted yet.*
