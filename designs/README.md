@@ -82,4 +82,4 @@ Yes / No / Maybe with guidance
 
 ## Accepted Designs
 
-*No designs have been accepted yet.*
+- [Sandbox](./0004-sandboxes-and-codeact.md): An agent-level execution environment that decouples tools from where their code runs (host, Docker, SSH).
