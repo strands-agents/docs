@@ -62,6 +62,7 @@
     "js-yaml": "^4.1.1",
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
     "sitemapper": "^4.1.4",
